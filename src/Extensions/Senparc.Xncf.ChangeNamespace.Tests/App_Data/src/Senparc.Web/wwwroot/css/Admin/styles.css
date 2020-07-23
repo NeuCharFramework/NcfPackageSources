@@ -1,0 +1,12 @@
+.nav-sm .hidden-small {
+    display: none;
+}
+
+.breadcrumb {
+    padding-left: 0px;
+    padding-top: 0px;
+}
+
+    .breadcrumb a {
+        color: #337ab7
+    }

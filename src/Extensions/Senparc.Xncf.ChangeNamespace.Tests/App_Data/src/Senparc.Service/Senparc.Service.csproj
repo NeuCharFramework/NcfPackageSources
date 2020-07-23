@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ProjectBiddingService.cs" />
+    <Compile Remove="ProjectDemandService.cs" />
+    <Compile Remove="ProjectKindService.cs" />
+    <Compile Remove="ProjectPayLogService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Qiniu.Shared" Version="7.2.15" />
+    <PackageReference Include="Senparc.NeuChar" Version="1.1.100.2-preview2" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.100-preview2" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.7.104" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.8.100.1-preview2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
+    <ProjectReference Include="..\Senparc.Log\Senparc.Log.csproj" />
+    <ProjectReference Include="..\Senparc.Respository\Senparc.Respository.csproj" />
+    <PackageReference Include="Senparc.Ncf.Core" Version="0.1.1-beta2" />
+    <PackageReference Include="Senparc.Ncf.Log" Version="0.1.1-beta2" />
+    <PackageReference Include="Senparc.Ncf.Repository" Version="0.1.1-beta2" />
+    <PackageReference Include="Senparc.Ncf.Service" Version="0.1.1-beta2" />
+    <ProjectReference Include="..\Senparc.SMS\Senparc.SMS.csproj" />
+    <ProjectReference Include="..\Senparc.Utility\Senparc.Utility.csproj" />
+  </ItemGroup>
+
+</Project>
