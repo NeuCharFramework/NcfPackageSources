@@ -67,7 +67,7 @@ namespace Senparc.Ncf.Core.Models
         /// <summary>
         /// 扩展模块
         /// </summary>
-        public DbSet<XscfModule> XscfModules { get; set; }
+        public DbSet<XncfModule> XncfModules { get; set; }
 
         #endregion
 
@@ -103,7 +103,7 @@ namespace Senparc.Ncf.Core.Models
         {
             #region 不可修改系统表
 
-            modelBuilder.ApplyConfiguration(new XscfModuleAccountConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new XncfModuleAccountConfigurationMapping());
             modelBuilder.ApplyConfiguration(new AccountConfigurationMapping());
             modelBuilder.ApplyConfiguration(new AccountPayLogConfigurationMapping());
             modelBuilder.ApplyConfiguration(new PointsLogConfigurationMapping());

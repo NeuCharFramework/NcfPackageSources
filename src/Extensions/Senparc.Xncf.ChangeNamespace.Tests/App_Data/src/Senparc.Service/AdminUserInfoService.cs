@@ -69,7 +69,7 @@ namespace Senparc.Service
         {
             try
             {
-                await _contextAccessor.Value.HttpContext.SignOutAsync(SiteConfig.ScfAdminAuthorizeScheme);
+                await _contextAccessor.Value.HttpContext.SignOutAsync(SiteConfig.NcfAdminAuthorizeScheme);
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace Senparc.Service
                 new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString(), ClaimValueTypes.Integer),
                 new Claim("AdminMember", "", ClaimValueTypes.String)
             };
-            var identity = new ClaimsIdentity(SiteConfig.ScfAdminAuthorizeScheme);
+            var identity = new ClaimsIdentity(SiteConfig.NcfAdminAuthorizeScheme);
             identity.AddClaims(claims);
             var authProperties = new AuthenticationProperties
             {
@@ -97,7 +97,7 @@ namespace Senparc.Service
             };
 
             Logout(); //退出登录
-            _contextAccessor.Value.HttpContext.SignInAsync(SiteConfig.ScfAdminAuthorizeScheme, new ClaimsPrincipal(identity), authProperties);
+            _contextAccessor.Value.HttpContext.SignInAsync(SiteConfig.NcfAdminAuthorizeScheme, new ClaimsPrincipal(identity), authProperties);
 
             #endregion
         }

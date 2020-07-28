@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Threads
 {
     /// <summary>
-    /// XSCF Thread 模块，线程配置
+    /// XNCF Thread 模块，线程配置
     /// </summary>
-    public class XscfThreadBuilder
+    public class XncfThreadBuilder
     {
         private List<ThreadInfo> _threadInfoList = new List<ThreadInfo>();
         public void AddThreadInfo(ThreadInfo threadInfo)
@@ -19,16 +19,16 @@ namespace Senparc.Ncf.XncfBase.Threads
             _threadInfoList.Add(threadInfo);
         }
 
-        internal void Build(IApplicationBuilder app, IXscfRegister register)
+        internal void Build(IApplicationBuilder app, IXncfRegister register)
         {
-            var threadRegister = register as IXscfThread;
+            var threadRegister = register as IXncfThread;
             if (threadRegister == null)
             {
                 return;
             }
 
             var i = 0;
-            //遍历单个 XSCF 内所有线程配置
+            //遍历单个 XNCF 内所有线程配置
             foreach (var threadInfo in _threadInfoList)
             {
                 if (threadInfo.Task == null)

@@ -21,7 +21,7 @@ namespace Senparc.Ncf.Core.Areas
 
         /// <summary>
         /// 如果提供了 UI 界面，必须指定一个首页，如：Admin/
-        /// <para>注意：此选项需要配合 XscfRegister 使用才有效，否则请忽略</para>
+        /// <para>注意：此选项需要配合 XncfRegister 使用才有效，否则请忽略</para>
         /// </summary>
         string HomeUrl { get; }
 

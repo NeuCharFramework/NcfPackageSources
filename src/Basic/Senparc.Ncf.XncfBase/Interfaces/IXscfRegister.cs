@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase
 {
-    public interface IXscfRegister
+    public interface IXncfRegister
     {
         /// <summary>
         /// 是否忽略安装（但不影响执行注册代码）
@@ -90,7 +90,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="services">IServiceCollection</param>
         /// <param name="configuration">Configuration</param>
         /// <returns></returns>
-        IServiceCollection AddXscfModule(IServiceCollection services, IConfiguration configuration);
+        IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// 添加AutoMap的映射关系
@@ -104,7 +104,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="app"></param>
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
-        IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService);
+        IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService);
 
         /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名

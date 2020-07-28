@@ -40,7 +40,7 @@ namespace Senparc.Ncf.XncfBase.Functions
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Exception = new XscfFunctionException(ex.Message, ex);
+                result.Exception = new XncfFunctionException(ex.Message, ex);
                 result.Message = "发生错误！" + result.Message;
 
                 RecordLog(sb, "发生错误：" + ex.Message);
@@ -111,7 +111,7 @@ namespace Senparc.Ncf.XncfBase.Functions
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Exception = new XscfFunctionException(ex.Message, ex);
+                result.Exception = new XncfFunctionException(ex.Message, ex);
                 result.Message = "发生错误！" + result.Message;
 
                 RecordLog(sb, "发生错误：" + ex.Message);

@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    public class DatabaseToolkitEntities : XscfDatabaseDbContext
+    public class DatabaseToolkitEntities : XncfDatabaseDbContext
     {
-        public override IXscfDatabase XscfDatabaseRegister => new Register();
+        public override IXncfDatabase XncfDatabaseRegister => new Register();
         public DatabaseToolkitEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }

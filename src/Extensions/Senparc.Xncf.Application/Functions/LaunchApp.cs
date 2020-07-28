@@ -42,7 +42,7 @@ namespace Senparc.Xncf.Application.Functions
             public string FilePath { get; set; }
         }
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "应用程序";
 
         public override string Description => "启动所有的程序";

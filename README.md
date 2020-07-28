@@ -1,11 +1,11 @@
 <img src="https://weixin.senparc.com/images/NCF/logo.png" width="300" />
 
-# ScfPackageSources
+# NcfPackageSources
 
 |              |    .NET Core    |     CI/CD
 |--------------|-----------------|---------------
-|  Basic       | ![.NET Core](https://github.com/NeuCharFramework/ScfPackageSources/workflows/.NET%20Core/badge.svg)  |  [![Build status](https://mysenparc.visualstudio.com/NeuCharFramework/_apis/build/status/NeuCharFramework-ASP.NET%20Core-CI)](https://mysenparc.visualstudio.com/NeuCharFramework/_build/latest?definitionId=41)
-|  Extensions  | ![.NET Core](https://github.com/NeuCharFramework/ScfPackageSources/workflows/.NET%20Core/badge.svg)  |  [![Build status](https://mysenparc.visualstudio.com/NeuCharFramework/_apis/build/status/NeuCharFramework-ASP.NET%20Core-CI)](https://mysenparc.visualstudio.com/NeuCharFramework/_build/latest?definitionId=41)
+|  Basic       | ![.NET Core](https://github.com/NeuCharFramework/NcfPackageSources/workflows/.NET%20Core/badge.svg)  |  [![Build status](https://mysenparc.visualstudio.com/NeuCharFramework/_apis/build/status/NeuCharFramework-ASP.NET%20Core-CI)](https://mysenparc.visualstudio.com/NeuCharFramework/_build/latest?definitionId=41)
+|  Extensions  | ![.NET Core](https://github.com/NeuCharFramework/NcfPackageSources/workflows/.NET%20Core/badge.svg)  |  [![Build status](https://mysenparc.visualstudio.com/NeuCharFramework/_apis/build/status/NeuCharFramework-ASP.NET%20Core-CI)](https://mysenparc.visualstudio.com/NeuCharFramework/_build/latest?definitionId=41)
 
 
 ## 说明

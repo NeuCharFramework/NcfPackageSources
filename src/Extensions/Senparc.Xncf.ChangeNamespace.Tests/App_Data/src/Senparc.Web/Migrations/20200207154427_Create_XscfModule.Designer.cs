@@ -10,8 +10,8 @@ using Senparc.Core.Models;
 namespace Senparc.Web.Migrations
 {
     [DbContext(typeof(SenparcEntities))]
-    [Migration("20200207154427_Create_XscfModule")]
-    partial class Create_XscfModule
+    [Migration("20200207154427_Create_XncfModule")]
+    partial class Create_XncfModule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -639,7 +639,7 @@ namespace Senparc.Web.Migrations
                     b.ToTable("SystemConfigs");
                 });
 
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.XscfModule", b =>
+            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.XncfModule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -680,7 +680,7 @@ namespace Senparc.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("XscfModules");
+                    b.ToTable("XncfModules");
                 });
 
             modelBuilder.Entity("Senparc.Core.Models.AccountPayLog", b =>

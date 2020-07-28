@@ -7,8 +7,8 @@ using System.Text;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    public partial class Register : IXscfRazorRuntimeCompilation
+    public partial class Register : IXncfRazorRuntimeCompilation
     {
-        public string LibraryPath => Path.Combine(SiteConfig.WebRootPath, "..", "..", "..", "..", "ScfPackageSources", "src", "Extensions", "Senparc.Xncf.DatabaseToolkit");
+        public string LibraryPath => Path.Combine(SiteConfig.WebRootPath, "..", "..", "..", "..", "NcfPackageSources", "src", "Extensions", "Senparc.Xncf.DatabaseToolkit");
     }
 }

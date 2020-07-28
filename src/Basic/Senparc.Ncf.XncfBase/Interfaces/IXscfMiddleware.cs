@@ -8,7 +8,7 @@ namespace Senparc.Ncf.XncfBase
     /// <summary>
     /// 中间件接口
     /// </summary>
-    public interface IXscfMiddleware
+    public interface IXncfMiddleware
     {
         /// <summary>
         /// 使用中间件

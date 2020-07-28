@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Terminal
 {
-    [XscfRegister]
-    public class Register : XncfRegisterBase, IXscfRegister
+    [XncfRegister]
+    public class Register : XncfRegisterBase, IXncfRegister
     {
         public Register()
         { }

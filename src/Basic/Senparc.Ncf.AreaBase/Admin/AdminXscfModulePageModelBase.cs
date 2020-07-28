@@ -11,56 +11,56 @@ using System.Text;
 namespace Senparc.Ncf.AreaBase.Admin
 {
     /// <summary>
-    /// XSCF 模块的页面模板
+    /// XNCF 模块的页面模板
     /// </summary>
-    public abstract class AdminXscfModulePageModelBase : AdminPageModelBase
+    public abstract class AdminXncfModulePageModelBase : AdminPageModelBase
     {
-        private XscfModuleDto _xscfModuleDto;
+        private XncfModuleDto _xncfModuleDto;
         /// <summary>
-        /// XscfModuleDto
+        /// XncfModuleDto
         /// </summary>
-        public XscfModuleDto XscfModuleDto
+        public XncfModuleDto XncfModuleDto
         {
             get
             {
-                if (_xscfModuleDto == null)
+                if (_xncfModuleDto == null)
                 {
-                    SetXscfModuleDto();
+                    SetXncfModuleDto();
                 }
-                return _xscfModuleDto;
+                return _xncfModuleDto;
             }
         }
         /// <summary>
-        /// XscfModuleDto.Uid
+        /// XncfModuleDto.Uid
         /// </summary>
-        public string XscfModuleUid => XscfModuleDto?.Uid;
+        public string XncfModuleUid => XncfModuleDto?.Uid;
 
         /// <summary>
-        /// 当前正在操作的 XscfRegister
+        /// 当前正在操作的 XncfRegister
         /// </summary>
-        public virtual IXscfRegister XscfRegister => XscfModuleDto != null ? XscfRegisterList.FirstOrDefault(z => z.Uid == XscfModuleDto.Uid) : null;
+        public virtual IXncfRegister XncfRegister => XncfModuleDto != null ? XncfRegisterList.FirstOrDefault(z => z.Uid == XncfModuleDto.Uid) : null;
 
-        protected readonly Lazy<XscfModuleService> _xscfModuleService;
+        protected readonly Lazy<XncfModuleService> _xncfModuleService;
 
-        protected AdminXscfModulePageModelBase(Lazy<XscfModuleService> xscfModuleService)
+        protected AdminXncfModulePageModelBase(Lazy<XncfModuleService> xncfModuleService)
         {
-            _xscfModuleService = xscfModuleService;
+            _xncfModuleService = xncfModuleService;
         }
 
-        public virtual void SetXscfModuleDto()
+        public virtual void SetXncfModuleDto()
         {
             if (Uid.IsNullOrEmpty())
             {
-                throw new XscfPageException(null, "页面未提供UID！");
+                throw new XncfPageException(null, "页面未提供UID！");
             }
 
-            var xscfModule = _xscfModuleService.Value.GetObject(z => z.Uid == Uid);
-            if (xscfModule == null)
+            var xncfModule = _xncfModuleService.Value.GetObject(z => z.Uid == Uid);
+            if (xncfModule == null)
             {
-                throw new XscfPageException(null, "尚未注册 XSCF 模块，UID：" + Uid);
+                throw new XncfPageException(null, "尚未注册 XNCF 模块，UID：" + Uid);
             }
 
-            _xscfModuleDto = _xscfModuleService.Value.Mapper.Map<XscfModuleDto>(xscfModule);
+            _xncfModuleDto = _xncfModuleService.Value.Mapper.Map<XncfModuleDto>(xncfModule);
         }
     }
 }

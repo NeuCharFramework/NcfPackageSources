@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Senparc.Ncf.Repository
 {
-    public class XscfModuleRepository : ClientRepositoryBase<XscfModule>
+    public class XncfModuleRepository : ClientRepositoryBase<XncfModule>
     {
-        public XscfModuleRepository(ISqlBaseFinanceData db) : base(db)
+        public XncfModuleRepository(ISqlBaseFinanceData db) : base(db)
         {
         }
     }

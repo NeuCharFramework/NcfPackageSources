@@ -22,7 +22,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             public int BackupCycleMinutes { get; set; }
             [Required]
             [MaxLength(300)]
-            [Description("备份路径||本地物理路径，如：E:\\Senparc\\Scf\\NCF.bak")]
+            [Description("备份路径||本地物理路径，如：E:\\Senparc\\Ncf\\NCF.bak")]
             public string BackupPath { get; set; }
 
             public override async Task LoadData(IServiceProvider serviceProvider)
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             }
         }
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "设置参数";
 
         public override string Description => "设置备份间隔时间、备份文件路径等参数";

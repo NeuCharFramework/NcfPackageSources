@@ -6,11 +6,11 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.AutoMapper
 {
     /// <summary>
-    /// Xscf 模块使用的 AutoMap 配置
+    /// Xncf 模块使用的 AutoMap 配置
     /// </summary>
-    public class XscfModuleProfile : Profile
+    public class XncfModuleProfile : Profile
     {
-        public XscfModuleProfile()
+        public XncfModuleProfile()
         {
             foreach (var register in Register.RegisterList)
             {

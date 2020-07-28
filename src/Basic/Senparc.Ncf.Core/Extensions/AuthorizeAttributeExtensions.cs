@@ -7,7 +7,7 @@ namespace Senparc.Ncf.Core.Extensions
 
     public class UserAuthorizeAttribute : AuthorizeAttribute
     {
-        public const string AuthenticationScheme = "ScfUserAuthorizeScheme";
+        public const string AuthenticationScheme = "NcfUserAuthorizeScheme";
         public UserAuthorizeAttribute(string policy) : this()
         {
             this.Policy = policy;

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
-    public class XscfModuleDto : DtoBase
+    public class XncfModuleDto : DtoBase
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
@@ -19,11 +19,11 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public bool AllowRemove { get; private set; }
         public string MenuId { get; private set; }
         public string Icon { get; private set; }
-        public XscfModules_State State { get; private set; }
-        private XscfModuleDto() { }
+        public XncfModules_State State { get; private set; }
+        private XncfModuleDto() { }
 
 
-        public XscfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XscfModules_State state)
+        public XncfModuleDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XncfModules_State state)
         {
             Id = id;
             Name = name;
@@ -39,7 +39,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
     }
 
-    public class CreateOrUpdate_XscfModuleDto : DtoBase
+    public class CreateOrUpdate_XncfModuleDto : DtoBase
     {
         [Required, StringLength(100)]
         public string Name { get; private set; }
@@ -59,11 +59,11 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string MenuId { get; private set; }
         public string Icon { get; private set; }
         [Required]
-        public XscfModules_State State { get; private set; }
+        public XncfModules_State State { get; private set; }
 
-        private CreateOrUpdate_XscfModuleDto() { }
+        private CreateOrUpdate_XncfModuleDto() { }
 
-        public CreateOrUpdate_XscfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XscfModules_State state)
+        public CreateOrUpdate_XncfModuleDto(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XncfModules_State state)
         {
             Name = name;
             Uid = uid;
@@ -78,7 +78,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
     }
 
-    public class UpdateVersion_XscfModuleDto : DtoBase
+    public class UpdateVersion_XncfModuleDto : DtoBase
     {
 
         [Required, StringLength(100)]
@@ -92,10 +92,10 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         [Required]
         public string Description { get; private set; }
 
-        private UpdateVersion_XscfModuleDto() { }
+        private UpdateVersion_XncfModuleDto() { }
 
 
-        public UpdateVersion_XscfModuleDto(string name, string uid, string menuName, string version, string description)
+        public UpdateVersion_XncfModuleDto(string name, string uid, string menuName, string version, string description)
         {
             Name = name;
             Uid = uid;
@@ -108,16 +108,16 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 跟新菜单Id
     /// </summary>
-    public class UpdateMenuId_XscfModuleDto : DtoBase
+    public class UpdateMenuId_XncfModuleDto : DtoBase
     {
         public string Uid { get; set; }
 
         public string MenuId { get; private set; }
 
-        private UpdateMenuId_XscfModuleDto() { }
+        private UpdateMenuId_XncfModuleDto() { }
 
 
-        public UpdateMenuId_XscfModuleDto(string uid, string menuId)
+        public UpdateMenuId_XncfModuleDto(string uid, string menuId)
         {
             Uid = uid;
             MenuId = menuId;

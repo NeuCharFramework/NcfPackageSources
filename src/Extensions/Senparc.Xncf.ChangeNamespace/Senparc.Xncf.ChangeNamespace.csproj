@@ -10,18 +10,18 @@
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.ChangeNamespace</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
-    <Title>XSCF 更改命名空间模块</Title>
+    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <Title>XNCF 更改命名空间模块</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/ScfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
       v0.1 创世
       v0.2 完成修改命名空间功能
       v0.3 完成还原命名空间功能
       v0.4 升级命名空间修改功能
 </PackageReleaseNotes>
-    <RepositoryUrl> https://github.com/NeuCharFramework/ScfPackageSources</RepositoryUrl>
+    <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

@@ -70,7 +70,7 @@ namespace Senparc.IntegrationSample
             //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
             AssembleScanHelper.RunScan();
             services.AddHttpContextAccessor();
-            //激活 Xscf 扩展引擎（必须）
+            //激活 Xncf 扩展引擎（必须）
             services.StartEngine(Configuration);
         }
 
@@ -85,8 +85,8 @@ namespace Senparc.IntegrationSample
                  {
                  });
 
-            //XscfModules（必须）
-            Senparc.Ncf.XncfBase.Register.UseXscfModules(app, registerService);
+            //XncfModules（必须）
+            Senparc.Ncf.XncfBase.Register.UseXncfModules(app, registerService);
 
             if (env.IsDevelopment())
             {

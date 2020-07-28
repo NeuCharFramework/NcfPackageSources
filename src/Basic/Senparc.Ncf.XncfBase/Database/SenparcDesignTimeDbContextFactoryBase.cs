@@ -17,10 +17,10 @@ namespace Senparc.Ncf.XncfBase.Database
     /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXscfDatabaseRegister>
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
         : IDesignTimeDbContextFactory<TSenparcEntities>
-            where TSenparcEntities : XscfDatabaseDbContext
-            where TXscfDatabaseRegister : class, IXscfDatabase, new()
+            where TSenparcEntities : XncfDatabaseDbContext
+            where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
         public virtual string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\");
 
@@ -30,11 +30,11 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public virtual TSenparcEntities GetInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
-            //获取 XscfDatabase 对象
-            var databaseRegister = Activator.CreateInstance(typeof(TXscfDatabaseRegister)) as TXscfDatabaseRegister;
-            //获取 XscfSenparcEntities 实例
-            var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbContextOptions }) as TSenparcEntities;
-            return xscfSenparcEntities;
+            //获取 XncfDatabase 对象
+            var databaseRegister = Activator.CreateInstance(typeof(TXncfDatabaseRegister)) as TXncfDatabaseRegister;
+            //获取 XncfSenparcEntities 实例
+            var xncfSenparcEntities = Activator.CreateInstance(databaseRegister.XncfDatabaseDbContextType, new object[] { dbContextOptions }) as TSenparcEntities;
+            return xncfSenparcEntities;
         }
 
         public SenparcDesignTimeDbContextFactoryBase()
@@ -63,7 +63,7 @@ namespace Senparc.Ncf.XncfBase.Database
             IRegisterService co2netRegister = RegisterService.Start(SenparcSetting);
             CO2NET.Config.RootDictionaryPath = RootDictionaryPath;
 
-            var register = System.Activator.CreateInstance<TXscfDatabaseRegister>() as TXscfDatabaseRegister;
+            var register = System.Activator.CreateInstance<TXncfDatabaseRegister>() as TXncfDatabaseRegister;
 
             //配置数据库
             var builder = new DbContextOptionsBuilder<TSenparcEntities>();

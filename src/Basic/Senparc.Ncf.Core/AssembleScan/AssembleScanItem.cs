@@ -42,7 +42,7 @@ namespace Senparc.Ncf.Core.AssembleScan
                 catch (Exception ex)
                 {
                     ScanSuccessed = false;
-                    new SCFExceptionBase("执行程序集扫描出错", ex);
+                    new NCFExceptionBase("执行程序集扫描出错", ex);
                 }
                 finally
                 {

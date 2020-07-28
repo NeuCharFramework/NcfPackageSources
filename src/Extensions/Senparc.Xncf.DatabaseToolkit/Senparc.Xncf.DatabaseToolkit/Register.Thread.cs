@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    public partial class Register : IXscfThread
+    public partial class Register : IXncfThread
     {
-        public void ThreadConfig(XscfThreadBuilder xscfThreadBuilder)
+        public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
-            xscfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
+            xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
                 name: "定时备份",
                 intervalTime: TimeSpan.FromSeconds(10),
                 task: async (app, threadInfo) =>

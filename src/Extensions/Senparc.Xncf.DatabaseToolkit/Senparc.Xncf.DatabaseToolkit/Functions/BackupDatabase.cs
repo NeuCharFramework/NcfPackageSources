@@ -48,7 +48,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             }
         }
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "备份数据库";
 
         public override string Description => "将当前使用的数据库备份到指定路径。友情提示：建议确保该路径不具备公开访问权限！";

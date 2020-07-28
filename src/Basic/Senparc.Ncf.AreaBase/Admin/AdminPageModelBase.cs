@@ -14,7 +14,7 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
     {
         AdminWorkContext AdminWorkContext { get; set; }
         string Uid { get; set; }
-        List<IXscfRegister> XscfRegisterList { get; }
+        List<IXncfRegister> XncfRegisterList { get; }
 
         FullSystemConfig FullSystemConfig { get; set; }
 
@@ -35,9 +35,9 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         public string Uid { get; set; }
 
         /// <summary>
-        /// 所有 XscfRegister 列表（包括还未注册的）
+        /// 所有 XncfRegister 列表（包括还未注册的）
         /// </summary>
-        public virtual List<IXscfRegister> XscfRegisterList => Senparc.Ncf.XncfBase.Register.RegisterList;
+        public virtual List<IXncfRegister> XncfRegisterList => Senparc.Ncf.XncfBase.Register.RegisterList;
 
 
         public virtual IActionResult RenderError(string message)

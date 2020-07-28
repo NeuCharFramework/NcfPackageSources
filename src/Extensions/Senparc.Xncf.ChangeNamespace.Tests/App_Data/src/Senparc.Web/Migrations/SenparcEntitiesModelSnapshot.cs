@@ -637,7 +637,7 @@ namespace Senparc.Web.Migrations
                     b.ToTable("SystemConfigs");
                 });
 
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.XscfModule", b =>
+            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.XncfModule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -678,7 +678,7 @@ namespace Senparc.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("XscfModules");
+                    b.ToTable("XncfModules");
                 });
 
             modelBuilder.Entity("Senparc.Core.Models.AccountPayLog", b =>

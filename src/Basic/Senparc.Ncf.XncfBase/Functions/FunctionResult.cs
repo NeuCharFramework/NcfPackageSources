@@ -24,6 +24,6 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// <summary>
         /// 异常信息（此时 Success 一般为 false）
         /// </summary>
-        public XscfFunctionException Exception { get; set; }
+        public XncfFunctionException Exception { get; set; }
     }
 }

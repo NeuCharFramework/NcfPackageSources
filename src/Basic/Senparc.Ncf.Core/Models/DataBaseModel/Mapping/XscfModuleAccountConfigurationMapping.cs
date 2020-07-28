@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
-    public class XscfModuleAccountConfigurationMapping : ConfigurationMappingWithIdBase<XscfModule, int>
+    public class XncfModuleAccountConfigurationMapping : ConfigurationMappingWithIdBase<XncfModule, int>
     {
-        public override void Configure(EntityTypeBuilder<XscfModule> builder)
+        public override void Configure(EntityTypeBuilder<XncfModule> builder)
         {
             base.Configure(builder);
 

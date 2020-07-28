@@ -3,13 +3,13 @@
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xscf 模块特性 - 扩展方法
+    /// Xncf 模块特性 - 扩展方法
     /// </summary>
-    public class XscfMethodAttribute : Attribute
+    public class XncfMethodAttribute : Attribute
     {
         public string Name { get; set; }
 
-        public XscfMethodAttribute(string name)
+        public XncfMethodAttribute(string name)
         {
             Name = name;
         }

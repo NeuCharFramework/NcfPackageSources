@@ -29,8 +29,8 @@ namespace Senparc.Ncf.Core.AutoMapper
                 .ForMember(_ => _.ResourceCode, opt => opt.MapFrom(_ => _.OpearMark));
             CreateMap<SysRole, SysRoleDto>();
 
-            CreateMap<XscfModule, CreateOrUpdate_XscfModuleDto>();
-            CreateMap<XscfModule, XscfModuleDto>();
+            CreateMap<XncfModule, CreateOrUpdate_XncfModuleDto>();
+            CreateMap<XncfModule, XncfModuleDto>();
         }
     }
 }

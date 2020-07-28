@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Senparc.Web.Migrations
 {
-    public partial class Create_XscfModule : Migration
+    public partial class Create_XncfModule : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -362,7 +362,7 @@ namespace Senparc.Web.Migrations
                 oldNullable: true);
 
             migrationBuilder.CreateTable(
-                name: "XscfModules",
+                name: "XncfModules",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -380,7 +380,7 @@ namespace Senparc.Web.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_XscfModules", x => x.Id);
+                    table.PrimaryKey("PK_XncfModules", x => x.Id);
                 });
 
             migrationBuilder.AddForeignKey(
@@ -423,7 +423,7 @@ namespace Senparc.Web.Migrations
                 table: "PointsLogs");
 
             migrationBuilder.DropTable(
-                name: "XscfModules");
+                name: "XncfModules");
 
             migrationBuilder.DropColumn(
                 name: "ResourceCode",

@@ -95,7 +95,7 @@
     }
 
 
-    public enum XscfModules_State
+    public enum XncfModules_State
     {
         关闭 = 0,
         开放 = 1,

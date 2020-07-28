@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Exceptions
 {
-    public class ScfModuleException : SCFExceptionBase
+    public class NcfModuleException : NCFExceptionBase
     {
-        //public IXscfRegister XscfRegister;
-        public ScfModuleException(string message, bool logged = false) : base(message, logged)
+        //public IXncfRegister XncfRegister;
+        public NcfModuleException(string message, bool logged = false) : base(message, logged)
         {
         }
 
-        public ScfModuleException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
+        public NcfModuleException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
         }
     }

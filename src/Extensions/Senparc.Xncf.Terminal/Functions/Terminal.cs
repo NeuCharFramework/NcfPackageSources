@@ -20,7 +20,7 @@ namespace Senparc.Xncf.Terminal.Functions
 
     public class Terminal : FunctionBase
     {
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "命令提示符";
 
         public override string Description => "输入Windows命令提示符中的命令,即可返回相应的结果。请注意：命令将在服务器系统中执行！";

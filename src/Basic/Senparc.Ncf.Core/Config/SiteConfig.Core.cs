@@ -47,13 +47,13 @@ namespace Senparc.Ncf.Core.Config
         public const string WEIXIN_FILTER_IGNORE = "senparcnofilter1";
         public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDOkC8A"; //将取前8位
         public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX631IC8A"; //将取前8位
-        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_SCF"; //微信APP Token加密
+        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_NCF"; //微信APP Token加密
         public const long MIN_WEIXINUSERINFO_ID = 10000000000000; //最小自定义WeixinUserInfo的Id
         public const decimal PROJECTDMANDDEPOSIT = 1000; //任务默认押金
         public const string CERT_P12_ADDRESS = @"E:\";//微信支付数字证书存放地址
 
-        public const string SYSTEM_XSCF_MODULE_SERVICE_UID = "00000000-0000-0000-0000-000000000001";
-        public const string SYSTEM_XSCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0000-0000-000000000002";
+        public const string SYSTEM_XNCF_MODULE_SERVICE_UID = "00000000-0000-0000-0000-000000000001";
+        public const string SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0000-0000-000000000002";
 
         /// <summary>
         /// 开发者收入比例
@@ -118,7 +118,7 @@ namespace Senparc.Ncf.Core.Config
         public const string AntiForgeryTokenSalt = "SOUIDEA__SENPARC";
         public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //将取前8位
         public static readonly long OfficalWeiboUserId = 2513419820;
-        public const string DomainName = "https://scf.senparc.com";
+        public const string DomainName = "https://ncf.senparc.com";
         public const string DefaultTemplate = "default";
         public const int SMSSENDWAITSECONDS = 60; //手机验证持续时间
         public const string DEFAULT_AVATAR = "/Content/Images/userinfonopic.png"; //默认头像
@@ -164,10 +164,10 @@ namespace Senparc.Ncf.Core.Config
         /// <summary>
         /// Admin 管理员的 Cookie 登录 Scheme
         /// </summary>
-        public readonly static string ScfAdminAuthorizeScheme = "ScfAdminAuthorizeScheme";
+        public readonly static string NcfAdminAuthorizeScheme = "NcfAdminAuthorizeScheme";
         /// <summary>
         /// User 管理员的 Cookie 登录 Scheme
         /// </summary>
-        public readonly static string ScfUserAuthorizeScheme = "ScfUserAuthorizeScheme";
+        public readonly static string NcfUserAuthorizeScheme = "NcfUserAuthorizeScheme";
     }
 }

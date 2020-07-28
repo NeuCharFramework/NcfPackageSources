@@ -12,7 +12,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
 
         }
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "Merge EF Core";
 
         public override string Description => "使用 Entity Framework Core 的 Code First 模式对数据库进行更新，使数据库和当前运行版本匹配。";

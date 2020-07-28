@@ -2833,7 +2833,7 @@
     "stream-consume": {
       "version": "0.1.1",
       "resolved": "https://registry.npmjs.org/stream-consume/-/stream-consume-0.1.1.tgz",
-      "integrity": "sha512-tNa3hzgkjEP7XbCkbRXe1jpg+ievoa0O4SCFlMOYEscGSS4JJsckGL8swUyAa/ApGU3Ae4t6Honor4HhL+tRyg==",
+      "integrity": "sha512-tNa3hzgkjEP7XbCkbRXe1jpg+ievoa0O4NCFlMOYEscGSS4JJsckGL8swUyAa/ApGU3Ae4t6Honor4HhL+tRyg==",
       "dev": true
     },
     "stream-shift": {

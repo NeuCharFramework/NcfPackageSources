@@ -22,9 +22,9 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 所有 XSCF 模块注册的基类
+    /// 所有 XNCF 模块注册的基类
     /// </summary>
-    public abstract class XncfRegisterBase : IXscfRegister
+    public abstract class XncfRegisterBase : IXncfRegister
     {
         /// <summary>
         /// 是否忽略安装（但不影响执行注册代码），默认为 false
@@ -77,14 +77,14 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
         protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
-            where TSenparcEntities : XscfDatabaseDbContext
+            where TSenparcEntities : XncfDatabaseDbContext
         {
             var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
             await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
 
             //if (!await mySenparcEntities.Database.EnsureCreatedAsync().ConfigureAwait(false))
             //{
-            //    throw new ScfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
+            //    throw new NcfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
             //}
         }
 
@@ -110,7 +110,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="databaseDbContext"></param>
         /// <param name="entityType">需要删除的表所对应的实体类型</param>
         /// <returns></returns>
-        protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, XscfDatabaseDbContext databaseDbContext, Type[] entityType)
+        protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, XncfDatabaseDbContext databaseDbContext, Type[] entityType)
         {
             SenparcTrace.SendCustomLog("开始删除应用表格", MenuName + ", " + Name);
             var appliedMigrations = databaseDbContext.Database.GetAppliedMigrations();
@@ -189,17 +189,17 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public virtual IServiceCollection AddXscfModule(IServiceCollection services, IConfiguration configuration)
+        public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
-            if (this is IXscfDatabase databaseRegister)
+            if (this is IXncfDatabase databaseRegister)
             {
-                //定义 XscfSenparcEntities 实例生成
+                //定义 XncfSenparcEntities 实例生成
                 Func<IServiceProvider, object> implementationFactory = s =>
                 {
                     //准备创建 DbContextOptionsBuilder 实例，定义类型
                     var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
                     //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
-                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XscfDatabaseDbContextType);
+                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XncfDatabaseDbContextType);
                     //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
                     //继续定义配置
@@ -213,16 +213,16 @@ namespace Senparc.Ncf.XncfBase
                                 errorNumbersToAdd: new int[] { 2 });
                         });
                     //创建 SenparcEntities 实例
-                    var xscfSenparcEntities = Activator.CreateInstance(databaseRegister.XscfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
-                    return xscfSenparcEntities;
+                    var xncfSenparcEntities = Activator.CreateInstance(databaseRegister.XncfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
+                    return xncfSenparcEntities;
                 };
-                //添加 XscfSenparcEntities 依赖注入配置
-                services.AddScoped(databaseRegister.XscfDatabaseDbContextType, implementationFactory);
+                //添加 XncfSenparcEntities 依赖注入配置
+                services.AddScoped(databaseRegister.XncfDatabaseDbContextType, implementationFactory);
                 //注册当前数据库的对象（必须）
-                EntitySetKeys.TryLoadSetInfo(databaseRegister.XscfDatabaseDbContextType);
+                EntitySetKeys.TryLoadSetInfo(databaseRegister.XncfDatabaseDbContextType);
 
                 //添加数据库相关注册过程
-                databaseRegister.AddXscfDatabaseModule(services);
+                databaseRegister.AddXncfDatabaseModule(services);
             }
             return services;
         }
@@ -233,7 +233,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="app"></param>
         /// <param name="registerService"></param>
         /// <returns></returns>
-        public virtual IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
+        public virtual IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             return app;
         }
@@ -260,7 +260,7 @@ namespace Senparc.Ncf.XncfBase
         /// <returns></returns>
         public virtual string GetDatabaseMigrationHistoryTableName()
         {
-            if (this is IXscfDatabase databaseRegiser)
+            if (this is IXncfDatabase databaseRegiser)
             {
                 return "__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory";
             }
@@ -272,15 +272,15 @@ namespace Senparc.Ncf.XncfBase
         /// 数据库 DbContext 选项配置
         /// </summary>
         /// <param name="dbContextOptionsAction"></param>
-        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XscfDatabaseDbContextType 所在的程序集</param>
+        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XncfDatabaseDbContextType 所在的程序集</param>
         public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
                                                    string assemblyName = null)
         {
-            if (this is IXscfDatabase databaseRegiser)
+            if (this is IXncfDatabase databaseRegiser)
             {
                 if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
                 {
-                    var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XscfDatabaseDbContextType.Assembly.FullName;
+                    var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XncfDatabaseDbContextType.Assembly.FullName;
                     var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
 
                     sqlServerOptionsAction

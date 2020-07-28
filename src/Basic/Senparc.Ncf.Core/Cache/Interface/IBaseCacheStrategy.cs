@@ -23,7 +23,7 @@ namespace Senparc.Ncf.Core.Cache
     /// <summary>
     /// 公共缓存策略接口
     /// </summary>
-    public interface IScfCacheStrategy : IBaseObjectCacheStrategy
+    public interface INcfCacheStrategy : IBaseObjectCacheStrategy
     { 
         /// <summary>
         /// 整个Cache集合的Key

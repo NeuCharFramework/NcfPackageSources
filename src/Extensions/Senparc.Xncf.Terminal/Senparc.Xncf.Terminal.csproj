@@ -10,15 +10,15 @@
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.Terminal</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/ScfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
-    <Title>XSCF 终端命令模块</Title>
+    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <Title>XNCF 终端命令模块</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/ScfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-scf.jpg</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
       v0.1 创世
 </PackageReleaseNotes>
-    <RepositoryUrl> https://github.com/NeuCharFramework/ScfPackageSources</RepositoryUrl>
+    <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

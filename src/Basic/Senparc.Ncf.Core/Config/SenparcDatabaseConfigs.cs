@@ -57,7 +57,7 @@ namespace Senparc.Ncf.Core.Config
                 }
                 else
                 {
-                    throw new SCFExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置");
+                    throw new NCFExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置");
                 }
             }
         }

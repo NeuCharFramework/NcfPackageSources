@@ -9,7 +9,7 @@ namespace Senparc.Ncf.XncfBase
     /// <summary>
     /// 扩展方法接口
     /// </summary>
-    public interface IXscfFunction
+    public interface IXncfFunction
     {
         string Name { get; }
         string Description { get; }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase
 {
-    public abstract class FunctionBase : IXscfFunction
+    public abstract class FunctionBase : IXncfFunction
     {
         /// <summary>
         /// 方法名称
-        /// <para>注意：Name 必须在单个 Xscf 模块中唯一！</para>
+        /// <para>注意：Name 必须在单个 Xncf 模块中唯一！</para>
         /// </summary>
         public abstract string Name { get; }
 

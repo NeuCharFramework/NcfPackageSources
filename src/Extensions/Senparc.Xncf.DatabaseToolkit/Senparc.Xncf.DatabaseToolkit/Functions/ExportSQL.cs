@@ -13,7 +13,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
 
         }
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "导出当前数据库 SQL 脚本";
 
         public override string Description => "导出当前站点正在使用的所有表的 SQL 脚本";

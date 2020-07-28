@@ -273,7 +273,7 @@ namespace Senparc.Service
 
             do
             {
-                userName = $"SCF_{Guid.NewGuid().ToString("n").Substring(0, 8)}";
+                userName = $"NCF_{Guid.NewGuid().ToString("n").Substring(0, 8)}";
                 account = this.GetAccount(userName);
             } while (account != null);
 

@@ -14,7 +14,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
 
         }
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "检测数据库是否需要更新";
 
         public override string Description => "使用 Entity Framework Core 的 Code First 模式中的 Migration 功能，检测系统当前数据库是否有未被更新的版本，如果有，请使用“Merge EF Core”方法进行更新。";

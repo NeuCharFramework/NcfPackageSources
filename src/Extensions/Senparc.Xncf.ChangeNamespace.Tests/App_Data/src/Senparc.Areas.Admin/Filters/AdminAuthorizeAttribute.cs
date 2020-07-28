@@ -12,7 +12,7 @@ namespace Senparc.Areas.Admin.Filters
     public class AdminAuthorizeAttribute : AuthorizeAttribute
     {
         //AuthorizeAttribute 可以和 MVC 通用：https://docs.microsoft.com/en-us/aspnet/core/razor-pages/filter?view=aspnetcore-2.2
-        public static string AuthenticationScheme => SiteConfig.ScfAdminAuthorizeScheme;
+        public static string AuthenticationScheme => SiteConfig.NcfAdminAuthorizeScheme;
 
         public AdminAuthorizeAttribute()
         {

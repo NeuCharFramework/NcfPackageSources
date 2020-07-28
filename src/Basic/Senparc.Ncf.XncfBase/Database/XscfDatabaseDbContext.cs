@@ -6,26 +6,26 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
-    /// IXscfDatabase 使用的 DbContext 基类
+    /// IXncfDatabase 使用的 DbContext 基类
     /// </summary>
-    public abstract class XscfDatabaseDbContext : DbContext
+    public abstract class XncfDatabaseDbContext : DbContext
     {
         /// <summary>
-        /// 当前 IXscfDatabase 注册类实例
+        /// 当前 IXncfDatabase 注册类实例
         /// </summary>
-        public abstract IXscfDatabase XscfDatabaseRegister { get; }
+        public abstract IXncfDatabase XncfDatabaseRegister { get; }
 
-        public XscfDatabaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public XncfDatabaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            if (XscfDatabaseRegister == null)
+            if (XncfDatabaseRegister == null)
             {
-                throw new ArgumentNullException(nameof(XscfDatabaseRegister));
+                throw new ArgumentNullException(nameof(XncfDatabaseRegister));
             }
 
-            XscfDatabaseRegister.OnModelCreating(modelBuilder);
+            XncfDatabaseRegister.OnModelCreating(modelBuilder);
 
 
             base.OnModelCreating(modelBuilder);

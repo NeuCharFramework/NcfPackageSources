@@ -35,7 +35,7 @@ namespace Senparc.Xncf.ChangeNamespace.Functions
         }
 
 
-        //注意：Name 必须在单个 Xscf 模块中唯一！
+        //注意：Name 必须在单个 Xncf 模块中唯一！
         public override string Name => "下载官方 NCF 源码";
 
         public override string Description => "修改所有源码在 .cs, .cshtml 中的命名空间";

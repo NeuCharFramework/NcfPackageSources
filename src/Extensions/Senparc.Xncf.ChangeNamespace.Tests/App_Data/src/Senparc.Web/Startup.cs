@@ -67,8 +67,8 @@ namespace Senparc.Web
             //添加 SenparcCoreSetting 配置文件（内容可以根据需要对应修改）
             //注册数据库客户端连接
 
-            //添加（注册） Scf 服务（重要，必须！）
-            services.AddScfServices(Configuration, env, CompatibilityVersion.Version_3_0);
+            //添加（注册） Ncf 服务（重要，必须！）
+            services.AddNcfServices(Configuration, env, CompatibilityVersion.Version_3_0);
 
             services.AddSenparcWeixinServices(Configuration); //Senparc.Weixin 注册（已自带 Senparc.CO2NET 全局注册）
         }

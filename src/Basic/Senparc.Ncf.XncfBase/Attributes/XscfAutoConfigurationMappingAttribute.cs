@@ -10,7 +10,7 @@ namespace Senparc.Ncf.XncfBase.Attributes
     /// 否则，当某实体没有创建 ConfigurationMapping 时，会将其默认属性注入到 SenparcEntities 系统对象。</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class XscfAutoConfigurationMappingAttribute : Attribute
+    public class XncfAutoConfigurationMappingAttribute : Attribute
     {
     }
 }

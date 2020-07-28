@@ -6,15 +6,15 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xscf 模块方法执行异常
+    /// Xncf 模块方法执行异常
     /// </summary>
-    public class XscfFunctionException : SCFExceptionBase
+    public class XncfFunctionException : NCFExceptionBase
     {
-        public XscfFunctionException(string message, bool logged = false) : this(message, null, logged)
+        public XncfFunctionException(string message, bool logged = false) : this(message, null, logged)
         {
         }
 
-        public XscfFunctionException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
+        public XncfFunctionException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
         }
     }

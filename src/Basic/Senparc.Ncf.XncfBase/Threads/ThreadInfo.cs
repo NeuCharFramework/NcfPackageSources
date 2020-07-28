@@ -14,7 +14,7 @@ namespace Senparc.Ncf.XncfBase.Threads
     public class ThreadInfo
     {
         /// <summary>
-        /// 用于识别 Thread，请确保单个 XSCF 模块中唯一
+        /// 用于识别 Thread，请确保单个 XNCF 模块中唯一
         /// </summary>
         public string Name { get; set; }
         /// <summary>

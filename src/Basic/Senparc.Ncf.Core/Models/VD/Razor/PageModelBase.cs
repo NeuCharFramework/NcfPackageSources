@@ -88,7 +88,7 @@ namespace Senparc.Ncf.Core.Models.VD
                 return Task.CompletedTask;
 
             }
-            catch (ScfUninstallException)
+            catch (NcfUninstallException)
             {
                 //需要进行安装
                 context.Result = new RedirectResult("/Install");

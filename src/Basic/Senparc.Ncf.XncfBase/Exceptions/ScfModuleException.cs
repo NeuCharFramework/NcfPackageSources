@@ -5,18 +5,18 @@ using System.Text;
 
 namespace Senparc.Ncf.XncfBase
 {
-    public class XscfPageException : SCFExceptionBase
+    public class XncfPageException : NCFExceptionBase
     {
-        public IXscfRegister XscfRegister { get; set; }
+        public IXncfRegister XncfRegister { get; set; }
 
-        public XscfPageException(IXscfRegister xscfRegister, string message, bool logged = false) : base(message, logged)
+        public XncfPageException(IXncfRegister xncfRegister, string message, bool logged = false) : base(message, logged)
         {
-            XscfRegister = xscfRegister;
+            XncfRegister = xncfRegister;
         }
 
-        public XscfPageException(IXscfRegister xscfRegister, string message, Exception inner, bool logged = false) : base(message, inner, logged)
+        public XncfPageException(IXncfRegister xncfRegister, string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
-            XscfRegister = xscfRegister;
+            XncfRegister = xncfRegister;
         }
     }
 }

@@ -7,16 +7,16 @@ using System;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    public partial class Register : IXscfDatabase
+    public partial class Register : IXncfDatabase
     {
         public const string DATABASE_PREFIX = "DatabaseToolkit";
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
-        public Type XscfDatabaseDbContextType => typeof(DatabaseToolkitEntities);
+        public Type XncfDatabaseDbContextType => typeof(DatabaseToolkitEntities);
 
-        public void AddXscfDatabaseModule(IServiceCollection services)
+        public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXscfDatabaseModule");
+            //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXncfDatabaseModule");
             services.AddScoped<DbConfig>();
             services.AddScoped<SetConfig>();
             services.AddScoped<SetConfig.SetConfig_Parameters>();
@@ -31,7 +31,7 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XscfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }

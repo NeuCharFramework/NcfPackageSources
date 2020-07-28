@@ -17,7 +17,7 @@ namespace Senparc.Ncf.Core.Areas
     {
         public static bool RegisterAreasFinished { get; set; }
 
-        public static object AddScfAreasLock = new object();
+        public static object AddNcfAreasLock = new object();
 
         /// <summary>
         /// 自动注册所有 Area
@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Core.Areas
         /// <param name="builder"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        public static IMvcBuilder AddScfAreas(this IMvcBuilder builder, IWebHostEnvironment env)
+        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, IWebHostEnvironment env)
         {
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
@@ -43,7 +43,7 @@ namespace Senparc.Ncf.Core.Areas
                 }
                 catch (Exception ex)
                 {
-                    SenparcTrace.SendCustomLog("AddScfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName, ex.ToString());
+                    SenparcTrace.SendCustomLog("AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName, ex.ToString());
                 }
             }, false);
             return builder;

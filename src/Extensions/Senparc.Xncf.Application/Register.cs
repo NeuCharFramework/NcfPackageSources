@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Application
 {
-    [XscfRegister]
-    public class Register : XscfRegisterBase, IXscfRegister
+    [XncfRegister]
+    public class Register : XncfRegisterBase, IXncfRegister
     {
         public Register()
         { }

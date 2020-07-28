@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Tests
 {
-    public class TestModule : XncfRegisterBase, IXscfRegister
+    public class TestModule : XncfRegisterBase, IXncfRegister
     {
         public override string Name => "Senparc.Ncf.XncfBase.Tests.TestModule";
 

@@ -9,9 +9,9 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// XSCF 模块数据库配置
+    /// XNCF 模块数据库配置
     /// </summary>
-    public interface IXscfDatabase
+    public interface IXncfDatabase
     {
         /// <summary>
         /// 全局唯一的前缀，务必避免和其他模块重复
@@ -25,19 +25,19 @@ namespace Senparc.Ncf.XncfBase
         /// 设置数据库，主要提供给使用
         /// </summary>
         /// <param name="dbContextOptionsAction"></param>
-        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XscfDatabaseDbContextType 所在的程序集</param>
+        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XncfDatabaseDbContextType 所在的程序集</param>
         void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
                                     string assemblyName = null);
 
         /// <summary>
-        /// XscfDatabaseDbContext 类型
+        /// XncfDatabaseDbContext 类型
         /// </summary>
-        Type XscfDatabaseDbContextType { get; }
+        Type XncfDatabaseDbContextType { get; }
 
         /// <summary>
         /// 添加数据库模块
         /// </summary>
         /// <param name="services"></param>
-        void AddXscfDatabaseModule(IServiceCollection services);
+        void AddXncfDatabaseModule(IServiceCollection services);
     }
 }
