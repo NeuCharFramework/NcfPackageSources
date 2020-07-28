@@ -58,7 +58,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public virtual TSenparcEntities CreateDbContext(string[] args)
         {
-            //修复 https://github.com/NeuCharFramework/NCF/issues/13 发现的问题（在非Web环境下无法得到网站根目录路径）
+            //修复 https://github.com/SenparcCoreFramework/SCF/issues/13 发现的问题（在非Web环境下无法得到网站根目录路径）
 
             IRegisterService co2netRegister = RegisterService.Start(SenparcSetting);
             CO2NET.Config.RootDictionaryPath = RootDictionaryPath;
