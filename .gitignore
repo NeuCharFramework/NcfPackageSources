@@ -61,3 +61,4 @@ obj/
 /src/Basic/.vs/ScfPackageSources.Basic/DesignTimeBuild
 /src/Extensions/Senparc.Xscf.DatabaseToolkit/Senparc.Xscf.DatabaseToolkit/App_Data/SenparcTraceLog
 /src/Basic/Senparc.Scf.XscfBase.Tests/App_Data/SenparcTraceLog/*.log
+/src/Extensions/Senparc.Xncf.ChangeNamespace.Tests/App_Data/src/NcfSrc/NCF
