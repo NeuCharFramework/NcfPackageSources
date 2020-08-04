@@ -16,29 +16,29 @@ variables:
 
 steps:
 
-- task: UseDotNet@2
-  inputs:
-    version: '3.1.x'
-    packageType: runtime
+# - task: UseDotNet@2
+#   inputs:
+#     version: '3.1.x'
+#     packageType: runtime
 
-- task: DotNetCoreCLI@2
-  displayName: Restore
+- task: NuGetCommand@2
   inputs:
-    command: restore
-    projects: '$(Parameters.RestoreBuildProjects)'
+    command: 'restore'
+    restoreSolution: '**/NcfPackageSources.sln'
+    feedsToUse: 'select'
+    
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: Build
+- task: VSTest@2
   inputs:
-    projects: '$(Parameters.RestoreBuildProjects)'
-    arguments: '--configuration $(BuildConfiguration)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '$(Parameters.TestProjects)'
-    arguments: '--configuration $(BuildConfiguration)'
 
 - task: NuGetToolInstaller@1
   displayName: 'Use NuGet 5.2.0'
