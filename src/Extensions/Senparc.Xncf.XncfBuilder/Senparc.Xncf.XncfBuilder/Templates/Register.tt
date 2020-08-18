@@ -1,0 +1,34 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.XncfBuilder.Functions;
+using System;
+using System.Collections.Generic;
+
+namespace <#= OrgName #>.Xncf.<#= XncfName #>
+{
+    [XncfRegister]
+    public partial class Register : XncfRegisterBase, IXncfRegister
+    {
+        #region IRegister 接口
+
+        public override string Name => "<#= OrgName #>.Xncf.<#= XncfName #>";
+
+        public override string Uid => "{$Uid$}";//必须确保全局唯一，生成后必须固定，已自动生成
+
+        public override string Version => "{$Version$}";//必须填写版本号
+
+        public override string MenuName => "{$MenuName$}";
+
+        public override string Icon => "{$Icon$}";
+
+        public override string Description => "{$Description$}";
+
+        public override IList<Type> Functions => new Type[] { {$FunctionTypes$} /*typeof(BuildXncf)*/ };
+
+        #endregion
+    }
+}

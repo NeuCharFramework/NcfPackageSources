@@ -32,6 +32,23 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.500-beta1" />
+    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Templates\Register.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Register.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Templates\Register.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Register.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>
 

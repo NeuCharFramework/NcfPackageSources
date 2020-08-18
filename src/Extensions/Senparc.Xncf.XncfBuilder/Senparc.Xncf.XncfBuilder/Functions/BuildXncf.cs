@@ -19,6 +19,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             [Required]
             [MaxLength(50)]
+            [Description("组织名称||用于作为模块命名空间（及名称）的前缀")]
+            public string OrgName { get; set; }
+
+            [Required]
+            [MaxLength(50)]
             [Description("模块名称||同时将作为类名，支持英文大小写和数字，不能以数字开头，不能带有空格和.,/*等特殊符号")]
             public string Name { get; set; }
 
@@ -84,7 +89,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                //生成
+                Senparc.Xncf.XncfBuidler.Templates.Register page = new Senparc.Xncf.XncfBuidler.Templates.Register() { 
+                 OrgName = "SenparcTest"
+                };
+                String pageContent = page.TransformText();
+                System.IO.File.WriteAllText("../Senparc.Test.Ncf/Register.cs", pageContent);
             });
         }
     }
