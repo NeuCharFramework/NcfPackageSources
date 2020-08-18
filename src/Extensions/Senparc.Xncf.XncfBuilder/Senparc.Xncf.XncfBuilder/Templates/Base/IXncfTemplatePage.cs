@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuidler.Templates
 {
-   
+
     public interface IXncfTemplatePage
     {
         /// <summary>
@@ -15,6 +15,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         /// <summary>
         /// 相对地址
         /// </summary>
-        string RelativeFilePath { get; set; }
+        string RelativeFilePath { get; }
+
+        string OrgName { get; set; }
+        string XncfName { get; set; }
     }
 }

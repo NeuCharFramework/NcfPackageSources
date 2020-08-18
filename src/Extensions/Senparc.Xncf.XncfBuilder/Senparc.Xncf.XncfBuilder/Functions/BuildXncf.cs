@@ -2,7 +2,6 @@
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuidler.Templates;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -90,11 +89,29 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
 
         private string _outPutBaseDir;
-        private void WriteContent(IXncfTemplatePage page)
+        /// <summary>
+        /// 输出内容
+        /// </summary>
+        /// <param name="page"></param>
+        private void WriteContent(IXncfTemplatePage page,StringBuilder sb)
         {
             String pageContent = page.TransformText();
-            System.IO.File.WriteAllText(Path.Combine(_outPutBaseDir,page.RelativeFilePath), pageContent);
+            System.IO.File.WriteAllText(Path.Combine(_outPutBaseDir, page.RelativeFilePath), pageContent, Encoding.UTF8);
+            sb.Append($"已添加文件：{page.RelativeFilePath}");
         }
+
+        /// <summary>
+        /// 添加文件夹
+        /// </summary>
+        /// <param name="dirName"></param>
+        private string AddDir(string dirName)
+        {
+            var path = Path.Combine(_outPutBaseDir, dirName);
+            Directory.CreateDirectory(path);
+            return path;
+        }
+
+
 
 
         public override FunctionResult Run(IFunctionParameter param)
@@ -102,27 +119,66 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
                 _outPutBaseDir = "../Senparc.Xncf.TemplateTest";
-                Senparc.Xncf.XncfBuidler.Templates.Register registerPage = new Senparc.Xncf.XncfBuidler.Templates.Register();
+                Senparc.Xncf.XncfBuidler.Templates.Register registerPage = new Senparc.Xncf.XncfBuidler.Templates.Register()
+                {
+                    OrgName = typeParam.OrgName,
+                    XncfName = typeParam.XncfName,
+                    Uid = Guid.NewGuid().ToString(),
+                    Version = typeParam.Version,
+                    MenuName = typeParam.MenuName,
+                    Icon = typeParam.Icon,
+                    Description = typeParam.Description,
+                };
 
-                registerPage.OrgName = typeParam.OrgName;
-                registerPage.XncfName = typeParam.XncfName;
-                registerPage.Uid = Guid.NewGuid().ToString();
-                registerPage.Version = typeParam.Version;
-                registerPage.MenuName = typeParam.MenuName;
-                registerPage.Icon = typeParam.Icon;
-                registerPage.Description = typeParam.Description;
-
-
-                //方法
+                //判断是否使用函数（方法）
                 var functionTypes = "";
                 if (typeParam.UseFunction.SelectedValues.Contains("1"))
                 {
                     functionTypes = "typeof(MyFunction)";
+
+                    //添加文件夹
+                    var dir = AddDir("Functions");
+                    Senparc.Xncf.XncfBuidler.Templates.Functions.MyFunction functionPage = new XncfBuidler.Templates.Functions.MyFunction()
+                    {
+                        OrgName = typeParam.OrgName,
+                        XncfName = typeParam.XncfName
+                    };
+                    WriteContent(functionPage,sb);
                 }
                 registerPage.FunctionTypes = functionTypes;
+                WriteContent(registerPage,sb);
 
-                WriteContent(registerPage);
+                //生成 .csproj
+                Senparc.Xncf.XncfBuidler.Templates.csproj csprojPage = new csproj()
+                {
+                    OrgName = typeParam.OrgName,
+                    XncfName = typeParam.XncfName,
+                    Version = typeParam.Version,
+                    MenuName = typeParam.MenuName,
+                    Description = typeParam.Description,
+                };
+                WriteContent(csprojPage,sb);
 
+                //生成 .sln
+                if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
+                {
+                    result.Success = false;
+                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                    sb.Append($"操作未全部完成：{result.Message}");
+                }
+                else if (File.Exists(typeParam.SlnFilePath))
+                {
+                    var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
+                    var newSlnFilePath = Path.Combine(Path.GetFullPath(typeParam.SlnFilePath),$"{slnFileName}-new.sln");
+                    File.Copy(typeParam.SlnFilePath, newSlnFilePath);
+                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！。";
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                    sb.Append($"操作未全部完成：{result.Message}");
+                }
             });
         }
     }
