@@ -1,9 +1,12 @@
 ﻿using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Xncf.XncfBuidler.Templates;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
@@ -25,12 +28,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             [Required]
             [MaxLength(50)]
             [Description("模块名称||同时将作为类名，支持英文大小写和数字，不能以数字开头，不能带有空格和.,/*等特殊符号")]
-            public string Name { get; set; }
+            public string XncfName { get; set; }
 
-            [Required]
-            [MaxLength(36)]
-            [Description("Uid||必须确保全局唯一，生成后必须固定")]
-            public string Uid { get; set; }
+            //[Required]
+            //[MaxLength(36)]
+            //[Description("Uid||必须确保全局唯一，生成后必须固定")]
+            //public string Uid { get; set; }
 
             [Required]
             [MaxLength(50)]
@@ -85,15 +88,41 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
         public override Type FunctionParameterType => typeof(Parameters);
 
+
+        private string _outPutBaseDir;
+        private void WriteContent(IXncfTemplatePage page)
+        {
+            String pageContent = page.TransformText();
+            System.IO.File.WriteAllText(Path.Combine(_outPutBaseDir,page.RelativeFilePath), pageContent);
+        }
+
+
         public override FunctionResult Run(IFunctionParameter param)
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                Senparc.Xncf.XncfBuidler.Templates.Register page = new Senparc.Xncf.XncfBuidler.Templates.Register() { 
-                 OrgName = "SenparcTest"
-                };
-                String pageContent = page.TransformText();
-                System.IO.File.WriteAllText("../Senparc.Test.Ncf/Register.cs", pageContent);
+                _outPutBaseDir = "../Senparc.Xncf.TemplateTest";
+                Senparc.Xncf.XncfBuidler.Templates.Register registerPage = new Senparc.Xncf.XncfBuidler.Templates.Register();
+
+                registerPage.OrgName = typeParam.OrgName;
+                registerPage.XncfName = typeParam.XncfName;
+                registerPage.Uid = Guid.NewGuid().ToString();
+                registerPage.Version = typeParam.Version;
+                registerPage.MenuName = typeParam.MenuName;
+                registerPage.Icon = typeParam.Icon;
+                registerPage.Description = typeParam.Description;
+
+
+                //方法
+                var functionTypes = "";
+                if (typeParam.UseFunction.SelectedValues.Contains("1"))
+                {
+                    functionTypes = "typeof(MyFunction)";
+                }
+                registerPage.FunctionTypes = functionTypes;
+
+                WriteContent(registerPage);
+
             });
         }
     }

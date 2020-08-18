@@ -59,24 +59,49 @@ namespace Senparc.Xncf.XncfBuidler.Templates
             
             #line default
             #line hidden
-            this.Write(@""";
-
-        public override string Uid => ""{$Uid$}"";//必须确保全局唯一，生成后必须固定，已自动生成
-
-        public override string Version => ""{$Version$}"";//必须填写版本号
-
-        public override string MenuName => ""{$MenuName$}"";
-
-        public override string Icon => ""{$Icon$}"";
-
-        public override string Description => ""{$Description$}"";
-
-        public override IList<Type> Functions => new Type[] { {$FunctionTypes$} /*typeof(BuildXncf)*/ };
-
-        #endregion
-    }
-}
-");
+            this.Write("\";\r\n\r\n        public override string Uid => \"");
+            
+            #line 20 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Uid));
+            
+            #line default
+            #line hidden
+            this.Write("\";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改\r\n\r\n        public override string Version => \"");
+            
+            #line 22 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Version));
+            
+            #line default
+            #line hidden
+            this.Write("\";//必须填写版本号\r\n\r\n        public override string MenuName => \"");
+            
+            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override string Icon => \"");
+            
+            #line 26 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Icon));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override string Description => \"");
+            
+            #line 28 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Description));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override IList<Type> Functions => new Type[] { ");
+            
+            #line 30 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(FunctionTypes));
+            
+            #line default
+            #line hidden
+            this.Write(" /*typeof(BuildXncf)*/ };\r\n\r\n        #endregion\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
