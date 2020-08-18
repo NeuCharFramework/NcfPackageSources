@@ -6,14 +6,14 @@
 <#@ output extension=".cs" #>
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
-using Senparc.Xncf.XncfBuidler.Templates;
+using <#= OrgName #>.Xncf.<#= XncfName #>.Functions;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 
-namespace <#= OrgName #>.Xncf.<#= XncfName #>
+namespace <#= OrgName #>.Xncf.<#= XncfName #>.Functions
 {
        public class MyFunction : FunctionBase
     {
@@ -42,7 +42,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
                  new SelectionItem("+","加法","数字1 + 数字2",false),
                  new SelectionItem("-","减法","数字1 - 数字2",true),
                  new SelectionItem("×","乘法","数字1 × 数字2",false),
-                 new SelectionItem("÷","处罚","数字1 ÷ 数字2",false)
+                 new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
             });
 
             [Description("计算平方||")]//多选框
@@ -100,21 +100,19 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
                         return;
                 }
 
-                sb.Append($"进行运算：{typeParam.Number1} {theOperator} {typeParam.Number2} = {calcResult}");
+                sb.AppendLine($"进行运算：{typeParam.Number1} {theOperator} {typeParam.Number2} = {calcResult}");
 
-                if (typeParam.Power.SelectedValues.Contains("2"))
-                {
-                    var oldValue = calcResult;
-                    calcResult =  Math.Pow(calcResult, 2);
-                    sb.Append($"进行二次方运算：{oldValue} ² = {calcResult}");
-                }
+                Action<int> raisePower = power =>{
+                    if (typeParam.Power.SelectedValues.Contains(power.ToString()))
+                    {
+                        var oldValue = calcResult;
+                        calcResult =  Math.Pow(calcResult, power);
+                        sb.AppendLine($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                    }
+                };
 
-                if (typeParam.Power.SelectedValues.Contains("3"))
-                {
-                    var oldValue = calcResult;
-                    calcResult = Math.Pow(calcResult, 3);
-                    sb.Append($"进行二次方运算：{oldValue} ³ = {calcResult}");
-                }
+                raisePower(2);
+                raisePower(3);
 
                 result.Message = $"计算结果：{calcResult}。计算过程请看日志";
             });

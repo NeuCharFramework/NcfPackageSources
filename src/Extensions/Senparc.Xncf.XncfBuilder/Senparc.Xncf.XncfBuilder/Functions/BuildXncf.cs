@@ -26,7 +26,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             [Required]
             [MaxLength(50)]
-            [Description("模块名称||同时将作为类名，支持英文大小写和数字，不能以数字开头，不能带有空格和.,/*等特殊符号")]
+            [Description("模块名称||同时将作为类名（请注意类名规范），支持连续英文大小写和数字，不能以数字开头，不能带有空格和.,/*等特殊符号")]
             public string XncfName { get; set; }
 
             //[Required]
@@ -93,11 +93,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         /// 输出内容
         /// </summary>
         /// <param name="page"></param>
-        private void WriteContent(IXncfTemplatePage page,StringBuilder sb)
+        private void WriteContent(IXncfTemplatePage page, StringBuilder sb)
         {
             String pageContent = page.TransformText();
             System.IO.File.WriteAllText(Path.Combine(_outPutBaseDir, page.RelativeFilePath), pageContent, Encoding.UTF8);
-            sb.Append($"已添加文件：{page.RelativeFilePath}");
+            sb.AppendLine($"已添加文件：{page.RelativeFilePath}");
         }
 
         /// <summary>
@@ -111,14 +111,17 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             return path;
         }
 
-
-
-
         public override FunctionResult Run(IFunctionParameter param)
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                _outPutBaseDir = "../Senparc.Xncf.TemplateTest";
+                var projectName = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}";
+                _outPutBaseDir = Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "..", $"{projectName}");
+                _outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
+                if (!Directory.Exists(_outPutBaseDir))
+                {
+                    Directory.CreateDirectory(_outPutBaseDir);
+                }
                 Senparc.Xncf.XncfBuidler.Templates.Register registerPage = new Senparc.Xncf.XncfBuidler.Templates.Register()
                 {
                     OrgName = typeParam.OrgName,
@@ -143,10 +146,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         OrgName = typeParam.OrgName,
                         XncfName = typeParam.XncfName
                     };
-                    WriteContent(functionPage,sb);
+                    WriteContent(functionPage, sb);
                 }
                 registerPage.FunctionTypes = functionTypes;
-                WriteContent(registerPage,sb);
+                WriteContent(registerPage, sb);
 
                 //生成 .csproj
                 Senparc.Xncf.XncfBuidler.Templates.csproj csprojPage = new csproj()
@@ -157,27 +160,58 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     MenuName = typeParam.MenuName,
                     Description = typeParam.Description,
                 };
-                WriteContent(csprojPage,sb);
+                WriteContent(csprojPage, sb);
 
                 //生成 .sln
                 if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
                 {
                     result.Success = false;
                     result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
-                    sb.Append($"操作未全部完成：{result.Message}");
+                    sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
                 else if (File.Exists(typeParam.SlnFilePath))
                 {
                     var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
-                    var newSlnFilePath = Path.Combine(Path.GetFullPath(typeParam.SlnFilePath),$"{slnFileName}-new.sln");
+                    var newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                    var newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
                     File.Copy(typeParam.SlnFilePath, newSlnFilePath);
+                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！。";
+
+                    //修改 new Sln
+                    string slnContent = null;
+                    using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
+                    {
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            slnContent = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                    }
+
+                    var projGuid = Guid.NewGuid().ToString("D");
+                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
+EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
+EndProject
+Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{csprojPage.RelativeFilePath}"", ""{projGuid}""
+EndProject
+").Replace(@"		{D0EF2816-B99A-4554-964A-6EA6814B3A36}.Test|Any CPU.Build.0 = Release|Any CPU
+", @$"		{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}.Test|Any CPU.Build.0 = Release|Any CPU
+		{projGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{projGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{projGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU
+		{projGuid}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
+");
+                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
+                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
                     result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！。";
                 }
                 else
                 {
                     result.Success = false;
                     result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
-                    sb.Append($"操作未全部完成：{result.Message}");
+                    sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
             });
         }

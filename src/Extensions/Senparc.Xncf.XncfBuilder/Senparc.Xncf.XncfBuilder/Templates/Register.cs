@@ -28,8 +28,21 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Senparc.Ncf.XncfBase;\r\nusing Senparc.Xncf.XncfBuilder.Functions;\r\nusing Sys" +
-                    "tem;\r\nusing System.Collections.Generic;\r\n\r\nnamespace ");
+            this.Write("using Senparc.Ncf.XncfBase;\r\nusing ");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(".Functions;\r\nusing System;\r\nusing System.Collections.Generic;\r\n\r\nnamespace ");
             
             #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));

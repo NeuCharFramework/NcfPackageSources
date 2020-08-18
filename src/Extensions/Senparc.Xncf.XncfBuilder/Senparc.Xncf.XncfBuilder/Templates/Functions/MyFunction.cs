@@ -28,10 +28,22 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Functions
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Senparc.Ncf.XncfBase;\r\nusing Senparc.Ncf.XncfBase.Functions;\r\nusing Senparc" +
-                    ".Xncf.XncfBuidler.Templates;\r\nusing System;\r\nusing System.ComponentModel;\r\nusing" +
-                    " System.ComponentModel.DataAnnotations;\r\nusing System.IO;\r\nusing System.Linq;\r\n\r" +
-                    "\nnamespace ");
+            this.Write("using Senparc.Ncf.XncfBase;\r\nusing Senparc.Ncf.XncfBase.Functions;\r\nusing ");
+            
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(".Functions;\r\nusing System;\r\nusing System.ComponentModel;\r\nusing System.ComponentM" +
+                    "odel.DataAnnotations;\r\nusing System.IO;\r\nusing System.Linq;\r\n\r\nnamespace ");
             
             #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
@@ -45,30 +57,30 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Functions
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n       public class MyFunction : FunctionBase\r\n    {\r\n        public MyFunct" +
-                    "ion(IServiceProvider serviceProvider) : base(serviceProvider)\r\n        {\r\n      " +
-                    "  }\r\n\r\n        public class Parameters : IFunctionParameter\r\n        {\r\n        " +
-                    "    [Required]\r\n            [MaxLength(50)]\r\n            [Description(\"名称||双竖线之前" +
-                    "为参数名称，双竖线之后为参数注释\")]\r\n            public string Name { get; set; }\r\n\r\n           " +
-                    " [Required]\r\n            [Description(\"数字||数字1\")]\r\n            public int Number" +
-                    "1 { get; set; }\r\n\r\n\r\n            [Required]\r\n            [Description(\"数字||数字2\")" +
-                    "]\r\n            public int Number2 { get; set; }\r\n\r\n            [Description(\"运算符" +
-                    "||\")]//下拉列表\r\n            public SelectionList Operator { get; set; } = new Selec" +
-                    "tionList(SelectionType.DropDownList, new[] {\r\n                 new SelectionItem" +
-                    "(\"+\",\"加法\",\"数字1 + 数字2\",false),\r\n                 new SelectionItem(\"-\",\"减法\",\"数字1 " +
-                    "- 数字2\",true),\r\n                 new SelectionItem(\"×\",\"乘法\",\"数字1 × 数字2\",false),\r\n" +
-                    "                 new SelectionItem(\"÷\",\"处罚\",\"数字1 ÷ 数字2\",false)\r\n            });\r" +
-                    "\n\r\n            [Description(\"计算平方||\")]//多选框\r\n            public SelectionList Po" +
-                    "wer { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {\r\n     " +
-                    "            new SelectionItem(\"2\",\"平方\",\"计算上述结果之后再计算平方\",false),\r\n                " +
-                    " new SelectionItem(\"3\",\"三次方\",\"计算上述结果之后再计算三次方\",false)\r\n            });\r\n        }" +
-                    "\r\n\r\n\r\n        public override string Name => \"我的函数\";\r\n\r\n        public override " +
-                    "string Description => \"我的函数的注释\";\r\n\r\n        public override Type FunctionParamet" +
-                    "erType => typeof(Parameters);\r\n\r\n        public override FunctionResult Run(IFun" +
-                    "ctionParameter param)\r\n        {\r\n            return FunctionHelper.RunFunction<" +
-                    "Parameters>(param, (typeParam, sb, result) =>\r\n            {\r\n                /*" +
-                    " 页面上点击“执行”后，将调用这里的方法\r\n                 *\r\n                 * 参数说明：\r\n            " +
-                    "     * param：IFunctionParameter 类型对象\r\n                 * typeParam：");
+            this.Write(".Functions\r\n{\r\n       public class MyFunction : FunctionBase\r\n    {\r\n        publ" +
+                    "ic MyFunction(IServiceProvider serviceProvider) : base(serviceProvider)\r\n       " +
+                    " {\r\n        }\r\n\r\n        public class Parameters : IFunctionParameter\r\n        {" +
+                    "\r\n            [Required]\r\n            [MaxLength(50)]\r\n            [Description(" +
+                    "\"名称||双竖线之前为参数名称，双竖线之后为参数注释\")]\r\n            public string Name { get; set; }\r\n\r\n " +
+                    "           [Required]\r\n            [Description(\"数字||数字1\")]\r\n            public " +
+                    "int Number1 { get; set; }\r\n\r\n\r\n            [Required]\r\n            [Description(" +
+                    "\"数字||数字2\")]\r\n            public int Number2 { get; set; }\r\n\r\n            [Descri" +
+                    "ption(\"运算符||\")]//下拉列表\r\n            public SelectionList Operator { get; set; } =" +
+                    " new SelectionList(SelectionType.DropDownList, new[] {\r\n                 new Sel" +
+                    "ectionItem(\"+\",\"加法\",\"数字1 + 数字2\",false),\r\n                 new SelectionItem(\"-\"," +
+                    "\"减法\",\"数字1 - 数字2\",true),\r\n                 new SelectionItem(\"×\",\"乘法\",\"数字1 × 数字2\"" +
+                    ",false),\r\n                 new SelectionItem(\"÷\",\"除法\",\"数字1 ÷ 数字2\",false)\r\n      " +
+                    "      });\r\n\r\n            [Description(\"计算平方||\")]//多选框\r\n            public Select" +
+                    "ionList Power { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[" +
+                    "] {\r\n                 new SelectionItem(\"2\",\"平方\",\"计算上述结果之后再计算平方\",false),\r\n      " +
+                    "           new SelectionItem(\"3\",\"三次方\",\"计算上述结果之后再计算三次方\",false)\r\n            });\r" +
+                    "\n        }\r\n\r\n\r\n        public override string Name => \"我的函数\";\r\n\r\n        public" +
+                    " override string Description => \"我的函数的注释\";\r\n\r\n        public override Type Funct" +
+                    "ionParameterType => typeof(Parameters);\r\n\r\n        public override FunctionResul" +
+                    "t Run(IFunctionParameter param)\r\n        {\r\n            return FunctionHelper.Ru" +
+                    "nFunction<Parameters>(param, (typeParam, sb, result) =>\r\n            {\r\n        " +
+                    "        /* 页面上点击“执行”后，将调用这里的方法\r\n                 *\r\n                 * 参数说明：\r\n  " +
+                    "               * param：IFunctionParameter 类型对象\r\n                 * typeParam：");
             
             #line 70 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
@@ -98,16 +110,16 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Functions
                     "t / typeParam.Number2;\r\n                        break;\r\n                    defa" +
                     "ult:\r\n                        result.Success = false;\r\n                        r" +
                     "esult.Message = $\"未知的运算符：{theOperator}\";\r\n                        return;\r\n     " +
-                    "           }\r\n\r\n                sb.Append($\"进行运算：{typeParam.Number1} {theOperato" +
-                    "r} {typeParam.Number2} = {calcResult}\");\r\n\r\n                if (typeParam.Power." +
-                    "SelectedValues.Contains(\"2\"))\r\n                {\r\n                    var oldVal" +
-                    "ue = calcResult;\r\n                    calcResult =  Math.Pow(calcResult, 2);\r\n  " +
-                    "                  sb.Append($\"进行二次方运算：{oldValue} ² = {calcResult}\");\r\n          " +
-                    "      }\r\n\r\n                if (typeParam.Power.SelectedValues.Contains(\"3\"))\r\n  " +
-                    "              {\r\n                    var oldValue = calcResult;\r\n               " +
-                    "     calcResult = Math.Pow(calcResult, 3);\r\n                    sb.Append($\"进行二次" +
-                    "方运算：{oldValue} ³ = {calcResult}\");\r\n                }\r\n\r\n                result." +
-                    "Message = $\"计算结果：{calcResult}。计算过程请看日志\";\r\n            });\r\n        }\r\n    }\r\n}");
+                    "           }\r\n\r\n                sb.AppendLine($\"进行运算：{typeParam.Number1} {theOpe" +
+                    "rator} {typeParam.Number2} = {calcResult}\");\r\n\r\n                Action<int> rais" +
+                    "ePower = power =>{\r\n                    if (typeParam.Power.SelectedValues.Conta" +
+                    "ins(power.ToString()))\r\n                    {\r\n                        var oldVa" +
+                    "lue = calcResult;\r\n                        calcResult =  Math.Pow(calcResult, po" +
+                    "wer);\r\n                        sb.AppendLine($\"进行{power}次方运算：{oldValue}{(power =" +
+                    "= 2 ? \"²\" : \"³\")} = {calcResult}\");\r\n                    }\r\n                };\r\n" +
+                    "\r\n                raisePower(2);\r\n                raisePower(3);\r\n\r\n            " +
+                    "    result.Message = $\"计算结果：{calcResult}。计算过程请看日志\";\r\n            });\r\n        }\r" +
+                    "\n    }\r\n}");
             return this.GenerationEnvironment.ToString();
         }
     }
