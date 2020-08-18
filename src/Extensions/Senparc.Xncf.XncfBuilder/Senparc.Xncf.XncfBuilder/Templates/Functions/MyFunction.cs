@@ -28,31 +28,18 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Functions
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Senparc.Ncf.XncfBase;\r\nusing Senparc.Ncf.XncfBase.Functions;\r\nusing ");
+            this.Write("using Senparc.Ncf.XncfBase;\r\nusing Senparc.Ncf.XncfBase.Functions;\r\nusing System;" +
+                    "\r\nusing System.ComponentModel;\r\nusing System.ComponentModel.DataAnnotations;\r\nus" +
+                    "ing System.IO;\r\nusing System.Linq;\r\n\r\nnamespace ");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
+            #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write(".Functions;\r\nusing System;\r\nusing System.ComponentModel;\r\nusing System.ComponentM" +
-                    "odel.DataAnnotations;\r\nusing System.IO;\r\nusing System.Linq;\r\n\r\nnamespace ");
-            
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(".Xncf.");
-            
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
+            #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -82,14 +69,14 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Functions
                     "        /* 页面上点击“执行”后，将调用这里的方法\r\n                 *\r\n                 * 参数说明：\r\n  " +
                     "               * param：IFunctionParameter 类型对象\r\n                 * typeParam：");
             
-            #line 70 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
+            #line 69 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 70 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
+            #line 69 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Functions\MyFunction.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default

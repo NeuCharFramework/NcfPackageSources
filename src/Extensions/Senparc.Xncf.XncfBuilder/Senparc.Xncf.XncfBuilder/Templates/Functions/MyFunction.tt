@@ -6,7 +6,6 @@
 <#@ output extension=".cs" #>
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
-using <#= OrgName #>.Xncf.<#= XncfName #>.Functions;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
