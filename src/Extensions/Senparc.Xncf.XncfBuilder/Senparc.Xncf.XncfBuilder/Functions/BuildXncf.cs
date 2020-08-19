@@ -1,7 +1,10 @@
 ﻿using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuidler.Templates;
+using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages;
+using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -66,7 +69,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             [Description("使用 Web 页面||")]
             public SelectionList UseWeb { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","是否需要使用 Web 页面模块（Database）",false),
+                 new SelectionItem("1","使用","是否需要使用 Web 页面模块（Web）",false),
             });
 
             [Description("使用中间件||")]
@@ -133,6 +136,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Description = typeParam.Description,
                 };
 
+                #region 使用函数
+
                 //判断是否使用函数（方法）
                 var functionTypes = "";
                 if (typeParam.UseFunction.SelectedValues.Contains("1"))
@@ -151,6 +156,40 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 registerPage.FunctionTypes = functionTypes;
                 WriteContent(registerPage, sb);
 
+                #endregion
+
+                #region 判断 Web - Area
+                //判断 Area 
+                if (typeParam.UseWeb.SelectedValues.Contains("1"))
+                {
+                    //生成目录
+                    var areaDirs = new List<string> {
+                        "Areas",
+                        "Areas/Admin",
+                        "Areas/Admin/Pages/",
+                        "Areas/Admin/Pages/MyApps",
+                        "Areas/Admin/Pages/Shared",
+                    };
+                    areaDirs.ForEach(z => AddDir(z));
+
+                    //载入Page
+                    var areaPages = new List<IXncfTemplatePage> {
+                        new ViewStart(typeParam.OrgName,typeParam.XncfName),
+                        new ViewImports(typeParam.OrgName,typeParam.XncfName),
+                        new Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps.Index(typeParam.OrgName,typeParam.XncfName),
+                        new Index_cs(typeParam.OrgName,typeParam.XncfName),
+                    };
+                    areaPages.ForEach(z => WriteContent(z, sb));
+
+                    //生成Register.Area
+                    var registerArea = new Register_Area(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(registerArea, sb);
+                }
+
+                #endregion
+
+                #region 生成 .csproj
+
                 //生成 .csproj
                 Senparc.Xncf.XncfBuidler.Templates.csproj csprojPage = new csproj()
                 {
@@ -161,6 +200,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Description = typeParam.Description,
                 };
                 WriteContent(csprojPage, sb);
+                #endregion
+
+                #region 生成 .sln
 
                 //生成 .sln
                 if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
@@ -213,6 +255,9 @@ EndProject
                     result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
                     sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
+
+                #endregion
+
             });
         }
     }

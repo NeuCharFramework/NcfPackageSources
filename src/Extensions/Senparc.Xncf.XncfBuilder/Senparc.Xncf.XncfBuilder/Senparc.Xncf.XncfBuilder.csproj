@@ -31,6 +31,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Templates\Areas\Admin\Pages\Shared\_Layout.cs" />
+    <Compile Remove="Templates\Areas\Admin\Pages\Shared\_LayoutData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Templates\Areas\Admin\Pages\Shared\_Layout.tt" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Templates\Functions\MyFunction.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -42,6 +49,26 @@
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index_cs.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\ViewImports.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewImports.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\ViewStart.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewStart.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\csproj.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -52,16 +79,41 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Register.cs">
+    <Compile Update="Templates\Register - 复制.cs">
+      <DependentUpon>Register.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Register.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Register_Area.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Register_Area.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Index_cs.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Areas\Admin\Pages\MyApps\Index.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Index.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Areas\Admin\Pages\ViewStart.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>ViewStart.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Areas\Admin\Pages\ViewImports.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ViewImports.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\csproj.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>csproj.cs</LastGenOutput>
@@ -72,11 +124,20 @@
       <LastGenOutput>MyFunction.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\Register_Area.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Register_Area.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
     <None Update="Templates\Register.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Register.cs</LastGenOutput>
+      <LastGenOutput>Register_Area.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Templates\Areas\Admin\Pages\Shared\" />
   </ItemGroup>
 </Project>
 

@@ -40,4 +40,8 @@
   <ItemGroup>
     <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.500-beta1" />
   </ItemGroup>
+  <# if(UseWeb) {#>
+  <ItemGroup>
+  </ItemGroup>
+  <# } #>
 </Project> 

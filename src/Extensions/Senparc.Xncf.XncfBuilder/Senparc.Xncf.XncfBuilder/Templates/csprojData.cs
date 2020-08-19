@@ -13,5 +13,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         public string Version { get; set; }
         public string MenuName { get; set; }
         public string Description { get; set; }
+
+        public bool UseWeb { get; set; }
     }
 }

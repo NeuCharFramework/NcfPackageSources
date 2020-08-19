@@ -1,0 +1,22 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+//using Senparc.Ncf.Service;
+using System;
+
+namespace Senparc.Xncf.ExtensionAreaTemplate.Areas.MyApp.Pages
+{
+    public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
+    {
+        public Index(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
+        {
+
+        }
+
+        public void OnGet()
+        {
+        }
+    }
+}
