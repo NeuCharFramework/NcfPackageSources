@@ -3,10 +3,10 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-//using Senparc.Ncf.Service;
+using Senparc.Ncf.Service;
 using System;
 
-namespace Senparc.Xncf.ExtensionAreaTemplate.Areas.MyApp.Pages
+namespace <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApps.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {

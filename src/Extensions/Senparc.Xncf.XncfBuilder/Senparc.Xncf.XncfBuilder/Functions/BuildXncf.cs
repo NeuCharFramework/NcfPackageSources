@@ -159,8 +159,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 #endregion
 
                 #region 判断 Web - Area
+                var useWeb = typeParam.UseWeb.SelectedValues.Contains("1");
                 //判断 Area 
-                if (typeParam.UseWeb.SelectedValues.Contains("1"))
+                if (useWeb)
                 {
                     //生成目录
                     var areaDirs = new List<string> {
@@ -198,6 +199,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Version = typeParam.Version,
                     MenuName = typeParam.MenuName,
                     Description = typeParam.Description,
+                    UseWeb = useWeb
                 };
                 WriteContent(csprojPage, sb);
                 #endregion

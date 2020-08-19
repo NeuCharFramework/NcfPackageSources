@@ -43,7 +43,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages
             
             #line default
             #line hidden
-            this.Write(".Areas.MyApp.Pages\r\n@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers\r\n");
+            this.Write(".Areas.MyApps.Pages\r\n@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

@@ -8,5 +8,5 @@
 @using System.Web.Mvc
 @using Senparc.CO2NET.Extensions
 
-@namespace <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApp.Pages
+@namespace <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApps.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

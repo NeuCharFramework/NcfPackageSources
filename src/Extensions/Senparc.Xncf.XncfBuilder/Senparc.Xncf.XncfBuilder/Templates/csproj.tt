@@ -5,7 +5,11 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".csproj" #>
 
+<# if(UseWeb){ #>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+<# }else{#>
 <Project Sdk="Microsoft.NET.Sdk">
+<#}#>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version><#= Version #></Version>
@@ -42,6 +46,9 @@
   </ItemGroup>
   <# if(UseWeb) {#>
   <ItemGroup>
+  	<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+	<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.3.500-beta1" />
   </ItemGroup>
   <# } #>
 </Project> 

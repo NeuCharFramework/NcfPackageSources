@@ -3,8 +3,22 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+@page
+@model <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApps.Pages.Index
 @{
-    Layout = "_XncfModuleLayout";
+    ViewData["Title"] = "<#= XncfName #> 首页";
+    Layout = "_Layout_Vue";
 }
+<div>
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
+        </el-header>
+        <el-main>
+            <h4>@Model.XncfRegister.Description</h4>
+            <br />
+            <i>当前模块为自动生成模块</i>
+        </el-main>
+    </el-container>
+</div>
 
-<div>123</div>

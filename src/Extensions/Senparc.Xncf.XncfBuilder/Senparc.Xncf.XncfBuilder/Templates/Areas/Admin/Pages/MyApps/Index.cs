@@ -28,7 +28,44 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("@{\r\n    Layout = \"_XncfModuleLayout\";\r\n}\r\n\r\n<div>123</div>");
+            this.Write("@page\r\n@model ");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(".Areas.MyApps.Pages.Index\r\n@{\r\n    ViewData[\"Title\"] = \"");
+            
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@" 首页"";
+    Layout = ""_Layout_Vue"";
+}
+<div>
+    <el-container>
+        <el-header class=""module-header"">
+            <span class=""start-title""> <i class=""fa fa-dot-circle-o""></i>&nbsp;<span class=""module-header-v"">首页</span></span>
+        </el-header>
+        <el-main>
+            <h4>@Model.XncfRegister.Description</h4>
+            <br />
+            <i>当前模块为自动生成模块</i>
+        </el-main>
+    </el-container>
+</div>
+
+");
             return this.GenerationEnvironment.ToString();
         }
     }
