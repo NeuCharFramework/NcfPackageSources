@@ -4,7 +4,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 @page
-@model <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApps.Pages.Index
+@model <#= OrgName #>.Xncf.<#= XncfName #>.Areas.<#= XncfName #>.Pages.Index
 @{
     ViewData["Title"] = "<#= XncfName #> 首页";
     Layout = "_Layout_Vue";

@@ -51,13 +51,15 @@ namespace ");
             
             #line default
             #line hidden
-            this.Write(@"
-{
-	public partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）
-	{
-		#region IAreaRegister 接口
-
-		public string HomeUrl => ""/Admin/MyApps/Index"";
+            this.Write("\r\n{\r\n\tpublic partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）\r\n\t{\r\n\t\t#" +
+                    "region IAreaRegister 接口\r\n\r\n\t\tpublic string HomeUrl => \"/Admin/");
+            
+            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Area.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"/Index"";
 
 		public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
 			 new AreaPageMenuItem(GetAreaHomeUrl(),""首页"",""fa fa-laptop""),

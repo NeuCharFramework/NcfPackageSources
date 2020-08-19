@@ -18,7 +18,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
 	{
 		#region IAreaRegister 接口
 
-		public string HomeUrl => "/Admin/MyApps/Index";
+		public string HomeUrl => "/Admin/<#= XncfName #>/Index";
 
 		public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
 			 new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),

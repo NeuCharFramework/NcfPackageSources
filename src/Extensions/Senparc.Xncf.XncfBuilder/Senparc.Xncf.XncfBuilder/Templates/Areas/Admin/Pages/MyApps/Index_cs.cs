@@ -42,7 +42,14 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
             
             #line default
             #line hidden
-            this.Write(@".Areas.MyApps.Pages
+            this.Write(".Areas.");
+            
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index_cs.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@".Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {

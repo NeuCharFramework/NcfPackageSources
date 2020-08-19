@@ -6,7 +6,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
 {
     public partial class Index_cs : IXncfTemplatePage
     {
-        public string RelativeFilePath => "Areas/Admin/Pages/MyApps/Index.cshtml.cs";
+        public string RelativeFilePath => $"Areas/Admin/Pages/{XncfName}/Index.cshtml.cs";
 
         public string OrgName { get; set; }
         public string XncfName { get; set; }

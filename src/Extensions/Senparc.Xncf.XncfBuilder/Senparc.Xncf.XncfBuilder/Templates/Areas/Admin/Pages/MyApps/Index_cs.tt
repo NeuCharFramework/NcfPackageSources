@@ -6,7 +6,7 @@
 using Senparc.Ncf.Service;
 using System;
 
-namespace <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApps.Pages
+namespace <#= OrgName #>.Xncf.<#= XncfName #>.Areas.<#= XncfName #>.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {

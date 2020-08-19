@@ -168,7 +168,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "Areas",
                         "Areas/Admin",
                         "Areas/Admin/Pages/",
-                        "Areas/Admin/Pages/MyApps",
+                        $"Areas/Admin/Pages/{typeParam.XncfName}",
                         "Areas/Admin/Pages/Shared",
                     };
                     areaDirs.ForEach(z => AddDir(z));

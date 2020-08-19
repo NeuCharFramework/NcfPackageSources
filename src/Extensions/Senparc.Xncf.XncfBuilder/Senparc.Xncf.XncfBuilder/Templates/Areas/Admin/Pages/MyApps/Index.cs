@@ -42,7 +42,14 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
             
             #line default
             #line hidden
-            this.Write(".Areas.MyApps.Pages.Index\r\n@{\r\n    ViewData[\"Title\"] = \"");
+            this.Write(".Areas.");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(".Pages.Index\r\n@{\r\n    ViewData[\"Title\"] = \"");
             
             #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
