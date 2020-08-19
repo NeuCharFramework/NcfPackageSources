@@ -49,15 +49,25 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
             
             #line default
             #line hidden
-            this.Write(@" 首页"";
-    Layout = ""_Layout_Vue"";
+            this.Write(" 首页\";\r\n    Layout = \"_Layout_Vue\";\r\n}\r\n\r\n@section breadcrumbs{\r\n    <el-breadcrum" +
+                    "b-item>扩展模块</el-breadcrumb-item>\r\n    <el-breadcrumb-item>");
+            
+            #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"</el-breadcrumb-item>
+    <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
+
 <div>
     <el-container>
         <el-header class=""module-header"">
             <span class=""start-title""> <i class=""fa fa-dot-circle-o""></i>&nbsp;<span class=""module-header-v"">首页</span></span>
         </el-header>
         <el-main>
+            <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
             <h4>@Model.XncfRegister.Description</h4>
             <br />
             <i>当前模块为自动生成模块</i>
@@ -65,6 +75,14 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
     </el-container>
 </div>
 
+
+@section scripts{
+    <script>
+        new Vue({
+            el: ""#app""
+        });
+    </script>
+}
 ");
             return this.GenerationEnvironment.ToString();
         }
