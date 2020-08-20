@@ -2,7 +2,7 @@
 
 namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
 {
-    public partial class SenparcEntities : IXncfTemplatePage
+    public partial class MySenparcEntities : IXncfTemplatePage
     {
         /// <summary>
         /// 相对地址
@@ -12,7 +12,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
         public string OrgName { get; set; }
         public string XncfName { get; set; }
 
-        public SenparcEntities(string orgName, string xncfName)
+        public MySenparcEntities(string orgName, string xncfName)
         {
             OrgName = orgName;
             XncfName = xncfName;

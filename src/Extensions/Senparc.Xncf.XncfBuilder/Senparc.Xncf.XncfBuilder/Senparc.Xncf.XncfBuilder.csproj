@@ -84,6 +84,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
+    <Compile Update="Templates\Models\DatabaseModel\MySenparcEntities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MySenparcEntities.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -114,9 +119,9 @@
       <LastGenOutput>SenparcDbContextFactory.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Models\DatabaseModel\SenparcEntities.tt">
+    <None Update="Templates\Models\DatabaseModel\MySenparcEntities.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcDbContextFactory.cs</LastGenOutput>
+      <LastGenOutput>MySenparcEntities.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
