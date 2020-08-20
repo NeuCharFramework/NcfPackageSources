@@ -4,7 +4,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
-using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel;
+using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;

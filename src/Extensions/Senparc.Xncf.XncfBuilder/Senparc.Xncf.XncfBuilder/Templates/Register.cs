@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
+namespace Senparc.Xncf.XncfBuidler.Templates
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class SenparcDbContextFactory : SenparcDbContextFactoryBase
+    public partial class Register : RegisterBase
     {
 #line hidden
         /// <summary>
@@ -28,53 +28,185 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
         /// </summary>
         public virtual string TransformText()
         {
+            this.Write("using Senparc.Ncf.XncfBase;\r\n");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+ if(UseFunction) { 
+            
+            #line default
+            #line hidden
             this.Write("using ");
             
-            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 8 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 8 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(".Models.DatabaseModel;\r\nusing Senparc.Ncf.XncfBase.Database;\r\nusing System;\r\nusin" +
-                    "g System.IO;\r\n\r\nnamespace ");
+            this.Write(".Functions;\r\n");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+ }
+            
+            #line default
+            #line hidden
+            
+            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+ if(UseDatabase) { 
+            
+            #line default
+            #line hidden
+            this.Write("using ");
+            
+            #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n    /// <summary>\r\n    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migratio" +
-                    "n 使用，在生产环境不会执行）\r\n    /// </summary>\r\n    public class SenparcDbContextFactory : " +
-                    "SenparcDesignTimeDbContextFactoryBase<");
+            this.Write(".Models.DatabaseModel;\r\nusing Senparc.Ncf.Core.Enums;\r\nusing Senparc.Ncf.Core.Mod" +
+                    "els;\r\nusing System.Linq;\r\nusing System.Threading.Tasks;\r\nusing Microsoft.Extensi" +
+                    "ons.DependencyInjection;\r\n");
             
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+ }
+            
+            #line default
+            #line hidden
+            this.Write("using System;\r\nusing System.Collections.Generic;\r\n\r\nnamespace ");
+            
+            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(@"SenparcEntities, Register>
-    {
-        /// <summary>
-        /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
-        /// </summary>
-        public override string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, ""..\\..\\..\\""/*项目根目录*/, ""..\\Senparc.Web""/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
-    }
-}
-");
+            this.Write("\r\n{\r\n    [XncfRegister]\r\n    public partial class Register : XncfRegisterBase, IX" +
+                    "ncfRegister\r\n    {\r\n        #region IRegister 接口\r\n\r\n        public override stri" +
+                    "ng Name => \"");
+            
+            #line 28 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 28 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override string Uid => \"");
+            
+            #line 30 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Uid));
+            
+            #line default
+            #line hidden
+            this.Write("\";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改\r\n\r\n        public override string Version => \"");
+            
+            #line 32 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Version));
+            
+            #line default
+            #line hidden
+            this.Write("\";//必须填写版本号\r\n\r\n        public override string MenuName => \"");
+            
+            #line 34 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override string Icon => \"");
+            
+            #line 36 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Icon));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override string Description => \"");
+            
+            #line 38 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Description));
+            
+            #line default
+            #line hidden
+            this.Write("\";\r\n\r\n        public override IList<Type> Functions => new Type[] { ");
+            
+            #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(FunctionTypes));
+            
+            #line default
+            #line hidden
+            this.Write(" /*typeof(BuildXncf)*/ };\r\n\r\n\r\n        ");
+            
+            #line 43 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+ if(UseDatabase) { 
+            
+            #line default
+            #line hidden
+            this.Write("        public override async Task InstallOrUpdateAsync(IServiceProvider serviceP" +
+                    "rovider, InstallOrUpdate installOrUpdate)\r\n        {\r\n            //安装或升级版本时更新数据" +
+                    "库\r\n            await base.MigrateDatabaseAsync<");
+            
+            #line 47 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("SenparcEntities>(serviceProvider);\r\n        }\r\n\r\n        public override async Ta" +
+                    "sk UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)\r\n" +
+                    "        {\r\n            ");
+            
+            #line 52 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("SenparcEntities mySenparcEntities = serviceProvider.GetService<");
+            
+            #line 52 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"SenparcEntities>();
+
+            //指定需要删除的数据实体
+
+            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
+            await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
+
+            await unsinstallFunc().ConfigureAwait(false);
+        }
+        ");
+            
+            #line 62 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+ }
+            
+            #line default
+            #line hidden
+            this.Write("\r\n        #endregion\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -86,7 +218,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class SenparcDbContextFactoryBase
+    public class RegisterBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
