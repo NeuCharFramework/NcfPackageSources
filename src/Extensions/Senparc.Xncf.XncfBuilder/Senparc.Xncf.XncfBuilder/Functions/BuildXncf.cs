@@ -127,6 +127,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     Directory.CreateDirectory(_outPutBaseDir);
                 }
+
+                //定义 Register 主文件
                 Senparc.Xncf.XncfBuidler.Templates.Register registerPage = new Senparc.Xncf.XncfBuidler.Templates.Register()
                 {
                     OrgName = typeParam.OrgName,
@@ -141,8 +143,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 #region 使用函数
 
                 //判断是否使用函数（方法）
+                var useFunction = typeParam.UseFunction.SelectedValues.Contains("1");
                 var functionTypes = "";
-                if (typeParam.UseFunction.SelectedValues.Contains("1"))
+                if (useFunction)
                 {
                     functionTypes = "typeof(MyFunction)";
 
@@ -156,7 +159,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     WriteContent(functionPage, sb);
                 }
                 registerPage.FunctionTypes = functionTypes;
-                WriteContent(registerPage, sb);
+                registerPage.UseFunction = useFunction;
 
                 #endregion
 
@@ -185,11 +188,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     areaPages.ForEach(z => WriteContent(z, sb));
 
                     //生成Register.Area
-                    var registerArea = new Register_Area(typeParam.OrgName, typeParam.XncfName);
+                    var registerArea = new RegisterArea(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(registerArea, sb);
                 }
 
                 #endregion
+
 
                 #region 判断 数据库
 
@@ -198,9 +202,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     //生成目录
                     var dbDirs = new List<string> {
+                        "App_Data",
+                        "App_Data/Database",
                         "Models",
-                        "Models/App_Data",
-                        "Models/App_Data/Database",
                         "Models/DatabaseModel",
                         "Models/DatabaseModel/Dto",
                         "Models/DatabaseModel/Mapping"
@@ -209,13 +213,19 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                     //载入Page
                     var dbFiles = new List<IXncfTemplatePage> {
-                        new Register_Area(typeParam.OrgName, typeParam.XncfName),
+                        new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
                         new XncfBuidler.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName),
                         new XncfBuidler.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }
+
+                #endregion
+
+                #region 生成 Register 主文件
+
+                WriteContent(registerPage, sb);
 
                 #endregion
 

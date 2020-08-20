@@ -4,7 +4,9 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 using Senparc.Ncf.XncfBase;
+<# if(UseFunction) {#>
 using <#= OrgName #>.Xncf.<#= XncfName #>.Functions;
+<#}#>
 using System;
 using System.Collections.Generic;
 

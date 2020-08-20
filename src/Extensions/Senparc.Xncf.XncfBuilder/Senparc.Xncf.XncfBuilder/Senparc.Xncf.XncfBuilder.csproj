@@ -36,6 +36,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Templates\Areas\Admin\Pages\Shared\_Layout.tt" />
+    <None Remove="Templates\RegisterArea.tt" />
+    <None Remove="Templates\RegisterDatabase.tt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\RegisterArea.tt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <LastGenOutput>RegisterArea.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </Content>
+    <Content Include="Templates\RegisterDatabase.tt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <LastGenOutput>RegisterDatabase.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Templates\Functions\MyFunction.cs">
@@ -99,15 +113,20 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Templates\RegisterArea.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RegisterArea.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Register_Area - 复制.cs">
       <DependentUpon>Register_Area.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Register_Database.cs">
+    <Compile Update="Templates\RegisterDatabase.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Register_Database.tt</DependentUpon>
+      <DependentUpon>RegisterDatabase.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -158,16 +177,6 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>MyFunction.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Templates\Register_Database.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Register_Database.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Register_Area.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Register_Database.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Register.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

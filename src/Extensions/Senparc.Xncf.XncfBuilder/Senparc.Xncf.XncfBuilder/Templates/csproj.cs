@@ -195,18 +195,21 @@ namespace Senparc.Xncf.XncfBuidler.Templates
             
             #line default
             #line hidden
-            this.Write("  <ItemGroup>\r\n  \t<PackageReference Include=\"Microsoft.AspNetCore.Authentication." +
-                    "Cookies\" Version=\"2.2.0\" />\r\n\t<PackageReference Include=\"Microsoft.AspNetCore.Mv" +
-                    "c\" Version=\"2.2.0\" />\r\n  </ItemGroup>\r\n  ");
+            this.Write(@"  <ItemGroup>
+  	<PackageReference Include=""Microsoft.AspNetCore.Authentication.Cookies"" Version=""2.2.0"" />
+	<PackageReference Include=""Microsoft.AspNetCore.Mvc"" Version=""2.2.0"" />
+    <PackageReference Include=""Senparc.Ncf.AreaBase"" Version=""0.3.500-beta1"" />
+  </ItemGroup>
+  ");
             
-            #line 54 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 55 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  } 
             
             #line default
             #line hidden
             this.Write("\r\n  ");
             
-            #line 56 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 57 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  if(UseDatabase) {
             
             #line default
@@ -215,10 +218,13 @@ namespace Senparc.Xncf.XncfBuidler.Templates
     <PackageReference Include=""Microsoft.EntityFrameworkCore.SqlServer"" Version=""3.1.6"" />
     <PackageReference Include=""Microsoft.EntityFrameworkCore.SqlServer.Design"" Version=""2.0.0-preview1-final"" />
     <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""3.1.6"">
-  </ItemGroup>
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+</ItemGroup>
   ");
             
-            #line 62 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 66 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  } 
             
             #line default

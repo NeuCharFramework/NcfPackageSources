@@ -19,5 +19,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         public string Icon { get; set; }
         public string Description { get; set; }
         public string FunctionTypes { get; set; }
+
+        public bool UseFunction { get; set; }
     }
 }

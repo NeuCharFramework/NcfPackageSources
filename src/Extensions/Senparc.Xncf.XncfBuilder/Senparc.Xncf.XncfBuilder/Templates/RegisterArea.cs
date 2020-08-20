@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class Register_Database : Register_DatabaseBase
+    public partial class RegisterArea : RegisterAreaBase
     {
 #line hidden
         /// <summary>
@@ -28,73 +28,89 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"using Microsoft.EntityFrameworkCore;
+            this.Write(@"using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.XncfBase;
-using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel;
-using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel.Dto;
-using Senparc.Xncf.ExtensionAreaTemplate.Services;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Areas;
+using Senparc.Ncf.Core.Config;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ");
             
-            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n    public partial class Register :\r\n        IXncfDatabase  //注册 XNCF 模块数据库（" +
-                    "按需选用）\r\n    {\r\n        #region IXncfDatabase 接口\r\n\r\n        /// <summary>\r\n       " +
-                    " /// 数据库前缀\r\n        /// </summary>\r\n        public const string DATABASE_PREFIX " +
-                    "= \"");
+            this.Write("\r\n{\r\n\tpublic partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）\r\n\t{\r\n\t\t#" +
+                    "region IAreaRegister 接口\r\n\r\n\t\tpublic string HomeUrl => \"/Admin/");
             
-            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            #line 22 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(@"_"";
+            this.Write(@"/Index"";
 
-        /// <summary>
-        /// 数据库前缀
-        /// </summary>
-        public string DatabaseUniquePrefix => DATABASE_PREFIX;
-        /// <summary>
-        /// 设置 XncfSenparcEntities 类型
-        /// </summary>
-        public Type XncfDatabaseDbContextType => typeof(");
+		public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
+			 new AreaPageMenuItem(GetAreaHomeUrl(),""首页"",""fa fa-laptop""),
+			 //new AreaPageMenuItem(GetAreaUrl(""/Admin/MyApp/About""),""关于"",""fa fa-bookmark-o""),
+		};
+
+		public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnvironment env)
+		{
+			builder.AddRazorPagesOptions(options =>
+			{
+				//此处可配置页面权限
+			});
+
+			SenparcTrace.SendCustomLog(""");
             
-            #line 33 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            #line 36 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(@"SenparcEntities);
-
-
-        public void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
-            //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
-        }
-
-        public void AddXncfDatabaseModule(IServiceCollection services)
-        {
-            //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
-            //ex. services.AddScoped(typeof(Color));
-        }
-
-        #endregion
-    }
-}
-");
+            this.Write(" 启动\", \"完成 Area:");
+            
+            #line 36 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 36 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(" 注册\");\r\n\r\n\t\t\treturn builder;\r\n\t\t}\r\n\r\n\t\t#endregion\r\n\r\n\t\t#region IXncfRazorRuntimeC" +
+                    "ompilation 接口\r\n\t\tpublic string LibraryPath => Path.GetFullPath(Path.Combine(Site" +
+                    "Config.WebRootPath, \"..\", \"..\", \"");
+            
+            #line 44 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 44 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("\"));\r\n\t\t#endregion\r\n\t}\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -106,7 +122,7 @@ namespace ");
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class Register_DatabaseBase
+    public class RegisterAreaBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
