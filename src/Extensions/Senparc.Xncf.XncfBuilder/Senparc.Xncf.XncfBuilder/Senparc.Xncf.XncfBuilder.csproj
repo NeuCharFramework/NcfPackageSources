@@ -98,6 +98,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
+    <Compile Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.cs">
+      <DependentUpon>Sample_ColorConfigurationMapping.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Templates\Models\DatabaseModel\Dto\ColorDto.cs">
+      <DependentUpon>ColorDto.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Templates\Models\DatabaseModel\MySenparcEntities.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -136,6 +146,16 @@
     <None Update="Templates\App_Data\Database\SenparcConfig.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>SenparcConfig.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Sample_ColorConfigurationMapping.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Models\DatabaseModel\Dto\ColorDto.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>ColorDto.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.tt">

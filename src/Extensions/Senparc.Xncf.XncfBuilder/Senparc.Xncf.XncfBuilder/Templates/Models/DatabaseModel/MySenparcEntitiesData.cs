@@ -12,10 +12,13 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
         public string OrgName { get; set; }
         public string XncfName { get; set; }
 
-        public MySenparcEntities(string orgName, string xncfName)
+        public bool UseSample { get; set; }
+
+        public MySenparcEntities(string orgName, string xncfName,bool useSample)
         {
             OrgName = orgName;
             XncfName = xncfName;
+            UseSample = useSample;
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.XncfBase.Attributes;
+
+namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models
+{
+    [XncfAutoConfigurationMapping]
+    public class <#= XncfName #>_ColorConfigurationMapping : ConfigurationMappingWithIdBase<Color, int>
+    {
+        public override void Configure(EntityTypeBuilder<Color> builder)
+        {
+            builder.Property(e => e.Red).IsRequired();
+            builder.Property(e => e.Green).IsRequired();
+            builder.Property(e => e.Blue).IsRequired();
+        }
+    }
+}

@@ -131,11 +131,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Description = typeParam.Description,
                 };
 
-                #region 安装 Sample
-
                 var useSample = typeParam.UseSammple.SelectedValues.Contains("1");
-
-                #endregion
 
                 #region 使用函数
 
@@ -202,8 +198,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "App_Data/Database",
                         "Models",
                         "Models/DatabaseModel",
-                        "Models/DatabaseModel/Dto",
-                        "Models/DatabaseModel/Mapping"
                     };
                     dbDirs.ForEach(z => AddDir(z));
 
@@ -211,10 +205,22 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var dbFiles = new List<IXncfTemplatePage> {
                         new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
                         new XncfBuidler.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
-                        new MySenparcEntities(typeParam.OrgName, typeParam.XncfName),
+                        new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuidler.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
+                }
+
+                #endregion
+
+                #region 安装 Sample
+                if (useSample)
+                {
+                    var sampleDirs = new List<string> {
+                        "Models/DatabaseModel/Dto",
+                        "Models/DatabaseModel/Mapping"
+                    };
+                    sampleDirs.ForEach(z => AddDir(z));
                 }
 
                 #endregion
