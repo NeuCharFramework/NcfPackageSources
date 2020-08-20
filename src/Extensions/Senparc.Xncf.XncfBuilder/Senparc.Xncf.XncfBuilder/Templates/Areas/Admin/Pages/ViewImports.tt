@@ -1,0 +1,12 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+@using Microsoft.AspNetCore.Mvc.Razor
+@using System.Web.Mvc
+@using Senparc.CO2NET.Extensions
+
+@namespace <#= OrgName #>.Xncf.<#= XncfName #>.Areas.MyApps.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
