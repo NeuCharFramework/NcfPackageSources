@@ -1,0 +1,50 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel;
+using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel.Dto;
+using Senparc.Xncf.ExtensionAreaTemplate.Services;
+using System;
+
+namespace <#= OrgName #>.Xncf.<#= XncfName #>
+{
+    public partial class Register :
+        IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    {
+        #region IXncfDatabase 接口
+
+        /// <summary>
+        /// 数据库前缀
+        /// </summary>
+        public const string DATABASE_PREFIX = "<#= XncfName #>_";
+
+        /// <summary>
+        /// 数据库前缀
+        /// </summary>
+        public string DatabaseUniquePrefix => DATABASE_PREFIX;
+        /// <summary>
+        /// 设置 XncfSenparcEntities 类型
+        /// </summary>
+        public Type XncfDatabaseDbContextType => typeof(<#= XncfName #>SenparcEntities);
+
+
+        public void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
+        }
+
+        public void AddXncfDatabaseModule(IServiceCollection services)
+        {
+            //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+            //ex. services.AddScoped(typeof(Color));
+        }
+
+        #endregion
+    }
+}

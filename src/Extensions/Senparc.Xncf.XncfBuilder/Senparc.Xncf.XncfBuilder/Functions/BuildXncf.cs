@@ -3,6 +3,7 @@ using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuidler.Templates;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps;
+using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -206,7 +207,14 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     };
                     dbDirs.ForEach(z => AddDir(z));
 
-
+                    //载入Page
+                    var dbFiles = new List<IXncfTemplatePage> {
+                        new Register_Area(typeParam.OrgName, typeParam.XncfName),
+                        new XncfBuidler.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
+                        new MySenparcEntities(typeParam.OrgName, typeParam.XncfName),
+                        new XncfBuidler.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
+                    };
+                    dbFiles.ForEach(z => WriteContent(z, sb));
                 }
 
                 #endregion
