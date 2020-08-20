@@ -15,5 +15,10 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         public string Description { get; set; }
 
         public bool UseWeb { get; set; }
+
+        /// <summary>
+        /// 项目文件路径（相对于src目录）
+        /// </summary>
+        public string ProjectFilePath => $"{OrgName}.Xncf.{XncfName}\\{OrgName}.Xncf.{XncfName}.csproj";
     }
 }

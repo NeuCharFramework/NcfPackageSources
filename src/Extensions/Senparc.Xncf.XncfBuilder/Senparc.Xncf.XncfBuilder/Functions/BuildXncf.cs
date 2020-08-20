@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
 {
@@ -79,7 +80,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             [Required]
             [MaxLength(250)]
-            [Description("解决方案文件||输入解决方案文件物理路径，将在其并列位置生成模块目录，如：E:\\Senparc\\Ncf\\ncf.sln")]
+            [Description("解决方案文件||输入解决方案文件物理路径，将在其并列位置生成模块目录，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\NCF.sln")]
             public string SlnFilePath { get; set; }
         }
 
@@ -201,7 +202,21 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Description = typeParam.Description,
                     UseWeb = useWeb
                 };
+
                 WriteContent(csprojPage, sb);
+
+                //自动附加项目
+                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath,"Senparc.Web.csproj"));
+                if (File.Exists(webProjFilePath))
+                {
+                    XDocument webCsproj = XDocument.Load(webProjFilePath);
+                    var referenceNode = new XElement("ProjectReference");
+                    referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
+                    var newNode = new XElement("ItemGroup", referenceNode);
+                    webCsproj.Root.Add(newNode);
+                    webCsproj.Save(webProjFilePath);
+                }
+
                 #endregion
 
                 #region 生成 .sln
