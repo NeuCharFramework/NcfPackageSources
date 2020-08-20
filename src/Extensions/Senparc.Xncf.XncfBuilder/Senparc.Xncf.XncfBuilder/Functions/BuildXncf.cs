@@ -59,24 +59,16 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             [Description("说明||模块的说明")]
             public string Description { get; set; }
 
-            [Description("使用函数||")]
-            public SelectionList UseFunction { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","是否需要使用函数模块（Function）",false),
+            [Description("功能配置||")]
+            public SelectionList UseModule { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("function","配置“函数”功能","是否需要使用函数模块（Function）",false),
+                 new SelectionItem("database","配置“数据库”功能","是否需要使用数据库模块（Database），将配置空数据库",false),
+                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web）",false),
             });
 
-            [Description("使用数据库||")]
-            public SelectionList UseDatabase { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","是否需要使用数据库模块（Database）",false),
-            });
-
-            [Description("使用 Web 页面||")]
-            public SelectionList UseWeb { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","是否需要使用 Web 页面模块（Web）",false),
-            });
-
-            [Description("使用中间件||")]
-            public SelectionList UseMiddleware { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","是否需要使用中间件模块（Middleware）",false),
+            [Description("安装 Sample||")]
+            public SelectionList UseSammple { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("1","是","是否安装数据库示例，由于展示需要，将自动安装上述“数据库”、“Web（Area） 页面”功能",false),
             });
 
             [Required]
@@ -91,7 +83,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         public override string Description => "根据配置条件生成 XNCF";
 
         public override Type FunctionParameterType => typeof(Parameters);
-
 
         private string _outPutBaseDir;
         /// <summary>
@@ -140,10 +131,16 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Description = typeParam.Description,
                 };
 
+                #region 安装 Sample
+
+                var useSample = typeParam.UseSammple.SelectedValues.Contains("1");
+
+                #endregion
+
                 #region 使用函数
 
                 //判断是否使用函数（方法）
-                var useFunction = typeParam.UseFunction.SelectedValues.Contains("1");
+                var useFunction = typeParam.UseModule.SelectedValues.Contains("function");
                 var functionTypes = "";
                 if (useFunction)
                 {
@@ -164,7 +161,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 #endregion
 
                 #region 判断 Web - Area
-                var useWeb = typeParam.UseWeb.SelectedValues.Contains("1");
+                var useWeb = typeParam.UseModule.SelectedValues.Contains("web");
                 //判断 Area 
                 if (useWeb)
                 {
@@ -194,10 +191,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #endregion
 
-
                 #region 判断 数据库
 
-                var useDatabase = typeParam.UseDatabase.SelectedValues.Contains("1");
+                var useDatabase = typeParam.UseModule.SelectedValues.Contains("database");
                 if (useDatabase)
                 {
                     //生成目录
@@ -253,11 +249,14 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 if (File.Exists(webProjFilePath))
                 {
                     XDocument webCsproj = XDocument.Load(webProjFilePath);
-                    var referenceNode = new XElement("ProjectReference");
-                    referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
-                    var newNode = new XElement("ItemGroup", referenceNode);
-                    webCsproj.Root.Add(newNode);
-                    webCsproj.Save(webProjFilePath);
+                    if (!webCsproj.ToString().Contains(csprojPage.ProjectFilePath))
+                    {
+                        var referenceNode = new XElement("ProjectReference");
+                        referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
+                        var newNode = new XElement("ItemGroup", referenceNode);
+                        webCsproj.Root.Add(newNode);
+                        webCsproj.Save(webProjFilePath);
+                    }
                 }
 
                 #endregion

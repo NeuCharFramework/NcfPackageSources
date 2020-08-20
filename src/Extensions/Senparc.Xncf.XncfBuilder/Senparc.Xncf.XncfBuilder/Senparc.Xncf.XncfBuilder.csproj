@@ -108,10 +108,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SenparcDbContextFactory.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Register - 复制.cs">
-      <DependentUpon>Register.tt</DependentUpon>
+    <Compile Update="Templates\Register.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>Register.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\RegisterArea.cs">
       <DesignTime>True</DesignTime>
@@ -180,7 +180,7 @@
     </None>
     <None Update="Templates\Register.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Register_Area.cs</LastGenOutput>
+      <LastGenOutput>Register.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -6,7 +6,7 @@
 using Senparc.Ncf.XncfBase;
 <# if(UseFunction) { #>
 using <#= OrgName #>.Xncf.<#= XncfName #>.Functions;
-<# }#>
+<# } #>
 <# if(UseDatabase) { #>
 using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel;
 using Senparc.Ncf.Core.Enums;
@@ -14,7 +14,7 @@ using Senparc.Ncf.Core.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-<# }#>
+<# } #>
 using System;
 using System.Collections.Generic;
 
@@ -49,6 +49,8 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
+            #regnion 删除数据库（演示）
+
             <#= XncfName #>SenparcEntities mySenparcEntities = serviceProvider.GetService<<#= XncfName #>SenparcEntities>();
 
             //指定需要删除的数据实体
@@ -56,6 +58,8 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
             //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
+
+            #endregion
 
             await unsinstallFunc().ConfigureAwait(false);
         }

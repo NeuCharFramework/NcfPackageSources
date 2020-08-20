@@ -52,7 +52,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
             this.Write(".Functions;\r\n");
             
             #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
- }
+ } 
             
             #line default
             #line hidden
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
                     "ons.DependencyInjection;\r\n");
             
             #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
- }
+ } 
             
             #line default
             #line hidden
@@ -175,16 +175,16 @@ namespace Senparc.Xncf.XncfBuidler.Templates
             #line hidden
             this.Write("SenparcEntities>(serviceProvider);\r\n        }\r\n\r\n        public override async Ta" +
                     "sk UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)\r\n" +
-                    "        {\r\n            ");
+                    "        {\r\n            #regnion 删除数据库（演示）\r\n\r\n            ");
             
-            #line 52 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            #line 54 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
             this.Write("SenparcEntities mySenparcEntities = serviceProvider.GetService<");
             
-            #line 52 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            #line 54 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -197,11 +197,13 @@ namespace Senparc.Xncf.XncfBuidler.Templates
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
+            #endregion
+
             await unsinstallFunc().ConfigureAwait(false);
         }
         ");
             
-            #line 62 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
+            #line 66 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
  }
             
             #line default
