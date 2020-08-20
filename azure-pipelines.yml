@@ -286,7 +286,7 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-  - task: NuGetCommand@2
+- task: NuGetCommand@2
   displayName: 'Senparc.Xncf.XncfBuilder- Symbol'
   inputs:
     command: push
