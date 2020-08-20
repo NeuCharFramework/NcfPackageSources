@@ -68,15 +68,25 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SenparcConfig.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index - 复制.cs">
       <DependentUpon>Index.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DatabaseSample.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs - 复制.cs">
       <DependentUpon>Index_cs.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DatabaseSample_cs.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Areas\Admin\Pages\ViewImports.cs">
       <DesignTime>True</DesignTime>
@@ -108,6 +118,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Templates\Models\DatabaseModel\Color.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Color.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Models\DatabaseModel\MySenparcEntities.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -138,6 +153,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>RegisterDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Update="Templates\Services\ColorService.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ColorService.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
@@ -148,6 +168,16 @@
       <LastGenOutput>SenparcConfig.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
+    <None Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>DatabaseSample.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>DatabaseSample_cs.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
     <None Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>Sample_ColorConfigurationMapping.cs</LastGenOutput>
@@ -156,6 +186,11 @@
     <None Update="Templates\Models\DatabaseModel\Dto\ColorDto.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>ColorDto.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Models\DatabaseModel\Color.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Color.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.tt">
@@ -170,12 +205,12 @@
     </None>
     <None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Index_cs.cs</LastGenOutput>
+      <LastGenOutput>DatabaseSample_cs.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Areas\Admin\Pages\MyApps\Index.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Index.cs</LastGenOutput>
+      <LastGenOutput>DatabaseSample.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Areas\Admin\Pages\ViewStart.tt">
@@ -202,6 +237,11 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>Register.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Services\ColorService.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>ColorService.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
   </ItemGroup>
   <ItemGroup>

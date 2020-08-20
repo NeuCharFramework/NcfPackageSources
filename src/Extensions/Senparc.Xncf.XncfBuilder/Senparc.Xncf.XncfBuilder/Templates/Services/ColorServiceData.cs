@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates
+namespace Senparc.Xncf.XncfBuidler.Templates.Services
 {
-    public partial class RegisterArea : IXncfTemplatePage
+    public partial class ColorService : IXncfTemplatePage
     {
         /// <summary>
         /// 相对地址
         /// </summary>
-        public string RelativeFilePath => "Register.Area.cs";
+        public string RelativeFilePath => $"Services\\ColorService.cs";
 
         public string OrgName { get; set; }
         public string XncfName { get; set; }
-        public bool UseSample { get; set; }
-        public RegisterArea(string orgName, string xncfName,bool useSample)
+
+
+        public ColorService(string orgName, string xncfName)
         {
             OrgName = orgName;
             XncfName = xncfName;
-            UseSample = useSample;
         }
     }
 }

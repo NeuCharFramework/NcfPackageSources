@@ -4,6 +4,9 @@ using Senparc.Xncf.XncfBuidler.Templates;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel;
+using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto;
+using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Mapping;
+using Senparc.Xncf.XncfBuidler.Templates.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,7 +54,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             [Required]
             [MaxLength(50)]
-            [Description("图标||支持 Font Awesome 图标集，如：fa fa-ofbuilding")]
+            [Description("图标||支持 Font Awesome 图标集，如：fa fa-star")]
             public string Icon { get; set; }
 
             [Required]
@@ -157,7 +160,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 #endregion
 
                 #region 判断 Web - Area
-                var useWeb = typeParam.UseModule.SelectedValues.Contains("web");
+                var useWeb = useSample || typeParam.UseModule.SelectedValues.Contains("web");
                 //判断 Area 
                 if (useWeb)
                 {
@@ -181,7 +184,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     areaPages.ForEach(z => WriteContent(z, sb));
 
                     //生成Register.Area
-                    var registerArea = new RegisterArea(typeParam.OrgName, typeParam.XncfName);
+                    var registerArea = new RegisterArea(typeParam.OrgName, typeParam.XncfName, useSample);
                     WriteContent(registerArea, sb);
                 }
 
@@ -189,7 +192,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #region 判断 数据库
 
-                var useDatabase = typeParam.UseModule.SelectedValues.Contains("database");
+                var useDatabase = useSample || typeParam.UseModule.SelectedValues.Contains("database");
+                registerPage.UseDatabase = useDatabase;
                 if (useDatabase)
                 {
                     //生成目录
@@ -198,6 +202,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "App_Data/Database",
                         "Models",
                         "Models/DatabaseModel",
+
+                        "Services",
                     };
                     dbDirs.ForEach(z => AddDir(z));
 
@@ -207,6 +213,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         new XncfBuidler.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuidler.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
+                        new Color(typeParam.OrgName, typeParam.XncfName),
+
+                        new ColorService(typeParam.OrgName, typeParam.XncfName),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }
@@ -218,15 +227,26 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     var sampleDirs = new List<string> {
                         "Models/DatabaseModel/Dto",
-                        "Models/DatabaseModel/Mapping"
+                        "Models/DatabaseModel/Mapping",
                     };
                     sampleDirs.ForEach(z => AddDir(z));
+
+                    //载入Page
+                    var sampleFiles = new List<IXncfTemplatePage> {
+                        new ColorDto(typeParam.OrgName, typeParam.XncfName),
+                        new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
+
+                        new DatabaseSample(typeParam.OrgName, typeParam.XncfName),
+                        new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName)
+                    };
+                    sampleFiles.ForEach(z => WriteContent(z, sb));
                 }
 
                 #endregion
 
                 #region 生成 Register 主文件
 
+                registerPage.UseSample = useSample;
                 WriteContent(registerPage, sb);
 
                 #endregion

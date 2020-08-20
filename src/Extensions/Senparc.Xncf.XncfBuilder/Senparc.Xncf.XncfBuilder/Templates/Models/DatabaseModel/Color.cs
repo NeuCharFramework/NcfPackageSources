@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
+namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Color.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class ColorDto : ColorDtoBase
+    public partial class Color : ColorBase
     {
 #line hidden
         /// <summary>
@@ -28,41 +28,60 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Senparc.Ncf.Core.Models;\r\n\r\nnamespace ");
+            this.Write("using Senparc.Ncf.Core.Models;\r\nusing ");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+            #line 8 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Color.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+            #line 8 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Color.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(@".Models.DatabaseModel.Dto
-{
-    public class ColorDto : DtoBase
-    {
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Red { get; private set; }
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Green { get; private set; }
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Blue { get; private set; }
-
-        private ColorDto() { }
-    }
-}
-");
+            this.Write(".Models.DatabaseModel.Dto;\r\nusing System;\r\nusing System.ComponentModel.DataAnnota" +
+                    "tions.Schema;\r\n\r\nnamespace ");
+            
+            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Color.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Color.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n{\r\n    /// <summary>\r\n    /// Color 实体类\r\n    /// </summary>\r\n    [Table(Registe" +
+                    "r.DATABASE_PREFIX + nameof(Color))]//必须添加前缀，防止全系统中发生冲突\r\n    [Serializable]\r\n    " +
+                    "public class Color : EntityBase<int>\r\n    {\r\n        /// <summary>\r\n        /// " +
+                    "颜色码，0-255\r\n        /// </summary>\r\n        public int Red { get; private set; }\r" +
+                    "\n        /// <summary>\r\n        /// 颜色码，0-255\r\n        /// </summary>\r\n        p" +
+                    "ublic int Green { get; private set; }\r\n\r\n        /// <summary>\r\n        /// 颜色码，" +
+                    "0-255\r\n        /// </summary>\r\n        public int Blue { get; private set; }\r\n\r\n" +
+                    "        /// <summary>\r\n        /// 附加列，测试多次数据库 Migrate\r\n        /// </summary>\r\n" +
+                    "        public string AdditionNote { get; private set; }\r\n\r\n        private Colo" +
+                    "r() { }\r\n\r\n        public Color(int red, int green, int blue)\r\n        {\r\n      " +
+                    "      if (red < 0 || green < 0 || blue < 0)\r\n            {\r\n                Rand" +
+                    "om();//随机\r\n            }\r\n            else\r\n            {\r\n                Red =" +
+                    " red;\r\n                Green = green;\r\n                Blue = blue;\r\n           " +
+                    " }\r\n        }\r\n\r\n        public Color(ColorDto colorDto)\r\n        {\r\n           " +
+                    " Red = colorDto.Red;\r\n            Green = colorDto.Green;\r\n            Blue = co" +
+                    "lorDto.Blue;\r\n        }\r\n\r\n        public void Random()\r\n        {\r\n            " +
+                    "//随机产生颜色代码\r\n            var radom = new Random(SystemTime.Now.Second);\r\n        " +
+                    "    Func<int> getRadomColorCode = () => radom.Next(0, 255);\r\n            Red = g" +
+                    "etRadomColorCode();\r\n            Green = getRadomColorCode();\r\n            Blue " +
+                    "= getRadomColorCode();\r\n        }\r\n\r\n        public void Brighten()\r\n        {\r\n" +
+                    "            Red = Math.Min(255, Red + 10);\r\n            Green = Math.Min(255, Gr" +
+                    "een + 10);\r\n            Blue = Math.Min(255, Blue + 10);\r\n        }\r\n\r\n        p" +
+                    "ublic void Darken()\r\n        {\r\n            Red = Math.Max(0, Red - 10);\r\n      " +
+                    "      Green = Math.Max(0, Green - 10);\r\n            Blue = Math.Max(0, Blue - 10" +
+                    ");\r\n        }\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -74,7 +93,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class ColorDtoBase
+    public class ColorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

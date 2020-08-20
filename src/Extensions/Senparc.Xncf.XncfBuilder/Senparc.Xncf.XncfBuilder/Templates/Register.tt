@@ -3,6 +3,8 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+using System;
+using System.Collections.Generic;
 using Senparc.Ncf.XncfBase;
 <# if(UseFunction) { #>
 using <#= OrgName #>.Xncf.<#= XncfName #>.Functions;
@@ -15,8 +17,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 <# } #>
-using System;
-using System.Collections.Generic;
+<# if(UseSample) { #>
+using <#= OrgName #>.Xncf.<#= XncfName #>.Services;
+using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel.Dto;
+<# } #>
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {
@@ -45,11 +49,34 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         {
             //安装或升级版本时更新数据库
             await base.MigrateDatabaseAsync<<#= XncfName #>SenparcEntities>(serviceProvider);
+
+            //根据安装或更新不同条件执行逻辑
+            switch (installOrUpdate)
+            {
+                case InstallOrUpdate.Install:
+                    //新安装
+                    <# if(UseSample) { #>
+                    #region 初始化数据库数据
+                    var colorService = serviceProvider.GetService<ColorService>();
+                    var color = colorService.GetObject(z => true);
+                    if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+                    {
+                        ColorDto colorDto = await colorService.CreateNewColor().ConfigureAwait(false);//创建默认颜色
+                    }
+                    #endregion
+                    <# }#>
+                    break;
+                case InstallOrUpdate.Update:
+                    //更新
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #regnion 删除数据库（演示）
+            #region 删除数据库（演示）
 
             <#= XncfName #>SenparcEntities mySenparcEntities = serviceProvider.GetService<<#= XncfName #>SenparcEntities>();
 

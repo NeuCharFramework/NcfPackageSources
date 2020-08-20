@@ -7,7 +7,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
         /// <summary>
         /// 相对地址
         /// </summary>
-        public string RelativeFilePath => $"SenparcDbContextFactory.cs";
+        public string RelativeFilePath => $"Models\\DatabaseModel\\SenparcDbContextFactory.cs";
 
         public string OrgName { get; set; }
         public string XncfName { get; set; }

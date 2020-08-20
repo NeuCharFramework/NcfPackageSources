@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
+namespace Senparc.Xncf.XncfBuidler.Templates.Services
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Services\ColorService.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class ColorDto : ColorDtoBase
+    public partial class ColorService : ColorServiceBase
     {
 #line hidden
         /// <summary>
@@ -28,41 +28,56 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Senparc.Ncf.Core.Models;\r\n\r\nnamespace ");
+            this.Write("using Senparc.Ncf.Core.Enums;\r\nusing Senparc.Ncf.Repository;\r\nusing Senparc.Ncf.S" +
+                    "ervice;\r\nusing ");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Services\ColorService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Services\ColorService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(@".Models.DatabaseModel.Dto
-{
-    public class ColorDto : DtoBase
-    {
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Red { get; private set; }
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Green { get; private set; }
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Blue { get; private set; }
-
-        private ColorDto() { }
-    }
-}
-");
+            this.Write(".Models.DatabaseModel.Dto;\r\nusing System;\r\nusing System.Threading.Tasks;\r\n\r\nnames" +
+                    "pace ");
+            
+            #line 13 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Services\ColorService.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 13 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Services\ColorService.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(".Services\r\n{\r\n    public class ColorService : ServiceBase<Color>\r\n    {\r\n        " +
+                    "public ColorService(IRepositoryBase<Color> repo, IServiceProvider serviceProvide" +
+                    "r)\r\n            : base(repo, serviceProvider)\r\n        {\r\n        }\r\n\r\n        p" +
+                    "ublic async Task<ColorDto> CreateNewColor()\r\n        {\r\n            Color color " +
+                    "= new Color(-1, -1, -1);\r\n            await base.SaveObjectAsync(color).Configur" +
+                    "eAwait(false);\r\n            ColorDto colorDto = base.Mapper.Map<ColorDto>(color)" +
+                    ";\r\n            return colorDto;\r\n        }\r\n\r\n        public async Task<ColorDto" +
+                    "> Brighten()\r\n        {\r\n            //TODO:异步方法需要添加排序功能\r\n            var obj = " +
+                    "this.GetObject(z => true, z => z.Id, OrderingType.Descending);\r\n            obj." +
+                    "Brighten();\r\n            await base.SaveObjectAsync(obj).ConfigureAwait(false);\r" +
+                    "\n            return base.Mapper.Map<ColorDto>(obj);\r\n        }\r\n\r\n        public" +
+                    " async Task<ColorDto> Darken()\r\n        {\r\n            //TODO:异步方法需要添加排序功能\r\n    " +
+                    "        var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);" +
+                    "\r\n            obj.Darken();\r\n            await base.SaveObjectAsync(obj).Configu" +
+                    "reAwait(false);\r\n            return base.Mapper.Map<ColorDto>(obj);\r\n        }\r\n" +
+                    "\r\n        public async Task<ColorDto> Random()\r\n        {\r\n            //TODO:异步" +
+                    "方法需要添加排序功能\r\n            var obj = this.GetObject(z => true, z => z.Id, OrderingT" +
+                    "ype.Descending);\r\n            obj.Random();\r\n            await base.SaveObjectAs" +
+                    "ync(obj).ConfigureAwait(false);\r\n            return base.Mapper.Map<ColorDto>(ob" +
+                    "j);\r\n        }\r\n\r\n        //TODO: 更多业务方法可以写到这里\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -74,7 +89,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class ColorDtoBase
+    public class ColorServiceBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

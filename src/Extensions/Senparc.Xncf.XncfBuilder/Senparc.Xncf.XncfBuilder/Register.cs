@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string MenuName => "XNCF 模块生成器";
 
-        public override string Icon => "fa fa-ofbuilding";
+        public override string Icon => "fa fa-ofwrench";
 
-        public override string Description => "快速生成 XNCF 模块基础程序代码";
+        public override string Description => "快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用";
 
         public override IList<Type> Functions => new Type[] { typeof(BuildXncf) };
 

@@ -22,5 +22,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
 
         public bool UseFunction { get; set; }
         public bool UseDatabase { get; set; }
+
+        public bool UseSample { get; set; }
     }
 }

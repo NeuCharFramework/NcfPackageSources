@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
+namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class ColorDto : ColorDtoBase
+    public partial class DatabaseSample : DatabaseSampleBase
     {
 #line hidden
         /// <summary>
@@ -28,41 +28,91 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Senparc.Ncf.Core.Models;\r\n\r\nnamespace ");
+            this.Write("@page\r\n@model ");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\Dto\ColorDto.tt"
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(@".Models.DatabaseModel.Dto
-{
-    public class ColorDto : DtoBase
-    {
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Red { get; private set; }
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Green { get; private set; }
-        /// <summary>
-        /// 颜色码，0-255
-        /// </summary>
-        public int Blue { get; private set; }
-
-        private ColorDto() { }
-    }
+            this.Write(".Areas.");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@".Pages.DatabaseSample
+@{
+    ViewData[""Title""] = ""数据库操作示例"";
+    Layout = ""_Layout_Vue"";
 }
-");
+@section HeaderContent{
+    <style>
+        .box {
+            margin: 30px auto;
+            text-align: center;
+            padding: 80px;
+        }
+    </style>
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>");
+            
+            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("</el-breadcrumb-item>\r\n    <el-breadcrumb-item>数据库操作示例</el-breadcrumb-item>\r\n}\r\n\r" +
+                    "\n<div>\r\n    <el-container>\r\n        <el-header class=\"module-header\">\r\n         " +
+                    "   <span class=\"start-title\"> <i class=\"fa fa-dot-circle-o\"></i>&nbsp;<span clas" +
+                    "s=\"module-header-v\">扩展页面测试模块</span></span>\r\n        </el-header>\r\n        <el-ma" +
+                    "in v-if=\"moduleData\">\r\n            <h4>{{moduleData.xncfModuleDto.description}}<" +
+                    "/h4>\r\n            <br />\r\n            <h4>安装时间：{{formaTableTime(moduleData.color" +
+                    "Dto.addTime)}}</h4>\r\n            <div class=\"box\" :style=\"{backgroundColor}\">\r\n\r" +
+                    "\n                <el-button @@click=\"changeColor(\'Brighten\')\"><i class=\"fa fa-ta" +
+                    "chometer\"></i> 变亮</el-button>\r\n                <el-button @@click=\"changeColor(\'" +
+                    "Darken\')\" type=\"info\"><i class=\"fa fa-moon-o\"></i> 变暗</el-button>\r\n             " +
+                    "   <el-button @@click=\"changeColor(\'Random\')\" type=\"success\"><i class=\"fa fa-sun" +
+                    "-o\"></i> 随机</el-button>\r\n            </div>\r\n        </el-main>\r\n    </el-contai" +
+                    "ner>\r\n</div>\r\n@section scripts{\r\n    <script>\r\n        var app = new Vue({\r\n    " +
+                    "        el: \"#app\",\r\n            data() {\r\n                return {\r\n           " +
+                    "         moduleData: null,\r\n                    uid: \'\'\r\n                };\r\n   " +
+                    "         },\r\n            computed: {\r\n                backgroundColor() {\r\n     " +
+                    "               let rgba = `rgba(${this.moduleData.colorDto.red},${this.moduleDat" +
+                    "a.colorDto.green},${this.moduleData.colorDto.blue},1)`\r\n                    retu" +
+                    "rn rgba;\r\n                }\r\n            },\r\n            mounted() {\r\n          " +
+                    "      this.getDetail();\r\n            },\r\n            methods: {\r\n               " +
+                    " async getDetail() {\r\n                    this.uid = resizeUrl().uid\r\n          " +
+                    "          const res = await service.get(\'/Admin/");
+            
+            #line 67 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("/DatabaseSample?handler=Detail&uid=\' + this.uid);\r\n                    this.modul" +
+                    "eData = res.data.data;\r\n                },\r\n                // 改变颜色\r\n           " +
+                    "     async changeColor(param) {\r\n                    const res = await service.g" +
+                    "et(\'/Admin/");
+            
+            #line 72 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("/DatabaseSample?handler=\' + param + \'&uid=\' + this.uid);\r\n                    thi" +
+                    "s.moduleData.colorDto = res.data.data;\r\n                }\r\n            }\r\n      " +
+                    "  });\r\n    </script>\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -74,7 +124,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class ColorDtoBase
+    public class DatabaseSampleBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

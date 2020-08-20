@@ -18,7 +18,6 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel.Dto
         /// 颜色码，0-255
         /// </summary>
         public int Green { get; private set; }
-
         /// <summary>
         /// 颜色码，0-255
         /// </summary>

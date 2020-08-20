@@ -64,6 +64,13 @@ namespace Senparc.Xncf.XncfBuidler.Templates
                     "= \"");
             
             #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default

@@ -65,10 +65,22 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
             
             #line default
             #line hidden
-            this.Write(@"SenparcEntities> dbContextOptions) : base(dbContextOptions)
-        {
-        }
-
+            this.Write("SenparcEntities> dbContextOptions) : base(dbContextOptions)\r\n        {\r\n        }" +
+                    "\r\n\r\n        ");
+            
+            #line 20 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+ if(UseSample) {
+            
+            #line default
+            #line hidden
+            this.Write("        public DbSet<Color> Colors { get; set; }\r\n        ");
+            
+            #line 22 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write(@"
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 

@@ -20,7 +20,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         /// <summary>
         /// 数据库前缀
         /// </summary>
-        public const string DATABASE_PREFIX = "<#= XncfName #>_";
+        public const string DATABASE_PREFIX = "<#= OrgName #>_<#= XncfName #>_";
 
         /// <summary>
         /// 数据库前缀
