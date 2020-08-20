@@ -12,23 +12,27 @@
 
 @section HeaderContent{
     <style>
-        .extensionAreaTemplate .el-menu {
+       .extensionAreaTemplate .box {
+            margin: 30px auto;
+            text-align: center;
+            padding: 80px;
+        }
+      .extensionAreaTemplate  .el-menu {
             min-height: 400px;
         }
-
-        .extensionAreaTemplate .el-menu-item a {
+       .extensionAreaTemplate .el-menu-item a {
             display: block;
             color: inherit;
             text-decoration: none;
         }
 
-            .extensionAreaTemplate .el-menu-item a i {
-                margin-right: 5px;
-                width: 24px;
-                text-align: center;
-                font-size: 18px;
-                vertical-align: middle;
-            }
+        .extensionAreaTemplate .el-menu-item a i {
+            margin-right: 5px;
+            width: 24px;
+            text-align: center;
+            font-size: 18px;
+            vertical-align: middle;
+        }
     </style>
 }
 
@@ -45,7 +49,7 @@
         </el-header>
         <el-container v-if="moduleData">
             <el-aside width="200px">
-                <el-menu background-color="#304156" default-active="1"
+                <el-menu background-color="#304156" default-active="2"
                          text-color="#bfcbd9" active-text-color="#409eff">
                     @(await Html.PartialAsync("_SideMenu"))
                 </el-menu>

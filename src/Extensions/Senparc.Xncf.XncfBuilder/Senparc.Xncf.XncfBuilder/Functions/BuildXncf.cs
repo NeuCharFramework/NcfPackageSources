@@ -3,6 +3,7 @@ using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuidler.Templates;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps;
+using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Mapping;
@@ -27,6 +28,17 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
         public class Parameters : IFunctionParameter
         {
+            [Required]
+            [MaxLength(250)]
+            [Description("解决方案文件（.sln）路径||输入 NCF 项目的解决方案（.sln）文件完整物理路径，将在其并列位置生成模块目录，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\NCF.sln")]
+            public string SlnFilePath { get; set; }
+
+            [Description("配置解决方案文件（.sln）||")]
+            public SelectionList NewSlnFile { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
+                 new SelectionItem("new","生成新的 .sln 文件","如果不选择，将覆盖现有 .sln 文件（不会影响已有功能），推荐使用备份功能",false),
+            });
+
             [Required]
             [MaxLength(50)]
             [Description("组织名称||用于作为模块命名空间（及名称）的前缀")]
@@ -74,10 +86,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                  new SelectionItem("1","是","是否安装数据库示例，由于展示需要，将自动安装上述“数据库”、“Web（Area） 页面”功能",false),
             });
 
-            [Required]
-            [MaxLength(250)]
-            [Description("解决方案文件||输入解决方案文件物理路径，将在其并列位置生成模块目录，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\NCF.sln")]
-            public string SlnFilePath { get; set; }
         }
 
 
@@ -178,7 +186,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var areaPages = new List<IXncfTemplatePage> {
                         new ViewStart(typeParam.OrgName,typeParam.XncfName),
                         new ViewImports(typeParam.OrgName,typeParam.XncfName),
-                        new Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps.Index(typeParam.OrgName,typeParam.XncfName),
+                        new Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps.Index(typeParam.OrgName,typeParam.XncfName,typeParam.MenuName),
                         new Index_cs(typeParam.OrgName,typeParam.XncfName),
                     };
                     areaPages.ForEach(z => WriteContent(z, sb));
@@ -237,7 +245,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
 
                         new DatabaseSample(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
-                        new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName)
+                        new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
+
+                        new _SideMenu(typeParam.OrgName, typeParam.XncfName)
                     };
                     sampleFiles.ForEach(z => WriteContent(z, sb));
                 }
@@ -298,10 +308,28 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 }
                 else if (File.Exists(typeParam.SlnFilePath))
                 {
+                    //是否创建新的 .sln 文件
+                    var useNewSlnFile = typeParam.NewSlnFile.SelectedValues.Contains("new");
+                   
                     var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
-                    var newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
-                    var newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
-                    File.Copy(typeParam.SlnFilePath, newSlnFilePath);
+                    string newSlnFileName = slnFileName;
+                    string newSlnFilePath = typeParam.SlnFilePath;
+                    if (useNewSlnFile)
+                    {
+                        newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                        newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
+                        File.Copy(typeParam.SlnFilePath, newSlnFilePath);
+                        sb.AppendLine($"完成 {newSlnFilePath} 文件创建");
+                    }
+                    else
+                    {
+                        var backupSln = typeParam.NewSlnFile.SelectedValues.Contains("backup");
+                        var backupFileName = $"{slnFileName}-backup-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                        var backupFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), backupFileName);
+                        File.Copy(typeParam.SlnFilePath, backupFilePath);
+                        sb.AppendLine($"完成 {newSlnFilePath} 文件备份");
+                    }
+
                     result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！。";
 
                     //修改 new Sln

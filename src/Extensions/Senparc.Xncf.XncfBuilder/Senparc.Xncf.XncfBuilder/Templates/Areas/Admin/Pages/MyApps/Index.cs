@@ -60,7 +60,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
                     "b-item>扩展模块</el-breadcrumb-item>\r\n    <el-breadcrumb-item>");
             
             #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\Index.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
             
             #line default
             #line hidden
@@ -73,6 +73,14 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
         <el-header class=""module-header"">
             <span class=""start-title""> <i class=""fa fa-dot-circle-o""></i>&nbsp;<span class=""module-header-v"">首页</span></span>
         </el-header>
+
+        <!-- 此处也可以加 SideMenu -->
+        @*<el-aside width=""200px"">
+            <el-menu background-color=""#304156"" default-active=""1""
+                        text-color=""#bfcbd9"" active-text-color=""#409eff"">
+                @(await Html.PartialAsync(""_SideMenu""))
+            </el-menu>
+        </el-aside>*@
         <el-main>
             <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
             <h4>@Model.XncfRegister.Description</h4>

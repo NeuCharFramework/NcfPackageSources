@@ -57,23 +57,27 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
 
 @section HeaderContent{
     <style>
-        .extensionAreaTemplate .el-menu {
+       .extensionAreaTemplate .box {
+            margin: 30px auto;
+            text-align: center;
+            padding: 80px;
+        }
+      .extensionAreaTemplate  .el-menu {
             min-height: 400px;
         }
-
-        .extensionAreaTemplate .el-menu-item a {
+       .extensionAreaTemplate .el-menu-item a {
             display: block;
             color: inherit;
             text-decoration: none;
         }
 
-            .extensionAreaTemplate .el-menu-item a i {
-                margin-right: 5px;
-                width: 24px;
-                text-align: center;
-                font-size: 18px;
-                vertical-align: middle;
-            }
+        .extensionAreaTemplate .el-menu-item a i {
+            margin-right: 5px;
+            width: 24px;
+            text-align: center;
+            font-size: 18px;
+            vertical-align: middle;
+        }
     </style>
 }
 
@@ -81,7 +85,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>");
             
-            #line 37 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            #line 41 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
             
             #line default
@@ -92,7 +96,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
                     "circle-o\"></i>&nbsp;<span class=\"module-header-v\">数据库操作示例</span></span>\r\n       " +
                     " </el-header>\r\n        <el-container v-if=\"moduleData\">\r\n            <el-aside w" +
                     "idth=\"200px\">\r\n                <el-menu background-color=\"#304156\" default-activ" +
-                    "e=\"1\"\r\n                         text-color=\"#bfcbd9\" active-text-color=\"#409eff\"" +
+                    "e=\"2\"\r\n                         text-color=\"#bfcbd9\" active-text-color=\"#409eff\"" +
                     ">\r\n                    @(await Html.PartialAsync(\"_SideMenu\"))\r\n                " +
                     "</el-menu>\r\n            </el-aside>\r\n            <el-main>\r\n                <h4>" +
                     "{{moduleData.xncfModuleDto.description}}</h4>\r\n                <br />\r\n         " +
@@ -114,7 +118,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
                     "{\r\n                async getDetail() {\r\n                    this.uid = resizeUrl" +
                     "().uid\r\n                    const res = await service.get(\'/Admin/");
             
-            #line 89 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            #line 93 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -124,7 +128,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
                     "     async changeColor(param) {\r\n                    const res = await service.g" +
                     "et(\'/Admin/");
             
-            #line 94 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            #line 98 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default

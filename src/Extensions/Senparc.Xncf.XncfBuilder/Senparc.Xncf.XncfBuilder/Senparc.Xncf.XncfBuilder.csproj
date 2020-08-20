@@ -63,25 +63,25 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SenparcConfig.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index - 复制.cs">
-      <DependentUpon>Index.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DatabaseSample.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs - 复制.cs">
-      <DependentUpon>Index_cs.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DatabaseSample_cs.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index_cs.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.cs">
       <DesignTime>True</DesignTime>
@@ -209,12 +209,12 @@
     </None>
     <None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>DatabaseSample_cs.cs</LastGenOutput>
+      <LastGenOutput>Index_cs.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Areas\Admin\Pages\MyApps\Index.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>DatabaseSample.cs</LastGenOutput>
+      <LastGenOutput>Index.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Areas\Admin\Pages\ViewStart.tt">
