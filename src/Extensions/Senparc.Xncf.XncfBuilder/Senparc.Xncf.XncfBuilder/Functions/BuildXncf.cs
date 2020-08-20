@@ -229,7 +229,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     Version = typeParam.Version,
                     MenuName = typeParam.MenuName,
                     Description = typeParam.Description,
-                    UseWeb = useWeb
+                    UseWeb = useWeb,
+                    UseDatabase = useDatabase
                 };
 
                 WriteContent(csprojPage, sb);

@@ -99,10 +99,15 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Register_Area.cs">
+    <Compile Update="Templates\Register_Area - 复制.cs">
+      <DependentUpon>Register_Area.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Register_Area.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Register_Database.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Register_Database.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +159,14 @@
       <LastGenOutput>MyFunction.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\Register_Database.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Register_Database.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
     <None Update="Templates\Register_Area.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Register_Area.cs</LastGenOutput>
+      <LastGenOutput>Register_Database.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Register.tt">

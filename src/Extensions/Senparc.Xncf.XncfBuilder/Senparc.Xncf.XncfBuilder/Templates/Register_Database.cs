@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class csproj : csprojBase
+    public partial class Register_Database : Register_DatabaseBase
     {
 #line hidden
         /// <summary>
@@ -28,202 +28,73 @@ namespace Senparc.Xncf.XncfBuidler.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n");
+            this.Write(@"using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel;
+using Senparc.Xncf.ExtensionAreaTemplate.Models.DatabaseModel.Dto;
+using Senparc.Xncf.ExtensionAreaTemplate.Services;
+using System;
+
+namespace ");
             
-            #line 8 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
- if(UseWeb){ 
+            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
-            this.Write("<Project Sdk=\"Microsoft.NET.Sdk.Razor\">\r\n");
+            this.Write(".Xncf.");
             
-            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
- }else{
+            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("<Project Sdk=\"Microsoft.NET.Sdk\">\r\n");
+            this.Write("\r\n{\r\n    public partial class Register :\r\n        IXncfDatabase  //注册 XNCF 模块数据库（" +
+                    "按需选用）\r\n    {\r\n        #region IXncfDatabase 接口\r\n\r\n        /// <summary>\r\n       " +
+                    " /// 数据库前缀\r\n        /// </summary>\r\n        public const string DATABASE_PREFIX " +
+                    "= \"");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"_"";
+
+        /// <summary>
+        /// 数据库前缀
+        /// </summary>
+        public string DatabaseUniquePrefix => DATABASE_PREFIX;
+        /// <summary>
+        /// 设置 XncfSenparcEntities 类型
+        /// </summary>
+        public Type XncfDatabaseDbContextType => typeof(");
+            
+            #line 33 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register_Database.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"SenparcEntities);
+
+
+        public void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
+        }
+
+        public void AddXncfDatabaseModule(IServiceCollection services)
+        {
+            //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+            //ex. services.AddScoped(typeof(Color));
+        }
+
+        #endregion
+    }
 }
-            
-            #line default
-            #line hidden
-            this.Write("  <PropertyGroup>\r\n    <TargetFramework>netcoreapp3.1</TargetFramework>\r\n    <Ver" +
-                    "sion>");
-            
-            #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Version));
-            
-            #line default
-            #line hidden
-            this.Write("</Version>\r\n    <AssemblyName>");
-            
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(".Xncf.");
-            
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("</AssemblyName>\r\n    <RootNamespace>");
-            
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(".Xncf.");
-            
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("</RootNamespace>\r\n    <GeneratePackageOnBuild Condition=\" \'$(Configuration)\' == \'" +
-                    "Release\' \">true</GeneratePackageOnBuild>\r\n    <Description>");
-            
-            #line 19 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Description));
-            
-            #line default
-            #line hidden
-            this.Write("</Description>\r\n    <Copyright>");
-            
-            #line 20 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write("</Copyright>\r\n    <PackageTags>");
-            
-            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(",NeuCharFramework,NCF,>");
-            
-            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(".Xncf.");
-            
-            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("</PackageTags>\r\n    <Authors>");
-            
-            #line 22 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write("</Authors>\r\n    <Owners>");
-            
-            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write("</Owners>\r\n    <!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPac" +
-                    "kageSources/blob/master/LICENSE</PackageLicenseUrl> -->\r\n    <Title>.");
-            
-            #line 25 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
-            
-            #line default
-            #line hidden
-            this.Write(@"</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
-    <PackageReleaseNotes>
-      v");
-            
-            #line 30 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Version));
-            
-            #line default
-            #line hidden
-            this.Write(@" 创世
-    </PackageReleaseNotes>
-    <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition="" '$(Configuration)' == 'Release' "">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\@");
-            
-            #line 37 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(".Xncf.");
-            
-            #line 37 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write(@".XML</DocumentationFile>
-    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include=""Senparc.Ncf.XncfBase"" Version=""0.3.500-beta1"" />
-    <ProjectReference Include=""..\Senparc.Core\Senparc.Core.csproj"" />
-    <ProjectReference Include=""..\Senparc.Service\Senparc.Service.csproj"" />
-  </ItemGroup>
-  ");
-            
-            #line 49 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
- if(UseWeb) {
-            
-            #line default
-            #line hidden
-            this.Write("  <ItemGroup>\r\n  \t<PackageReference Include=\"Microsoft.AspNetCore.Authentication." +
-                    "Cookies\" Version=\"2.2.0\" />\r\n\t<PackageReference Include=\"Microsoft.AspNetCore.Mv" +
-                    "c\" Version=\"2.2.0\" />\r\n  </ItemGroup>\r\n  ");
-            
-            #line 54 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n  ");
-            
-            #line 56 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
- if(UseDatabase) {
-            
-            #line default
-            #line hidden
-            this.Write(@"  <ItemGroup>
-    <PackageReference Include=""Microsoft.EntityFrameworkCore.SqlServer"" Version=""3.1.6"" />
-    <PackageReference Include=""Microsoft.EntityFrameworkCore.SqlServer.Design"" Version=""2.0.0-preview1-final"" />
-    <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""3.1.6"">
-  </ItemGroup>
-  ");
-            
-            #line 62 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n</Project> \r\n");
+");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -235,7 +106,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class csprojBase
+    public class Register_DatabaseBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
