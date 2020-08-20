@@ -54,48 +54,67 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
     ViewData[""Title""] = ""数据库操作示例"";
     Layout = ""_Layout_Vue"";
 }
+
 @section HeaderContent{
     <style>
-        .box {
-            margin: 30px auto;
-            text-align: center;
-            padding: 80px;
+        .extensionAreaTemplate .el-menu {
+            min-height: 400px;
         }
+
+        .extensionAreaTemplate .el-menu-item a {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+
+            .extensionAreaTemplate .el-menu-item a i {
+                margin-right: 5px;
+                width: 24px;
+                text-align: center;
+                font-size: 18px;
+                vertical-align: middle;
+            }
     </style>
 }
+
 @section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>");
             
-            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            #line 37 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
             
             #line default
             #line hidden
             this.Write("</el-breadcrumb-item>\r\n    <el-breadcrumb-item>数据库操作示例</el-breadcrumb-item>\r\n}\r\n\r" +
-                    "\n<div>\r\n    <el-container>\r\n        <el-header class=\"module-header\">\r\n         " +
-                    "   <span class=\"start-title\"> <i class=\"fa fa-dot-circle-o\"></i>&nbsp;<span clas" +
-                    "s=\"module-header-v\">扩展页面测试模块</span></span>\r\n        </el-header>\r\n        <el-ma" +
-                    "in v-if=\"moduleData\">\r\n            <h4>{{moduleData.xncfModuleDto.description}}<" +
-                    "/h4>\r\n            <br />\r\n            <h4>安装时间：{{formaTableTime(moduleData.color" +
-                    "Dto.addTime)}}</h4>\r\n            <div class=\"box\" :style=\"{backgroundColor}\">\r\n\r" +
-                    "\n                <el-button @@click=\"changeColor(\'Brighten\')\"><i class=\"fa fa-ta" +
-                    "chometer\"></i> 变亮</el-button>\r\n                <el-button @@click=\"changeColor(\'" +
-                    "Darken\')\" type=\"info\"><i class=\"fa fa-moon-o\"></i> 变暗</el-button>\r\n             " +
-                    "   <el-button @@click=\"changeColor(\'Random\')\" type=\"success\"><i class=\"fa fa-sun" +
-                    "-o\"></i> 随机</el-button>\r\n            </div>\r\n        </el-main>\r\n    </el-contai" +
-                    "ner>\r\n</div>\r\n@section scripts{\r\n    <script>\r\n        var app = new Vue({\r\n    " +
-                    "        el: \"#app\",\r\n            data() {\r\n                return {\r\n           " +
-                    "         moduleData: null,\r\n                    uid: \'\'\r\n                };\r\n   " +
-                    "         },\r\n            computed: {\r\n                backgroundColor() {\r\n     " +
-                    "               let rgba = `rgba(${this.moduleData.colorDto.red},${this.moduleDat" +
-                    "a.colorDto.green},${this.moduleData.colorDto.blue},1)`\r\n                    retu" +
-                    "rn rgba;\r\n                }\r\n            },\r\n            mounted() {\r\n          " +
-                    "      this.getDetail();\r\n            },\r\n            methods: {\r\n               " +
-                    " async getDetail() {\r\n                    this.uid = resizeUrl().uid\r\n          " +
-                    "          const res = await service.get(\'/Admin/");
+                    "\n<div class=\"extensionAreaTemplate\">\r\n    <el-container>\r\n        <el-header cla" +
+                    "ss=\"module-header\">\r\n            <span class=\"start-title\"> <i class=\"fa fa-dot-" +
+                    "circle-o\"></i>&nbsp;<span class=\"module-header-v\">数据库操作示例</span></span>\r\n       " +
+                    " </el-header>\r\n        <el-container v-if=\"moduleData\">\r\n            <el-aside w" +
+                    "idth=\"200px\">\r\n                <el-menu background-color=\"#304156\" default-activ" +
+                    "e=\"1\"\r\n                         text-color=\"#bfcbd9\" active-text-color=\"#409eff\"" +
+                    ">\r\n                    @(await Html.PartialAsync(\"_SideMenu\"))\r\n                " +
+                    "</el-menu>\r\n            </el-aside>\r\n            <el-main>\r\n                <h4>" +
+                    "{{moduleData.xncfModuleDto.description}}</h4>\r\n                <br />\r\n         " +
+                    "       <h4>安装时间：{{formaTableTime(moduleData.colorDto.addTime)}}</h4>\r\n          " +
+                    "      <div class=\"box\" :style=\"{backgroundColor}\">\r\n\r\n                    <el-bu" +
+                    "tton @@click=\"changeColor(\'Brighten\')\"><i class=\"fa fa-tachometer\"></i> 变亮</el-b" +
+                    "utton>\r\n                    <el-button @@click=\"changeColor(\'Darken\')\" type=\"inf" +
+                    "o\"><i class=\"fa fa-moon-o\"></i> 变暗</el-button>\r\n                    <el-button @" +
+                    "@click=\"changeColor(\'Random\')\" type=\"success\"><i class=\"fa fa-sun-o\"></i> 随机</el" +
+                    "-button>\r\n                </div>\r\n            </el-main>\r\n        </el-container" +
+                    ">\r\n    </el-container>\r\n</div>\r\n@section scripts{\r\n    <script>\r\n        var app" +
+                    " = new Vue({\r\n            el: \"#app\",\r\n            data() {\r\n                ret" +
+                    "urn {\r\n                    moduleData: null,\r\n                    uid: \'\'\r\n     " +
+                    "           };\r\n            },\r\n            computed: {\r\n                backgrou" +
+                    "ndColor() {\r\n                    let rgba = `rgba(${this.moduleData.colorDto.red" +
+                    "},${this.moduleData.colorDto.green},${this.moduleData.colorDto.blue},1)`\r\n      " +
+                    "              return rgba;\r\n                }\r\n            },\r\n            mount" +
+                    "ed() {\r\n                this.getDetail();\r\n            },\r\n            methods: " +
+                    "{\r\n                async getDetail() {\r\n                    this.uid = resizeUrl" +
+                    "().uid\r\n                    const res = await service.get(\'/Admin/");
             
-            #line 67 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            #line 89 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -105,7 +124,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
                     "     async changeColor(param) {\r\n                    const res = await service.g" +
                     "et(\'/Admin/");
             
-            #line 72 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
+            #line 94 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default

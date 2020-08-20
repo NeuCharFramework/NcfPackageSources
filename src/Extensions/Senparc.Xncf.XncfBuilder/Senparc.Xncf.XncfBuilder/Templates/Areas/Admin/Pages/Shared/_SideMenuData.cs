@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared
 {
-    public partial class _Layout : IXncfTemplatePage
+    public partial class _SideMenu : IXncfTemplatePage
     {
-        public string RelativeFilePath => $"_{XncfName}Layout.cshtml";
+        public string RelativeFilePath => $"_SideMenu.cshtml";
 
         public string OrgName { get; set; }
         public string XncfName { get; set; }

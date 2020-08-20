@@ -236,8 +236,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         new ColorDto(typeParam.OrgName, typeParam.XncfName),
                         new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
 
-                        new DatabaseSample(typeParam.OrgName, typeParam.XncfName),
-                        new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName)
+                        new DatabaseSample(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
+                        new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName)
                     };
                     sampleFiles.ForEach(z => WriteContent(z, sb));
                 }

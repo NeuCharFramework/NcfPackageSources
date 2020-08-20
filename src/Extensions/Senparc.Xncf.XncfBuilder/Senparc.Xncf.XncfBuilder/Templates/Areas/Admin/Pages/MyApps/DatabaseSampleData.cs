@@ -11,10 +11,13 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
         public string OrgName { get; set; }
         public string XncfName { get; set; }
 
-        public DatabaseSample(string orgName, string xncfName)
+        public string MenuName { get; set; }
+
+        public DatabaseSample(string orgName, string xncfName, string menuName)
         {
             OrgName = orgName;
             XncfName = xncfName;
+            MenuName = menuName;
         }
     }
 }

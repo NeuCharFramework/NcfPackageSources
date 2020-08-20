@@ -31,11 +31,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Templates\Areas\Admin\Pages\Shared\_Layout.cs" />
-    <Compile Remove="Templates\Areas\Admin\Pages\Shared\_LayoutData.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Templates\Areas\Admin\Pages\Shared\_Layout.tt" />
     <None Remove="Templates\RegisterArea.tt" />
     <None Remove="Templates\RegisterDatabase.tt" />
   </ItemGroup>
@@ -87,6 +82,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DatabaseSample_cs.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>_SideMenu.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Areas\Admin\Pages\ViewImports.cs">
       <DesignTime>True</DesignTime>
@@ -178,6 +178,10 @@
       <LastGenOutput>DatabaseSample_cs.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
+    <None Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>_SideMenu.cs</LastGenOutput>
+    </None>
     <None Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>Sample_ColorConfigurationMapping.cs</LastGenOutput>
@@ -243,9 +247,6 @@
       <LastGenOutput>ColorService.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Templates\Areas\Admin\Pages\Shared\" />
   </ItemGroup>
 </Project>
 

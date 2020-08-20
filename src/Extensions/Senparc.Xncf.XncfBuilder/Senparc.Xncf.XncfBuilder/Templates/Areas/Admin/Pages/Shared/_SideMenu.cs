@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\Shared\_Layout.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\Shared\_SideMenu.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class _Layout : _LayoutBase
+    public partial class _SideMenu : _SideMenuBase
     {
 #line hidden
         /// <summary>
@@ -28,48 +28,23 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"
-
-@model Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
-@using Senparc.Ncf.Core.Areas;
-@using Microsoft.AspNetCore.Http;
-@inject IHttpContextAccessor _httpContextAccessor
-@{
-    Layout = ""_Layout_Vue"";
-}
-@{
-    var subTitle = ViewData[""Title""];
-    ViewData[""Title""] = Model.XncfModuleDto?.MenuName + "" - "" + subTitle;
-}
-@section HeaderContent{
-    @RenderSection(""HeaderContent"", false)
-}
-@section Style{
-    @RenderSection(""Style"", false)
-}
-@section modal{
-    @RenderSection(""modal"", false)
-}
-@section explanations{
-    @RenderSection(""explanations"", false)
-}
-@section breadcrumbs{
-    <li>扩展模块</li>
-    <li>模块管理</li>
-    <li>@Model.XncfModuleDto.MenuName</li>
-    @RenderSection(""breadcrumbs"", false)
-    @if (!IsSectionDefined(""breadcrumbs""))
-    {
-        <li>@subTitle</li>
-    }
-}
-@section filter{
-    @RenderSection(""filter"", false)
-}
-@section scripts{
-    @RenderSection(""scripts"", false)
-}
-");
+            this.Write("    <el-menu-item index=\"1\">\r\n        <a :href=\"\'/Admin/");
+            
+            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\Shared\_SideMenu.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("/Index?uid=\'+moduleData.xncfModuleDto.uid\"><i class=\"fa fa-laptop\"></i>首页</a>\r\n  " +
+                    "  </el-menu-item>\r\n    <el-menu-item index=\"2\">\r\n        <a :href=\"\'/Admin/");
+            
+            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Areas\Admin\Pages\Shared\_SideMenu.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("/DatabaseSample?uid=\'+moduleData.xncfModuleDto.uid\"><i class=\"fa fa-bookmark-o\"><" +
+                    "/i>数据库操作示例</a>\r\n    </el-menu-item>");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -81,7 +56,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class _LayoutBase
+    public class _SideMenuBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
