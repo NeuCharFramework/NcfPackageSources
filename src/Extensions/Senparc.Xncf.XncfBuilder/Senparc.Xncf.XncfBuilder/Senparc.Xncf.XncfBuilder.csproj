@@ -49,6 +49,11 @@
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Templates\App_Data\Database\SenparcConfig.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcConfig.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -79,6 +84,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
+    <Compile Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcDbContextFactory.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Register - 复制.cs">
       <DependentUpon>Register.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -94,6 +104,21 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Templates\App_Data\Database\SenparcConfig.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>SenparcConfig.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>SenparcDbContextFactory.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Models\DatabaseModel\SenparcEntities.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>SenparcDbContextFactory.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
     <None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>Index_cs.cs</LastGenOutput>
@@ -136,7 +161,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Templates\Areas\Admin\Pages\Shared\" />
   </ItemGroup>
 </Project>

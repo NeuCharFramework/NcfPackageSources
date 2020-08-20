@@ -190,6 +190,27 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #endregion
 
+                #region 判断 数据库
+
+                var useDatabase = typeParam.UseDatabase.SelectedValues.Contains("1");
+                if (useDatabase)
+                {
+                    //生成目录
+                    var dbDirs = new List<string> {
+                        "Models",
+                        "Models/App_Data",
+                        "Models/App_Data/Database",
+                        "Models/DatabaseModel",
+                        "Models/DatabaseModel/Dto",
+                        "Models/DatabaseModel/Mapping"
+                    };
+                    dbDirs.ForEach(z => AddDir(z));
+
+
+                }
+
+                #endregion
+
                 #region 生成 .csproj
 
                 //生成 .csproj
@@ -205,8 +226,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 WriteContent(csprojPage, sb);
 
-                //自动附加项目
-                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath,"Senparc.Web.csproj"));
+                #endregion
+
+                #region 自动附加项目
+
+                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
                 if (File.Exists(webProjFilePath))
                 {
                     XDocument webCsproj = XDocument.Load(webProjFilePath);
