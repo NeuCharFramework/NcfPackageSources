@@ -17,7 +17,8 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel
         {
         }
 
-        <# if(UseSample) {#>
+        <# if(UseSample) 
+        {#>
         public DbSet<Color> Colors { get; set; }
         <# } #>
 

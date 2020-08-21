@@ -73,15 +73,15 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
                     " }\r\n        }\r\n\r\n        public Color(ColorDto colorDto)\r\n        {\r\n           " +
                     " Red = colorDto.Red;\r\n            Green = colorDto.Green;\r\n            Blue = co" +
                     "lorDto.Blue;\r\n        }\r\n\r\n        public void Random()\r\n        {\r\n            " +
-                    "//随机产生颜色代码\r\n            var radom = new Random(SystemTime.Now.Second);\r\n        " +
-                    "    Func<int> getRadomColorCode = () => radom.Next(0, 255);\r\n            Red = g" +
-                    "etRadomColorCode();\r\n            Green = getRadomColorCode();\r\n            Blue " +
-                    "= getRadomColorCode();\r\n        }\r\n\r\n        public void Brighten()\r\n        {\r\n" +
-                    "            Red = Math.Min(255, Red + 10);\r\n            Green = Math.Min(255, Gr" +
-                    "een + 10);\r\n            Blue = Math.Min(255, Blue + 10);\r\n        }\r\n\r\n        p" +
-                    "ublic void Darken()\r\n        {\r\n            Red = Math.Max(0, Red - 10);\r\n      " +
-                    "      Green = Math.Max(0, Green - 10);\r\n            Blue = Math.Max(0, Blue - 10" +
-                    ");\r\n        }\r\n    }\r\n}\r\n");
+                    "//随机产生颜色代码\r\n            var radom = new Random();\r\n            Func<int> getRado" +
+                    "mColorCode = () => radom.Next(0, 255);\r\n            Red = getRadomColorCode();\r\n" +
+                    "            Green = getRadomColorCode();\r\n            Blue = getRadomColorCode()" +
+                    ";\r\n        }\r\n\r\n        public void Brighten()\r\n        {\r\n            Red = Mat" +
+                    "h.Min(255, Red + 10);\r\n            Green = Math.Min(255, Green + 10);\r\n         " +
+                    "   Blue = Math.Min(255, Blue + 10);\r\n        }\r\n\r\n        public void Darken()\r\n" +
+                    "        {\r\n            Red = Math.Max(0, Red - 10);\r\n            Green = Math.Ma" +
+                    "x(0, Green - 10);\r\n            Blue = Math.Max(0, Blue - 10);\r\n        }\r\n    }\r" +
+                    "\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

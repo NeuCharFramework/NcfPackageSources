@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
+namespace Senparc.Xncf.XncfBuidler.Templates.Migrations
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class MySenparcEntities : MySenparcEntitiesBase
+    public partial class AddSample : AddSampleBase
     {
 #line hidden
         /// <summary>
@@ -28,70 +28,84 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Microsoft.EntityFrameworkCore;\r\nusing Senparc.Ncf.XncfBase;\r\nusing Senparc." +
-                    "Ncf.XncfBase.Database;\r\n\r\nnamespace ");
+            this.Write("using System;\r\nusing Microsoft.EntityFrameworkCore.Migrations;\r\n\r\nnamespace ");
             
-            #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 9 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(".Models.DatabaseModel\r\n{\r\n    public class ");
+            this.Write(".Migrations\r\n{\r\n    public partial class AddSample : Migration\r\n    {\r\n        pr" +
+                    "otected override void Up(MigrationBuilder migrationBuilder)\r\n        {\r\n        " +
+                    "    migrationBuilder.CreateTable(\r\n                name: \"");
             
-            #line 13 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities : XncfDatabaseDbContext\r\n    {\r\n        public override IXncfData" +
-                    "base XncfDatabaseRegister => new Register();\r\n        public ");
+            this.Write(@"_Color"",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation(""SqlServer:Identity"", ""1, 1""),
+                    Flag = table.Column<bool>(nullable: false),
+                    AddTime = table.Column<DateTime>(nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(nullable: false),
+                    AdminRemark = table.Column<string>(maxLength: 300, nullable: true),
+                    Remark = table.Column<string>(maxLength: 300, nullable: true),
+                    Red = table.Column<int>(nullable: false),
+                    Green = table.Column<int>(nullable: false),
+                    Blue = table.Column<int>(nullable: false),
+                    AdditionNote = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey(""PK_");
             
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 33 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 33 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities(DbContextOptions<");
+            this.Write("_Color\", x => x.Id);\r\n                });\r\n        }\r\n\r\n        protected overrid" +
+                    "e void Down(MigrationBuilder migrationBuilder)\r\n        {\r\n            migration" +
+                    "Builder.DropTable(\r\n                name: \"");
             
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\AddSample.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities> dbContextOptions) : base(dbContextOptions)\r\n        {\r\n        }" +
-                    "\r\n\r\n        ");
-            
-            #line 20 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
- if(UseSample) 
-        {
-            
-            #line default
-            #line hidden
-            this.Write("        public DbSet<Color> Colors { get; set; }\r\n        ");
-            
-            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write(@"
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
-        //ex. public DbSet<Color> Colors { get; set; }
-
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //}
-    }
-}
-");
+            this.Write("_Color\");\r\n        }\r\n    }\r\n}\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -103,7 +117,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class MySenparcEntitiesBase
+    public class AddSampleBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
