@@ -108,6 +108,36 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
+    <Compile Update="Templates\Migrations\AddSample - 复制.cs">
+      <DependentUpon>AddSample.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Templates\Migrations\AddSampleDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSampleDesigner.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Init.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Init.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\InitDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InitDesigner.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit - 复制.cs">
+      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.cs">
       <DependentUpon>Sample_ColorConfigurationMapping.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -181,6 +211,36 @@
     <None Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>_SideMenu.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\Migrations\AddSampleDesigner.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Migrations\AddSample.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>AddSampleDesign.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Migrations\InitDesigner.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>InitDesigner.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\Migrations\Init.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Init.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

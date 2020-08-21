@@ -4,6 +4,7 @@ using Senparc.Xncf.XncfBuidler.Templates;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps;
 using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared;
+using Senparc.Xncf.XncfBuidler.Templates.Migrations;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto;
 using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Mapping;
@@ -210,10 +211,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "App_Data/Database",
                         "Models",
                         "Models/DatabaseModel",
-
-                        "Services",
+                        "Migrations"
                     };
                     dbDirs.ForEach(z => AddDir(z));
+
+                    var initMigrationTime = Init.GetFileNamePrefix();
 
                     //载入Page
                     var dbFiles = new List<IXncfTemplatePage> {
@@ -221,9 +223,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         new XncfBuidler.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuidler.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
-                        new Color(typeParam.OrgName, typeParam.XncfName),
 
-                        new ColorService(typeParam.OrgName, typeParam.XncfName),
+                        new Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime)
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }
@@ -236,13 +238,22 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var sampleDirs = new List<string> {
                         "Models/DatabaseModel/Dto",
                         "Models/DatabaseModel/Mapping",
+                        "Services",
                     };
                     sampleDirs.ForEach(z => AddDir(z));
 
+                    var sampleMigrationTime = Init.GetFileNamePrefix(SystemTime.Now.DateTime.AddSeconds(1));
+
                     //载入Page
                     var sampleFiles = new List<IXncfTemplatePage> {
+                        new AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+
                         new ColorDto(typeParam.OrgName, typeParam.XncfName),
                         new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
+
+                        new Color(typeParam.OrgName, typeParam.XncfName),
+                        new ColorService(typeParam.OrgName, typeParam.XncfName),
 
                         new DatabaseSample(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
                         new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
@@ -250,7 +261,18 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         new _SideMenu(typeParam.OrgName, typeParam.XncfName)
                     };
                     sampleFiles.ForEach(z => WriteContent(z, sb));
+
+                    //Sample快照
+                    var addSampleSnapshot = new SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(addSampleSnapshot, sb);
                 }
+                else if (useDatabase)
+                {
+                    //默认 Init 快照
+                    var initSnapshot = new SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(initSnapshot, sb);
+                }
+
 
                 #endregion
 
@@ -310,7 +332,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     //是否创建新的 .sln 文件
                     var useNewSlnFile = typeParam.NewSlnFile.SelectedValues.Contains("new");
-                   
+
                     var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
                     string newSlnFileName = slnFileName;
                     string newSlnFilePath = typeParam.SlnFilePath;
@@ -343,7 +365,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         }
                     }
 
-                    var projGuid = Guid.NewGuid().ToString("D");
+                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
                     slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
 EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
 EndProject
@@ -357,10 +379,11 @@ EndProject
 		{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU
 		{projGuid}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
-");
+").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
+		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
                     System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
                     sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
-                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！。";
+                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
                 }
                 else
                 {

@@ -63,7 +63,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         public void Random()
         {
             //随机产生颜色代码
-            var radom = new Random(SystemTime.Now.Second);
+            var radom = new Random();
             Func<int> getRadomColorCode = () => radom.Next(0, 255);
             Red = getRadomColorCode();
             Green = getRadomColorCode();

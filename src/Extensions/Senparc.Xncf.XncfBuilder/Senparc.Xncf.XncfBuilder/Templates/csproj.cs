@@ -107,7 +107,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
             
             #line default
             #line hidden
-            this.Write(",NeuCharFramework,NCF,>");
+            this.Write(",NeuCharFramework,NCF,");
             
             #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
@@ -162,7 +162,7 @@ namespace Senparc.Xncf.XncfBuidler.Templates
   </PropertyGroup>
   <PropertyGroup Condition="" '$(Configuration)' == 'Release' "">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\@");
+    <DocumentationFile>..\..\..\BuildOutPut\");
             
             #line 37 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
