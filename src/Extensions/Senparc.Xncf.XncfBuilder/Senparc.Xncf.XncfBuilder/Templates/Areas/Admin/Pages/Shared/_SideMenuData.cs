@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared
+namespace Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.Shared
 {
     public partial class _SideMenu : IXncfTemplatePage
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
+namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Dto
 {
     public partial class ColorDto : IXncfTemplatePage
     {

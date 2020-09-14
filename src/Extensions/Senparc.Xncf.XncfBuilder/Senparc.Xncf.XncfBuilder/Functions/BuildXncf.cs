@@ -1,14 +1,14 @@
 ﻿using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
-using Senparc.Xncf.XncfBuidler.Templates;
-using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages;
-using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps;
-using Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.Shared;
-using Senparc.Xncf.XncfBuidler.Templates.Migrations;
-using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel;
-using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto;
-using Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Mapping;
-using Senparc.Xncf.XncfBuidler.Templates.Services;
+using Senparc.Xncf.XncfBuilder.Templates;
+using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages;
+using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps;
+using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.Shared;
+using Senparc.Xncf.XncfBuilder.Templates.Migrations;
+using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel;
+using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Dto;
+using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Mapping;
+using Senparc.Xncf.XncfBuilder.Templates.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -132,7 +132,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 }
 
                 //定义 Register 主文件
-                Senparc.Xncf.XncfBuidler.Templates.Register registerPage = new Senparc.Xncf.XncfBuidler.Templates.Register()
+                Senparc.Xncf.XncfBuilder.Templates.Register registerPage = new Senparc.Xncf.XncfBuilder.Templates.Register()
                 {
                     OrgName = typeParam.OrgName,
                     XncfName = typeParam.XncfName,
@@ -156,7 +156,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                     //添加文件夹
                     var dir = AddDir("Functions");
-                    Senparc.Xncf.XncfBuidler.Templates.Functions.MyFunction functionPage = new XncfBuidler.Templates.Functions.MyFunction()
+                    Senparc.Xncf.XncfBuilder.Templates.Functions.MyFunction functionPage = new XncfBuilder.Templates.Functions.MyFunction()
                     {
                         OrgName = typeParam.OrgName,
                         XncfName = typeParam.XncfName
@@ -187,7 +187,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var areaPages = new List<IXncfTemplatePage> {
                         new ViewStart(typeParam.OrgName,typeParam.XncfName),
                         new ViewImports(typeParam.OrgName,typeParam.XncfName),
-                        new Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps.Index(typeParam.OrgName,typeParam.XncfName,typeParam.MenuName),
+                        new Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps.Index(typeParam.OrgName,typeParam.XncfName,typeParam.MenuName),
                         new Index_cs(typeParam.OrgName,typeParam.XncfName),
                     };
                     areaPages.ForEach(z => WriteContent(z, sb));
@@ -220,9 +220,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     //载入Page
                     var dbFiles = new List<IXncfTemplatePage> {
                         new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
-                        new XncfBuidler.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
+                        new XncfBuilder.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
-                        new XncfBuidler.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
+                        new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
 
                         new Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                         new InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime)
@@ -286,7 +286,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 #region 生成 .csproj
 
                 //生成 .csproj
-                Senparc.Xncf.XncfBuidler.Templates.csproj csprojPage = new csproj()
+                Senparc.Xncf.XncfBuilder.Templates.csproj csprojPage = new csproj()
                 {
                     OrgName = typeParam.OrgName,
                     XncfName = typeParam.XncfName,
