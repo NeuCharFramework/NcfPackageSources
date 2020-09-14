@@ -108,11 +108,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\AddSample - 复制.cs">
-      <DependentUpon>AddSample.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="Templates\Migrations\AddSample.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -133,10 +128,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>InitDesigner.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit - 复制.cs">
-      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.cs">
       <DesignTime>True</DesignTime>
@@ -229,7 +224,7 @@
     </None>
     <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.tt">
