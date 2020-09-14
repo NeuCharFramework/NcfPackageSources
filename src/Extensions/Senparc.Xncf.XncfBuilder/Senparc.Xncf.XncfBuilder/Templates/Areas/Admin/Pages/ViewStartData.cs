@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages
+namespace Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages
 {
     public partial class ViewStart : IXncfTemplatePage
     {

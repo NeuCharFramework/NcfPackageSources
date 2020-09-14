@@ -1,6 +1,6 @@
-﻿using Senparc.Xncf.XncfBuidler.Templates;
+﻿using Senparc.Xncf.XncfBuilder.Templates;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel
+namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
 {
     public partial class MySenparcEntities : IXncfTemplatePage
     {

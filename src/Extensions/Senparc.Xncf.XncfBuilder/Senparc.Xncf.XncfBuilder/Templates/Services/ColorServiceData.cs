@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Services
+namespace Senparc.Xncf.XncfBuilder.Templates.Services
 {
     public partial class ColorService : IXncfTemplatePage
     {

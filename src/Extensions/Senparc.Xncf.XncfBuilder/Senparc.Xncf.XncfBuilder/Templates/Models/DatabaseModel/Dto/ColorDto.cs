@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Dto
+namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Dto
 {
     using System.Linq;
     using System.Text;

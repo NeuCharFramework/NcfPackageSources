@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Models.DatabaseModel.Mapping
+namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Mapping
 {
     public partial class Sample_ColorConfigurationMapping : IXncfTemplatePage
     {

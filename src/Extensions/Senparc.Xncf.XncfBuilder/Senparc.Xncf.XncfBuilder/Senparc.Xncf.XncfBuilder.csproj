@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.3-beta1</Version>
-    <AssemblyName>Senparc.Xncf.XncfBuidler</AssemblyName>
-    <RootNamespace>Senparc.Xncf.XncfBuidler</RootNamespace>
+    <Version>0.1.501-beta1</Version>
+    <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
+    <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Xncf.XncfBuidler 快速生成 XNCF 模块基础程序代码</Description>
+    <Description>Senparc.Xncf.XncfBuilder 快速生成 XNCF 模块基础程序代码</Description>
     <Copyright>NeuCharFramework</Copyright>
-    <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.XncfBuidler</PackageTags>
+    <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.XncfBuilder</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.XncfBuidler.XML</DocumentationFile>
+    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.XncfBuilder.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -113,6 +113,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Templates\Migrations\AddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSample.tt</DependentUpon>
+    </Compile>
     <Compile Update="Templates\Migrations\AddSampleDesigner.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -133,10 +138,10 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.cs">
+    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.cs">
       <DependentUpon>Sample_ColorConfigurationMapping.tt</DependentUpon>
@@ -219,17 +224,17 @@
     </None>
     <None Update="Templates\Migrations\AddSample.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>AddSampleDesign.cs</LastGenOutput>
+      <LastGenOutput>AddSample.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Migrations\InitDesigner.tt">
@@ -309,5 +314,3 @@
     </None>
   </ItemGroup>
 </Project>
-
-

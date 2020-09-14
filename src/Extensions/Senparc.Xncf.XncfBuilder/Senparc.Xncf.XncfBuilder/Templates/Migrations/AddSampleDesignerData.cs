@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Migrations
+namespace Senparc.Xncf.XncfBuilder.Templates.Migrations
 {
     public partial class AddSampleDesigner : IXncfTemplatePage
     {

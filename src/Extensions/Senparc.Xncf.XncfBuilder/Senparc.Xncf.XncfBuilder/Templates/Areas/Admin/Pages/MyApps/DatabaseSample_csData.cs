@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
+namespace Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps
 {
     public partial class DatabaseSample_cs : IXncfTemplatePage
     {

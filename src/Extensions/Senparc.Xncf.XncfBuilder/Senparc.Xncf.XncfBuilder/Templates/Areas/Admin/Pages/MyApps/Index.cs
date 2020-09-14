@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuidler.Templates.Areas.Admin.Pages.MyApps
+namespace Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps
 {
     using System.Linq;
     using System.Text;

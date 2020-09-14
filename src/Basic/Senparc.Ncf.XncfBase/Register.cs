@@ -31,10 +31,19 @@ namespace Senparc.Ncf.XncfBase
         /// 模块和方法集合。 TODO：可放置到缓存中
         /// </summary>
         public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
+
         /// <summary>
         /// 带有数据库的模块 TODO：可放置到缓存中
         /// </summary>
         public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
+
+        /// <summary>
+        /// 判断指定名称的模块是否已注册
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool IsRegistered(string name) => RegisterList.Exists(z => z.Name == name);
+
         /// <summary>
         /// 所有线程的集合
         /// </summary>

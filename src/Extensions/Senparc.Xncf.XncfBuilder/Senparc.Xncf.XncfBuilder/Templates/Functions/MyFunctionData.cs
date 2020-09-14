@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates.Functions
+namespace Senparc.Xncf.XncfBuilder.Templates.Functions
 {
     public partial class MyFunction : IXncfTemplatePage
     {

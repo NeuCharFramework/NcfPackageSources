@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuidler.Templates
+namespace Senparc.Xncf.XncfBuilder.Templates
 {
     public partial class csproj: IXncfTemplatePage
     {
