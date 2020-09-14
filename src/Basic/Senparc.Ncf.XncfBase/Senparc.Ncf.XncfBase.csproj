@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.3.500-beta1</Version>
+    <Version>0.3.501-beta1</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -16,12 +16,13 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-      v0.1 创世
-      v0.2.100 完成基础架构，功能跑通
-      v0.3.100 优化 Function 返回值
-      v0.3.303 提供 IXncfThread 接口
-      v0.3.305 添加 XncfAutoConfigurationMapping 特性
-</PackageReleaseNotes>
+		v0.1 创世
+		v0.2.100 完成基础架构，功能跑通
+		v0.3.100 优化 Function 返回值
+		v0.3.303 提供 IXncfThread 接口
+		v0.3.305 添加 XncfAutoConfigurationMapping 特性
+		v0.3.501 添加 Register.IsRegistered 方法
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
