@@ -1,10 +1,12 @@
-﻿using Senparc.Ncf.Core.Enums;
+﻿using Senparc.Ncf.Core.Cache;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Ncf.Service
 {
