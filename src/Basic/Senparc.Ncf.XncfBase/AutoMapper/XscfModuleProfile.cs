@@ -12,7 +12,7 @@ namespace Senparc.Ncf.XncfBase.AutoMapper
     {
         public XncfModuleProfile()
         {
-            foreach (var register in Register.RegisterList)
+            foreach (var register in XncfRegisterManager.RegisterList)
             {
                 if (register.AutoMapMappingConfigs != null)
                 {

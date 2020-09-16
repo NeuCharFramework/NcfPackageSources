@@ -37,7 +37,7 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         /// <summary>
         /// 所有 XncfRegister 列表（包括还未注册的）
         /// </summary>
-        public virtual List<IXncfRegister> XncfRegisterList => Senparc.Ncf.XncfBase.Register.RegisterList;
+        public virtual List<IXncfRegister> XncfRegisterList => Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList;
 
 
         public virtual IActionResult RenderError(string message)

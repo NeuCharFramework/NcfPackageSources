@@ -44,7 +44,7 @@ namespace Senparc.Ncf.XncfBase.Tests
         {
             var result = base.ServiceCollection.StartEngine(TestBase.Configuration);
             Console.WriteLine(result);
-            Assert.IsTrue(Senparc.Ncf.XncfBase.Register.RegisterList.Count > 0);
+            Assert.IsTrue(Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList.Count > 0);
         }
     }
 }

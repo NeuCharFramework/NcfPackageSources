@@ -28,23 +28,6 @@ namespace Senparc.Ncf.XncfBase
     public static class Register
     {
         /// <summary>
-        /// 模块和方法集合。 TODO：可放置到缓存中
-        /// </summary>
-        public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
-
-        /// <summary>
-        /// 带有数据库的模块 TODO：可放置到缓存中
-        /// </summary>
-        public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
-
-        /// <summary>
-        /// 判断指定名称的模块是否已注册
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static bool IsRegistered(string name) => RegisterList.Exists(z => z.Name == name);
-
-        /// <summary>
         /// 所有线程的集合
         /// </summary>
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; } = new ConcurrentDictionary<ThreadInfo, Thread>();
@@ -52,7 +35,7 @@ namespace Senparc.Ncf.XncfBase
         /// <summary>
         /// 所有自动注册 Xncf 的数据库的 ConfigurationMapping 对象
         /// </summary>
-        public static List<object> XncfAutoConfigurationMappingList = new List<object>();
+        public static List<object> XncfAutoConfigurationMappingList { get; set; } = new List<object>();
         //public static List<IEntityTypeConfiguration<EntityBase>> XncfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<EntityBase>>();
 
         /// <summary>
@@ -142,9 +125,9 @@ namespace Senparc.Ncf.XncfBase
 
                         var register = type.Assembly.CreateInstance(type.FullName) as IXncfRegister;
 
-                        if (!RegisterList.Contains(register))
+                        if (!XncfRegisterManager.RegisterList.Contains(register))
                         {
-                            if (RegisterList.Exists(z => z.Uid.Equals(register.Uid, StringComparison.OrdinalIgnoreCase)))
+                            if (XncfRegisterManager.RegisterList.Exists(z => z.Uid.Equals(register.Uid, StringComparison.OrdinalIgnoreCase)))
                             {
                                 throw new XncfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
                             }
@@ -153,7 +136,7 @@ namespace Senparc.Ncf.XncfBase
                             {
                                 hideTypeCount++;
                             }
-                            RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
+                            XncfRegisterManager.RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
                             services.AddScoped(type);//DI 中注册
                             foreach (var functionType in register.Functions)
                             {
@@ -211,7 +194,7 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
 
             //微模块进行 Service 注册
-            foreach (var xncfRegister in RegisterList)
+            foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 xncfRegister.AddXncfModule(services, configuration);
             }
@@ -247,7 +230,7 @@ namespace Senparc.Ncf.XncfBase
             var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             using (await cache.BeginCacheLockAsync("Senparc.Ncf.XncfBase.Register", "Scan").ConfigureAwait(false))
             {
-                foreach (var register in RegisterList)
+                foreach (var register in XncfRegisterManager.RegisterList)
                 {
                     sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXncfRegister：{register.GetType().FullName}");
                     if (register.IgnoreInstall)
@@ -298,7 +281,7 @@ namespace Senparc.Ncf.XncfBase
         /// <returns></returns>
         public static IApplicationBuilder UseXncfModules(IApplicationBuilder app, IRegisterService registerService)
         {
-            foreach (var register in RegisterList)
+            foreach (var register in XncfRegisterManager.RegisterList)
             {
                 try
                 {
@@ -351,7 +334,7 @@ namespace Senparc.Ncf.XncfBase
                 .FirstOrDefault(z => z.Name == "ApplyConfiguration" && z.ContainsGenericParameters && z.GetParameters().SingleOrDefault()?.ParameterType.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>));
 
             //所有模块中数据库实体中自动获取所有的 DbSet 下的实体类型
-            foreach (var databaseRegister in Register.XncfDatabaseList)
+            foreach (var databaseRegister in XncfRegisterManager.XncfDatabaseList)
             {
                 if (databaseRegister.XncfDatabaseDbContextType != null)
                 {
