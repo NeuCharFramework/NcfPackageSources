@@ -39,7 +39,7 @@ namespace Senparc.Ncf.Core.Cache
         public override async Task<FullXncfModule> InsertObjectToCacheAsync(string key)
         {
             var xncfModule = await (_dataContext.BaseDataContext as SenparcEntitiesBase).XncfModules
-                                        .FirstOrDefaultAsync(z => z.Name.Equals(key, StringComparison.OrdinalIgnoreCase))
+                                        .FirstOrDefaultAsync(z => z.Name == key)
                                         .ConfigureAwait(false);
             var fullXncfModule = await base.InsertObjectToCacheAsync(key, xncfModule).ConfigureAwait(false);
             return fullXncfModule;
