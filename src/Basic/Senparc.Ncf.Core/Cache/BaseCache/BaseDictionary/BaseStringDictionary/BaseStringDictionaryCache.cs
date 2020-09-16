@@ -29,7 +29,7 @@ namespace Senparc.Ncf.Core.Cache
 
     public abstract class BaseStringDictionaryCache<TValue, TEntity> : BaseDictionaryCache<string, TValue, TEntity>, IBaseStringDictionaryCache<TValue, TEntity> 
         where TValue : class,new()
-        where TEntity : class, new()
+        where TEntity : class/*, new()*/
     {
         /// <summary>
         /// 

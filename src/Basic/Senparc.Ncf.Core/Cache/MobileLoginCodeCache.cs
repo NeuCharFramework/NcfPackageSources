@@ -3,6 +3,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.DI;
 using Senparc.Ncf.Core.Enums;
 using System;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -73,6 +74,17 @@ namespace Senparc.Ncf.Core.Cache
                 Code = key
             };
             return this.InsertObjectToCache(key, mobileLoginCode);
+        }
+
+        public override async Task<MobileLoginCode> InsertObjectToCacheAsync(string key)
+        {
+            var mobileLoginCode = new MobileLoginCode()
+            {
+                AddTime = DateTime.Now,
+                FullDomainUserName = "",
+                Code = key
+            };
+            return await this.InsertObjectToCacheAsync(key, mobileLoginCode).ConfigureAwait(false);
         }
     }
 }

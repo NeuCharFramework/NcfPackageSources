@@ -20,7 +20,7 @@ namespace Senparc.Ncf.Core.Models.VD
 {
     public interface IPageModelBase : IBaseUiVD, IValidatorEnvironment
     {
-        new RouteData RouteData { get; set; }
+        RouteData RouteData { get; set; }
     }
 
 

@@ -5,6 +5,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Log;
 using System.IO;
 using Senparc.Ncf.Core.Utility;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -16,12 +17,25 @@ namespace Senparc.Ncf.Core.Cache
     public interface IBaseDictionaryCache<TKey, TValue, TEntity> : IBaseCache<TValue>
            where TValue : class, new()
     {
+        #region 同步方法
+
         TValue InsertObjectToCache(TKey key);
         TValue InsertObjectToCache(TKey key, TEntity obj);
         TValue GetObject(TKey key);
         void RemoveObject(TKey key);
-
         bool UpdateToCache(TKey key, TValue obj);
+
+        #endregion
+
+        #region 异步方法
+
+        Task<TValue> InsertObjectToCacheAsync(TKey key);
+        Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj);
+        Task<TValue> GetObjectAsync(TKey key);
+        Task RemoveObjectAsync(TKey key);
+        Task<bool> UpdateToCacheAsync(TKey key, TValue obj);
+
+        #endregion
     }
 
 
@@ -46,7 +60,7 @@ namespace Senparc.Ncf.Core.Cache
     public abstract class BaseDictionaryCache<TKey, TValue, TEntity> :
         BaseCache<TValue>, IBaseDictionaryCache<TKey, TValue, TEntity>
         where TValue : class, new()
-        where TEntity : class, new()
+        where TEntity : class/*, new()*/
     {
         /// <summary>
         /// 获取缓存中最终的Key
@@ -147,6 +161,7 @@ namespace Senparc.Ncf.Core.Cache
 
             //}
         }
+        #region 同步方法
 
         public override TValue Update()
         {
@@ -179,11 +194,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "系统调试记录cache长久以来的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-
-                    var msg = $"系统调试记录cache长久以来的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -238,5 +252,102 @@ namespace Senparc.Ncf.Core.Cache
         {
             throw new Exception("不可以使用此方法");
         }
+
+        #endregion
+
+
+        #region 异步方法
+
+        public override async Task<TValue> UpdateAsync()
+        {
+            return await base.UpdateAsync().ConfigureAwait(false);
+        }
+
+        public abstract Task<TValue> InsertObjectToCacheAsync(TKey key);
+
+        public virtual async Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+
+            TValue fullObj = new TValue();
+            var finalCacheKey = GetFinalCacheKey(key);
+            if (fullObj is IBaseFullEntity<TEntity>)
+            {
+                try
+                {
+                    (fullObj as BaseFullEntity<TEntity>).CreateEntity(obj);
+
+                    //if (base.Data == null)
+                    //{
+                    //    throw new Exception("base.Data=null");
+                    //}
+                    await base.Cache.SetAsync(finalCacheKey, fullObj).ConfigureAwait(false);
+                    return fullObj;
+                }
+                catch (Exception ex)
+                {
+                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
+
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    LogUtility.SystemLogger.Debug(msg, ex);
+                    throw new Exception(msg, ex);
+                }
+            }
+            else if (obj as TValue != null)
+            {
+                await base.Cache.SetAsync(finalCacheKey, obj as TValue).ConfigureAwait(false);
+                return obj as TValue;
+            }
+
+            await base.Cache.SetAsync(finalCacheKey, fullObj).ConfigureAwait(false);
+            return fullObj;
+        }
+
+        public virtual async Task<TValue> GetObjectAsync(TKey key)
+        {
+            if (key == null)
+            {
+                return null;
+            }
+
+            var finalCacheKey = GetFinalCacheKey(key);
+
+            if (base.Cache.CheckExisted(finalCacheKey))
+            {
+                return await base.Cache.GetAsync<TValue>(finalCacheKey).ConfigureAwait(false);
+            }
+            else
+            {
+                return await InsertObjectToCacheAsync(key).ConfigureAwait(false);
+            }
+        }
+
+        public virtual async Task RemoveObjectAsync(TKey key)
+        {
+            var finalCacheKey = GetFinalCacheKey(key);
+
+            if (await base.Cache.CheckExistedAsync(finalCacheKey).ConfigureAwait(false))
+            {
+                await base.Cache.RemoveFromCacheAsync(finalCacheKey).ConfigureAwait(false);
+            }
+        }
+
+        public virtual async Task<bool> UpdateToCacheAsync(TKey key, TValue obj)
+        {
+            var finalKey = GetFinalCacheKey(key);
+            return await base.UpdateToCacheAsync(finalKey, obj).ConfigureAwait(false);
+        }
+
+
+        public override Task RemoveCacheAsync()
+        {
+            throw new Exception("不可以使用此方法");
+        }
+
+        #endregion
     }
 }

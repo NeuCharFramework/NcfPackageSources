@@ -11,11 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Ncf.Core.Cache
 {
-    //public interface IFullSystemConfigCache : IBaseCache<FullSystemConfig>
-    //{
-
-    //}
-
     [AutoDIType(DILifecycleType.Scoped)]
     public class FullSystemConfigCache : BaseCache<FullSystemConfig>/*, IFullSystemConfigCache*/
     {
