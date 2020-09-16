@@ -56,7 +56,6 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         public override FullAccount GetObject(string key)
-
         {
             return base.GetObject(key);
         }

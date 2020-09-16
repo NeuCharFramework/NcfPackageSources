@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Core.Cache
     public abstract class BaseDictionaryCache<TKey, TValue, TEntity> :
         BaseCache<TValue>, IBaseDictionaryCache<TKey, TValue, TEntity>
         where TValue : class, new()
-        where TEntity : class, new()
+        where TEntity : class/*, new()*/
     {
         /// <summary>
         /// 获取缓存中最终的Key
@@ -179,11 +179,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "系统调试记录cache长久以来的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-
-                    var msg = $"系统调试记录cache长久以来的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
