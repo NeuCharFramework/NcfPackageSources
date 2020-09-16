@@ -4,8 +4,8 @@
 
 |              |    .NET Core    |     CI/CD
 |--------------|-----------------|---------------
-|  Basic       | ![.NET Core](https://github.com/NeuCharFramework/NcfPackageSources/workflows/.NET%20Core/badge.svg)  |  [![Build status](https://mysenparc.visualstudio.com/NeuCharFramework/_apis/build/status/NeuCharFramework-ASP.NET%20Core-CI)](https://mysenparc.visualstudio.com/NeuCharFramework/_build/latest?definitionId=41)
-|  Extensions  | ![.NET Core](https://github.com/NeuCharFramework/NcfPackageSources/workflows/.NET%20Core/badge.svg)  |  [![Build status](https://mysenparc.visualstudio.com/NeuCharFramework/_apis/build/status/NeuCharFramework-ASP.NET%20Core-CI)](https://mysenparc.visualstudio.com/NeuCharFramework/_build/latest?definitionId=41)
+|  Basic       | [![Build Status](https://mysenparc.visualstudio.com/NCF-and-PackageResources/_apis/build/status/NeuCharFramework.NcfPackageSources?branchName=master)](https://mysenparc.visualstudio.com/NCF-and-PackageResources/_build/latest?definitionId=48&branchName=master)
+|  Extensions  | [![Build Status](https://mysenparc.visualstudio.com/NCF-and-PackageResources/_apis/build/status/NeuCharFramework.NcfPackageSources?branchName=master)](https://mysenparc.visualstudio.com/NCF-and-PackageResources/_build/latest?definitionId=48&branchName=master)
 
 
 ## 说明
