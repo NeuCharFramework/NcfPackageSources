@@ -47,7 +47,7 @@ namespace Senparc.Ncf.XncfBase
         /// <summary>
         /// 所有线程的集合
         /// </summary>
-        public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection = new ConcurrentDictionary<ThreadInfo, Thread>();
+        public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; } = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         /// <summary>
         /// 所有自动注册 Xncf 的数据库的 ConfigurationMapping 对象
