@@ -424,7 +424,7 @@ namespace Senparc.Ncf.Core.Models
         public string UpdateLog { get; set; }
         public bool AllowRemove { get; set; }
         public string MenuId { get; set; }
-        public XncfModules_State State { get; private set; }
+        public XncfModules_State State { get; set; }
 
         public DateTime AddTime { get; set; }
         public DateTime LastUpdateTime { get; set; }

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.EntityFrameworkCore;
 using Senparc.CO2NET;
-using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.DI;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -33,7 +27,6 @@ namespace Senparc.Ncf.Core.Cache
         public override FullXncfModule InsertObjectToCache(string key)
         {
             throw new NotImplementedException();
-
         }
 
         public override async Task<FullXncfModule> InsertObjectToCacheAsync(string key)
