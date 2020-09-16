@@ -20,7 +20,18 @@ namespace Senparc.Ncf.Core.Models
         {
         }
 
-        #region 系统表
+        #region 系统表（无特殊情况不要修改）
+
+        /// <summary>
+        /// 系统设置
+        /// </summary>
+        public DbSet<SystemConfig> SystemConfigs { get; set; }
+
+
+        /// <summary>
+        /// 用户信息
+        /// </summary>
+        public virtual DbSet<Account> Accounts { get; set; }
 
         /// <summary>
         /// 菜单
@@ -42,27 +53,21 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public DbSet<SysPermission> SysPermission { get; set; }
 
-
         /// <summary>
         /// 角色人员表
         /// </summary>
         public DbSet<SysRoleAdminUserInfo> SysRoleAdminUserInfos { get; set; }
 
-
-        public virtual DbSet<Account> Accounts { get; set; }
-
-
-        public DbSet<SystemConfig> SystemConfigs { get; set; }
-
-
+        /// <summary>
+        /// 用户积分日志
+        /// </summary>
         public virtual DbSet<PointsLog> PointsLogs { get; set; }
 
+        /// <summary>
+        /// 用户支付日志
+        /// </summary>
+
         public virtual DbSet<AccountPayLog> AccountPayLogs { get; set; }
-
-        #region 不可修改系统表
-
-        #endregion
-
 
         /// <summary>
         /// 扩展模块

@@ -1,5 +1,6 @@
 ﻿using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Utility;
 using System;
 using System.Collections.Generic;
@@ -410,6 +411,29 @@ namespace Senparc.Ncf.Core.Models
 
     }
 
+
+    [Serializable]
+    public partial class FullXncfModule : BaseFullEntity<XncfModule>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Uid { get; set; }
+        public string MenuName { get; set; }
+        public string Version { get; set; }
+        public string Description { get; set; }
+        public string UpdateLog { get; set; }
+        public bool AllowRemove { get; set; }
+        public string MenuId { get; set; }
+        public XncfModules_State State { get; private set; }
+
+        public DateTime AddTime { get; set; }
+        public DateTime LastUpdateTime { get; set; }
+
+        public override void CreateEntity(XncfModule entity)
+        {
+            base.CreateEntity(entity);
+        }
+    }
 
     #endregion
 
