@@ -9,6 +9,8 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -27,11 +29,19 @@ namespace Senparc.Ncf.Core.Cache
         {
         }
 
+        [Obsolete]
         public override FullXncfModule InsertObjectToCache(string key)
         {
-            var xncfModule = (_dataContext.BaseDataContext as SenparcEntitiesBase).XncfModules
-                                .FirstOrDefault(z => z.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
-            var fullXncfModule = base.InsertObjectToCache(key, xncfModule);
+            throw new NotImplementedException();
+
+        }
+
+        public override async Task<FullXncfModule> InsertObjectToCacheAsync(string key)
+        {
+            var xncfModule = await (_dataContext.BaseDataContext as SenparcEntitiesBase).XncfModules
+                                        .FirstOrDefaultAsync(z => z.Name.Equals(key, StringComparison.OrdinalIgnoreCase))
+                                        .ConfigureAwait(false);
+            var fullXncfModule = await base.InsertObjectToCacheAsync(key, xncfModule).ConfigureAwait(false);
             return fullXncfModule;
         }
     }

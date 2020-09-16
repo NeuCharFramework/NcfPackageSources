@@ -55,7 +55,7 @@ namespace Senparc.Ncf.XncfBase
             }
             //检查数据库中的安装状态
             var fullXncfModuleCache = this._serviceProvider.GetService<FullXncfModuleCache>();
-            var fullXncfModule = fullXncfModuleCache.GetObject(xncfName);
+            var fullXncfModule = await fullXncfModuleCache.GetObjectAsync(xncfName);
             if (fullXncfModule == null || fullXncfModule.State != Core.Enums.XncfModules_State.开放)
             {
                 return false;
