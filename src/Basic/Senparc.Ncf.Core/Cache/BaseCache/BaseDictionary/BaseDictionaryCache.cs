@@ -322,7 +322,7 @@ namespace Senparc.Ncf.Core.Cache
             }
             else
             {
-                return InsertObjectToCache(key);
+                return await InsertObjectToCacheAsync(key).ConfigureAwait(false);
             }
         }
 
