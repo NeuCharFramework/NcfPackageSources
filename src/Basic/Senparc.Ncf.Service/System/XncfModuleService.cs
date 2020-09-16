@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Log;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Ncf.Service
 {
@@ -51,11 +53,79 @@ namespace Senparc.Ncf.Service
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public async Task UpdateMenuId(UpdateMenuId_XncfModuleDto dto)
+        public async Task UpdateMenuIdAsync(UpdateMenuId_XncfModuleDto dto)
         {
             var xncfModule = await base.GetObjectAsync(z => z.Uid == dto.Uid).ConfigureAwait(false);
             xncfModule.UpdateMenuId(dto.MenuId);
             await SaveObjectAsync(xncfModule).ConfigureAwait(false);
+        }
+
+        public override void SaveObject(XncfModule obj)
+        {
+            var isInsert = base.IsInsert(obj);
+            if (isInsert)
+            {
+                obj.Flag = false;
+            }
+            base.SaveObject(obj);
+            LogUtility.WebLogger.InfoFormat("XncfModule{2}：{0}（ID：{1}）", obj.Name, obj.Id, isInsert ? "新增" : "编辑");
+
+            //清除缓存
+            var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
+            //同步缓存锁
+            using (fullUserCache.Cache.BeginCacheLock(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()))
+            {
+                fullUserCache.RemoveObject(obj.Name);
+            }
+        }
+
+        public override async Task SaveObjectAsync(XncfModule obj)
+        {
+            var isInsert = base.IsInsert(obj);
+            if (isInsert)
+            {
+                obj.Flag = false;
+            }
+            await base.SaveObjectAsync(obj);
+            LogUtility.WebLogger.InfoFormat("XncfModule{2}：{0}（ID：{1}）", obj.Name, obj.Id, isInsert ? "新增" : "编辑");
+
+            //清除缓存
+            var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
+            //同步缓存锁
+            using (await fullUserCache.Cache.BeginCacheLockAsync(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()).ConfigureAwait(false))
+            {
+                await fullUserCache.RemoveObjectAsync(obj.Name);
+            }
+        }
+
+        public override void DeleteObject(XncfModule obj)
+        {
+            obj.Flag = true;
+            base.SaveObject(obj);
+            LogUtility.WebLogger.Info($"XncfModule被删除：{obj.Name}（ID：{obj.Id}）");
+
+            //清除缓存
+            var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
+            //同步缓存锁
+            using (fullUserCache.Cache.BeginCacheLock(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()))
+            {
+                fullUserCache.RemoveObject(obj.Name);
+            }
+        }
+
+        public override async Task DeleteObjectAsync(XncfModule obj)
+        {
+            obj.Flag = true;
+            await base.SaveObjectAsync(obj).ConfigureAwait(false);
+            LogUtility.WebLogger.Info($"XncfModule被删除：{obj.Name}（ID：{obj.Id}）");
+
+            //清除缓存
+            var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
+            //同步缓存锁
+            using (await fullUserCache.Cache.BeginCacheLockAsync(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()).ConfigureAwait(false))
+            {
+                await fullUserCache.RemoveObjectAsync(obj.Name);
+            }
         }
     }
 }
