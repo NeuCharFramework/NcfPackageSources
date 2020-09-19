@@ -50,8 +50,6 @@ namespace Senparc.Ncf.XncfBase
             this._serviceProvider = serviceProvider;
         }
 
-
-
         /// <summary>
         /// 检查数据库（缓存）中的模块信息，是否开放，并为开放状态
         /// </summary>
@@ -73,7 +71,7 @@ namespace Senparc.Ncf.XncfBase
         public async Task<bool> CheckXncfValiable(IXncfRegister xncfRegister)
         {
             //检查内存中是否存在
-            return IsRegistered(xncfRegister)
+            return xncfRegister!=null && IsRegistered(xncfRegister)
                 ? await CheckOpenStateAsync(xncfRegister.Name).ConfigureAwait(false)
                 : false;
         }
