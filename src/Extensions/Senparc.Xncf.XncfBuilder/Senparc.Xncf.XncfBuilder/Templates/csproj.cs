@@ -184,7 +184,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include=""Senparc.Ncf.XncfBase"" Version=""0.3.500-beta1"" />
+    <PackageReference Include=""Senparc.Ncf.XncfBase"" Version=""0.3.506.2-beta1"" />
     <ProjectReference Include=""..\Senparc.Core\Senparc.Core.csproj"" />
     <ProjectReference Include=""..\Senparc.Service\Senparc.Service.csproj"" />
   </ItemGroup>
@@ -198,7 +198,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             this.Write(@"  <ItemGroup>
   	<PackageReference Include=""Microsoft.AspNetCore.Authentication.Cookies"" Version=""2.2.0"" />
 	<PackageReference Include=""Microsoft.AspNetCore.Mvc"" Version=""2.2.0"" />
-    <PackageReference Include=""Senparc.Ncf.AreaBase"" Version=""0.3.500-beta1"" />
+    <PackageReference Include=""Senparc.Ncf.AreaBase"" Version=""0.3.506-beta1"" />
   </ItemGroup>
   ");
             

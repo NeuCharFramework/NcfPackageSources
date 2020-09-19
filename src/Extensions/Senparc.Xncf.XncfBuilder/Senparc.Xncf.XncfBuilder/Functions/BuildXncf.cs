@@ -352,7 +352,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         sb.AppendLine($"完成 {newSlnFilePath} 文件备份");
                     }
 
-                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！。";
+
+                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
 
                     //修改 new Sln
                     string slnContent = null;
