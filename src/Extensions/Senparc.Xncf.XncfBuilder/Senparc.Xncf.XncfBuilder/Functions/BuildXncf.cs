@@ -136,7 +136,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     OrgName = typeParam.OrgName,
                     XncfName = typeParam.XncfName,
-                    Uid = Guid.NewGuid().ToString(),
+                    Uid = Guid.NewGuid().ToString().ToUpper(),
                     Version = typeParam.Version,
                     MenuName = typeParam.MenuName,
                     Icon = typeParam.Icon,
