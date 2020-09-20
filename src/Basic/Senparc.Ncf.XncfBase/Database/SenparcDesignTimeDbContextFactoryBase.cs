@@ -119,8 +119,11 @@ namespace Senparc.Ncf.XncfBase.Database
         /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
         /// </summary>
         public abstract Action<SqlServerDbContextOptionsBuilder> SqlServerOptionsAction { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract string RootDictionaryPath { get; }
 
-        protected readonly string _rootDictionaryPath;
         private readonly string _ncfVersion;
         private readonly string _note;
 
@@ -137,7 +140,6 @@ namespace Senparc.Ncf.XncfBase.Database
         {
             SiteConfig.SenparcCoreSetting.DatabaseName = databaseName;
             CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
-            _rootDictionaryPath = rootDictionaryPath;
             this._ncfVersion = ncfVersion;
             this._note = note;
         }
