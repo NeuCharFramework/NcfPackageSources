@@ -1,25 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using Senparc.CO2NET;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
-using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.DI;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using AutoMapper;
-using Senparc.CO2NET.RegisterServices;
-using Senparc.CO2NET;
-using log4net;
 
 namespace Senparc.Ncf.Core
 {

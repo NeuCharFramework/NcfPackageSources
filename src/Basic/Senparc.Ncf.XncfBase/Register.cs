@@ -72,21 +72,25 @@ namespace Senparc.Ncf.XncfBase
                     {
                         scanTypesCount++;
                         var aTypes = a.GetTypes();
+                        //遍历程序集内的所有类型
                         foreach (var t in aTypes)
                         {
                             if (t.IsAbstract)
                             {
-                                continue;
+                                continue;//忽略抽象类
                             }
-
+                            //Console.WriteLine(t.GetType().Name);
+                            //获取 XncfRegister
                             if (t.GetInterfaces().Contains(typeof(IXncfRegister)))
                             {
                                 types[t] = ScanTypeKind.IXncfRegister;
                             }
+                            //获取 XncfFunction
                             else if (t.GetInterfaces().Contains(typeof(IXncfFunction)))
                             {
                                 types[t] = ScanTypeKind.IXncfFunction; /* 暂时不收录处理 */
                             }
+                            //获取 XncfAutoConfigurationMapping
                             else if (t.GetCustomAttributes(true).FirstOrDefault(z => z is XncfAutoConfigurationMappingAttribute) != null
                                 /*&& t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>))*/)
                             {
@@ -250,7 +254,7 @@ namespace Senparc.Ncf.XncfBase
                     }
 
                     var xncfModuleStoredDto = xncfModuleDtos.FirstOrDefault(z => z.Uid == register.Uid);
-                    var xncfModuleAssemblyDto = new UpdateVersion_XncfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description);
+                    var xncfModuleAssemblyDto = new UpdateVersion_XncfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description,register.Icon);
 
                     //检查更新，并安装到数据库
                     var xncfModuleService = serviceProvider.GetService<XncfModuleService>();
