@@ -29,7 +29,7 @@ namespace Senparc.Ncf.Service
             if (storedDto == null)
             {
                 //新增模块
-                var xncfModule = new XncfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, assemblyDto.Description, "", true, "", Core.Enums.XncfModules_State.新增待审核);
+                var xncfModule = new XncfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, assemblyDto.Description, "", true, "", assemblyDto.Icon, Core.Enums.XncfModules_State.新增待审核);
                 xncfModule.Create();
                 await base.SaveObjectAsync(xncfModule).ConfigureAwait(false);
                 return InstallOrUpdate.Install;

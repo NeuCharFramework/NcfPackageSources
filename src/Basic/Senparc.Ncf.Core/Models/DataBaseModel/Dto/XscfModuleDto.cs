@@ -91,17 +91,19 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Version { get; private set; }
         [Required]
         public string Description { get; private set; }
+        public string Icon { get; private set; }
 
         private UpdateVersion_XncfModuleDto() { }
 
 
-        public UpdateVersion_XncfModuleDto(string name, string uid, string menuName, string version, string description)
+        public UpdateVersion_XncfModuleDto(string name, string uid, string menuName, string version, string description,string icon)
         {
             Name = name;
             Uid = uid;
             MenuName = menuName;
             Version = version;
             Description = description;
+            Icon = icon;
         }
     }
 

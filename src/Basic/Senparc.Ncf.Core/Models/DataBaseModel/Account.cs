@@ -2,6 +2,7 @@
 using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Ncf.Core.Models
 {
@@ -14,8 +15,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
         public string UserName { get; set; }
+        //[MaxLength(100)]
         public string Password { get; set; }
+        //[MaxLength(100)]
         public string PasswordSalt { get; set; }
+        //[Required,MaxLength(50)]
         public string NickName { get; set; }
         public string RealName { get; set; }
         public string Phone { get; set; }
@@ -30,8 +34,10 @@ namespace Senparc.Ncf.Core.Models
         public decimal LockMoney { get; set; }
         public byte Sex { get; set; }
         public string QQ { get; set; }
+        [MaxLength(30)]
         public string Country { get; set; }
         public string Province { get; set; }
+        [MaxLength(30)]
         public string City { get; set; }
         public string District { get; set; }
         public string Address { get; set; }

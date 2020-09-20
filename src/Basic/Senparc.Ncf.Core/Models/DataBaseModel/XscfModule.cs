@@ -19,6 +19,11 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string UpdateLog { get; private set; }
         public bool AllowRemove { get; private set; }
         public string MenuId { get; private set; }
+        /// <summary>
+        /// 使用 FontAwesome 图标，如：fa fa-star
+        /// </summary>
+        public string Icon { get; private set; }
+
         public XncfModules_State State { get; private set; }
 
         /// <summary>
@@ -34,7 +39,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         private XncfModule() { }
 
 
-        public XncfModule(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, XncfModules_State state)
+        public XncfModule(string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId,string icon, XncfModules_State state)
         {
             Name = name;
             Uid = uid;
@@ -44,6 +49,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             UpdateLog = updateLog;
             AllowRemove = allowRemove;
             MenuId = menuId;
+            Icon = icon;
             State = state;
         }
 
