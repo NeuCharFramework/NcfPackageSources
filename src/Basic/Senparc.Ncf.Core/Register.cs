@@ -78,7 +78,14 @@ namespace Senparc.Ncf.Core
             //初始化项目
             if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
             {
-                var repository = LogManager.CreateRepository("NETCoreRepository");//读取Log配置文件
+                try
+                {
+                    var repository = LogManager.CreateRepository("NETCoreRepository");//读取Log配置文件
+                }
+                catch
+                {
+                    Console.WriteLine("NETCoreRepository 已进行过配置，无需重复配置");
+                }
                 RegisterServiceCollection();
                 return RegisterServiceStart();
             }

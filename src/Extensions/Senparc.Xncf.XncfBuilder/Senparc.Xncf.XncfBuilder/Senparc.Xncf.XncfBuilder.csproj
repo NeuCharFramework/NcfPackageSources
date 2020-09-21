@@ -30,6 +30,14 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
   <ItemGroup>
     <None Remove="Templates\RegisterArea.tt" />
     <None Remove="Templates\RegisterDatabase.tt" />
@@ -54,8 +62,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />
-    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+    <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+	  <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Templates\App_Data\Database\SenparcConfig.cs">

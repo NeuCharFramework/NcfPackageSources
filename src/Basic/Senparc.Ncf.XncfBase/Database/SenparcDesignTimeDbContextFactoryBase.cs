@@ -86,7 +86,7 @@ namespace Senparc.Ncf.XncfBase.Database
                 Console.WriteLine($"Uid: {xncfRegister.Uid}");
                 Console.WriteLine($"Version: {xncfRegister.Version}");
             }
-            var dbContextName = _register.XncfDatabaseDbContextType.GetType().Name;
+            var dbContextName = _register.XncfDatabaseDbContextType.Name;
             Console.WriteLine($"DbContextName: {dbContextName}");
             Console.WriteLine($"===============================");
         }
@@ -150,7 +150,13 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public virtual TDbContext CreateDbContext(string[] args)
         {
-            var repository = LogManager.CreateRepository("NETCoreRepository");
+            try
+            {
+                var repository = LogManager.CreateRepository("NETCoreRepository");
+            }
+            catch 
+            {
+            }
             var serviceCollection = new ServiceCollection();
             var configBuilder = new ConfigurationBuilder();
             var config = configBuilder.Build();
@@ -162,6 +168,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
             //如果运行 Add-Migration 命令，并且获取不到正确的网站根目录，此处可能无法自动获取到连接字符串（上述#13问题），
             //也可通过下面已经注释的的提供默认值方式解决（不推荐）
+
             var sqlConnection = (SqlConnectionStr ??
                 SenparcDatabaseConfigs.ClientConnectionString) ??
                 "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
@@ -175,12 +182,13 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine("=======  Start XNCF Engine  =======");
             var dt1 = DateTime.Now;
             var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartEngine(serviceCollection, config);
-            if (!startEngineRresult.IsNullOrWhiteSpace())
+            if (!startEngineRresult.IsNullOrEmpty())
             {
                 Console.WriteLine(startEngineRresult);
             }
             Console.WriteLine("======= XNCF Engine Started =======");
             Console.WriteLine($"======= 耗时: {SystemTime.DiffTotalMS(dt1)} 毫秒 =======");
+            Console.WriteLine();
 
             CreateDbContextAction();
 
