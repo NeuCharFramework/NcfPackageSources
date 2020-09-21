@@ -1,4 +1,5 @@
-﻿using Senparc.Ncf.XncfBase;
+﻿using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuilder.Templates;
 using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages;
@@ -17,6 +18,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
 {
@@ -27,7 +30,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
         }
 
-        public class Parameters : IFunctionParameter
+        public class Parameters : FunctionParameterLoadDataBase, IFunctionParameter
         {
             [Required]
             [MaxLength(250)]
@@ -87,6 +90,20 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                  new SelectionItem("1","是","是否安装数据库示例，由于展示需要，将自动安装上述“数据库”、“Web（Area） 页面”功能",false),
             });
 
+            /// <summary>
+            /// 预载入数据
+            /// </summary>
+            /// <param name="serviceProvider"></param>
+            /// <returns></returns>
+            public override async Task LoadData(IServiceProvider serviceProvider)
+            {
+                var configService = serviceProvider.GetService<ServiceBase<Config>>();
+                var config = await configService.GetObjectAsync(z => true);
+                if (config != null)
+                {
+                    configService.Mapper.Map(config, this);
+                }
+            }
         }
 
 
@@ -395,6 +412,21 @@ EndProject
 
                 #endregion
 
+                #region 将当前设置保存到数据库
+
+                var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
+                var config = configService.GetObject(z => true);
+                if (config == null)
+                {
+                    config = new Config(typeParam.SlnFilePath, typeParam.OrgName, typeParam.XncfName, typeParam.Version, typeParam.MenuName, typeParam.Icon);
+                }
+                else
+                {
+                    configService.Mapper.Map(typeParam, config);
+                }
+                configService.SaveObject(config);
+
+                #endregion
             });
         }
     }

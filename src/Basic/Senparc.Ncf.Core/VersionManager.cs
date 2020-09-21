@@ -23,8 +23,8 @@ namespace Senparc.Ncf.Core
             sb.AppendLine($"          NeuCharFramework {ncfVersion}");
             sb.AppendLine($"             Apache License 2.0 ");
             sb.AppendLine("");
-            sb.AppendLine("    https://github.com/NeuCharFramework/Ncf");
-            sb.AppendLine("    https://gitee.com/NeuCharFramework/Ncf");
+            sb.AppendLine("    https://github.com/NeuCharFramework/NCF");
+            sb.AppendLine("    https://gitee.com/NeuCharFramework/NCF");
             sb.AppendLine("");
             if (!note.IsNullOrEmpty())
             {

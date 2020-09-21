@@ -122,7 +122,6 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <summary>
         /// 
         /// </summary>
-        public abstract string RootDictionaryPath { get; }
 
         private readonly string _ncfVersion;
         private readonly string _note;
