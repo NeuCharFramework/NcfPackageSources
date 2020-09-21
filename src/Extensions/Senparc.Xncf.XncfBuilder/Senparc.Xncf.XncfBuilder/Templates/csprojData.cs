@@ -17,6 +17,9 @@ namespace Senparc.Xncf.XncfBuilder.Templates
         public bool UseWeb { get; set; }
         public bool UseDatabase { get; set; }
 
+        public string AreaBaseVersion { get; set; }
+        public string XncfBaseVersion { get; set; }
+
         /// <summary>
         /// 项目文件路径（相对于src目录）
         /// </summary>

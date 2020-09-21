@@ -20,6 +20,7 @@ using System.Text;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
 {
@@ -107,10 +108,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         configService.Mapper.Map(config, this);
                     }
                 }
-                catch 
+                catch
                 {
                 }
-                
+
             }
         }
 
@@ -310,6 +311,16 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #region 生成 .csproj
 
+                string areaBaseVersion = "";
+                try
+                {
+                    areaBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(Type.GetType("Senparc.Ncf.AreaBase.Admin.AdminPageModelBase")).Location).ProductVersion;
+                }
+                catch 
+                {
+                }
+
+
                 //生成 .csproj
                 Senparc.Xncf.XncfBuilder.Templates.csproj csprojPage = new csproj()
                 {
@@ -319,80 +330,81 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     MenuName = typeParam.MenuName,
                     Description = typeParam.Description,
                     UseWeb = useWeb,
-                    UseDatabase = useDatabase
+                    UseDatabase = useDatabase,
+                    AreaBaseVersion = areaBaseVersion,
+                    XncfBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(typeof(Senparc.Ncf.XncfBase.Register)).Location).ProductVersion
                 };
-
                 WriteContent(csprojPage, sb);
 
-                #endregion
+            #endregion
 
-                #region 自动附加项目
+            #region 自动附加项目
 
-                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
-                if (File.Exists(webProjFilePath))
+            var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
+            if (File.Exists(webProjFilePath))
+            {
+                XDocument webCsproj = XDocument.Load(webProjFilePath);
+                if (!webCsproj.ToString().Contains(csprojPage.ProjectFilePath))
                 {
-                    XDocument webCsproj = XDocument.Load(webProjFilePath);
-                    if (!webCsproj.ToString().Contains(csprojPage.ProjectFilePath))
+                    var referenceNode = new XElement("ProjectReference");
+                    referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
+                    var newNode = new XElement("ItemGroup", referenceNode);
+                    webCsproj.Root.Add(newNode);
+                    webCsproj.Save(webProjFilePath);
+                }
+            }
+
+            #endregion
+
+            #region 生成 .sln
+
+            //生成 .sln
+            if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
+            {
+                result.Success = false;
+                result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                sb.AppendLine($"操作未全部完成：{result.Message}");
+            }
+            else if (File.Exists(typeParam.SlnFilePath))
+            {
+                //是否创建新的 .sln 文件
+                var useNewSlnFile = typeParam.NewSlnFile.SelectedValues.Contains("new");
+
+                var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
+                string newSlnFileName = slnFileName;
+                string newSlnFilePath = typeParam.SlnFilePath;
+                if (useNewSlnFile)
+                {
+                    newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                    newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
+                    File.Copy(typeParam.SlnFilePath, newSlnFilePath);
+                    sb.AppendLine($"完成 {newSlnFilePath} 文件创建");
+                }
+                else
+                {
+                    var backupSln = typeParam.NewSlnFile.SelectedValues.Contains("backup");
+                    var backupFileName = $"{slnFileName}-backup-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                    var backupFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), backupFileName);
+                    File.Copy(typeParam.SlnFilePath, backupFilePath);
+                    sb.AppendLine($"完成 {newSlnFilePath} 文件备份");
+                }
+
+
+                result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
+
+                //修改 new Sln
+                string slnContent = null;
+                using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
+                {
+                    using (StreamReader sr = new StreamReader(fs))
                     {
-                        var referenceNode = new XElement("ProjectReference");
-                        referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
-                        var newNode = new XElement("ItemGroup", referenceNode);
-                        webCsproj.Root.Add(newNode);
-                        webCsproj.Save(webProjFilePath);
+                        slnContent = sr.ReadToEnd();
+                        sr.Close();
                     }
                 }
 
-                #endregion
-
-                #region 生成 .sln
-
-                //生成 .sln
-                if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
-                {
-                    result.Success = false;
-                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
-                    sb.AppendLine($"操作未全部完成：{result.Message}");
-                }
-                else if (File.Exists(typeParam.SlnFilePath))
-                {
-                    //是否创建新的 .sln 文件
-                    var useNewSlnFile = typeParam.NewSlnFile.SelectedValues.Contains("new");
-
-                    var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
-                    string newSlnFileName = slnFileName;
-                    string newSlnFilePath = typeParam.SlnFilePath;
-                    if (useNewSlnFile)
-                    {
-                        newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
-                        newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
-                        File.Copy(typeParam.SlnFilePath, newSlnFilePath);
-                        sb.AppendLine($"完成 {newSlnFilePath} 文件创建");
-                    }
-                    else
-                    {
-                        var backupSln = typeParam.NewSlnFile.SelectedValues.Contains("backup");
-                        var backupFileName = $"{slnFileName}-backup-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
-                        var backupFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), backupFileName);
-                        File.Copy(typeParam.SlnFilePath, backupFilePath);
-                        sb.AppendLine($"完成 {newSlnFilePath} 文件备份");
-                    }
-
-
-                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
-
-                    //修改 new Sln
-                    string slnContent = null;
-                    using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
-                    {
-                        using (StreamReader sr = new StreamReader(fs))
-                        {
-                            slnContent = sr.ReadToEnd();
-                            sr.Close();
-                        }
-                    }
-
-                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
-                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
+                var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
+                slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
 EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
 EndProject
 Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{csprojPage.RelativeFilePath}"", ""{projGuid}""
@@ -407,35 +419,35 @@ EndProject
 		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
 ").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
 		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
-                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
-                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
-                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
-                }
-                else
-                {
-                    result.Success = false;
-                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
-                    sb.AppendLine($"操作未全部完成：{result.Message}");
-                }
+                System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
+                sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
+                result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
+            }
+            else
+            {
+                result.Success = false;
+                result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                sb.AppendLine($"操作未全部完成：{result.Message}");
+            }
 
-                #endregion
+            #endregion
 
-                #region 将当前设置保存到数据库
+            #region 将当前设置保存到数据库
 
-                var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
-                var config = configService.GetObject(z => true);
-                if (config == null)
-                {
-                    config = new Config(typeParam.SlnFilePath, typeParam.OrgName, typeParam.XncfName, typeParam.Version, typeParam.MenuName, typeParam.Icon);
-                }
-                else
-                {
-                    configService.Mapper.Map(typeParam, config);
-                }
-                configService.SaveObject(config);
+            var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
+            var config = configService.GetObject(z => true);
+            if (config == null)
+            {
+                config = new Config(typeParam.SlnFilePath, typeParam.OrgName, typeParam.XncfName, typeParam.Version, typeParam.MenuName, typeParam.Icon);
+            }
+            else
+            {
+                configService.Mapper.Map(typeParam, config);
+            }
+            configService.SaveObject(config);
 
-                #endregion
-            });
+            #endregion
+        });
         }
-    }
+}
 }
