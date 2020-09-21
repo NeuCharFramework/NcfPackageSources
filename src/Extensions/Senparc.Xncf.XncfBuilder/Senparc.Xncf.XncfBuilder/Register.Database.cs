@@ -16,6 +16,7 @@ namespace Senparc.Xncf.XncfBuilder
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             services.AddScoped<Config>();
+            services.AddScoped<BuildXncf.Parameters>();
 
             //AutoMap映射
             base.AddAutoMapMapping(profile =>

@@ -97,12 +97,20 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             /// <returns></returns>
             public override async Task LoadData(IServiceProvider serviceProvider)
             {
-                var configService = serviceProvider.GetService<ServiceBase<Config>>();
-                var config = await configService.GetObjectAsync(z => true);
-                if (config != null)
+                try
                 {
-                    configService.Mapper.Map(config, this);
+                    //低版本没有数据库，此处需要try
+                    var configService = serviceProvider.GetService<ServiceBase<Config>>();
+                    var config = await configService.GetObjectAsync(z => true);
+                    if (config != null)
+                    {
+                        configService.Mapper.Map(config, this);
+                    }
                 }
+                catch 
+                {
+                }
+                
             }
         }
 
