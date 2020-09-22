@@ -314,7 +314,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 string areaBaseVersion = "";
                 try
                 {
-                    areaBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(Type.GetType("Senparc.Ncf.AreaBase.Admin.AdminPageModelBase")).Location).ProductVersion;
+                    //areaBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(Type.GetType("Senparc.Ncf.AreaBase.Admin.AdminPageModelBase,Senparc.Ncf.AreaBase")).Location).ProductVersion;
+                    var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                    var areaBaseDllPath = Path.Combine(dllPath, "Senparc.Ncf.AreaBase.dll");
+                    areaBaseVersion =
+                    FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(areaBaseDllPath).Location).ProductVersion; 
                 }
                 catch 
                 {
