@@ -19,6 +19,11 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         /// <summary>
         /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
         /// </summary>
-        public override string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"/*项目根目录*/, "..\\Senparc.Web"/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
+        private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"/*项目根目录*/, "..\\Senparc.Web"/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
+
+        public SenparcDbContextFactory()
+            : base(RootDictionaryPath)
+        {
+        }    
     }
 }

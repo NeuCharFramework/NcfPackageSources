@@ -62,3 +62,4 @@ obj/
 /src/Extensions/Senparc.Xscf.DatabaseToolkit/Senparc.Xscf.DatabaseToolkit/App_Data/SenparcTraceLog
 /src/Basic/Senparc.Scf.XscfBase.Tests/App_Data/SenparcTraceLog/*.log
 /src/Extensions/Senparc.Xncf.ChangeNamespace.Tests/App_Data/src/NcfSrc/NCF
+/src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder/App_Data/SenparcTraceLog

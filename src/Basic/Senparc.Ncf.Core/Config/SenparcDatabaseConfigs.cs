@@ -27,6 +27,7 @@ namespace Senparc.Ncf.Core.Config
                     }
                     catch (Exception e)
                     {
+                        //Console.WriteLine(e.Message);
                         LogUtility.WebLogger.ErrorFormat("SenparcConfigs.Configs读取错误：" + e.Message, e);
                     }
                     return configs;

@@ -184,23 +184,33 @@ namespace Senparc.Xncf.XncfBuilder.Templates
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include=""Senparc.Ncf.XncfBase"" Version=""0.3.506.2-beta1"" />
-    <ProjectReference Include=""..\Senparc.Core\Senparc.Core.csproj"" />
-    <ProjectReference Include=""..\Senparc.Service\Senparc.Service.csproj"" />
-  </ItemGroup>
-  ");
+    <PackageReference Include=""Senparc.Ncf.XncfBase"" Version=""");
+            
+            #line 45 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfBaseVersion));
+            
+            #line default
+            #line hidden
+            this.Write("\" />\r\n    <ProjectReference Include=\"..\\Senparc.Core\\Senparc.Core.csproj\" />\r\n   " +
+                    " <ProjectReference Include=\"..\\Senparc.Service\\Senparc.Service.csproj\" />\r\n  </I" +
+                    "temGroup>\r\n  ");
             
             #line 49 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  if(UseWeb) {
             
             #line default
             #line hidden
-            this.Write(@"  <ItemGroup>
-  	<PackageReference Include=""Microsoft.AspNetCore.Authentication.Cookies"" Version=""2.2.0"" />
-	<PackageReference Include=""Microsoft.AspNetCore.Mvc"" Version=""2.2.0"" />
-    <PackageReference Include=""Senparc.Ncf.AreaBase"" Version=""0.3.506-beta1"" />
-  </ItemGroup>
-  ");
+            this.Write("  <ItemGroup>\r\n  \t<PackageReference Include=\"Microsoft.AspNetCore.Authentication." +
+                    "Cookies\" Version=\"2.2.0\" />\r\n\t<PackageReference Include=\"Microsoft.AspNetCore.Mv" +
+                    "c\" Version=\"2.2.0\" />\r\n    <PackageReference Include=\"Senparc.Ncf.AreaBase\" Vers" +
+                    "ion=\"");
+            
+            #line 53 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(AreaBaseVersion));
+            
+            #line default
+            #line hidden
+            this.Write("\" />\r\n  </ItemGroup>\r\n  ");
             
             #line 55 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  } 
