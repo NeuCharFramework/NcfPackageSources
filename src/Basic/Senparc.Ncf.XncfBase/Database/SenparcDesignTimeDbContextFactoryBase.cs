@@ -9,6 +9,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Database;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,24 +22,24 @@ namespace Senparc.Ncf.XncfBase.Database
     /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
-        : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities>
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister, TDatabaseConfiguration>
+        : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TDatabaseConfiguration>
+            where TDatabaseConfiguration : IDatabaseConfiguration, new()
             where TSenparcEntities : XncfDatabaseDbContext
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
+
+
         public virtual SenparcSetting SenparcSetting => new SenparcSetting();
 
         public override string SqlConnectionStr => SenparcDatabaseConfigs.ClientConnectionString ?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
 
-        public override Action<SqlServerDbContextOptionsBuilder> SqlServerOptionsAction =>
-            b =>
-            {
-                _register.DbContextOptionsAction(b, null);
-                b.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(5),
-                    errorNumbersToAdd: new int[] { 2 });
-            };
+        //public override Action</*SqlServerDbContextOptionsBuilder*/ TDbContextOptionsBuilder> DbContextOptionsAction =>
+        //    b =>
+        //    {
+        //        _register.DbContextOptionsAction(b, null); 
+        //        base.DatabaseConfiguration.DbContextOptionsAction(b);
+        //    };
 
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
@@ -97,10 +98,14 @@ namespace Senparc.Ncf.XncfBase.Database
     /// <para>（针对非 XNCF 模块的普通 DbContext，在Senparc.Web 项目下进行 Add-Migration 等操作）</para>
     /// </summary>
     /// <typeparam name="TDbContext"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TDbContext>
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TDbContext, TDatabaseConfiguration>
         : IDesignTimeDbContextFactory<TDbContext>
+            where TDatabaseConfiguration : IDatabaseConfiguration, new()
             where TDbContext : DbContext
     {
+
+        public IDatabaseConfiguration DatabaseConfiguration { get; set; }
+
 
         /// <summary>
         /// SQL Server 连接字符串
@@ -114,14 +119,12 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <returns></returns>
         public abstract TDbContext GetDbContextInstance(DbContextOptions<TDbContext> dbContextOptions);
 
-        /// <summary>
-        /// 指定程序集等配置，如：
-        /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
-        /// </summary>
-        public abstract Action<SqlServerDbContextOptionsBuilder> SqlServerOptionsAction { get; }
-        /// <summary>
-        /// 
-        /// </summary>
+        ///// <summary>
+        ///// 指定程序集等配置，如：
+        ///// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
+        ///// </summary>
+        //public abstract Action</*SqlServerDbContextOptionsBuilder*/TDbContextOptionsBuilder> DbContextOptionsAction { get; }
+
 
         private readonly string _ncfVersion;
         private readonly string _note;
@@ -141,7 +144,10 @@ namespace Senparc.Ncf.XncfBase.Database
             CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
             this._ncfVersion = ncfVersion;
             this._note = note;
+
+            DatabaseConfiguration = new TDatabaseConfiguration();
         }
+
 
         /// <summary>
         /// 创建过程的其他代码
@@ -154,7 +160,7 @@ namespace Senparc.Ncf.XncfBase.Database
             {
                 var repository = LogManager.CreateRepository("NETCoreRepository");
             }
-            catch 
+            catch
             {
             }
             var serviceCollection = new ServiceCollection();
@@ -192,8 +198,10 @@ namespace Senparc.Ncf.XncfBase.Database
 
             CreateDbContextAction();
 
+            //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();
-            builder.UseSqlServer(sqlConnection, SqlServerOptionsAction);//beta6
+            DatabaseConfiguration.UseDatabase(builder, sqlConnection, DatabaseConfiguration.DbContextOptionsAction);
+            //单一使用 SQL Server 的方法：builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6
 
             return GetDbContextInstance(builder.Options);
         }

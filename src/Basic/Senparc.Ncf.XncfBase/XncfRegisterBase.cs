@@ -202,6 +202,10 @@ namespace Senparc.Ncf.XncfBase
                     dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XncfDatabaseDbContextType);
                     //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
+
+
+
+
                     //继续定义配置
                     dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString,
                         b =>
