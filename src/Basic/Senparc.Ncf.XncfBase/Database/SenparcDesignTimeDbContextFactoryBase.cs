@@ -72,7 +72,7 @@ namespace Senparc.Ncf.XncfBase.Database
         protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
         {
-            _register = System.Activator.CreateInstance<TXncfDatabaseRegister>() as TXncfDatabaseRegister;
+            _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
             Senparc.Ncf.Core.Register.TryRegisterMiniCore();
         }
 
@@ -142,7 +142,6 @@ namespace Senparc.Ncf.XncfBase.Database
             CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
             this._ncfVersion = ncfVersion;
             this._note = note;
-
             //获取数据库配置
             DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
         }
