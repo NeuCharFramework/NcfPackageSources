@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Core
     /// <summary>
     /// NCF 未安装
     /// </summary>
-    public class NcfUninstallException : NCFeExceptionBase
+    public class NcfUninstallException : NcfExceptionBase
     {
         public NcfUninstallException(string message, bool logged = false) : base(message, logged)
         {
