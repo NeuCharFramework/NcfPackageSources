@@ -22,9 +22,8 @@ namespace Senparc.Ncf.XncfBase.Database
     /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister, TDatabaseConfiguration>
-        : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TDatabaseConfiguration>
-            where TDatabaseConfiguration : IDatabaseConfiguration, new()
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
+        : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities>
             where TSenparcEntities : XncfDatabaseDbContext
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
@@ -98,9 +97,8 @@ namespace Senparc.Ncf.XncfBase.Database
     /// <para>（针对非 XNCF 模块的普通 DbContext，在Senparc.Web 项目下进行 Add-Migration 等操作）</para>
     /// </summary>
     /// <typeparam name="TDbContext"></typeparam>
-    public abstract class SenparcDesignTimeDbContextFactoryBase<TDbContext, TDatabaseConfiguration>
+    public abstract class SenparcDesignTimeDbContextFactoryBase<TDbContext>
         : IDesignTimeDbContextFactory<TDbContext>
-            where TDatabaseConfiguration : IDatabaseConfiguration, new()
             where TDbContext : DbContext
     {
 
@@ -145,7 +143,8 @@ namespace Senparc.Ncf.XncfBase.Database
             this._ncfVersion = ncfVersion;
             this._note = note;
 
-            DatabaseConfiguration = new TDatabaseConfiguration();
+            //获取数据库配置
+            DatabaseConfiguration = DatabaseConfigurationFactory.GetDatabaseConfiguration();
         }
 
 

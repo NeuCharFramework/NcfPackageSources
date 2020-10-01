@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Exceptions
 {
-    public class NcfModuleException : NCFExceptionBase
+    public class NcfModuleException : NCFeExceptionBase
     {
         //public IXncfRegister XncfRegister;
         public NcfModuleException(string message, bool logged = false) : base(message, logged)

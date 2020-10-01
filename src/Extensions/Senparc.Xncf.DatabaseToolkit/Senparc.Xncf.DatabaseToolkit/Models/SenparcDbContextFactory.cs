@@ -15,8 +15,7 @@ namespace Senparc.Xncf.DatabaseToolkit
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
     /// </summary>
-    public class SenparcDbContextFactory<TDatabaseConfiguration> : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities, Register, TDatabaseConfiguration>
-            where TDatabaseConfiguration : IDatabaseConfiguration, new()
+    public class SenparcDbContextFactory<TDatabaseConfiguration> : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities, Register>
     {
         public SenparcDbContextFactory()
             : base(

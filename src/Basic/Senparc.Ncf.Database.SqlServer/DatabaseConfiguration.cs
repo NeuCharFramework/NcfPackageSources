@@ -10,24 +10,27 @@ namespace Senparc.Ncf.Database.SqlServer
 {
     public class DatabaseConfiguration : IDatabaseConfiguration
     {
-        public Action<SqlServerDbContextOptionsBuilder> DbContextOptionsAction => b =>
+        public Type DbContextOptionsBuilderType => typeof(SqlServerDbContextOptionsBuilder);
+
+        Action<IRelationalDbContextOptionsBuilderInfrastructure> IDatabaseConfiguration.DbContextOptionsAction => b =>
         {
-            b.EnableRetryOnFailure(
+            if (b is SqlServerDbContextOptionsBuilder typedBuilder)
+            {
+                typedBuilder.EnableRetryOnFailure(
                    maxRetryCount: 5,
                    maxRetryDelay: TimeSpan.FromSeconds(5),
                    errorNumbersToAdd: new int[] { 2 });
+            }
+            else
+            {
+                throw 
+            }
         };
 
-        Action<IRelationalDbContextOptionsBuilderInfrastructure> IDatabaseConfiguration.DbContextOptionsAction => throw new NotImplementedException();
-
-        public void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<SqlServerDbContextOptionsBuilder> sqlServerOptionsAction = null)
-        {
-            optionsBuilder.UseSqlServer(connectionString, sqlServerOptionsAction);//beta6
-        }
 
         public void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null)
         {
-            throw new NotImplementedException();
+            optionsBuilder.UseSqlServer(connectionString, dbContextOptionsAction);//beta6
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Senparc.Ncf.XncfBase
     /// <summary>
     /// Xncf 模块方法执行异常
     /// </summary>
-    public class XncfFunctionException : NCFExceptionBase
+    public class XncfFunctionException : NCFeExceptionBase
     {
         public XncfFunctionException(string message, bool logged = false) : this(message, null, logged)
         {

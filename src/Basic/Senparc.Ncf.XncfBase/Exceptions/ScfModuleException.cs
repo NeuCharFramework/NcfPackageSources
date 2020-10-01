@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Senparc.Ncf.XncfBase
 {
-    public class XncfPageException : NCFExceptionBase
+    public class XncfPageException : NCFeExceptionBase
     {
         public IXncfRegister XncfRegister { get; set; }
 
