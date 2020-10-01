@@ -9,10 +9,13 @@ namespace Senparc.Ncf.Core.Database
     /// <summary>
     /// 数据库配置接口
     /// </summary>
-    /// <typeparam name="TDbContextOptionsBuilder"></typeparam>
-    /// <typeparam name="TOptionExtension"></typeparam>
     public interface IDatabaseConfiguration
     {
+        /// <summary>
+        /// DbContextOptionsBuilder 的类型，如：SQL Server 使用 SqlServerDbContextOptionsBuilder
+        /// </summary>
+        Type DbContextOptionsBuilderType { get; }
+
         /// <summary>
         /// 对 DbContextOptionsBuilder 的配置操作
         /// </summary>

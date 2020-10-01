@@ -144,7 +144,7 @@ namespace Senparc.Ncf.XncfBase.Database
             this._note = note;
 
             //获取数据库配置
-            DatabaseConfiguration = DatabaseConfigurationFactory.GetDatabaseConfiguration();
+            DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
         }
 
 
