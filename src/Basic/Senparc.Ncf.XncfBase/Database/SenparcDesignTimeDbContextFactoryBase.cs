@@ -4,17 +4,12 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Database;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
 
 namespace Senparc.Ncf.XncfBase.Database
 {
@@ -117,12 +112,12 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <returns></returns>
         public abstract TDbContext GetDbContextInstance(DbContextOptions<TDbContext> dbContextOptions);
 
-        ///// <summary>
-        ///// 指定程序集等配置，如：
-        ///// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
-        ///// </summary>
-        //public abstract Action</*SqlServerDbContextOptionsBuilder*/TDbContextOptionsBuilder> DbContextOptionsAction { get; }
-
+        /// <summary>
+        /// 指定程序集等配置，如：
+        /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
+        /// </summary>
+        public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction =>
+            DatabaseConfiguration.DbContextOptionsAction;//默认调用 DatabaseConfiguration 中的 DbContextOptionsAction
 
         private readonly string _ncfVersion;
         private readonly string _note;
@@ -198,7 +193,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
             //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();
-            DatabaseConfiguration.UseDatabase(builder, sqlConnection, DatabaseConfiguration.DbContextOptionsAction);
+            DatabaseConfiguration.UseDatabase(builder, sqlConnection,/* DatabaseConfiguration.DbContextOptionsAction*/ this.DbContextOptionsAction);
             //单一使用 SQL Server 的方法：builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6
 
             return GetDbContextInstance(builder.Options);
