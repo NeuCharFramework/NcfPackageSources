@@ -7,7 +7,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Database.SQLite
 {
     /// <summary>
-    /// SQLite 内存数据库配置
+    /// SQLite 内存数据库配置（NCF 对 IDatabaseConfiguration 的一个默认实现，也可以自定义配置）
     /// </summary>
     public class SQLiteMemoryDatabaseConfiguration : IDatabaseConfiguration
     {
