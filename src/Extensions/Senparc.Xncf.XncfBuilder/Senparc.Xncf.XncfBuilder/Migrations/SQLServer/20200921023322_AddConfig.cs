@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations
+namespace Senparc.Xncf.XncfBuilder.Migrations.SQLServer
 {
     public partial class AddConfig : Migration
     {

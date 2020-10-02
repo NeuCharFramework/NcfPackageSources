@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations
+namespace Senparc.Xncf.XncfBuilder.Migrations.SQLServer
 {
     [DbContext(typeof(XncfBuilderEntities))]
     [Migration("20200921023322_AddConfig")]

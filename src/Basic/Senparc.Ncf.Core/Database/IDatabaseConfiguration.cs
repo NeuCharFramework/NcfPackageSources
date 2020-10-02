@@ -8,6 +8,7 @@ namespace Senparc.Ncf.Core.Database
 {
     /// <summary>
     /// 数据库配置接口
+    /// <para>官方推荐的数据库提供程序：https://docs.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-cli </para>
     /// </summary>
     public interface IDatabaseConfiguration
     {
