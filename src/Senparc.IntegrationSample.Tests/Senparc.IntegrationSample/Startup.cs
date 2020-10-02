@@ -13,6 +13,7 @@ using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Database.SQLite;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Database.SqlServer;
 using Senparc.Ncf.SMS;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -74,7 +75,8 @@ namespace Senparc.IntegrationSample
             //激活 Xncf 扩展引擎（必须）
             services.StartEngine(Configuration);
             //指定数据库类型（可选），默认为 SQLiteMemoryDatabaseConfiguration
-            services.UseDatabase<SQLiteMemoryDatabaseConfiguration>();
+            services.UseDatabase<SQLServerDatabaseConfiguration>();
+            //services.UseDatabase<SQLiteMemoryDatabaseConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Database.SqlServer
 {
-    public class DatabaseConfiguration : IDatabaseConfiguration
+    public class SQLServerDatabaseConfiguration : IDatabaseConfiguration
     {
         public Type DbContextOptionsBuilderType => typeof(SqlServerDbContextOptionsBuilder);
 
