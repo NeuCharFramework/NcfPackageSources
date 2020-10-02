@@ -184,10 +184,17 @@ namespace Senparc.Ncf.XncfBase.Database
             var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartEngine(serviceCollection, config);
             if (!startEngineRresult.IsNullOrEmpty())
             {
-                Console.WriteLine(startEngineRresult);
+                Console.Write(startEngineRresult);
             }
             Console.WriteLine("======= XNCF Engine Started =======");
             Console.WriteLine($"======= 耗时: {SystemTime.DiffTotalMS(dt1)} 毫秒 =======");
+            Console.WriteLine();
+
+            Console.WriteLine("=======  DatabaseConfiguration  =======");
+            Console.WriteLine($"DatabaseConfiguration: {DatabaseConfiguration.GetType().Name}");
+            Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {DatabaseConfiguration.DbContextOptionsBuilderType.Name}");
+            Console.WriteLine($"DbContextOptionsAction: {(DatabaseConfiguration.DbContextOptionsAction == null ? "未指定" : "已指定")}");
+            Console.WriteLine("=======================================");
             Console.WriteLine();
 
             CreateDbContextAction();
@@ -195,7 +202,7 @@ namespace Senparc.Ncf.XncfBase.Database
             //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();
             DatabaseConfiguration.UseDatabase(builder, sqlConnection,
-                /* 注意：这里不能用 this.DbContextOptionsAction，否则子类重写将无效！*/
+            /* 注意：这里不能用 this.DbContextOptionsAction，否则子类重写将无效！*/
             DbContextOptionsAction);
             //单一使用 SQL Server 的方法：builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6
 
