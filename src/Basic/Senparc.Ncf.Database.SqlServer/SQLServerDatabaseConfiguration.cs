@@ -28,7 +28,6 @@ namespace Senparc.Ncf.Database.SqlServer
             }
         };
 
-
         public void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null)
         {
             optionsBuilder.UseSqlServer(connectionString, dbContextOptionsAction);//beta6

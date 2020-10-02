@@ -137,8 +137,6 @@ namespace Senparc.Ncf.XncfBase.Database
             CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
             this._ncfVersion = ncfVersion;
             this._note = note;
-            //获取数据库配置
-            DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
         }
 
 
@@ -149,6 +147,9 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public virtual TDbContext CreateDbContext(string[] args)
         {
+            //获取数据库配置
+            DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+           
             try
             {
                 var repository = LogManager.CreateRepository("NETCoreRepository");
@@ -193,7 +194,9 @@ namespace Senparc.Ncf.XncfBase.Database
 
             //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();
-            DatabaseConfiguration.UseDatabase(builder, sqlConnection,/* DatabaseConfiguration.DbContextOptionsAction*/ this.DbContextOptionsAction);
+            DatabaseConfiguration.UseDatabase(builder, sqlConnection,
+                /* 注意：这里不能用 this.DbContextOptionsAction，否则子类重写将无效！*/
+            DbContextOptionsAction);
             //单一使用 SQL Server 的方法：builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6
 
             return GetDbContextInstance(builder.Options);
