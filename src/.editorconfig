@@ -2,3 +2,6 @@
 
 # CS1712: 类型参数在 XML 注释中没有匹配的 typeparam 标记(但其他类型参数有)
 dotnet_diagnostic.CS1712.severity = none
+
+# CS1591: 缺少对公共可见类型或成员的 XML 注释
+# dotnet_diagnostic.CS1591.severity = none
