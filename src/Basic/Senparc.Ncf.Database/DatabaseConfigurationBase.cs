@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Database
         /// <returns></returns>
         public virtual string GetDatabaseMigrationHistoryTableName(XncfDatabaseData xncfDatabaseData)
         {
-            if (!xncfDatabaseData.DatabaseUniquePrefix.IsNullOrWhiteSpace())
+            if (xncfDatabaseData != null && !xncfDatabaseData.DatabaseUniquePrefix.IsNullOrWhiteSpace())
             {
                 return "__" + xncfDatabaseData.DatabaseUniquePrefix + "_EFMigrationsHistory";
             }
@@ -49,8 +49,6 @@ namespace Senparc.Ncf.Database
                        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
             };
 
-        Action<TBuilder> IDatabaseConfiguration<TBuilder, TExtension>.DbContextOptionsAction => throw new NotImplementedException();
-
         Action<IRelationalDbContextOptionsBuilderInfrastructure> IDatabaseConfiguration.DbContextOptionsAction => b =>
         {
             //获取当前数据库配置
@@ -58,7 +56,6 @@ namespace Senparc.Ncf.Database
             //获取当前指定的 IXncfDatabase 对应信息（只在针对某个特定的 XNCF 数据库模块进行 add-migration 等情况下有效）
             var currentXncfDatabaseData = currentDatabaseConfiguration.CurrentXncfDatabaseData;
             //执行带 TBuilder 泛型的 DbContextOptionsAction 方法
-            Console.WriteLine($"b as TBuilder:" + ((b as TBuilder) == null));
             DbContextOptionsAction(b as TBuilder, currentDatabaseConfiguration.CurrentXncfDatabaseData);
         };
 

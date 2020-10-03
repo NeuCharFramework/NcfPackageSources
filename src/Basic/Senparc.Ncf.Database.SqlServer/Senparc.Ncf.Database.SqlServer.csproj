@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.100.27-beta1</Version>
+    <Version>0.1.100.29-beta1</Version>
     <AssemblyName>Senparc.Ncf.Database.SqlServer</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.SqlServer</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>

@@ -13,12 +13,11 @@ namespace Senparc.Ncf.Database
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
         where TExtension : RelationalOptionsExtension, new()
     {
-        /// <summary>
-        /// 对 DbContextOptionsBuilder 的配置操作
-        /// <para>参数1：TBuilder</para>
-        /// <para>参数2：IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</para>
-        /// </summary>
-        new Action<TBuilder> DbContextOptionsAction { get; }
+        ///// <summary>
+        ///// 对 DbContextOptionsBuilder 的配置操作
+        ///// <para>参数1：TBuilder</para>
+        ///// </summary>
+        //new Action<TBuilder> DbContextOptionsAction { get; }
     }
 
     /// <summary>

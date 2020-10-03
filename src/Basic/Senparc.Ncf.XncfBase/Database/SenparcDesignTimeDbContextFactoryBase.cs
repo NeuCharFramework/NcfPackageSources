@@ -125,9 +125,6 @@ namespace Senparc.Ncf.XncfBase.Database
         /// </summary>
         public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction => b =>
         {
-            Console.WriteLine("A: " + (DatabaseConfiguration == null));
-            Console.WriteLine("A: " + (DatabaseConfiguration.DbContextOptionsAction == null));
-
             DatabaseConfiguration.DbContextOptionsAction(b);
         };
         //DatabaseConfiguration.DbContextOptionsAction;//默认调用 DatabaseConfiguration 中的 DbContextOptionsAction

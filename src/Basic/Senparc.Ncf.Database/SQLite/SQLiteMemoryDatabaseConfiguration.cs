@@ -14,8 +14,6 @@ namespace Senparc.Ncf.Database.SQLite
     {
         public Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction => b => { };
 
-        public Type DbContextOptionsBuilderType => typeof(SqliteDbContextOptionsBuilder);
-
 
         public override void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null)
         {

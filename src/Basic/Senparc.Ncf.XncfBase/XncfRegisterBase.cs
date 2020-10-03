@@ -260,30 +260,33 @@ namespace Senparc.Ncf.XncfBase
             AutoMapMappingConfigs.Add(mapping);
         }
 
-
-
-
         /// <summary>
         /// 数据库 DbContext 选项配置
         /// </summary>
         /// <param name="dbContextOptionsAction"></param>
         /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XncfDatabaseDbContextType 所在的程序集</param>
         public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
-                                                   string assemblyName = null)
+            string assemblyName = null)
         {
             if (this is IXncfDatabase databaseRegiser)
             {
-                //TODO:迁移 特定的数据库
+                var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
 
-                if (dbContextOptionsAction is SqliteDbContextOptionsBuilder sqlServerOptionsAction)
-                {
-                    var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XncfDatabaseDbContextType.Assembly.FullName;
-                    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();//TODO:分离独立的 Senparc.Ncf.Database
+                //指定 XncfDatabaseData
+                currentDatabaseConfiguration.CurrentXncfDatabaseData = new XncfDatabaseData(databaseRegiser.XncfDatabaseDbContextType, assemblyName, this.GetDatabaseMigrationHistoryTableName(), databaseRegiser.DatabaseUniquePrefix);
+                
+                //执行 DatabaseConfiguration 中的 DbContextOptionsAction;
+                currentDatabaseConfiguration.DbContextOptionsAction(dbContextOptionsAction);
 
-                    sqlServerOptionsAction
-                        .MigrationsAssembly(senparcEntitiesAssemblyName)
-                        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
-                }
+                //if (dbContextOptionsAction is SqliteDbContextOptionsBuilder sqlServerOptionsAction)
+                //{
+                //    var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XncfDatabaseDbContextType.Assembly.FullName;
+                //    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();//TODO:分离独立的 Senparc.Ncf.Database
+
+                //    sqlServerOptionsAction
+                //        .MigrationsAssembly(senparcEntitiesAssemblyName)
+                //        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
+                //}
 
                 //可以支持其他更多数据库
             }
