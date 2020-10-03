@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.Core.Database.SQLite;
+using Senparc.Ncf.Database.SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Database
+namespace Senparc.Ncf.Database
 {
     public class DatabaseConfigurationFactory
     {

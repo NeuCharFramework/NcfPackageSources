@@ -9,26 +9,24 @@ using System.Text;
 
 namespace Senparc.Ncf.Database.SqlServer
 {
-    public class SQLServerDatabaseConfiguration : IDatabaseConfiguration
+    public class SQLServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
-        public Type DbContextOptionsBuilderType => typeof(SqlServerDbContextOptionsBuilder);
+        public override Action<SqlServerDbContextOptionsBuilder> DbContextOptionsAction => b =>
+         {
+             b.EnableRetryOnFailure(
+                 maxRetryCount: 5,
+                 maxRetryDelay: TimeSpan.FromSeconds(5),
+                 errorNumbersToAdd: new int[] { 2 });
 
-        Action<IRelationalDbContextOptionsBuilderInfrastructure> IDatabaseConfiguration.DbContextOptionsAction => b =>
-        {
-            if (b.GetType() == DbContextOptionsBuilderType)
-            {
-                (b as SqlServerDbContextOptionsBuilder).EnableRetryOnFailure(
-                   maxRetryCount: 5,
-                   maxRetryDelay: TimeSpan.FromSeconds(5),
-                   errorNumbersToAdd: new int[] { 2 });
-            }
-            else
-            {
-                throw new NcfDatabaseException($"传入参数类型必须为 {DbContextOptionsBuilderType.Name}", DbContextOptionsBuilderType);
-            }
-        };
+             base.DbContextOptionsAction(b);
+         };
 
-        public void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null)
+        //Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction => b =>
+        //{
+
+        //};
+
+        public override void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<SqlServerDbContextOptionsBuilder> dbContextOptionsAction = null)
         {
             optionsBuilder.UseSqlServer(connectionString, dbContextOptionsAction);//beta6
         }

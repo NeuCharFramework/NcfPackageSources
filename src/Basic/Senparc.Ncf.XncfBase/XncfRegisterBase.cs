@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
+using Senparc.Ncf.Core.Database;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
@@ -204,18 +206,18 @@ namespace Senparc.Ncf.XncfBase
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
 
 
+                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+                    currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, b =>
+                    {
+                        databaseRegister.DbContextOptionsAction(b, null);
 
+                        //其他需要进行的配置，如对于 SQL Server：
+                        //b.EnableRetryOnFailure(
+                        //    maxRetryCount: 5,
+                        //    maxRetryDelay: TimeSpan.FromSeconds(5),
+                        //    errorNumbersToAdd: new int[] { 2 });
+                    });
 
-                    //继续定义配置
-                    dbOptionBuilder = SqlServerDbContextOptionsExtensions.UseSqlServer(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString,
-                        b =>
-                        {
-                            databaseRegister.DbContextOptionsAction(b, null);
-                            b.EnableRetryOnFailure(
-                                maxRetryCount: 5,
-                                maxRetryDelay: TimeSpan.FromSeconds(5),
-                                errorNumbersToAdd: new int[] { 2 });
-                        });
                     //创建 SenparcEntities 实例
                     var xncfSenparcEntities = Activator.CreateInstance(databaseRegister.XncfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
                     return xncfSenparcEntities;
@@ -258,18 +260,7 @@ namespace Senparc.Ncf.XncfBase
             AutoMapMappingConfigs.Add(mapping);
         }
 
-        /// <summary>
-        /// 获取 EF Code First MigrationHistory 数据库表名
-        /// </summary>
-        /// <returns></returns>
-        public virtual string GetDatabaseMigrationHistoryTableName()
-        {
-            if (this is IXncfDatabase databaseRegiser)
-            {
-                return "__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory";
-            }
-            return null;
-        }
+   
 
 
         /// <summary>
@@ -282,10 +273,12 @@ namespace Senparc.Ncf.XncfBase
         {
             if (this is IXncfDatabase databaseRegiser)
             {
-                if (dbContextOptionsAction is SqlServerDbContextOptionsBuilder sqlServerOptionsAction)
+                //TODO:迁移 特定的数据库
+
+                if (dbContextOptionsAction is SqliteDbContextOptionsBuilder sqlServerOptionsAction)
                 {
                     var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XncfDatabaseDbContextType.Assembly.FullName;
-                    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
+                    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();//TODO:分离独立的 Senparc.Ncf.Database
 
                     sqlServerOptionsAction
                         .MigrationsAssembly(senparcEntitiesAssemblyName)
