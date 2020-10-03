@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
   </ItemGroup>
 </Project>

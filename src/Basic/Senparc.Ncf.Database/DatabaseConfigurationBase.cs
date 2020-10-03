@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Senparc.CO2NET.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Senparc.Ncf.Database
 {
@@ -20,11 +18,11 @@ namespace Senparc.Ncf.Database
         /// 获取 EF Code First MigrationHistory 数据库表名
         /// </summary>
         /// <returns></returns>
-        public virtual string GetDatabaseMigrationHistoryTableName(string databaseUniquePrefix)
+        public virtual string GetDatabaseMigrationHistoryTableName(XncfDatabaseData xncfDatabaseData)
         {
-            if (!databaseUniquePrefix.IsNullOrWhiteSpace())
+            if (!xncfDatabaseData.DatabaseUniquePrefix.IsNullOrWhiteSpace())
             {
-                return "__" + databaseUniquePrefix + "_EFMigrationsHistory";
+                return "__" + xncfDatabaseData.DatabaseUniquePrefix + "_EFMigrationsHistory";
             }
             return null;
         }
@@ -32,15 +30,26 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 对 DbContextOptionsBuilder 的配置操作
         /// <para>参数1：TBuilder</para>
-        /// <para>参数2：dbContext 的 AssemblyName（仅在针对 XNCF 进行数据库迁移时有效）</para>
-        /// <para>参数3：MigrationHistoryTableName（仅在针对 XNCF 进行数据库迁移时有效）</para>
-        /// <para>参数3：DatabaseUniquePrefix（仅在针对 XNCF 进行数据库迁移时有效）</para>
+        /// <para>参数2：IXncfDatabase（仅在针对 XNCF 进行数据库迁移时有效）</para>
+        /// <para>参数3：强制指定 migration 的程序集名称（仅在针对 XNCF 进行数据库迁移时有效）</para>
         /// </summary>
-        public virtual Action<TBuilder, string, string, string> DbContextOptionsAction => (builder, assemblyName, migrationHistoryTableName, databaseUniquePrefix) =>
-           {
+        public virtual Action<TBuilder, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
+            {
+                //DbContext的程序集名称（或强制指定生成 add-migration 的程序集名称
+                var dbContextAssemblyName = xncfDatabaseData.AssemblyName ?? xncfDatabaseData.XncfDatabaseDbContextType.Assembly.FullName;
+                //Migration History 的表名
+                var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName(xncfDatabaseData);
 
-           };
+                builder.MigrationsAssembly(dbContextAssemblyName)
+                       .MigrationsHistoryTable(databaseMigrationHistoryTableName);
+            };
 
+        /// 使用数据库，如：
+        /// <para>var builder = new DbContextOptionsBuilder&lt;TDbContext&gt;(); builder.UseSqlServer(sqlConnection, DbContextOptionsAction);</para>
+        /// </summary>
+        /// <param name="optionsBuilder"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="dbContextOptionsAction"></param>
         public abstract void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<TBuilder> dbContextOptionsAction = null);
     }
 }

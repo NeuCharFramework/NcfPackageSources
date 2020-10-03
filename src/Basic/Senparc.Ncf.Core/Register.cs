@@ -5,7 +5,6 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AssembleScan;
-using Senparc.Ncf.Core.Database;
 using Senparc.Ncf.Core.DI;
 using System;
 using System.Linq;
@@ -69,18 +68,7 @@ namespace Senparc.Ncf.Core
             return services;
         }
 
-        /// <summary>
-        /// 使用指定数据库
-        /// </summary>
-        /// <typeparam name="TDatabaseConfiguration"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection UseDatabase<TDatabaseConfiguration>(this IServiceCollection services)
-                where TDatabaseConfiguration : IDatabaseConfiguration, new()
-        {
-            DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration = new TDatabaseConfiguration();
-            return services;
-        }
+
 
         #region TryRegisterMiniCore
         /// <summary>

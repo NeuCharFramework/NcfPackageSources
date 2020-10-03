@@ -14,7 +14,7 @@ namespace Senparc.Ncf.XncfBase
     public interface IXncfDatabase
     {
         /// <summary>
-        /// 全局唯一的前缀，务必避免和其他模块重复
+        /// 数据库表全局唯一的前缀，务必避免和其他模块重复
         /// </summary>
         string DatabaseUniquePrefix { get; }
         /// <summary>
