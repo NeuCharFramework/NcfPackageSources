@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
-using Senparc.Ncf.Core.Database;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.Collections.Generic;

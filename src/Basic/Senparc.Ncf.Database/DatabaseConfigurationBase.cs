@@ -15,6 +15,11 @@ namespace Senparc.Ncf.Database
     {
 
         /// <summary>
+        /// 当前正在操作的 XNCF 数据库（仅在对特定的 IXncfDatabase 操作时有效）
+        /// </summary>
+        public virtual XncfDatabaseData CurrentXncfDatabaseData { get; set; }
+
+        /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名
         /// </summary>
         /// <returns></returns>
@@ -44,12 +49,28 @@ namespace Senparc.Ncf.Database
                        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
             };
 
+        Action<TBuilder> IDatabaseConfiguration<TBuilder, TExtension>.DbContextOptionsAction => throw new NotImplementedException();
+
+        Action<IRelationalDbContextOptionsBuilderInfrastructure> IDatabaseConfiguration.DbContextOptionsAction => b =>
+        {
+            //获取当前数据库配置
+            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+            //获取当前指定的 IXncfDatabase 对应信息（只在针对某个特定的 XNCF 数据库模块进行 add-migration 等情况下有效）
+            var currentXncfDatabaseData = currentDatabaseConfiguration.CurrentXncfDatabaseData;
+            //执行带 TBuilder 泛型的 DbContextOptionsAction 方法
+            DbContextOptionsAction(b as TBuilder, currentDatabaseConfiguration.CurrentXncfDatabaseData);
+        };
+
+
+        //Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction =>
+        //        (builder, xncfDatabaseData) => DbContextOptionsAction(builder as TBuilder, xncfDatabaseData);
+
         /// 使用数据库，如：
         /// <para>var builder = new DbContextOptionsBuilder&lt;TDbContext&gt;(); builder.UseSqlServer(sqlConnection, DbContextOptionsAction);</para>
         /// </summary>
         /// <param name="optionsBuilder"></param>
         /// <param name="connectionString"></param>
         /// <param name="dbContextOptionsAction"></param>
-        public abstract void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<TBuilder> dbContextOptionsAction = null);
+        public abstract void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null);
     }
 }

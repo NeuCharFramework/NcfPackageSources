@@ -8,7 +8,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Config;
-using Senparc.Ncf.Core.Database;
+using Senparc.Ncf.Database;
 using System;
 
 namespace Senparc.Ncf.XncfBase.Database
@@ -64,10 +64,17 @@ namespace Senparc.Ncf.XncfBase.Database
             }
         }
 
-        protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null)
+        protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
         {
             _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
+
+            var databaseRegister = _register as IXncfRegister;
+
+            base.XncfDatabaseData = new XncfDatabaseData(_register.XncfDatabaseDbContextType,
+                                                         dbMigrationAssemblyName,
+                                                         databaseRegister.GetDatabaseMigrationHistoryTableName(),
+                                                         _register.DatabaseUniquePrefix);
             Senparc.Ncf.Core.Register.TryRegisterMiniCore();
         }
 
@@ -99,7 +106,6 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
-
         /// <summary>
         /// SQL Server 连接字符串
         /// </summary>
@@ -122,6 +128,7 @@ namespace Senparc.Ncf.XncfBase.Database
         private readonly string _ncfVersion;
         private readonly string _note;
 
+        protected XncfDatabaseData XncfDatabaseData { get; set; }
 
         /// <summary>
         /// SenparcDesignTimeDbContextFactoryBase 构造函数
@@ -130,11 +137,12 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <param name="rootDictionaryPath">将要设置的CO2NET.Config.RootDictionaryPath，一般为 Senparc.Web 或具有 App_Data/Database/SenparcConfig.config 配置文件的目录</param>
         /// <param name="databaseName">数据库名称，默认为 Local，即 Senparc.Web/appsettings.json 中的 DatabaseName</param>
         /// <param name="note">在日志中输出额外信息</param>
-        public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDictionaryPath,
+        public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDictionaryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
             string databaseName = "Local", string note = null)
         {
             SiteConfig.SenparcCoreSetting.DatabaseName = databaseName;
             CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
+            //XncfDatabaseData = xncfDatabaseData;
             this._ncfVersion = ncfVersion;
             this._note = note;
         }
@@ -149,7 +157,7 @@ namespace Senparc.Ncf.XncfBase.Database
         {
             //获取数据库配置
             DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
-           
+
             try
             {
                 var repository = LogManager.CreateRepository("NETCoreRepository");
@@ -192,8 +200,9 @@ namespace Senparc.Ncf.XncfBase.Database
 
             Console.WriteLine("=======  DatabaseConfiguration  =======");
             Console.WriteLine($"DatabaseConfiguration: {DatabaseConfiguration.GetType().Name}");
-            Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {DatabaseConfiguration.DbContextOptionsBuilderType.Name}");
+            Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {XncfDatabaseData?.XncfDatabaseDbContextType.Name ?? "未指定"}");
             Console.WriteLine($"DbContextOptionsAction: {(DatabaseConfiguration.DbContextOptionsAction == null ? "未指定" : "已指定")}");
+            Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.DatabaseUniquePrefix ?? "未指定")}");
             Console.WriteLine("=======================================");
             Console.WriteLine();
 

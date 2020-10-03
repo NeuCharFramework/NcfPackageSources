@@ -11,6 +11,7 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.XncfBase.Threads;
 using System;
@@ -259,7 +260,7 @@ namespace Senparc.Ncf.XncfBase
             AutoMapMappingConfigs.Add(mapping);
         }
 
-   
+
 
 
         /// <summary>
@@ -286,6 +287,20 @@ namespace Senparc.Ncf.XncfBase
 
                 //可以支持其他更多数据库
             }
+        }
+
+
+        /// <summary>
+        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetDatabaseMigrationHistoryTableName()
+        {
+            if (this is IXncfDatabase databaseRegiser)
+            {
+                return "__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory";
+            }
+            return null;
         }
     }
 }

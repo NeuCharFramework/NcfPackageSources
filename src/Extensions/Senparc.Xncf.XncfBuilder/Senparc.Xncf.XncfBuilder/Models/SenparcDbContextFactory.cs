@@ -1,5 +1,4 @@
-﻿using Senparc.Ncf.Core.Database;
-using Senparc.Ncf.XncfBase.Database;
+﻿using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 

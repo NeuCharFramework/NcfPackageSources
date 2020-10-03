@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.Database;
+﻿using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using System;
@@ -10,7 +10,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
     /// <summary>
     /// 显示当前的数据库配置类型
     /// </summary>
-    public class ShowDatabaseConfiguration: FunctionBase
+    public class ShowDatabaseConfiguration : FunctionBase
     {
         public class Parameters : IFunctionParameter
         {
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
                 var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
-                result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，DbContextOptionsBuilderType：{currentDatabaseConfiguration.DbContextOptionsBuilderType.Name}";
+                result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，DbContextOptionsBuilderType：{currentDatabaseConfiguration.CurrentXncfDatabaseData.XncfDatabaseDbContextType.Name}";
             });
         }
     }
