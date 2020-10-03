@@ -31,8 +31,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
+                var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
                 var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
-                result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，DbContextOptionsBuilderType：{currentDatabaseConfiguration.CurrentXncfDatabaseData.XncfDatabaseDbContextType.Name}";
+                result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}";
             });
         }
     }

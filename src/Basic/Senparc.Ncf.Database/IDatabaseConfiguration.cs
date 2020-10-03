@@ -26,21 +26,9 @@ namespace Senparc.Ncf.Database
     public interface IDatabaseConfiguration
     {
         /// <summary>
-        /// 当前正在操作的 XNCF 数据库（仅在对特定的 IXncfDatabase 操作时有效）
-        /// </summary>
-        XncfDatabaseData CurrentXncfDatabaseData { get; set; }
-
-        /// <summary>
         /// 注：实现类中，此方法应该返回值应该和基类的 DbContextOptionsAction 属性一致（如果有）
         /// </summary>
         Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction { get; }
-
-        /// <summary>
-        /// 获取 MigrationHistory 数据库表名
-        /// </summary>
-        /// <param name="xncfDatabaseData">实现 IXncfDatabase 的 XNCF 数据库模块注册类，导入到的 XncfDatabaseData</param>
-        /// <returns></returns>
-        string GetDatabaseMigrationHistoryTableName(XncfDatabaseData xncfDatabaseData);
 
         ///// <summary>
         ///// 对 DbContextOptionsBuilder 的配置操作

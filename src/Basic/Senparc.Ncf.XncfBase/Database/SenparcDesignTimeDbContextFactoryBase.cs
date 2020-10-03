@@ -71,10 +71,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
             var databaseRegister = _register as IXncfRegister;
 
-            base.XncfDatabaseData = new XncfDatabaseData(_register?.XncfDatabaseDbContextType,
-                                                         dbMigrationAssemblyName,
-                                                         databaseRegister?.GetDatabaseMigrationHistoryTableName(),
-                                                         _register?.DatabaseUniquePrefix);
+            base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
 
             Senparc.Ncf.Core.Register.TryRegisterMiniCore();
         }
@@ -204,9 +201,9 @@ namespace Senparc.Ncf.XncfBase.Database
 
             Console.WriteLine("=======  DatabaseConfiguration  =======");
             Console.WriteLine($"DatabaseConfiguration: {DatabaseConfiguration.GetType().Name}");
-            Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {XncfDatabaseData?.XncfDatabaseDbContextType.Name ?? "未指定"}");
+            Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {XncfDatabaseData?.XncfDatabaseRegister?.XncfDatabaseDbContextType.Name ?? "未指定"}");
             Console.WriteLine($"DbContextOptionsAction: {(DatabaseConfiguration.DbContextOptionsAction == null ? "未指定" : "已指定")}");
-            Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.DatabaseUniquePrefix ?? "未指定")}");
+            Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.XncfDatabaseRegister?.DatabaseUniquePrefix ?? "未指定")}");
             Console.WriteLine("=======================================");
             Console.WriteLine();
 

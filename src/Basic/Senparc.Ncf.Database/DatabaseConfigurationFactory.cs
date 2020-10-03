@@ -54,5 +54,11 @@ namespace Senparc.Ncf.Database
                 _currentDatabaseConfiguration = value;
             }
         }
+
+
+        /// <summary>
+        /// 给 design time（设计时）操作数据库（如migration）使用。指定当前正在操作的 XNCF 数据库信息（如果是直接继承自 DbContext 的类，需要模拟此参数）
+        /// </summary>
+        public XncfDatabaseData CurrentXncfDatabaseData { get; set; }
     }
 }

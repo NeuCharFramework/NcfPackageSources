@@ -143,10 +143,15 @@ namespace Senparc.Ncf.XncfBase
                 }
 
                 //删除 Migration 记录
-                var migrationHistoryTableName = GetDatabaseMigrationHistoryTableName();
-                SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
-                int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync($"DROP TABLE [{migrationHistoryTableName}]");
-                SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
+                if (this is IXncfDatabase databaseRegister)
+                {
+                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+
+                    var migrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
+                    SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
+                    int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync($"DROP TABLE [{migrationHistoryTableName}]");
+                    SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
+                }
             }
         }
 
@@ -272,9 +277,6 @@ namespace Senparc.Ncf.XncfBase
             {
                 var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
 
-                //指定 XncfDatabaseData
-                currentDatabaseConfiguration.CurrentXncfDatabaseData = new XncfDatabaseData(databaseRegiser.XncfDatabaseDbContextType, assemblyName, this.GetDatabaseMigrationHistoryTableName(), databaseRegiser.DatabaseUniquePrefix);
-                
                 //执行 DatabaseConfiguration 中的 DbContextOptionsAction;
                 currentDatabaseConfiguration.DbContextOptionsAction(dbContextOptionsAction);
 
@@ -290,20 +292,6 @@ namespace Senparc.Ncf.XncfBase
 
                 //可以支持其他更多数据库
             }
-        }
-
-
-        /// <summary>
-        /// 获取 EF Code First MigrationHistory 数据库表名
-        /// </summary>
-        /// <returns></returns>
-        public virtual string GetDatabaseMigrationHistoryTableName()
-        {
-            if (this is IXncfDatabase databaseRegiser)
-            {
-                return "__" + databaseRegiser.DatabaseUniquePrefix + "_EFMigrationsHistory";
-            }
-            return null;
         }
     }
 }

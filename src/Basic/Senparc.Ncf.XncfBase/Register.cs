@@ -180,7 +180,7 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            var scanResult = "初始化扫描结束，共扫描 {scanTypesCount} 个程序集";
+            var scanResult = $"初始化扫描结束，共扫描 {scanTypesCount} 个程序集";
             if (hideTypeCount > 0)
             {
                 scanResult += $"。其中 {hideTypeCount} 个程序集为非安装程序集，不会被缓存";

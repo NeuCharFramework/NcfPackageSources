@@ -105,12 +105,5 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
         IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService);
-
-        /// <summary>
-        /// 获取 EF Code First MigrationHistory 数据库表名
-        /// </summary>
-        /// <returns></returns>
-        string GetDatabaseMigrationHistoryTableName();
-
     }
 }

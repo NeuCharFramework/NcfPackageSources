@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.Collections.Generic;
 using System.Text;

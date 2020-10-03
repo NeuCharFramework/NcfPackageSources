@@ -14,18 +14,17 @@ namespace Senparc.Ncf.Database.SqlServer
         public SQLServerDatabaseConfiguration() { }
         public SQLServerDatabaseConfiguration(XncfDatabaseData xncfDatabaseData)
         {
-            base.CurrentXncfDatabaseData = xncfDatabaseData;
+            var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
+            databaseConfigurationFactory.CurrentXncfDatabaseData = xncfDatabaseData;
         }
 
-
-        public override Action<SqlServerDbContextOptionsBuilder, XncfDatabaseData> DbContextOptionsAction => (b, xncfDatabaseData) =>
-        {
+        public override Action<SqlServerDbContextOptionsBuilder> TypedDbContextOptionsAction => b => {
             b.EnableRetryOnFailure(
-                maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(5),
-                errorNumbersToAdd: new int[] { 2 });
+                   maxRetryCount: 5,
+                   maxRetryDelay: TimeSpan.FromSeconds(5),
+                   errorNumbersToAdd: new int[] { 2 });
 
-            base.DbContextOptionsAction(b, xncfDatabaseData);
+            base.DbContextOptionsAction(b);
         };
 
         public override void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null)
