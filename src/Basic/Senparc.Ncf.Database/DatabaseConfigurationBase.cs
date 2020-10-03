@@ -58,6 +58,7 @@ namespace Senparc.Ncf.Database
             //获取当前指定的 IXncfDatabase 对应信息（只在针对某个特定的 XNCF 数据库模块进行 add-migration 等情况下有效）
             var currentXncfDatabaseData = currentDatabaseConfiguration.CurrentXncfDatabaseData;
             //执行带 TBuilder 泛型的 DbContextOptionsAction 方法
+            Console.WriteLine($"b as TBuilder:" + ((b as TBuilder) == null));
             DbContextOptionsAction(b as TBuilder, currentDatabaseConfiguration.CurrentXncfDatabaseData);
         };
 

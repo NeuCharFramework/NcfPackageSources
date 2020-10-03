@@ -71,10 +71,11 @@ namespace Senparc.Ncf.XncfBase.Database
 
             var databaseRegister = _register as IXncfRegister;
 
-            base.XncfDatabaseData = new XncfDatabaseData(_register.XncfDatabaseDbContextType,
+            base.XncfDatabaseData = new XncfDatabaseData(_register?.XncfDatabaseDbContextType,
                                                          dbMigrationAssemblyName,
                                                          databaseRegister?.GetDatabaseMigrationHistoryTableName(),
-                                                         _register.DatabaseUniquePrefix);
+                                                         _register?.DatabaseUniquePrefix);
+
             Senparc.Ncf.Core.Register.TryRegisterMiniCore();
         }
 
@@ -122,8 +123,14 @@ namespace Senparc.Ncf.XncfBase.Database
         /// 指定程序集等配置，如：
         /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
         /// </summary>
-        public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction =>
-            DatabaseConfiguration.DbContextOptionsAction;//默认调用 DatabaseConfiguration 中的 DbContextOptionsAction
+        public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction => b =>
+        {
+            Console.WriteLine("A: " + (DatabaseConfiguration == null));
+            Console.WriteLine("A: " + (DatabaseConfiguration.DbContextOptionsAction == null));
+
+            DatabaseConfiguration.DbContextOptionsAction(b);
+        };
+        //DatabaseConfiguration.DbContextOptionsAction;//默认调用 DatabaseConfiguration 中的 DbContextOptionsAction
 
         private readonly string _ncfVersion;
         private readonly string _note;
@@ -207,9 +214,6 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine();
 
             CreateDbContextAction();
-
-            Console.WriteLine("11111111111111111111111111111");
-
 
             //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();

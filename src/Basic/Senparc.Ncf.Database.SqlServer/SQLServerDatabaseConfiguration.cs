@@ -30,6 +30,7 @@ namespace Senparc.Ncf.Database.SqlServer
 
         public override void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null)
         {
+            Console.WriteLine($"optionsBuilder:{optionsBuilder == null}");
             optionsBuilder.UseSqlServer(connectionString, dbContextOptionsAction);//beta6
         }
     }
