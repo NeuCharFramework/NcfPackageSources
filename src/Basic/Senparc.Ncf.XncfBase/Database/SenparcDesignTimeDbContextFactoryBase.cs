@@ -73,7 +73,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
             base.XncfDatabaseData = new XncfDatabaseData(_register.XncfDatabaseDbContextType,
                                                          dbMigrationAssemblyName,
-                                                         databaseRegister.GetDatabaseMigrationHistoryTableName(),
+                                                         databaseRegister?.GetDatabaseMigrationHistoryTableName(),
                                                          _register.DatabaseUniquePrefix);
             Senparc.Ncf.Core.Register.TryRegisterMiniCore();
         }
@@ -88,7 +88,7 @@ namespace Senparc.Ncf.XncfBase.Database
                 Console.WriteLine($"Uid: {xncfRegister.Uid}");
                 Console.WriteLine($"Version: {xncfRegister.Version}");
             }
-            var dbContextName = _register.XncfDatabaseDbContextType.Name;
+            var dbContextName = _register.XncfDatabaseDbContextType?.Name;
             Console.WriteLine($"DbContextName: {dbContextName}");
             Console.WriteLine($"===============================");
         }
@@ -207,6 +207,9 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine();
 
             CreateDbContextAction();
+
+            Console.WriteLine("11111111111111111111111111111");
+
 
             //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();

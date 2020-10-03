@@ -11,6 +11,13 @@ namespace Senparc.Ncf.Database.SqlServer
 {
     public class SQLServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
+        public SQLServerDatabaseConfiguration() { }
+        public SQLServerDatabaseConfiguration(XncfDatabaseData xncfDatabaseData)
+        {
+            base.CurrentXncfDatabaseData = xncfDatabaseData;
+        }
+
+
         public override Action<SqlServerDbContextOptionsBuilder, XncfDatabaseData> DbContextOptionsAction => (b, xncfDatabaseData) =>
         {
             b.EnableRetryOnFailure(
