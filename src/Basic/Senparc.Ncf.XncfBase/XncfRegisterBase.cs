@@ -215,10 +215,10 @@ namespace Senparc.Ncf.XncfBase
 
 
                     //使用数据库
-                    currentDatabaseConfiguration.UseDatabase(dbOptionBuilder ,Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
+                    currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
                        {
-                           //进行附加配置
-                           this.DbContextOptionsAction?.Invoke(b);
+                           ////进行附加配置
+                           //this.DbContextOptionsAction?.Invoke(b);
 
                            //执行 DatabaseConfiguration 中的 DbContextOptionsActionBase，进行基础配置;
                            currentDatabaseConfiguration.DbContextOptionsActionBase(b, xncfDatabaseData);
@@ -272,10 +272,17 @@ namespace Senparc.Ncf.XncfBase
             AutoMapMappingConfigs.Add(mapping);
         }
 
-        /// <summary>
-        /// 数据库 DbContext 选项配置（附加配置）
-        /// <para>第1个参数：IRelationalDbContextOptionsBuilderInfrastructure</para>
-        /// </summary>
-        public virtual Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction { get; }
+        ///// <summary>
+        ///// 数据库 DbContext 选项配置（附加配置）
+        ///// <para>第1个参数：IRelationalDbContextOptionsBuilderInfrastructure</para>
+        ///// <para>第2个参数：AssemblyName</para>
+        ///// </summary>
+        //public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
+        //{
+        //    if (xncfDatabaseData!=null && !xncfDatabaseData.AssemblyName.IsNullOrEmpty())
+        //    {
+                
+        //    }
+        //};
     }
 }
