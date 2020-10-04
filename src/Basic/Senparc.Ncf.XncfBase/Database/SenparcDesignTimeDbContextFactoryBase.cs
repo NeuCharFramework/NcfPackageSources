@@ -22,18 +22,7 @@ namespace Senparc.Ncf.XncfBase.Database
             where TSenparcEntities : XncfDatabaseDbContext
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
-
-
         public virtual SenparcSetting SenparcSetting => new SenparcSetting();
-
-        public override string SqlConnectionStr => SenparcDatabaseConfigs.ClientConnectionString ?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
-
-        //public override Action</*SqlServerDbContextOptionsBuilder*/ TDbContextOptionsBuilder> DbContextOptionsAction =>
-        //    b =>
-        //    {
-        //        _register.DbContextOptionsAction(b, null); 
-        //        base.DatabaseConfiguration.DbContextOptionsAction(b);
-        //    };
 
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
@@ -64,6 +53,8 @@ namespace Senparc.Ncf.XncfBase.Database
             }
         }
 
+       protected virtual Action<IServiceCollection> ServicesAction { get; }
+
         protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
         {
@@ -73,7 +64,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
             base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
 
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore();
+            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction);
         }
 
         public override void CreateDbContextAction()
@@ -124,7 +115,6 @@ namespace Senparc.Ncf.XncfBase.Database
          {
              DatabaseConfiguration.DbContextOptionsActionBase(builder, xncfDatabaseData);
          };
-        //DatabaseConfiguration.DbContextOptionsAction;//默认调用 DatabaseConfiguration 中的 DbContextOptionsAction
 
         private readonly string _ncfVersion;
         private readonly string _note;
@@ -153,7 +143,6 @@ namespace Senparc.Ncf.XncfBase.Database
         /// 创建过程的其他代码
         /// </summary>
         public abstract void CreateDbContextAction();
-
         public virtual TDbContext CreateDbContext(string[] args)
         {
             //获取数据库配置
