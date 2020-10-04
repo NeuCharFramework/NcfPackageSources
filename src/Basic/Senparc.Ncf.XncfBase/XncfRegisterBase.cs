@@ -204,14 +204,16 @@ namespace Senparc.Ncf.XncfBase
                 Func<IServiceProvider, object> implementationFactory = s =>
                 {
                     //准备创建 DbContextOptionsBuilder 实例，定义类型
-                    var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
+                    var dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
                     //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
                     dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XncfDatabaseDbContextType);
                     //创建 DbContextOptionsBuilder 实例
-                    DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
+                    RelationalDbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
 
                     //获取当前数据库配置
                     var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+
+
                     //使用数据库
                     currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
                        {

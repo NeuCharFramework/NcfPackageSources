@@ -18,6 +18,12 @@ namespace Senparc.Ncf.Database
         ///// <para>参数1：TBuilder</para>
         ///// </summary>
         //new Action<TBuilder> DbContextOptionsAction { get; }
+
+        /// <summary>
+        /// 获取 RelationalDbContextOptionsBuilder 实例
+        /// </summary>
+        /// <returns></returns>
+        RelationalDbContextOptionsBuilder<TBuilder, TExtension> GetRelationalDbContextOptionsBuilder();
     }
 
     /// <summary>
@@ -30,7 +36,7 @@ namespace Senparc.Ncf.Database
         /// </summary>
         Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase { get; }
 
-        Action<IRelationalDbContextOptionsBuilderInfrastructure, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
+        Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
 
         /// <summary>
         /// 使用数据库，如：
@@ -40,9 +46,8 @@ namespace Senparc.Ncf.Database
         /// <param name="connectionString"></param>
         /// <param name="dbContextOptionsAction"></param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
-        void UseDatabase(IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder, string connectionString,
-                XncfDatabaseData xncfDatabaseData = null, 
-                Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);
+        void UseDatabase(DbContextOptionsBuilder builder, IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder, string connectionString,
+                XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);
 
     }
 }

@@ -49,7 +49,12 @@ namespace Senparc.Ncf.Database
 
         public abstract Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension { get; }
 
-        public abstract Action<IRelationalDbContextOptionsBuilderInfrastructure, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
+        public abstract Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
+
+        public RelationalDbContextOptionsBuilder<TBuilder, TExtension> GetRelationalDbContextOptionsBuilder()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 使用数据库，如：
@@ -59,15 +64,19 @@ namespace Senparc.Ncf.Database
         /// <param name="xncfDatabaseData"></param>
         /// <param name="connectionString"></param>
         /// <param name="dbContextOptionsAction">额外需要配置的内容</param>
-        public void UseDatabase(IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder, string connectionString,
+        public void UseDatabase(DbContextOptionsBuilder builder,IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder, string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
             //执行基础代码和扩展代码
             DbContextOptionsActionBase(optionsBuilder, xncfDatabaseData);
 
-
             //执行 UseSQLite、UseSQLServer 等操作
-            SetUseDatabase(optionsBuilder, connectionString, xncfDatabaseData, b => DbContextOptionsActionBase(b, xncfDatabaseData));
+            SetUseDatabase(builder, connectionString, xncfDatabaseData, b =>
+            {
+                dbContextOptionsAction(b, xncfDatabaseData);
+            }
+            );
         }
+
     }
 }
