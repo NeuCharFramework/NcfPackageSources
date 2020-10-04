@@ -19,7 +19,6 @@ namespace Senparc.Ncf.Database
         /// </summary>
         public virtual Action<TBuilder, XncfDatabaseData> TypedDbContextOptionsActionBase => DbContextOptionsActionBase;
 
-
         public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase => (builder, xncfDatabaseData) =>
          {
 
@@ -42,9 +41,6 @@ namespace Senparc.Ncf.Database
              {
                  // 程序执行时 DatabaseConfigurationFactory.CurrentXncfDatabaseData 允许为 null
              }
-
-             //执行扩展代码
-             DbContextOptionsActionExtension?.Invoke(builder, xncfDatabaseData);
          };
 
         public abstract Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension { get; }
@@ -62,14 +58,16 @@ namespace Senparc.Ncf.Database
         public void UseDatabase(DbContextOptionsBuilder builder,/*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
-            //执行基础代码和扩展代码
-
             //执行 UseSQLite、UseSQLServer 等操作
             SetUseDatabase(builder, connectionString, xncfDatabaseData, b =>
-            {
-                DbContextOptionsActionBase(b, xncfDatabaseData);
-                dbContextOptionsAction(b, xncfDatabaseData);
-            }
+                {
+                    //执行基础代码
+                    DbContextOptionsActionBase(b, xncfDatabaseData);
+                    //执行扩展代码
+                    DbContextOptionsActionExtension?.Invoke(b, xncfDatabaseData);
+                    //执行外部传入的其他方法
+                    dbContextOptionsAction(b, xncfDatabaseData);
+                }
             );
         }
 

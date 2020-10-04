@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.SqlServer;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
