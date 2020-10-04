@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.XncfBuilder.Functions;
@@ -32,6 +33,11 @@ namespace Senparc.Xncf.XncfBuilder
         {
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
+        }
+
+        void IXncfDatabase.DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction, string assemblyName)
+        {
+            
         }
     }
 }

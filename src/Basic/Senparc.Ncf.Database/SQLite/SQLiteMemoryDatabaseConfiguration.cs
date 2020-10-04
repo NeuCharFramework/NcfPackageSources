@@ -13,7 +13,8 @@ namespace Senparc.Ncf.Database.SQLite
     /// </summary>
     public class SQLiteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
-        public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase => (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
+        public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase => 
+            (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
         {
             //强制使用内存数据库
             connectionString = "Filename=:memory:";

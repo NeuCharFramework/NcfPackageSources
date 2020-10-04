@@ -120,10 +120,10 @@ namespace Senparc.Ncf.XncfBase.Database
         /// 指定程序集等配置，如：
         /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
         /// </summary>
-        public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction => b =>
-        {
-            DatabaseConfiguration.DbContextOptionsAction(b);
-        };
+        public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
+         {
+             DatabaseConfiguration.DbContextOptionsActionBase(builder, xncfDatabaseData);
+         };
         //DatabaseConfiguration.DbContextOptionsAction;//默认调用 DatabaseConfiguration 中的 DbContextOptionsAction
 
         private readonly string _ncfVersion;
@@ -202,7 +202,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine("=======  DatabaseConfiguration  =======");
             Console.WriteLine($"DatabaseConfiguration: {DatabaseConfiguration.GetType().Name}");
             Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {XncfDatabaseData?.XncfDatabaseRegister?.XncfDatabaseDbContextType.Name ?? "未指定"}");
-            Console.WriteLine($"DbContextOptionsAction: {(DatabaseConfiguration.DbContextOptionsAction == null ? "未指定" : "已指定")}");
+            Console.WriteLine($"DbContextOptionsAction 扩展: {(DatabaseConfiguration.DbContextOptionsActionExtension == null ? "未指定" : "已指定")}");
             Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.XncfDatabaseRegister?.DatabaseUniquePrefix ?? "未指定")}");
             Console.WriteLine("=======================================");
             Console.WriteLine();

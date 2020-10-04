@@ -19,11 +19,11 @@ namespace Senparc.Ncf.Database
         ///// </summary>
         //new Action<TBuilder> DbContextOptionsAction { get; }
 
-        /// <summary>
-        /// 获取 RelationalDbContextOptionsBuilder 实例
-        /// </summary>
-        /// <returns></returns>
-        RelationalDbContextOptionsBuilder<TBuilder, TExtension> GetRelationalDbContextOptionsBuilder();
+        ///// <summary>
+        ///// 获取 RelationalDbContextOptionsBuilder 实例
+        ///// </summary>
+        ///// <returns></returns>
+        //RelationalDbContextOptionsBuilder<TBuilder, TExtension> GetRelationalDbContextOptionsBuilder();
     }
 
     /// <summary>
@@ -32,10 +32,18 @@ namespace Senparc.Ncf.Database
     public interface IDatabaseConfiguration
     {
         /// <summary>
-        /// 注：实现类中，此方法应该返回值应该和基类的 DbContextOptionsAction 属性一致（如果有）
+        /// 操作 DbContextOptions 的基础方法
         /// </summary>
         Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase { get; }
 
+        /// <summary>
+        /// 操作 DbContextOptions 的扩展方法
+        /// </summary>
+        Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension { get; }
+
+        /// <summary>
+        /// 设定 UseSLite、UseSQLServer 等方法
+        /// </summary>
         Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
 
         /// <summary>
@@ -46,7 +54,7 @@ namespace Senparc.Ncf.Database
         /// <param name="connectionString"></param>
         /// <param name="dbContextOptionsAction"></param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
-        void UseDatabase(DbContextOptionsBuilder builder, IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder, string connectionString,
+        void UseDatabase(DbContextOptionsBuilder builder, /*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);
 
     }

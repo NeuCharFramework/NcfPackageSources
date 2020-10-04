@@ -12,24 +12,20 @@ namespace Senparc.Ncf.Database.SqlServer
     public class SQLServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
         public SQLServerDatabaseConfiguration() { }
-        public SQLServerDatabaseConfiguration(XncfDatabaseData xncfDatabaseData)
+ 
+        public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (optionsBuilder, xncfDatabaseData) =>
         {
-            var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-            databaseConfigurationFactory.CurrentXncfDatabaseData = xncfDatabaseData;
-        }
-
-        public override Action<SqlServerDbContextOptionsBuilder> TypedDbContextOptionsAction => b => {
-            b.EnableRetryOnFailure(
-                   maxRetryCount: 5,
-                   maxRetryDelay: TimeSpan.FromSeconds(5),
-                   errorNumbersToAdd: new int[] { 2 });
-
-            base.DbContextOptionsAction(b);
+            var typedBuilder = optionsBuilder as SqlServerDbContextOptionsBuilder;
+            typedBuilder.EnableRetryOnFailure(
+                       maxRetryCount: 5,
+                       maxRetryDelay: TimeSpan.FromSeconds(5),
+                       errorNumbersToAdd: new int[] { 2 });
         };
 
-        public override void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null)
-        {
-            optionsBuilder.UseSqlServer(connectionString, dbContextOptionsAction);//beta6
-        }
+        public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
+            (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
+            {
+                optionsBuilder.UseSqlServer(connectionString, actionBase);//beta6
+            };
     }
 }
