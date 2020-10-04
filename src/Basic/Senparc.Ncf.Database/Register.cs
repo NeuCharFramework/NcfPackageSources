@@ -13,7 +13,7 @@ namespace Senparc.Ncf.Database
         /// <typeparam name="TDatabaseConfiguration"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection UseDatabase<TDatabaseConfiguration>(this IServiceCollection services)
+        public static IServiceCollection AddDatabase<TDatabaseConfiguration>(this IServiceCollection services)
                 where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration = new TDatabaseConfiguration();

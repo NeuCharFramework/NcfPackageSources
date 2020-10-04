@@ -28,12 +28,9 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 注：实现类中，此方法应该返回值应该和基类的 DbContextOptionsAction 属性一致（如果有）
         /// </summary>
-        Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction { get; }
+        Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase { get; }
 
-        ///// <summary>
-        ///// 对 DbContextOptionsBuilder 的配置操作
-        ///// </summary>
-        //Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction { get; }
+        Action<IRelationalDbContextOptionsBuilderInfrastructure, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
 
         /// <summary>
         /// 使用数据库，如：
@@ -43,7 +40,9 @@ namespace Senparc.Ncf.Database
         /// <param name="connectionString"></param>
         /// <param name="dbContextOptionsAction"></param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
-        void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null);
+        void UseDatabase(IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder, string connectionString,
+                XncfDatabaseData xncfDatabaseData = null, 
+                Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);
 
     }
 }

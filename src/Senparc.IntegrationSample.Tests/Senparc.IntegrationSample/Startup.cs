@@ -75,7 +75,7 @@ namespace Senparc.IntegrationSample
             //激活 Xncf 扩展引擎（必须）
             services.StartEngine(Configuration);
             //指定数据库类型（可选），默认为 SQLiteMemoryDatabaseConfiguration
-            services.UseDatabase<SQLServerDatabaseConfiguration>();
+            services.AddDatabase<SQLServerDatabaseConfiguration>();
             //services.UseDatabase<SQLiteMemoryDatabaseConfiguration>();
         }
 

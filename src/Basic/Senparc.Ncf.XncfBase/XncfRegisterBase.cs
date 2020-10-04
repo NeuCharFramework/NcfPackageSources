@@ -210,18 +210,23 @@ namespace Senparc.Ncf.XncfBase
                     //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
 
-
+                    //获取当前数据库配置
                     var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
-                    currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, b =>
-                    {
-                        databaseRegister.DbContextOptionsAction(b, null);
+                    //使用数据库
+                    currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
+                       {
+                           //进行附加配置
+                           this.DbContextOptionsAction?.Invoke(b);
 
-                        //其他需要进行的配置，如对于 SQL Server：
-                        //b.EnableRetryOnFailure(
-                        //    maxRetryCount: 5,
-                        //    maxRetryDelay: TimeSpan.FromSeconds(5),
-                        //    errorNumbersToAdd: new int[] { 2 });
-                    });
+                           //执行 DatabaseConfiguration 中的 DbContextOptionsActionBase，进行基础配置;
+                           currentDatabaseConfiguration.DbContextOptionsActionBase(b, xncfDatabaseData);
+
+                           //其他需要进行的配置，如对于 SQL Server：
+                           //b.EnableRetryOnFailure(
+                           //    maxRetryCount: 5,
+                           //    maxRetryDelay: TimeSpan.FromSeconds(5),
+                           //    errorNumbersToAdd: new int[] { 2 });
+                       });
 
                     //创建 SenparcEntities 实例
                     var xncfSenparcEntities = Activator.CreateInstance(databaseRegister.XncfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
@@ -266,32 +271,9 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 数据库 DbContext 选项配置
+        /// 数据库 DbContext 选项配置（附加配置）
+        /// <para>第1个参数：IRelationalDbContextOptionsBuilderInfrastructure</para>
         /// </summary>
-        /// <param name="dbContextOptionsAction"></param>
-        /// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XncfDatabaseDbContextType 所在的程序集</param>
-        public virtual void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
-            string assemblyName = null)
-        {
-            if (this is IXncfDatabase databaseRegiser)
-            {
-                var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
-
-                //执行 DatabaseConfiguration 中的 DbContextOptionsAction;
-                currentDatabaseConfiguration.DbContextOptionsAction(dbContextOptionsAction);
-
-                //if (dbContextOptionsAction is SqliteDbContextOptionsBuilder sqlServerOptionsAction)
-                //{
-                //    var senparcEntitiesAssemblyName = assemblyName ?? databaseRegiser.XncfDatabaseDbContextType.Assembly.FullName;
-                //    var databaseMigrationHistoryTableName = GetDatabaseMigrationHistoryTableName();//TODO:分离独立的 Senparc.Ncf.Database
-
-                //    sqlServerOptionsAction
-                //        .MigrationsAssembly(senparcEntitiesAssemblyName)
-                //        .MigrationsHistoryTable(databaseMigrationHistoryTableName);
-                //}
-
-                //可以支持其他更多数据库
-            }
-        }
+        public virtual Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction { get; }
     }
 }

@@ -211,7 +211,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
             //创建 DbContextOptionsBuilder 对象
             var builder = new DbContextOptionsBuilder<TDbContext>();
-            DatabaseConfiguration.UseDatabase(builder, sqlConnection,
+            DatabaseConfiguration.UseDatabase(builder, sqlConnection, XncfDatabaseData,
             /* 注意：这里不能用 this.DbContextOptionsAction，否则子类重写将无效！*/
             DbContextOptionsAction);
             //单一使用 SQL Server 的方法：builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6

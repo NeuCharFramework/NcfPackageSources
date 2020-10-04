@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
+using Senparc.CO2NET.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,13 +13,19 @@ namespace Senparc.Ncf.Database.SQLite
     /// </summary>
     public class SQLiteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
-        public Action<IRelationalDbContextOptionsBuilderInfrastructure> DbContextOptionsAction => b => { };
-
-
-        public override void UseDatabase(DbContextOptionsBuilder optionsBuilder, string connectionString, Action<IRelationalDbContextOptionsBuilderInfrastructure> dbContextOptionsAction = null, XncfDatabaseData xncfDatabaseData = null)
+        public override Action<IRelationalDbContextOptionsBuilderInfrastructure, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase => (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
         {
-            connectionString = "Filename=:memory:";//强制使用内存数据库
-            optionsBuilder.UseSqlite(connectionString, dbContextOptionsAction);//beta6
-        }
+            //强制使用内存数据库
+            connectionString = "Filename=:memory:";
+            //其他更多配置
+
+            //执行 UseSqlite（必须）
+            (optionsBuilder as DbContextOptionsBuilder).UseSqlite(connectionString, actionBase);
+        };
+
+        public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
+        {
+            //更多数据库操作独立配置（非必须）
+        };
     }
 }
