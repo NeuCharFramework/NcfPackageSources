@@ -58,7 +58,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{06
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.SqlServer", "Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj", "{6D2A1F6F-EB14-4C12-B65B-FAB3F6AA4D66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Ncf.Database", "Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj", "{EEE0FF80-C554-4281-AD21-A0D72D4CC712}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database", "Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj", "{EEE0FF80-C554-4281-AD21-A0D72D4CC712}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Ncf.Database.MySql", "Basic\Senparc.Ncf.Database.MySql\Senparc.Ncf.Database.MySql.csproj", "{AD791365-1699-411D-89BC-F5CE60451037}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -178,6 +180,12 @@ Global
 		{EEE0FF80-C554-4281-AD21-A0D72D4CC712}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EEE0FF80-C554-4281-AD21-A0D72D4CC712}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{EEE0FF80-C554-4281-AD21-A0D72D4CC712}.Test|Any CPU.Build.0 = Release|Any CPU
+		{AD791365-1699-411D-89BC-F5CE60451037}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD791365-1699-411D-89BC-F5CE60451037}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD791365-1699-411D-89BC-F5CE60451037}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD791365-1699-411D-89BC-F5CE60451037}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD791365-1699-411D-89BC-F5CE60451037}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{AD791365-1699-411D-89BC-F5CE60451037}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,6 +215,7 @@ Global
 		{06D46E79-A4B2-457A-93DB-E3060A12CFD0} = {20618121-91AE-4EFE-9899-ABCB0ADACE86}
 		{6D2A1F6F-EB14-4C12-B65B-FAB3F6AA4D66} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
 		{EEE0FF80-C554-4281-AD21-A0D72D4CC712} = {20618121-91AE-4EFE-9899-ABCB0ADACE86}
+		{AD791365-1699-411D-89BC-F5CE60451037} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
