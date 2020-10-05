@@ -53,7 +53,6 @@ namespace Senparc.Ncf.XncfBase.Database
             }
         }
 
-       protected virtual Action<IServiceCollection> ServicesAction { get; }
 
         protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
@@ -63,8 +62,6 @@ namespace Senparc.Ncf.XncfBase.Database
             var databaseRegister = _register as IXncfRegister;
 
             base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
-
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction);
         }
 
         public override void CreateDbContextAction()
@@ -92,6 +89,7 @@ namespace Senparc.Ncf.XncfBase.Database
         : IDesignTimeDbContextFactory<TDbContext>
             where TDbContext : DbContext
     {
+        protected virtual Action<IServiceCollection> ServicesAction { get; }
 
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
@@ -136,6 +134,8 @@ namespace Senparc.Ncf.XncfBase.Database
             //XncfDatabaseData = xncfDatabaseData;
             this._ncfVersion = ncfVersion;
             this._note = note;
+
+            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction);
         }
 
 
