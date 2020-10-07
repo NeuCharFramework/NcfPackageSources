@@ -109,6 +109,7 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <summary>
         /// 指定程序集等配置，如：
         /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
+        /// <para>注意：如果重写，最后一定要执行 base.DbContextOptionsAction() </para>
         /// </summary>
         public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
          {

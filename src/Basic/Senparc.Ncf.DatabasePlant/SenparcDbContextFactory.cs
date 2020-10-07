@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Database;
+using Senparc.Ncf.Database.SqlServer;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
@@ -16,6 +19,12 @@ namespace Senparc.Xncf.XncfBuilder
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
             //services.AddDatabase<SQLServerDatabaseConfiguration>();//指定其他数据库
+        };
+
+        public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (b, d) => {
+            Console.WriteLine(d.ToJson(true));
+            d.AssemblyName = "Senparc.Ncf.DatabasePlant";
+            base.DbContextOptionsAction(b, d);
         };
 
         public SenparcDbContextFactory()
