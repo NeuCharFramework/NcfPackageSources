@@ -8,6 +8,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Database;
 using System;
 
@@ -96,7 +97,7 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <summary>
         /// SQL Server 连接字符串
         /// </summary>
-        public virtual string SqlConnectionStr => SenparcDatabaseConfigs.ClientConnectionString ?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
+        public virtual string DatabaseConnectionStr => SenparcDatabaseConfigs.ClientConnectionString; //?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
 
         /// <summary>
         /// 返回 DbContext 实例
@@ -167,9 +168,12 @@ namespace Senparc.Ncf.XncfBase.Database
             //如果运行 Add-Migration 命令，并且获取不到正确的网站根目录，此处可能无法自动获取到连接字符串（上述#13问题），
             //也可通过下面已经注释的的提供默认值方式解决（不推荐）
 
-            var sqlConnection = (SqlConnectionStr ??
-                SenparcDatabaseConfigs.ClientConnectionString) ??
-                "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
+            if (DatabaseConnectionStr.IsNullOrEmpty())
+            {
+                throw new NcfDatabaseException("DatabaseConnectionStr 不能为空！", DatabaseConfiguration.GetType());
+            }
+
+            var sqlConnection = DatabaseConnectionStr;
 
             Console.WriteLine(Senparc.Ncf.Core.VersionManager.GetVersionNote(_ncfVersion, _note));
 
