@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using System;
@@ -15,5 +16,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         }
 
         public DbSet<DbConfig> DbConfigs { get; set; }
+
+        public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SQLite;
     }
 }
