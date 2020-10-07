@@ -21,7 +21,7 @@ namespace Senparc.Ncf.Core.Exceptions
             : base(message, inner, true)
         {
             message += @$"
-DatabaseConfiguration 类型：{typeOfDatabaseConfiguration.Name}
+DatabaseConfiguration 类型：{(typeOfDatabaseConfiguration == null ? "未提供" : typeOfDatabaseConfiguration.Name)}
 DbContext 类型：{(typeOfDbContext == null ? "未提供" : typeOfDbContext.Name)}
 ";
 

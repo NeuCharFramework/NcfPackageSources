@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
+using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 using System;
 using System.IO;
 
@@ -11,14 +12,14 @@ namespace Senparc.Xncf.XncfBuilder
     /// <para>1、切换至 Debug 模式</para>
     /// <para>2、运行：PM> add-migration [更新名称] -Context XncfBuilderEntities</para>
     /// </summary>
-    public class SenparcDbContextFactory : SenparcDesignTimeDbContextFactoryBase<XncfBuilderEntities, Register>
+    public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<XncfBuilderEntities_SqlServer, Register>
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
-            //services.AddDatabase<SQLServerDatabaseConfiguration>();//指定其他数据库
+            services.AddDatabase<SQLServerDatabaseConfiguration>();//指定其他数据库
         };
 
-        public SenparcDbContextFactory()
+        public SenparcDbContextFactory_SqlServer()
             : base(
                  /* Debug模式下项目根目录
                  /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
