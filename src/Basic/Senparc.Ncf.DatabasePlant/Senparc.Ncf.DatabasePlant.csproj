@@ -31,10 +31,6 @@
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Include="..\..\..\..\..\..\MyMig\20201007140615_init.cs" Link="20201007140615_init.cs" />
-	  <Compile Include="..\..\..\..\..\..\MyMig\20201007140615_init.Designer.cs" Link="20201007140615_init.Designer.cs" />
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="7.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
