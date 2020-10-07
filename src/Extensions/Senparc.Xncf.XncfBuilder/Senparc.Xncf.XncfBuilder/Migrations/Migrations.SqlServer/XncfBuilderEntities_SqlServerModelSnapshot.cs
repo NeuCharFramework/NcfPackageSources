@@ -2,67 +2,69 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Senparc.Xncf.XncfBuilder;
+using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.SQLite
+namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.SqlServer
 {
-    [DbContext(typeof(XncfBuilderEntities))]
-    [Migration("20201002025354_SQLite-Init")]
-    partial class SQLiteInit
+    [DbContext(typeof(XncfBuilderEntities_SqlServer))]
+    partial class XncfBuilderEntities_SqlServerModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6");
+                .HasAnnotation("ProductVersion", "3.1.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Senparc.Xncf.XncfBuilder.Config", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("AdminRemark")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Icon")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MenuName")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("OrgName")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
                     b.Property<string>("Remark")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
                     b.Property<string>("SlnFilePath")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
                     b.Property<string>("Version")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("XncfName")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.HasKey("Id");

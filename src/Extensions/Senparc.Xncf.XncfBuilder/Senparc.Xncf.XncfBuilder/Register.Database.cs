@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.XncfBuilder.Functions;
+using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 using System;
 
 namespace Senparc.Xncf.XncfBuilder
@@ -12,13 +13,15 @@ namespace Senparc.Xncf.XncfBuilder
         public const string DATABASE_PREFIX = "XncfBuilder";
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
-        public Type XncfDatabaseDbContextType => typeof(XncfBuilderEntities);
+        public Type XncfDatabaseDbContextType => typeof(XncfBuilderEntities_SqlServer);
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             services.AddScoped<Config>();
             services.AddScoped<BuildXncf.Parameters>();
 
+            services.AddScoped<XncfBuilderEntities_SqlServer>();
+            
             //AutoMap映射
             base.AddAutoMapMapping(profile =>
             {

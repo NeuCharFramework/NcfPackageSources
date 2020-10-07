@@ -47,7 +47,6 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Database.MySql\Senparc.Ncf.Database.MySql.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
