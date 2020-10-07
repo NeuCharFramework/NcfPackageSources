@@ -13,9 +13,9 @@ namespace Senparc.Ncf.DatabasePlant.Tests
             var commandTexts = new[] { 
                 @"cd E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Basic\Senparc.Ncf.DatabasePlant",
                 @"dir",
-                @"add-migration init -C XncfBuilderEntities  -o ""E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Migration.SQLite"""
-
-
+                @"dotnet --version",
+                @"Get-Help about_EntityFrameworkCore",
+                @"dotnet ef migrations add InitialCreate --context XncfBuilderEntities --output-dir E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Migration.SQLite",
             };
 
                 Process p = new Process();
