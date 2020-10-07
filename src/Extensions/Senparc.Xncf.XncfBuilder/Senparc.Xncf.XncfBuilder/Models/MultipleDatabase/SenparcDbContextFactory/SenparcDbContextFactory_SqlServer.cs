@@ -16,7 +16,8 @@ namespace Senparc.Xncf.XncfBuilder
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
-            services.AddDatabase<SQLServerDatabaseConfiguration>();//指定其他数据库
+            //指定其他数据库
+            services.AddDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SqlServer()

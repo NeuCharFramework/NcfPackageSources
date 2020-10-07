@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Database.SqlServer;
 using System;
 using System.Diagnostics;
 
