@@ -16,5 +16,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
         }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SqlServer;
+
+
     }
 }

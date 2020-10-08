@@ -13,7 +13,9 @@ namespace Senparc.Xncf.XncfBuilder
         public const string DATABASE_PREFIX = "XncfBuilder";
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
+        //TODO：动态类型
         public Type XncfDatabaseDbContextType => typeof(XncfBuilderEntities_SqlServer);
+        
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
@@ -21,14 +23,14 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<BuildXncf.Parameters>();
 
             services.AddScoped<XncfBuilderEntities_SqlServer>();
-            
+
             //AutoMap映射
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<Config, ConfigDto>();
                 profile.CreateMap<ConfigDto, Config>();
                 profile.CreateMap<BuildXncf.Parameters, Config>();
-                profile.CreateMap<Config,BuildXncf.Parameters>();
+                profile.CreateMap<Config, BuildXncf.Parameters>();
             });
         }
 

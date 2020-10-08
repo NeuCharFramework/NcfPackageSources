@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
@@ -27,6 +28,11 @@ namespace Senparc.Xncf.XncfBuilder
                  Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"))
         {
 
+        }
+
+        public override XncfBuilderEntities_SqlServer CreateDbContext(string[] args)
+        {
+            return base.CreateDbContext(args);
         }
     }
 }

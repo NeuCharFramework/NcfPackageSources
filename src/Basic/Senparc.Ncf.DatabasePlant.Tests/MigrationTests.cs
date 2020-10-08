@@ -12,12 +12,12 @@ namespace Senparc.Ncf.DatabasePlant.Tests
         [TestMethod]
         public void AddMigrationTest()
         {
-            var commandTexts = new[] { 
-                @"cd E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Basic\Senparc.Ncf.DatabasePlant",
+            var commandTexts = new[] {
+                @"cd E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder",
                 @"dir",
                 @"dotnet --version",
-                @"Get-Help about_EntityFrameworkCore",
-                @"dotnet ef migrations add InitialCreate --context XncfBuilderEntities --output-dir E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Migration.SQLite",
+                @"dotnet ef",
+                @"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir /Migrations/Test",
             };
 
                 Process p = new Process();
