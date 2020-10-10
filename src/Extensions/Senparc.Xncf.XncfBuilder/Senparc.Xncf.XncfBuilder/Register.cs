@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Senparc.Ncf.Database;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -39,10 +40,10 @@ namespace Senparc.Xncf.XncfBuilder
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             XncfBuilderEntities mySenparcEntities = serviceProvider.GetService<XncfBuilderEntities>();
+            var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
             //指定需要删除的数据实体
-
-            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(xncfDbContextType).Keys.ToArray();
             //删除数据库表
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 

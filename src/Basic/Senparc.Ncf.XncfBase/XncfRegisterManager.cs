@@ -22,7 +22,7 @@ namespace Senparc.Ncf.XncfBase
         public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
 
         /// <summary>
-        /// 带有数据库的模块 TODO：可放置到缓存中
+        /// 带有数据库的模块 TODO：可放置到缓存中 / TODO：可移除
         /// </summary>
         public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
 

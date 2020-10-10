@@ -17,10 +17,10 @@ namespace Senparc.Ncf.DatabasePlant.Tests
                 @"dir",
                 @"dotnet --version",
                 @"dotnet ef",
-                @"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir /Migrations/Test",
+                @"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir Migrations/Test",
             };
 
-                Process p = new Process();
+            Process p = new Process();
             p.StartInfo.FileName = "cmd.exe";
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardInput = true;
@@ -47,5 +47,7 @@ namespace Senparc.Ncf.DatabasePlant.Tests
             }
             Console.WriteLine(strOutput);
         }
+
+     
     }
 }

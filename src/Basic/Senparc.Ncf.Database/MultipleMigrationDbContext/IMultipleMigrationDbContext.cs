@@ -9,9 +9,9 @@ namespace Senparc.Ncf.Database.MultipleMigrationDbContext
     /// </summary>
     public interface IMultipleMigrationDbContext
     {
-        /// <summary>
-        /// 数据库类型
-        /// </summary>
-        MultipleDatabaseType MultipleDatabaseType { get; }
+        /////// <summary>
+        /////// 数据库类型
+        /////// </summary>
+        //MultipleDatabaseType MultipleDatabaseType { get; }
     }
 }

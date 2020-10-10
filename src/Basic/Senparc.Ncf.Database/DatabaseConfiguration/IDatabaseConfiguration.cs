@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 
 namespace Senparc.Ncf.Database
@@ -31,6 +32,11 @@ namespace Senparc.Ncf.Database
     /// </summary>
     public interface IDatabaseConfiguration
     {
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
+        MultipleDatabaseType MultipleDatabaseType { get; }
+
         /// <summary>
         /// 操作 DbContextOptions 的基础方法
         /// </summary>

@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Exceptions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -74,7 +77,14 @@ namespace Senparc.Ncf.Core.Models
             EntitySetKeysDictionary dic = new EntitySetKeysDictionary();
             foreach (var setKeyInfo in AllKeys.Values.Where(z => z.SenparcEntityType == dbContextType))
             {
-                dic.TryAdd(setKeyInfo.DbSetType, setKeyInfo);
+                if (!dic.ContainsKey(setKeyInfo.DbSetType))
+                {
+                    var addSuccess = dic.TryAdd(setKeyInfo.DbSetType, setKeyInfo);
+                    if (!addSuccess)
+                    {
+                        SenparcTrace.BaseExceptionLog(new NcfDatabaseException($"GetEntitySetInfo 发生异常，DbSetType：{setKeyInfo.DbSetType.Name}，setKeyInfo：{setKeyInfo.ToJson()}", null, dbContextType));
+                    }
+                }
             }
             return dic;
         }

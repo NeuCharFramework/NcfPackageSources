@@ -29,10 +29,10 @@ namespace Senparc.Ncf.XncfBase
         //void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
         //                            string assemblyName = null);
 
-        /// <summary>
-        /// XncfDatabaseDbContext 类型
-        /// </summary>
-        Type XncfDatabaseDbContextType { get; }
+        ///// <summary>
+        ///// XncfDatabaseDbContext 类型
+        ///// </summary>
+        //Type XncfDatabaseDbContextType { get; }
 
         /// <summary>
         /// 添加数据库模块

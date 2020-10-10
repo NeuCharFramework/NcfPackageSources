@@ -200,19 +200,23 @@ namespace Senparc.Ncf.XncfBase
         {
             if (this is IXncfDatabase databaseRegister)
             {
+                //获取当前适用的数据上下文
+                var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+
                 //定义 XncfSenparcEntities 实例生成
                 Func<IServiceProvider, object> implementationFactory = s =>
                 {
                     //准备创建 DbContextOptionsBuilder 实例，定义类型
                     var dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
+
+
                     //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
-                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(databaseRegister.XncfDatabaseDbContextType);
+                    dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(xncfDbContextType);
                     //创建 DbContextOptionsBuilder 实例
                     DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
 
                     //获取当前数据库配置
                     var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
-
 
                     //使用数据库
                     currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
@@ -231,13 +235,13 @@ namespace Senparc.Ncf.XncfBase
                        });
 
                     //创建 SenparcEntities 实例
-                    var xncfSenparcEntities = Activator.CreateInstance(databaseRegister.XncfDatabaseDbContextType, new object[] { dbOptionBuilder.Options });
+                    var xncfSenparcEntities = Activator.CreateInstance(xncfDbContextType, new object[] { dbOptionBuilder.Options });
                     return xncfSenparcEntities;
                 };
                 //添加 XncfSenparcEntities 依赖注入配置
-                services.AddScoped(databaseRegister.XncfDatabaseDbContextType, implementationFactory);
+                services.AddScoped(xncfDbContextType, implementationFactory);
                 //注册当前数据库的对象（必须）
-                EntitySetKeys.TryLoadSetInfo(databaseRegister.XncfDatabaseDbContextType);
+                EntitySetKeys.TryLoadSetInfo(xncfDbContextType);
 
                 //添加数据库相关注册过程
                 databaseRegister.AddXncfDatabaseModule(services);
@@ -281,7 +285,7 @@ namespace Senparc.Ncf.XncfBase
         //{
         //    if (xncfDatabaseData!=null && !xncfDatabaseData.AssemblyName.IsNullOrEmpty())
         //    {
-                
+
         //    }
         //};
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 
 namespace Senparc.Ncf.Database
@@ -14,6 +15,8 @@ namespace Senparc.Ncf.Database
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
         where TExtension : RelationalOptionsExtension, new()
     {
+        public abstract MultipleDatabaseType MultipleDatabaseType { get; }
+
         /// <summary>
         /// 具有 <typeparamref name="TBuilder"/> 类型的 DbContextOptionsAction
         /// </summary>
@@ -29,8 +32,11 @@ namespace Senparc.Ncf.Database
              {
                  var typedBuilder = builder as TBuilder;
 
+                 //获取指定 IXncfDatabase 对应于当前数据库类型的 DbContext 的类型
+                 var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(xncfDatabaseData.XncfDatabaseRegister.GetType());
+
                  //DbContext的程序集名称（或强制指定生成 add-migration 的程序集名称
-                 var dbContextAssemblyName = xncfDatabaseData.AssemblyName ?? xncfDatabaseData.XncfDatabaseRegister.XncfDatabaseDbContextType.Assembly.FullName;
+                 var dbContextAssemblyName = xncfDatabaseData.AssemblyName ?? dbContextType.Assembly.FullName;
                  //Migration History 的表名
                  var databaseMigrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(xncfDatabaseData.XncfDatabaseRegister);
 

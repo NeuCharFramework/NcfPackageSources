@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.XncfBuilder.Functions;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 using System;
@@ -12,10 +14,6 @@ namespace Senparc.Xncf.XncfBuilder
     {
         public const string DATABASE_PREFIX = "XncfBuilder";
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
-
-        //TODO：动态类型
-        public Type XncfDatabaseDbContextType => typeof(XncfBuilderEntities_SqlServer);
-        
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {

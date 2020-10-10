@@ -11,6 +11,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Database;
 using System;
+using System.Linq;
 
 namespace Senparc.Ncf.XncfBase.Database
 {
@@ -28,9 +29,13 @@ namespace Senparc.Ncf.XncfBase.Database
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
             //获取 XncfDatabase 对象
-            var databaseRegister = Activator.CreateInstance(typeof(TXncfDatabaseRegister)) as TXncfDatabaseRegister;
+            //var databaseRegister = Activator.CreateInstance(typeof(TXncfDatabaseRegister)) as TXncfDatabaseRegister;
+
+            //获取当前适用的 DbContext 类型
+            var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(typeof(TXncfDatabaseRegister));
+
             //获取 XncfSenparcEntities 实例
-            var xncfSenparcEntities = Activator.CreateInstance(databaseRegister.XncfDatabaseDbContextType, new object[] { dbContextOptions }) as TSenparcEntities;
+            var xncfSenparcEntities = Activator.CreateInstance(dbContextType, new object[] { dbContextOptions }) as TSenparcEntities;
             return xncfSenparcEntities;
         }
 
@@ -67,7 +72,11 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public override void CreateDbContextAction()
         {
+            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
             Console.WriteLine($"=======  XNCF Database  =======");
+            Console.WriteLine($"Current System Database Type: {currentDatabaseConfiguration.MultipleDatabaseType}");
+            Console.WriteLine();
+
             if (_register is IXncfRegister xncfRegister)
             {
                 Console.WriteLine($"Name: {xncfRegister.Name}");
@@ -75,7 +84,11 @@ namespace Senparc.Ncf.XncfBase.Database
                 Console.WriteLine($"Uid: {xncfRegister.Uid}");
                 Console.WriteLine($"Version: {xncfRegister.Version}");
             }
-            var dbContextName = _register.XncfDatabaseDbContextType?.Name;
+
+            //获取当前适用的 DbContext 类型
+            var multipleDatabasePool = MultipleDatabasePool.Instance;
+            var dbContextType = multipleDatabasePool.GetXncfDbContextType(typeof(TXncfDatabaseRegister));
+            var dbContextName = dbContextType.Name;
             Console.WriteLine($"DbContextName: {dbContextName}");
             Console.WriteLine($"===============================");
         }
@@ -195,7 +208,21 @@ namespace Senparc.Ncf.XncfBase.Database
 
             Console.WriteLine("=======  DatabaseConfiguration  =======");
             Console.WriteLine($"DatabaseConfiguration: {DatabaseConfiguration.GetType().Name}");
-            Console.WriteLine($"DatabaseConfiguration.DbContextOptionsBuilderType: {XncfDatabaseData?.XncfDatabaseRegister?.XncfDatabaseDbContextType.Name ?? "未指定"}");
+
+            if (XncfDatabaseData != null)
+            {
+
+
+                if (MultipleDatabasePool.Instance.TryGetValue(DatabaseConfiguration.MultipleDatabaseType, out var xncfDbContextTypes))
+                {
+                    Console.WriteLine($"Supported XncfDbContextTypes: {string.Join(",", xncfDbContextTypes)}");
+                }
+                else
+                {
+                    Console.WriteLine($"Supported XncfDbContextTypes: NONE !!!");
+                }
+            }
+
             Console.WriteLine($"DbContextOptionsAction 扩展: {(DatabaseConfiguration.DbContextOptionsActionExtension == null ? "未指定" : "已指定")}");
             Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.XncfDatabaseRegister?.DatabaseUniquePrefix ?? "未指定")}");
             Console.WriteLine("=======================================");
