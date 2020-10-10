@@ -55,7 +55,8 @@ namespace Senparc.Ncf.XncfBase
 
         private static void SetLog(StringBuilder sb, string log)
         {
-            sb.AppendLine($"[{SystemTime.Now}] {log}");
+            var msg = $"[{SystemTime.Now}] {log}";
+            sb.AppendLine(msg);
             Debug.WriteLine(log);
             Console.WriteLine(log);
         }
