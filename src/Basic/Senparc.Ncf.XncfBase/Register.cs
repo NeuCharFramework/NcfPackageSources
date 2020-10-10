@@ -238,7 +238,7 @@ namespace Senparc.Ncf.XncfBase
             {
                 xncfRegister.AddXncfModule(services, configuration);
             }
-            SetLog(sb, "完成模块 services.AddXncfModule()：共扫描 {scanTypesCount} 个程序集");
+            SetLog(sb, $"完成模块 services.AddXncfModule()：共扫描 {scanTypesCount} 个程序集");
 
             //支持 AutoMapper
             //引入当前系统
