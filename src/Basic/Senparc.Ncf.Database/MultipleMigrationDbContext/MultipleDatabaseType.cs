@@ -16,7 +16,8 @@ namespace Senparc.Ncf.Database.MultipleMigrationDbContext
         AzureCosmos,
         Oracle,
         PostgreSql,
-        Other = 99999
+        Other = 99999,
+        Default = SQLite,
         //TODO:更多
     }
 }

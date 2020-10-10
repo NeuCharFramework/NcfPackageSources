@@ -82,7 +82,7 @@ namespace Senparc.Ncf.Database
             var xncdDatabaseRegisterCollection = this[multipleDatabaseType];
             if (!xncdDatabaseRegisterCollection.ContainsKey(xncfDatabaseRegisterType))
             {
-                throw new NcfDatabaseException($"{xncfDatabaseRegisterType.Name} 模块未支持数据库：{multipleDatabaseType}", currentDatabaseConfiguration.GetType());
+                throw new NcfDatabaseException($"{xncfDatabaseRegisterType.FullName} 模块未支持数据库：{multipleDatabaseType}", currentDatabaseConfiguration.GetType());
             }
 
             return xncdDatabaseRegisterCollection[xncfDatabaseRegisterType];
