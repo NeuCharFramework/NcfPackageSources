@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -51,6 +53,13 @@ namespace Senparc.Ncf.XncfBase
             XncfAutoConfigurationMappingAttribute
         }
 
+        private static void SetLog(StringBuilder sb, string log)
+        {
+            sb.AppendLine($"[{SystemTime.Now}] {log}");
+            Debug.WriteLine(log);
+            Console.WriteLine(log);
+        }
+
         /// <summary>
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
@@ -58,7 +67,7 @@ namespace Senparc.Ncf.XncfBase
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"[{SystemTime.Now}] 开始初始化扫描 XncfModules");
+            SetLog(sb, "开始初始化扫描 XncfModules");
             var scanTypesCount = 0;
             var hideTypeCount = 0;
             ConcurrentDictionary<Type, ScanTypeKind> types = new ConcurrentDictionary<Type, ScanTypeKind>();
@@ -123,7 +132,7 @@ namespace Senparc.Ncf.XncfBase
                     Console.WriteLine($"扫描程集异常退出，可能无法获得完整程序集信息：{ex.Message}");
                 }
 
-                sb.AppendLine($"[{SystemTime.Now}] 满足条件对象：{types.Count()}");
+                SetLog(sb, $"满足条件对象：{types.Count()}");
 
                 //先注册 XncfRegister
                 {
@@ -144,7 +153,7 @@ namespace Senparc.Ncf.XncfBase
 
                     foreach (var type in orderedTypes)
                     {
-                        sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXncfRegister：{type.FullName}");
+                        SetLog(sb, $"扫描到 IXncfRegister：{type.FullName}");
 
                         var register = type.Assembly.CreateInstance(type.FullName) as IXncfRegister;
 
@@ -181,7 +190,7 @@ namespace Senparc.Ncf.XncfBase
                     ////再扫描具体方法
                     //foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXncfFunction))))
                     //{
-                    //    sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXncfFunction：{type.FullName}");
+                    //    SetLog(sb, "扫描到 IXncfFunction：{type.FullName}");
 
                     //    if (!ModuleFunctionCollection.ContainsKey(type))
                     //    {
@@ -211,7 +220,7 @@ namespace Senparc.Ncf.XncfBase
             {
                 scanResult += $"。其中 {hideTypeCount} 个程序集为非安装程序集，不会被缓存";
             }
-            sb.AppendLine($"[{SystemTime.Now}] {scanResult}");
+            SetLog(sb, $"{scanResult}");
 
 
             //Repository & Service
@@ -228,7 +237,7 @@ namespace Senparc.Ncf.XncfBase
             {
                 xncfRegister.AddXncfModule(services, configuration);
             }
-            sb.AppendLine($"[{SystemTime.Now}] 完成模块 services.AddXncfModule()：共扫描 {scanTypesCount} 个程序集");
+            SetLog(sb, "完成模块 services.AddXncfModule()：共扫描 {scanTypesCount} 个程序集");
 
             //支持 AutoMapper
             //引入当前系统
@@ -253,7 +262,7 @@ namespace Senparc.Ncf.XncfBase
             string justScanThisUid = null)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"[{SystemTime.Now}] 开始扫描 XncfModules");
+            SetLog(sb, "开始扫描 XncfModules");
 
             //先注册
             var updatedCount = 0;
@@ -262,21 +271,21 @@ namespace Senparc.Ncf.XncfBase
             {
                 foreach (var register in XncfRegisterManager.RegisterList)
                 {
-                    sb.AppendLine($"[{SystemTime.Now}] 扫描到 IXncfRegister：{register.GetType().FullName}");
+                    SetLog(sb, "扫描到 IXncfRegister：{register.GetType().FullName}");
                     if (register.IgnoreInstall)
                     {
-                        sb.AppendLine($"[{SystemTime.Now}] 当前模块要求忽略安装 uid：[{justScanThisUid}]，此模块跳过");
+                        SetLog(sb, "当前模块要求忽略安装 uid：[{justScanThisUid}]，此模块跳过");
                         continue;
                     }
 
                     if (justScanThisUid != null && register.Uid != justScanThisUid)
                     {
-                        sb.AppendLine($"[{SystemTime.Now}] 由于只要求更新 uid：[{justScanThisUid}]，此模块跳过");
+                        SetLog(sb, "由于只要求更新 uid：[{justScanThisUid}]，此模块跳过");
                         continue;
                     }
                     else
                     {
-                        sb.AppendLine($"[{SystemTime.Now}] 符合尝试安装/更新要求，继续执行");
+                        SetLog(sb, "符合尝试安装/更新要求，继续执行");
                     }
 
                     var xncfModuleStoredDto = xncfModuleDtos.FirstOrDefault(z => z.Uid == register.Uid);
@@ -285,7 +294,7 @@ namespace Senparc.Ncf.XncfBase
                     //检查更新，并安装到数据库
                     var xncfModuleService = serviceProvider.GetService<XncfModuleService>();
                     var installOrUpdate = await xncfModuleService.CheckAndUpdateVersionAsync(xncfModuleStoredDto, xncfModuleAssemblyDto).ConfigureAwait(false);
-                    sb.AppendLine($"[{SystemTime.Now}] 是否更新版本：{installOrUpdate?.ToString() ?? "未安装"}");
+                    SetLog(sb, $"是否更新版本：{installOrUpdate?.ToString() ?? "未安装"}");
 
                     if (installOrUpdate.HasValue)
                     {
@@ -299,7 +308,7 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            sb.AppendLine($"[{SystemTime.Now}] 扫描结束，共新增或更新 {updatedCount} 个程序集");
+            SetLog(sb, "扫描结束，共新增或更新 {updatedCount} 个程序集");
             return sb.ToString();
         }
 

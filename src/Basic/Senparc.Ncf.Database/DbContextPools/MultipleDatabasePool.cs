@@ -76,7 +76,7 @@ namespace Senparc.Ncf.Database
             MultipleDatabaseType multipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
             if (!this.ContainsKey(multipleDatabaseType))
             {
-                throw new NcfDatabaseException($"未发现已注册的未支持数据库：{multipleDatabaseType}", currentDatabaseConfiguration.GetType());
+                throw new NcfDatabaseException($"未发现任何支持此数据库类型的 XNCF 模块：{multipleDatabaseType}", currentDatabaseConfiguration.GetType());
             }
 
             var xncdDatabaseRegisterCollection = this[multipleDatabaseType];
