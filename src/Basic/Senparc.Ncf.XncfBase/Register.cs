@@ -57,8 +57,8 @@ namespace Senparc.Ncf.XncfBase
         {
             var msg = $"[{SystemTime.Now}] {log}";
             sb.AppendLine(msg);
-            Debug.WriteLine(log);
-            Console.WriteLine(log);
+            Debug.WriteLine(msg);
+            Console.WriteLine(msg);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Senparc.Ncf.XncfBase
 
 
                             //获取多数据库配置（XncfDatabaseDbContext 的子类）
-                            if (t.IsSubclassOf(typeof(XncfDatabaseDbContext)) &&
+                            if (t.IsSubclassOf(typeof(SenparcEntitiesBase)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
                               t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) != null)
                             {
                                 //获取特性
@@ -133,7 +133,7 @@ namespace Senparc.Ncf.XncfBase
                     Console.WriteLine($"扫描程集异常退出，可能无法获得完整程序集信息：{ex.Message}");
                 }
 
-                SetLog(sb, $"满足条件对象：{types.Count()}");
+                SetLog(sb, $"满足 ScanTypeKind 条件的类型：{types.Count()}");
 
                 //先注册 XncfRegister
                 {

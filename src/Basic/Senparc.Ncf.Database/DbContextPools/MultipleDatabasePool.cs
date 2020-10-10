@@ -10,7 +10,7 @@ namespace Senparc.Ncf.Database
     /// <summary>
     /// 多数据库配置池
     /// </summary>
-    public class MultipleDatabasePool 
+    public class MultipleDatabasePool
         : Dictionary<MultipleDatabaseType, Dictionary<Type/* IXncfDatabase Register 类型*/, Type/* 数据库 XncfDatabaseDbContext 类型 */>>
     {
         #region 单例
@@ -45,7 +45,7 @@ namespace Senparc.Ncf.Database
         /// <returns></returns>
         public string TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
-            var msg = $"检测到多数据库 DbContext：{multiDbContextAttr.XncfDatabaseRegisterType.FullName}\t>\t{xncfDatabaseDbContextType.FullName} | \t {multiDbContextAttr.MultipleDatabaseType}";
+            var msg = $"检测到多数据库 DbContext：{multiDbContextAttr.XncfDatabaseRegisterType.FullName}\t>\t{xncfDatabaseDbContextType.FullName} |\t{multiDbContextAttr.MultipleDatabaseType}";
 
             //查看是否已经包含 MultipleDatabaseType 
             if (!this.ContainsKey(multiDbContextAttr.MultipleDatabaseType))
@@ -55,13 +55,13 @@ namespace Senparc.Ncf.Database
             }
 
             //加入配置
-            this[multiDbContextAttr.MultipleDatabaseType][xncfDatabaseDbContextType] = multiDbContextAttr.XncfDatabaseRegisterType;
+            this[multiDbContextAttr.MultipleDatabaseType][multiDbContextAttr.XncfDatabaseRegisterType] = xncfDatabaseDbContextType;
 
             //暂时休眠  -A7B5C6
             ////同步添加到 XncfDatabaseDbContextPool
             //XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
 
-            return msg;
+            return "\t" + msg;
         }
 
         /// <summary>

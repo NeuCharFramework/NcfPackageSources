@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Senparc.Xncf.ChangeNamespace\Senparc.Xncf.ChangeNamespace.csproj" />
+    <ProjectReference Include="..\..\Senparc.Xncf.ChangeNamespace\Senparc.Xncf.ChangeNamespace.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
@@ -15,7 +16,7 @@ namespace Senparc.Ncf.XncfBase.Database
     /// <summary>
     /// IXncfDatabase 使用的 DbContext 基类
     /// </summary>
-    public abstract class XncfDatabaseDbContext : DbContext, IMultipleMigrationDbContext
+    public abstract class XncfDatabaseDbContext : SenparcEntitiesBase, ISenparcEntities, IMultipleMigrationDbContext
     {
         MultipleMigrationDbContextAttribute _multipleMigrationDbContext;
         /// <summary>
@@ -43,7 +44,8 @@ namespace Senparc.Ncf.XncfBase.Database
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister => MultipleMigrationDbContext.XncfDatabaseRegister;
 
-        public XncfDatabaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        protected XncfDatabaseDbContext(DbContextOptions dbContextOptions)
+            : base(dbContextOptions)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

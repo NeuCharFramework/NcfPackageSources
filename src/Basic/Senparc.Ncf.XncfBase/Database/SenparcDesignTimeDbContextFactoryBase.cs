@@ -9,6 +9,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using System;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Senparc.Ncf.XncfBase.Database
     /// <typeparam name="TSenparcEntities"></typeparam>
     public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
         : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities>
-            where TSenparcEntities : XncfDatabaseDbContext
+            where TSenparcEntities : SenparcEntitiesBase
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
         public virtual SenparcSetting SenparcSetting => new SenparcSetting();
