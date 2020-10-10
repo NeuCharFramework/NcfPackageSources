@@ -25,8 +25,6 @@ namespace Senparc.Ncf.XncfBase.Database
             where TSenparcEntities : SenparcEntitiesBase
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
-        public virtual SenparcSetting SenparcSetting => new SenparcSetting();
-
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
             //获取 XncfDatabase 对象
@@ -133,7 +131,16 @@ namespace Senparc.Ncf.XncfBase.Database
         private readonly string _ncfVersion;
         private readonly string _note;
 
+        /// <summary>
+        /// XncfDatabaseData
+        /// </summary>
         protected XncfDatabaseData XncfDatabaseData { get; set; }
+
+        ///// <summary>
+        ///// 特殊类型，例如 SystemServiceEntities
+        ///// </summary>
+        //protected Type SpecificSenparcEntites { get; } = null;
+
 
         /// <summary>
         /// SenparcDesignTimeDbContextFactoryBase 构造函数

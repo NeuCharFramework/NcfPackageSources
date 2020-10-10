@@ -57,8 +57,8 @@ namespace Senparc.Ncf.XncfBase
         {
             var msg = $"[{SystemTime.Now}] {log}";
             sb.AppendLine(msg);
-            Debug.WriteLine(msg);
-            Console.WriteLine(msg);
+            //Debug.WriteLine(msg);
+            //Console.WriteLine(msg);
         }
 
         /// <summary>

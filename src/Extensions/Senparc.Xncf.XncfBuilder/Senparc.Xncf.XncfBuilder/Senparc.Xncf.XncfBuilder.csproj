@@ -65,12 +65,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+    <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	  <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Templates\App_Data\Database\SenparcConfig.cs">

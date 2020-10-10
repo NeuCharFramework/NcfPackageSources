@@ -8,7 +8,7 @@ using System.Text;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 
-namespace Senparc.Ncf.Database.SqlServer
+namespace Senparc.Ncf.Database.MySql
 {
     public class MySqlDatabaseConfiguration : DatabaseConfigurationBase<MySqlDbContextOptionsBuilder, MySqlOptionsExtension>
     {
