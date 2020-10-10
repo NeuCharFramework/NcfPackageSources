@@ -121,7 +121,7 @@ namespace Senparc.Ncf.XncfBase
                                 //添加配置
                                 var multipleDatabasePool = MultipleDatabasePool.Instance;
                                 var result = multipleDatabasePool.TryAdd(multiDbContextAttr, t);
-                                sb.AppendLine(result);
+                                SetLog(sb, result);
                             }
 
                         }
