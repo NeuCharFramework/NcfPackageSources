@@ -81,7 +81,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
         protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
-            where TSenparcEntities : SenparcEntitiesBase
+            where TSenparcEntities : DbContext
         {
             var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
             await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
@@ -111,10 +111,10 @@ namespace Senparc.Ncf.XncfBase
         /// 删除表（此方法请慎重使用！）
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="databaseDbContext">注意：这里不使用 SenparcEntitiesBase 基类，是暂时为保护 SenparcEntities 对应表不被轻易删除</param>
+        /// <param name="databaseDbContext"></param>
         /// <param name="entityType">需要删除的表所对应的实体类型</param>
         /// <returns></returns>
-        protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, XncfDatabaseDbContext databaseDbContext, Type[] entityType)
+        protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, DbContext databaseDbContext, Type[] entityType)
         {
             SenparcTrace.SendCustomLog("开始删除应用表格", MenuName + ", " + Name);
             var appliedMigrations = databaseDbContext.Database.GetAppliedMigrations();

@@ -22,7 +22,7 @@ namespace Senparc.Ncf.XncfBase.Database
     /// <typeparam name="TSenparcEntities"></typeparam>
     public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
         : SenparcDesignTimeDbContextFactoryBase<TSenparcEntities>
-            where TSenparcEntities : SenparcEntitiesBase
+            where TSenparcEntities : DbContext, ISenparcEntities
             where TXncfDatabaseRegister : class, IXncfDatabase, new()
     {
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)

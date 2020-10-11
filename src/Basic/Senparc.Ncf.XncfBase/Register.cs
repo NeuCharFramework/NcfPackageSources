@@ -113,7 +113,8 @@ namespace Senparc.Ncf.XncfBase
 
 
                             //获取多数据库配置（XncfDatabaseDbContext 的子类）
-                            if (t.IsSubclassOf(typeof(SenparcEntitiesBase)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
+                            if (t.IsSubclassOf(typeof(DbContext)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
+                               t.GetInterface(nameof(ISenparcEntities)) != null &&
                               t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) != null)
                             {
                                 //获取特性

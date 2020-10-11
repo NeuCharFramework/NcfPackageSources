@@ -122,7 +122,7 @@ namespace Senparc.Ncf.Database
         /// <param name="dbContextOptionsAction">额外配置操作</param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         /// <returns></returns>
-        public SenparcEntitiesBase GetDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
+        public DbContext GetDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
             //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
@@ -160,7 +160,7 @@ namespace Senparc.Ncf.Database
                 dbContextOptionsAction
                 );
             //实例化 DbContext
-            var dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as SenparcEntitiesBase;
+            var dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as DbContext;
             if (dbContext == null)
             {
                 throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.GetType(), null);

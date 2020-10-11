@@ -1,22 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyModel.Resolution;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
     /// IXncfDatabase 使用的 DbContext 基类
     /// </summary>
-    public abstract class XncfDatabaseDbContext : SenparcEntitiesBase, ISenparcEntities, IMultipleMigrationDbContext
+    public abstract class XncfDatabaseDbContext : DbContext, ISenparcEntities, IMultipleMigrationDbContext
     {
         MultipleMigrationDbContextAttribute _multipleMigrationDbContext;
         /// <summary>
@@ -57,7 +55,58 @@ namespace Senparc.Ncf.XncfBase.Database
 
             XncfDatabaseRegister.OnModelCreating(modelBuilder);
 
+            var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
+            foreach (var entityType in types)
+            {
+                SetGlobalQueryMethodInfo(entityType, modelBuilder);
+            }
+
             base.OnModelCreating(modelBuilder);
         }
+
+        #region ISenparcEntities 接口
+
+        private static readonly bool[] _migrated = { true };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetGlobalQueryMethodInfo(IMutableEntityType entityType, ModelBuilder modelBuilder)
+        {
+            var dbContextType = this.GetType();
+            dbContextType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Single(t => t.IsGenericMethod && t.Name == "SetGlobalQuery")
+                .MakeGenericMethod(entityType.ClrType)
+                .Invoke(this, new object[] { modelBuilder });
+        }
+
+
+        public void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
+        {
+            builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+        }
+
+        public void ResetMigrate()
+        {
+            _migrated[0] = false;
+        }
+
+        public void Migrate()
+        {
+            if (!_migrated[0])
+            {
+                lock (_migrated)
+                {
+                    if (!_migrated[0])
+                    {
+                        Database.Migrate(); // apply all migrations
+                        _migrated[0] = true;
+                    }
+                }
+            }
+        }
+
+
+        #endregion
     }
 }
