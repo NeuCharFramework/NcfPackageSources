@@ -201,11 +201,13 @@ namespace Senparc.Ncf.XncfBase
         /// <returns></returns>
         public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"开始注册Register {this.GetType()}");
+
             if (this is IXncfDatabase databaseRegister)
             {
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine($"开始注册数据库上下文 {this.GetType()}");
+                Console.WriteLine($"开始注册数据库上下文 {databaseRegister.GetType()}");
                 //遍历所有Register中的数据库进行注册
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
@@ -220,11 +222,11 @@ namespace Senparc.Ncf.XncfBase
                             //准备创建 DbContextOptionsBuilder 实例，定义类型
                             var dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
 
-
                             //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
                             dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
                             //创建 DbContextOptionsBuilder 实例
                             DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
+                            Console.WriteLine("dbOptionBuilder："+ dbOptionBuilder.ToJson(true));
 
                             //获取当前数据库配置
                             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;

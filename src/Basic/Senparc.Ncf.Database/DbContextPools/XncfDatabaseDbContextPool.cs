@@ -47,13 +47,13 @@ namespace Senparc.Ncf.Database
         public void TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
             //查看是否已经包含 IDatabaseRegister 
-            if (!this.ContainsKey(xncfDatabaseDbContextType))
+            if (!this.ContainsKey(multiDbContextAttr.XncfDatabaseRegisterType))
             {
                 //添加 MultipleDatabaseType 对应集合
-                this[xncfDatabaseDbContextType] = new Dictionary<MultipleDatabaseType, Type>();
+                this[multiDbContextAttr.XncfDatabaseRegisterType] = new Dictionary<MultipleDatabaseType, Type>();
             }
             //加入配置
-            this[xncfDatabaseDbContextType][multiDbContextAttr.MultipleDatabaseType] = multiDbContextAttr.XncfDatabaseRegisterType;
+            this[multiDbContextAttr.XncfDatabaseRegisterType][multiDbContextAttr.MultipleDatabaseType] = xncfDatabaseDbContextType;
         }
     }
 }
