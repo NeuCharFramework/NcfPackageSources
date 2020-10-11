@@ -249,8 +249,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var dbFiles = new List<IXncfTemplatePage> {
                         new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
                         new XncfBuilder.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
+                        //重复多数据库
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
+                        //重复多数据库
+                        new Templates.Models.MultipleDatabase.SenparcEntities_SqlServer(typeParam.OrgName, typeParam.XncfName),
+
 
                         //重复多数据库
                         new Templates.Migrations.Migrations.SQLite.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
