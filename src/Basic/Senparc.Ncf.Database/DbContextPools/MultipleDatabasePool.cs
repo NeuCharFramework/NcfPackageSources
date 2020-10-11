@@ -135,8 +135,9 @@ namespace Senparc.Ncf.Database
             {
                 //带泛型
                 ////准备创建 DbContextOptionsBuilder 实例，定义类型
-                dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
-                //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
+                dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
+                //dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
+                //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntities>
                 dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
 
                 //创建 DbContextOptionsBuilder 实例
