@@ -1,330 +1,425 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.3.200-beta1</Version>
-    <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
-    <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Xncf.XncfBuilder 快速生成 XNCF 模块基础程序代码</Description>
-    <Copyright>NeuCharFramework</Copyright>
-    <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.XncfBuilder</PackageTags>
-    <Authors>NeuCharFramework</Authors>
-    <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
-    <Title>XNCF 模块生成器</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
-    <PackageReleaseNotes>
-      v0.1 创世
-</PackageReleaseNotes>
-    <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.XncfBuilder.XML</DocumentationFile>
-    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Migrations.SQLServer\**" />
-    <EmbeddedResource Remove="Migrations.SQLServer\**" />
-    <None Remove="Migrations.SQLServer\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Templates\RegisterArea.tt" />
-    <None Remove="Templates\RegisterDatabase.tt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Templates\RegisterArea.tt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <LastGenOutput>RegisterArea.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </Content>
-    <Content Include="Templates\RegisterDatabase.tt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <LastGenOutput>RegisterDatabase.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Templates\Functions\MyFunction.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>MyFunction.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
-	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-	  <PackageReference Include="System.CodeDom" Version="4.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Templates\App_Data\Database\SenparcConfig.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SenparcConfig.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DatabaseSample.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DatabaseSample_cs.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Index.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Index_cs.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>_SideMenu.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\ViewImports.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ViewImports.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Areas\Admin\Pages\ViewStart.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ViewStart.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\csproj.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>csproj.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Functions\MyFunction.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>MyFunction.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Migrations\AddSample.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AddSample.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Migrations\AddSampleDesigner.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AddSampleDesigner.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Migrations\Init.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Init.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Migrations\InitDesigner.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>InitDesigner.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.cs">
-      <DependentUpon>Sample_ColorConfigurationMapping.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Templates\Models\DatabaseModel\Dto\ColorDto.cs">
-      <DependentUpon>ColorDto.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Templates\Models\DatabaseModel\Color.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Color.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Models\DatabaseModel\MySenparcEntities.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>MySenparcEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SenparcDbContextFactory.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Register.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Register.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\RegisterArea.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RegisterArea.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Register_Area - 复制.cs">
-      <DependentUpon>Register_Area.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Templates\RegisterDatabase.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RegisterDatabase.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Templates\Services\ColorService.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ColorService.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Templates\App_Data\Database\SenparcConfig.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcConfig.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>DatabaseSample.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>DatabaseSample_cs.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>_SideMenu.cs</LastGenOutput>
-    </None>
-    <None Update="Templates\Migrations\AddSampleDesigner.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Migrations\AddSample.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>AddSample.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Migrations\InitDesigner.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>InitDesigner.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Migrations\Init.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Init.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Sample_ColorConfigurationMapping.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Models\DatabaseModel\Dto\ColorDto.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>ColorDto.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Models\DatabaseModel\Color.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Color.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>SenparcDbContextFactory.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Models\DatabaseModel\MySenparcEntities.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>MySenparcEntities.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Index_cs.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\MyApps\Index.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>Index.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\ViewStart.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>ViewStart.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-    <None Update="Templates\Areas\Admin\Pages\ViewImports.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>ViewImports.cs</LastGenOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Templates\csproj.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>csproj.cs</LastGenOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Templates\Functions\MyFunction.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>MyFunction.cs</LastGenOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Templates\Register.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>Register.cs</LastGenOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Templates\Services\ColorService.tt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>ColorService.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="Migrations\Migrations.SqlServer\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Version>0.3.200.100-beta1</Version>
+		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
+		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<Description>Senparc.Xncf.XncfBuilder 快速生成 XNCF 模块基础程序代码</Description>
+		<Copyright>NeuCharFramework</Copyright>
+		<PackageTags>NeuCharFramework,NCF,Senparc.Xncf.XncfBuilder</PackageTags>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
+		<PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+		<Title>XNCF 模块生成器</Title>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+		<PackageReleaseNotes>
+			v0.1 创世
+		</PackageReleaseNotes>
+		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.XncfBuilder.XML</DocumentationFile>
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+		<Optimize>true</Optimize>
+		<DebugType>pdbonly</DebugType>
+		<ErrorReport>prompt</ErrorReport>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="Migrations.SQLServer\**" />
+		<EmbeddedResource Remove="Migrations.SQLServer\**" />
+		<None Remove="Migrations.SQLServer\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Templates\RegisterArea.tt" />
+		<None Remove="Templates\RegisterDatabase.tt" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Templates\RegisterArea.tt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<LastGenOutput>RegisterArea.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</Content>
+		<Content Include="Templates\RegisterDatabase.tt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<LastGenOutput>RegisterDatabase.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Templates\Functions\MyFunction.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>MyFunction.tt</DependentUpon>
+		</None>
+		<None Include="Templates\Migrations\Migrations.SQLite\AddSample.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSample.tt</DependentUpon>
+		</None>
+		<None Include="Templates\Migrations\Migrations.SQLite\AddSampleDesigner.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSampleDesigner.tt</DependentUpon>
+		</None>
+		<None Include="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForAddSample.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+		</None>
+		<None Include="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForInit.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+		</None>
+		<None Include="Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcEntities_SqlServer.tt</DependentUpon>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<PackageReference Include="System.CodeDom" Version="4.7.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Templates\App_Data\Database\SenparcConfig.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcConfig.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>DatabaseSample.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>DatabaseSample_cs.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\MyApps\Index.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Index.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Index_cs.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>_SideMenu.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\ViewImports.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ViewImports.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Areas\Admin\Pages\ViewStart.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ViewStart.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\csproj.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>csproj.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Functions\MyFunction.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>MyFunction.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SQLite\AddSample.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSample.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SQLite\AddSampleDesigner.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSampleDesigner.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SQLite\Init.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Init.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SQLite\InitDesigner.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>InitDesigner.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForAddSample.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForInit.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SqlServer\AddSample.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSample.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SqlServer\AddSampleDesigner.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSampleDesigner.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SqlServer\Init.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Init.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SqlServer\InitDesigner.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>InitDesigner.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForAddSample.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForInit.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.cs">
+			<DependentUpon>Sample_ColorConfigurationMapping.tt</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="Templates\Models\DatabaseModel\Dto\ColorDto.cs">
+			<DependentUpon>ColorDto.tt</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="Templates\Models\DatabaseModel\Color.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Color.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Models\DatabaseModel\MySenparcEntities.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>MySenparcEntities.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcDbContextFactory.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>SenparcEntities_SqlServer.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Register.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Register.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\RegisterArea.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>RegisterArea.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Register_Area - 复制.cs">
+			<DependentUpon>Register_Area.tt</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="Templates\RegisterDatabase.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>RegisterDatabase.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Templates\Services\ColorService.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ColorService.tt</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="Templates\App_Data\Database\SenparcConfig.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>SenparcConfig.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>DatabaseSample.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\MyApps\DatabaseSample_cs.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>DatabaseSample_cs.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\Shared\_SideMenu.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>_SideMenu.cs</LastGenOutput>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SQLite\AddSample.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>AddSample.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SQLite\AddSampleDesigner.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SQLite\Init.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>init.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SQLite\InitDesigner.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>initDesigner.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForInit.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForAddSample.tt">
+		  <Generator>TextTemplatingFilePreprocessor</Generator>
+		  <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SqlServer\AddSampleDesigner.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SqlServer\AddSample.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>AddSample.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForAddSample.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForInit.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SqlServer\InitDesigner.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>InitDesigner.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Migrations\Migrations.SqlServer\Init.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>Init.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Models\DatabaseModel\Mapping\Sample_ColorConfigurationMapping.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>Sample_ColorConfigurationMapping.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Models\DatabaseModel\Dto\ColorDto.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>ColorDto.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Models\DatabaseModel\Color.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>Color.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Models\DatabaseModel\SenparcDbContextFactory.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>SenparcDbContextFactory.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Models\DatabaseModel\MySenparcEntities.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>MySenparcEntities.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\MyApps\Index_cs.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>Index_cs.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\MyApps\Index.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>Index.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\ViewStart.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>ViewStart.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+		<None Update="Templates\Areas\Admin\Pages\ViewImports.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>ViewImports.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\csproj.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>csproj.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Functions\MyFunction.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>MyFunction.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>SenparcEntities_SqlServer.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Register.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>Register.cs</LastGenOutput>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Services\ColorService.tt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<LastGenOutput>ColorService.cs</LastGenOutput>
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Migrations\" />
+		<Folder Include="Migrations\Migrations.SqlServer\" />
+	</ItemGroup>
 </Project>

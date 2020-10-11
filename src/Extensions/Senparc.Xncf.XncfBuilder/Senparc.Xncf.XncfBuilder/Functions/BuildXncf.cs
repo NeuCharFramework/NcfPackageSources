@@ -236,11 +236,14 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "App_Data/Database",
                         "Models",
                         "Models/DatabaseModel",
-                        "Migrations"
+                        "Models/MultipleDatabase",
+                        "Migrations",
+                        "Migrations/Migrations.SQLite",
+                        "Migrations/Migrations.SqlServer",
                     };
                     dbDirs.ForEach(z => AddDir(z));
 
-                    var initMigrationTime = Init.GetFileNamePrefix();
+                    var initMigrationTime = Templates.Migrations.Migrations.SqlServer.Init.GetFileNamePrefix();
 
                     //载入Page
                     var dbFiles = new List<IXncfTemplatePage> {
@@ -249,8 +252,13 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
 
-                        new Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        new InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime)
+                        //重复多数据库
+                        new Templates.Migrations.Migrations.SQLite.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new Templates.Migrations.Migrations.SQLite.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+
+                        //重复多数据库
+                        new Templates.Migrations.Migrations.SqlServer.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new Templates.Migrations.Migrations.SqlServer.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }
@@ -267,12 +275,19 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     };
                     sampleDirs.ForEach(z => AddDir(z));
 
-                    var sampleMigrationTime = Init.GetFileNamePrefix(SystemTime.Now.DateTime.AddSeconds(1));
+                    var sampleMigrationTime = Templates.Migrations.Migrations.SqlServer.Init.GetFileNamePrefix(SystemTime.Now.DateTime.AddSeconds(1));
 
                     //载入Page
+
                     var sampleFiles = new List<IXncfTemplatePage> {
-                        new AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        new AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        //重复多数据库
+                        new Templates.Migrations.Migrations.SQLite.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new Templates.Migrations.Migrations.SQLite.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+
+                        //重复多数据库
+                        new Templates.Migrations.Migrations.SqlServer.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new Templates.Migrations.Migrations.SqlServer.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+
 
                         new ColorDto(typeParam.OrgName, typeParam.XncfName),
                         new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
@@ -288,16 +303,26 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     sampleFiles.ForEach(z => WriteContent(z, sb));
 
                     //Sample快照
-                    var addSampleSnapshot = new SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    //重复多数据库
+                    var addSampleSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(addSampleSnapshot, sb);
+
+                    //重复多数据库
+                    var addSampleSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(addSampleSnapshot_SqlServer, sb);
+
                 }
                 else if (useDatabase)
                 {
                     //默认 Init 快照
-                    var initSnapshot = new SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    //重复多数据库
+                    var initSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(initSnapshot, sb);
-                }
 
+                    //重复多数据库
+                    var initSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(initSnapshot_SqlServer, sb);
+                }
 
                 #endregion
 

@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Xncf.XncfBuilder.Templates.Migrations
+namespace Senparc.Xncf.XncfBuilder.Templates.Migrations.Migrations.SqlServer
 {
-    public partial class AddSampleDesigner : IXncfTemplatePage
+    public partial class AddSample : IXncfTemplatePage
     {
         /// <summary>
         /// 相对地址
         /// </summary>
-        public string RelativeFilePath => $"Migrations/{MigrationTime}_AddSample.Designer.cs";
+        public string RelativeFilePath => $"Migrations/Migrations.SqlServer/{MigrationTime}_AddSample.cs";
 
         public string OrgName { get; set; }
         public string XncfName { get; set; }
         public string MigrationTime { get; set; }
 
-        public AddSampleDesigner(string orgName, string xncfName, string migrationTime)
+        public AddSample(string orgName, string xncfName, string migrationTime)
         {
             OrgName = orgName;
             XncfName = xncfName;

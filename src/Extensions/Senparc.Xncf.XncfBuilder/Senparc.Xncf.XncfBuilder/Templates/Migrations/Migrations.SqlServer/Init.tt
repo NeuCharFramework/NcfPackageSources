@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace <#= OrgName #>.Xncf.<#= XncfName #>.Migrations
+namespace <#= OrgName #>.Xncf.<#= XncfName #>.Migrations.Migrations.SqlServer
 {
     public partial class Init : Migration
     {

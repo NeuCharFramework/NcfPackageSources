@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
+namespace Senparc.Xncf.XncfBuilder.Templates.Models.MultipleDatabase
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class MySenparcEntities : MySenparcEntitiesBase
+    public partial class SenparcEntities_SqlServer : SenparcEntities_SqlServerBase
     {
 #line hidden
         /// <summary>
@@ -28,61 +28,93 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Microsoft.EntityFrameworkCore;\r\nusing Senparc.Ncf.Database;\r\nusing Senparc." +
-                    "Ncf.Database.MultipleMigrationDbContext;\r\nusing Senparc.Ncf.XncfBase.Database;\r\n" +
-                    "\r\nnamespace ");
+            this.Write(@"
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.XncfBase.Database;
+using System;
+using System.IO;
+
+namespace ");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(".Models.DatabaseModel\r\n{\r\n    [MultipleMigrationDbContext(MultipleDatabaseType.SQ" +
-                    "Lite, typeof(Register))]\r\n    public class ");
+            this.Write(".Models.DatabaseModel\r\n{\r\n    [MultipleMigrationDbContext(MultipleDatabaseType.Sq" +
+                    "lServer, typeof(Register))]\r\n    public class ");
             
-            #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 19 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities : XncfDatabaseDbContext\r\n    {\r\n        public ");
+            this.Write("SenparcEntities_SqlServer : ");
             
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 19 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)\r\n    " +
-                    "    {\r\n        }\r\n\r\n        ");
+            this.Write("SenparcEntities\r\n    {\r\n        public ");
             
-            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
- if(UseSample) 
+            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"SenparcEntities_SqlServer(DbContextOptions<NewAppSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
-            
-            #line default
-            #line hidden
-            this.Write("        public DbSet<Color> Colors { get; set; }\r\n        ");
-            
-            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write(@"
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
-        //ex. public DbSet<Color> Colors { get; set; }
+        }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //}
+
+        /// <summary>
+        /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+        /// <para>1、切换至 Debug 模式</para>
+        /// <para>2、运行：PM> add-migration [更新名称] -c ");
+            
+            #line 29 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("SenparcEntities_SqlServer_SqlServer -o Migrations/Migrations.SqlServer </para>\r\n " +
+                    "       /// </summary>\r\n        public class SenparcDbContextFactory_SqlServer : " +
+                    "SenparcDesignTimeDbContextFactoryBase<");
+            
+            #line 31 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"SenparcEntities_SqlServer, Register>
+        {
+            protected override Action<IServiceCollection> ServicesAction => services =>
+            {
+                //指定其他数据库
+                services.AddDatabase(""Senparc.Ncf.Database.SqlServer"", ""Senparc.Ncf.Database.SqlServer"", ""SQLServerDatabaseConfiguration"");
+            };
+
+            /// <summary>
+            /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
+            /// </summary>
+            private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, ""..\\..\\..\\""/*项目根目录*/, ""..\\Senparc.Web""/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
+
+            public SenparcDbContextFactory_SqlServer() : base(RootDictionaryPath)
+            {
+
+            }
+        }
     }
 }
 ");
@@ -97,7 +129,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class MySenparcEntitiesBase
+    public class SenparcEntities_SqlServerBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
