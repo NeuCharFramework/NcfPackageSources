@@ -73,7 +73,14 @@ namespace ");
             
             #line default
             #line hidden
-            this.Write(@"SenparcEntities_SqlServer(DbContextOptions<NewAppSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
+            this.Write("SenparcEntities_SqlServer(DbContextOptions<");
+            
+            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"SenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
 

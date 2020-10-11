@@ -16,7 +16,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>.Migrations.Migrations.SQLite
 {
     [DbContext(typeof(<#= XncfName #>SenparcEntities))]
     [Migration("<#= MigrationTime #>_Init")]
-    partial class init
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>.Migrations.Migrations.SqlServer
 {
-    [DbContext(typeof(<#= XncfName #>SenparcEntities))]
+    [DbContext(typeof(<#= XncfName #>SenparcEntities_SqlServer))]
     partial class <#= XncfName #>SenparcEntitiesModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

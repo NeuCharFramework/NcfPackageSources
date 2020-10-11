@@ -42,9 +42,9 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Migrations.Migrations.SQLite
             
             #line default
             #line hidden
-            this.Write(@"Migrations.Migrations.SQLite
+            this.Write(@".Migrations.Migrations.SQLite
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

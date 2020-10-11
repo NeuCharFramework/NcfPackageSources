@@ -6,9 +6,9 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace <#= OrgName #>.Xncf.<#= XncfName #>Migrations.Migrations.SQLite
+namespace <#= OrgName #>.Xncf.<#= XncfName #>.Migrations.Migrations.SQLite
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

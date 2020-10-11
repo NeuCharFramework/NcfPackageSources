@@ -65,7 +65,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Migrations.Migrations.SqlServer
             
             #line default
             #line hidden
-            this.Write("SenparcEntities))]\r\n    partial class ");
+            this.Write("SenparcEntities_SqlServer))]\r\n    partial class ");
             
             #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForInit.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));

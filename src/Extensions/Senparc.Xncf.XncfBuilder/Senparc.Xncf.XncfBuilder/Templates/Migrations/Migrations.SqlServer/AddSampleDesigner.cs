@@ -70,7 +70,7 @@ namespace ");
             
             #line default
             #line hidden
-            this.Write("SenparcEntities))]\r\n    [Migration(\"");
+            this.Write("SenparcEntities_SqlServer))]\r\n    [Migration(\"");
             
             #line 18 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SqlServer\AddSampleDesigner.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(MigrationTime));

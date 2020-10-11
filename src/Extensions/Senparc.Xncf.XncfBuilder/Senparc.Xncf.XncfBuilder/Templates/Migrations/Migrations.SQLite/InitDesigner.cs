@@ -73,7 +73,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Migrations.Migrations.SQLite
             #line default
             #line hidden
             this.Write(@"_Init"")]
-    partial class init
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

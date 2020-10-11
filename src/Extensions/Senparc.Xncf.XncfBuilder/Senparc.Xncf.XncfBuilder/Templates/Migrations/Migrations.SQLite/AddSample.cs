@@ -28,7 +28,84 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Migrations.Migrations.SQLite
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n");
+            this.Write("using System;\r\nusing Microsoft.EntityFrameworkCore.Migrations;\r\n\r\nnamespace ");
+            
+            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write(".Xncf.");
+            
+            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(".Migrations.Migrations.SQLite\r\n{\r\n    public partial class AddSample : Migration\r" +
+                    "\n    {\r\n        protected override void Up(MigrationBuilder migrationBuilder)\r\n " +
+                    "       {\r\n            migrationBuilder.CreateTable(\r\n                name: \"");
+            
+            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write(@"_Color"",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation(""Sqlite:Autoincrement"", true),
+                    Flag = table.Column<bool>(nullable: false),
+                    AddTime = table.Column<DateTime>(nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(nullable: false),
+                    AdminRemark = table.Column<string>(maxLength: 300, nullable: true),
+                    Remark = table.Column<string>(maxLength: 300, nullable: true),
+                    Red = table.Column<int>(nullable: false),
+                    Green = table.Column<int>(nullable: false),
+                    Blue = table.Column<int>(nullable: false),
+                    AdditionNote = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey(""PK_");
+            
+            #line 34 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 34 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("_Color\", x => x.Id);\r\n                });\r\n        }\r\n\r\n        protected overrid" +
+                    "e void Down(MigrationBuilder migrationBuilder)\r\n        {\r\n            migration" +
+                    "Builder.DropTable(\r\n                name: \"");
+            
+            #line 41 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
+            
+            #line default
+            #line hidden
+            this.Write("_");
+            
+            #line 41 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.SQLite\AddSample.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
+            
+            #line default
+            #line hidden
+            this.Write("_Color\");\r\n        }\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
