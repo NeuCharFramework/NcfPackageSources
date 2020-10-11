@@ -1,4 +1,7 @@
-﻿using Senparc.Ncf.Core.Exceptions;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
@@ -57,9 +60,8 @@ namespace Senparc.Ncf.Database
             //加入配置
             this[multiDbContextAttr.MultipleDatabaseType][multiDbContextAttr.XncfDatabaseRegisterType] = xncfDatabaseDbContextType;
 
-            //暂时休眠  -A7B5C6
-            ////同步添加到 XncfDatabaseDbContextPool
-            //XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
+            //同步添加到 XncfDatabaseDbContextPool
+            XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
 
             return "\t" + msg;
         }
@@ -88,5 +90,21 @@ namespace Senparc.Ncf.Database
             return xncdDatabaseRegisterCollection[xncfDatabaseRegisterType];
         }
 
+        /// <summary>
+        /// 获取指定 xncfDatabaseRegister 关联的当前数据库实例
+        /// </summary>
+        /// <param name="xncfDatabaseRegisterType"></param>
+        /// <returns></returns>
+        public SenparcEntitiesBase GetDbContext(Type xncfDatabaseRegisterType)
+        {
+            var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
+            var dbContextOptionsBuilder = new DbContextOptionsBuilder();
+            var dbContext = Activator.CreateInstance(dbContextType, dbContextOptionsBuilder) as SenparcEntitiesBase;
+            if (dbContext == null)
+            {
+                throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.GetType(), null);
+            }
+            return dbContext;
+        }
     }
 }
