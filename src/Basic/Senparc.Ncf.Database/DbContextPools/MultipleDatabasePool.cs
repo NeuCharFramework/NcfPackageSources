@@ -9,10 +9,28 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Senparc.Ncf.Database
 {
+    public class XncfDatabaseDbContextWapper
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="migrationDbContextType">设计时（或运行时进行 Database.Migrate() 操作的）所使用的 XncfDatabaseDbContext 类型</param>
+        /// <param name="runtimeDbContextType">运行时所使用的 XncfDatabaseDbContext 类型（通常为进行查询时）</param>
+        public XncfDatabaseDbContextWapper(Type migrationDbContextType, Type runtimeDbContextType)
+        {
+            MigrationDbContextType = migrationDbContextType;
+            RuntimeDbContextType = runtimeDbContextType;
+        }
+
+        public Type MigrationDbContextType { get; set; }
+        public Type RuntimeDbContextType { get; set; }
+    }
+
     /// <summary>
     /// 多数据库配置池
     /// </summary>
@@ -108,20 +126,39 @@ namespace Senparc.Ncf.Database
         {
             //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
-            //创建DbContextOptionsBuilder
-            //PS：此处如果需要，也可以通过反射创建带参数的 Builder，如：new DbContextOptionsBuilder<SenparcEntities>()）
-            var dbContextOptionsBuilder = new DbContextOptionsBuilder();
+            DbContextOptionsBuilder dbOptionBuilder;
+
+            var dbOptionBuilderType = dbContextType.GetConstructors()
+                                             .First().GetParameters().First().ParameterType;
+
+            if (dbOptionBuilderType.GenericTypeArguments.Length > 0)
+            {
+                //带泛型
+                ////准备创建 DbContextOptionsBuilder 实例，定义类型
+                dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
+                //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
+                dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
+
+                //创建 DbContextOptionsBuilder 实例
+                dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
+            }
+            else
+            {
+                //不带泛型
+                dbOptionBuilder = new DbContextOptionsBuilder();
+            }
+
             //获取当前数据库配置
             var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
             //指定使用当前数据库
             currentDatabasConfiguration.UseDatabase(
-                dbContextOptionsBuilder,
+                dbOptionBuilder,
                 connectionString ?? SenparcDatabaseConfigs.ClientConnectionString,
                 xncfDatabaseData,
                 dbContextOptionsAction
                 );
             //实例化 DbContext
-            var dbContext = Activator.CreateInstance(dbContextType, dbContextOptionsBuilder) as SenparcEntitiesBase;
+            var dbContext = Activator.CreateInstance(dbContextType, dbOptionBuilder) as SenparcEntitiesBase;
             if (dbContext == null)
             {
                 throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.GetType(), null);

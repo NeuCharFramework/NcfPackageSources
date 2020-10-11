@@ -216,17 +216,33 @@ namespace Senparc.Ncf.XncfBase
 
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
+                        Console.WriteLine("处理上下文：" + dbContextType.FullName);
+
+                        DbContextOptionsBuilder dbOptionBuilder;
+
                         //定义 XncfSenparcEntities 实例生成
                         Func<IServiceProvider, object> implementationFactory = s =>
                         {
-                            //准备创建 DbContextOptionsBuilder 实例，定义类型
-                            var dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
+                            var dbOptionBuilderType = dbContextType.GetConstructors()
+                                             .First().GetParameters().First().ParameterType;
 
-                            //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
-                            dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
-                            //创建 DbContextOptionsBuilder 实例
-                            DbContextOptionsBuilder dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
-                            Console.WriteLine("dbOptionBuilder："+ dbOptionBuilder.ToJson(true));
+                            if (dbOptionBuilderType.GenericTypeArguments.Length > 0)
+                            {
+                                //带泛型
+                                ////准备创建 DbContextOptionsBuilder 实例，定义类型
+                                dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
+                                //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntity>
+                                dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
+
+                                //创建 DbContextOptionsBuilder 实例
+                                dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
+                                Console.WriteLine("dbOptionBuilder Json：" + dbOptionBuilder.ToJson(true));
+                            }
+                            else
+                            {
+                                //不带泛型
+                                dbOptionBuilder = new DbContextOptionsBuilder();
+                            }
 
                             //获取当前数据库配置
                             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
