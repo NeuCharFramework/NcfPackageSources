@@ -126,15 +126,16 @@ namespace Senparc.Ncf.Database
         {
             //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
+
             DbContextOptionsBuilder dbOptionBuilder;
 
-            var dbOptionBuilderType = dbContextType.GetConstructors()
-                                             .First().GetParameters().First().ParameterType;
+            var dbOptionBuilderType = dbContextType.GetConstructors().First()
+                                        .GetParameters().First().ParameterType;
 
             if (dbOptionBuilderType.GenericTypeArguments.Length > 0)
             {
                 //带泛型
-                ////准备创建 DbContextOptionsBuilder 实例，定义类型
+                //准备创建 DbContextOptionsBuilder 实例，定义类型
                 dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
                 //dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
                 //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntities>
@@ -159,7 +160,7 @@ namespace Senparc.Ncf.Database
                 dbContextOptionsAction
                 );
             //实例化 DbContext
-            var dbContext = Activator.CreateInstance(dbContextType, dbOptionBuilder) as SenparcEntitiesBase;
+            var dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as SenparcEntitiesBase;
             if (dbContext == null)
             {
                 throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.GetType(), null);

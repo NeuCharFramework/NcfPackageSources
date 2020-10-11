@@ -201,23 +201,15 @@ namespace Senparc.Ncf.XncfBase
         /// <returns></returns>
         public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine($"开始注册Register {this.GetType()}");
-
             if (this is IXncfDatabase databaseRegister)
             {
-                Console.WriteLine($"开始注册数据库上下文 {databaseRegister.GetType()}");
                 //遍历所有Register中的数据库进行注册
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
                     var dbContextTypes = XncfDatabaseDbContextPool.Instance[this.GetType()];
-                    Console.WriteLine($"发现数据库上下文： {dbContextTypes.Count} 个");
 
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
-                        Console.WriteLine("处理上下文：" + dbContextType.FullName);
-
                         DbContextOptionsBuilder dbOptionBuilder;
 
                         //定义 XncfSenparcEntities 实例生成

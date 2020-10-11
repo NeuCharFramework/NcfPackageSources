@@ -62,7 +62,8 @@ namespace Senparc.Ncf.Database
         /// <param name="connectionString"></param>
         /// <param name="dbContextOptionsAction">额外需要配置的内容</param>
         public void UseDatabase(DbContextOptionsBuilder builder,/*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
-                XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
+                XncfDatabaseData xncfDatabaseData = null, 
+                Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
             //执行 UseSQLite、UseSQLServer 等操作
             SetUseDatabase(builder, connectionString, xncfDatabaseData, b =>
@@ -72,7 +73,7 @@ namespace Senparc.Ncf.Database
                     //执行扩展代码
                     DbContextOptionsActionExtension?.Invoke(b, xncfDatabaseData);
                     //执行外部传入的其他方法
-                    dbContextOptionsAction(b, xncfDatabaseData);
+                    dbContextOptionsAction?.Invoke(b, xncfDatabaseData);
                 }
             );
         }
