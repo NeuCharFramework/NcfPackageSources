@@ -56,9 +56,9 @@ namespace Senparc.Ncf.Database
         /// 使用数据库，如：
         /// <para>var builder = new DbContextOptionsBuilder&lt;TDbContext&gt;(); builder.UseSqlServer(sqlConnection, DbContextOptionsAction);</para>
         /// </summary>
-        /// <param name="optionsBuilder"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="dbContextOptionsAction"></param>
+        /// <param name="builder">DbContextOptionsBuilder</param>
+        /// <param name="connectionString">连接字符串</param>
+        /// <param name="dbContextOptionsAction">额外配置操作</param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         void UseDatabase(DbContextOptionsBuilder builder, /*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);

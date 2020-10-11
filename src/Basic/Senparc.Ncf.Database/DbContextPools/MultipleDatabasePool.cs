@@ -1,5 +1,8 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -60,8 +63,9 @@ namespace Senparc.Ncf.Database
             //加入配置
             this[multiDbContextAttr.MultipleDatabaseType][multiDbContextAttr.XncfDatabaseRegisterType] = xncfDatabaseDbContextType;
 
-            //同步添加到 XncfDatabaseDbContextPool
-            XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
+            //暂时休眠  -A7B5C6
+            ////同步添加到 XncfDatabaseDbContextPool
+            //XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
 
             return "\t" + msg;
         }
@@ -73,8 +77,11 @@ namespace Senparc.Ncf.Database
         /// <returns></returns>
         public Type GetXncfDbContextType(Type xncfDatabaseRegisterType)
         {
+            //数据库配置工厂
             var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
+            //当前数据库配置
             var currentDatabaseConfiguration = databaseConfigurationFactory.CurrentDatabaseConfiguration;
+            //当前数据库类型
             MultipleDatabaseType multipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
             if (!this.ContainsKey(multipleDatabaseType))
             {
@@ -93,12 +100,28 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 获取指定 xncfDatabaseRegister 关联的当前数据库实例
         /// </summary>
-        /// <param name="xncfDatabaseRegisterType"></param>
+        /// <param name="xncfDatabaseRegisterType">实现了 IXncfDatabase 的具体类型</param>
+        /// <param name="connectionString">连接字符串，如果为 null，则默认使用 SenparcDatabaseConfigs.ClientConnectionString</param>
+        /// <param name="dbContextOptionsAction">额外配置操作</param>
+        /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         /// <returns></returns>
-        public SenparcEntitiesBase GetDbContext(Type xncfDatabaseRegisterType)
+        public SenparcEntitiesBase GetDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
+            //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
+            //创建DbContextOptionsBuilder
+            //PS：此处如果需要，也可以通过反射创建带参数的 Builder，如：new DbContextOptionsBuilder<SenparcEntities>()）
             var dbContextOptionsBuilder = new DbContextOptionsBuilder();
+            //获取当前数据库配置
+            var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+            //指定使用当前数据库
+            currentDatabasConfiguration.UseDatabase(
+                dbContextOptionsBuilder,
+                connectionString ?? SenparcDatabaseConfigs.ClientConnectionString,
+                xncfDatabaseData,
+                dbContextOptionsAction
+                );
+            //实例化 DbContext
             var dbContext = Activator.CreateInstance(dbContextType, dbContextOptionsBuilder) as SenparcEntitiesBase;
             if (dbContext == null)
             {
