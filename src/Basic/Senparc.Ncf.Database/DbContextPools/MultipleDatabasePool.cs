@@ -63,9 +63,8 @@ namespace Senparc.Ncf.Database
             //加入配置
             this[multiDbContextAttr.MultipleDatabaseType][multiDbContextAttr.XncfDatabaseRegisterType] = xncfDatabaseDbContextType;
 
-            //暂时休眠  -A7B5C6
-            ////同步添加到 XncfDatabaseDbContextPool
-            //XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
+            //同步添加到 XncfDatabaseDbContextPool
+            XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
 
             return "\t" + msg;
         }

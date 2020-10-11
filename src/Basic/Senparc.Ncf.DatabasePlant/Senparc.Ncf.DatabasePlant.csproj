@@ -1,11 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.2.200.101-beta1</Version>
+    <Version>0.2.200.102-beta1</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Ncf.DatabasePlant 数据库组装厂</Description>
+    <Description>
+		Senparc.Ncf.DatabasePlant 数据库组装厂。
+		一般只在开发环境下对数据库修改时使用，因此可以添加条件编译符号，如：
+		&lt;PackageReference Condition=" '$(Configuration)' != 'Release' " Include="Senparc.Ncf.DatabasePlant" Version="0.2.200.102-beta1" /&gt;
+	</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF</PackageTags>
     <Authors>NeuCharFramework</Authors>

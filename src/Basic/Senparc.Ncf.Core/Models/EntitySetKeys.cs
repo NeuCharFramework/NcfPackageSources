@@ -56,7 +56,10 @@ namespace Senparc.Ncf.Core.Models
                         if (prop.PropertyType.Name.IndexOf("DbSet") != -1 && prop.PropertyType.GetGenericArguments().Length > 0)
                         {
                             var dbSetType = prop.PropertyType.GetGenericArguments()[0];
-                            AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
+                            if (!AllKeys.ContainsKey(dbSetType))
+                            {
+                                AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
+                            }
                         }
                     }
                     catch
