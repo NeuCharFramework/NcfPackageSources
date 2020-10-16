@@ -37,12 +37,13 @@ namespace Senparc.Xncf.XncfBuilder
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //更新数据库
-            await base.MigrateDatabaseAsync<XncfBuilderEntities>(serviceProvider);
+            await base.MigrateDatabaseAsync(serviceProvider);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            XncfBuilderEntities mySenparcEntities = serviceProvider.GetService<XncfBuilderEntities>();
+            var mySenparcEntitiesType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+            XncfBuilderEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
             //指定需要删除的数据实体
