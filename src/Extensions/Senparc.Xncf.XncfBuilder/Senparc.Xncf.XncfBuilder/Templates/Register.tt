@@ -79,7 +79,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         {
             #region 删除数据库（演示）
 
-            var mySenparcEntitiesType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+            var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             <#= XncfName #>SenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as <#= XncfName #>SenparcEntities;
 
             //指定需要删除的数据实体

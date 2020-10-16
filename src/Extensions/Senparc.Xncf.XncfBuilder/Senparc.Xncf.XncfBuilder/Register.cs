@@ -21,7 +21,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
 
-        public override string Version => "0.2.5";//必须填写版本号
+        public override string Version => "0.2.6";//必须填写版本号
 
         public override string MenuName => "XNCF 模块生成器";
 
@@ -42,7 +42,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            var mySenparcEntitiesType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+            var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             XncfBuilderEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 

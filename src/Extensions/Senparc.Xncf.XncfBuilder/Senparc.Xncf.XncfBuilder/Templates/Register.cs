@@ -250,7 +250,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
         {
             #region 删除数据库（演示）
 
-            var mySenparcEntitiesType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+            var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             ");
             
             #line 83 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
