@@ -33,6 +33,7 @@ namespace Senparc.Ncf.Database
 
     /// <summary>
     /// 多数据库配置池
+    /// <para>Value 为 Dictionary<Type/* IXncfDatabase Register 类型*/, Type/* 数据库 XncfDatabaseDbContext 类型 */></para>
     /// </summary>
     public class MultipleDatabasePool
         : Dictionary<MultipleDatabaseType, Dictionary<Type/* IXncfDatabase Register 类型*/, Type/* 数据库 XncfDatabaseDbContext 类型 */>>

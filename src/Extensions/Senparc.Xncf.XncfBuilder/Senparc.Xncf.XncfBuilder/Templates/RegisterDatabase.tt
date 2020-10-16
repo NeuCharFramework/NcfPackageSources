@@ -26,11 +26,6 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         /// 数据库前缀
         /// </summary>
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
-        /// <summary>
-        /// 设置 XncfSenparcEntities 类型
-        /// </summary>
-        public Type XncfDatabaseDbContextType => typeof(<#= XncfName #>SenparcEntities);
-
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {

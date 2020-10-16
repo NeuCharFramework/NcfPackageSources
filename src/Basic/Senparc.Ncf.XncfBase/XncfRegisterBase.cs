@@ -73,6 +73,38 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
+        #region 执行 Migrate 更新数据 MigrateDatabaseAsync()
+
+        /// <summary>
+        /// 执行 Migrate 更新数据
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="dbContextType"></param>
+        /// <param name="checkdbContextType">是否需要对 dbContextType 类型进行检查</param>
+        /// <returns></returns>
+        protected virtual async Task MigrateDatabaseAsync(IServiceProvider serviceProvider, Type dbContextType, bool checkdbContextType = true)
+        {
+            if (checkdbContextType && !dbContextType.IsSubclassOf(typeof(DbContext)))
+            {
+                throw new NcfDatabaseException("dbContextType 参数必须继承自 DbContext", null, dbContextType);
+            }
+
+            var mySenparcEntities = serviceProvider.GetService(dbContextType) as DbContext;
+            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
+        }
+
+
+        /// <summary>
+        /// 执行 Migrate 更新数据
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        protected virtual async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)
+        {
+            //当前Register对应的数据库上下文（DbContext）类型
+            var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+            await MigrateDatabaseAsync(serviceProvider, dbContextType, false);
+        }
 
         /// <summary>
         /// 执行 Migrate 更新数据
@@ -83,14 +115,10 @@ namespace Senparc.Ncf.XncfBase
         protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
             where TSenparcEntities : DbContext
         {
-            var mySenparcEntities = serviceProvider.GetService<TSenparcEntities>();
-            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
-
-            //if (!await mySenparcEntities.Database.EnsureCreatedAsync().ConfigureAwait(false))
-            //{
-            //    throw new NcfModuleException($"更新数据库失败：{typeof(TSenparcEntities).Name}");
-            //}
+            await MigrateDatabaseAsync(serviceProvider, typeof(TSenparcEntities));
         }
+
+        #endregion
 
         /// <summary>
         /// 安装代码

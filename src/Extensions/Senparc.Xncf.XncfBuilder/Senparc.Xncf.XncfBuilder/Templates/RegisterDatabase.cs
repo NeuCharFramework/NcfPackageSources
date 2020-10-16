@@ -81,18 +81,6 @@ namespace Senparc.Xncf.XncfBuilder.Templates
         /// 数据库前缀
         /// </summary>
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
-        /// <summary>
-        /// 设置 XncfSenparcEntities 类型
-        /// </summary>
-        public Type XncfDatabaseDbContextType => typeof(");
-            
-            #line 32 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write(@"SenparcEntities);
-
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
