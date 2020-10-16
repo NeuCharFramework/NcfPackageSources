@@ -273,16 +273,16 @@ namespace Senparc.Ncf.XncfBase
             {
                 foreach (var register in XncfRegisterManager.RegisterList)
                 {
-                    SetLog(sb, "扫描到 IXncfRegister：{register.GetType().FullName}");
+                    SetLog(sb, $"扫描到 IXncfRegister：{register.GetType().FullName}");
                     if (register.IgnoreInstall)
                     {
-                        SetLog(sb, "当前模块要求忽略安装 uid：[{justScanThisUid}]，此模块跳过");
+                        SetLog(sb, $"当前模块要求忽略安装 uid：[{justScanThisUid}]，此模块跳过");
                         continue;
                     }
 
                     if (justScanThisUid != null && register.Uid != justScanThisUid)
                     {
-                        SetLog(sb, "由于只要求更新 uid：[{justScanThisUid}]，此模块跳过");
+                        SetLog(sb, $"由于只要求更新 uid：[{justScanThisUid}]，此模块跳过");
                         continue;
                     }
                     else
@@ -310,7 +310,7 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            SetLog(sb, "扫描结束，共新增或更新 {updatedCount} 个程序集");
+            SetLog(sb, $"扫描结束，共新增或更新 {updatedCount} 个程序集");
             return sb.ToString();
         }
 
