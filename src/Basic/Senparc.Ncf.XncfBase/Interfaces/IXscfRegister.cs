@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.XncfBase.Threads;
 using System;
 using System.Collections.Concurrent;

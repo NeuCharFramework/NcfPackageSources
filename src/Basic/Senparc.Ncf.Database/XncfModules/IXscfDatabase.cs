@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,5 +40,13 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="services"></param>
         void AddXncfDatabaseModule(IServiceCollection services);
+
+
+        /// <summary>
+        /// 尝试获取 当前配置下的数据库上下文类型，如果未找到对应数据库，会抛出异常：<see cref="NcfDatabaseException"/>）
+        /// </summary>
+        /// <exception cref="NcfDatabaseException"></exception>
+        /// <returns></returns>
+        Type TryGetXncfDatabaseDbContextType { get; }
     }
 }

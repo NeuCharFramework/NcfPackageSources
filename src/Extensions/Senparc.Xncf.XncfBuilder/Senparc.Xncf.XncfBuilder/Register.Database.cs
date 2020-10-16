@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
@@ -14,6 +15,8 @@ namespace Senparc.Xncf.XncfBuilder
     {
         public const string DATABASE_PREFIX = "XncfBuilder";
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
+
+        public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
