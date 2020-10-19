@@ -47,7 +47,7 @@ namespace Senparc.Ncf.XncfBase
 
         public XncfRegisterManager(IServiceProvider serviceProvider)
         {
-            this._serviceProvider = serviceProvider;
+            this._serviceProvider = serviceProvider; 
         }
 
         /// <summary>

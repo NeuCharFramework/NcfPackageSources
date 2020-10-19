@@ -238,14 +238,13 @@ namespace Senparc.Ncf.XncfBase
 
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
-                        DbContextOptionsBuilder dbOptionBuilder;
+                        var dbOptionBuilderType = dbContextType.GetConstructors()
+                                            .First().GetParameters().First().ParameterType;
 
                         //定义 XncfSenparcEntities 实例生成
-                        Func<IServiceProvider, object> implementationFactory = s =>
+                        Func<IServiceProvider, DbContext> implementationFactory = s =>
                         {
-                            var dbOptionBuilderType = dbContextType.GetConstructors()
-                                             .First().GetParameters().First().ParameterType;
-
+                            DbContextOptionsBuilder dbOptionBuilder;
                             if (dbOptionBuilderType.GenericTypeArguments.Length > 0)
                             {
                                 //带泛型
@@ -257,7 +256,6 @@ namespace Senparc.Ncf.XncfBase
 
                                 //创建 DbContextOptionsBuilder 实例
                                 dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
-                                Console.WriteLine("dbOptionBuilder Json：" + dbOptionBuilder.ToJson(true));
                             }
                             else
                             {
@@ -285,8 +283,8 @@ namespace Senparc.Ncf.XncfBase
                                 });
 
                             //创建 SenparcEntities 实例
-                            var xncfSenparcEntities = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options });
-                            return xncfSenparcEntities;
+                            var xncfSenparcEntities = Activator.CreateInstance(dbContextType, dbOptionBuilder.Options);
+                            return xncfSenparcEntities as DbContext;
                         };
                         //添加 XncfSenparcEntities 依赖注入配置
                         services.AddScoped(dbContextType, implementationFactory);

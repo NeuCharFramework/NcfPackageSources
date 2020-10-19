@@ -54,6 +54,11 @@ namespace Senparc.Xncf.XncfBuilder
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        {
+            return base.AddXncfModule(services, configuration);
+        }
+
         #endregion
     }
 }

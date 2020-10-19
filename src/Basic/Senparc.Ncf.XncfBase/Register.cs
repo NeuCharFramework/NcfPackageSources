@@ -234,6 +234,10 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(ConfigurationMappingBase<>));
             services.AddScoped(typeof(ConfigurationMappingWithIdBase<,>));
 
+
+            services.AddScoped(typeof(DbContextOptionsBuilder<>));
+            services.AddScoped(typeof(DbContextOptionsBuilder));
+
             //微模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {

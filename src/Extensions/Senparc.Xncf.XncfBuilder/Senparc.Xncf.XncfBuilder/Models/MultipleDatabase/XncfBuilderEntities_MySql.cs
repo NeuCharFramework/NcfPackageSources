@@ -14,7 +14,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class XncfBuilderEntities_MySql : XncfBuilderEntities, IMultipleMigrationDbContext
     {
-        public XncfBuilderEntities_MySql(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public XncfBuilderEntities_MySql(DbContextOptions<XncfBuilderEntities_MySql> dbContextOptions) : base(dbContextOptions)
         {
         }
     }

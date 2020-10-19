@@ -16,7 +16,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
     public class XncfBuilderEntities_SqlServer : XncfBuilderEntities, IMultipleMigrationDbContext
     {
-        public XncfBuilderEntities_SqlServer(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public XncfBuilderEntities_SqlServer(DbContextOptions<XncfBuilderEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
     }
