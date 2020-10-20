@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.DatabaseToolkit.Functions;
 using System;
@@ -13,7 +14,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public const string DATABASE_PREFIX = "DatabaseToolkit";
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
-        public Type XncfDatabaseDbContextType => typeof(DatabaseToolkitEntities);
+        public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {

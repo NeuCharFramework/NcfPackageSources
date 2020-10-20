@@ -50,7 +50,7 @@ namespace Senparc.Xncf.DatabaseToolkit
 
             //指定需要删除的数据实体
 
-            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             //删除数据库表
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 

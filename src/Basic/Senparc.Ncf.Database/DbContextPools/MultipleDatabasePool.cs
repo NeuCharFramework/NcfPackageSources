@@ -7,6 +7,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,16 @@ namespace Senparc.Ncf.Database
             XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
 
             return "\t" + msg;
+        }
+
+        /// <summary>
+        /// 获取指定 IXncfDatabase 关联的当前数据库上下文（DbContext）
+        /// </summary>
+        /// <param name="xncfDatabaseRegister">实现了 IXncfDatabase 的实体</param>
+        /// <returns></returns>
+        public Type GetXncfDbContextType(IXncfDatabase xncfDatabaseRegister)
+        {
+            return GetXncfDbContextType(xncfDatabaseRegister.GetType());
         }
 
         /// <summary>
