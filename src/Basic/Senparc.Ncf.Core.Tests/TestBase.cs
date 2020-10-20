@@ -11,7 +11,7 @@ namespace Senparc.Ncf.Core.Tests
     [TestClass]
     public class TestBase
     {
-        public IServiceCollection ServiceCollection { get; } = new ServiceCollection();
+        public IServiceCollection ServiceCollection { get; }
         public static IConfiguration Configuration { get; set; }
 
         protected static IRegisterService registerService;
@@ -19,6 +19,7 @@ namespace Senparc.Ncf.Core.Tests
 
         public TestBase()
         {
+            ServiceCollection = new ServiceCollection();
             RegisterServiceCollection();
             RegisterServiceStart();
         }

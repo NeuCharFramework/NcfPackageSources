@@ -60,6 +60,10 @@ namespace Senparc.Ncf.Core.Models
                             {
                                 AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
                             }
+                            else if(AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
+                            {
+                                AllKeys[dbSetType].SenparcEntityTypes.Add(tryLoadDbContextType);//给这个 dbSetType 添加一个新的 DbContext 关联类型
+                            }
                         }
                     }
                     catch
@@ -78,7 +82,7 @@ namespace Senparc.Ncf.Core.Models
         public static EntitySetKeysDictionary GetEntitySetInfo(Type dbContextType)
         {
             EntitySetKeysDictionary dic = new EntitySetKeysDictionary();
-            foreach (var setKeyInfo in AllKeys.Values.Where(z => z.SenparcEntityType == dbContextType))
+            foreach (var setKeyInfo in AllKeys.Values.Where(z => z.SenparcEntityTypes.Contains(dbContextType)))
             {
                 if (!dic.ContainsKey(setKeyInfo.DbSetType))
                 {
@@ -116,13 +120,13 @@ namespace Senparc.Ncf.Core.Models
         /// <summary>
         /// SenparcEntity 类型
         /// </summary>
-        public Type SenparcEntityType { get; set; }
+        public List<Type> SenparcEntityTypes { get; set; }
 
         public SetKeyInfo(string setName, Type dbSetType, Type senparcEntityType)
         {
             SetName = setName;
             DbSetType = dbSetType;
-            SenparcEntityType = senparcEntityType;
+            SenparcEntityTypes = new List<Type>() { senparcEntityType };
         }
     }
 
