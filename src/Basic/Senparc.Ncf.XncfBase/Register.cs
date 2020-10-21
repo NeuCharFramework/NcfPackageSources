@@ -68,7 +68,7 @@ namespace Senparc.Ncf.XncfBase
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
         {
             StringBuilder sb = new StringBuilder();
-            SetLog(sb, "开始初始化扫描 XncfModules");
+            SetLog(sb, "Start scanning XncfModules");
             var scanTypesCount = 0;
             var hideTypeCount = 0;
             ConcurrentDictionary<Type, ScanTypeKind> types = new ConcurrentDictionary<Type, ScanTypeKind>();
@@ -135,7 +135,7 @@ namespace Senparc.Ncf.XncfBase
                     Console.WriteLine($"扫描程集异常退出，可能无法获得完整程序集信息：{ex.Message}");
                 }
 
-                SetLog(sb, $"满足 ScanTypeKind 条件的类型：{types.Count()}");
+                SetLog(sb, $"Satisfies the ScanTypeKind condition: {types.Count()}");
 
                 //先注册 XncfRegister
                 {
@@ -156,7 +156,7 @@ namespace Senparc.Ncf.XncfBase
 
                     foreach (var type in orderedTypes)
                     {
-                        SetLog(sb, $"扫描到 IXncfRegister：{type.FullName}");
+                        SetLog(sb, $"Scan IXncfRegister: {type.FullName}");
 
                         var register = type.Assembly.CreateInstance(type.FullName) as IXncfRegister;
 
@@ -218,10 +218,10 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            var scanResult = $"初始化扫描结束，共扫描 {scanTypesCount} 个程序集";
+            var scanResult = $"The initialization scan ended, scanning a total of {scanTypesCount} Assemblies.";
             if (hideTypeCount > 0)
             {
-                scanResult += $"。其中 {hideTypeCount} 个程序集为非安装程序集，不会被缓存";
+                scanResult += $"Among them, {hideTypeCount} assemblies are non-installed assemblies and will not be cached.";
             }
             SetLog(sb, $"{scanResult}");
 
@@ -244,7 +244,7 @@ namespace Senparc.Ncf.XncfBase
             {
                 xncfRegister.AddXncfModule(services, configuration);
             }
-            SetLog(sb, $"完成模块 services.AddXncfModule()：共扫描 {scanTypesCount} 个程序集");
+            SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
 
             //支持 AutoMapper
             //引入当前系统

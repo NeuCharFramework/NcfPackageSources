@@ -56,6 +56,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             [Description("更新名称||可使用英文、数字、下划线，不可以有空格，如：Add_Config")]
             public string MigrationName { get; set; }
 
+            [Description("输出详细日志||使用 add-migration 的 -v 参数")]
+            public SelectionList OutputVerbose { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("1","使用","",false)
+            });
+
             /// <summary>
             /// 预载入数据
             /// </summary>
@@ -122,16 +127,19 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 var commandTexts = new List<string> {
                 @$"cd {typeParam.ProjectPath}",
-                @"dir",
-                @"dotnet --version",
-                @"dotnet ef",
-                //@"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir Migrations/Test",
+                //@"dir",
+                //@"dotnet --version",
+                //@"dotnet ef",
+                //@"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir Migrations/Test",// 本行为示例，将自动根据条件执行
             };
 
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
                     var migrationDir = Path.Combine(typeParam.ProjectPath, "Migrations", $"Migrations.{dbType}");
-                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}_{dbType} -o {migrationDir} -v");
+                    var outputVerbose = typeParam.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
+                    var dbTypeSuffix = Enum.TryParse(dbType, out MultipleDatabaseType dbTypeEnum) && dbTypeEnum == MultipleDatabaseType.Default
+                                            ? "" : $"_{dbType}";//如果是SQL Lite
+                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -o {migrationDir}{outputVerbose}");
                 }
 
                 Process p = new Process();
@@ -162,6 +170,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     strOutput = e.Message;
                 }
                 result.Message = "执行完毕，请查看日志！";
+
+                if (strOutput.Contains("Build FAILED", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    result.Message += "重要提示：可能出现错误，请检查日志！";
+                }
             });
         }
     }

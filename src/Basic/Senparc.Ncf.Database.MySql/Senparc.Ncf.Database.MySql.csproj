@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.2.200.106-beta1</Version>
+    <Version>0.2.200.108-beta1</Version>
     <AssemblyName>Senparc.Ncf.Database.MySql</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.MySql</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>

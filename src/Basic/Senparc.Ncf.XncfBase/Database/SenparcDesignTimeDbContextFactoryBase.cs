@@ -13,6 +13,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace Senparc.Ncf.XncfBase.Database
 {
@@ -62,10 +63,12 @@ namespace Senparc.Ncf.XncfBase.Database
         protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
         {
+            //注释可能出现中文，对中文环境可以配置使用 GB2312
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Console.OutputEncoding = Encoding.GetEncoding("GB2312");
+
             _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
-
-            var databaseRegister = _register as IXncfRegister;
-
+            //var databaseRegister = _register as IXncfRegister;
             base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
         }
 
@@ -168,6 +171,7 @@ namespace Senparc.Ncf.XncfBase.Database
         public abstract void CreateDbContextAction();
         public virtual TDbContext CreateDbContext(string[] args)
         {
+
             //获取数据库配置
             DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
 
@@ -211,7 +215,7 @@ namespace Senparc.Ncf.XncfBase.Database
                 Console.Write(startEngineRresult);
             }
             Console.WriteLine("======= XNCF Engine Started =======");
-            Console.WriteLine($"======= 耗时: {SystemTime.DiffTotalMS(dt1)} 毫秒 =======");
+            Console.WriteLine($"======= Cost: {SystemTime.DiffTotalMS(dt1)} ms =======");
             Console.WriteLine();
 
             Console.WriteLine("=======  DatabaseConfiguration  =======");
@@ -219,8 +223,6 @@ namespace Senparc.Ncf.XncfBase.Database
 
             if (XncfDatabaseData != null)
             {
-
-
                 if (MultipleDatabasePool.Instance.TryGetValue(DatabaseConfiguration.MultipleDatabaseType, out var xncfDbContextTypes))
                 {
                     Console.WriteLine($"Supported XncfDbContextTypes: {string.Join(",", xncfDbContextTypes)}");
@@ -231,8 +233,8 @@ namespace Senparc.Ncf.XncfBase.Database
                 }
             }
 
-            Console.WriteLine($"DbContextOptionsAction 扩展: {(DatabaseConfiguration.DbContextOptionsActionExtension == null ? "未指定" : "已指定")}");
-            Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.XncfDatabaseRegister?.DatabaseUniquePrefix ?? "未指定")}");
+            Console.WriteLine($"DbContextOptionsAction Extension Action: {(DatabaseConfiguration.DbContextOptionsActionExtension == null ? "n.s." : "Specified")}");
+            Console.WriteLine($"DatabaseUniquePrefix: {(XncfDatabaseData?.XncfDatabaseRegister?.DatabaseUniquePrefix ?? "n.s.")}");
             Console.WriteLine("=======================================");
             Console.WriteLine();
 

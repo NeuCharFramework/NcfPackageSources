@@ -5,6 +5,7 @@ using Moq;
 using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using System;
+using System.Text;
 
 namespace Senparc.Ncf.Core.Tests
 {
@@ -19,6 +20,8 @@ namespace Senparc.Ncf.Core.Tests
 
         public TestBase()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             ServiceCollection = new ServiceCollection();
             RegisterServiceCollection();
             RegisterServiceStart();

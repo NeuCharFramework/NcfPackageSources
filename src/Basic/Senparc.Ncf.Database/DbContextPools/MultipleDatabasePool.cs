@@ -71,7 +71,7 @@ namespace Senparc.Ncf.Database
         /// <returns></returns>
         public string TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
-            var msg = $"检测到多数据库 DbContext：{multiDbContextAttr.XncfDatabaseRegisterType.FullName}\t>\t{xncfDatabaseDbContextType.FullName} |\t{multiDbContextAttr.MultipleDatabaseType}";
+            var msg = $"Multiple databases detected, DbContext Type：{multiDbContextAttr.XncfDatabaseRegisterType.FullName}\t>\t{xncfDatabaseDbContextType.FullName} |\t{multiDbContextAttr.MultipleDatabaseType}";
 
             //查看是否已经包含 MultipleDatabaseType 
             if (!this.ContainsKey(multiDbContextAttr.MultipleDatabaseType))
