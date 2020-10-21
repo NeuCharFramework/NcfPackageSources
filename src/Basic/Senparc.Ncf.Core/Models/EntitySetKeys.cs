@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Core.Models
                             {
                                 AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
                             }
-                            else if(AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
+                            else if(!AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
                             {
                                 AllKeys[dbSetType].SenparcEntityTypes.Add(tryLoadDbContextType);//给这个 dbSetType 添加一个新的 DbContext 关联类型
                             }

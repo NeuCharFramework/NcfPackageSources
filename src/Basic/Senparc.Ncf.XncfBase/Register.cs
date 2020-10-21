@@ -82,7 +82,8 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     //遍历所有程序集
-                    foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    foreach (var a in assemblies)
                     {
                         scanTypesCount++;
                         var aTypes = a.GetTypes();

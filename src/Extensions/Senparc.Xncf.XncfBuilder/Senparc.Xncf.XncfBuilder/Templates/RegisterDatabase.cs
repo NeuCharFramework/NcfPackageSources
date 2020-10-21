@@ -99,7 +99,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
         /// <summary>
         /// 数据库前缀
         /// </summary>
-        public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+        public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
