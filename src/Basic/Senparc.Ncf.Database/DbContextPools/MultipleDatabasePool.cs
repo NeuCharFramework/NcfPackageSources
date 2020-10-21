@@ -167,7 +167,7 @@ namespace Senparc.Ncf.Database
             //指定使用当前数据库
             currentDatabasConfiguration.UseDatabase(
                 dbOptionBuilder,
-                connectionString ?? SenparcDatabaseConfigs.ClientConnectionString,
+                connectionString ?? SenparcDatabaseConnectionConfigs.ClientConnectionString,
                 xncfDatabaseData,
                 dbContextOptionsAction
                 );

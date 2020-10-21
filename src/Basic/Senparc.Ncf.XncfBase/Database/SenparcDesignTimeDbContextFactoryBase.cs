@@ -112,7 +112,7 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <summary>
         /// SQL Server 连接字符串
         /// </summary>
-        public virtual string DatabaseConnectionStr => SenparcDatabaseConfigs.ClientConnectionString; //?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
+        public virtual string DatabaseConnectionStr => SenparcDatabaseConnectionConfigs.ClientConnectionString; //?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
 
         /// <summary>
         /// 返回 DbContext 实例

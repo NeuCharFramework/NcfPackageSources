@@ -30,10 +30,10 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                 {
                     DatabaseTypes = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
                     {
-                        SelectedValues = new[] { MultipleDatabaseType.SQLite.ToString(), MultipleDatabaseType.SqlServer.ToString()/*, MultipleDatabaseType.MySql.ToString()*/ }
+                        SelectedValues = new[] { MultipleDatabaseType.SQLite.ToString(),/*, MultipleDatabaseType.SqlServer.ToString(), */MultipleDatabaseType.MySql.ToString() }
                     },
                     DbContextName = "XncfBuilderEntities",
-                    MigrationName = "AddTest",
+                    MigrationName = "AddConfig",
                     ProjectPath = @"E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder"
                 });
 

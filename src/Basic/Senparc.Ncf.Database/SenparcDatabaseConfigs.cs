@@ -2,6 +2,8 @@
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Utility;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.Log;
 using System;
 using System.Collections.Concurrent;
@@ -9,9 +11,9 @@ using System.Collections.Generic;
 
 namespace Senparc.Ncf.Core.Config
 {
-    public static class SenparcDatabaseConfigs
+    public static class SenparcDatabaseConnectionConfigs
     {
-        public const string SENPARC_CONFIG_KEY = "__SENPARC_DATABASE_CONFIG_KEY";
+        public const string SENPARC_CONFIG_KEY = "__SENPARC_DATABASE_CONNECTION_CONFIG_KEY";
         public static ConcurrentDictionary<string, SenparcConfig> Configs
         {
             get
@@ -28,7 +30,7 @@ namespace Senparc.Ncf.Core.Config
                     catch (Exception e)
                     {
                         //Console.WriteLine(e.Message);
-                        LogUtility.WebLogger.ErrorFormat("SenparcConfigs.Configs读取错误：" + e.Message, e);
+                        LogUtility.WebLogger.ErrorFormat("SenparcConfigs.Configs 读取错误：" + e.Message, e);
                     }
                     return configs;
                 };
@@ -48,19 +50,32 @@ namespace Senparc.Ncf.Core.Config
             get
             {
                 var databaseName = Config.SiteConfig.SenparcCoreSetting.DatabaseName ?? "Client";
-                if (SenparcDatabaseConfigs.Configs != null && SenparcDatabaseConfigs.Configs.ContainsKey(databaseName))
+
+                if (SenparcDatabaseConnectionConfigs.Configs != null && SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
                 {
                     //根据数据库类型不同，区分输出连接字符串。
                     //string provider = "System.Data.SqlClient";
                     //return string.Format(@"metadata=res://*/Models.Sprent.csdl|res://*/Models.Sprent.ssdl|res://*/Models.Sprent.msl;provider={0};provider connection string='{1}';"
                     //    , provider, HandleIdeaConfigs.Config.ConnectionString);
-                    return SenparcDatabaseConfigs.Configs[databaseName].ConnectionStringFull;
+                    return SenparcDatabaseConnectionConfigs.Configs[databaseName].ConnectionStringFull;
                 }
                 else
                 {
                     throw new NcfExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置");
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取完整名称
+        /// </summary>
+        /// <param name="databaseName"></param>
+        /// <returns></returns>
+        public static string GetFullDatabaseName(string databaseName)
+        {
+            var currentDatabaseType = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.MultipleDatabaseType;
+            var fullDatabaseName =  $"{databaseName}-{currentDatabaseType}";
+            return fullDatabaseName;
         }
     }
 }
