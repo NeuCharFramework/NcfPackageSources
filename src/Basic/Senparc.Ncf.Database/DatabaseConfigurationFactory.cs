@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Senparc.Ncf.Database
 {
+    /// <summary>
+    /// 多数据库配置工厂
+    /// </summary>
     public class DatabaseConfigurationFactory
     {
         #region 单例

@@ -3,14 +3,15 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Utility;
 using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.Log;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace Senparc.Ncf.Core.Config
 {
+    /// <summary>
+    /// 数据库连接信息配置
+    /// </summary>
     public static class SenparcDatabaseConnectionConfigs
     {
         public const string SENPARC_CONFIG_KEY = "__SENPARC_DATABASE_CONNECTION_CONFIG_KEY";
@@ -74,7 +75,7 @@ namespace Senparc.Ncf.Core.Config
         public static string GetFullDatabaseName(string databaseName)
         {
             var currentDatabaseType = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.MultipleDatabaseType;
-            var fullDatabaseName =  $"{databaseName}-{currentDatabaseType}";
+            var fullDatabaseName = $"{databaseName}-{currentDatabaseType}";
             return fullDatabaseName;
         }
     }
