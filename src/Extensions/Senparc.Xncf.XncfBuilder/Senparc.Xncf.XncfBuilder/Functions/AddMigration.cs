@@ -80,9 +80,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             }
         }
 
-        public override string Name => "生成 XNCF";
+        public override string Name => "Add-Migration 命令";
 
-        public override string Description => "根据配置条件生成 XNCF";
+        public override string Description => "可视化完成多数据库的 add-migration 命令，使用 Code First 更新数据库";
 
         public override Type FunctionParameterType => typeof(Parameters);
 
