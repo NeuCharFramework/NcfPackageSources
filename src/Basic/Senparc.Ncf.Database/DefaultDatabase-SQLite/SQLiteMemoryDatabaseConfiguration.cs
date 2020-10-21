@@ -19,8 +19,6 @@ namespace Senparc.Ncf.Database.SQLite
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
         {
-            //强制使用内存数据库
-            connectionString = "Filename=:memory:";
             //其他更多配置
 
             //执行 UseSqlite（必须）

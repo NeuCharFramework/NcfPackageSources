@@ -50,7 +50,7 @@ namespace Senparc.Ncf.Core.Config
         {
             get
             {
-                var databaseName = Config.SiteConfig.SenparcCoreSetting.DatabaseName ?? "Client";
+                var databaseName = GetFullDatabaseName(Config.SiteConfig.SenparcCoreSetting.DatabaseName ?? "Client");
 
                 if (SenparcDatabaseConnectionConfigs.Configs != null && SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
                 {
