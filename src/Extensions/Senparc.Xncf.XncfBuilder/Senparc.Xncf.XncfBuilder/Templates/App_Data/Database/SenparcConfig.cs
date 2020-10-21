@@ -28,26 +28,42 @@ namespace Senparc.Xncf.XncfBuilder.Templates.App_Data.Database
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<SenparcConfigs>\r\n\t<SenparcConfig>\r\n\t\t<Id" +
-                    ">1</Id>\r\n\t\t<Name>Client</Name>\r\n\t\t<Host><![CDATA[.\\]]></Host>\r\n\t\t<DataBase><![CD" +
-                    "ATA[NCF]]></DataBase>\r\n\t\t<UserName><![CDATA[sa]]></UserName>\r\n\t\t<Password><![CDA" +
-                    "TA[123]]></Password>\r\n\t\t<Provider><![CDATA[System.Data.SqlClient]]></Provider>\r\n" +
-                    "\t\t<ConnectionString><![CDATA[data source=.\\;initial catalog=NCF;integrated secur" +
-                    "ity=True;MultipleActiveResultSets=True;App=EntityFramework]]></ConnectionString>" +
-                    "\r\n\r\n\t\t<!--本地联网测试测试数据库（可在appsettings.json中修改DatabaseName配置）-->\r\n\t\t<ConnectionStri" +
-                    "ngFull><![CDATA[Server=192.168.8.254,14480;Database=SCF_XFY; User ID=sa; Passwor" +
-                    "d=@WSXzaq1;Application Name=fxu]]></ConnectionStringFull>\r\n\t\t<ApplicationPath><!" +
-                    "[CDATA[/]]></ApplicationPath>\r\n\t</SenparcConfig>\r\n\t<SenparcConfig>\r\n\t\t<Id>2</Id>" +
-                    "\r\n\t\t<Name>Local</Name>\r\n\t\t<Host><![CDATA[.\\]]></Host>\r\n\t\t<DataBase><![CDATA[NCF]" +
-                    "]></DataBase>\r\n\t\t<UserName><![CDATA[sa]]></UserName>\r\n\t\t<Password><![CDATA[123]]" +
-                    "></Password>\r\n\t\t<Provider><![CDATA[System.Data.SqlClient]]></Provider>\r\n\t\t<Conne" +
-                    "ctionString><![CDATA[data source=.\\;initial catalog=NCF;integrated security=True" +
-                    ";MultipleActiveResultSets=True;App=EntityFramework]]></ConnectionString>\r\n\r\n\t\t<!" +
-                    "--本地Demo默认数据库（可在appsettings.json中修改DatabaseName配置）-->\r\n\t\t<ConnectionStringFull><" +
-                    "![CDATA[Server=.\\;Database=NCF; initial catalog=NCF;integrated security=True;Mul" +
-                    "tipleActiveResultSets=True;App=EntityFramework]]></ConnectionStringFull>\r\n\t\t<App" +
-                    "licationPath><![CDATA[/]]></ApplicationPath>\r\n\t</SenparcConfig>\r\n</SenparcConfig" +
-                    "s>");
+            this.Write(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<SenparcConfigs>
+	<SenparcConfig>
+		<Id>1</Id>
+		<Name>Client-SqlServer</Name>
+		<!--本地联网测试测试数据库（可在appsettings.json中修改DatabaseName配置）-->
+		<ConnectionStringFull><![CDATA[Server=192.168.8.254,14480;Database=SCF_XFY; User ID=sa; Password=@WSXzaq1;Application Name=fxu]]></ConnectionStringFull>
+		<ApplicationPath><![CDATA[/]]></ApplicationPath>
+	</SenparcConfig>
+	
+	<!-- Local 开始 -->
+	<SenparcConfig>
+		<Id>2</Id>
+		<Name>Local-SQLite</Name>
+		<!--本地数据库-->
+		<ConnectionStringFull><![CDATA[Filename=:memory:]]></ConnectionStringFull>
+		<ApplicationPath><![CDATA[/]]></ApplicationPath>
+	</SenparcConfig>
+	<SenparcConfig>
+		<Id>3</Id>
+		<Name>Local-SqlServer</Name>
+		<!--本地Demo默认数据库（可在appsettings.json中修改DatabaseName配置）-->
+		<ConnectionStringFull><![CDATA[Server=.\;Database=NCF; initial catalog=NCF;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework]]></ConnectionStringFull>
+		<ApplicationPath><![CDATA[/]]></ApplicationPath>
+	</SenparcConfig>
+	<SenparcConfig>
+		<Id>4</Id>
+		<Name>Local-MySql</Name>
+		<!--本地Demo默认数据库（可在appsettings.json中修改DatabaseName配置）-->
+		<ConnectionStringFull>
+			<![CDATA[Server=localhost;Database=NCF;Uid=root;Pwd=RootPwd4@NeuCharFramework;]]></ConnectionStringFull>
+		<ApplicationPath><![CDATA[/]]></ApplicationPath>
+	</SenparcConfig>
+	<!-- Local 结束 -->
+
+</SenparcConfigs>");
             return this.GenerationEnvironment.ToString();
         }
     }
