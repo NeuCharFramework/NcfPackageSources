@@ -28,16 +28,9 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.MultipleDatabase
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
-using Senparc.Ncf.XncfBase.Database;
-using System;
-using System.IO;
-
-namespace ");
+            this.Write("\r\nusing Microsoft.EntityFrameworkCore;\r\nusing Microsoft.Extensions.DependencyInje" +
+                    "ction;\r\nusing Senparc.Ncf.Database;\r\nusing Senparc.Ncf.Core.Models;\r\nusing Senpa" +
+                    "rc.Ncf.XncfBase.Database;\r\nusing System;\r\nusing System.IO;\r\n\r\nnamespace ");
             
             #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));

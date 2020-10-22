@@ -7,7 +7,7 @@
 //     重新生成代码，这些更改将会丢失。
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Senparc.Xncf.XncfBuilder.Templates.Models.MultipleDatabase
+namespace Senparc.Xncf.XncfBuilder.Templates.Migrations.Migrations.MySql
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.MultipleDatabase
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
+    #line 1 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.MySql\Init.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class SenparcEntities_MySql : SenparcEntities_MySqlBase
+    public partial class Init : InitBase
     {
 #line hidden
         /// <summary>
@@ -28,90 +28,30 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.MultipleDatabase
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\nusing Microsoft.EntityFrameworkCore;\r\nusing Microsoft.Extensions.DependencyInje" +
-                    "ction;\r\nusing Senparc.Ncf.Database;\r\nusing Senparc.Ncf.Core.Models;\r\nusing Senpa" +
-                    "rc.Ncf.XncfBase.Database;\r\nusing System;\r\nusing System.IO;\r\n\r\nnamespace ");
+            this.Write("\r\nusing Microsoft.EntityFrameworkCore.Migrations;\r\n\r\nnamespace ");
             
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
+            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.MySql\Init.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
+            #line 10 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Migrations\Migrations.MySql\Init.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(".Models.DatabaseModel\r\n{\r\n    [MultipleMigrationDbContext(MultipleDatabaseType.My" +
-                    "Sql, typeof(Register))]\r\n    public class ");
-            
-            #line 19 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("SenparcEntities_MySql : ");
-            
-            #line 19 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("SenparcEntities\r\n    {\r\n        public ");
-            
-            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("SenparcEntities_MySql(DbContextOptions<");
-            
-            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write(@"SenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
-        {
-        }
-    }
-    
-
-    /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -c ");
-            
-            #line 30 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("SenparcEntities_MySql -o Migrations/Migrations.MySql </para>\r\n    /// </summary>\r" +
-                    "\n    public class SenparcDbContextFactory_MySql : SenparcDesignTimeDbContextFact" +
-                    "oryBase<");
-            
-            #line 32 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write(@"SenparcEntities_MySql, Register>
+            this.Write(@".Migrations.Migrations.MySql
+{
+    public partial class Init : Migration
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //指定其他数据库
-            services.AddDatabase(""Senparc.Ncf.Database.MySql"", ""Senparc.Ncf.Database.MySql"", ""MySqlDatabaseConfiguration"");
-        };
 
-        /// <summary>
-        /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
-        /// </summary>
-        private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, ""..\\..\\..\\""/*项目根目录*/, ""..\\Senparc.Web""/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
+        }
 
-        public SenparcDbContextFactory_MySql() : base(RootDictionaryPath)
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
 
         }
@@ -129,7 +69,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.MultipleDatabase
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class SenparcEntities_MySqlBase
+    public class InitBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

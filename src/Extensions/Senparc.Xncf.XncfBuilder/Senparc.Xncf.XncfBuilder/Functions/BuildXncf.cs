@@ -240,6 +240,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "Migrations",
                         "Migrations/Migrations.SQLite",
                         "Migrations/Migrations.SqlServer",
+                        "Migrations/Migrations.MySql",
                     };
                     dbDirs.ForEach(z => AddDir(z));
 
@@ -252,7 +253,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         //重复多数据库 - SQLite
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
-
                         //重复多数据库 - SqlServer
                         new Templates.Models.MultipleDatabase.SenparcEntities_SqlServer(typeParam.OrgName, typeParam.XncfName),
                           //重复多数据库 - MySql
@@ -261,14 +261,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         //重复多数据库 - SQLite
                         new Templates.Migrations.Migrations.SQLite.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                         new Templates.Migrations.Migrations.SQLite.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-
                         //重复多数据库 - SqlServer
                         new Templates.Migrations.Migrations.SqlServer.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                         new Templates.Migrations.Migrations.SqlServer.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-
-                        // //重复多数据库
-                        //new Templates.Migrations.Migrations.MySql.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        //new Templates.Migrations.Migrations.MySql.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                         //重复多数据库 - MySql
+                        new Templates.Migrations.Migrations.MySql.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new Templates.Migrations.Migrations.MySql.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }
@@ -290,13 +288,15 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     //载入Page
 
                     var sampleFiles = new List<IXncfTemplatePage> {
-                        //重复多数据库
+                        //重复多数据库 - SQLite
                         new Templates.Migrations.Migrations.SQLite.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
                         new Templates.Migrations.Migrations.SQLite.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-
-                        //重复多数据库
+                        //重复多数据库 - SQLServer
                         new Templates.Migrations.Migrations.SqlServer.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
                         new Templates.Migrations.Migrations.SqlServer.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        //重复多数据库 - MySql
+                        new Templates.Migrations.Migrations.MySql.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new Templates.Migrations.Migrations.MySql.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
 
 
                         new ColorDto(typeParam.OrgName, typeParam.XncfName),
@@ -313,25 +313,33 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     sampleFiles.ForEach(z => WriteContent(z, sb));
 
                     //Sample快照
-                    //重复多数据库
+                    //重复多数据库 - SQLite
                     var addSampleSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(addSampleSnapshot, sb);
 
-                    //重复多数据库
+                    //重复多数据库 - SQL Server
                     var addSampleSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(addSampleSnapshot_SqlServer, sb);
+
+                    //重复多数据库 - MySQL
+                    var addSampleSnapshot_MySql = new Templates.Migrations.Migrations.MySql.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(addSampleSnapshot_MySql, sb);
 
                 }
                 else if (useDatabase)
                 {
                     //默认 Init 快照
-                    //重复多数据库
+                    //重复多数据库 - SQLite
                     var initSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(initSnapshot, sb);
 
-                    //重复多数据库
+                    //重复多数据库 - SQL Server
                     var initSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(initSnapshot_SqlServer, sb);
+
+                    //重复多数据库 - MySQL
+                    var initSnapshot_MySql = new Templates.Migrations.Migrations.MySql.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(initSnapshot_MySql, sb);
                 }
 
                 #endregion

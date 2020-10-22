@@ -4,12 +4,11 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
-using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.XncfBase;
 using System;
 using Senparc.Ncf.Database;
+using Senparc.Ncf.Core.Models;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {

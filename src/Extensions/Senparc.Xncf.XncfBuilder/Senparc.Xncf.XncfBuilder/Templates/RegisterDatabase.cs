@@ -28,32 +28,18 @@ namespace Senparc.Xncf.XncfBuilder.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using ");
+            this.Write("using Microsoft.EntityFrameworkCore;\r\nusing Microsoft.Extensions.DependencyInject" +
+                    "ion;\r\nusing System;\r\nusing Senparc.Ncf.Database;\r\nusing Senparc.Ncf.Core.Models;" +
+                    "\r\n\r\nnamespace ");
             
-            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            #line 13 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 7 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write(".Models.DatabaseModel;\r\nusing Microsoft.EntityFrameworkCore;\r\nusing Microsoft.Ext" +
-                    "ensions.DependencyInjection;\r\nusing Senparc.Ncf.XncfBase;\r\nusing System;\r\nusing " +
-                    "Senparc.Ncf.Database;\r\n\r\nnamespace ");
-            
-            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
-            
-            #line default
-            #line hidden
-            this.Write(".Xncf.");
-            
-            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            #line 13 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -63,14 +49,14 @@ namespace Senparc.Xncf.XncfBuilder.Templates
                     " /// 数据库前缀\r\n        /// </summary>\r\n        public const string DATABASE_PREFIX " +
                     "= \"");
             
-            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write("_");
             
-            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default

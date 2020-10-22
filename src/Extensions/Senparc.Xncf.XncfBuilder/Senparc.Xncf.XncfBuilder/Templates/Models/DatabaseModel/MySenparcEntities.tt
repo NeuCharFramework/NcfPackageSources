@@ -6,7 +6,7 @@
 <#@ output extension=".cs" #>
 using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel

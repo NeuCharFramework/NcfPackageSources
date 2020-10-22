@@ -32,9 +32,14 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                     {
                         SelectedValues = new[] { MultipleDatabaseType.SQLite.ToString(),/*, MultipleDatabaseType.SqlServer.ToString(), */MultipleDatabaseType.MySql.ToString() }
                     },
-                    DbContextName = "XncfBuilderEntities",
-                    MigrationName = "AddConfig",
-                    ProjectPath = @"E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder"
+
+                    //DbContextName = "XncfBuilderEntities",
+                    //MigrationName = "AddConfig",
+                    //ProjectPath = @"E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder"
+
+                    DbContextName = "MyApp2SenparcEntities",
+                    MigrationName = "AddSample",
+                    ProjectPath = @"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcDemo2.Xncf.MyApp2"
                 });
 
                 Console.WriteLine(result.ToJson(true).Replace("\\r", "\r").Replace("\\n", "\n"));

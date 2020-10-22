@@ -29,8 +29,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
         public virtual string TransformText()
         {
             this.Write("using Microsoft.EntityFrameworkCore;\r\nusing Senparc.Ncf.Database;\r\nusing Senparc." +
-                    "Ncf.Database.MultipleMigrationDbContext;\r\nusing Senparc.Ncf.XncfBase.Database;\r\n" +
-                    "\r\nnamespace ");
+                    "Ncf.Core.Models;\r\nusing Senparc.Ncf.XncfBase.Database;\r\n\r\nnamespace ");
             
             #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
