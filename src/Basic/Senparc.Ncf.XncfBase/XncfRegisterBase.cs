@@ -175,7 +175,7 @@ namespace Senparc.Ncf.XncfBase
                 //删除 Migration 记录
                 if (this is IXncfDatabase databaseRegister)
                 {
-                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
                     var migrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
                     SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
@@ -264,7 +264,7 @@ namespace Senparc.Ncf.XncfBase
                             }
 
                             //获取当前数据库配置
-                            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+                            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
                             //使用数据库
                             currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConnectionConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>

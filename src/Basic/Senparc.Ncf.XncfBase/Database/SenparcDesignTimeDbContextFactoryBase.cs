@@ -74,7 +74,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
         public override void CreateDbContextAction()
         {
-            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
             Console.WriteLine($"=======  XNCF Database  =======");
             Console.WriteLine($"Current System Database Type: {currentDatabaseConfiguration.MultipleDatabaseType}");
             Console.WriteLine();
@@ -173,7 +173,7 @@ namespace Senparc.Ncf.XncfBase.Database
         {
 
             //获取数据库配置
-            DatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+            DatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
             try
             {

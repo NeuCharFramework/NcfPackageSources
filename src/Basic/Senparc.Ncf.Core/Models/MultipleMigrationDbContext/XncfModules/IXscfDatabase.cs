@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.XncfBase
+namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
     /// XNCF 模块数据库配置

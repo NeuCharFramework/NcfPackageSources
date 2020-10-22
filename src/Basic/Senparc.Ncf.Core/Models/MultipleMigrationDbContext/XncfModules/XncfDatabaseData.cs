@@ -1,9 +1,8 @@
-﻿using Senparc.Ncf.XncfBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Database
+namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
     /// XNCF 数据库模块信息，仅在单独操作特定 XNCF 数据库模块时有用，其他情况下对象可能为 null

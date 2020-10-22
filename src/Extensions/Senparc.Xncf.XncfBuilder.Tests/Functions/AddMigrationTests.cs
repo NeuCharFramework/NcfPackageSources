@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Xncf.XncfBuilder.Functions;

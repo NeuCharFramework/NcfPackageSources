@@ -1,6 +1,6 @@
 ﻿using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
-using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;

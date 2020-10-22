@@ -1,10 +1,9 @@
 ﻿using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Database
+namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
     /// NCF 数据库帮助类

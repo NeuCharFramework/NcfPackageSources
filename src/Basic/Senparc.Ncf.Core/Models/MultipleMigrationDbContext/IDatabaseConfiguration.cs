@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 
-namespace Senparc.Ncf.Database
+namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
     /// 数据库配置接口

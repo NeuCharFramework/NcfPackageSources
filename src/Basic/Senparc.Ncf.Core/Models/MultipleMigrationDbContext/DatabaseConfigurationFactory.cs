@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.Database.SQLite;
+using Senparc.Ncf.Core.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
-namespace Senparc.Ncf.Database
+namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
     /// 多数据库配置工厂
@@ -41,14 +42,16 @@ namespace Senparc.Ncf.Database
 
         private IDatabaseConfiguration _currentDatabaseConfiguration;
 
-        public IDatabaseConfiguration CurrentDatabaseConfiguration
+        public IDatabaseConfiguration Current
         {
             get
             {
                 if (_currentDatabaseConfiguration == null)
                 {
+                    throw new NcfDatabaseException("未指定 DatabaseConfiguration！", null);
+
                     //如果未配置，则默认使用 SQLiteDatabaseConfiguration 内存数据库
-                    _currentDatabaseConfiguration = new SQLiteMemoryDatabaseConfiguration();
+                    //_currentDatabaseConfiguration = new SQLiteMemoryDatabaseConfiguration();
                 }
                 return _currentDatabaseConfiguration;
             }

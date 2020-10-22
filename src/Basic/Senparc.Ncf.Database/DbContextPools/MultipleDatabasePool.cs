@@ -7,7 +7,6 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
-using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,7 +108,7 @@ namespace Senparc.Ncf.Database
             //数据库配置工厂
             var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
             //当前数据库配置
-            var currentDatabaseConfiguration = databaseConfigurationFactory.CurrentDatabaseConfiguration;
+            var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
             //当前数据库类型
             MultipleDatabaseType multipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
             if (!this.ContainsKey(multipleDatabaseType))
@@ -163,7 +162,7 @@ namespace Senparc.Ncf.Database
             }
 
             //获取当前数据库配置
-            var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+            var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
             //指定使用当前数据库
             currentDatabasConfiguration.UseDatabase(
                 dbOptionBuilder,
@@ -175,7 +174,7 @@ namespace Senparc.Ncf.Database
             var dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as DbContext;
             if (dbContext == null)
             {
-                throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.GetType(), null);
+                throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.Current.GetType(), null);
             }
             return dbContext;
         }

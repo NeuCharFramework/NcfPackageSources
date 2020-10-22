@@ -21,30 +21,30 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel
         public <#= XncfName #>SenparcEntities_SqlServer(DbContextOptions<<#= XncfName #>SenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
+    }
+    
 
+    /// <summary>
+    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+    /// <para>1、切换至 Debug 模式</para>
+    /// <para>2、运行：PM> add-migration [更新名称] -c <#= XncfName #>SenparcEntities_SqlServer -o Migrations/Migrations.SqlServer </para>
+    /// </summary>
+    public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<<#= XncfName #>SenparcEntities_SqlServer, Register>
+    {
+        protected override Action<IServiceCollection> ServicesAction => services =>
+        {
+            //指定其他数据库
+            services.AddDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
+        };
 
         /// <summary>
-        /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-        /// <para>1、切换至 Debug 模式</para>
-        /// <para>2、运行：PM> add-migration [更新名称] -c <#= XncfName #>SenparcEntities_SqlServer_SqlServer -o Migrations/Migrations.SqlServer </para>
+        /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
         /// </summary>
-        public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<<#= XncfName #>SenparcEntities_SqlServer, Register>
+        private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"/*项目根目录*/, "..\\Senparc.Web"/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
+
+        public SenparcDbContextFactory_SqlServer() : base(RootDictionaryPath)
         {
-            protected override Action<IServiceCollection> ServicesAction => services =>
-            {
-                //指定其他数据库
-                services.AddDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
-            };
 
-            /// <summary>
-            /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
-            /// </summary>
-            private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"/*项目根目录*/, "..\\Senparc.Web"/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
-
-            public SenparcDbContextFactory_SqlServer() : base(RootDictionaryPath)
-            {
-
-            }
         }
     }
 }

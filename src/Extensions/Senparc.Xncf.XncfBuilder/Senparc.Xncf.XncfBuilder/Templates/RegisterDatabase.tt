@@ -8,7 +8,6 @@ using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.XncfBase;
-using <#= OrgName #>.Xncf.<#= XncfName #>.Models.MultipleDatabase;
 using System;
 using Senparc.Ncf.Database;
 

@@ -74,7 +74,7 @@ namespace Senparc.Ncf.Core.Config
         /// <returns></returns>
         public static string GetFullDatabaseName(string databaseName)
         {
-            var currentDatabaseType = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration.MultipleDatabaseType;
+            var currentDatabaseType = DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
             var fullDatabaseName = $"{databaseName}-{currentDatabaseType}";
             return fullDatabaseName;
         }

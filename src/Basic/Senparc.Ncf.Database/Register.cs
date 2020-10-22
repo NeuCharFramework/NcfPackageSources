@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using System;
 using System.Reflection;
 
@@ -20,7 +21,7 @@ namespace Senparc.Ncf.Database
         public static IServiceCollection AddDatabase<TDatabaseConfiguration>(this IServiceCollection services)
                 where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
-            DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration = new TDatabaseConfiguration();
+            DatabaseConfigurationFactory.Instance.Current = new TDatabaseConfiguration();
             return services;
         }
 
@@ -40,7 +41,7 @@ namespace Senparc.Ncf.Database
 
             var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, true) as IDatabaseConfiguration;
 
-            DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration = databaseConfiguration;
+            DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
             return services;
         }
 
@@ -58,7 +59,7 @@ namespace Senparc.Ncf.Database
                 throw new NcfDatabaseException($"{nameof(databaseConfiguration)} 参数不能为 null", null);
             }
 
-            DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration = databaseConfiguration;
+            DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
             return services;
         }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Ncf.Database.MySql
 {

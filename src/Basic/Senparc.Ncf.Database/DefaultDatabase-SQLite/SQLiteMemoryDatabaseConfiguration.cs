@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

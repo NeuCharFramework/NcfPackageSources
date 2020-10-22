@@ -1,4 +1,5 @@
-﻿using Senparc.Ncf.Database;
+﻿using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using System;
@@ -32,7 +33,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-                var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.CurrentDatabaseConfiguration;
+                var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
                 result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}";
             });
         }

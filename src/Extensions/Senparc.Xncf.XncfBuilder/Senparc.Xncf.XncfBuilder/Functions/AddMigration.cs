@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
 {
@@ -48,7 +49,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             [Required]
             [MaxLength(100)]
-            [Description("自定义 DbContext 名称||如：MyDemoSenparcEntities")]
+            [Description("自定义 DbContext 名称||如：MyDemoSenparcEntities（注意：不需要加数据库类型后缀）")]
             public string DbContextName { get; set; }
 
             [Required]

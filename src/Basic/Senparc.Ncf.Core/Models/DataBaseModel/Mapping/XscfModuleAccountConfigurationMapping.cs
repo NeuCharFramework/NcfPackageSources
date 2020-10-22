@@ -16,11 +16,20 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             builder.Property(e => e.Uid).HasMaxLength(100).IsRequired();
             builder.Property(e => e.MenuName).HasMaxLength(100);
             builder.Property(e => e.Version).HasMaxLength(100).IsRequired();
-            builder.Property(e => e.UpdateLog).HasColumnType("ntext").IsRequired();
             builder.Property(e => e.AllowRemove).IsRequired();
             builder.Property(e => e.MenuId).HasMaxLength(100);
             builder.Property(e => e.State).IsRequired();
             builder.Property(e => e.Icon).HasMaxLength(100);
+
+            var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
+            if (currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.MySql)
+            {
+                builder.Property(e => e.UpdateLog).HasColumnType("text").IsRequired();
+            }
+            else
+            {
+                builder.Property(e => e.UpdateLog).HasColumnType("ntext").IsRequired();
+            }
         }
     }
 }
