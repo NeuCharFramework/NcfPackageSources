@@ -40,21 +40,26 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
-            await base.MigrateDatabaseAsync<DatabaseToolkitEntities>(serviceProvider);
+            //安装或升级版本时更新数据库
+            await base.MigrateDatabaseAsync(serviceProvider);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            DatabaseToolkitEntities mySenparcEntities = serviceProvider.GetService<DatabaseToolkitEntities>();
+            #region 删除数据库（演示）
+
+            var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
+            DatabaseToolkitEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as DatabaseToolkitEntities;
 
             //指定需要删除的数据实体
 
+            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
-            //删除数据库表
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
-            await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
+            #endregion
+
+            await unsinstallFunc().ConfigureAwait(false);
         }
 
         #endregion
