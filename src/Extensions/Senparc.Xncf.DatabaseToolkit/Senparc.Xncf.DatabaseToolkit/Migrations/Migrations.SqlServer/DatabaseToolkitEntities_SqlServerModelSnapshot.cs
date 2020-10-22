@@ -43,7 +43,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LastBackupTime")
+                    b.Property<DateTime>("LastBackupTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LastUpdateTime")

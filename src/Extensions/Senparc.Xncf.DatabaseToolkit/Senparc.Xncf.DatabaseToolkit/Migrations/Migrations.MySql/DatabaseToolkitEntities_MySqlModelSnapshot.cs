@@ -40,7 +40,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("LastBackupTime")
+                    b.Property<DateTime>("LastBackupTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("LastUpdateTime")

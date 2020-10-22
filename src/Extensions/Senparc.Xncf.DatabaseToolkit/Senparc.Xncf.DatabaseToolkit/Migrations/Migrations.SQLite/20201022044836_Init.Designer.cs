@@ -9,7 +9,7 @@ using Senparc.Xncf.DatabaseToolkit;
 namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
 {
     [DbContext(typeof(DatabaseToolkitEntities))]
-    [Migration("20201022042854_Init")]
+    [Migration("20201022044836_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("LastBackupTime")
+                    b.Property<DateTime>("LastBackupTime")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")

@@ -39,7 +39,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("LastBackupTime")
+                    b.Property<DateTime>("LastBackupTime")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")

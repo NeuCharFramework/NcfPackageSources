@@ -20,7 +20,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
                     Remark = table.Column<string>(maxLength: 300, nullable: true),
                     BackupCycleMinutes = table.Column<int>(nullable: false),
                     BackupPath = table.Column<string>(maxLength: 300, nullable: true),
-                    LastBackupTime = table.Column<DateTime>(nullable: true)
+                    LastBackupTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

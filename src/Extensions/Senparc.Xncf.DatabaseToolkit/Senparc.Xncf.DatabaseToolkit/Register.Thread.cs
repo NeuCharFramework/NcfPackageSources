@@ -50,7 +50,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                             {
                                 if (dbConfig != null && dbConfig.BackupCycleMinutes > 0 && !dbConfig.BackupPath.IsNullOrEmpty())
                                 {
-                                    if (!dbConfig.LastBackupTime.HasValue || SystemTime.NowDiff(dbConfig.LastBackupTime.Value) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
+                                    if (SystemTime.NowDiff(dbConfig.LastBackupTime) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
                                     {
                                         backupParam.Path = dbConfig.BackupPath;
                                         //await backupParam.LoadData(serviceProvider);
