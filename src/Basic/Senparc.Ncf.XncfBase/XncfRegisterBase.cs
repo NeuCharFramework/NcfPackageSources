@@ -197,7 +197,6 @@ namespace Senparc.Ncf.XncfBase
                 //删除 Migration 记录
                 if (this is IXncfDatabase databaseRegister)
                 {
-
                     var migrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
                     SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
                     string sqlStr;
@@ -213,7 +212,7 @@ namespace Senparc.Ncf.XncfBase
                             break;
                     }
 
-                    int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync("sqlStr");
+                    int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync(sqlStr);
                     SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
                 }
             }
