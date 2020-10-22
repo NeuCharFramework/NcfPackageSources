@@ -37,9 +37,9 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                     //MigrationName = "AddConfig",
                     //ProjectPath = @"E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder"
 
-                    DbContextName = "MyApp2SenparcEntities",
-                    MigrationName = "AddSample",
-                    ProjectPath = @"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcDemo2.Xncf.MyApp2"
+                    DbContextName = "MyAppSenparcEntities",
+                    MigrationName = "Add_Counter",
+                    ProjectPath = @"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp"
                 });
 
                 Console.WriteLine(result.ToJson(true).Replace("\\r", "\r").Replace("\\n", "\n"));
