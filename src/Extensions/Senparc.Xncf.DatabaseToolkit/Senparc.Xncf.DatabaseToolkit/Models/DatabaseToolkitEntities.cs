@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    [MultipleMigrationDbContext(MultipleDatabaseType.SQLite, typeof(Register))]
+    [MultipleMigrationDbContext(MultipleDatabaseType.SQLite, typeof(Register))] 
     public class DatabaseToolkitEntities : XncfDatabaseDbContext
     {
         public DatabaseToolkitEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)

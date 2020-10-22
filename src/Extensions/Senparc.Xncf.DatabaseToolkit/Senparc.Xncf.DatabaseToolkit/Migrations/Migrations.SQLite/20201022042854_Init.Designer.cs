@@ -2,55 +2,53 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
 {
     [DbContext(typeof(DatabaseToolkitEntities))]
-    partial class DatabaseToolkitEntitiesModelSnapshot : ModelSnapshot
+    [Migration("20201022042854_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "3.1.6");
 
             modelBuilder.Entity("Senparc.Xncf.DatabaseToolkit.DbConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
-                        .HasColumnType("nvarchar(300)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(300);
 
                     b.Property<int>("BackupCycleMinutes")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("BackupPath")
-                        .HasColumnType("nvarchar(300)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(300);
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("LastBackupTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("nvarchar(300)")
+                        .HasColumnType("TEXT")
                         .HasMaxLength(300);
 
                     b.HasKey("Id");

@@ -18,7 +18,6 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
     {
         public AddMigrationTests()
         {
-            //base.ServiceCollection.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
         }
 
         [TestMethod]

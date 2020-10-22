@@ -63,11 +63,7 @@ namespace Senparc.Ncf.XncfBase.Database
         protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
         {
-            //注释可能出现中文，对中文环境可以配置使用 GB2312
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            Console.OutputEncoding = Encoding.GetEncoding("GB2312");
-
-            _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
+               _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
             //var databaseRegister = _register as IXncfRegister;
             base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
         }
@@ -155,6 +151,10 @@ namespace Senparc.Ncf.XncfBase.Database
         public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDictionaryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
             string databaseName = "Local", string note = null)
         {
+            //注释可能出现中文，对中文环境可以配置使用 GB2312
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Console.OutputEncoding = Encoding.GetEncoding("GB2312");
+
             SiteConfig.SenparcCoreSetting.DatabaseName = databaseName;
             CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
             //XncfDatabaseData = xncfDatabaseData;

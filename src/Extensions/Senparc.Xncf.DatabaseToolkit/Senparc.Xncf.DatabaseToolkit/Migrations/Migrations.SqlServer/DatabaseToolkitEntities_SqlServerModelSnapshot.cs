@@ -3,21 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Senparc.Xncf.DatabaseToolkit;
+using Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
 {
-    [DbContext(typeof(DatabaseToolkitEntities))]
-    [Migration("20200328162338_Add_DbConfig_LastBackupTime")]
-    partial class Add_DbConfig_LastBackupTime
+    [DbContext(typeof(DatabaseToolkitEntities_SqlServer))]
+    partial class DatabaseToolkitEntities_SqlServerModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -29,7 +27,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("AdminRemark")
                         .HasColumnType("nvarchar(300)")
@@ -49,7 +47,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Remark")
                         .HasColumnType("nvarchar(300)")

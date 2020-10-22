@@ -34,7 +34,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             {
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
                 var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
-                result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}";
+                result.Message = $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，数据库类型：{currentDatabaseConfiguration.MultipleDatabaseType}";
             });
         }
     }

@@ -249,20 +249,26 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var dbFiles = new List<IXncfTemplatePage> {
                         new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
                         new XncfBuilder.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
-                        //重复多数据库
+                        //重复多数据库 - SQLite
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
-                        //重复多数据库
+
+                        //重复多数据库 - SqlServer
                         new Templates.Models.MultipleDatabase.SenparcEntities_SqlServer(typeParam.OrgName, typeParam.XncfName),
+                          //重复多数据库 - MySql
+                        new Templates.Models.MultipleDatabase.SenparcEntities_MySql(typeParam.OrgName, typeParam.XncfName),
 
-
-                        //重复多数据库
+                        //重复多数据库 - SQLite
                         new Templates.Migrations.Migrations.SQLite.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                         new Templates.Migrations.Migrations.SQLite.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
 
-                        //重复多数据库
+                        //重复多数据库 - SqlServer
                         new Templates.Migrations.Migrations.SqlServer.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                         new Templates.Migrations.Migrations.SqlServer.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+
+                        // //重复多数据库
+                        //new Templates.Migrations.Migrations.MySql.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        //new Templates.Migrations.Migrations.MySql.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }

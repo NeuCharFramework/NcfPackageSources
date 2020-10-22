@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
@@ -15,6 +16,7 @@ namespace Senparc.Xncf.XncfBuilder
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
             //services.AddDatabase<SQLServerDatabaseConfiguration>();//指定其他数据库
+            services.AddDatabase("Senparc.Ncf.Database", "Senparc.Ncf.Database.SQLite", "SQLiteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_XncfBuilderEntities()
