@@ -68,6 +68,12 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
             #line hidden
             this.Write(@"SenparcEntities, Register>
     {
+        protected override Action<IServiceCollection> ServicesAction => services =>
+        {
+            //services.AddDatabase<SQLServerDatabaseConfiguration>();//指定其他数据库
+            services.AddDatabase(""Senparc.Ncf.Database"", ""Senparc.Ncf.Database.SQLite"", ""SQLiteMemoryDatabaseConfiguration"");
+        };
+
         /// <summary>
         /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
         /// </summary>
