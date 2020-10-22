@@ -16,6 +16,7 @@ using Senparc.Ncf.Core.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Database;
 <# } #>
 <# if(UseSample) { #>
 using <#= OrgName #>.Xncf.<#= XncfName #>.Services;
@@ -48,7 +49,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //安装或升级版本时更新数据库
-            await base.MigrateDatabaseAsync<<#= XncfName #>SenparcEntities>(serviceProvider);
+            await base.MigrateDatabaseAsync(serviceProvider);
 
             //根据安装或更新不同条件执行逻辑
             switch (installOrUpdate)
@@ -78,12 +79,13 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         {
             #region 删除数据库（演示）
 
-            <#= XncfName #>SenparcEntities mySenparcEntities = serviceProvider.GetService<<#= XncfName #>SenparcEntities>();
+            var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
+            <#= XncfName #>SenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as <#= XncfName #>SenparcEntities;
 
             //指定需要删除的数据实体
 
             //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
-            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             #endregion

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.610.109-beta1</Version>
+    <Version>0.3.320.400-beta1</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -14,9 +14,9 @@
     <Title>XNCF 模块生成器</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-      v0.1 创世
+			v0.1 创世
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
@@ -31,8 +31,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
+    <!-- 说明：因为 Pomelo.EntityFrameworkCore.MySql 一个未充分解耦的问题，这里暂时先引用，待其升级后会取消，和具体数据库充分解耦
+	           官方反馈：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1205 -->
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations.SQLServer\**" />
+    <EmbeddedResource Remove="Migrations.SQLServer\**" />
+    <None Remove="Migrations.SQLServer\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -60,12 +68,73 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </None>
+    <None Include="Templates\Migrations\Migrations.MySql\AddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSample.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.MySql\AddSampleDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSampleDesigner.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.MySql\Init.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Init.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.MySql\InitDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InitDesigner.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.MySql\SenparcEntitiesModelSnapshotForAddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.MySql\SenparcEntitiesModelSnapshotForInit.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.SQLite\AddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSample.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.SQLite\AddSampleDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSampleDesigner.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForAddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForInit.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Models\MultipleDatabase\SenparcEntities_MySql.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntities_MySql.tt</DependentUpon>
+    </None>
+    <None Include="Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntities_SqlServer.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
@@ -119,32 +188,92 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MyFunction.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\AddSample.cs">
+    <Compile Update="Templates\Migrations\Migrations.MySql\AddSample.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AddSample.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\AddSampleDesigner.cs">
+    <Compile Update="Templates\Migrations\Migrations.MySql\AddSampleDesigner.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AddSampleDesigner.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\Init.cs">
+    <Compile Update="Templates\Migrations\Migrations.MySql\Init.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Init.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\InitDesigner.cs">
+    <Compile Update="Templates\Migrations\Migrations.MySql\InitDesigner.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>InitDesigner.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.cs">
+    <Compile Update="Templates\Migrations\Migrations.MySql\SenparcEntitiesModelSnapshotForAddSample.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.cs">
+    <Compile Update="Templates\Migrations\Migrations.MySql\SenparcEntitiesModelSnapshotForInit.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SQLite\AddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSample.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SQLite\AddSampleDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSampleDesigner.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SQLite\Init.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Init.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SQLite\InitDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InitDesigner.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForAddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForInit.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SqlServer\AddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSample.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SqlServer\AddSampleDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddSampleDesigner.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SqlServer\Init.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Init.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SqlServer\InitDesigner.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InitDesigner.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForAddSample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntitiesModelSnapshotForAddSample.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForInit.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SenparcEntitiesModelSnapshotForInit.tt</DependentUpon>
@@ -173,6 +302,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SenparcDbContextFactory.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Models\MultipleDatabase\SenparcEntities_MySql.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntities_MySql.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SenparcEntities_SqlServer.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Register.cs">
       <DesignTime>True</DesignTime>
@@ -223,32 +362,91 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>_SideMenu.cs</LastGenOutput>
     </None>
-    <None Update="Templates\Migrations\AddSampleDesigner.tt">
+    <None Update="Templates\Migrations\Migrations.MySql\AddSample.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>AddSample.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.MySql\AddSampleDesigner.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.MySql\Init.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Init.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.MySql\InitDesigner.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>InitDesigner.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.MySql\SenparcEntitiesModelSnapshotForAddSample.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\Migrations\Migrations.MySql\SenparcEntitiesModelSnapshotForInit.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SQLite\AddSample.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>AddSample.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SQLite\AddSampleDesigner.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SQLite\Init.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>init.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SQLite\InitDesigner.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>initDesigner.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForInit.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SQLite\SenparcEntitiesModelSnapshotForAddSample.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Migrations\Migrations.SqlServer\AddSampleDesigner.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>AddSampleDesigner.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Migrations\AddSample.tt">
+    <None Update="Templates\Migrations\Migrations.SqlServer\AddSample.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>AddSample.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForAddSample.tt">
+    <None Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForAddSample.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>SenparcEntitiesModelSnapshotForAddSample.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Migrations\SenparcEntitiesModelSnapshotForInit.tt">
+    <None Update="Templates\Migrations\Migrations.SqlServer\SenparcEntitiesModelSnapshotForInit.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>SenparcEntitiesModelSnapshotForInit.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Migrations\InitDesigner.tt">
+    <None Update="Templates\Migrations\Migrations.SqlServer\InitDesigner.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>InitDesigner.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Migrations\Init.tt">
+    <None Update="Templates\Migrations\Migrations.SqlServer\Init.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LastGenOutput>Init.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -308,6 +506,15 @@
       <LastGenOutput>MyFunction.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\Models\MultipleDatabase\SenparcEntities_MySql.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SenparcEntities_MySql.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\Models\MultipleDatabase\SenparcEntities_SqlServer.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SenparcEntities_SqlServer.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\Register.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>Register.cs</LastGenOutput>
@@ -318,5 +525,9 @@
       <LastGenOutput>ColorService.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="Migrations\Migrations.SqlServer\" />
   </ItemGroup>
 </Project>

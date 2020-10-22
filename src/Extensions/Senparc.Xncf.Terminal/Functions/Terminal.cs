@@ -52,7 +52,6 @@ namespace Senparc.Xncf.Terminal.Functions
             switch (upperCmd)
             {
                 case "NCF RELEASE"://切换到发布状态
-
                     break;
                 case "NCF DEVELOP"://切换到开发状态
                     break;

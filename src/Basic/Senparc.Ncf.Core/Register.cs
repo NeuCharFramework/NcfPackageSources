@@ -68,12 +68,14 @@ namespace Senparc.Ncf.Core
             return services;
         }
 
+
+
         #region TryRegisterMiniCore
         /// <summary>
         /// 以最小化的过程进行自动注册，适用于缺少环境的单元测试、Code First 命令等。请勿在生产环境中使用此命令！
         /// <para>如果已经注册过，则返回 null</para>
         /// </summary>
-        public static IRegisterService TryRegisterMiniCore()
+        public static IRegisterService TryRegisterMiniCore(Action<IServiceCollection> servicesAction = null)
         {
             //初始化项目
             if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
@@ -86,7 +88,10 @@ namespace Senparc.Ncf.Core
                 {
                     Console.WriteLine("NETCoreRepository 已进行过配置，无需重复配置");
                 }
-                RegisterServiceCollection();
+                //允许从外部添加对 services 的注册操作
+                var services = RegisterServiceCollection();
+                servicesAction?.Invoke(services);
+
                 return RegisterServiceStart();
             }
             return null;
@@ -100,13 +105,14 @@ namespace Senparc.Ncf.Core
         /// <summary>
         /// 注册 IServiceCollection 和 MemoryCache
         /// </summary>
-        private static void RegisterServiceCollection()
+        private static IServiceCollection RegisterServiceCollection()
         {
             var serviceCollection = new ServiceCollection();
             var configBuilder = new ConfigurationBuilder();
             var config = configBuilder.Build();
             serviceCollection.AddSenparcGlobalServices(config);
             serviceCollection.AddMemoryCache();//使用内存缓存
+            return serviceCollection;
         }
 
 
@@ -117,7 +123,7 @@ namespace Senparc.Ncf.Core
         {
             //注册
             var senparcSetting = CreateSenparcSetting();
-            return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { });
+            return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { }, autoScanExtensionCacheStrategies);
         }
         #endregion
     }

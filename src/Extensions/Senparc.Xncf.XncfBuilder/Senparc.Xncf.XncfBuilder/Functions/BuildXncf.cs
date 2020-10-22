@@ -115,7 +115,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             }
         }
 
-
         public override string Name => "生成 XNCF";
 
         public override string Description => "根据配置条件生成 XNCF";
@@ -237,21 +236,37 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         "App_Data/Database",
                         "Models",
                         "Models/DatabaseModel",
-                        "Migrations"
+                        "Models/MultipleDatabase",
+                        "Migrations",
+                        "Migrations/Migrations.SQLite",
+                        "Migrations/Migrations.SqlServer",
+                        "Migrations/Migrations.MySql",
                     };
                     dbDirs.ForEach(z => AddDir(z));
 
-                    var initMigrationTime = Init.GetFileNamePrefix();
+                    var initMigrationTime = Templates.Migrations.Migrations.SqlServer.Init.GetFileNamePrefix();
 
                     //载入Page
                     var dbFiles = new List<IXncfTemplatePage> {
                         new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
                         new XncfBuilder.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
+                        //重复多数据库 - SQLite
                         new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
                         new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
+                        //重复多数据库 - SqlServer
+                        new Templates.Models.MultipleDatabase.SenparcEntities_SqlServer(typeParam.OrgName, typeParam.XncfName),
+                          //重复多数据库 - MySql
+                        new Templates.Models.MultipleDatabase.SenparcEntities_MySql(typeParam.OrgName, typeParam.XncfName),
 
-                        new Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        new InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime)
+                        //重复多数据库 - SQLite
+                        new Templates.Migrations.Migrations.SQLite.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new Templates.Migrations.Migrations.SQLite.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        //重复多数据库 - SqlServer
+                        new Templates.Migrations.Migrations.SqlServer.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new Templates.Migrations.Migrations.SqlServer.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                         //重复多数据库 - MySql
+                        new Templates.Migrations.Migrations.MySql.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
+                        new Templates.Migrations.Migrations.MySql.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
                     };
                     dbFiles.ForEach(z => WriteContent(z, sb));
                 }
@@ -268,12 +283,21 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     };
                     sampleDirs.ForEach(z => AddDir(z));
 
-                    var sampleMigrationTime = Init.GetFileNamePrefix(SystemTime.Now.DateTime.AddSeconds(1));
+                    var sampleMigrationTime = Templates.Migrations.Migrations.SqlServer.Init.GetFileNamePrefix(SystemTime.Now.DateTime.AddSeconds(1));
 
                     //载入Page
+
                     var sampleFiles = new List<IXncfTemplatePage> {
-                        new AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        new AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        //重复多数据库 - SQLite
+                        new Templates.Migrations.Migrations.SQLite.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new Templates.Migrations.Migrations.SQLite.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        //重复多数据库 - SQLServer
+                        new Templates.Migrations.Migrations.SqlServer.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new Templates.Migrations.Migrations.SqlServer.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        //重复多数据库 - MySql
+                        new Templates.Migrations.Migrations.MySql.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+                        new Templates.Migrations.Migrations.MySql.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
+
 
                         new ColorDto(typeParam.OrgName, typeParam.XncfName),
                         new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
@@ -289,16 +313,34 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     sampleFiles.ForEach(z => WriteContent(z, sb));
 
                     //Sample快照
-                    var addSampleSnapshot = new SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    //重复多数据库 - SQLite
+                    var addSampleSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(addSampleSnapshot, sb);
+
+                    //重复多数据库 - SQL Server
+                    var addSampleSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(addSampleSnapshot_SqlServer, sb);
+
+                    //重复多数据库 - MySQL
+                    var addSampleSnapshot_MySql = new Templates.Migrations.Migrations.MySql.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(addSampleSnapshot_MySql, sb);
+
                 }
                 else if (useDatabase)
                 {
                     //默认 Init 快照
-                    var initSnapshot = new SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    //重复多数据库 - SQLite
+                    var initSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
                     WriteContent(initSnapshot, sb);
-                }
 
+                    //重复多数据库 - SQL Server
+                    var initSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(initSnapshot_SqlServer, sb);
+
+                    //重复多数据库 - MySQL
+                    var initSnapshot_MySql = new Templates.Migrations.Migrations.MySql.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
+                    WriteContent(initSnapshot_MySql, sb);
+                }
 
                 #endregion
 
@@ -318,9 +360,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                     var areaBaseDllPath = Path.Combine(dllPath, "Senparc.Ncf.AreaBase.dll");
                     areaBaseVersion =
-                    FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(areaBaseDllPath).Location).ProductVersion; 
+                    FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(areaBaseDllPath).Location).ProductVersion;
                 }
-                catch 
+                catch
                 {
                 }
 
@@ -340,75 +382,75 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 };
                 WriteContent(csprojPage, sb);
 
-            #endregion
+                #endregion
 
-            #region 自动附加项目
+                #region 自动附加项目
 
-            var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
-            if (File.Exists(webProjFilePath))
-            {
-                XDocument webCsproj = XDocument.Load(webProjFilePath);
-                if (!webCsproj.ToString().Contains(csprojPage.ProjectFilePath))
+                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
+                if (File.Exists(webProjFilePath))
                 {
-                    var referenceNode = new XElement("ProjectReference");
-                    referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
-                    var newNode = new XElement("ItemGroup", referenceNode);
-                    webCsproj.Root.Add(newNode);
-                    webCsproj.Save(webProjFilePath);
-                }
-            }
-
-            #endregion
-
-            #region 生成 .sln
-
-            //生成 .sln
-            if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
-            {
-                result.Success = false;
-                result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
-                sb.AppendLine($"操作未全部完成：{result.Message}");
-            }
-            else if (File.Exists(typeParam.SlnFilePath))
-            {
-                //是否创建新的 .sln 文件
-                var useNewSlnFile = typeParam.NewSlnFile.SelectedValues.Contains("new");
-
-                var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
-                string newSlnFileName = slnFileName;
-                string newSlnFilePath = typeParam.SlnFilePath;
-                if (useNewSlnFile)
-                {
-                    newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
-                    newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
-                    File.Copy(typeParam.SlnFilePath, newSlnFilePath);
-                    sb.AppendLine($"完成 {newSlnFilePath} 文件创建");
-                }
-                else
-                {
-                    var backupSln = typeParam.NewSlnFile.SelectedValues.Contains("backup");
-                    var backupFileName = $"{slnFileName}-backup-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
-                    var backupFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), backupFileName);
-                    File.Copy(typeParam.SlnFilePath, backupFilePath);
-                    sb.AppendLine($"完成 {newSlnFilePath} 文件备份");
-                }
-
-
-                result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
-
-                //修改 new Sln
-                string slnContent = null;
-                using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
-                {
-                    using (StreamReader sr = new StreamReader(fs))
+                    XDocument webCsproj = XDocument.Load(webProjFilePath);
+                    if (!webCsproj.ToString().Contains(csprojPage.ProjectFilePath))
                     {
-                        slnContent = sr.ReadToEnd();
-                        sr.Close();
+                        var referenceNode = new XElement("ProjectReference");
+                        referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
+                        var newNode = new XElement("ItemGroup", referenceNode);
+                        webCsproj.Root.Add(newNode);
+                        webCsproj.Save(webProjFilePath);
                     }
                 }
 
-                var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
-                slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
+                #endregion
+
+                #region 生成 .sln
+
+                //生成 .sln
+                if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
+                {
+                    result.Success = false;
+                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                    sb.AppendLine($"操作未全部完成：{result.Message}");
+                }
+                else if (File.Exists(typeParam.SlnFilePath))
+                {
+                    //是否创建新的 .sln 文件
+                    var useNewSlnFile = typeParam.NewSlnFile.SelectedValues.Contains("new");
+
+                    var slnFileName = Path.GetFileName(typeParam.SlnFilePath);
+                    string newSlnFileName = slnFileName;
+                    string newSlnFilePath = typeParam.SlnFilePath;
+                    if (useNewSlnFile)
+                    {
+                        newSlnFileName = $"{slnFileName}-new-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                        newSlnFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), newSlnFileName);
+                        File.Copy(typeParam.SlnFilePath, newSlnFilePath);
+                        sb.AppendLine($"完成 {newSlnFilePath} 文件创建");
+                    }
+                    else
+                    {
+                        var backupSln = typeParam.NewSlnFile.SelectedValues.Contains("backup");
+                        var backupFileName = $"{slnFileName}-backup-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
+                        var backupFilePath = Path.Combine(Path.GetDirectoryName(typeParam.SlnFilePath), backupFileName);
+                        File.Copy(typeParam.SlnFilePath, backupFilePath);
+                        sb.AppendLine($"完成 {newSlnFilePath} 文件备份");
+                    }
+
+
+                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
+
+                    //修改 new Sln
+                    string slnContent = null;
+                    using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
+                    {
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            slnContent = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                    }
+
+                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
+                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
 EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
 EndProject
 Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{csprojPage.RelativeFilePath}"", ""{projGuid}""
@@ -423,35 +465,35 @@ EndProject
 		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
 ").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
 		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
-                System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
-                sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
-                result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
-            }
-            else
-            {
-                result.Success = false;
-                result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
-                sb.AppendLine($"操作未全部完成：{result.Message}");
-            }
+                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
+                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
+                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                    sb.AppendLine($"操作未全部完成：{result.Message}");
+                }
 
-            #endregion
+                #endregion
 
-            #region 将当前设置保存到数据库
+                #region 将当前设置保存到数据库
 
-            var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
-            var config = configService.GetObject(z => true);
-            if (config == null)
-            {
-                config = new Config(typeParam.SlnFilePath, typeParam.OrgName, typeParam.XncfName, typeParam.Version, typeParam.MenuName, typeParam.Icon);
-            }
-            else
-            {
-                configService.Mapper.Map(typeParam, config);
-            }
-            configService.SaveObject(config);
+                var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
+                var config = configService.GetObject(z => true);
+                if (config == null)
+                {
+                    config = new Config(typeParam.SlnFilePath, typeParam.OrgName, typeParam.XncfName, typeParam.Version, typeParam.MenuName, typeParam.Icon);
+                }
+                else
+                {
+                    configService.Mapper.Map(typeParam, config);
+                }
+                configService.SaveObject(config);
 
-            #endregion
-        });
+                #endregion
+            });
         }
-}
+    }
 }

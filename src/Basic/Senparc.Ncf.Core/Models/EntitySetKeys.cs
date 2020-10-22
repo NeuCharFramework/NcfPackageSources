@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Exceptions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -53,7 +56,14 @@ namespace Senparc.Ncf.Core.Models
                         if (prop.PropertyType.Name.IndexOf("DbSet") != -1 && prop.PropertyType.GetGenericArguments().Length > 0)
                         {
                             var dbSetType = prop.PropertyType.GetGenericArguments()[0];
-                            AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
+                            if (!AllKeys.ContainsKey(dbSetType))
+                            {
+                                AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
+                            }
+                            else if(!AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
+                            {
+                                AllKeys[dbSetType].SenparcEntityTypes.Add(tryLoadDbContextType);//给这个 dbSetType 添加一个新的 DbContext 关联类型
+                            }
                         }
                     }
                     catch
@@ -72,9 +82,16 @@ namespace Senparc.Ncf.Core.Models
         public static EntitySetKeysDictionary GetEntitySetInfo(Type dbContextType)
         {
             EntitySetKeysDictionary dic = new EntitySetKeysDictionary();
-            foreach (var setKeyInfo in AllKeys.Values.Where(z => z.SenparcEntityType == dbContextType))
+            foreach (var setKeyInfo in AllKeys.Values.Where(z => z.SenparcEntityTypes.Contains(dbContextType)))
             {
-                dic.TryAdd(setKeyInfo.DbSetType, setKeyInfo);
+                if (!dic.ContainsKey(setKeyInfo.DbSetType))
+                {
+                    var addSuccess = dic.TryAdd(setKeyInfo.DbSetType, setKeyInfo);
+                    if (!addSuccess)
+                    {
+                        SenparcTrace.BaseExceptionLog(new NcfDatabaseException($"GetEntitySetInfo 发生异常，DbSetType：{setKeyInfo.DbSetType.Name}，setKeyInfo：{setKeyInfo.ToJson()}", null, dbContextType));
+                    }
+                }
             }
             return dic;
         }
@@ -103,13 +120,13 @@ namespace Senparc.Ncf.Core.Models
         /// <summary>
         /// SenparcEntity 类型
         /// </summary>
-        public Type SenparcEntityType { get; set; }
+        public List<Type> SenparcEntityTypes { get; set; }
 
         public SetKeyInfo(string setName, Type dbSetType, Type senparcEntityType)
         {
             SetName = setName;
             DbSetType = dbSetType;
-            SenparcEntityType = senparcEntityType;
+            SenparcEntityTypes = new List<Type>() { senparcEntityType };
         }
     }
 

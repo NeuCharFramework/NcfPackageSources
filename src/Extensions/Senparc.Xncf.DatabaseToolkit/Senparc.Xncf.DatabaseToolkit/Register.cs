@@ -20,7 +20,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Name => "Senparc.Xncf.DatabaseToolkit";
 
         public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.5.8.2";//必须填写版本号
+        public override string Version => "0.5.11";//必须填写版本号
 
         public override string MenuName => "数据库工具包";
         public override string Icon => "fa fa-database";
@@ -32,6 +32,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override IList<Type> Functions => new[] {
             typeof(Functions.SetConfig),
             typeof(Functions.BackupDatabase),
+            typeof(Functions.ShowDatabaseConfiguration),
             typeof(Functions.ExportSQL),
             typeof(Functions.CheckUpdate),
             typeof(Functions.UpdateDatabase),
@@ -39,21 +40,26 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
-            await base.MigrateDatabaseAsync<DatabaseToolkitEntities>(serviceProvider);
+            //安装或升级版本时更新数据库
+            await base.MigrateDatabaseAsync(serviceProvider);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            DatabaseToolkitEntities mySenparcEntities = serviceProvider.GetService<DatabaseToolkitEntities>();
+            #region 删除数据库（演示）
+
+            var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
+            DatabaseToolkitEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as DatabaseToolkitEntities;
 
             //指定需要删除的数据实体
 
-            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XncfDatabaseDbContextType).Keys.ToArray();
-            //删除数据库表
+            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
-            await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
+            #endregion
+
+            await unsinstallFunc().ConfigureAwait(false);
         }
 
         #endregion

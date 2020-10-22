@@ -5,15 +5,16 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 using Microsoft.EntityFrameworkCore;
-using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel
 {
+    [MultipleMigrationDbContext(MultipleDatabaseType.SQLite, typeof(Register))]
     public class <#= XncfName #>SenparcEntities : XncfDatabaseDbContext
     {
-        public override IXncfDatabase XncfDatabaseRegister => new Register();
-        public <#= XncfName #>SenparcEntities(DbContextOptions<<#= XncfName #>SenparcEntities> dbContextOptions) : base(dbContextOptions)
+        public <#= XncfName #>SenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 

@@ -28,47 +28,40 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("using Microsoft.EntityFrameworkCore;\r\nusing Senparc.Ncf.XncfBase;\r\nusing Senparc." +
-                    "Ncf.XncfBase.Database;\r\n\r\nnamespace ");
+            this.Write("using Microsoft.EntityFrameworkCore;\r\nusing Senparc.Ncf.Database;\r\nusing Senparc." +
+                    "Ncf.Core.Models;\r\nusing Senparc.Ncf.XncfBase.Database;\r\n\r\nnamespace ");
             
-            #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 11 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write(".Models.DatabaseModel\r\n{\r\n    public class ");
+            this.Write(".Models.DatabaseModel\r\n{\r\n    [MultipleMigrationDbContext(MultipleDatabaseType.SQ" +
+                    "Lite, typeof(Register))]\r\n    public class ");
             
-            #line 13 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities : XncfDatabaseDbContext\r\n    {\r\n        public override IXncfData" +
-                    "base XncfDatabaseRegister => new Register();\r\n        public ");
+            this.Write("SenparcEntities : XncfDatabaseDbContext\r\n    {\r\n        public ");
             
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
-            this.Write("SenparcEntities(DbContextOptions<");
+            this.Write("SenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)\r\n    " +
+                    "    {\r\n        }\r\n\r\n        ");
             
-            #line 16 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
-            
-            #line default
-            #line hidden
-            this.Write("SenparcEntities> dbContextOptions) : base(dbContextOptions)\r\n        {\r\n        }" +
-                    "\r\n\r\n        ");
-            
-            #line 20 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 21 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
  if(UseSample) 
         {
             
@@ -76,7 +69,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
             #line hidden
             this.Write("        public DbSet<Color> Colors { get; set; }\r\n        ");
             
-            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
+            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\MySenparcEntities.tt"
  } 
             
             #line default

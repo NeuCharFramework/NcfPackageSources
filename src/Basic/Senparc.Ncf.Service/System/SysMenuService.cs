@@ -64,7 +64,7 @@ namespace Senparc.Ncf.Service
             }
             if (isRepeat && sysMenuDto.MenuType == MenuType.按钮)
             {
-                throw new NCFExceptionBase($"ResourceCode：{sysMenuDto.ResourceCode}已重复");
+                throw new NcfExceptionBase($"ResourceCode：{sysMenuDto.ResourceCode}已重复");
             }
             menu.ResourceCode = sysMenuDto.MenuType == MenuType.按钮 ? menu.ResourceCode : string.Empty;
             await SaveObjectAsync(menu);

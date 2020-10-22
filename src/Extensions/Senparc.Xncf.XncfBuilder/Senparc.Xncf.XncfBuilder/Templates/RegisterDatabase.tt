@@ -4,11 +4,11 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
-using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.XncfBase;
 using System;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Core.Models;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {
@@ -26,11 +26,11 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
         /// 数据库前缀
         /// </summary>
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
-        /// <summary>
-        /// 设置 XncfSenparcEntities 类型
-        /// </summary>
-        public Type XncfDatabaseDbContextType => typeof(<#= XncfName #>SenparcEntities);
 
+        /// <summary>
+        /// 数据库前缀
+        /// </summary>
+        public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {

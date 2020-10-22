@@ -25,7 +25,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         /// <summary>
         /// 上次备份时间
         /// </summary>
-        public DateTime? LastBackupTime { get; private set; }
+        public DateTime LastBackupTime { get; private set; }
 
         private DbConfig() { }
 
@@ -33,6 +33,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         {
             BackupCycleMinutes = backupCycleMinutes;
             BackupPath = backupPath;
+            LastBackupTime = SystemTime.Now.AddDays(-1).DateTime;
         }
 
         public void RecordBackupTime()

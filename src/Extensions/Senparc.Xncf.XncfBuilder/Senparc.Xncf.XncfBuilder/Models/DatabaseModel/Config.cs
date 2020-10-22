@@ -13,42 +13,42 @@ namespace Senparc.Xncf.XncfBuilder
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class Config : EntityBase<int>
     {
-            /// <summary>
-            /// Sln 文件路径
-            /// </summary>
-            [MaxLength(300)]
-            public string SlnFilePath { get; private set; }
-            /// <summary>
-            /// 组织名称
-            /// </summary>
-            [MaxLength(300)]
-            public string OrgName { get; private set; }
+        /// <summary>
+        /// Sln 文件路径
+        /// </summary>
+        [MaxLength(300)]
+        public string SlnFilePath { get; private set; }
+        /// <summary>
+        /// 组织名称
+        /// </summary>
+        [MaxLength(300)]
+        public string OrgName { get; private set; }
 
-            /// <summary>
-            /// 模块名称
-            /// </summary>
-            [MaxLength(50)]
-            public string XncfName { get; private set; }
+        /// <summary>
+        /// 模块名称
+        /// </summary>
+        [MaxLength(50)]
+        public string XncfName { get; private set; }
 
-            /// <summary>
-            /// 版本号
-            /// </summary>
-            [MaxLength(100)]
-            public string Version { get; private set; }
+        /// <summary>
+        /// 版本号
+        /// </summary>
+        [MaxLength(100)]
+        public string Version { get; private set; }
 
-            /// <summary>
-            /// 菜单名称
-            /// </summary>
-            [MaxLength(100)]
-            public string MenuName { get; private set; }
+        /// <summary>
+        /// 菜单名称
+        /// </summary>
+        [MaxLength(100)]
+        public string MenuName { get; private set; }
 
-            /// <summary>
-            /// 图标
-            /// </summary>
-            [MaxLength(100)]
-            public string Icon { get; private set; }
+        /// <summary>
+        /// 图标
+        /// </summary>
+        [MaxLength(100)]
+        public string Icon { get; private set; }
 
-            private Config() { }
+        private Config() { }
 
         public Config(string slnFilePath, string orgName, string xncfName, string version, string menuName, string icon)
         {

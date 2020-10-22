@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Threads;
@@ -29,6 +30,15 @@ namespace Senparc.Xncf.DatabaseToolkit
                         using (var scope = app.ApplicationServices.CreateScope())
                         {
                             var serviceProvider = scope.ServiceProvider;
+
+                            //检测当前模块是否可用
+                            XncfRegisterManager xncfRegisterManager = new XncfRegisterManager(serviceProvider);
+                            var xncfIsValiable = await xncfRegisterManager.CheckXncfValiable(this);
+                            if (!xncfIsValiable)
+                            {
+                                throw new NcfModuleException($"{this.MenuName} 模块当前不可用，跳过数据库自动备份轮询");
+                            }
+
                             //初始化数据库备份方法
                             BackupDatabase backupDatabase = new BackupDatabase(serviceProvider);
                             //初始化参数
@@ -40,7 +50,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                             {
                                 if (dbConfig != null && dbConfig.BackupCycleMinutes > 0 && !dbConfig.BackupPath.IsNullOrEmpty())
                                 {
-                                    if (!dbConfig.LastBackupTime.HasValue || SystemTime.NowDiff(dbConfig.LastBackupTime.Value) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
+                                    if (SystemTime.NowDiff(dbConfig.LastBackupTime) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
                                     {
                                         backupParam.Path = dbConfig.BackupPath;
                                         //await backupParam.LoadData(serviceProvider);

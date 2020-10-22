@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.XncfBase.Threads;
 using System;
 using System.Collections.Concurrent;
@@ -105,12 +106,5 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
         IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService);
-
-        /// <summary>
-        /// 获取 EF Code First MigrationHistory 数据库表名
-        /// </summary>
-        /// <returns></returns>
-        string GetDatabaseMigrationHistoryTableName();
-
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Data.SqlClient;
+//using Microsoft.Data.SqlClient;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Cache;
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using System.Data.Common;
 
 namespace Senparc.Ncf.Core.Models.VD
 {
@@ -80,7 +81,7 @@ namespace Senparc.Ncf.Core.Models.VD
             {
                 FullSystemConfig = fullSystemConfigCache.Data;
             }
-            catch (SqlException)
+            catch (/*SqlException*/ DbException)
             {
                 //如数据库未创建
                 context.Result = new RedirectResult("/Install");

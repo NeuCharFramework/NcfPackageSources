@@ -52,11 +52,19 @@ namespace Senparc.Ncf.XncfBase.Threads
                             }
                             catch (Exception ex)
                             {
-                                SenparcTrace.BaseExceptionLog(ex);
-                                await threadInfo.ExceptionHandler?.Invoke(ex);
+                                if (threadInfo.ExceptionHandler != null)
+                                {
+                                    await threadInfo.ExceptionHandler.Invoke(ex);
+                                }
+                                else
+                                {
+                                    SenparcTrace.BaseExceptionLog(ex);
+                                }
                             }
-                            //进行延迟
-                            await Task.Delay(threadInfo.IntervalTime);
+                            finally {
+                                //进行延迟
+                                await Task.Delay(threadInfo.IntervalTime);
+                            }
                         }
                     });
                     thread.Name = $"{register.Uid}-{threadInfo.Name ?? Guid.NewGuid().ToString()}";
