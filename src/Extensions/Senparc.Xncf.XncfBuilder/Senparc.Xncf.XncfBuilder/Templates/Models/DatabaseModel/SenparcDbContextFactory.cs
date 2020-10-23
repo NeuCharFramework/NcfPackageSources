@@ -43,16 +43,17 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
             #line default
             #line hidden
             this.Write(".Models.DatabaseModel;\r\nusing Senparc.Ncf.XncfBase.Database;\r\nusing System;\r\nusin" +
-                    "g System.IO;\r\n\r\nnamespace ");
+                    "g System.IO;\r\nusing Microsoft.Extensions.DependencyInjection;\r\nusing Senparc.Ncf" +
+                    ".Database;\r\n\r\nnamespace ");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 12 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -61,7 +62,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel
                     "n 使用，在生产环境不会执行）\r\n    /// </summary>\r\n    public class SenparcDbContextFactory : " +
                     "SenparcDesignTimeDbContextFactoryBase<");
             
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
+            #line 19 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Models\DatabaseModel\SenparcDbContextFactory.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
