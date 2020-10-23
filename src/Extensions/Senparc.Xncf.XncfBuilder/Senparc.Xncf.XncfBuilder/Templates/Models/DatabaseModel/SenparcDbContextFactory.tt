@@ -8,6 +8,8 @@ using <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Database;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {
