@@ -24,7 +24,6 @@ using System.Diagnostics;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
 {
-
     public class BuildXncf : FunctionBase
     {
         public BuildXncf(IServiceProvider serviceProvider) : base(serviceProvider)

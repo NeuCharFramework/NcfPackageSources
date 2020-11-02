@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.Core.Models;
+using System.Data.Common;
 
 namespace Senparc.Ncf.Database.SqlServer
 {
@@ -31,5 +32,19 @@ namespace Senparc.Ncf.Database.SqlServer
             {
                 optionsBuilder.UseSqlServer(connectionString, actionBase);//beta6
             };
+
+        public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
+        {
+            return $@"Backup Database {dbConnection.Database} To disk='{backupFilePath}'";
+        }
+
+        public override string GetDropTableSql(DbContext dbContext, string tableName)
+        {
+            //var schma = dbContext.Model.FindEntityType(type).GetSchema();
+            //TODO: 增加 schma
+            return $"DROP TABLE {tableName}";
+        }
+
+
     }
 }

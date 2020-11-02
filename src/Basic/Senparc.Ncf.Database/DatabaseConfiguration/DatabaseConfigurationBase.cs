@@ -5,6 +5,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
+using System.Data.Common;
 
 namespace Senparc.Ncf.Database
 {
@@ -53,6 +54,23 @@ namespace Senparc.Ncf.Database
         public abstract Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension { get; }
 
         public abstract Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
+
+        /// <summary>
+        /// 备份数据库方法
+        /// <para>如果返回null，则在方法内部完成备份程序</para>
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="backupFilePath"></param>
+        /// <returns></returns>
+        public abstract string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath);
+        /// <summary>
+        /// 删除指定表Sql
+        /// <para>如果返回null，则在方法内部完成删除操作</para>
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public abstract string GetDropTableSql(DbContext dbContext, string tableName);
 
         /// <summary>
         /// 使用数据库，如：

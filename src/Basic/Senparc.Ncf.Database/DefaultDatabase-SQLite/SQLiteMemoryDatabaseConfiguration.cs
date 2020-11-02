@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Database.SQLite
 {
@@ -29,5 +32,17 @@ namespace Senparc.Ncf.Database.SQLite
         {
             //更多数据库操作独立配置（非必须）
         };
+
+
+        public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
+        {
+            (dbConnection as SqliteConnection).BackupDatabase(new SqliteConnection("data source=" + backupFilePath));
+            return null;
+        }
+
+        public override string GetDropTableSql(DbContext dbContext, string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
