@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.DatabaseToolkit.Functions
 {
@@ -90,12 +91,18 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
                     var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
                     RecordLog(sb, "获取 ISenparcEntities 对象成功");
 
-                    //TODO:还需要支持更多的数据库
-                    var sql = $@"Backup Database {senparcEntities.Database.GetDbConnection().Database} To disk='{path}'";
-
-                    RecordLog(sb, "准备执行 SQL：" + sql);
-                    int affectRows = senparcEntities.Database.ExecuteSqlRaw(sql);
-                    RecordLog(sb, "执行完毕，备份结束。affectRows：" + affectRows);
+                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
+                    var backupSql = currentDatabaseConfiguration.GetBackupDatabaseSql(senparcEntities.Database.GetDbConnection(), path);
+                    if (backupSql.IsNullOrEmpty())
+                    {
+                        RecordLog(sb, $"{currentDatabaseConfiguration.GetType().Name} 内部已处理，无需单独执行 SQL");
+                    }
+                    else
+                    {
+                        RecordLog(sb, "准备执行 SQL：" + backupSql);
+                        int affectRows = senparcEntities.Database.ExecuteSqlRaw(backupSql);
+                        RecordLog(sb, "执行完毕，备份结束。affectRows：" + affectRows);
+                    }
 
                     if (typeParam.Options.SelectedValues.Contains($"{(int)BackupDatabaseOptions.校验备份成功}"))
                     {

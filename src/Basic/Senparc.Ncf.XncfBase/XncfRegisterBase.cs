@@ -160,32 +160,32 @@ namespace Senparc.Ncf.XncfBase
                 {
                     try
                     {
-                        var schma = databaseDbContext.Model.FindEntityType(type).GetSchema();
+
                         var tableName = databaseDbContext.Model.FindEntityType(type).GetTableName();
-                        SenparcTrace.SendCustomLog("开始删除表格", $"[schma].[tableName]：[{schma}].[{tableName}]");
-                        //mySenparcEntities.Colors.FromSqlRaw($"DELETE FROM [{key}]");
 
-                        string fullTableName = $"[{tableName}]";
-                        if (!schma.IsNullOrEmpty())
-                        {
-                            fullTableName = $"[{schma}].{fullTableName}";
-                        }
+                        #region 适用于 SQL Server
+                        //SenparcTrace.SendCustomLog("开始删除表格", $"[schma].[tableName]：[{schma}].[{tableName}]");
+                        ////mySenparcEntities.Colors.FromSqlRaw($"DELETE FROM [{key}]");
 
-                        int keyExeCount;
-                        string sqlStr;
-                        switch (currentDatabaseConfiguration.MultipleDatabaseType)
+                        //string fullTableName = $"[{tableName}]";
+                        //if (!schma.IsNullOrEmpty())
+                        //{
+                        //    fullTableName = $"[{schma}].{fullTableName}";
+                        //}
+                        #endregion
+
+                        SenparcTrace.SendCustomLog("开始删除表格", $"tableName：{tableName}");
+
+                        string dropTableSql = currentDatabaseConfiguration.GetDropTableSql(databaseDbContext, tableName);
+                        if (!dropTableSql.IsNullOrEmpty())
                         {
-                            case MultipleDatabaseType.MySql:
-                                sqlStr = $"DROP TABLE {fullTableName.Replace("[", "").Replace("]", "")}";
-                                break;
-                            case MultipleDatabaseType.SqlServer:
-                            case MultipleDatabaseType.Other:
-                            default:
-                                sqlStr = $"DROP TABLE {fullTableName}";
-                                break;
+                            int keyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync(dropTableSql);
+                            SenparcTrace.SendCustomLog("影响行数", keyExeCount + " 行");
                         }
-                        keyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync(sqlStr);
-                        SenparcTrace.SendCustomLog("影响行数", keyExeCount + " 行");
+                        else
+                        {
+                            SenparcTrace.SendCustomLog("执行结果", $"{currentDatabaseConfiguration.GetType().Name} 内部已处理，无需单独执行 SQL");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -199,21 +199,17 @@ namespace Senparc.Ncf.XncfBase
                 {
                     var migrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
                     SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
-                    string sqlStr;
-                    switch (currentDatabaseConfiguration.MultipleDatabaseType)
+                    string sqlStr = currentDatabaseConfiguration.GetDropTableSql(databaseDbContext, migrationHistoryTableName);
+                    if (!sqlStr.IsNullOrEmpty())
                     {
-                        case MultipleDatabaseType.MySql:
-                            sqlStr = $"DROP TABLE {migrationHistoryTableName.Replace("[", "").Replace("]", "")}";
-                            break;
-                        case MultipleDatabaseType.SqlServer:
-                        case MultipleDatabaseType.Other:
-                        default:
-                            sqlStr = $"DROP TABLE [{migrationHistoryTableName}]";
-                            break;
+                        int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync(sqlStr);
+                        SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
+                    }
+                    else
+                    {
+                        SenparcTrace.SendCustomLog("执行结果", $"{currentDatabaseConfiguration.GetType().Name} 内部已处理，无需单独执行 SQL");
                     }
 
-                    int historyExeCount = await databaseDbContext.Database.ExecuteSqlRawAsync(sqlStr);
-                    SenparcTrace.SendCustomLog("影响行数", historyExeCount + " 行");
                 }
             }
         }
