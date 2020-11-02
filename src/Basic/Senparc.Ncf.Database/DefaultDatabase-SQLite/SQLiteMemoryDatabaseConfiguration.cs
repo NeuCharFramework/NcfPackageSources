@@ -42,7 +42,7 @@ namespace Senparc.Ncf.Database.SQLite
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
-            throw new NotImplementedException();
+            return $"DROP TABLE IF EXISTS {tableName}";
         }
     }
 }
