@@ -9,6 +9,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.Core.Models;
 using System.Data.Common;
+using MySql.Data.MySqlClient;
 
 namespace Senparc.Ncf.Database.MySql
 {
@@ -35,7 +36,15 @@ namespace Senparc.Ncf.Database.MySql
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            return $"BACKUP DATABASE {dbConnection.Database} TO DISK '{backupFilePath}'";
+            MySqlConnection conn = dbConnection as MySqlConnection;
+            
+            //using (MySqlBackup mb = new MySqlBackup(dbConnection.CreateCommand()))
+            //{
+            //    mb.ExportToFile(backupFilePath);
+            //    conn.Close();
+            //}
+
+            return null;
         }
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
