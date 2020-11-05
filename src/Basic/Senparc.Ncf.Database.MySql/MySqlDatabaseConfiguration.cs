@@ -36,15 +36,7 @@ namespace Senparc.Ncf.Database.MySql
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            MySqlConnection conn = dbConnection as MySqlConnection;
-            
-            //using (MySqlBackup mb = new MySqlBackup(dbConnection.CreateCommand()))
-            //{
-            //    mb.ExportToFile(backupFilePath);
-            //    conn.Close();
-            //}
-
-            return null;
+            throw new NcfDatabaseException("Pomelo.EntityFrameworkCore.MySql 暂时不支持运行时备份，请使用命令行进行备份。Pomelo.EntityFrameworkCore.MySql v5.0 之后可支持。", DatabaseConfigurationFactory.Instance.Current.GetType(), null);
         }
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
