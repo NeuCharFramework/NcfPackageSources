@@ -44,7 +44,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 主站客户数据库SQL连接字符串(for EF)
+        /// 主站客户数据库连接字符串（根据当前配置数据库动态获得）
         /// </summary>
         public static string ClientConnectionString
         {
