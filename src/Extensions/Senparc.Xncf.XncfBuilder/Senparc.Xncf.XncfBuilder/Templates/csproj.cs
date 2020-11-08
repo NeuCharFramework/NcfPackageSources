@@ -136,7 +136,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             #line default
             #line hidden
             this.Write("</Owners>\r\n    <!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPac" +
-                    "kageSources/blob/master/LICENSE</PackageLicenseUrl> -->\r\n    <Title>.");
+                    "kageSources/blob/master/LICENSE</PackageLicenseUrl> -->\r\n    <Title>");
             
             #line 25 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(MenuName));
