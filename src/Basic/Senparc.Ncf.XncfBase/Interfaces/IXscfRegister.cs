@@ -21,26 +21,32 @@ namespace Senparc.Ncf.XncfBase
         /// 是否忽略安装（但不影响执行注册代码）
         /// </summary>
         bool IgnoreInstall { get; }
+
         /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// 编号，要求全局唯一
         /// </summary>
         string Uid { get; }
+
         /// <summary>
         /// 版本号
         /// </summary>
         string Version { get; }
+
         /// <summary>
         /// 菜单名称
         /// </summary>
         string MenuName { get; }
+
         /// <summary>
         /// Icon图标
         /// </summary>
         string Icon { get; }
+
         /// <summary>
         /// 说明
         /// </summary>
@@ -50,7 +56,6 @@ namespace Senparc.Ncf.XncfBase
         /// 注册方法，注册的顺序决定了界面中排列的顺序
         /// </summary>
         IList<Type> Functions { get; }
-      
 
         /// <summary>
         /// 添加 AutoMap 映射
@@ -66,6 +71,7 @@ namespace Senparc.Ncf.XncfBase
         /// 安装代码
         /// </summary>
         Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate);
+
         /// <summary>
         /// 卸载代码
         /// </summary>
