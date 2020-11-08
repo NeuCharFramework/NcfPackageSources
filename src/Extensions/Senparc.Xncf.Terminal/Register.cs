@@ -14,7 +14,7 @@ namespace Senparc.Xncf.Terminal
         public Register()
         { }
 
-        #region IRegister 接口
+        #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.Terminal";
         public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定

@@ -15,7 +15,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public Register()
         { }
 
-        #region IRegister 接口
+        #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.DatabaseToolkit";
 

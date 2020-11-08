@@ -14,7 +14,7 @@ namespace Senparc.Xncf.ChangeNamespace
         public Register()
         { }
 
-        #region IRegister 接口
+        #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.ChangeNamespace";
         public override string Uid => "476A8F12-860D-4B18-B703-393BBDEFBD85";//必须确保全局唯一，生成后必须固定
