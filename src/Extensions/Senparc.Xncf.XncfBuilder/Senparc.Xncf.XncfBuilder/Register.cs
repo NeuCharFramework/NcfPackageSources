@@ -15,7 +15,7 @@ namespace Senparc.Xncf.XncfBuilder
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
-        #region IRegister 接口
+        #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.XncfBuilder";
 

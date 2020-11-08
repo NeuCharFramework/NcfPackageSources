@@ -141,7 +141,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             #line default
             #line hidden
             this.Write("\r\n{\r\n    [XncfRegister]\r\n    public partial class Register : XncfRegisterBase, IX" +
-                    "ncfRegister\r\n    {\r\n        #region IRegister 接口\r\n\r\n        public override stri" +
+                    "ncfRegister\r\n    {\r\n        #region IXncfRegister 接口\r\n\r\n        public override stri" +
                     "ng Name => \"");
             
             #line 33 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
