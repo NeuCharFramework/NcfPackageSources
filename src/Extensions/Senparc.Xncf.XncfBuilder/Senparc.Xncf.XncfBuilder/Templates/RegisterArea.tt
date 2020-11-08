@@ -10,12 +10,14 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Config;
 using System;
+using Senparc.Ncf.XncfBase;
 using System.Collections.Generic;
 using System.IO;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {
-	public partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）
+	public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
+									IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
 	{
 		#region IAreaRegister 接口
 
