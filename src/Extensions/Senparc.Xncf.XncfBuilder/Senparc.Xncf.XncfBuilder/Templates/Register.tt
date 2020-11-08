@@ -42,7 +42,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
 
         public override string Description => "<#= Description #>";
 
-        public override IList<Type> Functions => new Type[] { <#= FunctionTypes #> /*typeof(BuildXncf)*/ };
+        public override IList<Type> Functions => new Type[] { <#= FunctionTypes #> };
 
 
         <# if(UseDatabase) { #>

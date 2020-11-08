@@ -141,8 +141,8 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             #line default
             #line hidden
             this.Write("\r\n{\r\n    [XncfRegister]\r\n    public partial class Register : XncfRegisterBase, IX" +
-                    "ncfRegister\r\n    {\r\n        #region IXncfRegister 接口\r\n\r\n        public override stri" +
-                    "ng Name => \"");
+                    "ncfRegister\r\n    {\r\n        #region IXncfRegister 接口\r\n\r\n        public override " +
+                    "string Name => \"");
             
             #line 33 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
@@ -198,7 +198,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             
             #line default
             #line hidden
-            this.Write(" /*typeof(BuildXncf)*/ };\r\n\r\n\r\n        ");
+            this.Write(" };\r\n\r\n\r\n        ");
             
             #line 48 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\Register.tt"
  if(UseDatabase) { 
