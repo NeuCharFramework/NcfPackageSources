@@ -119,14 +119,34 @@ namespace Senparc.Ncf.Service
                 SysPermission sysPermission = new SysPermission(item);
                 sysRoleMenus.Add(sysPermission);
             }
+            #region 正确方式1 传统方式
+            //var db = BaseData.BaseDB.BaseDataContext;
+            //IEnumerable<SysPermission> entitis = await db.Set<SysPermission>().Where(o => o.RoleId == sysMenuDto.FirstOrDefault().RoleId).ToListAsync();
+            //db.Set<SysPermission>().RemoveRange(entitis);
+            //db.Set<SysPermission>().AddRange(sysRoleMenus);
+            //await db.SaveChangesAsync();
+            //await DbToCacheAsync();//暂时 
+            #endregion
 
-            await BeginTransactionAsync(async () =>
+            #region 异常方法
+            //await BeginTransactionAsync(async () =>
+            //{
+            //    IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
+            //    await DeleteAllAsync(entitis);
+            //    await SaveObjectListAsync(sysRoleMenus);
+            //    await DbToCacheAsync();//暂时
+            //}); 
+            #endregion
+            #region 正确方式2 多次调用DbContext.SaveChanges 方式
+            // https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/connection-resiliency#execution-strategies-and-transactions
+            await ServiceBase.ResilientTransaction.New(BaseData.BaseDB.BaseDataContext).ExecuteAsync(async () =>
             {
                 IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
-                await DeleteAllAsync(entitis);
-                await SaveObjectListAsync(sysRoleMenus);
+                await DeleteAllAsync(entitis); // 此处会调用SaveChangeAsync
+                await SaveObjectListAsync(sysRoleMenus); // 此处会调用SaveChangeAsync
                 await DbToCacheAsync();//暂时
             });
+            #endregion
         }
 
         /// <summary>
