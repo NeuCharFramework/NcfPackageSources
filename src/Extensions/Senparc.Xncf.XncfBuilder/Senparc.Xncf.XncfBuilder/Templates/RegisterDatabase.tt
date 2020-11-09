@@ -12,8 +12,7 @@ using Senparc.Ncf.Core.Models;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {
-    public partial class Register :
-        IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
     {
         #region IXncfDatabase 接口
 

@@ -44,19 +44,18 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n    public partial class Register :\r\n        IXncfDatabase  //注册 XNCF 模块数据库（" +
-                    "按需选用）\r\n    {\r\n        #region IXncfDatabase 接口\r\n\r\n        /// <summary>\r\n       " +
-                    " /// 数据库前缀\r\n        /// </summary>\r\n        public const string DATABASE_PREFIX " +
-                    "= \"");
+            this.Write("\r\n{\r\n    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）\r\n  " +
+                    "  {\r\n        #region IXncfDatabase 接口\r\n\r\n        /// <summary>\r\n        /// 数据库前" +
+                    "缀\r\n        /// </summary>\r\n        public const string DATABASE_PREFIX = \"");
             
-            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            #line 22 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write("_");
             
-            #line 23 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
+            #line 22 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterDatabase.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
