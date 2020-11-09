@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
+using System.Data.Common;
 
 namespace Senparc.Ncf.Core.Models
 {
@@ -13,17 +14,7 @@ namespace Senparc.Ncf.Core.Models
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
         where TExtension : RelationalOptionsExtension, new()
     {
-        ///// <summary>
-        ///// 对 DbContextOptionsBuilder 的配置操作
-        ///// <para>参数1：TBuilder</para>
-        ///// </summary>
-        //new Action<TBuilder> DbContextOptionsAction { get; }
 
-        ///// <summary>
-        ///// 获取 RelationalDbContextOptionsBuilder 实例
-        ///// </summary>
-        ///// <returns></returns>
-        //RelationalDbContextOptionsBuilder<TBuilder, TExtension> GetRelationalDbContextOptionsBuilder();
     }
 
     /// <summary>
@@ -62,5 +53,21 @@ namespace Senparc.Ncf.Core.Models
         void UseDatabase(DbContextOptionsBuilder builder, /*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);
 
+        /// <summary>
+        /// 备份数据库方法
+        /// <para>如果返回null，则在方法内部完成备份程序</para>
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="backupFilePath"></param>
+        string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath);
+
+        /// <summary>
+        /// 删除指定表Sql
+        /// <para>如果返回null，则在方法内部完成删除操作</para>
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        string GetDropTableSql(DbContext dbContext, string tableName);
     }
 }

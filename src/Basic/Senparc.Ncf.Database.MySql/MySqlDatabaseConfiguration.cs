@@ -8,6 +8,8 @@ using System.Text;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.Core.Models;
+using System.Data.Common;
+using MySql.Data.MySqlClient;
 
 namespace Senparc.Ncf.Database.MySql
 {
@@ -31,5 +33,15 @@ namespace Senparc.Ncf.Database.MySql
             {
                 optionsBuilder.UseMySql(connectionString, actionBase);//beta6
             };
+
+        public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
+        {
+            throw new NcfDatabaseException("Pomelo.EntityFrameworkCore.MySql 暂时不支持运行时备份，请使用命令行进行备份。Pomelo.EntityFrameworkCore.MySql v5.0 之后可支持。", DatabaseConfigurationFactory.Instance.Current.GetType(), null);
+        }
+
+        public override string GetDropTableSql(DbContext dbContext, string tableName)
+        {
+            return $"DROP TABLE '{tableName}'";
+        }
     }
 }
