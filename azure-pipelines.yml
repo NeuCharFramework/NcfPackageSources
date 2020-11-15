@@ -52,24 +52,46 @@ steps:
     checkLatest: true
 
 - task: NuGetCommand@2
-  displayName: Senparc.Ncf.Core
+  displayName: Senparc.Ncf.Core -V0
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Ncf.Core.*.nupkg'
+    packagesToPush: '**/Senparc.Ncf.Core.0.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
 
 - task: NuGetCommand@2
-  displayName: 'Senparc.Ncf.Core - Symbol'
+  displayName: 'Senparc.Ncf.Core -V0 - Symbol'
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Ncf.Core.*.snupkg'
+    packagesToPush: '**/Senparc.Ncf.Core.0.*.snupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Core.AspNet
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Core.AspNet*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Core.AspNet - Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Core.AspNet*.snupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Log
