@@ -93,7 +93,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             public SelectionList UseModule { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("function","配置“函数”功能","是否需要使用函数模块（Function）",false),
                  new SelectionItem("database","配置“数据库”功能","是否需要使用数据库模块（Database），将配置空数据库",false),
-                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web）",false),
+                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web），如果选择，将忽略 .NET Standard 2.1配置，强制使用 .NET Core 3.1（默认），或 .NET 5（需要选中）",false),
             });
 
             [Description("安装 Sample||")]
@@ -389,10 +389,19 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     UseDatabase = useDatabase,
                     AreaBaseVersion = areaBaseVersion,
                     XncfBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(typeof(Senparc.Ncf.XncfBase.Register)).Location).ProductVersion,
-                    FrameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty() 
-                                            ? typeParam.FrameworkVersion.SelectedValues.First() 
-                                            : typeParam.OtherFrameworkVersion
                 };
+
+                //获取当前配置的 FrameworkVersion
+                var frameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty()
+                                            ? typeParam.FrameworkVersion.SelectedValues.First()
+                                            : typeParam.OtherFrameworkVersion;
+                if (useWeb && frameworkVersion == "netstandard2.1")
+                {
+                    //需要使用网页，强制修正为支持 Host 的目标框架
+                    frameworkVersion = "netcoreapp3.1";
+                }
+                csprojPage.FrameworkVersion = frameworkVersion;
+
                 WriteContent(csprojPage, sb);
 
                 #endregion
