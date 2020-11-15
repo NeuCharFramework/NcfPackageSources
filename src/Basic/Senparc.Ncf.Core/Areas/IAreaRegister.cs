@@ -17,7 +17,7 @@ namespace Senparc.Ncf.Core.Areas
         /// <param name="builder"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnvironment env);
+        IMvcBuilder AuthorizeConfig(IMvcBuilder builder);
 
         /// <summary>
         /// 如果提供了 UI 界面，必须指定一个首页，如：Admin/

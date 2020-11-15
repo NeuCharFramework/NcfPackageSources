@@ -11,7 +11,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 <#}#>
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework><#= FrameworkVersion #></TargetFramework>
     <Version><#= Version #></Version>
     <AssemblyName><#= OrgName #>.Xncf.<#= XncfName #></AssemblyName>
     <RootNamespace><#= OrgName #>.Xncf.<#= XncfName #></RootNamespace>

@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.XncfBuilder.Functions
 {
@@ -42,6 +43,16 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                  new SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
                  new SelectionItem("new","生成新的 .sln 文件","如果不选择，将覆盖现有 .sln 文件（不会影响已有功能，但如果 sln 解决方案正在运行，可能会触发自动重启服务）,并推荐使用备份功能",false),
             });
+
+            [Description("目标框架版本||")]
+            public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+                 new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5）",true),
+                 new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
+                 new SelectionItem("net5.0","net5.0","使用 .NET 5.0",false),
+            });
+
+            [Description("自定义目标框架版本||其他目标框架版本，如果填写，将覆盖【目标框架版本】的选择")]
+            public string OtherFrameworkVersion { get; set; }
 
             [Required]
             [MaxLength(50)]
@@ -377,7 +388,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     UseWeb = useWeb,
                     UseDatabase = useDatabase,
                     AreaBaseVersion = areaBaseVersion,
-                    XncfBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(typeof(Senparc.Ncf.XncfBase.Register)).Location).ProductVersion
+                    XncfBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(typeof(Senparc.Ncf.XncfBase.Register)).Location).ProductVersion,
+                    FrameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty() 
+                                            ? typeParam.FrameworkVersion.SelectedValues.First() 
+                                            : typeParam.OtherFrameworkVersion
                 };
                 WriteContent(csprojPage, sb);
 

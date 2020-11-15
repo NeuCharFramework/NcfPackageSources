@@ -84,7 +84,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
                         }
 
                         RecordLog(sb, "检测到同名文件，已经移动到（并覆盖）：" + copyPath);
-                        File.Move(path, copyPath, true);
+                        File.Move(path, copyPath);
                     }
 
                     RecordLog(sb, "开始获取 ISenparcEntities 对象");
