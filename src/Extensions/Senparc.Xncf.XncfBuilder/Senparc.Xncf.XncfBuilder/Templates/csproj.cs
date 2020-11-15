@@ -216,16 +216,17 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             
             #line default
             #line hidden
-            this.Write("\" />\r\n  </ItemGroup>\r\n  ");
+            this.Write("\" />\r\n    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->\r\n    <PackageReference Inclu" +
+                    "de=\"Microsoft.NET.Sdk.Razor\" Version=\"3.1.10\" />\r\n  </ItemGroup>\r\n  ");
             
-            #line 55 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 57 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  } 
             
             #line default
             #line hidden
             this.Write("\r\n  ");
             
-            #line 57 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 59 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  if(UseDatabase) {
             
             #line default
@@ -240,7 +241,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates
 </ItemGroup>
   ");
             
-            #line 66 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            #line 68 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
  } 
             
             #line default
