@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder.Templates
 {
-    public partial class csproj: IXncfTemplatePage
+    public partial class csproj : IXncfTemplatePage
     {
         public string RelativeFilePath => $"{OrgName}.Xncf.{XncfName}.csproj";
 
@@ -19,6 +19,8 @@ namespace Senparc.Xncf.XncfBuilder.Templates
 
         public string AreaBaseVersion { get; set; }
         public string XncfBaseVersion { get; set; }
+
+        public string FrameworkVersion { get; set; } = "netstandard2.1";
 
         /// <summary>
         /// 项目文件路径（相对于src目录）

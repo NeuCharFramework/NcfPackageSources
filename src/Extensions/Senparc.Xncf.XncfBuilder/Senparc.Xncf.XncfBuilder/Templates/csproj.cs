@@ -49,8 +49,14 @@ namespace Senparc.Xncf.XncfBuilder.Templates
             
             #line default
             #line hidden
-            this.Write("  <PropertyGroup>\r\n    <TargetFramework>netcoreapp3.1</TargetFramework>\r\n    <Ver" +
-                    "sion>");
+            this.Write("  <PropertyGroup>\r\n    <TargetFramework>");
+            
+            #line 14 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(FrameworkVersion));
+            
+            #line default
+            #line hidden
+            this.Write("</TargetFramework>\r\n    <Version>");
             
             #line 15 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\csproj.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Version));

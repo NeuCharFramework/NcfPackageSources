@@ -84,9 +84,9 @@ namespace ");
             
             #line default
             #line hidden
-            this.Write("\t\t};\r\n\r\n\t\tpublic IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnviron" +
-                    "ment env)\r\n\t\t{\r\n\t\t\tbuilder.AddRazorPagesOptions(options =>\r\n\t\t\t{\r\n\t\t\t\t//此处可配置页面权" +
-                    "限\r\n\t\t\t});\r\n\r\n\t\t\tSenparcTrace.SendCustomLog(\"");
+            this.Write("\t\t};\r\n\r\n\t\tpublic IMvcBuilder AuthorizeConfig(IMvcBuilder builder)\r\n\t\t{\r\n\t\t\tbuilde" +
+                    "r.AddRazorPagesOptions(options =>\r\n\t\t\t{\r\n\t\t\t\t//此处可配置页面权限\r\n\t\t\t});\r\n\r\n\t\t\tSenparcTr" +
+                    "ace.SendCustomLog(\"");
             
             #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));

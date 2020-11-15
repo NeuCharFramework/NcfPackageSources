@@ -23,9 +23,9 @@ namespace Senparc.Ncf.Core.Areas
         /// 自动注册所有 Area
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="env"></param>
+        /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
         /// <returns></returns>
-        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, IWebHostEnvironment env)
+        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, Action<IAreaRegister> eachRegsiterAction = null)
         {
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
@@ -38,7 +38,8 @@ namespace Senparc.Ncf.Core.Areas
                     foreach (var registerType in areaRegisterTypes)
                     {
                         var register = Activator.CreateInstance(registerType, true) as IAreaRegister;
-                        register.AuthorizeConfig(builder, env);//进行注册
+                        register.AuthorizeConfig(builder);//进行注册
+                        eachRegsiterAction?.Invoke(register);//执行额外的操作
                     }
                 }
                 catch (Exception ex)
