@@ -20,13 +20,13 @@ steps:
   displayName: 'Use .NET Core SDK 3'
   inputs:
     version: '3.1.x'
-    packageType: runtime
+    packageType: 'sdk'
 
 - task: UseDotNet@2
   displayName: 'Use .NET SDK 5'
   inputs:
     version: '5.0.x'
-    packageType: runtime
+    packageType: 'sdk'
 
 
 - task: NuGetCommand@2
