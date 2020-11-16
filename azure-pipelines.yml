@@ -47,7 +47,7 @@ steps:
   inputs:
     command: build
     projects: '**/NcfPackageSources.sln'
-    arguments: '--configuration Release -p:Version=10.8.$(Build.BuildId)-official'
+    arguments: '--configuration Release'
 
 # - task: VSTest@2
 #   inputs:
