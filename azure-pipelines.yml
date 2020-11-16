@@ -28,6 +28,7 @@ steps:
     version: '5.0.x'
     packageType: runtime
 
+
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
@@ -41,10 +42,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+# - task: VSTest@2
+#   inputs:
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
 
 
 - task: NuGetToolInstaller@1
