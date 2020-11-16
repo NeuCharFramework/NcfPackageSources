@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Senparc.CO2NET.Cache;
+using Senparc.Ncf.Core.Entities;
 using Senparc.Ncf.Log;
-using Senparc.Weixin.Entities;
 
 namespace Senparc.Ncf.Core.Cache
 {
