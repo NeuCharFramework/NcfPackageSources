@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-		<Version>0.1.100-beta1</Version>
+		<Version>0.1.100.1-beta1</Version>
 		<AssemblyName>Senparc.Ncf.Core.AspNet</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Core.AspNet</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -43,10 +43,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Senparc.CO2NET" Version="1.3.110" />
-		<PackageReference Include="Senparc.Weixin" Version="6.7.502" />
-		<PackageReference Include="Senparc.Weixin.Cache.CsRedis" Version="0.1.502" />
-		<PackageReference Include="Senparc.Weixin.Cache.Memcached" Version="2.6.502" />
-		<PackageReference Include="Senparc.Weixin.MP" Version="16.10.502.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
