@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-		<Version>0.1.100.1-beta1</Version>
+		<TargetFrameworks>netstandard2.1</TargetFrameworks>
+		<Version>0.1.100.2-beta1</Version>
 		<AssemblyName>Senparc.Ncf.Core.AspNet</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Core.AspNet</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -48,5 +48,20 @@
 		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions">
+			<Version>2.2.0</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions">
+			<Version>2.2.0</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.Hosting">
+			<Version>2.2.7</Version>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Hosting">
+			<Version>3.1.0</Version>
+		</PackageReference>
 	</ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ namespace Senparc.Ncf.Core.AspNet.Areas
         /// <param name="builder"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        public static IMvcBuilder AddNcfAreasWithHost(this IMvcBuilder builder, IWebHostEnvironment env)
+        public static IMvcBuilder AddNcfAreasWithHost(this IMvcBuilder builder, Microsoft.Extensions.Hosting.IHostEnvironment/*IWebHostEnvironment*/ env)
         {
             AreaRegister.AddNcfAreas(builder, register =>
             {
