@@ -17,6 +17,6 @@ namespace Senparc.Ncf.Core.AspNet.Areas
         /// <param name="builder"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnvironment env);
+        IMvcBuilder AuthorizeConfig(IMvcBuilder builder, Microsoft.Extensions.Hosting.IHostEnvironment/*IWebHostEnvironment*/ env);
     }
 }
