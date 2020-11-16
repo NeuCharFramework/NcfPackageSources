@@ -11,7 +11,6 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Ncf.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using Senparc.Weixin.MP.AdvancedAPIs.Semantic;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
