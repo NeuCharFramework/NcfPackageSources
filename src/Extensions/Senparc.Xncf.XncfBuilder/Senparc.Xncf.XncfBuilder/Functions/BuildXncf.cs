@@ -44,7 +44,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                  new SelectionItem("new","生成新的 .sln 文件","如果不选择，将覆盖现有 .sln 文件（不会影响已有功能，但如果 sln 解决方案正在运行，可能会触发自动重启服务）,并推荐使用备份功能",false),
             });
 
-            [Description("目标框架版本||")]
+            [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
             public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5）",true),
                  new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
