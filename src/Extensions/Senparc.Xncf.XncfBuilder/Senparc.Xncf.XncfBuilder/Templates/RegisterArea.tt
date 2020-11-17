@@ -30,7 +30,7 @@ namespace <#= OrgName #>.Xncf.<#= XncfName #>
 			 <# } #>
 		};
 
-		public IMvcBuilder AuthorizeConfig(IMvcBuilder builder)
+		public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
 		{
 			builder.AddRazorPagesOptions(options =>
 			{
