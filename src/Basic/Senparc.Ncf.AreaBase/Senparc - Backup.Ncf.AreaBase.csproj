@@ -1,29 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <Version>0.6.102-beta1</Version>
-    <AssemblyName>Senparc.Ncf.Database.SqlServer</AssemblyName>
-    <RootNamespace>Senparc.Ncf.Database.SqlServer</RootNamespace>
+    <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
+    <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Senparc.Ncf.Database.SqlServer</Description>
+    <Description>Senparc.Ncf.AreaBase</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
-    <Title>Senparc.Ncf.Database.SqlServer</Title>
+    <Title>Senparc.Ncf.AreaBase</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-			v0.1 创世
+			v0.1 创世，从 NCF 模板项目提炼移植
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Database.SqlServer.XML</DocumentationFile>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.AreaBase.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -31,21 +31,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Senparc.CO2NET" Version="1.3.200" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-    <ProjectReference Include="..\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Core.AspNet\Senparc.Ncf.Core.AspNet.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
 </Project>
