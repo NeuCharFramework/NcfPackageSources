@@ -70,8 +70,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.XncfBuilder.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.MySql.Backcup", "Basic\Senparc.Ncf.Database.MySql.Backup\Senparc.Ncf.Database.MySql.Backcup.csproj", "{548A1BB0-88DE-45D4-95DF-2538A9592823}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Core.AspNet", "Basic\Senparc.Ncf.Core.AspNet\Senparc.Ncf.Core.AspNet.csproj", "{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -212,12 +210,6 @@ Global
 		{548A1BB0-88DE-45D4-95DF-2538A9592823}.Release|Any CPU.Build.0 = Release|Any CPU
 		{548A1BB0-88DE-45D4-95DF-2538A9592823}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{548A1BB0-88DE-45D4-95DF-2538A9592823}.Test|Any CPU.Build.0 = Test|Any CPU
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -252,7 +244,6 @@ Global
 		{20893400-862D-48F8-A9B9-6431B20BB763} = {49BB21C7-7403-4086-BB93-1C5F36116F85}
 		{06916F5D-E293-462D-AAD1-D64F5AE03019} = {49BB21C7-7403-4086-BB93-1C5F36116F85}
 		{548A1BB0-88DE-45D4-95DF-2538A9592823} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
-		{8E9A8912-D8E6-421F-A7FE-9F7CFEF9B357} = {20618121-91AE-4EFE-9899-ABCB0ADACE86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
