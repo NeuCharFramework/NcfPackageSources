@@ -37,17 +37,18 @@ using System;
 using Senparc.Ncf.XncfBase;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Hosting;
 
 namespace ");
             
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 18 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 17 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 18 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -56,7 +57,7 @@ namespace ");
                     "\t\t\tIXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译\r\n\t{\r\n\t\t#region IAreaRegist" +
                     "er 接口\r\n\r\n\t\tpublic string HomeUrl => \"/Admin/");
             
-            #line 24 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 25 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -65,21 +66,21 @@ namespace ");
                     "geMenuItem>() {\r\n\t\t\t new AreaPageMenuItem(GetAreaHomeUrl(),\"首页\",\"fa fa-laptop\")," +
                     "\r\n\t\t\t ");
             
-            #line 28 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 29 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
  if(UseSample) { 
             
             #line default
             #line hidden
             this.Write("\t\t\t new AreaPageMenuItem(GetAreaUrl($\"/Admin/");
             
-            #line 29 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 30 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
             this.Write("/DatabaseSample\"),\"数据库操作示例\",\"fa fa-bookmark-o\"),\r\n\t\t\t ");
             
-            #line 30 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 31 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
  } 
             
             #line default
@@ -88,21 +89,21 @@ namespace ");
                     "t env)\r\n\t\t{\r\n\t\t\tbuilder.AddRazorPagesOptions(options =>\r\n\t\t\t{\r\n\t\t\t\t//此处可配置页面权限\r\n" +
                     "\t\t\t});\r\n\r\n\t\t\tSenparcTrace.SendCustomLog(\"");
             
-            #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 41 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
             #line hidden
             this.Write(" 启动\", \"完成 Area:");
             
-            #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 41 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 40 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 41 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default
@@ -111,14 +112,14 @@ namespace ");
                     "ompilation 接口\r\n\t\tpublic string LibraryPath => Path.GetFullPath(Path.Combine(Site" +
                     "Config.WebRootPath, \"..\", \"..\", \"");
             
-            #line 48 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 49 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(OrgName));
             
             #line default
             #line hidden
             this.Write(".Xncf.");
             
-            #line 48 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
+            #line 49 "E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Templates\RegisterArea.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(XncfName));
             
             #line default

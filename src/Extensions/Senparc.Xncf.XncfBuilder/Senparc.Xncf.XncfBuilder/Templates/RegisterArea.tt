@@ -13,6 +13,7 @@ using System;
 using Senparc.Ncf.XncfBase;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Hosting;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>
 {
