@@ -177,7 +177,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     string migrationDir = GetMigrationDir(typeParam, MultipleDatabaseType.MySql.ToString());
                     var defaultFileName = $"{typeParam.DbContextName}ModelSnapshot.cs";
-                    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot";
+                    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot.cs";
                     if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
                     {
                         File.Delete(defaultFileName);
