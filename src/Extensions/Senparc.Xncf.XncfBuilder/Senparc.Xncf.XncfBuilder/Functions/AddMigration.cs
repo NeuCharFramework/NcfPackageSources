@@ -136,7 +136,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
-                    var migrationDir = Path.Combine(typeParam.ProjectPath, "Migrations", $"Migrations.{dbType}");
+                    string migrationDir = GetMigrationDir(typeParam, dbType);
                     var outputVerbose = typeParam.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
                     var dbTypeSuffix = Enum.TryParse(dbType, out MultipleDatabaseType dbTypeEnum) && dbTypeEnum == MultipleDatabaseType.Default
                                             ? "" : $"_{dbType}";//如果是SQL Lite
@@ -170,6 +170,21 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     strOutput = e.Message;
                 }
+
+
+                //Pomelo-MySQL 命名有不统一的情况，需要处理
+                if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
+                {
+                    string migrationDir = GetMigrationDir(typeParam, MultipleDatabaseType.MySql.ToString());
+                    var defaultFileName = $"{typeParam.DbContextName}ModelSnapshot.cs";
+                    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot";
+                    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
+                    {
+                        File.Delete(defaultFileName);
+                        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
+                    }
+                }
+
                 result.Message = "执行完毕，请查看日志！";
 
                 if (strOutput.Contains("Build FAILED", StringComparison.InvariantCultureIgnoreCase))
@@ -177,6 +192,17 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     result.Message += "重要提示：可能出现错误，请检查日志！";
                 }
             });
+        }
+
+        /// <summary>
+        /// 获取迁移文件生成目录
+        /// </summary>
+        /// <param name="typeParam"></param>
+        /// <param name="dbType"></param>
+        /// <returns></returns>
+        private string GetMigrationDir(Parameters typeParam, string dbType)
+        {
+            return Path.Combine(typeParam.ProjectPath, "Migrations", $"Migrations.{dbType}");
         }
     }
 }
