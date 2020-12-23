@@ -30,13 +30,19 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     [Serializable]
-    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>
+    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*默认支持多租户接口*/
     {
         /// <summary>
         /// 主键
         /// </summary>
         [Key]
         public TKey Id { get; set; }
+        
+        /// <summary>
+        /// 租户 ID
+        /// <para>如果为-1，则本系统不启用多租户</para>
+        /// </summary>
+        public int TenantId { get; set; }
 
         /// <summary>
         /// 更新最后更新时间
