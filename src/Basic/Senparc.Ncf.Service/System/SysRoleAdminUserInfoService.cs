@@ -37,8 +37,7 @@ namespace Senparc.Ncf.Service
             }
 
             IEnumerable<SysRoleAdminUserInfo> sysRoleAdmins = await GetFullListAsync(_ => _.AccountId == accountId);
-
-            await BeginTransactionAsync(async () => 
+            await ServiceBase.ResilientTransaction.New(BaseData.BaseDB.BaseDataContext).ExecuteAsync(async () =>
             {
                 if (sysRoleAdmins.Any())
                 {
@@ -48,9 +47,6 @@ namespace Senparc.Ncf.Service
                 {
                     await SaveObjectListAsync(sysRoleAdminUserInfos);
                 }
-            }, ex => 
-            {
-                return new NotSupportedException("不支持");
             });
         }
     }
