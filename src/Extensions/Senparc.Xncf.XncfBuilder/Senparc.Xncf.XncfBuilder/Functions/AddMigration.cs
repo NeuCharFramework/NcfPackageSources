@@ -172,18 +172,18 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 }
 
 
-                //Pomelo-MySQL 命名有不统一的情况，需要处理
-                if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
-                {
-                    string migrationDir = GetMigrationDir(typeParam, MultipleDatabaseType.MySql.ToString());
-                    var defaultFileName = $"{typeParam.DbContextName}ModelSnapshot.cs";
-                    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot.cs";
-                    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
-                    {
-                        File.Delete(defaultFileName);
-                        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
-                    }
-                }
+                ////Pomelo-MySQL 命名有不统一的情况，需要处理
+                //if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
+                //{
+                //    string migrationDir = GetMigrationDir(typeParam, MultipleDatabaseType.MySql.ToString());
+                //    var defaultFileName = $"{typeParam.DbContextName}ModelSnapshot.cs";
+                //    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot.cs";
+                //    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
+                //    {
+                //        File.Delete(defaultFileName);
+                //        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
+                //    }
+                //}
 
                 result.Message = "执行完毕，请查看日志！";
 

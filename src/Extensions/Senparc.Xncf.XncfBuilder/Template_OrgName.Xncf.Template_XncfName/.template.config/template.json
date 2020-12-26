@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Jeffrey",
+  "classifications": [ "NCF", "XNCF" ],
+  "name": "Custom XNCF Module",
+  "identity": "Custom XNCF Module",
+  "groupIdentity": "Custom XNCF",
+  "shortName": "XNCF",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "MyGroup.Xncf.MyModule", //【修改】在使用 -n 选项时，会替换模板中项目的名字
+  "preferNameDirectory": true,
+  "exclude": [
+    "**/bin",
+    "**/bower_components",
+    "**/jspm_packages",
+    "**/node_modules",
+    "**/obj",
+    "**/platforms"
+  ]
+}

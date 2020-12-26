@@ -41,7 +41,6 @@ namespace Senparc.Ncf.Service
         public void Dispose()
         {
             _wrap.ServiceData.BaseData.BaseDB.BaseDataContext.ChangeTracker.AutoDetectChangesEnabled = false;
-
         }
     }
 }
