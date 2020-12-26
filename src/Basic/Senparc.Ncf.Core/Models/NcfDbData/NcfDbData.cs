@@ -2,7 +2,7 @@
 
 namespace Senparc.Ncf.Core.Models
 {
-    public interface ISqlBaseFinanceData
+    public interface INcfDbData
     {
         /// <summary>
         /// 强制手动更改DetectChange
@@ -12,7 +12,7 @@ namespace Senparc.Ncf.Core.Models
         void CloseConnection();
     }
 
-    public abstract class SqlBaseFinanceData : ISqlBaseFinanceData
+    public abstract class NcfDbData : INcfDbData
     {
         /// <summary>
         /// 强制手动更改DetectChange

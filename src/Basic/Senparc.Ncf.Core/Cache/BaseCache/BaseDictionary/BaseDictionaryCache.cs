@@ -50,7 +50,7 @@ namespace Senparc.Ncf.Core.Cache
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
         /// <param name="timeOut">单位：分钟。1440为一天。</param>
-        public BaseDictionaryCache(string CACHE_KEY, ISqlBaseFinanceData db, int timeOut)
+        public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
             base.TimeOut = timeOut;
@@ -148,7 +148,7 @@ namespace Senparc.Ncf.Core.Cache
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
         /// <param name="timeOut">单位：分钟。1440为一天。</param>
-        public BaseDictionaryCache(string CACHE_KEY, ISqlBaseFinanceData db, int timeOut)
+        public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db)
         {
             base.TimeOut = timeOut;

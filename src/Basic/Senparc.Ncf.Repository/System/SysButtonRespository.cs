@@ -25,7 +25,7 @@ namespace Senparc.Respository
     {
         private readonly SenparcEntitiesBase _senparcEntities;
 
-        public SysButtonRespository(ISqlBaseFinanceData db) : base(db)
+        public SysButtonRespository(INcfDbData db) : base(db)
         {
             _senparcEntities = db.BaseDataContext as SenparcEntitiesBase;
         }

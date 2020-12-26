@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Repository
 {
     public class XncfModuleRepository : ClientRepositoryBase<XncfModule>
     {
-        public XncfModuleRepository(ISqlBaseFinanceData db) : base(db)
+        public XncfModuleRepository(INcfDbData db) : base(db)
         {
         }
     }

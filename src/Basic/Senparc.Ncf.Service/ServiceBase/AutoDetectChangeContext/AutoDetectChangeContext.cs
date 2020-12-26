@@ -5,17 +5,17 @@ namespace Senparc.Ncf.Service
     /// <summary>
     /// 临时开放BaseDataContext.Configuration.AutoDetectChangesEnabled属性，用于大批量更新数据的环境，结束后还原到false状态。
     /// </summary>
-    public class AutoDetectChangeContextWrap : IDisposable
+    public class AutoDetectChangeContextWrap : IDisposabled
     {
         public IServiceDataBase ServiceData { get; set; }
-        //private ISqlBaseFinanceData _sqlFinanceData;
+        //private INcfDbData _ncfDbData;
 
 
         public AutoDetectChangeContextWrap(IServiceDataBase serviceData)
         {
             //_service = service;
             //_service.BaseRepository.BaseDB.BaseDataContext.Configuration.AutoDetectChangesEnabled = true;
-            //_sqlFinanceData = sqlFinanceData;
+            //_ncfDbData =  ncfDbData;
             ServiceData = serviceData;
             ServiceData.BaseData.BaseDB.BaseDataContext.ChangeTracker.AutoDetectChangesEnabled= false;
             ServiceData.BaseData.BaseDB.ManualDetectChangeObject = true;
