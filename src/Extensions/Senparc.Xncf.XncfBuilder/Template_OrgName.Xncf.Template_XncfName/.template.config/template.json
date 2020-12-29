@@ -12,6 +12,61 @@
   },
   "sourceName": "MyGroup.Xncf.MyModule", //【修改】在使用 -n 选项时，会替换模板中项目的名字
   "preferNameDirectory": true,
+  "symbols": {
+    "UseSample": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "UseWeb": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "UseFunction": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "UseDatabase": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(!UseSample)", //如果不添加 Sample，排除下面的文件
+          "exclude": [
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs"
+          ]
+        },
+        {
+          "condition": "(!UseFunction)", //如果不添加 Function，排除下面的文件
+          "exclude": [
+            "Functions/"
+          ]
+        },
+        {
+          "condition": "(!UseWeb && !UseSample)", //如果不添加 UseWeb，排除下面的文件
+          "exclude": [
+            "Register.Area.cs"
+          ]
+        },
+        {
+          "condition": "(!UseDatabase && !UseSample)", //如果不添加 数据库，排除下面的文件
+          "exclude": [
+            "Register.Database.cs",
+            "Models",
+            "Migrations"
+          ]
+        }
+      ]
+    }
+  ],
   "exclude": [
     "**/bin",
     "**/bower_components",

@@ -31,11 +31,17 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Description => "Template_Description";
 
+#if (UseFunctions)
         public override IList<Type> Functions => new Type[] { typeof(MyFunction) };
+#else
+        public override IList<Type> Functions => new Type[] { };
+#endif
 
 
-                public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+
+        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+#if (UseDatabase || UseSample)
             //安装或升级版本时更新数据库
             await base.MigrateDatabaseAsync(serviceProvider);
 
@@ -44,25 +50,29 @@ namespace Template_OrgName.Xncf.Template_XncfName
             {
                 case InstallOrUpdate.Install:
                     //新安装
-                                        #region 初始化数据库数据
+#if (UserSample)
+            #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorService>();
                     var color = colorService.GetObject(z => true);
                     if (color == null)//如果是纯第一次安装，理论上不会有残留数据
                     {
                         ColorDto colorDto = await colorService.CreateNewColor().ConfigureAwait(false);//创建默认颜色
                     }
-                    #endregion
-                                        break;
+            #endregion
+#endif
+                    break;
                 case InstallOrUpdate.Update:
                     //更新
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+#endif
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
+#if (UseDatabase || UserSample)
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -75,10 +85,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             #endregion
-
+#endif
             await unsinstallFunc().ConfigureAwait(false);
         }
-        
         #endregion
     }
 }
