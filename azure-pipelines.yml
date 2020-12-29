@@ -29,11 +29,12 @@ steps:
     packageType: 'sdk'
 
 
-# - task: NuGetCommand@2
-#   inputs:
-#     command: 'restore'
-#     restoreSolution: '**/NcfPackageSources.sln'
-#     feedsToUse: 'select'
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/NcfPackageSources.sln'
+    feedsToUse: 'select'
+    vstsFeed: 'e5e2ef66-6e3e-4bad-b938-9c6092f3b020'
     
 # - task: VSBuild@1
 #   inputs:
