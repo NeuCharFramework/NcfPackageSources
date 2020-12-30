@@ -33,8 +33,8 @@ steps:
   inputs:
     command: 'restore'
     restoreSolution: '**/NcfPackageSources.sln'
-    feedsToUse: 'select'
-    vstsFeed: 'f46f694e-c782-4325-b2db-bf2d62f9dac7'
+    feedsToUse: 'config'
+    externalFeedCredentials: 'nuget-jeffrey-full-key'
     
 # - task: VSBuild@1
 #   inputs:
