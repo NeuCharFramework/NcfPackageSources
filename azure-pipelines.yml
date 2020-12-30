@@ -34,7 +34,7 @@ steps:
     command: 'restore'
     restoreSolution: '**/NcfPackageSources.sln'
     feedsToUse: 'select'
-    vstsFeed: 'bf43f0b7-06c0-4916-ac62-e958c3611aa4'
+    vstsFeed: 'f46f694e-c782-4325-b2db-bf2d62f9dac7'
     
 # - task: VSBuild@1
 #   inputs:
