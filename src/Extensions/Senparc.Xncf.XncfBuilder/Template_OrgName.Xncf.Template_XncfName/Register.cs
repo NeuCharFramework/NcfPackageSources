@@ -72,7 +72,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-#if (UseDatabase || UserSample)
+#if (UseDatabase || UseSample)
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;

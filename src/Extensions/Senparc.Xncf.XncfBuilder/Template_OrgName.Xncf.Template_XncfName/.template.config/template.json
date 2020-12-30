@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/template",
   "author": "Jeffrey",
   "classifications": [ "NCF", "XNCF" ],
-  "name": "Custom XNCF Module",
+  "name": "Custom XNCF Module Template",
   "identity": "Custom XNCF Module",
   "groupIdentity": "Custom XNCF",
   "shortName": "XNCF",
