@@ -36,6 +36,9 @@
     <Content Include=".template.config\template.json" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".template.config\readme.md" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.104-beta1" />
     <!--<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
     <ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />-->
