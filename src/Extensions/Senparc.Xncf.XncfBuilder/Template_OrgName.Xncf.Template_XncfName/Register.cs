@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
-using Template_OrgName.Xncf.Template_XncfName.Functions;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Models;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+#if (UseFunction)
+using Template_OrgName.Xncf.Template_XncfName.Functions;
+#endif
+#if(UseDatabase || UseSample)
+using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
+#endif
+#if(UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Services;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+#endif
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
