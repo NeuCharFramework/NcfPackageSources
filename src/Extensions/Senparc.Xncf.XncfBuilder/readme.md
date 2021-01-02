@@ -7,4 +7,4 @@
 
 ### 手动创建模板项目
 
-> dotnet new xncf -n MyProject -UseDatabase true
+> dotnet new xncf -n MyProject --force --UseDatabase true

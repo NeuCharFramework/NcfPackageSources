@@ -47,7 +47,7 @@
         {
           "condition": "(!UseFunction)", //如果不添加 Function，排除下面的文件
           "exclude": [
-            "Functions/"
+            "Functions/MyFunction.cs"
           ]
         },
         {
