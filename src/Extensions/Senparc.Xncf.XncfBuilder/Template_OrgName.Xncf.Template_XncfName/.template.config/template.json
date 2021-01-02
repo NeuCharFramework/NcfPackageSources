@@ -10,7 +10,6 @@
     "language": "C#",
     "type": "project"
   },
-  "sourceName": "MyGroup.Xncf.MyModule", //【修改】在使用 -n 选项时，会替换模板中项目的名字
   "preferNameDirectory": true,
   "symbols": {
     "UseSample": {
@@ -32,8 +31,64 @@
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
+    },
+    //Replace file name and content
+    "XncfName": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's name",
+      "fileRename": "Template_XncfName",
+      "replaces": "Template_XncfName",
+      "isRequired": true,
+      "defaultValue": "MyXncf"
+    },
+    "OrgName": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Organization Name",
+      "fileRename": "Template_OrgName",
+      "replaces": "Template_OrgName",
+      "isRequired": true,
+      "defaultValue": "MyOrg"
+    },
+    "Version": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Version, like. 0.1, 0,2-alpha",
+      "fileRename": "Template_Version",
+      "replaces": "Template_Version",
+      "isRequired": false,
+      "defaultValue": "0.1"
+    },
+    "MenuName": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Menu Name",
+      "fileRename": "Template_MenuName",
+      "replaces": "Template_MenuName",
+      "isRequired": false,
+      "defaultValue": "MyProject"
+    },
+    "Icon": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Icon name",
+      "fileRename": "Template_Icon",
+      "replaces": "Template_Icon",
+      "isRequired": false,
+      "defaultValue": "fa fa-star"
+    },
+    "Description": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Description",
+      "fileRename": "Template_Description",
+      "replaces": "Template_Description",
+      "isRequired": false,
+      "defaultValue": "Project's Description"
     }
   },
+  "sourceName": "MyGroup.Xncf.MyModule",
   "sources": [
     {
       "modifiers": [
@@ -54,8 +109,8 @@
         {
           "condition": "(!UseWeb && !UseSample)", //如果不添加 UseWeb，排除下面的文件
           "exclude": [
-            "Areas/**",
-            "Register.Area.cs"
+            "Register.Area.cs",
+            "Areas/**"
           ]
         },
         {
