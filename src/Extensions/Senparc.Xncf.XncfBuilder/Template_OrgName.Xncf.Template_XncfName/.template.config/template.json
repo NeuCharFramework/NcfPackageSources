@@ -41,13 +41,14 @@
           "condition": "(!UseSample)", //如果不添加 Sample，排除下面的文件
           "exclude": [
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
-            "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs"
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
+            "Areas/Services/**"
           ]
         },
         {
           "condition": "(!UseFunction)", //如果不添加 Function，排除下面的文件
           "exclude": [
-            "Functions/MyFunction.cs"
+            "Functions/**"
           ]
         },
         {
@@ -60,8 +61,8 @@
           "condition": "(!UseDatabase && !UseSample)", //如果不添加 数据库，排除下面的文件
           "exclude": [
             "Register.Database.cs",
-            "Models",
-            "Migrations"
+            "Models/**",
+            "Migrations/**"
           ]
         }
       ]
