@@ -32,6 +32,11 @@
       "dataType": "bool",
       "defaultValue": "false"
     },
+    "IntegrationToNcf":{
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "true"
+    },
     //Replace file name and content
     "XncfName": {
       "type": "parameter",
@@ -86,6 +91,15 @@
       "replaces": "Template_Description",
       "isRequired": false,
       "defaultValue": "Project's Description"
+    },
+    "Guid": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Unique Guid",
+      "fileRename": "Template_Guid",
+      "replaces": "Template_Guid",
+      "isRequired": true,
+      "defaultValue": "WrongGuid"
     }
   },
   "sourceName": "MyGroup.Xncf.MyModule",

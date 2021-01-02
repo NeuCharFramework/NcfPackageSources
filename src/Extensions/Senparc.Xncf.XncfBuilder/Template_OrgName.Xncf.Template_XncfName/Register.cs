@@ -21,7 +21,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Name => "Template_OrgName.Xncf.Template_XncfName";
 
-        public override string Uid => "CB1F85CF-D0F6-437A-9BAD-3630FDDA3664";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "Template_Guid";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
         public override string Version => "Template_Version";//必须填写版本号
 
