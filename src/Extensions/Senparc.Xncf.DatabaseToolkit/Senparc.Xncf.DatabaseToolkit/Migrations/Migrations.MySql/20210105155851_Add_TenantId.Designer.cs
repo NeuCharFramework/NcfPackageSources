@@ -2,56 +2,55 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
 {
-    [DbContext(typeof(DatabaseToolkitEntities_SqlServer))]
-    partial class DatabaseToolkitEntities_SqlServerModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DatabaseToolkitEntities_MySql))]
+    [Migration("20210105155851_Add_TenantId")]
+    partial class Add_TenantId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Senparc.Xncf.DatabaseToolkit.DbConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
 
                     b.Property<int>("BackupCycleMinutes")
                         .HasColumnType("int");
 
                     b.Property<string>("BackupPath")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("LastBackupTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
