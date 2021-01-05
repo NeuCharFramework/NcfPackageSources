@@ -140,7 +140,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         /// <returns></returns>
         private string BuildSample(Parameters typeParam, ref StringBuilder sb)
         {
-            string projectName = GetPeojectName(typeParam);
+            string projectName = GetProjectName(typeParam);
             _outPutBaseDir = Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "..", $"{projectName}");
             _outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
             if (!Directory.Exists(_outPutBaseDir))
@@ -163,8 +163,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             var isUseWeb = isUseSample || typeParam.UseModule.SelectedValues.Contains("web");
             var useWeb = isUseWeb ? " --UseWeb true" : " --UseWeb false";
             var useDatabase = isUseSample || typeParam.UseModule.SelectedValues.Contains("database") ? " --UseDatabase true" : " --UseDatabase false";
-
-
 
             //获取Area引用版本
             string areaBaseVersion = "";
@@ -234,7 +232,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         /// </summary>
         /// <param name="typeParam"></param>
         /// <returns></returns>
-        private static string GetPeojectName(Parameters typeParam)
+        private static string GetProjectName(Parameters typeParam)
         {
             return $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}";
         }
@@ -243,8 +241,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                BuildSample(typeParam, ref sb); //执行模板生成
-
+                var outputStr = BuildSample(typeParam, ref sb); //执行模板生成
                 var projectFilePath = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}\\{typeParam.OrgName}.Xncf.{typeParam.XncfName}.csproj";
 
                 #region 自动附加项目
@@ -314,7 +311,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         }
                     }
 
-                    var projectName = GetPeojectName(typeParam);
+                    var projectName = GetProjectName(typeParam);
 
                     var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
                     slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
@@ -358,6 +355,8 @@ EndProject
                     configService.Mapper.Map(typeParam, config);
                 }
                 configService.SaveObject(config);
+
+                result.Message += "\r\n\r\n" + outputStr;
 
                 #endregion
             });
