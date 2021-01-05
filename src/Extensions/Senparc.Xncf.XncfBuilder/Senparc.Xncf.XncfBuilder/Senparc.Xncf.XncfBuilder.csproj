@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.7.105.1-beta1</Version>
+    <Version>0.7.105.2-beta1</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -45,22 +45,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Templates\RegisterArea.tt" />
-    <None Remove="Templates\RegisterDatabase.tt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Templates\RegisterArea.tt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <LastGenOutput>RegisterArea.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </Content>
-    <Content Include="Templates\RegisterDatabase.tt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <LastGenOutput>RegisterDatabase.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Templates\Functions\MyFunction.cs">
@@ -318,15 +302,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>RegisterArea.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Register_Area - 复制.cs">
-      <DependentUpon>Register_Area.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="Templates\RegisterDatabase.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RegisterDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\Register_Area - 复制.cs">
+      <DependentUpon>Register_Area.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Update="Templates\Services\ColorService.cs">
       <DesignTime>True</DesignTime>
@@ -514,6 +498,16 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>Register.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\RegisterArea.tt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <LastGenOutput>RegisterArea.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\RegisterDatabase.tt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <LastGenOutput>RegisterDatabase.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
     <None Update="Templates\Services\ColorService.tt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
