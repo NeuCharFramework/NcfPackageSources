@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<!--<TargetFrameworks>netstandard2.1</TargetFrameworks>-->
+		<TargetFrameworks>netstandard2.1</TargetFrameworks>
 		<!--创建 Database 迁移时使用-->
-		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-		<Version>0.7.108.2-beta1</Version>
+		<!--<TargetFrameworks>netcoreapp3.1</TargetFrameworks>-->
+		<Version>0.8.108-beta1</Version>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
