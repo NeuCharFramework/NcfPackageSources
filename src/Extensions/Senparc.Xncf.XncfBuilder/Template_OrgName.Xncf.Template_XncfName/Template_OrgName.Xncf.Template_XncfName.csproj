@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
-		<!--<Version>Template_Version</Version>-->
-		<Version>0.0.0.9999</Version>
+		<TargetFrameworks>netstandard2.1</TargetFrameworks>
+		<!--创建 Database 迁移时使用-->
+		<!--<TargetFrameworks>netcoreapp3.1</TargetFrameworks>-->
+		
+		<Version Condition=" '$(IntegrationToNcf)' == 'true' ">Template_Version</Version>
 		<AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
 		<RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
