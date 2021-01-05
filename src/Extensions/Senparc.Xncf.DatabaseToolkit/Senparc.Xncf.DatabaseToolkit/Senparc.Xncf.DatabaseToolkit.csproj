@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks Condition=" '$(Configuration)' != 'DatabasePlant' ">netstandard2.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(Configuration)' == 'DatabasePlant' ">netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>
 	  <Version>0.9.106-beta1</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
