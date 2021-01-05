@@ -9,7 +9,6 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.Core.Models;
 using System.Data.Common;
-using MySql.Data.MySqlClient;
 
 namespace Senparc.Ncf.Database.MySql
 {
@@ -31,7 +30,10 @@ namespace Senparc.Ncf.Database.MySql
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                optionsBuilder.UseMySql(connectionString, actionBase);//beta6
+                optionsBuilder.UseMySql(connectionString,
+                    //ServerVersion 用法：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1233
+                    ServerVersion.AutoDetect(connectionString), 
+                    actionBase);//beta6
             };
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
