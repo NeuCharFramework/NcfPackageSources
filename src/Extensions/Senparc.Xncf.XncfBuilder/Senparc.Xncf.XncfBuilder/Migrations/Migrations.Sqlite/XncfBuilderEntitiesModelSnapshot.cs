@@ -14,7 +14,7 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Senparc.Xncf.XncfBuilder.Config", b =>
                 {
@@ -26,42 +26,45 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Icon")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MenuName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OrgName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SlnFilePath")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Version")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("XncfName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

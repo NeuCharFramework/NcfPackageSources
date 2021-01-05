@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<!--<TargetFrameworks>netstandard2.1</TargetFrameworks>-->
+		<TargetFrameworks>netstandard2.1</TargetFrameworks>
 		<!--创建 Database 迁移时使用-->
-		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+		<!--<TargetFrameworks>netcoreapp3.1</TargetFrameworks>-->
 
 		<!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-		<Version>0.9.108-beta1</Version>
+		<Version>0.9.108.1-beta1</Version>
 		<AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
 		<RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
