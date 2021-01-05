@@ -20,7 +20,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Name => "Senparc.Xncf.DatabaseToolkit";
 
         public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.5.11";//必须填写版本号
+        public override string Version => "0.6.0";//必须填写版本号
 
         public override string MenuName => "数据库工具包";
         public override string Icon => "fa fa-database";
