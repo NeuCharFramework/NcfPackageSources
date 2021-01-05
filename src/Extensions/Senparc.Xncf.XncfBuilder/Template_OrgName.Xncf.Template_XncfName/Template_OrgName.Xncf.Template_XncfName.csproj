@@ -42,7 +42,8 @@
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.104-beta1" />
+		<PackageReference Condition=" '$(IntegrationToNcf)' == 'true'" Include="Senparc.Ncf.XncfBase" Version="0.6.106-beta1" />
+		<ProjectReference Condition=" '$(IntegrationToNcf)' != 'true'" Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
@@ -60,5 +61,4 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
-
 </Project>
