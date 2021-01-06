@@ -148,14 +148,16 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 Directory.CreateDirectory(_outPutBaseDir);
             }
 
+            //TODO:参数合法性校验
+
             //基础信息
             var orgName = $" --OrgName {typeParam.OrgName}";
             var xncfName = $" --OrgName {typeParam.XncfName}";
             var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
-            var icon = $" --Icon {typeParam.Icon}";
-            var description = $" --Icon {typeParam.Description}";
+            var icon = $" --Icon \"{typeParam.Icon}\"";
+            var description = $" --Description \"{typeParam.Description}\"";
             var version = $" --Version {typeParam.Version}";
-            var menuName = $" --MenuName {typeParam.MenuName}";
+            var menuName = $" --MenuName \"{typeParam.MenuName}\"";
             //配置功能
             var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
             var useSample = isUseSample ? " --UseSample true" : " --UseSample false";
