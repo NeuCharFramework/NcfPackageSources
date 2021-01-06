@@ -141,8 +141,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         private string BuildSample(Parameters typeParam, ref StringBuilder sb)
         {
             string projectName = GetProjectName(typeParam);
-            _outPutBaseDir = Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "..", $"{projectName}");
-            _outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
+            _outPutBaseDir = Path.GetDirectoryName(typeParam.SlnFilePath);  //Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, ".."/*, $"{projectName}"*/);//找到sln根目录即可
+            //_outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
             if (!Directory.Exists(_outPutBaseDir))
             {
                 Directory.CreateDirectory(_outPutBaseDir);
@@ -152,7 +152,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             //基础信息
             var orgName = $" --OrgName {typeParam.OrgName}";
-            var xncfName = $" --OrgName {typeParam.XncfName}";
+            var xncfName = $" --XncfName {typeParam.XncfName}";
             var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
             var icon = $" --Icon \"{typeParam.Icon}\"";
             var description = $" --Description \"{typeParam.Description}\"";
@@ -193,8 +193,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName} --framework aspnetcore3.1",//TODO:可以支持更多参数，如net5.0
-                $"dotnet add ../Senparc.Web/Senparc.Web.csproj reference"
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}",
+                $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference {projectName}/{projectName}.csproj",
+                $"dotnet sln {typeParam.SlnFilePath} add {projectName}/{projectName}.csproj"
             };
 
 
@@ -316,25 +317,25 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                     var projectName = GetProjectName(typeParam);
 
-                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
-                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
-EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
-EndProject
-Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{relativeFilePath}"", ""{projGuid}""
-EndProject
-").Replace(@"		{D0EF2816-B99A-4554-964A-6EA6814B3A36}.Test|Any CPU.Build.0 = Release|Any CPU
-", @$"		{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}.Test|Any CPU.Build.0 = Release|Any CPU
-		{projGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{projGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{projGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU
-		{projGuid}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
-").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
-		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
-                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
-                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
-                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
+//                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
+//                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
+//EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
+//EndProject
+//Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{relativeFilePath}"", ""{projGuid}""
+//EndProject
+//").Replace(@"		{D0EF2816-B99A-4554-964A-6EA6814B3A36}.Test|Any CPU.Build.0 = Release|Any CPU
+//", @$"		{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}.Test|Any CPU.Build.0 = Release|Any CPU
+//		{projGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+//		{projGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
+//		{projGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
+//		{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU
+//		{projGuid}.Test|Any CPU.ActiveCfg = Release|Any CPU
+//		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
+//").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
+//		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
+//                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
+//                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
+//                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
                 }
                 else
                 {

@@ -140,7 +140,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var outputVerbose = typeParam.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
                     var dbTypeSuffix = Enum.TryParse(dbType, out MultipleDatabaseType dbTypeEnum) && dbTypeEnum == MultipleDatabaseType.Default
                                             ? "" : $"_{dbType}";//如果是SQL Lite
-                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -o {migrationDir}{outputVerbose}");
+                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -o {migrationDir}{outputVerbose} --framework aspnetcore3.1"/*TODO:可以支持更多参数，如net5.0*/);
                 }
 
                 Process p = new Process();
