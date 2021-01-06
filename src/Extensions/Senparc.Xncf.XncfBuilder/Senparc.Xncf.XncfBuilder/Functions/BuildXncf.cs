@@ -191,7 +191,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}"
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName} --framework aspnetcore3.1",//TODO:可以支持更多参数，如net5.0
+                $"dotnet add ../Senparc.Web/Senparc.Web.csproj reference"
             };
 
 
@@ -246,19 +247,19 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #region 自动附加项目
 
-                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
-                if (File.Exists(webProjFilePath))
-                {
-                    XDocument webCsproj = XDocument.Load(webProjFilePath);
-                    if (!webCsproj.ToString().Contains(projectFilePath))
-                    {
-                        var referenceNode = new XElement("ProjectReference");
-                        referenceNode.Add(new XAttribute("Include", $"..\\{projectFilePath}"));
-                        var newNode = new XElement("ItemGroup", referenceNode);
-                        webCsproj.Root.Add(newNode);
-                        webCsproj.Save(webProjFilePath);
-                    }
-                }
+                //var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
+                //if (File.Exists(webProjFilePath))
+                //{
+                //    XDocument webCsproj = XDocument.Load(webProjFilePath);
+                //    if (!webCsproj.ToString().Contains(projectFilePath))
+                //    {
+                //        var referenceNode = new XElement("ProjectReference");
+                //        referenceNode.Add(new XAttribute("Include", $"..\\{projectFilePath}"));
+                //        var newNode = new XElement("ItemGroup", referenceNode);
+                //        webCsproj.Root.Add(newNode);
+                //        webCsproj.Save(webProjFilePath);
+                //    }
+                //}
 
                 #endregion
 
