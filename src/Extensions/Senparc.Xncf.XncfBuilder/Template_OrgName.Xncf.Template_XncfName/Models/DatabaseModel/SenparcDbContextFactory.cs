@@ -21,13 +21,26 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// <summary>
         /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
         /// </summary>
-        private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, 
-                                                                "..\\..\\..\\"/*项目根目录*/, 
-                                                                "..\\Senparc.Web"/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
+        private static string RootDictionaryPath
+        {
+            get
+            {
+                var projectPath = Path.GetFullPath("..\\..\\..\\", AppContext.BaseDirectory);//项目根目录
+
+                var webPath = Path.GetFullPath("..\\Senparc.Web",/*找到 Web目录，以获取统一的数据库连接字符串配置*/
+                                               projectPath);
+                if (Directory.Exists(webPath))
+                {
+                    return webPath;//优先使用Web统一配置
+                }
+
+                return projectPath;
+            }
+        }
 
         public SenparcDbContextFactory()
             : base(RootDictionaryPath)
         {
-        }    
+        }
     }
 }
