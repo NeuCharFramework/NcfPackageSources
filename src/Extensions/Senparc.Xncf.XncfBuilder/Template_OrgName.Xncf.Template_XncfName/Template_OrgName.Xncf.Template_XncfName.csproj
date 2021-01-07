@@ -40,7 +40,7 @@
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Condition=" '$(IntegrationToNcf)' == 'true'" Include="Senparc.Ncf.XncfBase" Version="0.6.106-beta1" />
+		<PackageReference Condition=" '$(IntegrationToNcf)' == 'true'" Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
 		<ProjectReference Condition=" '$(IntegrationToNcf)' != 'true'" Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 	</ItemGroup>
 	<ItemGroup>

@@ -32,7 +32,7 @@
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "IntegrationToNcf":{
+    "IntegrationToNcf": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "true"
@@ -100,6 +100,15 @@
       "replaces": "Template_Guid",
       "isRequired": true,
       "defaultValue": "WrongGuid"
+    },
+    "XncfBaseVersion": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Senparc.Ncf.XncfBase package version",
+      "fileRename": "Template_XncfBase_Version",
+      "replaces": "Template_XncfBase_Version",
+      "isRequired": true,
+      "defaultValue": "0.6.106-beta1"
     }
   },
   "sourceName": "MyGroup.Xncf.MyModule",

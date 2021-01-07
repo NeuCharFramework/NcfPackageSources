@@ -150,22 +150,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             //TODO:参数合法性校验
 
-            //基础信息
-            var orgName = $" --OrgName {typeParam.OrgName}";
-            var xncfName = $" --XncfName {typeParam.XncfName}";
-            var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
-            var icon = $" --Icon \"{typeParam.Icon}\"";
-            var description = $" --Description \"{typeParam.Description}\"";
-            var version = $" --Version {typeParam.Version}";
-            var menuName = $" --MenuName \"{typeParam.MenuName}\"";
-            //配置功能
-            var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
-            var useSample = isUseSample ? " --UseSample true" : " --UseSample false";
-            var useFunction = typeParam.UseModule.SelectedValues.Contains("function") ? " --UseFunction true" : " --UseFunction false";
-            var isUseWeb = isUseSample || typeParam.UseModule.SelectedValues.Contains("web");
-            var useWeb = isUseWeb ? " --UseWeb true" : " --UseWeb false";
-            var useDatabase = isUseSample || typeParam.UseModule.SelectedValues.Contains("database") ? " --UseDatabase true" : " --UseDatabase false";
-
             //获取Area引用版本
             string areaBaseVersion = "";
             try
@@ -181,6 +165,24 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             }
 
 
+            //基础信息
+            var orgName = $" --OrgName {typeParam.OrgName}";
+            var xncfName = $" --XncfName {typeParam.XncfName}";
+            var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
+            var icon = $" --Icon \"{typeParam.Icon}\"";
+            var description = $" --Description \"{typeParam.Description}\"";
+            var version = $" --Version {typeParam.Version}";
+            var menuName = $" --MenuName \"{typeParam.MenuName}\"";
+            var xncfBaseVersion = $" --XncfBaseVersion {areaBaseVersion}";
+
+            //配置功能
+            var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
+            var useSample = isUseSample ? " --UseSample true" : " --UseSample false";
+            var useFunction = typeParam.UseModule.SelectedValues.Contains("function") ? " --UseFunction true" : " --UseFunction false";
+            var isUseWeb = isUseSample || typeParam.UseModule.SelectedValues.Contains("web");
+            var useWeb = isUseWeb ? " --UseWeb true" : " --UseWeb false";
+            var useDatabase = isUseSample || typeParam.UseModule.SelectedValues.Contains("database") ? " --UseDatabase true" : " --UseDatabase false";
+
             //获取当前配置的 FrameworkVersion
             var frameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty()
                                         ? typeParam.FrameworkVersion.SelectedValues.First()
@@ -193,7 +195,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}",
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj"
             };
