@@ -21,7 +21,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
 
-        public override string Version => "0.3.0";//必须填写版本号
+        public override string Version => "0.3.2";//必须填写版本号
 
         public override string MenuName => "XNCF 模块生成器";
 
