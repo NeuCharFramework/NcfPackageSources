@@ -66,3 +66,4 @@ obj/
 /src/Basic/Senparc.Ncf.DatabasePlant/App_Data/SenparcTraceLog
 /src/Extensions/Senparc.Xncf.XncfBuilder.Tests/App_Data/SenparcTraceLog
 /src/Extensions/Senparc.Xncf.DatabaseToolkit/Senparc.Xncf.DatabaseToolkit/App_Data/SenparcTraceLog
+/src/Extensions/Senparc.Xncf.XncfBuilder/Template_OrgName.Xncf.Template_XncfName/App_Data/SenparcTraceLog

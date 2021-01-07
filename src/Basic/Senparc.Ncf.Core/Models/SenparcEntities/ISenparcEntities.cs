@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models
 {
+    /// <summary>
+    /// ISenparcEntities
+    /// </summary>
     public interface ISenparcEntities : IDisposable, IInfrastructure<IServiceProvider>, IDbContextDependencies, IDbSetCache, /*IDbQueryCache, */IDbContextPoolable
     {
         void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase;
