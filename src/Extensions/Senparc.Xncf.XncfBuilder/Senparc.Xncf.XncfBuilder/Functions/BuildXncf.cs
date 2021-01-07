@@ -310,7 +310,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 }
                 configService.SaveObject(config);
 
-                result.Message += "\r\n\r\n" + outputStr;
+                //result.Message += "\r\n\r\n" + outputStr;
 
                 #endregion
             });
