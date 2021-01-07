@@ -197,7 +197,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 $"cd {_outPutBaseDir}",
                 $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
-                $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj"
+                $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };
 
             Process p = new Process();
