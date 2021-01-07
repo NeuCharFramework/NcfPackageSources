@@ -194,10 +194,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
                 $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}",
-                $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference {projectName}/{projectName}.csproj",
-                $"dotnet sln {typeParam.SlnFilePath} add {projectName}/{projectName}.csproj"
+                $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
+                $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj"
             };
-
 
             Process p = new Process();
             p.StartInfo.FileName = "cmd.exe";
@@ -248,24 +247,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 var outputStr = BuildSample(typeParam, ref sb); //执行模板生成
                 var projectFilePath = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}\\{typeParam.OrgName}.Xncf.{typeParam.XncfName}.csproj";
 
-                #region 自动附加项目
-
-                //var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
-                //if (File.Exists(webProjFilePath))
-                //{
-                //    XDocument webCsproj = XDocument.Load(webProjFilePath);
-                //    if (!webCsproj.ToString().Contains(projectFilePath))
-                //    {
-                //        var referenceNode = new XElement("ProjectReference");
-                //        referenceNode.Add(new XAttribute("Include", $"..\\{projectFilePath}"));
-                //        var newNode = new XElement("ItemGroup", referenceNode);
-                //        webCsproj.Root.Add(newNode);
-                //        webCsproj.Save(webProjFilePath);
-                //    }
-                //}
-
-                #endregion
-
                 #region 生成 .sln
 
                 var relativeFilePath = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}.csproj";
@@ -303,39 +284,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
 
                     result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
-
-                    //修改 new Sln
-                    string slnContent = null;
-                    using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
-                    {
-                        using (StreamReader sr = new StreamReader(fs))
-                        {
-                            slnContent = sr.ReadToEnd();
-                            sr.Close();
-                        }
-                    }
-
-                    var projectName = GetProjectName(typeParam);
-
-//                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
-//                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
-//EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
-//EndProject
-//Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{relativeFilePath}"", ""{projGuid}""
-//EndProject
-//").Replace(@"		{D0EF2816-B99A-4554-964A-6EA6814B3A36}.Test|Any CPU.Build.0 = Release|Any CPU
-//", @$"		{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}.Test|Any CPU.Build.0 = Release|Any CPU
-//		{projGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-//		{projGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
-//		{projGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
-//		{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU
-//		{projGuid}.Test|Any CPU.ActiveCfg = Release|Any CPU
-//		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
-//").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
-//		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
-//                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
-//                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
-//                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
                 }
                 else
                 {

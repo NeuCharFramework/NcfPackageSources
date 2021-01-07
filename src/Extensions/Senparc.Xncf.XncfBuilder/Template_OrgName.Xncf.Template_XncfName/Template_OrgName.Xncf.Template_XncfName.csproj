@@ -31,10 +31,8 @@
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-	<ItemGroup>
+	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
 		<Content Include=".template.config\template.json" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Include=".template.config\readme.md" />
 	</ItemGroup>
 	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true' ">
