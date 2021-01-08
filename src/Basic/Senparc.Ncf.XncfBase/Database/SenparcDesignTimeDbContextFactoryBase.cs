@@ -63,7 +63,7 @@ namespace Senparc.Ncf.XncfBase.Database
         protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
         {
-               _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
+            _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
             //var databaseRegister = _register as IXncfRegister;
             base.XncfDatabaseData = new XncfDatabaseData(_register, dbMigrationAssemblyName);
         }
@@ -171,7 +171,6 @@ namespace Senparc.Ncf.XncfBase.Database
         public abstract void CreateDbContextAction();
         public virtual TDbContext CreateDbContext(string[] args)
         {
-
             //获取数据库配置
             DatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 

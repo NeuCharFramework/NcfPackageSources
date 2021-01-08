@@ -54,10 +54,6 @@ namespace Senparc.Ncf.Core.Config
 
                 if (SenparcDatabaseConnectionConfigs.Configs != null && SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
                 {
-                    //根据数据库类型不同，区分输出连接字符串。
-                    //string provider = "System.Data.SqlClient";
-                    //return string.Format(@"metadata=res://*/Models.Sprent.csdl|res://*/Models.Sprent.ssdl|res://*/Models.Sprent.msl;provider={0};provider connection string='{1}';"
-                    //    , provider, HandleIdeaConfigs.Config.ConnectionString);
                     return SenparcDatabaseConnectionConfigs.Configs[databaseName].ConnectionStringFull;
                 }
                 else
