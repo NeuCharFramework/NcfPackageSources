@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.SqlServer
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_SqlServer))]
-    partial class Template_XncfNameSenparcEntitiesModelSnapshot : ModelSnapshot
+    partial class Template_XncfNameSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
