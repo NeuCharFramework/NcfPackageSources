@@ -21,18 +21,18 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             _serviceProvider = serviceProvider;
         }
 
-        public Task OnGetAsync()
+        public async Task OnGetAsync()
         {
             var color = _colorService.GetObject(z => true, z => z.Id, OrderingType.Descending);
-            ColorDto = _colorService.Mapper.Map<ColorDto>(color);
-            return Task.CompletedTask;
+            ColorDto = color == null 
+                        ? (await _colorService.CreateNewColor()) 
+                        : _colorService.Mapper.Map<ColorDto>(color);
         }
 
         public IActionResult OnGetDetail()
         {
             var color = _colorService.GetObject(z => true, z => z.Id, OrderingType.Descending);
             var colorDto = _colorService.Mapper.Map<ColorDto>(color);
-            //return Task.CompletedTask;
             return Ok(new { colorDto, XncfModuleDto });
         }
 
