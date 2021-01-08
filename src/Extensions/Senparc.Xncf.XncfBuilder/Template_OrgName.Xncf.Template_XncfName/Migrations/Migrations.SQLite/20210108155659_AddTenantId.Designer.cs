@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.SQLite
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities))]
-    partial class Template_XncfNameSenparcEntitiesModelSnapshot : ModelSnapshot
+    [Migration("20210108155659_AddTenantId")]
+    partial class AddTenantId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
