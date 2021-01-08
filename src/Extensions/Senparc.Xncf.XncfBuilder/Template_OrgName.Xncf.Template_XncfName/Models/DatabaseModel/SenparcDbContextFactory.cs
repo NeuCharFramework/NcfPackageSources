@@ -21,7 +21,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// <summary>
         /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
         /// </summary>
-        private static string RootDictionaryPath
+        internal static string RootDictionaryPath
         {
             get
             {
@@ -33,7 +33,6 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 {
                     return webPath;//优先使用Web统一配置
                 }
-
                 return projectPath;
             }
         }

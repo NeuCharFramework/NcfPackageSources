@@ -31,12 +31,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel
             services.AddDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
         };
 
-        /// <summary>
-        /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
-        /// </summary>
-        private static string RootDictionaryPath => Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"/*项目根目录*/, "..\\Senparc.Web"/*找到 Web目录，以获取统一的数据库连接字符串配置*/);
-
-        public SenparcDbContextFactory_MySql() : base(RootDictionaryPath)
+        public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactory.RootDictionaryPath)
         {
 
         }
