@@ -21,6 +21,20 @@
 		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test</Configurations>
 	</PropertyGroup>
+	<PropertyGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<ContentTargetFolders>content</ContentTargetFolders>
+		<PackageVersion>0.1</PackageVersion>
+		<PackageType>Template</PackageType>
+		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
+	</PropertyGroup>
+	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
+		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
+		<Content Include=".template.config\template.json" />
+		<None Include=".template.config\readme.md" />
+		<Compile Remove="**\*" />
+	</ItemGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
 		<DocumentationFile>..\..\..\BuildOutPut\Template_OrgName.Xncf.Template_XncfName.XML</DocumentationFile>
@@ -30,10 +44,6 @@
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
-		<Content Include=".template.config\template.json" />
-		<None Include=".template.config\readme.md" />
-	</ItemGroup>
 	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true' ">
 		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
