@@ -74,6 +74,8 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 
+
+
         #endregion
 
         /// <summary>
