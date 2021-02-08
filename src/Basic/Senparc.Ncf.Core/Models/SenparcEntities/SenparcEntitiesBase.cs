@@ -75,6 +75,10 @@ namespace Senparc.Ncf.Core.Models
         public DbSet<XncfModule> XncfModules { get; set; }
 
 
+        /// <summary>
+        /// 多租户信息
+        /// </summary>
+        public DbSet<TenantInfo> TenantInfos { get; set; }
 
         #endregion
 
