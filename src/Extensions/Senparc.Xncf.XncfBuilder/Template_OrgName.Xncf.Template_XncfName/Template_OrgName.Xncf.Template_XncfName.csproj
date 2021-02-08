@@ -49,6 +49,43 @@
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Include="Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml.cs" />
+	  <Compile Include="Areas\Admin\Pages\Template_XncfName\Index.cshtml.cs" />
+	  <Compile Include="Functions\MyFunction.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\20201226143133_Init.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\20201226143133_Init.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\20201226143134_AddSample.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\20201226143134_AddSample.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\20210108155724_AddTenantId.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\20210108155724_AddTenantId.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.MySql\Template_XncfNameSenparcEntities_MySqlModelSnapshot.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\20201226143133_Init.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\20201226143133_Init.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\20201226143134_AddSample.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\20201226143134_AddSample.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\20210108155659_AddTenantId.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\20210108155659_AddTenantId.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\Template_XncfNameSenparcEntitiesModelSnapshot.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\20201226143133_Init.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\20201226143133_Init.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\20201226143134_AddSample.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\20201226143134_AddSample.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\20210108155711_AddTenantId.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\20210108155711_AddTenantId.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.SqlServer\Template_XncfNameSenparcEntities_SqlServerModelSnapshot.cs" />
+	  <Compile Include="Models\DatabaseModel\Color.cs" />
+	  <Compile Include="Models\DatabaseModel\Dto\ColorDto.cs" />
+	  <Compile Include="Models\DatabaseModel\Mapping\Template_XncfName_ColorConfigurationMapping.cs" />
+	  <Compile Include="Models\DatabaseModel\SenparcDbContextFactory.cs" />
+	  <Compile Include="Models\DatabaseModel\Template_XncfNameSenparcEntities.cs" />
+	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_MySql.cs" />
+	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_SqlServer.cs" />
+	  <Compile Include="Register.Area.cs" />
+	  <Compile Include="Register.cs" />
+	  <Compile Include="Register.Database.cs" />
+	  <Compile Include="Services\ColorService.cs" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Condition=" '$(IntegrationToNcf)' == 'true'" Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
 		<ProjectReference Condition=" '$(IntegrationToNcf)' != 'true'" Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 	</ItemGroup>
@@ -62,5 +99,10 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
 		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
 		<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\Migrations-MySql\" />
+	  <Folder Include="Migrations\Migrations-SQLite\" />
+	  <Folder Include="Migrations\Migrations-SqlServer\" />
 	</ItemGroup>
 </Project>
