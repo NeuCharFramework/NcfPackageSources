@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/NcfPackageSources.sln'
@@ -16,28 +16,43 @@ variables:
 
 steps:
 
-# - task: UseDotNet@2
-#   inputs:
-#     version: '3.1.x'
-#     packageType: runtime
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 3'
+  inputs:
+    version: '3.1.x'
+    packageType: 'sdk'
+
+- task: UseDotNet@2
+  displayName: 'Use .NET SDK 5'
+  inputs:
+    version: '5.0.x'
+    packageType: 'sdk'
 
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
     restoreSolution: '**/NcfPackageSources.sln'
-    feedsToUse: 'select'
+    feedsToUse: 'config'
+    externalFeedCredentials: 'nuget-jeffrey-full-key'
     
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+# - task: VSBuild@1
+#   inputs:
+#     solution: '$(solution)'
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: build
+    projects: '**/NcfPackageSources.sln'
+    arguments: '--configuration Release'
+
+# - task: VSTest@2
+#   inputs:
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
 
 
 - task: NuGetToolInstaller@1
@@ -47,24 +62,45 @@ steps:
     checkLatest: true
 
 - task: NuGetCommand@2
-  displayName: Senparc.Ncf.Core
+  displayName: Senparc.Ncf.Core -V0
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Ncf.Core.*.nupkg'
+    packagesToPush: '**/Senparc.Ncf.Core.0.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
 
 - task: NuGetCommand@2
-  displayName: 'Senparc.Ncf.Core - Symbol'
+  displayName: 'Senparc.Ncf.Core -V0 - Symbol'
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Ncf.Core.*.snupkg'
+    packagesToPush: '**/Senparc.Ncf.Core.0.*.snupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Core.AspNet
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Core.AspNet*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Core.AspNet - Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Core.AspNet*.snupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Log
@@ -305,6 +341,89 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database -v0
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.0.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database -v0 - Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.0.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.DatabasePlant
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.DatabasePlant.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.DatabasePlant- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.DatabasePlant.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.MySql
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.MySql.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.MySql- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.MySql.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.SqlServer
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.SqlServer.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.SqlServer- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.SqlServer.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 
 - task: DotNetCoreCLI@2
   displayName: Publish
