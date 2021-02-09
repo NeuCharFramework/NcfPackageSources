@@ -41,7 +41,7 @@ namespace Senparc.Xncf.XncfBuilder.Templates.App_Data.Database
 	<!-- Local 开始 -->
 	<SenparcConfig>
 		<Id>2</Id>
-		<Name>Local-SQLite</Name>
+		<Name>Local-Sqlite</Name>
 		<!--本地数据库-->
 		<ConnectionStringFull><![CDATA[Filename=:memory:]]></ConnectionStringFull>
 		<ApplicationPath><![CDATA[/]]></ApplicationPath>
