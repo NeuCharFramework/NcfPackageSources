@@ -17,7 +17,6 @@ namespace Senparc.Ncf.Core.Models
         Oracle,
         PostgreSql,
         Other = 99999,
-        Default = SQLite,
         //TODO:更多
     }
 }

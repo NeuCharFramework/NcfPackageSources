@@ -49,6 +49,20 @@
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Remove="Migrations\Migrations-MySql\**" />
+	  <Compile Remove="Migrations\Migrations-SQLite\**" />
+	  <Compile Remove="Migrations\Migrations-SqlServer\**" />
+	  <Content Remove="Migrations\Migrations-MySql\**" />
+	  <Content Remove="Migrations\Migrations-SQLite\**" />
+	  <Content Remove="Migrations\Migrations-SqlServer\**" />
+	  <EmbeddedResource Remove="Migrations\Migrations-MySql\**" />
+	  <EmbeddedResource Remove="Migrations\Migrations-SQLite\**" />
+	  <EmbeddedResource Remove="Migrations\Migrations-SqlServer\**" />
+	  <None Remove="Migrations\Migrations-MySql\**" />
+	  <None Remove="Migrations\Migrations-SQLite\**" />
+	  <None Remove="Migrations\Migrations-SqlServer\**" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Compile Include="Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml.cs" />
 	  <Compile Include="Areas\Admin\Pages\Template_XncfName\Index.cshtml.cs" />
 	  <Compile Include="Functions\MyFunction.cs" />
@@ -65,7 +79,7 @@
 	  <Compile Include="Migrations\Migrations.SQLite\20201226143134_AddSample.Designer.cs" />
 	  <Compile Include="Migrations\Migrations.SQLite\20210108155659_AddTenantId.cs" />
 	  <Compile Include="Migrations\Migrations.SQLite\20210108155659_AddTenantId.Designer.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite\Template_XncfNameSenparcEntitiesModelSnapshot.cs" />
+	  <Compile Include="Migrations\Migrations.SQLite\Template_XncfNameSenparcEntities_SQLiteModelSnapshot.cs" />
 	  <Compile Include="Migrations\Migrations.SqlServer\20201226143133_Init.cs" />
 	  <Compile Include="Migrations\Migrations.SqlServer\20201226143133_Init.Designer.cs" />
 	  <Compile Include="Migrations\Migrations.SqlServer\20201226143134_AddSample.cs" />
@@ -78,6 +92,7 @@
 	  <Compile Include="Models\DatabaseModel\Mapping\Template_XncfName_ColorConfigurationMapping.cs" />
 	  <Compile Include="Models\DatabaseModel\SenparcDbContextFactory.cs" />
 	  <Compile Include="Models\DatabaseModel\Template_XncfNameSenparcEntities.cs" />
+	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_SQLite.cs" />
 	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_MySql.cs" />
 	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_SqlServer.cs" />
 	  <Compile Include="Register.Area.cs" />
@@ -99,10 +114,5 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
 		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
 		<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Migrations\Migrations-MySql\" />
-	  <Folder Include="Migrations\Migrations-SQLite\" />
-	  <Folder Include="Migrations\Migrations-SqlServer\" />
 	</ItemGroup>
 </Project>

@@ -124,22 +124,21 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                if (!typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.SQLite.ToString()))
+                if (typeParam.DatabaseTypes.SelectedValues.Count() == 0)
                 {
-                    result.Message = $"{MultipleDatabaseType.SQLite} 暂时为默认数据库，必选";
+                    result.Message = "至少选择 1 个数据库！";
                     return;
                 }
 
                 var commandTexts = new List<string> {
-                @$"cd {typeParam.ProjectPath}",
-            };
+                                        @$"cd {typeParam.ProjectPath}",
+                                    };
 
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
                     string migrationDir = GetMigrationDir(typeParam, dbType);
                     var outputVerbose = typeParam.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
-                    var dbTypeSuffix = Enum.TryParse(dbType, out MultipleDatabaseType dbTypeEnum) && dbTypeEnum == MultipleDatabaseType.Default
-                                            ? "" : $"_{dbType}";//如果是SQL Lite
+                    var dbTypeSuffix = $"_{dbType}";
                     commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -s {typeParam.DatabasePlantPath} -o {migrationDir}{outputVerbose}");
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0

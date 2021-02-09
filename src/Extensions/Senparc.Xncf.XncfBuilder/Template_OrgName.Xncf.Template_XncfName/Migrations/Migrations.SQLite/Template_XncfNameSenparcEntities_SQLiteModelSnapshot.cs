@@ -7,8 +7,8 @@ using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.SQLite
 {
-    [DbContext(typeof(Template_XncfNameSenparcEntities))]
-    partial class Template_XncfNameSenparcEntitiesModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Template_XncfNameSenparcEntities_SQLite))]
+    partial class Template_XncfNameSenparcEntities_SQLiteModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
