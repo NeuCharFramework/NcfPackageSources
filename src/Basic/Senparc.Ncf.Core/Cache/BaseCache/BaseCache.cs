@@ -26,7 +26,7 @@ namespace Senparc.Ncf.Core.Cache
 
         public delegate void UpdateWithBataBase(T obj);
 
-        protected ISqlBaseFinanceData _db;
+        protected INcfDbData _db;
 
         protected string CacheKey;
         private T _data;
@@ -52,7 +52,7 @@ namespace Senparc.Ncf.Core.Cache
             : this(cacheKey, null)
         { }
 
-        public BaseCache(string cacheKey, ISqlBaseFinanceData db)
+        public BaseCache(string cacheKey, INcfDbData db)
         {
             CacheKey = cacheKey;
 

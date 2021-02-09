@@ -74,6 +74,12 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 
+
+        /// <summary>
+        /// 多租户信息
+        /// </summary>
+        public DbSet<TenantInfo> TenantInfos { get; set; }
+
         #endregion
 
         /// <summary>
@@ -124,11 +130,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 
+        /// 设置全局查询
         /// </summary>
         private static readonly MethodInfo SetGlobalQueryMethodInfo = typeof(SenparcEntitiesBase)
             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Single(t => t.IsGenericMethod && t.Name == "SetGlobalQuery");
+            .Single(t => t.IsGenericMethod && t.Name == nameof(SetGlobalQuery) /*"SetGlobalQuery"*/);
 
         /// <summary>
         /// 全局查询，附带软删除状态
@@ -137,7 +143,13 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="builder"></param>
         public virtual void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
+            //软删除
             builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+            ////租户
+            //if (typeof(T).IsAssignableFrom(typeof(IMultipleTenant)))
+            //{
+            //    builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+            //}
         }
     }
 }

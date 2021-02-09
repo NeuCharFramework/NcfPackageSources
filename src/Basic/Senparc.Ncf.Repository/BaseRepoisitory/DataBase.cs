@@ -4,7 +4,7 @@ namespace Senparc.Ncf.Repository
 {
     public interface IDataBase
     {
-        ISqlBaseFinanceData BaseDB { get; set; }
+        INcfDbData BaseDB { get; set; }
 
         void CloseConnection();
     }
@@ -12,9 +12,9 @@ namespace Senparc.Ncf.Repository
 
     public class DataBase : IDataBase
     {
-        public ISqlBaseFinanceData BaseDB { get; set; }
+        public INcfDbData BaseDB { get; set; }
 
-        public DataBase(ISqlBaseFinanceData baseDB)
+        public DataBase(INcfDbData baseDB)
         {
             BaseDB = baseDB;
         }

@@ -9,8 +9,10 @@ namespace Senparc.Ncf.Core.Models
     /// 数据库实体基类
     /// </summary>
     [Serializable]
-    public partial class EntityBase : IEntityBase
+    public partial class EntityBase : IEntityBase, IMultiTenancy
     {
+        #region IEntityBase 接口
+
         /// <summary>
         /// 是否软删除
         /// </summary>
@@ -23,6 +25,19 @@ namespace Senparc.Ncf.Core.Models
         /// 上次更新时间
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
+
+        #endregion
+
+        #region IMultiTenancy 接口
+
+        /// <summary>
+        /// 租户 ID
+        /// <para>如果为-1，则本系统不启用多租户</para>
+        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        /// </summary>
+        public int TenantId { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -30,13 +45,14 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     [Serializable]
-    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>
+    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*默认支持多租户接口*/
     {
         /// <summary>
         /// 主键
         /// </summary>
         [Key]
         public TKey Id { get; set; }
+
 
         /// <summary>
         /// 更新最后更新时间

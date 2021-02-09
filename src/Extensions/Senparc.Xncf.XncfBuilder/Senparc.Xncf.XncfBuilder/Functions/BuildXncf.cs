@@ -132,305 +132,132 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         public override Type FunctionParameterType => typeof(Parameters);
 
         private string _outPutBaseDir;
+
+
         /// <summary>
-        /// 输出内容
+        /// 执行模板生成
         /// </summary>
-        /// <param name="page"></param>
-        private void WriteContent(IXncfTemplatePage page, StringBuilder sb)
+        /// <returns></returns>
+        private string BuildSample(Parameters typeParam, ref StringBuilder sb)
         {
-            String pageContent = page.TransformText();
-            System.IO.File.WriteAllText(Path.Combine(_outPutBaseDir, page.RelativeFilePath), pageContent, Encoding.UTF8);
-            sb.AppendLine($"已添加文件：{page.RelativeFilePath}");
+            string projectName = GetProjectName(typeParam);
+            _outPutBaseDir = Path.GetDirectoryName(typeParam.SlnFilePath);  //Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, ".."/*, $"{projectName}"*/);//找到sln根目录即可
+            //_outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
+            if (!Directory.Exists(_outPutBaseDir))
+            {
+                Directory.CreateDirectory(_outPutBaseDir);
+            }
+
+            //TODO:参数合法性校验
+
+            //获取Area引用版本
+            string areaBaseVersion = "";
+            try
+            {
+                //areaBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(Type.GetType("Senparc.Ncf.AreaBase.Admin.AdminPageModelBase,Senparc.Ncf.AreaBase")).Location).ProductVersion;
+                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                var areaBaseDllPath = Path.Combine(dllPath, "Senparc.Ncf.AreaBase.dll");
+                areaBaseVersion =
+                FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(areaBaseDllPath).Location).ProductVersion;
+            }
+            catch
+            {
+            }
+
+
+            //基础信息
+            var orgName = $" --OrgName {typeParam.OrgName}";
+            var xncfName = $" --XncfName {typeParam.XncfName}";
+            var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
+            var icon = $" --Icon \"{typeParam.Icon}\"";
+            var description = $" --Description \"{typeParam.Description}\"";
+            var version = $" --Version {typeParam.Version}";
+            var menuName = $" --MenuName \"{typeParam.MenuName}\"";
+            var xncfBaseVersion = $" --XncfBaseVersion {areaBaseVersion}";
+
+            //配置功能
+            var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
+            var useSample = isUseSample ? " --UseSample true" : " --UseSample false";
+            var useFunction = typeParam.UseModule.SelectedValues.Contains("function") ? " --UseFunction true" : " --UseFunction false";
+            var isUseWeb = isUseSample || typeParam.UseModule.SelectedValues.Contains("web");
+            var useWeb = isUseWeb ? " --UseWeb true" : " --UseWeb false";
+            var useDatabase = isUseSample || typeParam.UseModule.SelectedValues.Contains("database") ? " --UseDatabase true" : " --UseDatabase false";
+
+            //获取当前配置的 FrameworkVersion
+            var frameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty()
+                                        ? typeParam.FrameworkVersion.SelectedValues.First()
+                                        : typeParam.OtherFrameworkVersion;
+            if (isUseWeb && frameworkVersion == "netstandard2.1")
+            {
+                //需要使用网页，强制修正为支持 Host 的目标框架
+                frameworkVersion = "netcoreapp3.1";
+            }
+
+            var commandTexts = new List<string> {
+                $"cd {_outPutBaseDir}",
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}",
+                $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
+                $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
+            };
+
+            Process p = new Process();
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardInput = true;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.CreateNoWindow = true;
+            string strOutput = null;
+            try
+            {
+                p.Start();
+                foreach (string item in commandTexts)
+                {
+                    p.StandardInput.WriteLine(item);
+                }
+                p.StandardInput.WriteLine("exit");
+                strOutput = p.StandardOutput.ReadToEnd();
+                base.RecordLog(sb, strOutput);
+
+                //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
+                p.WaitForExit();
+                p.Close();
+            }
+            catch (Exception e)
+            {
+                strOutput = e.Message;
+            }
+
+
+            return strOutput;
         }
 
         /// <summary>
-        /// 添加文件夹
+        /// 项目名称
         /// </summary>
-        /// <param name="dirName"></param>
-        private string AddDir(string dirName)
+        /// <param name="typeParam"></param>
+        /// <returns></returns>
+        private static string GetProjectName(Parameters typeParam)
         {
-            var path = Path.Combine(_outPutBaseDir, dirName);
-            Directory.CreateDirectory(path);
-            return path;
+            return $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}";
         }
 
         public override FunctionResult Run(IFunctionParameter param)
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                var projectName = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}";
-                _outPutBaseDir = Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "..", $"{projectName}");
-                _outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
-                if (!Directory.Exists(_outPutBaseDir))
-                {
-                    Directory.CreateDirectory(_outPutBaseDir);
-                }
-
-                //定义 Register 主文件
-                Senparc.Xncf.XncfBuilder.Templates.Register registerPage = new Senparc.Xncf.XncfBuilder.Templates.Register()
-                {
-                    OrgName = typeParam.OrgName,
-                    XncfName = typeParam.XncfName,
-                    Uid = Guid.NewGuid().ToString().ToUpper(),
-                    Version = typeParam.Version,
-                    MenuName = typeParam.MenuName,
-                    Icon = typeParam.Icon,
-                    Description = typeParam.Description,
-                };
-
-                var useSample = typeParam.UseSammple.SelectedValues.Contains("1");
-
-                #region 使用函数
-
-                //判断是否使用函数（方法）
-                var useFunction = typeParam.UseModule.SelectedValues.Contains("function");
-                var functionTypes = "";
-                if (useFunction)
-                {
-                    functionTypes = "typeof(MyFunction)";
-
-                    //添加文件夹
-                    var dir = AddDir("Functions");
-                    Senparc.Xncf.XncfBuilder.Templates.Functions.MyFunction functionPage = new XncfBuilder.Templates.Functions.MyFunction()
-                    {
-                        OrgName = typeParam.OrgName,
-                        XncfName = typeParam.XncfName
-                    };
-                    WriteContent(functionPage, sb);
-                }
-                registerPage.FunctionTypes = functionTypes;
-                registerPage.UseFunction = useFunction;
-
-                #endregion
-
-                #region 判断 Web - Area
-                var useWeb = useSample || typeParam.UseModule.SelectedValues.Contains("web");
-                //判断 Area 
-                if (useWeb)
-                {
-                    //生成目录
-                    var areaDirs = new List<string> {
-                        "Areas",
-                        "Areas/Admin",
-                        "Areas/Admin/Pages/",
-                        $"Areas/Admin/Pages/{typeParam.XncfName}",
-                        "Areas/Admin/Pages/Shared",
-                    };
-                    areaDirs.ForEach(z => AddDir(z));
-
-                    //载入Page
-                    var areaPages = new List<IXncfTemplatePage> {
-                        new ViewStart(typeParam.OrgName,typeParam.XncfName),
-                        new ViewImports(typeParam.OrgName,typeParam.XncfName),
-                        new Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps.Index(typeParam.OrgName,typeParam.XncfName,typeParam.MenuName),
-                        new Index_cs(typeParam.OrgName,typeParam.XncfName),
-                    };
-                    areaPages.ForEach(z => WriteContent(z, sb));
-
-                    //生成Register.Area
-                    var registerArea = new RegisterArea(typeParam.OrgName, typeParam.XncfName, useSample);
-                    WriteContent(registerArea, sb);
-                }
-
-                #endregion
-
-                #region 判断 数据库
-
-                var useDatabase = useSample || typeParam.UseModule.SelectedValues.Contains("database");
-                registerPage.UseDatabase = useDatabase;
-                if (useDatabase)
-                {
-                    //生成目录
-                    var dbDirs = new List<string> {
-                        "App_Data",
-                        "App_Data/Database",
-                        "Models",
-                        "Models/DatabaseModel",
-                        "Models/MultipleDatabase",
-                        "Migrations",
-                        "Migrations/Migrations.SQLite",
-                        "Migrations/Migrations.SqlServer",
-                        "Migrations/Migrations.MySql",
-                    };
-                    dbDirs.ForEach(z => AddDir(z));
-
-                    var initMigrationTime = Templates.Migrations.Migrations.SqlServer.Init.GetFileNamePrefix();
-
-                    //载入Page
-                    var dbFiles = new List<IXncfTemplatePage> {
-                        new RegisterDatabase(typeParam.OrgName, typeParam.XncfName),
-                        new XncfBuilder.Templates.App_Data.Database.SenparcConfig(typeParam.OrgName, typeParam.XncfName),
-                        //重复多数据库 - SQLite
-                        new MySenparcEntities(typeParam.OrgName, typeParam.XncfName,useSample),
-                        new XncfBuilder.Templates.Models.DatabaseModel.SenparcDbContextFactory(typeParam.OrgName, typeParam.XncfName),
-                        //重复多数据库 - SqlServer
-                        new Templates.Models.MultipleDatabase.SenparcEntities_SqlServer(typeParam.OrgName, typeParam.XncfName),
-                          //重复多数据库 - MySql
-                        new Templates.Models.MultipleDatabase.SenparcEntities_MySql(typeParam.OrgName, typeParam.XncfName),
-
-                        //重复多数据库 - SQLite
-                        new Templates.Migrations.Migrations.SQLite.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        new Templates.Migrations.Migrations.SQLite.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        //重复多数据库 - SqlServer
-                        new Templates.Migrations.Migrations.SqlServer.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        new Templates.Migrations.Migrations.SqlServer.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                         //重复多数据库 - MySql
-                        new Templates.Migrations.Migrations.MySql.Init(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                        new Templates.Migrations.Migrations.MySql.InitDesigner(typeParam.OrgName, typeParam.XncfName, initMigrationTime),
-                    };
-                    dbFiles.ForEach(z => WriteContent(z, sb));
-                }
-
-                #endregion
-
-                #region 安装 Sample
-                if (useSample)
-                {
-                    var sampleDirs = new List<string> {
-                        "Models/DatabaseModel/Dto",
-                        "Models/DatabaseModel/Mapping",
-                        "Services",
-                    };
-                    sampleDirs.ForEach(z => AddDir(z));
-
-                    var sampleMigrationTime = Templates.Migrations.Migrations.SqlServer.Init.GetFileNamePrefix(SystemTime.Now.DateTime.AddSeconds(1));
-
-                    //载入Page
-
-                    var sampleFiles = new List<IXncfTemplatePage> {
-                        //重复多数据库 - SQLite
-                        new Templates.Migrations.Migrations.SQLite.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        new Templates.Migrations.Migrations.SQLite.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        //重复多数据库 - SQLServer
-                        new Templates.Migrations.Migrations.SqlServer.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        new Templates.Migrations.Migrations.SqlServer.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        //重复多数据库 - MySql
-                        new Templates.Migrations.Migrations.MySql.AddSample(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-                        new Templates.Migrations.Migrations.MySql.AddSampleDesigner(typeParam.OrgName, typeParam.XncfName,sampleMigrationTime),
-
-
-                        new ColorDto(typeParam.OrgName, typeParam.XncfName),
-                        new Sample_ColorConfigurationMapping(typeParam.OrgName, typeParam.XncfName),
-
-                        new Color(typeParam.OrgName, typeParam.XncfName),
-                        new ColorService(typeParam.OrgName, typeParam.XncfName),
-
-                        new DatabaseSample(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
-                        new DatabaseSample_cs(typeParam.OrgName, typeParam.XncfName,typeParam.MenuName),
-
-                        new _SideMenu(typeParam.OrgName, typeParam.XncfName)
-                    };
-                    sampleFiles.ForEach(z => WriteContent(z, sb));
-
-                    //Sample快照
-                    //重复多数据库 - SQLite
-                    var addSampleSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
-                    WriteContent(addSampleSnapshot, sb);
-
-                    //重复多数据库 - SQL Server
-                    var addSampleSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
-                    WriteContent(addSampleSnapshot_SqlServer, sb);
-
-                    //重复多数据库 - MySQL
-                    var addSampleSnapshot_MySql = new Templates.Migrations.Migrations.MySql.SenparcEntitiesModelSnapshotForAddSample(typeParam.OrgName, typeParam.XncfName);
-                    WriteContent(addSampleSnapshot_MySql, sb);
-
-                }
-                else if (useDatabase)
-                {
-                    //默认 Init 快照
-                    //重复多数据库 - SQLite
-                    var initSnapshot = new Templates.Migrations.Migrations.SQLite.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
-                    WriteContent(initSnapshot, sb);
-
-                    //重复多数据库 - SQL Server
-                    var initSnapshot_SqlServer = new Templates.Migrations.Migrations.SqlServer.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
-                    WriteContent(initSnapshot_SqlServer, sb);
-
-                    //重复多数据库 - MySQL
-                    var initSnapshot_MySql = new Templates.Migrations.Migrations.MySql.SenparcEntitiesModelSnapshotForInit(typeParam.OrgName, typeParam.XncfName);
-                    WriteContent(initSnapshot_MySql, sb);
-                }
-
-                #endregion
-
-                #region 生成 Register 主文件
-
-                registerPage.UseSample = useSample;
-                WriteContent(registerPage, sb);
-
-                #endregion
-
-                #region 生成 .csproj
-
-                string areaBaseVersion = "";
-                try
-                {
-                    //areaBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(Type.GetType("Senparc.Ncf.AreaBase.Admin.AdminPageModelBase,Senparc.Ncf.AreaBase")).Location).ProductVersion;
-                    var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-                    var areaBaseDllPath = Path.Combine(dllPath, "Senparc.Ncf.AreaBase.dll");
-                    areaBaseVersion =
-                    FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(areaBaseDllPath).Location).ProductVersion;
-                }
-                catch
-                {
-                }
-
-
-                //生成 .csproj
-                Senparc.Xncf.XncfBuilder.Templates.csproj csprojPage = new csproj()
-                {
-                    OrgName = typeParam.OrgName,
-                    XncfName = typeParam.XncfName,
-                    Version = typeParam.Version,
-                    MenuName = typeParam.MenuName,
-                    Description = typeParam.Description,
-                    UseWeb = useWeb,
-                    UseDatabase = useDatabase,
-                    AreaBaseVersion = areaBaseVersion,
-                    XncfBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(typeof(Senparc.Ncf.XncfBase.Register)).Location).ProductVersion,
-                };
-
-                //获取当前配置的 FrameworkVersion
-                var frameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty()
-                                            ? typeParam.FrameworkVersion.SelectedValues.First()
-                                            : typeParam.OtherFrameworkVersion;
-                if (useWeb && frameworkVersion == "netstandard2.1")
-                {
-                    //需要使用网页，强制修正为支持 Host 的目标框架
-                    frameworkVersion = "netcoreapp3.1";
-                }
-                csprojPage.FrameworkVersion = frameworkVersion;
-
-                WriteContent(csprojPage, sb);
-
-                #endregion
-
-                #region 自动附加项目
-
-                var webProjFilePath = Path.GetFullPath(Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "Senparc.Web.csproj"));
-                if (File.Exists(webProjFilePath))
-                {
-                    XDocument webCsproj = XDocument.Load(webProjFilePath);
-                    if (!webCsproj.ToString().Contains(csprojPage.ProjectFilePath))
-                    {
-                        var referenceNode = new XElement("ProjectReference");
-                        referenceNode.Add(new XAttribute("Include", $"..\\{csprojPage.ProjectFilePath}"));
-                        var newNode = new XElement("ItemGroup", referenceNode);
-                        webCsproj.Root.Add(newNode);
-                        webCsproj.Save(webProjFilePath);
-                    }
-                }
-
-                #endregion
+                var outputStr = BuildSample(typeParam, ref sb); //执行模板生成
+                var projectFilePath = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}\\{typeParam.OrgName}.Xncf.{typeParam.XncfName}.csproj";
 
                 #region 生成 .sln
+
+                var relativeFilePath = $"{typeParam.OrgName}.Xncf.{typeParam.XncfName}.csproj";
 
                 //生成 .sln
                 if (!typeParam.SlnFilePath.ToUpper().EndsWith(".SLN"))
                 {
                     result.Success = false;
-                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                    result.Message = $"解决方案文件未找到，请手动引用项目 {projectFilePath}";
                     sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
                 else if (File.Exists(typeParam.SlnFilePath))
@@ -459,42 +286,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
 
                     result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
-
-                    //修改 new Sln
-                    string slnContent = null;
-                    using (FileStream fs = new FileStream(newSlnFilePath, FileMode.Open))
-                    {
-                        using (StreamReader sr = new StreamReader(fs))
-                        {
-                            slnContent = sr.ReadToEnd();
-                            sr.Close();
-                        }
-                    }
-
-                    var projGuid = Guid.NewGuid().ToString("B").ToUpper();//ex. {76FC86E0-991D-47B7-8AAB-42B27DAB10C1}
-                    slnContent = slnContent.Replace(@"Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{D0EF2816-B99A-4554-964A-6EA6814B3A36}""
-EndProject", @$"Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""Senparc.Core"", ""Senparc.Core\Senparc.Core.csproj"", ""{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}""
-EndProject
-Project(""{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}"") = ""{projectName}"", ""{projectName}\{csprojPage.RelativeFilePath}"", ""{projGuid}""
-EndProject
-").Replace(@"		{D0EF2816-B99A-4554-964A-6EA6814B3A36}.Test|Any CPU.Build.0 = Release|Any CPU
-", @$"		{{D0EF2816-B99A-4554-964A-6EA6814B3A36}}.Test|Any CPU.Build.0 = Release|Any CPU
-		{projGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{projGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{projGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{projGuid}.Release|Any CPU.Build.0 = Release|Any CPU
-		{projGuid}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{projGuid}.Test|Any CPU.Build.0 = Release|Any CPU
-").Replace(@"GlobalSection(NestedProjects) = preSolution", @$"GlobalSection(NestedProjects) = preSolution
-		{projGuid} = {{76FC86E0-991D-47B7-8AAB-42B27DAB10C1}}");
-                    System.IO.File.WriteAllText(newSlnFilePath, slnContent, Encoding.UTF8);
-                    sb.AppendLine($"已创建新的解决方案文件：{newSlnFilePath}");
-                    result.Message = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！";
                 }
                 else
                 {
                     result.Success = false;
-                    result.Message = $"解决方案文件未找到，请手动引用项目 {csprojPage.RelativeFilePath}";
+                    result.Message = $"解决方案文件未找到，请手动引用项目 {relativeFilePath}";
                     sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
 
@@ -513,6 +309,8 @@ EndProject
                     configService.Mapper.Map(typeParam, config);
                 }
                 configService.SaveObject(config);
+
+                //result.Message += "\r\n\r\n" + outputStr;
 
                 #endregion
             });

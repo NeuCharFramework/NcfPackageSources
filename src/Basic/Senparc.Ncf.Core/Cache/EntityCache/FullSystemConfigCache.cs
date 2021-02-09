@@ -15,9 +15,9 @@ namespace Senparc.Ncf.Core.Cache
     public class FullSystemConfigCache : BaseCache<FullSystemConfig>/*, IFullSystemConfigCache*/
     {
         public const string CACHE_KEY = "FullSystemConfigCache";
-        private ISqlBaseFinanceData _dataContext => base._db as ISqlBaseFinanceData;
+        private INcfDbData _dataContext => base._db as INcfDbData;
 
-        public FullSystemConfigCache(ISqlBaseFinanceData db)
+        public FullSystemConfigCache(INcfDbData db)
             : base(CACHE_KEY, db)
         {
             base.TimeOut = 1440;

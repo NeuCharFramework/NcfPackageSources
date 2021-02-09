@@ -23,13 +23,13 @@ namespace Senparc.Ncf.Repository
         //{
         //}
 
-        public RepositoryBase(ISqlBaseFinanceData db) : base(db)
+        public RepositoryBase(INcfDbData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
-            //DB = db ?? ObjectFactory.GetInstance<ISqlClientFinanceData>();//如果没有定义，取默认数据库
+            //DB = db ?? ObjectFactory.GetInstance<INcfDbData>();//如果没有定义，取默认数据库
 
             base.BaseDB = db;
-            // ObjectFactory.GetInstance<ISqlClientFinanceData>();
+            // ObjectFactory.GetInstance<INcfDbData>();
 
             EntitySetKeysDictionary keys = EntitySetKeys.GetAllEntitySetInfo();
             _entitySetName = keys[typeof(T)].SetName;

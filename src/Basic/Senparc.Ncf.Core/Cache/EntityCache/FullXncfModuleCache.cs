@@ -12,14 +12,14 @@ namespace Senparc.Ncf.Core.Cache
     public class FullXncfModuleCache : BaseStringDictionaryCache<FullXncfModule, XncfModule>
     {
         public const string CACHE_KEY = "FullXncfModuleCache";
-        private ISqlBaseFinanceData _dataContext => base._db as ISqlBaseFinanceData;
+        private INcfDbData _dataContext => base._db as INcfDbData;
 
-        public FullXncfModuleCache(ISqlBaseFinanceData db)
+        public FullXncfModuleCache(INcfDbData db)
             : this(CACHE_KEY, db, 1440)
         {
         }
 
-        public FullXncfModuleCache(string CACHE_KEY, ISqlBaseFinanceData db, int timeOut) : base(CACHE_KEY, db, timeOut)
+        public FullXncfModuleCache(string CACHE_KEY, INcfDbData db, int timeOut) : base(CACHE_KEY, db, timeOut)
         {
         }
 

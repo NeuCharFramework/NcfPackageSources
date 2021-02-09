@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Jeffrey",
+  "classifications": [ "NCF", "XNCF" ],
+  "name": "Custom XNCF Module Template",
+  "identity": "Custom XNCF Module",
+  "groupIdentity": "Custom XNCF",
+  "shortName": "XNCF",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "preferNameDirectory": true,
+  "symbols": {
+    "UseSample": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "UseWeb": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "UseFunction": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "UseDatabase": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
+    "IntegrationToNcf": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "true"
+    },
+    //Replace file name and content
+    "XncfName": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's name",
+      "fileRename": "Template_XncfName",
+      "replaces": "Template_XncfName",
+      "isRequired": true,
+      "defaultValue": "MyXncf"
+    },
+    "OrgName": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Organization Name",
+      "fileRename": "Template_OrgName",
+      "replaces": "Template_OrgName",
+      "isRequired": true,
+      "defaultValue": "MyOrg"
+    },
+    "Version": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Version, like. 0.1, 0,2-alpha",
+      "fileRename": "Template_Version",
+      "replaces": "Template_Version",
+      "isRequired": false,
+      "defaultValue": "0.1"
+    },
+    "MenuName": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Menu Name",
+      "fileRename": "Template_MenuName",
+      "replaces": "Template_MenuName",
+      "isRequired": false,
+      "defaultValue": "MyProject"
+    },
+    "Icon": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Icon name",
+      "fileRename": "Template_Icon",
+      "replaces": "Template_Icon",
+      "isRequired": false,
+      "defaultValue": "fa fa-star"
+    },
+    "Description": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Description",
+      "fileRename": "Template_Description",
+      "replaces": "Template_Description",
+      "isRequired": false,
+      "defaultValue": "Project's Description"
+    },
+    "Guid": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "XNCF Module's Unique Guid",
+      "fileRename": "Template_Guid",
+      "replaces": "Template_Guid",
+      "isRequired": true,
+      "defaultValue": "WrongGuid"
+    },
+    "XncfBaseVersion": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Senparc.Ncf.XncfBase package version",
+      "fileRename": "Template_XncfBase_Version",
+      "replaces": "Template_XncfBase_Version",
+      "isRequired": true,
+      "defaultValue": "0.6.106-beta1"
+    }
+  },
+  "sourceName": "MyGroup.Xncf.MyModule",
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(!UseSample)", //如果不添加 Sample，排除下面的文件
+          "exclude": [
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
+            "Services/**"
+          ]
+        },
+        {
+          "condition": "(!UseFunction)", //如果不添加 Function，排除下面的文件
+          "exclude": [
+            "Functions/**"
+          ]
+        },
+        {
+          "condition": "(!UseWeb && !UseSample)", //如果不添加 UseWeb，排除下面的文件
+          "exclude": [
+            "Register.Area.cs",
+            "Areas/**"
+          ]
+        },
+        {
+          "condition": "(!UseDatabase && !UseSample)", //如果不添加 数据库，排除下面的文件
+          "exclude": [
+            "Register.Database.cs",
+            "Models/**",
+            "Migrations/**"
+          ]
+        }
+      ]
+    }
+  ],
+  "exclude": [
+    "**/bin",
+    "**/bower_components",
+    "**/jspm_packages",
+    "**/node_modules",
+    "**/obj",
+    "**/platforms",
+    "**/SenparcTraceLog"
+  ]
+}

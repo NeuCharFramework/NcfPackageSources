@@ -14,8 +14,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Senparc.Xncf.DatabaseToolkit.DbConfig", b =>
                 {
@@ -27,15 +27,15 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("AdminRemark")
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
 
                     b.Property<int>("BackupCycleMinutes")
                         .HasColumnType("int");
 
                     b.Property<string>("BackupPath")
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
@@ -47,8 +47,11 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

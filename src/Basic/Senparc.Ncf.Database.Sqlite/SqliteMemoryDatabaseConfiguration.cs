@@ -10,23 +10,20 @@ using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Database.SQLite
+namespace Senparc.Ncf.Database.Sqlite
 {
-    /// <summary>
-    /// SQLite 内存数据库配置（NCF 对 IDatabaseConfiguration 的一个默认实现，也可以自定义配置）
-    /// </summary>
-    public class SQLiteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
+    public class SqliteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
-        public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SQLite;
+        public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Sqlite;
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
-        {
-            //其他更多配置
+            {
+                //其他更多配置
 
-            //执行 UseSqlite（必须）
-            optionsBuilder.UseSqlite(connectionString, actionBase);
-        };
+                //执行 UseSqlite（必须）
+                optionsBuilder.UseSqlite(connectionString, actionBase);
+            };
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {

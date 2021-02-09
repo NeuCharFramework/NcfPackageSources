@@ -27,7 +27,7 @@ namespace Senparc.Ncf.Core.Cache
         public const string CACHE_KEY = "FullAccountCache";
         private const int timeout = 1440;
 
-        private ISqlBaseFinanceData _dataContext => base._db as ISqlBaseFinanceData;
+        private INcfDbData _dataContext => base._db as INcfDbData;
 
         #region 同步方法
 
@@ -43,7 +43,7 @@ namespace Senparc.Ncf.Core.Cache
             return account;
         }
 
-        public FullAccountCache(ISqlBaseFinanceData db)
+        public FullAccountCache(INcfDbData db)
             : base(CACHE_KEY, db, timeout)
         {
         }

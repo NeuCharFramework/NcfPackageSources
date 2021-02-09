@@ -25,7 +25,7 @@ namespace Senparc.Respository
     {
         private readonly SenparcEntitiesBase _senparcEntities;
 
-        public SysButtonRespository(ISqlBaseFinanceData db) : base(db)
+        public SysButtonRespository(INcfDbData db) : base(db)
         {
             _senparcEntities = db.BaseDataContext as SenparcEntitiesBase;
         }
@@ -37,7 +37,10 @@ namespace Senparc.Respository
         /// <returns></returns>
         public async Task<int> DeleteButtonsByMenuId(string menuId)
         {
-            return await _senparcEntities.Database.ExecuteSqlCommandAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
+            //升级至 EF Core 5.0 后方法无效
+            //return await _senparcEntities.Database.ExecuteSqlCommandAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
+
+            return await _senparcEntities.Database.ExecuteSqlRawAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
         }
     }
 }

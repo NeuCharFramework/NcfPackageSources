@@ -10,7 +10,6 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder
 {
-    [MultipleMigrationDbContext(MultipleDatabaseType.SQLite, typeof(Register))]
     public class XncfBuilderEntities : XncfDatabaseDbContext, IMultipleMigrationDbContext
     {
         public XncfBuilderEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
@@ -18,7 +17,5 @@ namespace Senparc.Xncf.XncfBuilder
         }
 
         public DbSet<Config> Configs { get; set; }
-
-        //public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SQLite;
     }
 }

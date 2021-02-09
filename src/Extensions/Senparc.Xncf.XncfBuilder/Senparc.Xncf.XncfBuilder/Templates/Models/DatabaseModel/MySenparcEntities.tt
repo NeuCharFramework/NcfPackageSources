@@ -11,7 +11,7 @@ using Senparc.Ncf.XncfBase.Database;
 
 namespace <#= OrgName #>.Xncf.<#= XncfName #>.Models.DatabaseModel
 {
-    [MultipleMigrationDbContext(MultipleDatabaseType.SQLite, typeof(Register))]
+    [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
     public class <#= XncfName #>SenparcEntities : XncfDatabaseDbContext
     {
         public <#= XncfName #>SenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)

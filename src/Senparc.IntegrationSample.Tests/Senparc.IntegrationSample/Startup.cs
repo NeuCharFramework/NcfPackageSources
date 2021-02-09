@@ -76,7 +76,7 @@ namespace Senparc.IntegrationSample
             services.StartEngine(Configuration);
             //指定数据库类型（可选），默认为 SQLiteMemoryDatabaseConfiguration
             services.AddDatabase<SQLServerDatabaseConfiguration>();
-            //services.UseDatabase<SQLiteMemoryDatabaseConfiguration>();
+            //services.UseDatabase<SqliteMemoryDatabaseConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

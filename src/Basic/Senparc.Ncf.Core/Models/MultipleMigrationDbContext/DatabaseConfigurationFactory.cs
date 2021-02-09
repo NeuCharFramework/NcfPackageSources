@@ -49,9 +49,6 @@ namespace Senparc.Ncf.Core.Models
                 if (_currentDatabaseConfiguration == null)
                 {
                     throw new NcfDatabaseException("未指定 DatabaseConfiguration！", null);
-
-                    //如果未配置，则默认使用 SQLiteDatabaseConfiguration 内存数据库
-                    //_currentDatabaseConfiguration = new SQLiteMemoryDatabaseConfiguration();
                 }
                 return _currentDatabaseConfiguration;
             }

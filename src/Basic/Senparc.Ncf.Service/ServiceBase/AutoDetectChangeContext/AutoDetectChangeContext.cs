@@ -8,14 +8,14 @@ namespace Senparc.Ncf.Service
     public class AutoDetectChangeContextWrap : IDisposable
     {
         public IServiceDataBase ServiceData { get; set; }
-        //private ISqlBaseFinanceData _sqlFinanceData;
+        //private INcfDbData _ncfDbData;
 
 
         public AutoDetectChangeContextWrap(IServiceDataBase serviceData)
         {
             //_service = service;
             //_service.BaseRepository.BaseDB.BaseDataContext.Configuration.AutoDetectChangesEnabled = true;
-            //_sqlFinanceData = sqlFinanceData;
+            //_ncfDbData =  ncfDbData;
             ServiceData = serviceData;
             ServiceData.BaseData.BaseDB.BaseDataContext.ChangeTracker.AutoDetectChangesEnabled= false;
             ServiceData.BaseData.BaseDB.ManualDetectChangeObject = true;
@@ -41,7 +41,6 @@ namespace Senparc.Ncf.Service
         public void Dispose()
         {
             _wrap.ServiceData.BaseData.BaseDB.BaseDataContext.ChangeTracker.AutoDetectChangesEnabled = false;
-
         }
     }
 }

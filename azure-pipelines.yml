@@ -28,7 +28,6 @@ steps:
     version: '5.0.x'
     packageType: 'sdk'
 
-
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
@@ -81,7 +80,6 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
-
 
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Core.AspNet
@@ -344,7 +342,6 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Database -v0
   inputs:
@@ -436,7 +433,6 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
   enabled: false
-
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'

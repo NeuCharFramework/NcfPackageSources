@@ -37,12 +37,17 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             [Required]
             [MaxLength(250)]
+            [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 netcoreapp3.1 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\Senparc.Web.DatabasePlant\\")]
+            public string DatabasePlantPath { get; set; }
+
+            [Required]
+            [MaxLength(250)]
             [Description("XNCF 项目路径||输入 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
             public string ProjectPath { get; set; }
 
             [Description("生成数据库类型||更多类型陆续添加中")]
             public SelectionList DatabaseTypes { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem(MultipleDatabaseType.SQLite.ToString(),MultipleDatabaseType.SQLite.ToString(),"",true),
+                 new SelectionItem(MultipleDatabaseType.Sqlite.ToString(),MultipleDatabaseType.Sqlite.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.SqlServer.ToString(),MultipleDatabaseType.SqlServer.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.MySql.ToString(),MultipleDatabaseType.MySql.ToString(),"",true),
             });
@@ -119,28 +124,24 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             return FunctionHelper.RunFunction<Parameters>(param, (typeParam, sb, result) =>
             {
-                if (!typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.SQLite.ToString()))
+                if (typeParam.DatabaseTypes.SelectedValues.Count() == 0)
                 {
-                    result.Message = $"{MultipleDatabaseType.SQLite} 暂时为默认数据库，必选";
+                    result.Message = "至少选择 1 个数据库！";
                     return;
                 }
 
-
                 var commandTexts = new List<string> {
-                @$"cd {typeParam.ProjectPath}",
-                //@"dir",
-                //@"dotnet --version",
-                //@"dotnet ef",
-                //@"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir Migrations/Test",// 本行为示例，将自动根据条件执行
-            };
+                                        @$"cd {typeParam.ProjectPath}",
+                                    };
 
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
                     string migrationDir = GetMigrationDir(typeParam, dbType);
                     var outputVerbose = typeParam.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
-                    var dbTypeSuffix = Enum.TryParse(dbType, out MultipleDatabaseType dbTypeEnum) && dbTypeEnum == MultipleDatabaseType.Default
-                                            ? "" : $"_{dbType}";//如果是SQL Lite
-                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -o {migrationDir}{outputVerbose}");
+                    var dbTypeSuffix = $"_{dbType}";
+                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -s {typeParam.DatabasePlantPath} -o {migrationDir}{outputVerbose}");
+                    // --framework netcoreapp3.1
+                    // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
 
                 Process p = new Process();
@@ -172,18 +173,18 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 }
 
 
-                //Pomelo-MySQL 命名有不统一的情况，需要处理
-                if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
-                {
-                    string migrationDir = GetMigrationDir(typeParam, MultipleDatabaseType.MySql.ToString());
-                    var defaultFileName = $"{typeParam.DbContextName}ModelSnapshot.cs";
-                    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot.cs";
-                    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
-                    {
-                        File.Delete(defaultFileName);
-                        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
-                    }
-                }
+                ////Pomelo-MySQL 命名有不统一的情况，需要处理
+                //if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
+                //{
+                //    string migrationDir = GetMigrationDir(typeParam, MultipleDatabaseType.MySql.ToString());
+                //    var defaultFileName = $"{typeParam.DbContextName}ModelSnapshot.cs";
+                //    var pomeloFileName = $"{typeParam.DbContextName}_MySqlModelSnapshot.cs";
+                //    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
+                //    {
+                //        File.Delete(defaultFileName);
+                //        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
+                //    }
+                //}
 
                 result.Message = "执行完毕，请查看日志！";
 
