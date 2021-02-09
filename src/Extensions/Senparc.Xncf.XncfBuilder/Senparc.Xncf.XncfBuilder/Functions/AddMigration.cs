@@ -37,6 +37,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         {
             [Required]
             [MaxLength(250)]
+            [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 netcoreapp3.1 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\Senparc.Web.DatabasePlant\\")]
+            public string DatabasePlantPath { get; set; }
+
+            [Required]
+            [MaxLength(250)]
             [Description("XNCF 项目路径||输入 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
             public string ProjectPath { get; set; }
 
@@ -125,13 +130,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     return;
                 }
 
-
                 var commandTexts = new List<string> {
                 @$"cd {typeParam.ProjectPath}",
-                //@"dir",
-                //@"dotnet --version",
-                //@"dotnet ef",
-                //@"dotnet ef migrations add Int2 --context XncfBuilderEntities_SqlServer --output-dir Migrations/Test",// 本行为示例，将自动根据条件执行
             };
 
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
@@ -140,7 +140,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     var outputVerbose = typeParam.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
                     var dbTypeSuffix = Enum.TryParse(dbType, out MultipleDatabaseType dbTypeEnum) && dbTypeEnum == MultipleDatabaseType.Default
                                             ? "" : $"_{dbType}";//如果是SQL Lite
-                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -o {migrationDir}{outputVerbose} --framework netcoreapp3.1"/*TODO:可以支持更多参数，如net5.0*/);
+                    commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -s {typeParam.DatabasePlantPath} -o {migrationDir}{outputVerbose}");
+                    // --framework netcoreapp3.1
+                    // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
 
                 Process p = new Process();
