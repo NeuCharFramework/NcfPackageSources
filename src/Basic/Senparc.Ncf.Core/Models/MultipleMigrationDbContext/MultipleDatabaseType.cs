@@ -9,7 +9,7 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     public enum MultipleDatabaseType
     {
-        SQLite,
+        Sqlite,
         SqlServer,
         MySql,
         InMemory,

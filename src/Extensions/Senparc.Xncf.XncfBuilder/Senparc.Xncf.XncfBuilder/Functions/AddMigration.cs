@@ -47,7 +47,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             [Description("生成数据库类型||更多类型陆续添加中")]
             public SelectionList DatabaseTypes { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem(MultipleDatabaseType.SQLite.ToString(),MultipleDatabaseType.SQLite.ToString(),"",true),
+                 new SelectionItem(MultipleDatabaseType.Sqlite.ToString(),MultipleDatabaseType.Sqlite.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.SqlServer.ToString(),MultipleDatabaseType.SqlServer.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.MySql.ToString(),MultipleDatabaseType.MySql.ToString(),"",true),
             });
