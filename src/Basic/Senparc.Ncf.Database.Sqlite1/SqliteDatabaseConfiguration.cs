@@ -10,11 +10,11 @@ using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Database.SQLite
+namespace Senparc.Ncf.Database.Sqlite
 {
-    public class SQLiteDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
+    public class SqliteDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
-        public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SQLite;
+        public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Sqlite;
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>

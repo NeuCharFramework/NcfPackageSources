@@ -74,8 +74,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XncfBuilder", "XncfBuilder"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template_OrgName.Xncf.Template_XncfName", "Extensions\Senparc.Xncf.XncfBuilder\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj", "{18B72817-3B27-48DD-97B5-3C9F6C2D7F7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.SQLite", "Basic\Senparc.Ncf.Database.SQLite\Senparc.Ncf.Database.SQLite.csproj", "{3A0643D6-1F84-4925-AABD-9D6B18797977}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -222,12 +220,6 @@ Global
 		{18B72817-3B27-48DD-97B5-3C9F6C2D7F7D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{18B72817-3B27-48DD-97B5-3C9F6C2D7F7D}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{18B72817-3B27-48DD-97B5-3C9F6C2D7F7D}.Test|Any CPU.Build.0 = Test|Any CPU
-		{3A0643D6-1F84-4925-AABD-9D6B18797977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A0643D6-1F84-4925-AABD-9D6B18797977}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A0643D6-1F84-4925-AABD-9D6B18797977}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A0643D6-1F84-4925-AABD-9D6B18797977}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A0643D6-1F84-4925-AABD-9D6B18797977}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{3A0643D6-1F84-4925-AABD-9D6B18797977}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -264,7 +256,6 @@ Global
 		{548A1BB0-88DE-45D4-95DF-2538A9592823} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
 		{3C473DB5-6DAD-4BDE-B7AD-773DAB17582E} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 		{18B72817-3B27-48DD-97B5-3C9F6C2D7F7D} = {3C473DB5-6DAD-4BDE-B7AD-773DAB17582E}
-		{3A0643D6-1F84-4925-AABD-9D6B18797977} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
