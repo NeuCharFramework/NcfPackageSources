@@ -30,7 +30,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database", "Senparc.Ncf.Database.SQLite", "SQLiteMemoryDatabaseConfiguration");
+            services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SQLite()
