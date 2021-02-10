@@ -6,53 +6,55 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.MySql
+namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.Sqlite
 {
-    [DbContext(typeof(Template_XncfNameSenparcEntities_MySql))]
-    [Migration("20201226143134_Init")]
-    partial class AddSample
+    [DbContext(typeof(Template_XncfNameSenparcEntities))]
+    [Migration("20210108155659_AddTenantId")]
+    partial class AddTenantId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Template_OrgName.Xncf.Template_XncfName.Color", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdditionNote")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Blue")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Green")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Red")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

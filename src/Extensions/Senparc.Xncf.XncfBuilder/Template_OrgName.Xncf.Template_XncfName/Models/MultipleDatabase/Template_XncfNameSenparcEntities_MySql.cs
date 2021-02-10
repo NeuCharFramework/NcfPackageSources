@@ -6,8 +6,9 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
+using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel
+namespace Template_OrgName.Xncf.Template_XncfName.Models
 {
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class Template_XncfNameSenparcEntities_MySql : Template_XncfNameSenparcEntities
@@ -31,7 +32,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel
             services.AddDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
         };
 
-        public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactory.RootDictionaryPath)
+        public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {
 
         }

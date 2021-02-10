@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
+using Template_OrgName.Xncf.Template_XncfName.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.MySql
 {

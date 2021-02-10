@@ -1,15 +1,6 @@
 ﻿using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
-using Senparc.Xncf.XncfBuilder.Templates;
-using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages;
-using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps;
-using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.Shared;
-using Senparc.Xncf.XncfBuilder.Templates.Migrations;
-using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel;
-using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Dto;
-using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Mapping;
-using Senparc.Xncf.XncfBuilder.Templates.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -96,29 +87,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         public override string Description => "可视化完成多数据库的 add-migration 命令，使用 Code First 更新数据库。注意：根据计算机配置和数据库情况，执行过程可能在30-60秒不等，请耐心等待。";
 
         public override Type FunctionParameterType => typeof(Parameters);
-
-        private string _outPutBaseDir;
-        /// <summary>
-        /// 输出内容
-        /// </summary>
-        /// <param name="page"></param>
-        private void WriteContent(IXncfTemplatePage page, StringBuilder sb)
-        {
-            String pageContent = page.TransformText();
-            System.IO.File.WriteAllText(Path.Combine(_outPutBaseDir, page.RelativeFilePath), pageContent, Encoding.UTF8);
-            sb.AppendLine($"已添加文件：{page.RelativeFilePath}");
-        }
-
-        /// <summary>
-        /// 添加文件夹
-        /// </summary>
-        /// <param name="dirName"></param>
-        private string AddDir(string dirName)
-        {
-            var path = Path.Combine(_outPutBaseDir, dirName);
-            Directory.CreateDirectory(path);
-            return path;
-        }
 
         public override FunctionResult Run(IFunctionParameter param)
         {
