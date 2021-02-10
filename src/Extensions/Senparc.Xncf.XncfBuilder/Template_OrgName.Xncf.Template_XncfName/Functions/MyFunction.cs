@@ -107,7 +107,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Functions
                 raisePower(2);
                 raisePower(3);
 
-                result.Message = $"计算结果：{calcResult}。计算过程请看日志";
+                result.Message = $"【{typeParam.Name}】计算结果：{calcResult}。计算过程请看日志";
             });
         }
     }
