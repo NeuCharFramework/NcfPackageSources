@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 #if (UseFunction)
 using Template_OrgName.Xncf.Template_XncfName.Functions;
 #endif
-#if(UseDatabase || UseSample)
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
+#if (UseDatabase || UseSample)
+using Template_OrgName.Xncf.Template_XncfName.Models;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 #endif
-#if(UseSample)
+#if (UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Services;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 #endif
