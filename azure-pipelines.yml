@@ -425,6 +425,28 @@ steps:
   condition: succeededOrFailed()
 
 
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.Sqlite
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Sqlite.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.Sqlite- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Sqlite.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
