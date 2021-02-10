@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.Sqlite
 {
     public partial class Init : Migration
     {

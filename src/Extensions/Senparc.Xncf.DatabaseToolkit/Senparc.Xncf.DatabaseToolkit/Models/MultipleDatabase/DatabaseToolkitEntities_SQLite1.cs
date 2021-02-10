@@ -10,12 +10,12 @@ using System.IO;
 namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成 SQLite 数据库 Migration 信息的类，请勿修改
+    /// 用于生成 Sqlite 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
-    public class DatabaseToolkitEntities_SQLite : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitEntities_SQLite1 : DatabaseToolkitEntities, IMultipleMigrationDbContext
     {
-        public DatabaseToolkitEntities_SQLite(DbContextOptions<DatabaseToolkitEntities_SQLite> dbContextOptions) : base(dbContextOptions)
+        public DatabaseToolkitEntities_SQLite1(DbContextOptions<DatabaseToolkitEntities_SQLite1> dbContextOptions) : base(dbContextOptions)
         {
         }
     }
@@ -25,7 +25,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// <para>1、切换至 Debug 模式</para>
     /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitEntities_SqlServer -o Migrations/Migrations.SqlServer </para>
     /// </summary>
-    public class SenparcDbContextFactory_SQLite : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities_SQLite, Register>
+    public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities_SQLite1, Register>
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
@@ -33,7 +33,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
             services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
-        public SenparcDbContextFactory_SQLite()
+        public SenparcDbContextFactory_Sqlite()
             : base(
                  /* Debug模式下项目根目录
                  /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */

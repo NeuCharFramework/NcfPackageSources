@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(DatabaseToolkitEntities))]
-    partial class DatabaseToolkitEntitiesModelSnapshot : ModelSnapshot
+    partial class DatabaseToolkitEntities_SqliteModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(DatabaseToolkitEntities))]
-    [Migration("20201022044836_Init")]
-    partial class Init
+    [Migration("20210105155826_Add_TenantId")]
+    partial class Add_TenantId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Senparc.Xncf.DatabaseToolkit.DbConfig", b =>
                 {
@@ -28,15 +28,15 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("BackupCycleMinutes")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BackupPath")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
@@ -48,8 +48,11 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SQLite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
