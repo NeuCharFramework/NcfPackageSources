@@ -55,7 +55,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             {
                 case InstallOrUpdate.Install:
                     //新安装
-#if (UserSample)
+#if (UseSample)
             #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorService>();
                     var color = colorService.GetObject(z => true);

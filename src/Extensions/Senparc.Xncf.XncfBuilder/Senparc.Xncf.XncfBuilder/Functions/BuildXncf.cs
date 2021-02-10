@@ -151,6 +151,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 return $" --{paramName} {libVBersion}";
             };
 
+            //配置 true 或 false 的参数
+            Func<bool, string, string> getBoolParam = (condition, paramName) => $" --{paramName} {(condition ? "true" : "false")}";
+
             //基础信息  注意： -- 前面统一加 1 个空格
             var orgName = $" --OrgName {typeParam.OrgName}";
             var xncfName = $" --XncfName {typeParam.XncfName}";
@@ -162,14 +165,13 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
             string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
 
-
             //配置功能
             var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
-            var useSample = isUseSample ? " --UseSample true" : " --UseSample false";
-            var useFunction = typeParam.UseModule.SelectedValues.Contains("function") ? " --UseFunction true" : " --UseFunction false";
+            var useSample = getBoolParam(isUseSample, "UseSample");
+            var useFunction = getBoolParam(typeParam.UseModule.SelectedValues.Contains("function"), "UseFunction");
             var isUseWeb = isUseSample || typeParam.UseModule.SelectedValues.Contains("web");
-            var useWeb = isUseWeb ? " --UseWeb true" : " --UseWeb false";
-            var useDatabase = isUseSample || typeParam.UseModule.SelectedValues.Contains("database") ? " --UseDatabase true" : " --UseDatabase false";
+            var useWeb = getBoolParam(isUseWeb, "UseWeb");
+            var useDatabase = getBoolParam(isUseSample, "UseDatabase");
 
             //获取当前配置的 FrameworkVersion
             var frameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty()
@@ -178,12 +180,14 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             if (isUseWeb && frameworkVersion == "netstandard2.1")
             {
                 //需要使用网页，强制修正为支持 Host 的目标框架
-                frameworkVersion = "netcoreapp3.1";
+                frameworkVersion = "netcoreapp3.1";//TODO:后续将支持 .NET 5.0
             }
+
+            var targetFramework = $" --TargetFramework {frameworkVersion}";
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };

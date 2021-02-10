@@ -12,6 +12,15 @@
   },
   "preferNameDirectory": true,
   "symbols": {
+    "TargetFramework": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "<TargetFramework> value",
+      "fileRename": "Template_TargetFramework",
+      "replaces": "Template_TargetFramework",
+      "isRequired": true,
+      "defaultValue": "netstandard2.1"
+    },
     "UseSample": {
       "type": "parameter",
       "dataType": "bool",
