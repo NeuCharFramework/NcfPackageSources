@@ -8,7 +8,7 @@ using Senparc.Xncf.XncfBuilder;
 namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(XncfBuilderEntities))]
-    partial class XncfBuilderEntitiesModelSnapshot : ModelSnapshot
+    partial class XncfBuilderEntities_SqliteModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
