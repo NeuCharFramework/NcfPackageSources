@@ -13,9 +13,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 Sqlite 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
-    public class DatabaseToolkitEntities_SQLite1 : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitEntities_Sqlite : DatabaseToolkitEntities, IMultipleMigrationDbContext
     {
-        public DatabaseToolkitEntities_SQLite1(DbContextOptions<DatabaseToolkitEntities_SQLite1> dbContextOptions) : base(dbContextOptions)
+        public DatabaseToolkitEntities_Sqlite(DbContextOptions<DatabaseToolkitEntities_Sqlite> dbContextOptions) : base(dbContextOptions)
         {
         }
     }
@@ -25,7 +25,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// <para>1、切换至 Debug 模式</para>
     /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitEntities_SqlServer -o Migrations/Migrations.SqlServer </para>
     /// </summary>
-    public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities_SQLite1, Register>
+    public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities_Sqlite, Register>
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
