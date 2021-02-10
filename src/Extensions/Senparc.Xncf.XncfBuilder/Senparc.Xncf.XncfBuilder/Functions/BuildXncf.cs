@@ -141,22 +141,17 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             //TODO:参数合法性校验
 
-            //获取Area引用版本
-            string areaBaseVersion = "";
-            try
+            //获取类库当前项目引用版本信息
+            Func<string, string, string> getLibVersionParam = (dllName, paramName) =>
             {
-                //areaBaseVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(Type.GetType("Senparc.Ncf.AreaBase.Admin.AdminPageModelBase,Senparc.Ncf.AreaBase")).Location).ProductVersion;
+
                 var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-                var areaBaseDllPath = Path.Combine(dllPath, "Senparc.Ncf.AreaBase.dll");
-                areaBaseVersion =
-                FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(areaBaseDllPath).Location).ProductVersion;
-            }
-            catch
-            {
-            }
+                var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
+                var libVBersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
+                return $" --{paramName} {libVBersion}";
+            };
 
-
-            //基础信息
+            //基础信息  注意： -- 前面统一加 1 个空格
             var orgName = $" --OrgName {typeParam.OrgName}";
             var xncfName = $" --XncfName {typeParam.XncfName}";
             var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
@@ -164,7 +159,9 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             var description = $" --Description \"{typeParam.Description}\"";
             var version = $" --Version {typeParam.Version}";
             var menuName = $" --MenuName \"{typeParam.MenuName}\"";
-            var xncfBaseVersion = $" --XncfBaseVersion {areaBaseVersion}";
+            string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
+            string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
+
 
             //配置功能
             var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
@@ -186,7 +183,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}",
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };

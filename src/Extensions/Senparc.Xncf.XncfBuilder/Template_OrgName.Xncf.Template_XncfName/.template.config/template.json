@@ -109,6 +109,15 @@
       "replaces": "Template_XncfBase_Version",
       "isRequired": true,
       "defaultValue": "0.6.106-beta1"
+    },
+    "NcfAreaBaseVersion": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Senparc.Ncf.AreaBase package version",
+      "fileRename": "Template_NcfAreaBase_Version",
+      "replaces": "Template_NcfAreaBase_Version",
+      "isRequired": true,
+      "defaultValue": "0.6.114-beta1"
     }
   },
   "sourceName": "MyGroup.Xncf.MyModule",
