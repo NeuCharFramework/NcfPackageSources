@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Template_OrgName.Xncf.Template_XncfName.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.SqlServer
 {

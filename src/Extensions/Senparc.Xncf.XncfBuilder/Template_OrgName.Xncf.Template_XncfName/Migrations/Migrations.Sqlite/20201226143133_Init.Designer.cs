@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
+using Template_OrgName.Xncf.Template_XncfName.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.SQLite
+namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities))]
     [Migration("20201226143133_Init")]

@@ -1,15 +1,6 @@
 ﻿using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
-using Senparc.Xncf.XncfBuilder.Templates;
-using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages;
-using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.MyApps;
-using Senparc.Xncf.XncfBuilder.Templates.Areas.Admin.Pages.Shared;
-using Senparc.Xncf.XncfBuilder.Templates.Migrations;
-using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel;
-using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Dto;
-using Senparc.Xncf.XncfBuilder.Templates.Models.DatabaseModel.Mapping;
-using Senparc.Xncf.XncfBuilder.Templates.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

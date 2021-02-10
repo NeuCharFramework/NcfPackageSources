@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.SQLite
+namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.Sqlite
 {
     public partial class AddTenantId : Migration
     {

@@ -50,16 +50,16 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Remove="Migrations\Migrations-MySql\**" />
-	  <Compile Remove="Migrations\Migrations-SQLite\**" />
+	  <Compile Remove="Migrations\Migrations-Sqlite\**" />
 	  <Compile Remove="Migrations\Migrations-SqlServer\**" />
 	  <Content Remove="Migrations\Migrations-MySql\**" />
-	  <Content Remove="Migrations\Migrations-SQLite\**" />
+	  <Content Remove="Migrations\Migrations-Sqlite\**" />
 	  <Content Remove="Migrations\Migrations-SqlServer\**" />
 	  <EmbeddedResource Remove="Migrations\Migrations-MySql\**" />
-	  <EmbeddedResource Remove="Migrations\Migrations-SQLite\**" />
+	  <EmbeddedResource Remove="Migrations\Migrations-Sqlite\**" />
 	  <EmbeddedResource Remove="Migrations\Migrations-SqlServer\**" />
 	  <None Remove="Migrations\Migrations-MySql\**" />
-	  <None Remove="Migrations\Migrations-SQLite\**" />
+	  <None Remove="Migrations\Migrations-Sqlite\**" />
 	  <None Remove="Migrations\Migrations-SqlServer\**" />
 	</ItemGroup>
 	<ItemGroup>
@@ -73,13 +73,13 @@
 	  <Compile Include="Migrations\Migrations.MySql\20210108155724_AddTenantId.cs" />
 	  <Compile Include="Migrations\Migrations.MySql\20210108155724_AddTenantId.Designer.cs" />
 	  <Compile Include="Migrations\Migrations.MySql\Template_XncfNameSenparcEntities_MySqlModelSnapshot.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\20201226143133_Init.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\20201226143133_Init.Designer.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\20201226143134_AddSample.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\20201226143134_AddSample.Designer.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\20210108155659_AddTenantId.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\20210108155659_AddTenantId.Designer.cs" />
-	  <Compile Include="Migrations\Migrations.SQLite1\Template_XncfNameSenparcEntities_SQLiteModelSnapshot.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\20201226143133_Init.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\20201226143133_Init.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\20201226143134_AddSample.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\20201226143134_AddSample.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\20210108155659_AddTenantId.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\20210108155659_AddTenantId.Designer.cs" />
+	  <Compile Include="Migrations\Migrations.Sqlite\Template_XncfNameSenparcEntities_SqliteModelSnapshot.cs" />
 	  <Compile Include="Migrations\Migrations.SqlServer\20201226143133_Init.cs" />
 	  <Compile Include="Migrations\Migrations.SqlServer\20201226143133_Init.Designer.cs" />
 	  <Compile Include="Migrations\Migrations.SqlServer\20201226143134_AddSample.cs" />
@@ -90,9 +90,9 @@
 	  <Compile Include="Models\DatabaseModel\Color.cs" />
 	  <Compile Include="Models\DatabaseModel\Dto\ColorDto.cs" />
 	  <Compile Include="Models\DatabaseModel\Mapping\Template_XncfName_ColorConfigurationMapping.cs" />
-	  <Compile Include="Models\DatabaseModel\SenparcDbContextFactory.cs" />
 	  <Compile Include="Models\DatabaseModel\Template_XncfNameSenparcEntities.cs" />
-	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_SQLite.cs" />
+	  <Compile Include="Models\MultipleDatabase\SenparcDbContextFactoryConfig.cs" />
+	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_Sqlite.cs" />
 	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_MySql.cs" />
 	  <Compile Include="Models\MultipleDatabase\Template_XncfNameSenparcEntities_SqlServer.cs" />
 	  <Compile Include="Register.Area.cs" />

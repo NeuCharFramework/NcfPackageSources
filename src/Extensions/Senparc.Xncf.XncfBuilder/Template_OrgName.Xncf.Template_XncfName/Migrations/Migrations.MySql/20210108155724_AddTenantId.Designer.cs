@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.MySql
