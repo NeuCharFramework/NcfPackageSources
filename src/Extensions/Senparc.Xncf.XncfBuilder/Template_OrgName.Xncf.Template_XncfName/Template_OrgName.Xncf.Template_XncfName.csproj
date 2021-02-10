@@ -44,10 +44,7 @@
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true' ">
-		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
-		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
-	</ItemGroup>
+	
 	<ItemGroup>
 	  <Compile Remove="Migrations\Migrations-MySql\**" />
 	  <Compile Remove="Migrations\Migrations-Sqlite\**" />
@@ -100,17 +97,24 @@
 	  <Compile Include="Register.Database.cs" />
 	  <Compile Include="Services\ColorService.cs" />
 	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Condition=" '$(IntegrationToNcf)' == 'true'" Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
-		<ProjectReference Condition=" '$(IntegrationToNcf)' != 'true'" Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	
+	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
+		<PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
+		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.6.114-beta1" />
+		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
+		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
 	</ItemGroup>
+
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">
 		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.6.114-beta1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
 		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
 		<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
