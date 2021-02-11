@@ -36,5 +36,12 @@ namespace Senparc.Ncf.Core.Models
         /// 上次更新时间
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
+
+        /// <summary>
+        /// 租户 ID
+        /// <para>如果为-1，则本系统不启用多租户</para>
+        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        /// </summary>
+        public int TenantId { get; set; }
     }
 }
