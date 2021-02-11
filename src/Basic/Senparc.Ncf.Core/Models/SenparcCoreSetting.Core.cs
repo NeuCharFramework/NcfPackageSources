@@ -1,5 +1,6 @@
 ﻿using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Ncf.Core.Models
 {
@@ -26,10 +27,18 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public CacheType CacheType { get; set; }
 
+        #region 多租户
+
         /// <summary>
         /// 是否启用多租户，默认为 false
         /// </summary>
         public bool EnableMultiTenant { get; set; }
+        /// <summary>
+        /// 区分租户的规则
+        /// </summary>
+        public TenantRule TenantRule { get; set; } = TenantRule.Default;
+
+        #endregion
 
         ///
         public string MemcachedAddresses { get; set; }

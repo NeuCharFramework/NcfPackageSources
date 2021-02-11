@@ -6,6 +6,7 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.DI;
+using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Linq;
 
@@ -68,7 +69,12 @@ namespace Senparc.Ncf.Core
             return services;
         }
 
+        public static IServiceCollection AddMultiTenant(this IServiceCollection services)
+        {
+            services.AddScoped<RequestTenantInfo>();
 
+            return services;
+        }
 
         #region TryRegisterMiniCore
         /// <summary>
