@@ -34,7 +34,21 @@ namespace Senparc.Ncf.Core.Cache
 
         public override Dictionary<string, TenantInfoDto> Update()
         {
-            var fullList = _senparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToList();
+            List<TenantInfo> fullList = null;
+            try
+            {
+                fullList = _senparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToList();
+            }
+            catch (Exception ex)
+            {
+                //如果表不存在，则需要更新
+                _senparcEntitiesBase.Migrate();
+            }
+            finally
+            {
+                fullList = fullList ?? _senparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToList();
+            }
+
             var tenantInfoCollection = new Dictionary<string, TenantInfoDto>(StringComparer.OrdinalIgnoreCase);
             fullList.ForEach(z => tenantInfoCollection[z.TenantKey.ToUpper()/*全部大写*/] = _mapper.Map<TenantInfoDto>(z));
             base.SetData(tenantInfoCollection, base.TimeOut, null);
