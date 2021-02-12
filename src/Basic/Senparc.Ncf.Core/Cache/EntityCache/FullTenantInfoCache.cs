@@ -41,7 +41,8 @@ namespace Senparc.Ncf.Core.Cache
             }
             catch (Exception ex)
             {
-                //如果表不存在，则需要更新
+                //如果从旧版本升级，表不存在，则需要更新
+                _senparcEntitiesBase.ResetMigrate();
                 _senparcEntitiesBase.Migrate();
             }
             finally
