@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>-->
-    <Version>0.6.117-beta1</Version>
+    <Version>0.6.119-beta1</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>

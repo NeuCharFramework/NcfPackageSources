@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,6 +28,7 @@ namespace Senparc.Ncf.Core.MultiTenant
             var requestTenantInfo = serviceProvider.GetRequiredService<RequestTenantInfo>();
 
             string tenantName = null;
+            TenantInfoDto tenantInfoDto = null;
             switch (Config.SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
@@ -38,11 +40,7 @@ namespace Senparc.Ncf.Core.MultiTenant
                     var fullTenantInfoCache = serviceProvider.GetRequiredService<FullTenantInfoCache>();
                     var tenantInfoCollection = fullTenantInfoCache.Data;
 
-                    if (tenantInfoCollection.TryGetValue(host, out var tenantInfo))
-                    {
-                        tenantName = tenantInfo.Name;
-                    }
-                    else
+                    if (!tenantInfoCollection.TryGetValue(host, out tenantInfoDto))
                     {
                         goto default;
                     }
@@ -59,7 +57,8 @@ namespace Senparc.Ncf.Core.MultiTenant
                     break;
             }
 
-            requestTenantInfo.Name = tenantName;
+            requestTenantInfo.Id = tenantInfoDto.TenantId;
+            requestTenantInfo.Name = tenantInfoDto.Name;
 
             await _next(context);
         }

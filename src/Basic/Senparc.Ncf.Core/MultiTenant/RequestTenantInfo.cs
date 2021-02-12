@@ -9,6 +9,7 @@ namespace Senparc.Ncf.Core.MultiTenant
     /// </summary>
     public class RequestTenantInfo
     {
+        public int Id { get; set; }
         /// <summary>
         /// 唯一名称
         /// </summary>

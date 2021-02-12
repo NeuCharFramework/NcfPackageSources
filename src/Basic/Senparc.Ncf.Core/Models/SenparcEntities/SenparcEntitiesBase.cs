@@ -1,11 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Core.Models
 {
@@ -15,9 +21,22 @@ namespace Senparc.Ncf.Core.Models
     public abstract class SenparcEntitiesBase : DbContext, ISenparcEntities
     {
         private static readonly bool[] _migrated = { true };
-
-        public SenparcEntitiesBase(DbContextOptions options) : base(options)
+        private IServiceProvider _serviceProvider;
+        private IServiceProvider SserviceProvider
         {
+            get
+            {
+                if (_serviceProvider == null)
+                {
+                    _serviceProvider = SenparcDI.GetServiceProvider();
+                }
+                return _serviceProvider;
+            }
+        }
+
+        public SenparcEntitiesBase(DbContextOptions options/*, IServiceProvider serviceProvider*/) : base(options)
+        {
+            _serviceProvider = SenparcDI.GetServiceProvider();
         }
 
         #region 系统表（无特殊情况不要修改）
@@ -144,12 +163,63 @@ namespace Senparc.Ncf.Core.Models
         public virtual void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
             //软删除
-            builder.Entity<T>().HasQueryFilter(z => !z.Flag);
-            ////租户
+            var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+
+            //多租户
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(T).IsAssignableFrom(typeof(IMultiTenancy)))
+            {
+                var requestTenantInfo = SserviceProvider.GetRequiredService<RequestTenantInfo>();
+                entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
+            }
+
             //if (typeof(T).IsAssignableFrom(typeof(IMultipleTenant)))
             //{
             //    builder.Entity<T>().HasQueryFilter(z => !z.Flag);
             //}
+        }
+
+        /// <summary>
+        /// 自动添加多租户Id
+        /// </summary>
+        private void AddTenandId()
+        {
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                ChangeTracker.DetectChanges(); // 
+                var addedEntities = this.ChangeTracker
+                                            .Entries()
+                                            .Where(z => z.State == EntityState.Added)
+                                            .Select(z => z.Entity)
+                                            .ToList();
+                foreach (var entity in addedEntities)
+                {
+                    var multiTenantEntity = entity as IMultiTenancy;
+                    if (multiTenantEntity?.TenantId != 0)
+                    {
+                        var requestTenantInfo = SserviceProvider.GetRequiredService<RequestTenantInfo>();
+                        multiTenantEntity.TenantId = requestTenantInfo.Id;
+                    }
+                }
+            }
+        }
+
+        public override int SaveChanges()
+        {
+            //处理多租户
+            AddTenandId();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            //处理多租户
+            AddTenandId();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);//底层引用的就是  SaveChangesAsync，所以不用处理
         }
     }
 }
