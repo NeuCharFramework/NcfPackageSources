@@ -320,8 +320,7 @@ namespace Senparc.Ncf.XncfBase
                 else
                 {
                     var errMsg = $"{databaseRegister.GetType().FullName} 未注册任何数据库 DbContext！";
-                    SenparcTrace.BaseExceptionLog(new NcfDatabaseException
-                        (errMsg, null, null));
+                    SenparcTrace.BaseExceptionLog(new NcfDatabaseException(errMsg, null, null));
                     Console.WriteLine(errMsg);
                 }
 

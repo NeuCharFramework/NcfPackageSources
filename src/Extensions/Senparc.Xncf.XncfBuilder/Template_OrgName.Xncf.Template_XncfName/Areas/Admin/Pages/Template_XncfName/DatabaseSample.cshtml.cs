@@ -5,12 +5,15 @@ using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 using Template_OrgName.Xncf.Template_XncfName.Services;
 using System;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 {
     public class DatabaseSample : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
         public ColorDto ColorDto { get; set; }
+
+        public MultipleDatabaseType MultipleDatabaseType { get; set; }
 
         private readonly ColorService _colorService;
         private readonly IServiceProvider _serviceProvider;
@@ -19,6 +22,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         {
             _colorService = colorService;
             _serviceProvider = serviceProvider;
+
+            var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
+            var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
+            MultipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
         }
 
         public async Task OnGetAsync()

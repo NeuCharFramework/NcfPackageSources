@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using AutoMapper;
+using log4net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
@@ -6,6 +7,8 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.DI;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Linq;
 
@@ -68,7 +71,13 @@ namespace Senparc.Ncf.Core
             return services;
         }
 
+        public static IServiceCollection AddMultiTenant(this IServiceCollection services)
+        {
+            services.AddScoped<RequestTenantInfo>();
+            services.AddScoped<TenantInfoDto>();
 
+            return services;
+        }
 
         #region TryRegisterMiniCore
         /// <summary>
