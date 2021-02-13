@@ -228,8 +228,11 @@ namespace Senparc.Ncf.XncfBase
 
             //Repository & Service
             services.AddScoped(typeof(Senparc.Ncf.Repository.IRepositoryBase<>), typeof(Senparc.Ncf.Repository.RepositoryBase<>));
-            services.AddScoped(typeof(ServiceBase<>));
+            services.AddScoped(typeof(Senparc.Ncf.Repository.RepositoryBase<>));
+            services.AddScoped(typeof(Senparc.Ncf.Repository.IClientRepositoryBase<>), typeof(Senparc.Ncf.Repository.ClientRepositoryBase<>));
+            services.AddScoped(typeof(Senparc.Ncf.Repository.ClientRepositoryBase<>));
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
+            services.AddScoped(typeof(ServiceBase<>));
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingBase<>));
