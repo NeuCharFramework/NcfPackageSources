@@ -34,10 +34,15 @@ namespace Senparc.Ncf.Core.Cache
 
         public override Dictionary<string, TenantInfoDto> Update()
         {
+            throw new Senparc.Ncf.Core.Exceptions.NcfTenantException("FullTenantInfoCache 不支持同步更新方法，请使用异步方法 UpdateAsync()");
+        }
+
+        public override async Task<Dictionary<string, TenantInfoDto>> UpdateAsync()
+        {
             List<TenantInfo> fullList = null;
             try
             {
-                fullList = _senparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToList();
+                fullList = await _senparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -52,8 +57,9 @@ namespace Senparc.Ncf.Core.Cache
 
             var tenantInfoCollection = new Dictionary<string, TenantInfoDto>(StringComparer.OrdinalIgnoreCase);
             fullList.ForEach(z => tenantInfoCollection[z.TenantKey.ToUpper()/*全部大写*/] = _mapper.Map<TenantInfoDto>(z));
-            base.SetData(tenantInfoCollection, base.TimeOut, null);
-            return base.Data;
+            await base.SetDataAsync(tenantInfoCollection, base.TimeOut, null);
+
+            return await GetDataAsync();
         }
     }
 }
