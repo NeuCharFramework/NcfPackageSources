@@ -84,6 +84,12 @@ namespace Senparc.Ncf.Service
 
             tenantInfo = new TenantInfo(name, true, tenantKey);
             await SaveObjectAsync(tenantInfo);
+
+            //所有涉及到租户信息的修改，都清除租户信息，重新更新
+            var fullTenantInfoCache = _serviceProvider.GetRequiredService<FullTenantInfoCache>();
+            await fullTenantInfoCache.RemoveCacheAsync();
+            //TODO:可以放到充血实体领域中完成
+
             return base.Mapper.Map<TenantInfoDto>(tenantInfo);
         }
 
@@ -98,6 +104,12 @@ namespace Senparc.Ncf.Service
             var urlData = httpContext.Request;
             var host = urlData.Host.Host;
             return await CreateTenantInfoAsync(host, host);
+        }
+
+        public override async Task SaveChangesAsync()
+        {
+         
+            await base.SaveChangesAsync();
         }
     }
 }
