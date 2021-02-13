@@ -11,20 +11,20 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// 全局唯一编号（自动分配）
         /// </summary>
         [Required]
-        public Guid Guid { get; private set; }
+        public Guid Guid { get; set; }
         /// <summary>
         /// 名称
         /// </summary>
         [Required]
-        public string Name { get; private set; }
+        public string Name { get; set; }
         /// <summary>
         /// 是否启用
         /// </summary>
         [Required]
-        public bool Enable { get; private set; }
+        public bool Enable { get; set; }
         /// <summary>
         /// 匹配域名、URL、Head的参数
         /// </summary>
-        public string TenantKey { get; private set; }
+        public string TenantKey { get; set; }
     }
 }
