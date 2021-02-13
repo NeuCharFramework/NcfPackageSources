@@ -15,6 +15,10 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// 匹配条件
+        /// </summary>
+        public string TenantKey { get; set; }
+        /// <summary>
         /// 初始化开始时间
         /// </summary>
         public DateTimeOffset BeginTime { get; }
