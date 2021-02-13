@@ -70,7 +70,6 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 创建租户信息
         /// </summary>
-        /// <param name="httpContext"></param>
         /// <param name="name"></param>
         /// <param name="tenantKey"></param>
         /// <returns></returns>
@@ -91,8 +90,9 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 创建默认 TenantInfo 信息
         /// </summary>
+        /// <param name="httpContext">如果为 null，则自动从 IHttpContextAccessor 中获取</param>
         /// <returns></returns>
-        public async Task<TenantInfoDto> CreateInitTenantInfo(HttpContext httpContext)
+        public async Task<TenantInfoDto> CreateInitTenantInfoAsync(HttpContext httpContext)
         {
             httpContext = httpContext ?? _httpContextAccessor.Value.HttpContext;
             var urlData = httpContext.Request;
