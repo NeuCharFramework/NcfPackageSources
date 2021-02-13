@@ -37,7 +37,6 @@ namespace Senparc.Ncf.Service
             switch (SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
-                    Console.WriteLine("进入到 TenantRule.DomainName");
                     var urlData = httpContext.Request;
                     var host = urlData.Host.Host.ToUpper()/*全部大写*/;//主机名（不带端口）
                     tenantKey = host;
@@ -55,22 +54,17 @@ namespace Senparc.Ncf.Service
 
             var fullTenantInfoCache = _serviceProvider.GetRequiredService<FullTenantInfoCache>();
             var tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
-            Console.WriteLine($"tenantInfoCollection：{tenantInfoCollection.ToJson()}");
-            Console.WriteLine($"tenantKey：{tenantKey}");
 
             if (!string.IsNullOrEmpty(tenantKey) && tenantInfoCollection.TryGetValue(tenantKey, out var tenantInfoDto))
             {
-                Console.WriteLine($"找到匹配缓存：{tenantInfoDto.ToJson()}");
-                requestTenantInfo.Id = tenantInfoDto.TenantId;
+                requestTenantInfo.Id = tenantInfoDto.Id;
                 requestTenantInfo.Name = tenantInfoDto.Name;
                 requestTenantInfo.TenantKey = tenantInfoDto.TenantKey;
             }
             else
             {
-                Console.WriteLine($"未找到匹配缓存");
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
             }
-            Console.WriteLine($"requestTenantInfo：{requestTenantInfo.ToJson()}");
 
             return requestTenantInfo;
         }

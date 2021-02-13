@@ -7,6 +7,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     public class TenantInfoDto : DtoBase
     {
+        public int Id { get; set; }
         /// <summary>
         /// 全局唯一编号（自动分配）
         /// </summary>
