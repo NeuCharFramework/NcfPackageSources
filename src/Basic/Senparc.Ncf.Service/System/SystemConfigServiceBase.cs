@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Service
 {
@@ -24,6 +25,18 @@ namespace Senparc.Ncf.Service
             //删除缓存
             var systemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
             systemConfigCache.RemoveCache();
+        }
+
+        public override async Task SaveObjectAsync(SystemConfig obj)
+        {
+            LogUtility.SystemLogger.Info("系统信息被编辑");
+
+            await base.SaveObjectAsync(obj);
+
+            //删除缓存
+            var systemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
+            await systemConfigCache.RemoveCacheAsync();
+            await base.SaveObjectAsync(obj);
         }
 
         public virtual string BackupDatabase()
