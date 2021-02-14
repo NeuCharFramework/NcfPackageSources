@@ -192,7 +192,6 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 获取缓存中的数据
         /// </summary>
-        /// <param name="isRefresh"></param>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
         {
@@ -214,28 +213,36 @@ namespace Senparc.Ncf.Service
         {
             IEnumerable<SysMenu> sysMenus = new List<SysMenu>()
             {
-                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "1", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="6", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="7", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="8", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="9", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="10", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="11", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "2", MenuType = MenuType.按钮 },
+#region 管理员管理
+                new SysMenu(){ Id = "1.1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "1", MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="12", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="13", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="14", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="15", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="16", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="17", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.1.1", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.1.2", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.1.3", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.1.4", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.1.5", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.1.6", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1.1", MenuType = MenuType.按钮 },
+#endregion
 
+#region 角色管理
+                  new SysMenu(){ Id = "1.2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "1", MenuType = MenuType.菜单},
 
+                new SysMenu() { Id ="1.2.1", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.2.2", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.2.3", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.2.4", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.2.5", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id ="1.2.6", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "1.2", MenuType = MenuType.按钮 },
+	#endregion
+
+                new SysMenu(){ Id = "1.3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "1", MenuType = MenuType.菜单},
+
+                new SysMenu(){ Id = "1.4", MenuName = "系统信息", Url = "/Admin/SystemConfig/Index", Icon = "fa fa-flag", Visible = true, IsLocked = true, Sort = 225, ParentId = "1", MenuType = MenuType.菜单},
+
+                new SysMenu(){ Id = "2", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "2.1", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "2", MenuType = MenuType.菜单},
             };
 
             IEnumerable<SysRole> sysRoles = new List<SysRole>()
@@ -245,23 +252,25 @@ namespace Senparc.Ncf.Service
 
             IEnumerable<SysPermission> sysPermissions = new List<SysPermission>()
             {
-                new SysPermission() { PermissionId = "0", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.1.1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.1.2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.1.3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.1.4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.1.5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = "1.1.6", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = "1.2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.2.1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.2.2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.2.3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.2.4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.2.5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.2.6", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "6", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "7", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "8", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "9", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "10", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "12", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "13", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "14", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "15", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "16", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "17", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true }
+                new SysPermission() { PermissionId = "2.1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true }
             };
 
             IEnumerable<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>()
