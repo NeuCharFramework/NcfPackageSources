@@ -174,18 +174,18 @@ namespace Senparc.Ncf.Service
         public virtual IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
-            getSysMenuTreesRecursive(sysMenuTreeItems, sysMenuTrees, null);
+            GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenuTrees, null);
             return sysMenuTrees;
         }
 
 
-        private void getSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, string parentId)
+        private void GetSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, string parentId)
         {
             foreach (var item in sysMenuTreeItems.Where(_ => _.ParentId == parentId && _.IsMenu))
             {
                 SysMenuTreeItemDto sysMenu = new SysMenuTreeItemDto() { MenuName = item.MenuName, Id = item.Id, IsMenu = item.IsMenu, Icon = item.Icon, Url = item.Url, Children = new List<SysMenuTreeItemDto>() };
                 sysMenuTrees.Add(sysMenu);
-                getSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item.Id);
+                GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item.Id);
             }
         }
 
@@ -235,11 +235,12 @@ namespace Senparc.Ncf.Service
                 new SysMenu() { Id ="1.2.4", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "1.2", MenuType = MenuType.按钮 },
                 new SysMenu() { Id ="1.2.5", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "1.2", MenuType = MenuType.按钮 },
                 new SysMenu() { Id ="1.2.6", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "1.2", MenuType = MenuType.按钮 },
-	#endregion
+#endregion
 
                 new SysMenu(){ Id = "1.3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "1", MenuType = MenuType.菜单},
 
                 new SysMenu(){ Id = "1.4", MenuName = "系统信息", Url = "/Admin/SystemConfig/Index", Icon = "fa fa-flag", Visible = true, IsLocked = true, Sort = 225, ParentId = "1", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = "1.5", MenuName = "多租户信息", Url = "/Admin/TenantInfo/Index", Icon = "fa fa-group", Visible = true, IsLocked = true, Sort = 210, ParentId = "1", MenuType = MenuType.菜单},
 
                 new SysMenu(){ Id = "2", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
                 new SysMenu(){ Id = "2.1", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "2", MenuType = MenuType.菜单},
@@ -269,6 +270,7 @@ namespace Senparc.Ncf.Service
                 new SysPermission() { PermissionId = "1.2.6", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "1.3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "1.4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = "1.5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
                 new SysPermission() { PermissionId = "2.1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true }
             };
