@@ -72,25 +72,34 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 创建租户信息
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="tenantKey"></param>
+        /// <param name="createOrUpdate_TenantInfoDto"></param>
         /// <returns></returns>
-        public async Task<TenantInfoDto> CreateTenantInfoAsync(string name, string tenantKey)
+        public async Task<TenantInfoDto> CreateOrUpdateTenantInfoAsync(CreateOrUpdate_TenantInfoDto createOrUpdate_TenantInfoDto)
         {
-            tenantKey = tenantKey.ToUpper();
-            var tenantInfo = await GetObjectAsync(z => z.Name == name || z.TenantKey == tenantKey);
+            createOrUpdate_TenantInfoDto.TenantKey = createOrUpdate_TenantInfoDto.TenantKey.ToUpper();
+            var tenantInfo = await GetObjectAsync(z => z.Id != createOrUpdate_TenantInfoDto.Id && (z.Name == createOrUpdate_TenantInfoDto.Name || z.TenantKey == createOrUpdate_TenantInfoDto.TenantKey));
             if (tenantInfo != null)
             {
-                throw new NcfTenantException($"已存在名为 {name} 或 关键条件为 {tenantKey} 的租户记录！");
+                throw new NcfTenantException($"已存在名为 {createOrUpdate_TenantInfoDto.Name} 或 关键条件为 {createOrUpdate_TenantInfoDto.TenantKey} 的租户记录！");
             }
 
-            tenantInfo = new TenantInfo(name, true, tenantKey);
+            if (createOrUpdate_TenantInfoDto.Id > 0)
+            {
+                //编辑
+                tenantInfo = await GetObjectAsync(z => z.Id == createOrUpdate_TenantInfoDto.Id, null);
+                if (tenantInfo == null)
+                {
+                    throw new NcfTenantException($"租户信息不存在！Id：{createOrUpdate_TenantInfoDto.Id}");
+                }
+                tenantInfo.Update(createOrUpdate_TenantInfoDto);
+            }
+            else
+            {
+                //新增
+                tenantInfo = new TenantInfo(createOrUpdate_TenantInfoDto.Name, createOrUpdate_TenantInfoDto.Enable, createOrUpdate_TenantInfoDto.TenantKey);
+            }
             await SaveObjectAsync(tenantInfo);
-
-            //所有涉及到租户信息的修改，都清除租户信息，重新更新
-            var fullTenantInfoCache = _serviceProvider.GetRequiredService<FullTenantInfoCache>();
-            await fullTenantInfoCache.RemoveCacheAsync();
-            //TODO:可以放到充血实体领域中完成
+            await tenantInfo.ClearCache(_serviceProvider);//所有涉及到租户信息的修改，都清除租户信息，重新更新
 
             return base.Mapper.Map<TenantInfoDto>(tenantInfo);
         }
@@ -105,12 +114,36 @@ namespace Senparc.Ncf.Service
             httpContext = httpContext ?? _httpContextAccessor.Value.HttpContext;
             var urlData = httpContext.Request;
             var host = urlData.Host.Host;
-            return await CreateTenantInfoAsync(host, host);
+            CreateOrUpdate_TenantInfoDto createOrUpdate_TenantInfoDto = new CreateOrUpdate_TenantInfoDto(0, host, host, true, "系统初始化自动创建");
+            return await CreateOrUpdateTenantInfoAsync(createOrUpdate_TenantInfoDto);
+        }
+
+        /// <summary>
+        /// 价差 Name 是否存在
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public async Task<bool> CheckNameExisted(int id, string name)
+        {
+            return await GetObjectAsync(z => z.Id != id && z.Name == name, null) != null;
+        }
+
+        /// <summary>
+        /// 价差 TenantKey 是否存在
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tenantKey"></param>
+        /// <returns></returns>
+        public async Task<bool> CheckTenantKeyExisted(int id, string tenantKey)
+        {
+            tenantKey = tenantKey.ToUpper();
+            return await GetObjectAsync(z => z.Id != id && z.TenantKey == tenantKey, null) != null;
         }
 
         public override async Task SaveChangesAsync()
         {
-         
+
             await base.SaveChangesAsync();
         }
     }

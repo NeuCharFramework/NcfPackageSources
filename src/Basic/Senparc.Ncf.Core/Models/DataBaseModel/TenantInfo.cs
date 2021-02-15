@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.Cache;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
@@ -44,6 +47,29 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         private Guid GenerateGuid()
         {
             return Guid.NewGuid();
+        }
+
+        /// <summary>
+        /// 更新数据
+        /// </summary>
+        /// <param name="dto"></param>
+        public void Update(CreateOrUpdate_TenantInfoDto dto)
+        {
+            Name = dto.Name;
+            Enable = dto.Enable;
+            TenantKey = dto.TenantKey;
+            AdminRemark = dto.AdminRemark;
+        }
+
+        /// <summary>
+        /// 清除缓存
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        public async Task ClearCache(IServiceProvider serviceProvider)
+        {
+            var fullTenantInfoCache = serviceProvider.GetRequiredService<FullTenantInfoCache>();
+            await fullTenantInfoCache.RemoveCacheAsync();
         }
     }
 }

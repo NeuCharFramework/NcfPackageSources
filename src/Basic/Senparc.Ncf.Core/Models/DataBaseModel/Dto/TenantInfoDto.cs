@@ -32,5 +32,14 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     public class CreateOrUpdate_TenantInfoDto : TenantInfoDto
     {
         new public string AdminRemark { get; set; }
+
+        public CreateOrUpdate_TenantInfoDto(int id, string name, string tenantKey, bool enable, string adminRemark)
+        {
+            Id = id;
+            Name = name;
+            TenantKey = tenantKey.ToUpper();
+            Enable = enable;
+            AdminRemark = adminRemark;
+        }
     }
 }
