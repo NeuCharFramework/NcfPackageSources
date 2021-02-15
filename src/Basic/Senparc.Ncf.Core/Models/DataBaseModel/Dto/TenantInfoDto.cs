@@ -28,4 +28,9 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// </summary>
         public string TenantKey { get; set; }
     }
+
+    public class CreateOrUpdate_TenantInfoDto : TenantInfoDto
+    {
+        new public string AdminRemark { get; set; }
+    }
 }
