@@ -165,9 +165,12 @@ namespace Senparc.Ncf.Core.Models
             //软删除
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
+            Console.WriteLine("进入软删除 SetGlobalQuery");
+
             //多租户
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(T).IsAssignableFrom(typeof(IMultiTenancy)))
             {
+                Console.WriteLine("进入多租户 SetGlobalQuery");
                 var requestTenantInfo = SserviceProvider.GetRequiredService<RequestTenantInfo>();
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
             }
@@ -185,6 +188,8 @@ namespace Senparc.Ncf.Core.Models
         {
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
+                Console.WriteLine("进入多租户 AddTenandId");
+
                 ChangeTracker.DetectChanges(); // 
                 var addedEntities = this.ChangeTracker
                                             .Entries()
