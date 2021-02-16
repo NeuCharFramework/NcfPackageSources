@@ -21,11 +21,11 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// <summary>
         /// 初始化开始时间
         /// </summary>
-        public DateTimeOffset BeginTime { get; }
+        public DateTime BeginTime { get; }
 
         public RequestTenantInfo()
         {
-            BeginTime = SystemTime.Now;
+            BeginTime = SystemTime.Now.UtcDateTime;
         }
     }
 }
