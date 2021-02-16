@@ -16,7 +16,7 @@ namespace Senparc.Ncf.Core.Tests
         [TestMethod]
         public void IsAssignableFromTest()
         {
-            var result = typeof(SysMenu).IsAssignableFrom(typeof(IMultiTenancy));
+            var result = typeof(IMultiTenancy).IsAssignableFrom(typeof(SysMenu));
             Assert.IsTrue(result);
         }
     }

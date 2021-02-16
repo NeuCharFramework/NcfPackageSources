@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
@@ -166,12 +167,11 @@ namespace Senparc.Ncf.Core.Models
             Console.WriteLine("进入软删除 SetGlobalQuery");
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
-            Console.WriteLine($"{typeof(T).Name} IsAssignableFrom IMultiTenancy:{typeof(T).IsAssignableFrom(typeof(IMultiTenancy))} / EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
             //多租户
-            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(T).IsAssignableFrom(typeof(IMultiTenancy)))
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)))
             {
-                Console.WriteLine("进入多租户 SetGlobalQuery");
                 var requestTenantInfo = SserviceProvider.GetRequiredService<RequestTenantInfo>();
+                Console.WriteLine($"进入多租户 SetGlobalQuery，requestTenantInfo：{requestTenantInfo.ToJson()}");
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
             }
 
@@ -201,8 +201,9 @@ namespace Senparc.Ncf.Core.Models
                 foreach (var entity in addedEntities)
                 {
                     var multiTenantEntity = entity as IMultiTenancy;
-                    if (multiTenantEntity != null)
+                    if (multiTenantEntity?.TenantId == 0)
                     {
+                        //如果未设置，则进行设定
                         requestTenantInfo = requestTenantInfo ?? SserviceProvider.GetRequiredService<RequestTenantInfo>();
                         multiTenantEntity.TenantId = requestTenantInfo.Id;
                     }
