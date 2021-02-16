@@ -34,7 +34,7 @@
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
 		<Content Include=".template.config\template.json" />
 		<None Include=".template.config\readme.md" />
-		<Compile Remove="**\*" />
+		<!--<Compile Remove="**\*" />-->
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
