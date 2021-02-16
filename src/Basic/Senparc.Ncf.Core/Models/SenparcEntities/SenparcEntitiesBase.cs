@@ -23,7 +23,7 @@ namespace Senparc.Ncf.Core.Models
     {
         private static readonly bool[] _migrated = { true };
         private IServiceProvider _serviceProvider;
-        private IServiceProvider SserviceProvider
+        private IServiceProvider ServiceProvider
         {
             get
             {
@@ -170,7 +170,7 @@ namespace Senparc.Ncf.Core.Models
             //多租户
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)))
             {
-                var requestTenantInfo = SserviceProvider.GetRequiredService<RequestTenantInfo>();
+                var requestTenantInfo = ServiceProvider.GetRequiredService<RequestTenantInfo>();
                 Console.WriteLine($"进入多租户 SetGlobalQuery，requestTenantInfo：{requestTenantInfo.ToJson()}");
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
             }
@@ -204,12 +204,13 @@ namespace Senparc.Ncf.Core.Models
 
                     var multiTenantEntity = entity as IMultiTenancy;
 
-                    Console.WriteLine($"\t multiTenantEntity：{multiTenantEntity != null}");
+                    Console.WriteLine($"\t multiTenantEntity != null：{multiTenantEntity != null}");
 
                     if (multiTenantEntity?.TenantId == 0)
                     {
                         //如果未设置，则进行设定
-                        requestTenantInfo = requestTenantInfo ?? SserviceProvider.GetRequiredService<RequestTenantInfo>();
+                        requestTenantInfo = requestTenantInfo ?? ServiceProvider.GetRequiredService<RequestTenantInfo>();
+
                         Console.WriteLine($"\t requestTenantInfo：{requestTenantInfo.ToJson()}");
 
                         multiTenantEntity.TenantId = requestTenantInfo.Id;

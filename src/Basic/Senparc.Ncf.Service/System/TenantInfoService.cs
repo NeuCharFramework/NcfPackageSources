@@ -66,6 +66,8 @@ namespace Senparc.Ncf.Service
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
             }
 
+            System.Console.WriteLine("SetScopedRequestTenantInfoAsync - requestTenantInfo："+ requestTenantInfo.ToJson());
+
             return requestTenantInfo;
         }
 
