@@ -200,11 +200,18 @@ namespace Senparc.Ncf.Core.Models
                 RequestTenantInfo requestTenantInfo = null;
                 foreach (var entity in addedEntities)
                 {
+                    Console.WriteLine($"\t 处理：{entity.GetType().Name}");
+
                     var multiTenantEntity = entity as IMultiTenancy;
+
+                    Console.WriteLine($"\t multiTenantEntity：{multiTenantEntity != null}");
+
                     if (multiTenantEntity?.TenantId == 0)
                     {
                         //如果未设置，则进行设定
                         requestTenantInfo = requestTenantInfo ?? SserviceProvider.GetRequiredService<RequestTenantInfo>();
+                        Console.WriteLine($"\t requestTenantInfo：{requestTenantInfo.ToJson()}");
+
                         multiTenantEntity.TenantId = requestTenantInfo.Id;
                     }
                 }
