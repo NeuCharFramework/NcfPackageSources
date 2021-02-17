@@ -24,14 +24,19 @@ namespace Senparc.Ncf.Core.Models
     {
         private static readonly bool[] _migrated = { true };
         private IServiceProvider _serviceProvider;
-        private IServiceProvider ServiceProvider
+        private IServiceScope _serviceScope;
+
+        /// <summary>
+        /// SenparcDI 储存的 GlobalServiceCollection 生成的 ServiceProvider
+        /// </summary>
+        protected virtual IServiceProvider ServiceProvider
         {
             get
             {
-                return TestServiceProvider;
                 if (_serviceProvider == null)
                 {
-                    _serviceProvider = ((IInfrastructure<IServiceProvider>)this).Instance;
+                    _serviceScope = SenparcDI.GlobalServiceCollection.BuildServiceProvider().CreateScope();
+                    _serviceProvider = _serviceScope.ServiceProvider;// ((IInfrastructure<IServiceProvider>)this).Instance;
                 }
                 return _serviceProvider;
             }
@@ -39,7 +44,11 @@ namespace Senparc.Ncf.Core.Models
 
         public SenparcEntitiesBase(DbContextOptions options/*, IServiceProvider serviceProvider*/) : base(options)
         {
+        }
 
+        ~SenparcEntitiesBase()
+        {
+            _serviceScope?.Dispose();
         }
 
         #region 系统表（无特殊情况不要修改）
@@ -157,9 +166,6 @@ namespace Senparc.Ncf.Core.Models
         private static readonly MethodInfo SetGlobalQueryMethodInfo = typeof(SenparcEntitiesBase)
             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
             .Single(t => t.IsGenericMethod && t.Name == nameof(SetGlobalQuery) /*"SetGlobalQuery"*/);
-
-        public static IServiceProvider TestServiceProvider;
-
 
         /// <summary>
         /// 全局查询，附带软删除状态

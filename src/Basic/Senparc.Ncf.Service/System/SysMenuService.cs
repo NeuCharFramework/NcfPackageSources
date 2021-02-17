@@ -13,6 +13,8 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
 using AutoMapper.QueryableExtensions;
+using Senparc.Ncf.Core.MultiTenant;
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Ncf.Service
 {
@@ -211,45 +213,54 @@ namespace Senparc.Ncf.Service
         /// </summary>
         public void Init()
         {
+            //设置 TenantId 前缀，避免不同租户之间的 ID 冲突
+            string tenantId = null;
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
+                tenantId = $"{requestTenantInfo.Id}-";
+            }
+
             IEnumerable<SysMenu> sysMenus = new List<SysMenu>()
             {
-                new SysMenu(){ Id = "1", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
 
 #region 管理员管理
-                new SysMenu(){ Id = "1.1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "1", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1.1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "1", MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="1.1.1", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1.1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.1.2", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1.1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.1.3", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1.1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.1.4", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1.1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.1.5", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1.1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.1.6", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.1", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.2", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.3", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.4", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.5", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.6", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1.1", MenuType = MenuType.按钮 },
 #endregion
 
 #region 角色管理
-                  new SysMenu(){ Id = "1.2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "1", MenuType = MenuType.菜单},
+                  new SysMenu(){ Id = tenantId+"1.2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "1", MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="1.2.1", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "1.2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.2.2", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "1.2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.2.3", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "1.2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.2.4", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "1.2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.2.5", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "1.2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="1.2.6", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.1", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.2", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.3", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.4", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.5", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.6", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "1.2", MenuType = MenuType.按钮 },
 #endregion
 
-                new SysMenu(){ Id = "1.3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "1", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1.3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "1", MenuType = MenuType.菜单},
 
-                new SysMenu(){ Id = "1.4", MenuName = "系统信息", Url = "/Admin/SystemConfig/Index", Icon = "fa fa-flag", Visible = true, IsLocked = true, Sort = 225, ParentId = "1", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "1.5", MenuName = "多租户信息", Url = "/Admin/TenantInfo/Index", Icon = "fa fa-group", Visible = true, IsLocked = true, Sort = 210, ParentId = "1", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1.4", MenuName = "系统信息", Url = "/Admin/SystemConfig/Index", Icon = "fa fa-flag", Visible = true, IsLocked = true, Sort = 225, ParentId = "1", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1.5", MenuName = "多租户信息", Url = "/Admin/TenantInfo/Index", Icon = "fa fa-group", Visible = true, IsLocked = true, Sort = 210, ParentId = "1", MenuType = MenuType.菜单},
 
-                new SysMenu(){ Id = "2", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "2.1", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "2", MenuType = MenuType.菜单},
+                new SysMenu(){ Id =tenantId+"2", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
+                new SysMenu(){ Id =tenantId+"2.1", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "2", MenuType = MenuType.菜单},
             };
 
             IEnumerable<SysRole> sysRoles = new List<SysRole>()
             {
-                new SysRole() { Id = "1", RoleCode = "administrator", RoleName = "超级管理员", Enabled = true }
+                new SysRole() { Id = tenantId+"1", RoleCode = "administrator", RoleName = "超级管理员", Enabled = true }
             };
+
 
             IEnumerable<SysPermission> sysPermissions = new List<SysPermission>()
             {
