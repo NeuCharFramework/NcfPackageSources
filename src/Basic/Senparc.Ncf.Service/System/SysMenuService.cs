@@ -288,7 +288,7 @@ namespace Senparc.Ncf.Service
 
             IEnumerable<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>()
             {
-                new SysRoleAdminUserInfo() { RoleCode = "administrator", RoleId = "1", AccountId = 1 }
+                new SysRoleAdminUserInfo() { RoleCode = "administrator", RoleId =tenantId+ "1", AccountId = 1 }
             };
 
             try
