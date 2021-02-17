@@ -28,6 +28,7 @@ namespace Senparc.Ncf.Core.Models
         {
             get
             {
+                return TestServiceProvider;
                 if (_serviceProvider == null)
                 {
                     _serviceProvider = ((IInfrastructure<IServiceProvider>)this).Instance;
@@ -38,6 +39,7 @@ namespace Senparc.Ncf.Core.Models
 
         public SenparcEntitiesBase(DbContextOptions options/*, IServiceProvider serviceProvider*/) : base(options)
         {
+
         }
 
         #region 系统表（无特殊情况不要修改）
@@ -156,6 +158,9 @@ namespace Senparc.Ncf.Core.Models
             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
             .Single(t => t.IsGenericMethod && t.Name == nameof(SetGlobalQuery) /*"SetGlobalQuery"*/);
 
+        public static IServiceProvider TestServiceProvider;
+
+
         /// <summary>
         /// 全局查询，附带软删除状态
         /// </summary>
@@ -170,6 +175,7 @@ namespace Senparc.Ncf.Core.Models
             //多租户
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)))
             {
+                Console.WriteLine("ServiceProvider.GetRequiredService<RequestTenantInfo>(); " + ServiceProvider.GetHashCode());
                 var requestTenantInfo = ServiceProvider.GetRequiredService<RequestTenantInfo>();
                 Console.WriteLine($"进入多租户 SetGlobalQuery，requestTenantInfo：{requestTenantInfo.ToJson()}");
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);

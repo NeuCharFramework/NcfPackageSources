@@ -2,8 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
+using System;
 using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Service.MultiTenant
@@ -20,10 +22,12 @@ namespace Senparc.Ncf.Service.MultiTenant
             _next = next;
         }
 
+
         public async Task InvokeAsync(HttpContext context)
         {
             System.Console.WriteLine("进入TenantMiddleware");
             var serviceProvider = context.RequestServices;
+            SenparcEntitiesBase.TestServiceProvider = serviceProvider;
             var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
             await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
             await _next(context);

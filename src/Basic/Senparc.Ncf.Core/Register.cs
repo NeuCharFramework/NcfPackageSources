@@ -71,6 +71,11 @@ namespace Senparc.Ncf.Core
             return services;
         }
 
+        /// <summary>
+        /// 添加多租户
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddMultiTenant(this IServiceCollection services)
         {
             services.AddScoped<RequestTenantInfo>();
@@ -121,6 +126,7 @@ namespace Senparc.Ncf.Core
             var config = configBuilder.Build();
             serviceCollection.AddSenparcGlobalServices(config);
             serviceCollection.AddMemoryCache();//使用内存缓存
+            serviceCollection.AddMultiTenant();//多租户
             return serviceCollection;
         }
 
