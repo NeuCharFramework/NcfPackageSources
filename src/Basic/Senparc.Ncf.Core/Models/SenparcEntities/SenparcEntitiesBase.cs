@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
@@ -29,7 +30,7 @@ namespace Senparc.Ncf.Core.Models
             {
                 if (_serviceProvider == null)
                 {
-                    _serviceProvider = SenparcDI.GetServiceProvider();
+                    _serviceProvider = ((IInfrastructure<IServiceProvider>)this).Instance;
                 }
                 return _serviceProvider;
             }
@@ -37,7 +38,6 @@ namespace Senparc.Ncf.Core.Models
 
         public SenparcEntitiesBase(DbContextOptions options/*, IServiceProvider serviceProvider*/) : base(options)
         {
-            _serviceProvider = SenparcDI.GetServiceProvider();
         }
 
         #region 系统表（无特殊情况不要修改）
