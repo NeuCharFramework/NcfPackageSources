@@ -18,12 +18,14 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// 获取 RequestTenantInfo，并且检查其是否匹配
         /// </summary>
         /// <param name="serviceProvider"></param>
+        /// <param name="referenceMethod">引用此方法的方法（用于异常提示）</param>
         /// <param name="dbContext"></param>
         /// <exception cref="NcfTenantException">如果 RequestTenantInfo.MatchSuccess 为 false，则抛出异常</exception>
         /// <returns></returns>
         public static RequestTenantInfo TryGetAndCheckRequestTenantInfo(IServiceProvider serviceProvider, string referenceMethod, DbContext dbContext = null)
         {
             var requestTenantInfo = serviceProvider.GetRequiredService<RequestTenantInfo>();
+            Console.WriteLine(" referenceMethod requestTenantInfo:" + requestTenantInfo.GetHashCode());
 
             //如果未设置，则进行设定
             if (!requestTenantInfo.MatchSuccess)
