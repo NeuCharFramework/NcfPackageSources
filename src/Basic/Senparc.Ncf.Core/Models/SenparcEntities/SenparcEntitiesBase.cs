@@ -175,22 +175,14 @@ namespace Senparc.Ncf.Core.Models
         public virtual void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
             //软删除
-            Console.WriteLine("进入软删除 SetGlobalQuery");
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
             //多租户
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)))
             {
-                Console.WriteLine("ServiceProvider.GetRequiredService<RequestTenantInfo>(); " + ServiceProvider.GetHashCode());
                 var requestTenantInfo = ServiceProvider.GetRequiredService<RequestTenantInfo>();
-                Console.WriteLine($"进入多租户 SetGlobalQuery，requestTenantInfo：{requestTenantInfo.ToJson()}");
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
             }
-
-            //if (typeof(T).IsAssignableFrom(typeof(IMultipleTenant)))
-            //{
-            //    builder.Entity<T>().HasQueryFilter(z => !z.Flag);
-            //}
         }
 
         /// <summary>
@@ -200,8 +192,6 @@ namespace Senparc.Ncf.Core.Models
         {
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
-                Console.WriteLine("进入多租户 AddTenandId");
-
                 ChangeTracker.DetectChanges(); // 
                 var addedEntities = this.ChangeTracker
                                             .Entries()
@@ -212,19 +202,12 @@ namespace Senparc.Ncf.Core.Models
                 RequestTenantInfo requestTenantInfo = null;
                 foreach (var entity in addedEntities)
                 {
-                    Console.WriteLine($"\t 处理：{entity.GetType().Name}");
-
                     var multiTenantEntity = entity as IMultiTenancy;
-
-                    Console.WriteLine($"\t multiTenantEntity != null：{multiTenantEntity != null}");
 
                     if (multiTenantEntity?.TenantId == 0)
                     {
                         //如果未设置，则进行设定
                         requestTenantInfo = requestTenantInfo ?? ServiceProvider.GetRequiredService<RequestTenantInfo>();
-
-                        Console.WriteLine($"\t requestTenantInfo：{requestTenantInfo.ToJson()}");
-
                         multiTenantEntity.TenantId = requestTenantInfo.Id;
                     }
                 }

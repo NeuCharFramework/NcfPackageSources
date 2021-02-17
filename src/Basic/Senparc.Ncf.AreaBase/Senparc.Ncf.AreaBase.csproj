@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.6.125-beta1</Version>
+    <Version>0.6.126-beta1</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>

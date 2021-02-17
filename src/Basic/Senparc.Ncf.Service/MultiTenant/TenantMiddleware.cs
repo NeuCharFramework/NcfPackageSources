@@ -25,7 +25,6 @@ namespace Senparc.Ncf.Service.MultiTenant
 
         public async Task InvokeAsync(HttpContext context)
         {
-            System.Console.WriteLine("进入TenantMiddleware");
             var serviceProvider = context.RequestServices;
             var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
             await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
