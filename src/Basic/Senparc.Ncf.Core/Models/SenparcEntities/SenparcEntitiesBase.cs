@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
 using System;
@@ -24,7 +25,7 @@ namespace Senparc.Ncf.Core.Models
     {
         private static readonly bool[] _migrated = { true };
         private IServiceProvider _serviceProvider;
-        private IServiceScope _serviceScope;
+        //private IServiceScope _serviceScope;
 
         /// <summary>
         /// SenparcDI 储存的 GlobalServiceCollection 生成的 ServiceProvider
@@ -35,21 +36,50 @@ namespace Senparc.Ncf.Core.Models
             {
                 if (_serviceProvider == null)
                 {
-                    _serviceScope = SenparcDI.GlobalServiceCollection.BuildServiceProvider().CreateScope();
-                    _serviceProvider = _serviceScope.ServiceProvider;// ((IInfrastructure<IServiceProvider>)this).Instance;
+                    throw new Senparc.Ncf.Core.Exceptions.NcfDatabaseException("_serviceProvider 不可以为 null", null);
+                    //_serviceScope = SenparcDI.GlobalServiceCollection.BuildServiceProvider().CreateScope();
+                    //_serviceProvider = _serviceScope.ServiceProvider;// ((IInfrastructure<IServiceProvider>)this).Instance;
                 }
                 return _serviceProvider;
             }
         }
 
-        public SenparcEntitiesBase(DbContextOptions options/*, IServiceProvider serviceProvider*/) : base(options)
+        /// <summary>
+        /// 自动添加多租户Id
+        /// </summary>
+        private void AddTenandId()
         {
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                ChangeTracker.DetectChanges(); // 
+                var addedEntities = this.ChangeTracker
+                                            .Entries()
+                                            .Where(z => z.State == EntityState.Added)
+                                            .Select(z => z.Entity)
+                                            .ToList();
+
+                RequestTenantInfo requestTenantInfo = null;
+                foreach (var entity in addedEntities)
+                {
+                    if (entity is IMultiTenancy multiTenantEntity)
+                    {
+                        //如果未设置，则进行设定
+                        requestTenantInfo = requestTenantInfo ?? MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesBase.AddTenandId()", this);
+                        multiTenantEntity.TenantId = requestTenantInfo.Id;
+                    }
+                }
+            }
         }
 
-        ~SenparcEntitiesBase()
+        public SenparcEntitiesBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
-            _serviceScope?.Dispose();
+            _serviceProvider = serviceProvider;
         }
+
+        //~SenparcEntitiesBase()
+        //{
+        //    _serviceScope?.Dispose();
+        //}
 
         #region 系统表（无特殊情况不要修改）
 
@@ -113,6 +143,8 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
+        #region Migration 迁移相关方法
+
         /// <summary>
         /// 执行 EF Core 的合并操作（等价于 update-database）
         /// <para>出于安全考虑，每次执行 Migrate() 方法之前，必须先执行 ResetMigrate() 开启允许 Migrate 执行的状态。</para>
@@ -140,6 +172,7 @@ namespace Senparc.Ncf.Core.Models
             _migrated[0] = false;
         }
 
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -180,37 +213,8 @@ namespace Senparc.Ncf.Core.Models
             //多租户
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)))
             {
-                var requestTenantInfo = ServiceProvider.GetRequiredService<RequestTenantInfo>();
+                RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesBase.SetGlobalQuery<T>(ModelBuilder builder)", this);
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
-            }
-        }
-
-        /// <summary>
-        /// 自动添加多租户Id
-        /// </summary>
-        private void AddTenandId()
-        {
-            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
-            {
-                ChangeTracker.DetectChanges(); // 
-                var addedEntities = this.ChangeTracker
-                                            .Entries()
-                                            .Where(z => z.State == EntityState.Added)
-                                            .Select(z => z.Entity)
-                                            .ToList();
-
-                RequestTenantInfo requestTenantInfo = null;
-                foreach (var entity in addedEntities)
-                {
-                    var multiTenantEntity = entity as IMultiTenancy;
-
-                    if (multiTenantEntity?.TenantId == 0)
-                    {
-                        //如果未设置，则进行设定
-                        requestTenantInfo = requestTenantInfo ?? ServiceProvider.GetRequiredService<RequestTenantInfo>();
-                        multiTenantEntity.TenantId = requestTenantInfo.Id;
-                    }
-                }
             }
         }
 

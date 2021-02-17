@@ -60,10 +60,12 @@ namespace Senparc.Ncf.Service
                 requestTenantInfo.Id = tenantInfoDto.Id;
                 requestTenantInfo.Name = tenantInfoDto.Name;
                 requestTenantInfo.TenantKey = tenantInfoDto.TenantKey;
+                requestTenantInfo.MatchSuccess = true;
             }
             else
             {
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
+                requestTenantInfo.MatchSuccess = false;
             }
 
             return requestTenantInfo;

@@ -22,6 +22,10 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// 初始化开始时间
         /// </summary>
         public DateTime BeginTime { get; }
+        /// <summary>
+        /// 是否匹配成功
+        /// </summary>
+        public bool MatchSuccess { get; set; }
 
         public RequestTenantInfo()
         {

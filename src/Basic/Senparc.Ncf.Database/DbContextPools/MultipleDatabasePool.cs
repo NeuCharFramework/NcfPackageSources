@@ -132,8 +132,9 @@ namespace Senparc.Ncf.Database
         /// <param name="connectionString">连接字符串，如果为 null，则默认使用 SenparcDatabaseConfigs.ClientConnectionString</param>
         /// <param name="dbContextOptionsAction">额外配置操作</param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
+        /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
-        public DbContext GetDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
+        public DbContext GetDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null)
         {
             //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
@@ -171,7 +172,16 @@ namespace Senparc.Ncf.Database
                 dbContextOptionsAction
                 );
             //实例化 DbContext
-            var dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as DbContext;
+            DbContext dbContext;
+            if (serviceProvider == null)
+            {
+                dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as DbContext;
+            }
+            else
+            {
+                dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options, serviceProvider }) as DbContext;
+            }
+
             if (dbContext == null)
             {
                 throw new NcfDatabaseException($"未能创建 {dbContextType.FullName} 的实例", DatabaseConfigurationFactory.Instance.Current.GetType(), null);
