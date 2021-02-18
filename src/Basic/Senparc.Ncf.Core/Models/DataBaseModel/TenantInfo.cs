@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Cache;
+using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 租户信息
     /// </summary>
-    public class TenantInfo : EntityBase<int>
+    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant
     {
         /// <summary>
         /// 全局唯一编号（自动分配）
@@ -35,6 +37,9 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// </summary>
         [Required]
         public string TenantKey { get; private set; }
+
+        [NotMapped]
+        new public string TenantId { get; private set; }
 
         public TenantInfo(string name, bool enable, string tenantKey)
         {

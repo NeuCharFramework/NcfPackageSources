@@ -37,6 +37,9 @@ namespace Senparc.Ncf.Core.Models
                 if (_serviceProvider == null)
                 {
                     throw new Senparc.Ncf.Core.Exceptions.NcfDatabaseException("_serviceProvider 不可以为 null", null);
+
+                    //base.Database.GetDbConnection().Site.GetRequiredService<>
+
                     //_serviceScope = SenparcDI.GlobalServiceCollection.BuildServiceProvider().CreateScope();
                     //_serviceProvider = _serviceScope.ServiceProvider;// ((IInfrastructure<IServiceProvider>)this).Instance;
                 }
@@ -61,7 +64,7 @@ namespace Senparc.Ncf.Core.Models
                 RequestTenantInfo requestTenantInfo = null;
                 foreach (var entity in addedEntities)
                 {
-                    if (entity is IMultiTenancy multiTenantEntity)
+                    if (!(entity is IIgnoreMulitTenant) && (entity is IMultiTenancy multiTenantEntity))
                     {
                         //如果未设置，则进行设定
                         requestTenantInfo = requestTenantInfo ?? MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesBase.AddTenandId()", this);
@@ -211,7 +214,7 @@ namespace Senparc.Ncf.Core.Models
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
             //多租户
-            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)))
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
                 RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesBase.SetGlobalQuery<T>(ModelBuilder builder)", this);
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);

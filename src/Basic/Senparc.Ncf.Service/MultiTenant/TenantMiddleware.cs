@@ -22,7 +22,6 @@ namespace Senparc.Ncf.Service.MultiTenant
             _next = next;
         }
 
-
         public async Task InvokeAsync(HttpContext context)
         {
             var serviceProvider = context.RequestServices;
