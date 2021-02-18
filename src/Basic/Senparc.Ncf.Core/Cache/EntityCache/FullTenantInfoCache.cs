@@ -65,9 +65,9 @@ namespace Senparc.Ncf.Core.Cache
         {
             List<TenantInfo> fullList = null;
 
-            using (var scope = _serviceProvider.CreateScope())
+            //using (var scope = _serviceProvider.CreateScope())
             {
-                SenparcEntitiesBase scopedSenparcEntitiesBase = scope.ServiceProvider.GetRequiredService<SenparcEntitiesBase>();
+                SenparcEntitiesBase scopedSenparcEntitiesBase = _senparcEntitiesBase;//scope.ServiceProvider.GetRequiredService<SenparcEntitiesBase>();
 
                 try
                 {
