@@ -52,7 +52,7 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         private void AddTenandId()
         {
-            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            if (this.EnableMultiTenant)
             {
                 ChangeTracker.DetectChanges(); // 
                 var addedEntities = this.ChangeTracker
@@ -74,15 +74,27 @@ namespace Senparc.Ncf.Core.Models
             }
         }
 
-        public SenparcEntitiesBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
+        public bool? _enableMultiTenant;
+
+        /// <summary>
+        /// 是否启用多租户，默认读取 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// </summary>
+        public bool EnableMultiTenant
         {
-            _serviceProvider = serviceProvider;
+            get
+            {
+                if (!_enableMultiTenant.HasValue)
+                {
+                    _enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
+                }
+                return _enableMultiTenant.Value;
+            }
+            private set
+            {
+                _enableMultiTenant = value;
+            }
         }
 
-        //~SenparcEntitiesBase()
-        //{
-        //    _serviceScope?.Dispose();
-        //}
 
         #region 系统表（无特殊情况不要修改）
 
@@ -145,6 +157,35 @@ namespace Senparc.Ncf.Core.Models
         public DbSet<TenantInfo> TenantInfos { get; set; }
 
         #endregion
+
+
+        public SenparcEntitiesBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        //~SenparcEntitiesBase()
+        //{
+        //    _serviceScope?.Dispose();
+        //}
+
+
+        /// <summary>
+        /// 设置当前 DbContext 是否启用上下文
+        /// </summary>
+        /// <param name="enable"></param>
+        public void SetMultiTenantEnable(bool enable)
+        {
+            EnableMultiTenant = enable;
+        }
+
+        /// <summary>
+        /// 多租户状态重置为 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// </summary>
+        public void ResetMultiTenantEnable()
+        {
+            SetMultiTenantEnable(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
+        }
 
         #region Migration 迁移相关方法
 
@@ -214,7 +255,8 @@ namespace Senparc.Ncf.Core.Models
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
             //多租户
-            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
+            Console.WriteLine("SetGlobalQuery<T> this.EnableMultiTenant:" + this.EnableMultiTenant);
+            if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
                 RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
