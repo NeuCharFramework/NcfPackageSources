@@ -216,7 +216,7 @@ namespace Senparc.Ncf.Core.Models
             //多租户
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
-                RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesBase.SetGlobalQuery<T>(ModelBuilder builder)", this);
+                RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);
                 entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
             }
         }
