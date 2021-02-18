@@ -38,6 +38,9 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         [Required]
         public string TenantKey { get; private set; }
 
+        /// <summary>
+        /// 此属性已经取消和数据库的映射
+        /// </summary>
         [NotMapped]
         new public string TenantId { get; private set; }
 

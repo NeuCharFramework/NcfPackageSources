@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -34,8 +35,18 @@ namespace Senparc.Ncf.XncfBase.Database
             //获取当前适用的 DbContext 类型
             var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(typeof(TXncfDatabaseRegister));
 
+            var constructorParams = new List<object>() {
+                dbContextOptions
+            };
+
+            //判断构造函数参数个数
+            if (dbContextType.GetConstructors().First().GetParameters().Length == 2)
+            {
+                constructorParams.Add(SenparcDI.GetServiceProvider());//添加第二个参数（目前只为系统基础对象，如 SystemServiceEntities 使用）
+            }
+
             //获取 XncfSenparcEntities 实例
-            var xncfSenparcEntities = Activator.CreateInstance(dbContextType, new object[] { dbContextOptions }) as TSenparcEntities;
+            var xncfSenparcEntities = Activator.CreateInstance(dbContextType, constructorParams.ToArray()) as TSenparcEntities;
             return xncfSenparcEntities;
         }
 
