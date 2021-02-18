@@ -68,8 +68,6 @@ namespace Senparc.Ncf.Core.Cache
             using (var scope = _serviceProvider.CreateScope())
             {
                 SenparcEntitiesBase scopedSenparcEntitiesBase = scope.ServiceProvider.GetRequiredService<SenparcEntitiesBase>();
-                Console.WriteLine($"senparcEntitiesBase:{_senparcEntitiesBase.GetHashCode()}");
-                Console.WriteLine($"scopedSenparcEntitiesBase:{scopedSenparcEntitiesBase.GetHashCode()}");
 
                 try
                 {
