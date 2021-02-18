@@ -255,7 +255,7 @@ namespace Senparc.Ncf.Core.Models
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
             //多租户
-            Console.WriteLine("SetGlobalQuery<T> this.EnableMultiTenant:" + this.EnableMultiTenant);
+            Console.WriteLine($"SetGlobalQuery<{typeof(T).Name}> this.EnableMultiTenant:" + this.EnableMultiTenant +$" / SiteConfig.SenparcCoreSetting.EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
             if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
                 RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);

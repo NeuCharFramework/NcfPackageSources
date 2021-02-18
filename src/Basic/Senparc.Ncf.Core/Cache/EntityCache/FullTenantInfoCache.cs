@@ -30,15 +30,17 @@ namespace Senparc.Ncf.Core.Cache
         /// <returns></returns>
         private async Task<List<TenantInfo>> GetEnabledListAsync(SenparcEntitiesBase scopedSenparcEntitiesBase)
         {
+            List<TenantInfo> list = null;
             try
             {
                 scopedSenparcEntitiesBase.SetMultiTenantEnable(false);
-                return await scopedSenparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToListAsync();
+                list = await scopedSenparcEntitiesBase.TenantInfos.Where(z => z.Enable).ToListAsync();
             }
             finally
             {
                 scopedSenparcEntitiesBase.ResetMultiTenantEnable();
             }
+            return list;
         }
 
 
