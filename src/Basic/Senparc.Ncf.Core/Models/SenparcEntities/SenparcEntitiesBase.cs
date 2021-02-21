@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Models.SenparcEntities
+namespace Senparc.Ncf.Core.Models
 {
     public abstract class SenparcEntitiesBase : SenparcEntitiesMultiTenantBase, ISenparcEntitiesDbContext
     {
@@ -61,11 +61,6 @@ namespace Senparc.Ncf.Core.Models.SenparcEntities
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 
-
-        /// <summary>
-        /// 多租户信息
-        /// </summary>
-        public DbSet<TenantInfo> TenantInfos { get; set; }
 
         #endregion
 
