@@ -208,7 +208,9 @@ namespace Senparc.Ncf.Database
             //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
 
-            return this.GetType().GetMethod(nameof(GetDbContext)).MakeGenericMethod(new Type[] { dbContextType }).Invoke(this, null) as DbContext;
+            return this.GetType().GetMethod(nameof(GetDbContext))
+                .MakeGenericMethod(new Type[] { dbContextType })
+                .Invoke(this, new object[] { connectionString , xncfDatabaseData , dbContextOptionsAction , serviceProvider }) as DbContext;
 
             //return GetDbContext(dbContextType, connectionString, xncfDatabaseData, dbContextOptionsAction, serviceProvider);
         }
