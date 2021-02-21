@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models;
@@ -27,8 +28,9 @@ namespace Senparc.Ncf.Service.MultiTenant
             var serviceProvider = context.RequestServices;
             var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
             var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
-            Console.WriteLine("TenantMiddleware requestTenantInfo:"+ requestTenantInfo.GetHashCode());
+            Console.WriteLine($"\tTenantMiddleware requestTenantInfo({requestTenantInfo.GetHashCode()})：" + requestTenantInfo.ToJson());
             await _next(context);
+            Console.WriteLine("TenantMiddleware finished");
         }
     }
 }

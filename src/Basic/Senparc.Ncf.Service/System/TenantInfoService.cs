@@ -37,6 +37,7 @@ namespace Senparc.Ncf.Service
             switch (SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
+                    cw
                     var urlData = httpContext.Request;
                     var host = urlData.Host.Host.ToUpper()/*全部大写*/;//主机名（不带端口）
                     tenantKey = host;
@@ -52,8 +53,10 @@ namespace Senparc.Ncf.Service
                     throw new Exception("未处理的 TenantRule 类型");
             }
 
+            Console.WriteLine("\t\t准备进入 _serviceProvider.GetRequiredService<FullTenantInfoCache>()");
             var fullTenantInfoCache = _serviceProvider.GetRequiredService<FullTenantInfoCache>();
             var tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
+            Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");
 
             if (!string.IsNullOrEmpty(tenantKey) && tenantInfoCollection.TryGetValue(tenantKey, out var tenantInfoDto))
             {
