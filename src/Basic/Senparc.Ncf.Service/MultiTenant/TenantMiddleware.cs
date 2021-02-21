@@ -28,9 +28,9 @@ namespace Senparc.Ncf.Service.MultiTenant
             var serviceProvider = context.RequestServices;
             var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
             var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
-            Console.WriteLine($"\tTenantMiddleware requestTenantInfo({requestTenantInfo.GetHashCode()})：" + requestTenantInfo.ToJson());
+            //Console.WriteLine($"\tTenantMiddleware requestTenantInfo({requestTenantInfo.GetHashCode()})：" + requestTenantInfo.ToJson());
             await _next(context);
-            Console.WriteLine("TenantMiddleware finished");
+            //Console.WriteLine("TenantMiddleware finished");
         }
     }
 }

@@ -141,7 +141,7 @@ namespace Senparc.Ncf.Core.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            Console.WriteLine("\t SenparcEntitiesDbContextBase OnModelCreating");
+            //Console.WriteLine("\t SenparcEntitiesDbContextBase OnModelCreating");
 
             var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
             foreach (var entityType in types)
@@ -172,7 +172,7 @@ namespace Senparc.Ncf.Core.Models
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
 
             //多租户
-            Console.WriteLine($"\t DbContext:{this.GetHashCode()} \tSetGlobalQuery<{typeof(T).Name}> this.EnableMultiTenant:" + this.EnableMultiTenant + $" / SiteConfig.SenparcCoreSetting.EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
+            //Console.WriteLine($"\t DbContext:{this.GetHashCode()} \tSetGlobalQuery<{typeof(T).Name}> this.EnableMultiTenant:" + this.EnableMultiTenant + $" / SiteConfig.SenparcCoreSetting.EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
             if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
                 RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesDbContextBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);
@@ -188,7 +188,7 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="enable"></param>
         public void SetMultiTenantEnable(bool enable)
         {
-            Console.WriteLine($"\t {this.GetHashCode()}\tset EnableMultiTenant to:" + enable);
+            //Console.WriteLine($"\t {this.GetHashCode()}\tset EnableMultiTenant to:" + enable);
             EnableMultiTenant = enable;
         }
 
@@ -197,7 +197,7 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public void ResetMultiTenantEnable()
         {
-            Console.WriteLine($"\t {this.GetHashCode()}\tResetMultiTenantEnable()");
+            //Console.WriteLine($"\t {this.GetHashCode()}\tResetMultiTenantEnable()");
             SetMultiTenantEnable(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
         }
 

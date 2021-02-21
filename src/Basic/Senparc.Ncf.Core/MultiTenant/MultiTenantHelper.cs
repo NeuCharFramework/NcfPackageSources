@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Core.MultiTenant
         public static RequestTenantInfo TryGetAndCheckRequestTenantInfo(IServiceProvider serviceProvider, string referenceMethod, DbContext dbContext = null)
         {
             var requestTenantInfo = serviceProvider.GetRequiredService<RequestTenantInfo>();
-            Console.WriteLine($"{referenceMethod} requestTenantInfo:" + requestTenantInfo.GetHashCode());
+            //Console.WriteLine($"{referenceMethod} requestTenantInfo:" + requestTenantInfo.GetHashCode());
 
             //如果未设置，则进行设定
             if (!requestTenantInfo.MatchSuccess)
