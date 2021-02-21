@@ -34,7 +34,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             return FunctionHelper.RunFunction<ExportSQL_Parameters>(param, (typeParam, sb, result) =>
              {
                  RecordLog(sb, "开始获取 ISenparcEntities 对象");
-                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as SenparcEntitiesBase;
+                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntitiesDbContext)) as SenparcEntitiesBase;
                  RecordLog(sb, "获取 ISenparcEntities 对象成功");
                  RecordLog(sb, "开始生成 SQL ");
                  var sql = senparcEntities.Database.GenerateCreateScript();

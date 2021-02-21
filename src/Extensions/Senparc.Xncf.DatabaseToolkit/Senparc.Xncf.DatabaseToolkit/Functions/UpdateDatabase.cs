@@ -33,7 +33,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Functions
             return FunctionHelper.RunFunction<UpdateDatabase_Parameters>(param, (typeParam, sb, result) =>
             {
                 RecordLog(sb, "开始获取 ISenparcEntities 对象");
-                ISenparcEntities senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntities)) as ISenparcEntities;
+                ISenparcEntitiesDbContext senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntitiesDbContext)) as ISenparcEntitiesDbContext;
                 RecordLog(sb, "获取 ISenparcEntities 对象成功");
                 RecordLog(sb, "开始重新标记 Merge 状态");
                 senparcEntities.ResetMigrate();
