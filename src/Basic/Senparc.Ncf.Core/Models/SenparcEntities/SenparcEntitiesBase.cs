@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models
 {
-    public abstract class SenparcEntitiesBase : SenparcEntitiesMultiTenantBase, ISenparcEntitiesDbContext
+    public abstract class SenparcEntitiesBase : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
         #region 系统表（无特殊情况不要修改）
 

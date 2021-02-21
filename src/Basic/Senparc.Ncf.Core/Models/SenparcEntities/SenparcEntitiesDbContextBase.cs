@@ -47,6 +47,57 @@ namespace Senparc.Ncf.Core.Models
             }
         }
 
+        /// <summary>
+        /// 自动添加多租户Id
+        /// </summary>
+        private void AddTenandId()
+        {
+            if (this.EnableMultiTenant)
+            {
+                ChangeTracker.DetectChanges(); // 
+                var addedEntities = this.ChangeTracker
+                                            .Entries()
+                                            .Where(z => z.State == EntityState.Added)
+                                            .Select(z => z.Entity)
+                                            .ToList();
+
+                RequestTenantInfo requestTenantInfo = null;
+                foreach (var entity in addedEntities)
+                {
+                    if (!(entity is IIgnoreMulitTenant) && (entity is IMultiTenancy multiTenantEntity))
+                    {
+                        //如果未设置，则进行设定
+                        requestTenantInfo = requestTenantInfo ?? MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesDbContextBase.AddTenandId()", this);
+                        multiTenantEntity.TenantId = requestTenantInfo.Id;
+                    }
+                }
+            }
+        }
+
+        public bool? _enableMultiTenant;
+
+        /// <summary>
+        /// 是否启用多租户，默认读取 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// </summary>
+        public bool EnableMultiTenant
+        {
+            get
+            {
+                if (!_enableMultiTenant.HasValue)
+                {
+                    _enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
+                }
+                return _enableMultiTenant.Value;
+            }
+            private set
+            {
+                _enableMultiTenant = value;
+            }
+        }
+
+
+
+
         public SenparcEntitiesDbContextBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
             _serviceProvider = serviceProvider;
@@ -119,6 +170,56 @@ namespace Senparc.Ncf.Core.Models
         {
             //软删除
             var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+
+            //多租户
+            Console.WriteLine($"\t DbContext:{this.GetHashCode()} \tSetGlobalQuery<{typeof(T).Name}> this.EnableMultiTenant:" + this.EnableMultiTenant + $" / SiteConfig.SenparcCoreSetting.EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
+            if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
+            {
+                RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesDbContextBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);
+                entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
+            }
         }
+
+
+
+        /// <summary>
+        /// 设置当前 DbContext 是否启用上下文
+        /// </summary>
+        /// <param name="enable"></param>
+        public void SetMultiTenantEnable(bool enable)
+        {
+            Console.WriteLine($"\t {this.GetHashCode()}\tset EnableMultiTenant to:" + enable);
+            EnableMultiTenant = enable;
+        }
+
+        /// <summary>
+        /// 多租户状态重置为 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// </summary>
+        public void ResetMultiTenantEnable()
+        {
+            Console.WriteLine($"\t {this.GetHashCode()}\tResetMultiTenantEnable()");
+            SetMultiTenantEnable(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
+        }
+
+
+        public override int SaveChanges()
+        {
+            //处理多租户
+            AddTenandId();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            //处理多租户
+            AddTenandId();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+
+        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        //{
+        //    return base.SaveChangesAsync(cancellationToken);//底层引用的就是  SaveChangesAsync，所以不用处理
+        //}
     }
 }

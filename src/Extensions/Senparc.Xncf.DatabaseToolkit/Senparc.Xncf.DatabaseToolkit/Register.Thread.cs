@@ -19,7 +19,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         {
             xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
                 name: "定时备份",
-                intervalTime: TimeSpan.FromSeconds(10),
+                intervalTime: TimeSpan.FromSeconds(30),
                 task: async (app, threadInfo) =>
                 {
                     try
@@ -96,6 +96,10 @@ namespace Senparc.Xncf.DatabaseToolkit
                             threadInfo.RecordStory("完成数据库自动备份：" + result.Message);
                             SenparcTrace.SendCustomLog("完成数据库自动备份", backupParam.Path);
                         }
+                    }
+                    catch (NcfModuleException ex)
+                    {
+                        throw;
                     }
                     catch
                     {

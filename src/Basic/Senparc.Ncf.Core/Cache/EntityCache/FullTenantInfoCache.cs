@@ -28,7 +28,7 @@ namespace Senparc.Ncf.Core.Cache
 
 
         private IMapper _mapper;
-        private readonly SenparcEntitiesMultiTenantBase _senparcEntitiesMultiTenantBase;
+        private readonly SenparcEntitiesMultiTenant _senparcEntitiesMultiTenantBase;
         //private SenparcEntitiesBase _senparcEntitiesBase => base._db.BaseDataContext as SenparcEntitiesBase;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
 
-        public FullTenantInfoCache(INcfDbData db, IMapper mapper, SenparcEntitiesMultiTenantBase senparcEntitiesMultiTenantBase)
+        public FullTenantInfoCache(INcfDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase)
             : this(CACHE_KEY, db, 1440)
         {
             _mapper = mapper;
