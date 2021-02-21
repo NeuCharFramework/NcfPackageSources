@@ -51,6 +51,7 @@
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
 		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
+		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">
