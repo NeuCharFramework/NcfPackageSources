@@ -69,6 +69,19 @@ namespace Senparc.Ncf.Core.Models
         {
         }
 
-     
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            Console.WriteLine("\t SenparcEntitiesBase OnModelCreating");
+
+            #region 不可修改系统表
+            modelBuilder.ApplyConfiguration(new XncfModuleAccountConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new AccountConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new AccountPayLogConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new PointsLogConfigurationMapping());
+
+            #endregion
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
