@@ -129,14 +129,15 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 获取指定 DbContext 的数据库实例
         /// </summary>
-        /// <param name="dbContextType">DbContext 类型</param>
         /// <param name="connectionString">连接字符串，如果为 null，则默认使用 SenparcDatabaseConfigs.ClientConnectionString</param>
         /// <param name="dbContextOptionsAction">额外配置操作</param>
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
-        public DbContext GetDbContext(Type dbContextType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null)
+        public T GetDbContext<T>(string connectionString = null, XncfDatabaseData xncfDatabaseData = null, 
+            Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null) where T : DbContext
         {
+            var dbContextType = typeof(T);
             DbContextOptionsBuilder dbOptionBuilder;
 
             var dbOptionBuilderType = dbContextType.GetConstructors().First()
@@ -170,14 +171,14 @@ namespace Senparc.Ncf.Database
                 dbContextOptionsAction
                 );
             //实例化 DbContext
-            DbContext dbContext;
+            T dbContext;
             if (serviceProvider == null)
             {
-                dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as DbContext;
+                dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options }) as T;
             }
             else
             {
-                dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options, serviceProvider }) as DbContext;
+                dbContext = Activator.CreateInstance(dbContextType, new object[] { dbOptionBuilder.Options, serviceProvider }) as T;
             }
 
             if (dbContext == null)
@@ -196,17 +197,20 @@ namespace Senparc.Ncf.Database
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
-        public DbContext GetXncfDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null)
+        public DbContext GetXncfDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, 
+            Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null)
         {
-            if (typeof(IXncfDatabase).IsAssignableFrom(xncfDatabaseRegisterType))
+            if (!typeof(IXncfDatabase).IsAssignableFrom(xncfDatabaseRegisterType))
             {
-                throw new NcfDatabaseException($"{nameof(xncfDatabaseRegisterType)} 必须实现 IXncfDatabase 接口", DatabaseConfigurationFactory.Instance.Current.GetType());
+                throw new NcfDatabaseException($"{nameof(xncfDatabaseRegisterType)} 参数：{xncfDatabaseRegisterType.Name} 必须实现 IXncfDatabase 接口", DatabaseConfigurationFactory.Instance.Current.GetType());
             }
 
             //获取 DbContext 上下文类型
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
 
-            return GetDbContext(dbContextType, connectionString, xncfDatabaseData, dbContextOptionsAction, serviceProvider);
+            return this.GetType().GetMethod(nameof(GetDbContext)).MakeGenericMethod(new Type[] { dbContextType }).Invoke(this, null) as DbContext;
+
+            //return GetDbContext(dbContextType, connectionString, xncfDatabaseData, dbContextOptionsAction, serviceProvider);
         }
     }
 }
