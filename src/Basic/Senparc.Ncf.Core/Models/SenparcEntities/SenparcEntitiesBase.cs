@@ -8,6 +8,11 @@ namespace Senparc.Ncf.Core.Models
 {
     public abstract class SenparcEntitiesBase : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
+        #region 多租户
+        public DbSet<TenantInfo> TenantInfos { get; set; }
+        
+        #endregion
+
         #region 系统表（无特殊情况不要修改）
 
         /// <summary>

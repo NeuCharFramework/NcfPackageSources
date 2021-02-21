@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 租户信息
     /// </summary>
-    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant
+    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant //TODO:可以直接继承不使用多租户的基类
     {
         /// <summary>
         /// 全局唯一编号（自动分配）
