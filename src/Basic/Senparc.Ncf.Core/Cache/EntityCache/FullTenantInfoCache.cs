@@ -79,6 +79,8 @@ namespace Senparc.Ncf.Core.Cache
             {
                 //当前可能正在 Middleware 的获取过程中，还没有完成多租户获取
                 //如果从旧版本升级，表不存在，则需要更新
+
+                //TODO:_senparcEntitiesMultiTenant 当前没有做 Migration，所有实际上无法进行更新
                 _senparcEntitiesMultiTenant.ResetMigrate();
                 _senparcEntitiesMultiTenant.Migrate();
 

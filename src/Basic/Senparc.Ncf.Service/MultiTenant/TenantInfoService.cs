@@ -92,14 +92,23 @@ namespace Senparc.Ncf.Service
         /// 创建租户信息
         /// </summary>
         /// <param name="createOrUpdate_TenantInfoDto"></param>
+        /// <param name="throwIfExisted">如果 Name 或 TenantKey 已存在，则抛出异常</param>
+        /// <exception cref="NcfTenantException">Name 或 TenantKey 已存在</exception>
         /// <returns></returns>
-        public async Task<TenantInfoDto> CreateOrUpdateTenantInfoAsync(CreateOrUpdate_TenantInfoDto createOrUpdate_TenantInfoDto)
+        public async Task<TenantInfoDto> CreateOrUpdateTenantInfoAsync(CreateOrUpdate_TenantInfoDto createOrUpdate_TenantInfoDto, bool throwIfExisted = false)
         {
             createOrUpdate_TenantInfoDto.TenantKey = createOrUpdate_TenantInfoDto.TenantKey.ToUpper();
             var tenantInfo = await GetObjectAsync(z => z.Id != createOrUpdate_TenantInfoDto.Id && (z.Name == createOrUpdate_TenantInfoDto.Name || z.TenantKey == createOrUpdate_TenantInfoDto.TenantKey));
             if (tenantInfo != null)
             {
-                throw new NcfTenantException($"已存在名为 {createOrUpdate_TenantInfoDto.Name} 或 关键条件为 {createOrUpdate_TenantInfoDto.TenantKey} 的租户记录！");
+                if (throwIfExisted)
+                {
+                    throw new NcfTenantException($"已存在名为 {createOrUpdate_TenantInfoDto.Name} 或 关键条件为 {createOrUpdate_TenantInfoDto.TenantKey} 的租户记录！");
+                }
+                else
+                {
+                    return base.Mapper.Map<TenantInfoDto>(tenantInfo);
+                }
             }
 
             if (createOrUpdate_TenantInfoDto.Id > 0)
