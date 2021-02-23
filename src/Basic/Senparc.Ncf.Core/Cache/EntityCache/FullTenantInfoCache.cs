@@ -28,8 +28,8 @@ namespace Senparc.Ncf.Core.Cache
 
 
         private IMapper _mapper;
-        private readonly SenparcEntitiesMultiTenant _senparcEntitiesMultiTenant;
-        private SenparcEntitiesBase _senparcEntitiesBase => base._db.BaseDataContext as SenparcEntitiesBase;
+        private SenparcEntitiesMultiTenant _senparcEntitiesMultiTenant => base._db.BaseDataContext as SenparcEntitiesMultiTenant;
+        //private SenparcEntitiesBase _senparcEntitiesBase => base._db.BaseDataContext as SenparcEntitiesBase;
 
         /// <summary>
         /// 获取当前启用状态的 TenantInfo
@@ -51,11 +51,10 @@ namespace Senparc.Ncf.Core.Cache
         }
 
 
-        public FullTenantInfoCache(INcfDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase)
+        public FullTenantInfoCache(TenantInfoDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase)
             : this(CACHE_KEY, db, 1440)
         {
             _mapper = mapper;
-            this._senparcEntitiesMultiTenant = senparcEntitiesMultiTenantBase;
         }
 
         public FullTenantInfoCache(string CACHE_KEY, INcfDbData db, int timeOut) : base(CACHE_KEY, db)
@@ -80,8 +79,8 @@ namespace Senparc.Ncf.Core.Cache
             {
                 //当前可能正在 Middleware 的获取过程中，还没有完成多租户获取
                 //如果从旧版本升级，表不存在，则需要更新
-                _senparcEntitiesBase.ResetMigrate();
-                _senparcEntitiesBase.Migrate();
+                _senparcEntitiesMultiTenant.ResetMigrate();
+                _senparcEntitiesMultiTenant.Migrate();
 
                 //var HttpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();//注意：这里不能使用 TenantInfoService.SetScopedRequestTenantInfoAsync()， 否则会引发死循环
             }
