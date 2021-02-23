@@ -7,6 +7,7 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.DI;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
 using System;
@@ -80,6 +81,8 @@ namespace Senparc.Ncf.Core
         {
             services.AddScoped<RequestTenantInfo>();
             services.AddScoped<TenantInfoDto>();
+            services.AddScoped<ITenantInfoDbData>();
+            
 
             return services;
         }

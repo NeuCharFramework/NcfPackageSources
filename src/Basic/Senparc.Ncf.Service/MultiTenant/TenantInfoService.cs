@@ -19,7 +19,7 @@ namespace Senparc.Ncf.Service
     {
         private readonly Lazy<IHttpContextAccessor> _httpContextAccessor;
 
-        public TenantInfoService(IClientRepositoryBase<TenantInfo> repo, IServiceProvider serviceProvider, Lazy<IHttpContextAccessor> httpContextAccessor)
+        public TenantInfoService(TenantInfoRepository repo, IServiceProvider serviceProvider, Lazy<IHttpContextAccessor> httpContextAccessor)
             : base(repo, serviceProvider)
         {
             this._httpContextAccessor = httpContextAccessor;

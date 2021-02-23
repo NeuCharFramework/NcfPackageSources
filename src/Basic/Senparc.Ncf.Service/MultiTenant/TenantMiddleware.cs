@@ -49,7 +49,6 @@ namespace Senparc.Ncf.Service.MultiTenant
             //Console.WriteLine($"\tTenantMiddleware requestTenantInfo({requestTenantInfo.GetHashCode()})：" + requestTenantInfo.ToJson());
             Console.WriteLine("\t next from TenantMiddleware");
 
-
             await _next(context);
             //Console.WriteLine("TenantMiddleware finished");
         }
