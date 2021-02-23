@@ -35,15 +35,21 @@ namespace Senparc.Ncf.Service.MultiTenant
             }
             catch (NcfUninstallException unInstallEx)
             {
-                
+                Console.WriteLine("\t NcfUninstallException from TenantMiddleware");
+                context.Items["NcfUninstallException"] = true;
             }
             catch (Exception ex)
             {
+                Console.WriteLine("\t Exception from TenantMiddleware");
+
                 //如果数据库出错
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
             //Console.WriteLine($"\tTenantMiddleware requestTenantInfo({requestTenantInfo.GetHashCode()})：" + requestTenantInfo.ToJson());
+            Console.WriteLine("\t next from TenantMiddleware");
+
+
             await _next(context);
             //Console.WriteLine("TenantMiddleware finished");
         }

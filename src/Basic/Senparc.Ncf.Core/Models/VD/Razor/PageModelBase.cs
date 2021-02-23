@@ -75,12 +75,15 @@ namespace Senparc.Ncf.Core.Models.VD
         public override Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
             //获取缓存系统信息
-
             try
             {
+                if (true)
+                {
+
+                }
                 Console.WriteLine("\t Try FullSystemConfig");
 
-            var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
+                var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
                 FullSystemConfig = fullSystemConfigCache.Data;
             }
             catch (/*SqlException*/ DbException)
