@@ -25,11 +25,26 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// <summary>
         /// 是否匹配成功
         /// </summary>
-        public bool MatchSuccess { get; set; }
+        public bool MatchSuccess { get; private set; }
+
+        /// <summary>
+        /// 是否已经尝试过匹配
+        /// </summary>
+        public bool TriedMatching { get; private set; }
 
         public RequestTenantInfo()
         {
             BeginTime = SystemTime.Now.UtcDateTime;
+        }
+
+       /// <summary>
+       /// 尝试匹配
+       /// </summary>
+       /// <param name="success">是否成功</param>
+        public void TryMatch(bool success)
+        {
+            TriedMatching = true;
+            MatchSuccess = success;
         }
     }
 }

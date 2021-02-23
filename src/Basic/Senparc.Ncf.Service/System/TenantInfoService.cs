@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
@@ -54,8 +55,19 @@ namespace Senparc.Ncf.Service
             }
 
             //Console.WriteLine("\t\t准备进入 _serviceProvider.GetRequiredService<FullTenantInfoCache>()");
+
             var fullTenantInfoCache = _serviceProvider.GetRequiredService<FullTenantInfoCache>();
-            var tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
+            Dictionary<string, TenantInfoDto> tenantInfoCollection;
+            try
+            {
+                tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
+            }
+            catch (Exception ex)
+            {
+                //数据库错误，通常为系统未安装
+                throw new NcfUninstallException("系统未安装");
+            }
+
             //Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");
 
             if (!string.IsNullOrEmpty(tenantKey) && tenantInfoCollection.TryGetValue(tenantKey, out var tenantInfoDto))
@@ -64,13 +76,13 @@ namespace Senparc.Ncf.Service
                 requestTenantInfo.Id = tenantInfoDto.Id;
                 requestTenantInfo.Name = tenantInfoDto.Name;
                 requestTenantInfo.TenantKey = tenantInfoDto.TenantKey;
-                requestTenantInfo.MatchSuccess = true;
+                requestTenantInfo.TryMatch(true);
             }
             else
             {
                 //Console.WriteLine($"\t\t 未匹配到 tenantKey：{tenantKey}");
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
-                requestTenantInfo.MatchSuccess = false;
+                requestTenantInfo.TryMatch(false);
             }
 
             return requestTenantInfo;
