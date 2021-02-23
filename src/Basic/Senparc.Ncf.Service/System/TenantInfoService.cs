@@ -62,10 +62,10 @@ namespace Senparc.Ncf.Service
             {
                 tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
             }
-            catch (Exception ex)
+            catch
             {
                 //数据库错误，通常为系统未安装
-                throw new NcfUninstallException("系统未安装");
+                throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装");
             }
 
             //Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");
