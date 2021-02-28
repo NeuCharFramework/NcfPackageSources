@@ -77,11 +77,6 @@ namespace Senparc.Ncf.Core.Models.VD
             //获取缓存系统信息
             try
             {
-                if (true)
-                {
-
-                }
-
                 var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
                 FullSystemConfig = fullSystemConfigCache.Data;
             }
