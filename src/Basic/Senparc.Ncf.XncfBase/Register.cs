@@ -437,7 +437,7 @@ namespace Senparc.Ncf.XncfBase
                     //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
                     //continue;
                 }
-                Console.WriteLine($"\t\t ApplyAllAutoConfigurationMapping 第二次调用 MakeGenericMethod，setKeyInfo：{entityType.Name}");
+                Console.WriteLine($"\t\t [{ApplyedAutoConfigurationMappingTypes.Count}]ApplyAllAutoConfigurationMapping 第二次调用 MakeGenericMethod，setKeyInfo：{entityType.Name}");
 
                 entityTypeConfigurationMethod.MakeGenericMethod(entityType)
                                 .Invoke(modelBuilder, new object[1]
