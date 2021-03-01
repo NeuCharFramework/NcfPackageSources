@@ -13,6 +13,10 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     public class BlankEntityTypeConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
          where TEntity : class
     {
+        /// <summary>
+        /// 设置 TEntity 的实体
+        /// </summary>
+        /// <param name="builder">用于设置实体类型（entity type）的 builder</param>
         public void Configure(EntityTypeBuilder<TEntity> builder)
         {
             

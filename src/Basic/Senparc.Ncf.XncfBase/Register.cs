@@ -374,6 +374,7 @@ namespace Senparc.Ncf.XncfBase
         /// 所有已经使用的 [AutoConfigurationMapping] 对应的实体类型
         /// </summary>
         public static List<Type> ApplyedAutoConfigurationMappingTypes = new List<Type>();
+        private static List<Type> AddedApplyedAutoConfigurationMappingEntityTypes = new List<Type>();
         /// <summary>
         /// 自动添加所有 XNCF 模块中标记了 [XncfAutoConfigurationMapping] 特性的对象
         /// </summary>
@@ -395,12 +396,20 @@ namespace Senparc.Ncf.XncfBase
                 {
                     //数据库实体类型
                     var entityType = setKeyInfo.DbSetType;
+                    if (AddedApplyedAutoConfigurationMappingEntityTypes.Contains(entityType))
+                    {
+                        Console.WriteLine($"\t ApplyAllAutoConfigurationMapping 有重复 setKeyInfo：{entityType.Name}，已跳过");
+                        continue;
+                    }
+                    Console.WriteLine($"\t ApplyAllAutoConfigurationMapping 处理 setKeyInfo：{entityType.Name}");
+
                     //默认空 ConfigurationMapping 对象的泛型类型
                     var blankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
                     //创建一个新的实例
                     var blankEntityTypeConfiguration = Activator.CreateInstance(blankEntityTypeConfigurationType);
                     //最佳到末尾，这样可以优先执行用户自定义的代码
                     XncfAutoConfigurationMappingList.Add(blankEntityTypeConfiguration);
+                    AddedApplyedAutoConfigurationMappingEntityTypes.Add(entityType);
                 }
             }
 
@@ -425,8 +434,10 @@ namespace Senparc.Ncf.XncfBase
                 Type entityType = interfaceType.GenericTypeArguments[0];
                 if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
                 {
-                    continue;//如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                    //continue;
                 }
+                Console.WriteLine($"\t\t ApplyAllAutoConfigurationMapping 第二次调用 MakeGenericMethod，setKeyInfo：{entityType.Name}");
 
                 entityTypeConfigurationMethod.MakeGenericMethod(entityType)
                                 .Invoke(modelBuilder, new object[1]

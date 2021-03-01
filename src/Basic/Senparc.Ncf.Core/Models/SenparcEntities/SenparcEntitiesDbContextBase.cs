@@ -147,6 +147,8 @@ namespace Senparc.Ncf.Core.Models
             Console.WriteLine("\t\t types:" + types.Select(z=>z.Name).ToJson());
             foreach (var entityType in types)
             {
+                Console.WriteLine("\t\t\t type:" + entityType.Name);
+
                 SetGlobalQueryMethodInfo
                         .MakeGenericMethod(entityType.ClrType)
                         .Invoke(this, new object[] { modelBuilder });
