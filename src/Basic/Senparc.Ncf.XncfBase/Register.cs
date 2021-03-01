@@ -398,10 +398,10 @@ namespace Senparc.Ncf.XncfBase
                     var entityType = setKeyInfo.DbSetType;
                     if (AddedApplyedAutoConfigurationMappingEntityTypes.Contains(entityType))
                     {
-                        Console.WriteLine($"\t ApplyAllAutoConfigurationMapping 有重复 setKeyInfo：{entityType.Name}，已跳过");
+                        //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping 有重复 setKeyInfo：{entityType.Name}，已跳过");
                         continue;
                     }
-                    Console.WriteLine($"\t ApplyAllAutoConfigurationMapping 处理 setKeyInfo：{entityType.Name}");
+                    //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping 处理 setKeyInfo：{entityType.Name}");
 
                     //默认空 ConfigurationMapping 对象的泛型类型
                     var blankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
@@ -432,12 +432,13 @@ namespace Senparc.Ncf.XncfBase
                 }
                 //实体类型，如：DbConfig
                 Type entityType = interfaceType.GenericTypeArguments[0];
-                if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
-                {
-                    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
-                    //continue;
-                }
-                Console.WriteLine($"\t\t [{ApplyedAutoConfigurationMappingTypes.Count}]ApplyAllAutoConfigurationMapping 第二次调用 MakeGenericMethod，setKeyInfo：{entityType.Name}");
+
+                //PS：此处不能过滤，否则可能导致如 SystemServiceEntities_SqlServer / SystemServiceEntities_Mysql 中只有先注册的对象才成功，后面的被忽略
+                //if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
+                //{
+                //    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                //    //continue;
+                //}
 
                 entityTypeConfigurationMethod.MakeGenericMethod(entityType)
                                 .Invoke(modelBuilder, new object[1]

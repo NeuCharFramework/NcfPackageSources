@@ -141,14 +141,13 @@ namespace Senparc.Ncf.Core.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            Console.WriteLine("\t SenparcEntitiesDbContextBase OnModelCreating");
-
+            Console.WriteLine($"\t SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name}");
+      
             var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
-            Console.WriteLine("\t\t types:" + types.Select(z=>z.Name).ToJson());
+            //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
             foreach (var entityType in types)
             {
-                Console.WriteLine("\t\t\t type:" + entityType.Name);
-
+                Console.WriteLine($"\t\t entity type: {entityType.Name}");
                 SetGlobalQueryMethodInfo
                         .MakeGenericMethod(entityType.ClrType)
                         .Invoke(this, new object[] { modelBuilder });
@@ -171,15 +170,20 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="builder"></param>
         public virtual void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
-            //软删除
-            var entityBuilder = builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+            var entityBuilder = builder.Entity<T>();//.HasQueryFilter(z => !z.Flag);
 
             //多租户
             //Console.WriteLine($"\t DbContext:{this.GetHashCode()} \tSetGlobalQuery<{typeof(T).Name}> this.EnableMultiTenant:" + this.EnableMultiTenant + $" / SiteConfig.SenparcCoreSetting.EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
             if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
+                //多租户 + 软删除
                 RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesDbContextBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);
-                entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id);
+                entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id && !z.Flag);
+            }
+            else
+            {
+                //仅软删除
+                entityBuilder.HasQueryFilter(z => !z.Flag);
             }
         }
 
