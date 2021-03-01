@@ -17,6 +17,9 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// Request 请求中的 Header 信息
         /// </summary>
         RequestHeader = 1,
+        /// <summary>
+        /// 默认
+        /// </summary>
         Default = DomainName
     }
 }

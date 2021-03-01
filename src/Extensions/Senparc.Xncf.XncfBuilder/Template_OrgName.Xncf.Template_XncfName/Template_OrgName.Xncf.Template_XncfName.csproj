@@ -34,7 +34,7 @@
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
 		<Content Include=".template.config\template.json" />
 		<None Include=".template.config\readme.md" />
-		<Compile Remove="**\*" />
+		<!--<Compile Remove="**\*" />-->
 	</ItemGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -51,6 +51,7 @@
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
 		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
 		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
+		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">

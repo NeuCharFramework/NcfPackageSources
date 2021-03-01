@@ -14,7 +14,7 @@ namespace Senparc.Ncf.XncfBase.Database
     /// <summary>
     /// IXncfDatabase 使用的 DbContext 基类
     /// </summary>
-    public abstract class XncfDatabaseDbContext : DbContext, ISenparcEntities, IMultipleMigrationDbContext
+    public abstract class XncfDatabaseDbContext : DbContext, ISenparcEntitiesDbContext, IMultipleMigrationDbContext
     {
         MultipleMigrationDbContextAttribute _multipleMigrationDbContext;
         /// <summary>

@@ -115,7 +115,7 @@ namespace Senparc.Ncf.XncfBase
 
                             //获取多数据库配置（XncfDatabaseDbContext 的子类）
                             if (t.IsSubclassOf(typeof(DbContext)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
-                               t.GetInterface(nameof(ISenparcEntities)) != null &&
+                               t.GetInterface(nameof(ISenparcEntitiesDbContext)) != null &&
                               t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) != null)
                             {
                                 //获取特性
@@ -228,8 +228,11 @@ namespace Senparc.Ncf.XncfBase
 
             //Repository & Service
             services.AddScoped(typeof(Senparc.Ncf.Repository.IRepositoryBase<>), typeof(Senparc.Ncf.Repository.RepositoryBase<>));
-            services.AddScoped(typeof(ServiceBase<>));
+            services.AddScoped(typeof(Senparc.Ncf.Repository.RepositoryBase<>));
+            services.AddScoped(typeof(Senparc.Ncf.Repository.IClientRepositoryBase<>), typeof(Senparc.Ncf.Repository.ClientRepositoryBase<>));
+            services.AddScoped(typeof(Senparc.Ncf.Repository.ClientRepositoryBase<>));
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
+            services.AddScoped(typeof(ServiceBase<>));
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingBase<>));
@@ -371,6 +374,7 @@ namespace Senparc.Ncf.XncfBase
         /// 所有已经使用的 [AutoConfigurationMapping] 对应的实体类型
         /// </summary>
         public static List<Type> ApplyedAutoConfigurationMappingTypes = new List<Type>();
+        private static List<Type> AddedApplyedAutoConfigurationMappingEntityTypes = new List<Type>();
         /// <summary>
         /// 自动添加所有 XNCF 模块中标记了 [XncfAutoConfigurationMapping] 特性的对象
         /// </summary>
@@ -392,12 +396,20 @@ namespace Senparc.Ncf.XncfBase
                 {
                     //数据库实体类型
                     var entityType = setKeyInfo.DbSetType;
+                    if (AddedApplyedAutoConfigurationMappingEntityTypes.Contains(entityType))
+                    {
+                        //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping 有重复 setKeyInfo：{entityType.Name}，已跳过");
+                        continue;
+                    }
+                    //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping 处理 setKeyInfo：{entityType.Name}");
+
                     //默认空 ConfigurationMapping 对象的泛型类型
                     var blankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
                     //创建一个新的实例
                     var blankEntityTypeConfiguration = Activator.CreateInstance(blankEntityTypeConfigurationType);
                     //最佳到末尾，这样可以优先执行用户自定义的代码
                     XncfAutoConfigurationMappingList.Add(blankEntityTypeConfiguration);
+                    AddedApplyedAutoConfigurationMappingEntityTypes.Add(entityType);
                 }
             }
 
@@ -420,10 +432,13 @@ namespace Senparc.Ncf.XncfBase
                 }
                 //实体类型，如：DbConfig
                 Type entityType = interfaceType.GenericTypeArguments[0];
-                if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
-                {
-                    continue;//如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
-                }
+
+                //PS：此处不能过滤，否则可能导致如 SystemServiceEntities_SqlServer / SystemServiceEntities_Mysql 中只有先注册的对象才成功，后面的被忽略
+                //if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
+                //{
+                //    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                //    //continue;
+                //}
 
                 entityTypeConfigurationMethod.MakeGenericMethod(entityType)
                                 .Invoke(modelBuilder, new object[1]

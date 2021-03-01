@@ -75,10 +75,9 @@ namespace Senparc.Ncf.Core.Models.VD
         public override Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
             //获取缓存系统信息
-            var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
-
             try
             {
+                var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
                 FullSystemConfig = fullSystemConfigCache.Data;
             }
             catch (/*SqlException*/ DbException)
@@ -95,7 +94,6 @@ namespace Senparc.Ncf.Core.Models.VD
                 context.Result = new RedirectResult("/Install");
                 return Task.CompletedTask;
             }
-
 
             return base.OnPageHandlerExecutionAsync(context, next);
         }

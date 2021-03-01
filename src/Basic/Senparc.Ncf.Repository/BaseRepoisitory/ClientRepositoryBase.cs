@@ -27,7 +27,5 @@ namespace Senparc.Ncf.Repository
             var keys = EntitySetKeys.GetAllEntitySetInfo();
             _entitySetName = keys[typeof(T)].SetName;
         }
-
-
     }
 }

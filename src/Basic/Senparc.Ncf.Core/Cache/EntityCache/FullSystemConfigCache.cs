@@ -25,7 +25,17 @@ namespace Senparc.Ncf.Core.Cache
 
         public override FullSystemConfig Update()
         {
-            var systemConfig = (_dataContext.BaseDataContext as SenparcEntitiesBase).SystemConfigs.FirstOrDefault();
+            SystemConfig systemConfig = null;
+            try
+            {
+
+                systemConfig = (_dataContext.BaseDataContext as SenparcEntitiesBase).SystemConfigs.FirstOrDefault();
+            }
+            catch
+            {
+                new NcfUninstallException("FullSystemConfigCache 访问数据库异常，推测系统未安装或未正确配置数据库");
+            }
+
             FullSystemConfig fullSystemConfig;
             if (systemConfig != null)
             {
@@ -68,6 +78,7 @@ namespace Senparc.Ncf.Core.Cache
 
                 throw new NcfUninstallException($"NCF 系统未初始化，请先执行 {hostName}/Install 进行数据初始化");
             }
+
 
             base.SetData(fullSystemConfig, base.TimeOut, null);
             return base.Data;

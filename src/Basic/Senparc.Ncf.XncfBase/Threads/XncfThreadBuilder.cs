@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
 {
+    //TODO: 线程备份及后台操作需要考虑租户问题
+
     /// <summary>
     /// XNCF Thread 模块，线程配置
     /// </summary>
@@ -26,6 +28,8 @@ namespace Senparc.Ncf.XncfBase.Threads
             {
                 return;
             }
+
+            return;//TODO:多租户完成之前暂时不启用后台线程，需要解决线程和租户的对应关系
 
             var i = 0;
             //遍历单个 XNCF 内所有线程配置

@@ -2,23 +2,16 @@
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Senparc.Ncf.Core.Models
 {
-    /// <summary>
-    /// SenparcEntities 的基类
-    /// </summary>
-    public abstract class SenparcEntitiesBase : DbContext, ISenparcEntities
+    public abstract class SenparcEntitiesBase : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
-        private static readonly bool[] _migrated = { true };
-
-        public SenparcEntitiesBase(DbContextOptions options) : base(options)
-        {
-        }
+        #region 多租户
+        public DbSet<TenantInfo> TenantInfos { get; set; }
+        
+        #endregion
 
         #region 系统表（无特殊情况不要修改）
 
@@ -26,7 +19,6 @@ namespace Senparc.Ncf.Core.Models
         /// 系统设置
         /// </summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
-
 
         /// <summary>
         /// 用户信息
@@ -75,43 +67,17 @@ namespace Senparc.Ncf.Core.Models
         public DbSet<XncfModule> XncfModules { get; set; }
 
 
-        /// <summary>
-        /// 多租户信息
-        /// </summary>
-        public DbSet<TenantInfo> TenantInfos { get; set; }
-
         #endregion
 
-        /// <summary>
-        /// 执行 EF Core 的合并操作（等价于 update-database）
-        /// <para>出于安全考虑，每次执行 Migrate() 方法之前，必须先执行 ResetMigrate() 开启允许 Migrate 执行的状态。</para>
-        /// </summary>
-        public virtual void Migrate()
-        {
-            if (!_migrated[0])
-            {
-                lock (_migrated)
-                {
-                    if (!_migrated[0])
-                    {
-                        Database.Migrate(); // apply all migrations
-                        _migrated[0] = true;
-                    }
-                }
-            }
-        }
 
-        /// <summary>
-        /// 重置合并状态
-        /// </summary>
-        public virtual void ResetMigrate()
+        protected SenparcEntitiesBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options, serviceProvider)
         {
-            _migrated[0] = false;
         }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Console.WriteLine("\t SenparcEntitiesBase OnModelCreating");
+
             #region 不可修改系统表
             modelBuilder.ApplyConfiguration(new XncfModuleAccountConfigurationMapping());
             modelBuilder.ApplyConfiguration(new AccountConfigurationMapping());
@@ -120,36 +86,7 @@ namespace Senparc.Ncf.Core.Models
 
             #endregion
 
-            var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
-            foreach (var entityType in types)
-            {
-                SetGlobalQueryMethodInfo
-                        .MakeGenericMethod(entityType.ClrType)
-                        .Invoke(this, new object[] { modelBuilder });
-            }
-        }
-
-        /// <summary>
-        /// 设置全局查询
-        /// </summary>
-        private static readonly MethodInfo SetGlobalQueryMethodInfo = typeof(SenparcEntitiesBase)
-            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Single(t => t.IsGenericMethod && t.Name == nameof(SetGlobalQuery) /*"SetGlobalQuery"*/);
-
-        /// <summary>
-        /// 全局查询，附带软删除状态
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="builder"></param>
-        public virtual void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
-        {
-            //软删除
-            builder.Entity<T>().HasQueryFilter(z => !z.Flag);
-            ////租户
-            //if (typeof(T).IsAssignableFrom(typeof(IMultipleTenant)))
-            //{
-            //    builder.Entity<T>().HasQueryFilter(z => !z.Flag);
-            //}
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

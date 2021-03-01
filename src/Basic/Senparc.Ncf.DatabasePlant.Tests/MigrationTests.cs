@@ -9,7 +9,7 @@ namespace Senparc.Ncf.DatabasePlant.Tests
     [TestClass]
     public class MigrationTests
     {
-        [TestMethod]
+        //[TestMethod]
         public void AddMigrationTest()
         {
             var commandTexts = new[] {

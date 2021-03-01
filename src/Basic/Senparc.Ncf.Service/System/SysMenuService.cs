@@ -13,6 +13,8 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
 using AutoMapper.QueryableExtensions;
+using Senparc.Ncf.Core.MultiTenant;
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Ncf.Service
 {
@@ -174,25 +176,24 @@ namespace Senparc.Ncf.Service
         public virtual IEnumerable<SysMenuTreeItemDto> GetSysMenuTreesMainRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
-            getSysMenuTreesRecursive(sysMenuTreeItems, sysMenuTrees, null);
+            GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenuTrees, null);
             return sysMenuTrees;
         }
 
 
-        private void getSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, string parentId)
+        private void GetSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, string parentId)
         {
             foreach (var item in sysMenuTreeItems.Where(_ => _.ParentId == parentId && _.IsMenu))
             {
                 SysMenuTreeItemDto sysMenu = new SysMenuTreeItemDto() { MenuName = item.MenuName, Id = item.Id, IsMenu = item.IsMenu, Icon = item.Icon, Url = item.Url, Children = new List<SysMenuTreeItemDto>() };
                 sysMenuTrees.Add(sysMenu);
-                getSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item.Id);
+                GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item.Id);
             }
         }
 
         /// <summary>
         /// 获取缓存中的数据
         /// </summary>
-        /// <param name="isRefresh"></param>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
         {
@@ -212,105 +213,84 @@ namespace Senparc.Ncf.Service
         /// </summary>
         public void Init()
         {
+            //设置 TenantId 前缀，避免不同租户之间的 ID 冲突
+            string tenantId = null;
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
+                tenantId = $"{requestTenantInfo.Id}-";
+            }
+
             IEnumerable<SysMenu> sysMenus = new List<SysMenu>()
             {
-                new SysMenu(){ Id = "0", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = "0", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId = "0", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId = "0", MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "4", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
-                new SysMenu(){ Id = "5", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId = "4", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1", MenuName = "系统管理", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 300, MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="6", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="7", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="8", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="9", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="10", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId = "2", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="11", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId = "2", MenuType = MenuType.按钮 },
+#region 管理员管理
+                new SysMenu(){ Id = tenantId+"1.1", MenuName = "管理员管理", Url = "/Admin/AdminUserInfo/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 300, ParentId = tenantId+"1", MenuType = MenuType.菜单},
 
-                new SysMenu() { Id ="12", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="13", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="14", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="15", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="16", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = "1", MenuType = MenuType.按钮 },
-                new SysMenu() { Id ="17", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = "1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.1", MenuName = "新增", Visible = true,ResourceCode = "admin-add", ParentId =tenantId+"1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.2", MenuName = "查询", Visible = true,ResourceCode = "admin-search", ParentId =tenantId+ "1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.3", MenuName = "分配角色", Visible = true,ResourceCode = "admin-grant", ParentId = tenantId+"1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.4", MenuName = "编辑", Visible = true,ResourceCode = "admin-edit", ParentId = tenantId+"1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.5", MenuName = "删除", Visible = true,ResourceCode = "admin-delete", ParentId = tenantId+"1.1", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.1.6", MenuName = "查看", Visible = true,ResourceCode = "admin-detail", ParentId = tenantId+"1.1", MenuType = MenuType.按钮 },
+#endregion
 
+#region 角色管理
+                new SysMenu(){ Id = tenantId+"1.2", MenuName = "角色管理", Url = "/Admin/Role/Index", Icon = "fa fa-user", Visible = true, IsLocked = true, Sort = 275, ParentId =tenantId+ "1", MenuType = MenuType.菜单},
 
+                new SysMenu() { Id =tenantId+"1.2.1", MenuName = "新增", Visible = true, ResourceCode = "role-add", ParentId = tenantId+"1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.2", MenuName = "查询", Visible = true,ResourceCode = "role-search", ParentId = tenantId+"1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.3", MenuName = "授权", Visible = true,ResourceCode = "role-grant", ParentId = tenantId+"1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.4", MenuName = "删除", Visible = true,ResourceCode = "role-delete", ParentId = tenantId+"1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.5", MenuName = "编辑", Visible = true,ResourceCode = "role-edit", ParentId =tenantId+ "1.2", MenuType = MenuType.按钮 },
+                new SysMenu() { Id =tenantId+"1.2.6", MenuName = "查看", Visible = true,ResourceCode = "role-detail", ParentId =tenantId+ "1.2", MenuType = MenuType.按钮 },
+#endregion
+
+                new SysMenu(){ Id = tenantId+"1.3", MenuName = "菜单管理", Url = "/Admin/Menu/Index", Icon = "fa fa-bars", Visible = true, IsLocked = true, Sort = 250, ParentId =tenantId+ "1", MenuType = MenuType.菜单},
+
+                new SysMenu(){ Id = tenantId+"1.4", MenuName = "系统信息", Url = "/Admin/SystemConfig/Index", Icon = "fa fa-flag", Visible = true, IsLocked = true, Sort = 225, ParentId =tenantId+ "1", MenuType = MenuType.菜单},
+                new SysMenu(){ Id = tenantId+"1.5", MenuName = "多租户信息", Url = "/Admin/TenantInfo/Index", Icon = "fa fa-group", Visible = true, IsLocked = true, Sort = 210, ParentId = tenantId+"1", MenuType = MenuType.菜单},
+
+                new SysMenu(){ Id =tenantId+"2", MenuName = "扩展模块", Url = null, Icon = "fa fa-cog", Visible = true, IsLocked = true, Sort = 200, MenuType = MenuType.菜单},
+                new SysMenu(){ Id =tenantId+"2.1", MenuName = "模块管理", Url = "/Admin/XncfModule/Index", Icon = "fa fa-user-secret", Visible = true, IsLocked = true, Sort = 175, ParentId =tenantId+ "2", MenuType = MenuType.菜单},
             };
 
             IEnumerable<SysRole> sysRoles = new List<SysRole>()
             {
-                new SysRole() { Id = "1", RoleCode = "administrator", RoleName = "超级管理员", Enabled = true }
+                new SysRole() { Id = tenantId+"1", RoleCode = "administrator", RoleName = "超级管理员", Enabled = true }
             };
+
 
             IEnumerable<SysPermission> sysPermissions = new List<SysPermission>()
             {
-                new SysPermission() { PermissionId = "0", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "1", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "2", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "3", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "4", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "5", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "6", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "7", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "8", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "9", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true } ,
-                new SysPermission() { PermissionId = "10", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "12", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "13", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "14", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "15", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "16", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true },
-                new SysPermission() { PermissionId = "17", ResourceCode = string.Empty, RoleId = "1", RoleCode = "administrator", IsMenu = true }
+                new SysPermission() { PermissionId = tenantId+"1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.1.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.1.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.1.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.1.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.1.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = tenantId+"1.1.6", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true } ,
+                new SysPermission() { PermissionId = tenantId+"1.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.2.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.2.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.2.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.2.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.2.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.2.6", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"1.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
+                new SysPermission() { PermissionId = tenantId+"2.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true }
             };
 
             IEnumerable<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>()
             {
-                new SysRoleAdminUserInfo() { RoleCode = "administrator", RoleId = "1", AccountId = 1 }
+                new SysRoleAdminUserInfo() { RoleCode = "administrator", RoleId =tenantId+ "1", AccountId = 1 }
             };
 
-            #region SQL 语句
-            //            var sql = @"BEGIN TRAN
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'91c13c73-1688-455f-94df-e8ecd1affdc7', 0, CAST(N'2019-11-04T15:15:14.9078474' AS DateTime2), CAST(N'2019-11-04T15:15:14.9078474' AS DateTime2), N'95d1dc86-52b5-4689-9735-a2c483f89e81', N'新增子级菜单', N'AddChild', N'/Admin/Menu/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'9ae3fbce-5768-4414-af3c-7a66b9e74a3a', 0, CAST(N'2019-11-04T15:13:23.9369838' AS DateTime2), CAST(N'2019-11-04T15:15:14.9078455' AS DateTime2), N'7c307710-45ca-46e2-a96e-7234c5fa4abd', N'保存', N'Save', N'/Admin/Menu/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'9cb64700-a0d5-4e35-8b89-cc921d93dfe2', 1, CAST(N'2019-11-04T15:10:24.3031650' AS DateTime2), CAST(N'2019-11-04T15:13:23.9369807' AS DateTime2), N'67855ef5-ab6b-4e93-978f-b618e5306005', N'新增', N'Add', N'/Admin/Role/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'a184c01e-d655-4b4a-a3d8-12dc751d2ad2', 0, CAST(N'2019-11-04T15:13:23.9369830' AS DateTime2), CAST(N'2019-11-04T15:13:23.9369830' AS DateTime2), N'7c307710-45ca-46e2-a96e-7234c5fa4abd', N'删除', N'Del', N'/Admin/Role/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'ab4b97cf-0394-419d-9c75-dbb04828e831', 0, CAST(N'2019-11-04T15:10:24.3029475' AS DateTime2), CAST(N'2019-11-04T15:10:24.3029475' AS DateTime2), N'67855ef5-ab6b-4e93-978f-b618e5306005', N'新增', N'Add', N'/Admin/AdminUserInfo/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'b1168466-fc2b-43ad-b449-297d5b1bf494', 0, CAST(N'2019-11-04T15:10:24.3031671' AS DateTime2), CAST(N'2019-11-04T15:10:24.3031671' AS DateTime2), N'67855ef5-ab6b-4e93-978f-b618e5306005', N'授权', N'Auth', N'/Admin/AdminUserInfo/AuthorizationPage', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'bd534d1f-fbdf-44f1-bd8a-9223d475ab07', 0, CAST(N'2019-11-04T15:10:24.3031667' AS DateTime2), CAST(N'2019-11-04T15:10:24.3031667' AS DateTime2), N'67855ef5-ab6b-4e93-978f-b618e5306005', N'编辑', N'Edit', N'/Admin/AdminUserInfo/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'e6fe98cf-4670-4665-b1c9-dbcd61a89f47', 0, CAST(N'2019-11-04T15:15:14.9078477' AS DateTime2), CAST(N'2019-11-04T15:15:14.9078477' AS DateTime2), N'95d1dc86-52b5-4689-9735-a2c483f89e81', N'删除', N'Del', N'/Admin/Menu/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'e9d3b568-cac5-4c1f-863d-f57117c215e8', 0, CAST(N'2019-11-04T15:15:14.9078469' AS DateTime2), CAST(N'2019-11-04T15:15:14.9078469' AS DateTime2), N'95d1dc86-52b5-4689-9735-a2c483f89e81', N'新增一级菜单', N'AddFirst', N'/Admin/Menu/Edit', NULL, NULL)
-            //INSERT [dbo].[SysButtons] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuId], [ButtonName], [OpearMark], [Url], [AdminRemark], [Remark]) VALUES (N'f9c07719-97b9-4b30-9b01-6dcfae25813c', 0, CAST(N'2019-11-04T15:13:23.9369843' AS DateTime2), CAST(N'2019-11-04T15:13:23.9369843' AS DateTime2), N'7c307710-45ca-46e2-a96e-7234c5fa4abd', N'设置权限', N'Authentic', N'/Admin/Role/Permission', NULL, NULL)
-            //INSERT [dbo].[SysMenus] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuName], [ParentId], [Url], [Icon], [Sort], [Visible], [AdminRemark], [Remark]) VALUES (N'538e9d87-e9da-4541-9269-13c3bc99bb9e', 0, CAST(N'2019-08-14T17:29:53.4776498' AS DateTime2), CAST(N'2019-11-04T15:21:31.0513206' AS DateTime2), N'系统管理', NULL, NULL, N'fa fa-cog', 20, 1, NULL, NULL)
-            //INSERT [dbo].[SysMenus] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuName], [ParentId], [Url], [Icon], [Sort], [Visible], [AdminRemark], [Remark]) VALUES (N'67855ef5-ab6b-4e93-978f-b618e5306005', 0, CAST(N'2019-08-14T17:30:01.4833756' AS DateTime2), CAST(N'2019-11-04T15:10:24.4180192' AS DateTime2), N'管理员管理', N'538e9d87-e9da-4541-9269-13c3bc99bb9e', N'/Admin/AdminUserInfo/Index', N'fa fa-user-secret', 50, 1, NULL, NULL)
-            //INSERT [dbo].[SysMenus] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuName], [ParentId], [Url], [Icon], [Sort], [Visible], [AdminRemark], [Remark]) VALUES (N'7c307710-45ca-46e2-a96e-7234c5fa4abd', 0, CAST(N'2019-08-14T17:30:08.3403569' AS DateTime2), CAST(N'2019-11-04T15:13:23.9880751' AS DateTime2), N'角色管理', N'538e9d87-e9da-4541-9269-13c3bc99bb9e', N'/Admin/Role/Index', N'fa fa-user', 49, 1, NULL, NULL)
-            //INSERT [dbo].[SysMenus] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuName], [ParentId], [Url], [Icon], [Sort], [Visible], [AdminRemark], [Remark]) VALUES (N'95d1dc86-52b5-4689-9735-a2c483f89e81', 0, CAST(N'2019-08-14T17:30:14.1710351' AS DateTime2), CAST(N'2019-11-04T15:15:14.9146690' AS DateTime2), N'菜单管理', N'538e9d87-e9da-4541-9269-13c3bc99bb9e', N'/Admin/Menu/Index', N'fa fa-bars', 40, 1, NULL, NULL)
-            //INSERT [dbo].[SysMenus] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuName], [ParentId], [Url], [Icon], [Sort], [Visible], [AdminRemark], [Remark]) VALUES (N'538e9d87-e9da-4541-9269-13c3bc99bb90', 0, CAST(N'2019-08-14T17:29:53.4776498' AS DateTime2), CAST(N'2019-11-04T15:21:31.0513206' AS DateTime2), N'扩展模块', NULL, NULL, N'fa fa-cog', 10, 1, NULL, NULL)
-            //INSERT [dbo].[SysMenus] ([Id], [Flag], [AddTime], [LastUpdateTime], [MenuName], [ParentId], [Url], [Icon], [Sort], [Visible], [AdminRemark], [Remark]) VALUES (N'67855ef5-ab6b-4e93-978f-b618e5306000', 0, CAST(N'2019-08-14T17:30:01.4833756' AS DateTime2), CAST(N'2019-11-04T15:10:24.4180192' AS DateTime2), N'模块管理', N'538e9d87-e9da-4541-9269-13c3bc99bb90', N'/Admin/XncfModule', N'fa fa-user-secret', 10, 1, NULL, NULL)
-
-            //SET IDENTITY_INSERT [dbo].[SysPermission] ON 
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1094, 0, CAST(N'2019-11-05T09:53:41.9787383' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787384' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'e6fe98cf-4670-4665-b1c9-dbcd61a89f47', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1095, 0, CAST(N'2019-11-05T09:53:41.9787381' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787382' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'91c13c73-1688-455f-94df-e8ecd1affdc7', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1096, 0, CAST(N'2019-11-05T09:53:41.9787379' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787379' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 1, N'95d1dc86-52b5-4689-9735-a2c483f89e81', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1097, 0, CAST(N'2019-11-05T09:53:41.9787376' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787376' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'f9c07719-97b9-4b30-9b01-6dcfae25813c', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1098, 0, CAST(N'2019-11-05T09:53:41.9787373' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787374' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'a184c01e-d655-4b4a-a3d8-12dc751d2ad2', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1099, 0, CAST(N'2019-11-05T09:53:41.9787371' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787372' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'9ae3fbce-5768-4414-af3c-7a66b9e74a3a', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1100, 0, CAST(N'2019-11-05T09:53:41.9787368' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787369' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 1, N'7c307710-45ca-46e2-a96e-7234c5fa4abd', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1101, 0, CAST(N'2019-11-05T09:53:41.9787363' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787363' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'bd534d1f-fbdf-44f1-bd8a-9223d475ab07', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1102, 0, CAST(N'2019-11-05T09:53:41.9787360' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787361' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'b1168466-fc2b-43ad-b449-297d5b1bf494', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1103, 0, CAST(N'2019-11-05T09:53:41.9787358' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787358' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'ab4b97cf-0394-419d-9c75-dbb04828e831', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1104, 0, CAST(N'2019-11-05T09:53:41.9787355' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787356' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 1, N'67855ef5-ab6b-4e93-978f-b618e5306005', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1105, 0, CAST(N'2019-11-05T09:53:41.9787339' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787344' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 1, N'538e9d87-e9da-4541-9269-13c3bc99bb9e', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1106, 0, CAST(N'2019-11-05T09:53:41.9787386' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787387' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'e9d3b568-cac5-4c1f-863d-f57117c215e8', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1107, 0, CAST(N'2019-11-05T09:53:41.9787386' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787387' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'538e9d87-e9da-4541-9269-13c3bc99bb90', NULL, NULL, NULL)
-            //INSERT [dbo].[SysPermission] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [RoleId], [IsMenu], [PermissionId], [AdminRemark], [Remark], [ResourceCode]) VALUES (1108, 0, CAST(N'2019-11-05T09:53:41.9787386' AS DateTime2), CAST(N'2019-11-05T09:53:41.9787387' AS DateTime2), N'administrator', N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, N'67855ef5-ab6b-4e93-978f-b618e5306000', NULL, NULL, NULL)
-            //SET IDENTITY_INSERT [dbo].[SysPermission] OFF
-            //SET IDENTITY_INSERT [dbo].[SysRoleAdminUserInfos] ON 
-            //INSERT [dbo].[SysRoleAdminUserInfos] ([Id], [Flag], [AddTime], [LastUpdateTime], [RoleCode], [AccountId], [RoleId], [AdminRemark], [Remark]) VALUES (4, 0, CAST(N'2019-08-15T11:51:01.2047663' AS DateTime2), CAST(N'2019-08-15T11:51:01.2047673' AS DateTime2), N'administrator', 1, N'1f0dcb10-c6cc-437c-ad0f-526debb18290', NULL, NULL)
-            //SET IDENTITY_INSERT [dbo].[SysRoleAdminUserInfos] OFF
-            //INSERT [dbo].[SysRoles] ([Id], [Flag], [AddTime], [LastUpdateTime], [Enabled], [RoleName], [RoleCode], [AdminRemark], [Remark]) VALUES (N'1f0dcb10-c6cc-437c-ad0f-526debb18290', 0, CAST(N'2019-08-14T17:28:47.1455467' AS DateTime2), CAST(N'2019-08-14T17:28:47.1455467' AS DateTime2), 1, N'超级管理员', N'administrator', NULL, NULL)
-            //COMMIT"; 
-            #endregion
             try
             {
                 _senparcEntities.SysRoles.AddRange(sysRoles);
