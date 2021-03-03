@@ -29,6 +29,9 @@
 		<PackageVersion>0.1</PackageVersion>
 		<PackageType>Template</PackageType>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
+		<!-- 为解决错误： rzc discover exited with code -2147450730.  -->
+		<RazorCompileOnBuild>false</RazorCompileOnBuild>
+		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
 	</PropertyGroup>
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
