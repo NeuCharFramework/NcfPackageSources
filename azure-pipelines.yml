@@ -448,10 +448,10 @@ steps:
 
 
 - task: NuGetCommand@2
-  displayName: Template_OrgName.Xncf.Template_XncfName
+  displayName: Senparc.Xncf.XncfBuilder.Template
   inputs:
     command: push
-    packagesToPush: '**/Template_OrgName.Xncf.Template_XncfName.*.nupkg'
+    packagesToPush: '**/Senparc.Xncf.XncfBuilder.Template.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
