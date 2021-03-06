@@ -11,10 +11,10 @@
 		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>-->
 	</PropertyGroup>
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
-		<Content Include="**\*" Exclude="**\bin\**;**\obj\**" />
-		<Content Include=".template.config\template.json" />
-		<None Include=".template.config\readme.md" />
-		<!--<Compile Remove="**\*" />-->
+		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates、**\obj\**" />
+		<!--<Content Include=".template.config\template.json" />-->
+		<!--<None Include=".template.config\readme.md" />-->
+		<Compile Remove="**\*" />
 	</ItemGroup>
 	<PropertyGroup>
 		<TargetFramework Condition=" '$(IntegrationToNcf)' != 'true' ">netstandard2.1</TargetFramework>
@@ -74,14 +74,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <!--<Content Update="Areas\**\*;Functions">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>-->
-	  <!--<Content Update="Areas\Admin\Pages\Shared\_ViewImports.cshtml">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="Areas\Admin\Pages\Shared\_ViewStart.cshtml">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>-->
+	  <Folder Include="templates\" />
 	</ItemGroup>
 </Project>
