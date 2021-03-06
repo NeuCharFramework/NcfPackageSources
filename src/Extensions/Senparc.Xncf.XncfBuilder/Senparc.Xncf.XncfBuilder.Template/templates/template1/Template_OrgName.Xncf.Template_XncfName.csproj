@@ -1,21 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
-		<IncludeContentInPack>true</IncludeContentInPack>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<ContentTargetFolders>content</ContentTargetFolders>
-		<PackageVersion>0.1.1</PackageVersion>
-		<PackageType>Template</PackageType>
-		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
-		<!-- 为解决CI/CD错误： rzc discover exited with code -2147450730.，生成后也可以删除  -->
-		<!--<RazorCompileOnBuild>false</RazorCompileOnBuild>
-		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>-->
-	</PropertyGroup>
-	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true' ">
-		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates、**\obj\**" />
-		<!--<Content Include=".template.config\template.json" />-->
-		<!--<None Include=".template.config\readme.md" />-->
-		<Compile Remove="**\*" />
-	</ItemGroup>
 	<PropertyGroup>
 		<TargetFramework Condition=" '$(IntegrationToNcf)' != 'true' ">netstandard2.1</TargetFramework>
 		<TargetFramework Condition=" '$(IntegrationToNcf)' == 'true' ">Template_TargetFramework</TargetFramework>
