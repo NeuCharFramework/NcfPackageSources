@@ -69,13 +69,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.MySql.Backcup", "Basic\Senparc.Ncf.Database.MySql.Backup\Senparc.Ncf.Database.MySql.Backcup.csproj", "{548A1BB0-88DE-45D4-95DF-2538A9592823}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XncfBuilder", "XncfBuilder", "{3C473DB5-6DAD-4BDE-B7AD-773DAB17582E}"
-	ProjectSection(SolutionItems) = preProject
-		Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Template\Senparc.Xncf.XncfBuilder.Template.csproj = Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Template\Senparc.Xncf.XncfBuilder.Template.csproj
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.Sqlite", "Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj", "{CD0C1BF6-2E3D-439F-B17D-8A7C678C9483}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.XncfBuilder.Tests", "Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Tests\Senparc.Xncf.XncfBuilder.Tests.csproj", "{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.XncfBuilder.Template", "Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Template\Senparc.Xncf.XncfBuilder.Template.csproj", "{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -222,9 +221,14 @@ Global
 		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,6 +265,7 @@ Global
 		{3C473DB5-6DAD-4BDE-B7AD-773DAB17582E} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 		{CD0C1BF6-2E3D-439F-B17D-8A7C678C9483} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
 		{A7FB80C1-3ABB-48B5-B5DA-7EB7030C855A} = {49BB21C7-7403-4086-BB93-1C5F36116F85}
+		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33} = {3C473DB5-6DAD-4BDE-B7AD-773DAB17582E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}

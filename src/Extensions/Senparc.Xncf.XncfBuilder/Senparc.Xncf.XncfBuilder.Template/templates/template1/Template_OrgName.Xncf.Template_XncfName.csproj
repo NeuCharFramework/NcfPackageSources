@@ -42,10 +42,10 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">
-		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 
-		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
