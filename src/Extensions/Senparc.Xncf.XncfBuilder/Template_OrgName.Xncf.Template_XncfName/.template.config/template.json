@@ -3,7 +3,7 @@
   "author": "Jeffrey",
   "classifications": [ "NCF", "XNCF" ],
   "name": "Custom XNCF Module Template",
-  "identity": "Custom XNCF Module",
+  "identity": "Senparc.Xncf.XncfBuilder.Template",
   "groupIdentity": "Custom XNCF",
   "shortName": "XNCF",
   "tags": {
