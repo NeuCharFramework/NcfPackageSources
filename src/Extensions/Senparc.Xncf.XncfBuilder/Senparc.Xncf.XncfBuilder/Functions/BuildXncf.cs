@@ -291,9 +291,14 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     Console.WriteLine("run:" + item);
                     pCreate.StandardInput.WriteLine(item);
+                    Console.WriteLine($"[{SystemTime.Now}] run：{item}");
                 }
                 pCreate.StandardInput.WriteLine("exit");
+                Console.WriteLine($"[{SystemTime.Now}] run：exit");
+
                 strOutput = pCreate.StandardOutput.ReadToEnd();
+                Console.WriteLine($"[{SystemTime.Now}] ReadToEnd()");
+
                 base.RecordLog(sb, strOutput);
 
                 //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
