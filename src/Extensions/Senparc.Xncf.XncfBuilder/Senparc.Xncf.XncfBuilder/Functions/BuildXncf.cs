@@ -36,8 +36,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             });
 
             [MaxLength(250)]
-            [Description("模板名称或路径||输入 Nuget 上 XNCF 模板包的名称，在线安装；或输入本地 Nuget 包的绝对路径（如 E:\\templates\\Senparc.Xncf.XncfBuilder.Template.0.1.4.nupkg。如果已确认安装过，并且不需要更新，可以留空，以节省时间")]
-            public string TemplateNameOrPath { get; set; } = "Senparc.Xncf.XncfBuilder.Template";
+            [Description("安装新模板||暗黄")]
+            public SelectionList TemplatePackage { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+                 new SelectionItem("online","在线获取","从 Nuget.org 等在线环境获取最新版本，时间会略长",true),
+                 new SelectionItem("local","本地安装","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",true),
+                 new SelectionItem("no","不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
+            });
 
             [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
             public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
@@ -210,19 +214,44 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #region 检查并安装模板
 
-                if (typeParam.TemplateNameOrPath.IsNullOrEmpty())
+                p.StandardInput.WriteLine($"dotnet new -u");
+                var output = p.StandardOutput.ReadToEnd();
+                var unInstallTemplatePackage = !output.Contains("XNCF");
+                var installPackageCmd = string.Empty;
+                switch (typeParam.TemplatePackage.SelectedValues.First())
                 {
-                    p.StandardInput.WriteLine($"dotnet new -u");
-                    var output = p.StandardOutput.ReadToEnd();
-                    if (!output.Contains("XNCF"))
-                    {
-                        //未安装，强制安装
-                        p.StandardInput.WriteLine($"dotnet new -i Senparc.Xncf.XncfBuilder.Template");
-                    }
+                    case "online":
+                        base.RecordLog(sb, "配置在线安装 XNCF 模板");
+                        installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
+                        break;
+                    case "local":
+                        var slnDir = Directory.GetParent(typeParam.SlnFilePath).FullName;
+                        var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").FirstOrDefault();
+
+                        if (packageFile.IsNullOrEmpty())
+                        {
+                            base.RecordLog(sb, "本地未找到文件：Senparc.Xncf.XncfBuilder.Template.*.nupkg，转为在线安装");
+                            goto case "online";
+                        }
+                        base.RecordLog(sb, $"配置本地安装 XNCF 模板：{packageFile}");
+                        installPackageCmd = $"dotnet new -i {packageFile}";
+                        break;
+                    case "no":
+                        base.RecordLog(sb, $"未要求安装 XNCF 模板");
+                        if (unInstallTemplatePackage)
+                        {
+                            base.RecordLog(sb, $"未发现已安装模板，转到在线安装");
+                            goto case "online";
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                else
+
+                if (!installPackageCmd.IsNullOrEmpty())
                 {
-                    p.StandardInput.WriteLine($"dotnet new -i {typeParam.TemplateNameOrPath}");
+                    base.RecordLog(sb, $"执行 XNCF 模板安装命令：" + installPackageCmd);
+                    p.StandardInput.WriteLine(installPackageCmd);
                 }
 
                 #endregion
@@ -309,6 +338,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     result.Message = $"解决方案文件未找到，请手动引用项目 {relativeFilePath}";
                     sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
+
+
+                Console.WriteLine(outputStr);
+                Console.WriteLine(sb.ToString());
 
                 #endregion
 
