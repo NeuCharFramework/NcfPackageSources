@@ -35,6 +35,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                  new SelectionItem("new","生成新的 .sln 文件","如果不选择，将覆盖现有 .sln 文件（不会影响已有功能，但如果 sln 解决方案正在运行，可能会触发自动重启服务）,并推荐使用备份功能",false),
             });
 
+            [MaxLength(250)]
+            [Description("模板名称或路径||输入 Nuget 上模板包的名称；或本地 Nuget 包的绝对路径（如 E:\\templates\\Senparc.Xncf.XncfBuilder.Template.0.1.4.nupkg，如果已确认安装过，可以留空，以节省时间")]
+            public string TemplateNameOrPath { get; set; } = "Senparc.Xncf.XncfBuilder.Template";
+
             [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
             public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5）",true),
@@ -203,6 +207,26 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             try
             {
                 p.Start();
+
+                #region 检查并安装模板
+
+                if (typeParam.TemplateNameOrPath.IsNullOrEmpty())
+                {
+                    p.StandardInput.WriteLine($"dotnet new -u");
+                    var output = p.StandardOutput.ReadToEnd();
+                    if (!output.Contains("XNCF"))
+                    {
+                        //未安装，强制安装
+                        p.StandardInput.WriteLine($"dotnet new -i Senparc.Xncf.XncfBuilder.Template");
+                    }
+                }
+                else
+                {
+                    p.StandardInput.WriteLine($"dotnet new -i {typeParam.TemplateNameOrPath}");
+                }
+
+                #endregion
+
                 foreach (string item in commandTexts)
                 {
                     p.StandardInput.WriteLine(item);
