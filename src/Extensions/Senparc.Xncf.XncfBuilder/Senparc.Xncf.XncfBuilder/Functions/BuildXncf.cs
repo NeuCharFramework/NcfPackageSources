@@ -201,13 +201,25 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };
 
-            Process p = new Process();
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.CreateNoWindow = true;
+            Func<Process> GetNewProcess = () =>
+            {
+                Process p = new Process();
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.CreateNoWindow = true;
+                return p;
+            };
+
+            Action<Process> CloseProcess = p =>
+            {
+                p.WaitForExit();
+                p.Close();
+            };
+
+            Process p = GetNewProcess();
             string strOutput;
             try
             {
@@ -215,8 +227,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #region 检查并安装模板
                 Console.WriteLine("dotnet new - l ：");
+                p.StandardInput.WriteLine($"dir");
                 p.StandardInput.WriteLine($"dotnet new -l");
+                p.StandardInput.WriteLine("exit");
                 var output = p.StandardOutput.ReadToEnd();
+                CloseProcess(p);
+
                 Console.WriteLine("\t" + output);
                 var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
                 var installPackageCmd = string.Empty;
@@ -263,6 +279,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 #endregion
 
+                p = GetNewProcess();
                 foreach (string item in commandTexts)
                 {
                     Console.WriteLine("run:" + item);
