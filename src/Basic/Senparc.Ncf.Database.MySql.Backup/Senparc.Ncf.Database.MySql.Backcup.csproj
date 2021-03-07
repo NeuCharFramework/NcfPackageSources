@@ -20,7 +20,7 @@
 			v0.1 创世
 		</PackageReleaseNotes>
 		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test</Configurations>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath>..\..\BuildOutPut</OutputPath>

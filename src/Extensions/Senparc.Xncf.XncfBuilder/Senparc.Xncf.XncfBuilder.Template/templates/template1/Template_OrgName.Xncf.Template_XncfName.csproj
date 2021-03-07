@@ -20,7 +20,7 @@
 			vTemplate_Version 创世
 		</PackageReleaseNotes>
 		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test</Configurations>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

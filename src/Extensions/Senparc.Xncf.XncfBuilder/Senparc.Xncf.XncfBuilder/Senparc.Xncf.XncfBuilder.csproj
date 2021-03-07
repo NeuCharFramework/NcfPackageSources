@@ -21,7 +21,7 @@
 			v0.8.127 使用 .NET Core 命令行创建模板，取代原有的 T4 模板
 		</PackageReleaseNotes>
 		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test</Configurations>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
