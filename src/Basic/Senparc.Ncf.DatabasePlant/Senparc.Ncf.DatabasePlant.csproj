@@ -26,7 +26,7 @@
 		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test</Configurations>
 	</PropertyGroup>
-	<PropertyGroup Condition=" ('$(Configuration)' == 'Release') OR  ('$(Configuration)'=='TemplateRelease')">
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath>..\..\BuildOutPut</OutputPath>
 		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.DatabasePlant.XML</DocumentationFile>
 		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
