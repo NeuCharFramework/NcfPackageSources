@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.1.5</PackageVersion>
+		<PackageVersion>0.1.6</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>Senparc;JeffreySu</Authors>
@@ -30,14 +30,16 @@
 		<OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
+		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
 		<Compile Remove="**\*" />
-		<None Include="**\App_Data\SenparcTraceLog\**" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="readme.md" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="templates\template1\App_Data\SenparcTraceLog\" />
 	</ItemGroup>
 </Project>
