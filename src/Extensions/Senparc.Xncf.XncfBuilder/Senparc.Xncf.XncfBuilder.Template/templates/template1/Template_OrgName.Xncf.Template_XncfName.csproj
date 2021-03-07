@@ -48,7 +48,7 @@
 		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<!--<ItemGroup>
 	  <Content Remove="templates\template1\App_Data\Database\SenparcConfig.config" />
 	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml" />
 	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml" />
@@ -64,7 +64,7 @@
 	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_ViewStart.cshtml" />
 	  <None Include="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml" />
 	  <None Include="templates\template1\Areas\Admin\Pages\Template_XncfName\Index.cshtml" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />

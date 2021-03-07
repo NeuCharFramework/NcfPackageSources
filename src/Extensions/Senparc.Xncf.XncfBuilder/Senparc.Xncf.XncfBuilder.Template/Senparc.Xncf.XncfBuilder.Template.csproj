@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.1.3</PackageVersion>
+		<PackageVersion>0.1.4</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>Senparc;JeffreySu</Authors>
 		<Owners>Senparc;JeffreySu</Owners>
 		<Description>Templates to use when creating an XNCF module for NCF project.</Description>
 		<PackageTags>NeuCharFramework;NCF;XNCF;template</PackageTags>
-		<TargetFramework>netstandard2.1</TargetFramework>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<ContentTargetFolders>content</ContentTargetFolders>
@@ -28,6 +28,6 @@
 	<ItemGroup>
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
 		<Compile Remove="**\*" />
-		<None Include="**\App_Data\SenparcTraceLog\*" />
+		<None Include="**\App_Data\SenparcTraceLog\**" />
 	</ItemGroup>
 </Project>
