@@ -36,7 +36,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             });
 
             [MaxLength(250)]
-            [Description("模板名称或路径||输入 Nuget 上模板包的名称；或本地 Nuget 包的绝对路径（如 E:\\templates\\Senparc.Xncf.XncfBuilder.Template.0.1.4.nupkg，如果已确认安装过，可以留空，以节省时间")]
+            [Description("模板名称或路径||输入 Nuget 上 XNCF 模板包的名称，在线安装；或输入本地 Nuget 包的绝对路径（如 E:\\templates\\Senparc.Xncf.XncfBuilder.Template.0.1.4.nupkg。如果已确认安装过，并且不需要更新，可以留空，以节省时间")]
             public string TemplateNameOrPath { get; set; } = "Senparc.Xncf.XncfBuilder.Template";
 
             [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]

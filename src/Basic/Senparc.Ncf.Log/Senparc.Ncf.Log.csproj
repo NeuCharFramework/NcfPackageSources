@@ -5,6 +5,7 @@
     <AssemblyName>Senparc.Ncf.Log</AssemblyName>
     <RootNamespace>Senparc.Ncf.Log</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='ReleaseTemplate'">true</GeneratePackageOnBuild>
     <Description>Senparc.Ncf.Log</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF</PackageTags>
@@ -20,9 +21,18 @@
       创世
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test</Configurations>
+    <Configurations>Debug;Release;Test;ReleaseTemplate</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Log.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='ReleaseTemplate'">
     <OutputPath>..\..\BuildOutPut</OutputPath>
     <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Log.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>

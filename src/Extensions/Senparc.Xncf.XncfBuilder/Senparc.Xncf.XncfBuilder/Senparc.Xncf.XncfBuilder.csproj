@@ -22,9 +22,12 @@
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.XncfBuilder.XML</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ||  '$(Configuration)' == 'TemplateRelease'">
+    <OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
+    <!--<DocumentationFile Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut\Senparc.Xncf.XncfBuilder.XML</DocumentationFile>-->
+	  
+    <OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
+	  
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
