@@ -6,6 +6,7 @@
   "identity": "Senparc.Xncf.XncfBuilder.Template",
   "groupIdentity": "Custom XNCF",
   "shortName": "XNCF",
+  "description": "Template for XNCF Builder.",
   "tags": {
     "language": "C#",
     "type": "project"
