@@ -38,8 +38,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             [MaxLength(250)]
             [Description("安装新模板||安装 XNCF 的模板")]
             public SelectionList TemplatePackage { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("online","在线获取（从 Nuget.org 等在线环境获取最新版本，时间会略长）","从 Nuget.org 等在线环境获取最新版本，时间会略长",true),
-                 new SelectionItem("local","本地安装（从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包）","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",true),
+                 new SelectionItem("online","在线获取（从 Nuget.org 等在线环境获取最新版本，时间会略长）","从 Nuget.org 等在线环境获取最新版本，时间会略长",false),
+                 new SelectionItem("local","本地安装（从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包）","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",false),
                  new SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
             });
 
@@ -139,6 +139,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         /// <returns></returns>
         private string BuildSample(Parameters typeParam, ref StringBuilder sb)
         {
+            Console.WriteLine("开始创建 XNCF 项目");
+
             string projectName = GetProjectName(typeParam);
             _outPutBaseDir = Path.GetDirectoryName(typeParam.SlnFilePath);  //Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, ".."/*, $"{projectName}"*/);//找到sln根目录即可
             //_outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
@@ -152,7 +154,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             //获取类库当前项目引用版本信息
             Func<string, string, string> getLibVersionParam = (dllName, paramName) =>
             {
-
                 var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
                 var libVBersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
@@ -213,10 +214,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 p.Start();
 
                 #region 检查并安装模板
-
+                Console.WriteLine("dotnet new - l ：");
                 p.StandardInput.WriteLine($"dotnet new -l");
                 var output = p.StandardOutput.ReadToEnd();
-                Console.WriteLine("dotnet new -l:" + output);
+                Console.WriteLine("\t" + output);
                 var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
                 var installPackageCmd = string.Empty;
                 switch (typeParam.TemplatePackage.SelectedValues.First())
