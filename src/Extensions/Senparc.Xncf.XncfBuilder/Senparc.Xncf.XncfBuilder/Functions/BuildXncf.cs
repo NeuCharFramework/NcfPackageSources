@@ -36,11 +36,11 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             });
 
             [MaxLength(250)]
-            [Description("安装新模板||暗黄")]
+            [Description("安装新模板||安装 XNCF 的模板")]
             public SelectionList TemplatePackage { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("online","在线获取","从 Nuget.org 等在线环境获取最新版本，时间会略长",true),
-                 new SelectionItem("local","本地安装","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",true),
-                 new SelectionItem("no","不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
+                 new SelectionItem("online","在线获取（从 Nuget.org 等在线环境获取最新版本，时间会略长）","从 Nuget.org 等在线环境获取最新版本，时间会略长",true),
+                 new SelectionItem("local","本地安装（从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包）","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",true),
+                 new SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
             });
 
             [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]

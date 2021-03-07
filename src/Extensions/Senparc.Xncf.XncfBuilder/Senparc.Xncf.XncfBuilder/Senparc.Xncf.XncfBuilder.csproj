@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
-		<Version>0.8.127.2-beta1</Version>
+		<Version>0.8.127.3-beta1</Version>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -41,6 +41,12 @@
 		<Compile Remove="Migrations.SQLServer\**" />
 		<EmbeddedResource Remove="Migrations.SQLServer\**" />
 		<None Remove="Migrations.SQLServer\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="readme.md" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">

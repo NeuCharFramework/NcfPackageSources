@@ -34,4 +34,10 @@
 		<Compile Remove="**\*" />
 		<None Include="**\App_Data\SenparcTraceLog\**" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="readme.md" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="readme.md" />
+	</ItemGroup>
 </Project>
