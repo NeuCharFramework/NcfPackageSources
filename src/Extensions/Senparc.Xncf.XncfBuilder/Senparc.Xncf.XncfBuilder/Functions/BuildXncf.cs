@@ -196,6 +196,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
+                //"echo %DATE:~0,4%-%DATE:~5,2%-%DATE:~8,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%",
+                //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
                 $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
@@ -223,65 +225,65 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             string strOutput;
             try
             {
-                #region 检查并安装模板
+                //#region 检查并安装模板
 
-                Process pListTemplate = GetNewProcess();
-                Console.WriteLine("dotnet new - l ：");
-                pListTemplate.StandardInput.WriteLine($"dotnet new -l");
-                pListTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
-                var output = pListTemplate.StandardOutput.ReadToEnd();
-                CloseProcess(pListTemplate);
+                //Process pListTemplate = GetNewProcess();
+                //Console.WriteLine("dotnet new - l ：");
+                //pListTemplate.StandardInput.WriteLine($"dotnet new -l");
+                //pListTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                //var output = pListTemplate.StandardOutput.ReadToEnd();
+                //CloseProcess(pListTemplate);
 
 
-                Console.WriteLine("\t" + output);
-                var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
-                var installPackageCmd = string.Empty;
-                switch (typeParam.TemplatePackage.SelectedValues.First())
-                {
-                    case "online":
-                        Console.WriteLine("online");
-                        base.RecordLog(sb, "配置在线安装 XNCF 模板");
-                        installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
-                        break;
-                    case "local":
-                        Console.WriteLine("local");
+                //Console.WriteLine("\t" + output);
+                //var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
+                //var installPackageCmd = string.Empty;
+                //switch (typeParam.TemplatePackage.SelectedValues.First())
+                //{
+                //    case "online":
+                //        Console.WriteLine("online");
+                //        base.RecordLog(sb, "配置在线安装 XNCF 模板");
+                //        installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
+                //        break;
+                //    case "local":
+                //        Console.WriteLine("local");
 
-                        var slnDir = Directory.GetParent(typeParam.SlnFilePath).FullName;
-                        var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
+                //        var slnDir = Directory.GetParent(typeParam.SlnFilePath).FullName;
+                //        var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
 
-                        if (packageFile.IsNullOrEmpty())
-                        {
-                            base.RecordLog(sb, "本地未找到文件：Senparc.Xncf.XncfBuilder.Template.*.nupkg，转为在线安装");
-                            goto case "online";
-                        }
-                        base.RecordLog(sb, $"配置本地安装 XNCF 模板：{packageFile}");
-                        installPackageCmd = $"dotnet new -i {packageFile}";
-                        break;
-                    case "no":
-                        Console.WriteLine("no");
+                //        if (packageFile.IsNullOrEmpty())
+                //        {
+                //            base.RecordLog(sb, "本地未找到文件：Senparc.Xncf.XncfBuilder.Template.*.nupkg，转为在线安装");
+                //            goto case "online";
+                //        }
+                //        base.RecordLog(sb, $"配置本地安装 XNCF 模板：{packageFile}");
+                //        installPackageCmd = $"dotnet new -i {packageFile}";
+                //        break;
+                //    case "no":
+                //        Console.WriteLine("no");
 
-                        base.RecordLog(sb, $"未要求安装 XNCF 模板");
-                        if (unInstallTemplatePackage)
-                        {
-                            base.RecordLog(sb, $"未发现已安装模板，转到在线安装");
-                            goto case "online";
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                //        base.RecordLog(sb, $"未要求安装 XNCF 模板");
+                //        if (unInstallTemplatePackage)
+                //        {
+                //            base.RecordLog(sb, $"未发现已安装模板，转到在线安装");
+                //            goto case "online";
+                //        }
+                //        break;
+                //    default:
+                //        throw new ArgumentOutOfRangeException();
+                //}
 
-                if (!installPackageCmd.IsNullOrEmpty())
-                {
-                    var pInstallTemplate = GetNewProcess();
-                    base.RecordLog(sb, $"执行 XNCF 模板安装命令：" + installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
-                    CloseProcess(pInstallTemplate);
-                }
-                Console.WriteLine($"[{SystemTime.Now}] finish install template");
+                //if (!installPackageCmd.IsNullOrEmpty())
+                //{
+                //    var pInstallTemplate = GetNewProcess();
+                //    base.RecordLog(sb, $"执行 XNCF 模板安装命令：" + installPackageCmd);
+                //    pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
+                //    pInstallTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                //    CloseProcess(pInstallTemplate);
+                //}
+                //Console.WriteLine($"[{SystemTime.Now}] finish install template");
 
-                #endregion
+                //#endregion
 
                 var pCreate = GetNewProcess();
 
