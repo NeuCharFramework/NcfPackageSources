@@ -250,7 +250,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         Console.WriteLine("local");
 
                         var slnDir = Directory.GetParent(typeParam.SlnFilePath).FullName;
-                        var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").FirstOrDefault();
+                        var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
 
                         if (packageFile.IsNullOrEmpty())
                         {
