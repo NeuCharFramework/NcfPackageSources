@@ -210,6 +210,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.CreateNoWindow = true;
+                p.Start();
                 return p;
             };
 
@@ -219,19 +220,21 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 p.Close();
             };
 
-            Process p = GetNewProcess();
+            Process p;
             string strOutput;
             try
             {
-                p.Start();
-
                 #region 检查并安装模板
+
+                p = GetNewProcess();
                 Console.WriteLine("dotnet new - l ：");
                 p.StandardInput.WriteLine($"dir");
                 p.StandardInput.WriteLine($"dotnet new -l");
-                p.StandardInput.WriteLine("exit");
+                p.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
                 var output = p.StandardOutput.ReadToEnd();
                 CloseProcess(p);
+
+                p = GetNewProcess();
 
                 Console.WriteLine("\t" + output);
                 var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
@@ -290,8 +293,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 base.RecordLog(sb, strOutput);
 
                 //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
-                p.WaitForExit();
-                p.Close();
+                CloseProcess(p);
             }
             catch (Exception e)
             {
