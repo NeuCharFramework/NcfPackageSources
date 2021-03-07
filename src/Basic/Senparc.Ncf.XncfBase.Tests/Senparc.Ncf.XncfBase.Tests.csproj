@@ -5,7 +5,7 @@
 
 		<IsPackable>false</IsPackable>
 
-		<Configurations>Debug;Release;ReleaseTemplate</Configurations>
+		<Configurations>Debug;Release;TemplateRelease</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -5,7 +5,7 @@
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='ReleaseTemplate'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>Senparc.Ncf.AreaBase</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF</PackageTags>
@@ -20,7 +20,7 @@
 			v0.1 创世，从 NCF 模板项目提炼移植
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;ReleaseTemplate</Configurations>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
@@ -31,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='ReleaseTemplate'">
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
     <OutputPath>..\..\BuildOutPut</OutputPath>
     <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.AreaBase.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>

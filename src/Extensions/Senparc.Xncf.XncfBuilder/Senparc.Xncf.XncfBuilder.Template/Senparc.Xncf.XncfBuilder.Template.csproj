@@ -23,9 +23,11 @@
 		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
 		<Configurations>Debug;Release;Test</Configurations>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ||  '$(Configuration)' == 'TemplateRelease'">
+		<OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
+		<OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />

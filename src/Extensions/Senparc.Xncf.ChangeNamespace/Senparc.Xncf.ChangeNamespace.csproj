@@ -5,7 +5,7 @@
     <AssemblyName>Senparc.Xncf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xncf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='ReleaseTemplate'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>Senparc.Xncf.ChangeNamespace 修改命名空间</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.ChangeNamespace</PackageTags>
@@ -23,7 +23,7 @@
 			v0.4 升级命名空间修改功能
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;ReleaseTemplate</Configurations>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
@@ -34,7 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='ReleaseTemplate'">
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
     <OutputPath>..\..\BuildOutPut</OutputPath>
     <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.ChangeNamespace.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>

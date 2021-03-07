@@ -5,7 +5,7 @@
     <AssemblyName>Senparc.Ncf.Utility</AssemblyName>
     <RootNamespace>Senparc.Ncf.Utility</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='ReleaseTemplate'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>Senparc.Ncf.Utility</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF</PackageTags>
@@ -21,7 +21,7 @@
       创世
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;ReleaseTemplate</Configurations>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='ReleaseTemplate'">
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
     <OutputPath>..\..\BuildOutPut</OutputPath>
     <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Utility.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
