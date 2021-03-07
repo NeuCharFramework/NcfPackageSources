@@ -34,7 +34,7 @@ namespace Senparc.Ncf.Core.MultiTenant
 
         public RequestTenantInfo()
         {
-            BeginTime = SystemTime.Now.UtcDateTime;
+            BeginTime = SystemTime.Now.DateTime;
         }
 
        /// <summary>

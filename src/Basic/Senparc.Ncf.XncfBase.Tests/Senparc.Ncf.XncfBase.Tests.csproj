@@ -4,6 +4,8 @@
 		<TargetFrameworks>netstandard2.1</TargetFrameworks>
 
 		<IsPackable>false</IsPackable>
+
+		<Configurations>Debug;Release;TemplateRelease</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>

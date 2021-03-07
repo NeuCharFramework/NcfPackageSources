@@ -3,9 +3,10 @@
   "author": "Jeffrey",
   "classifications": [ "NCF", "XNCF" ],
   "name": "Custom XNCF Module Template",
-  "identity": "Custom XNCF Module",
+  "identity": "XncfBuilder.Template",
   "groupIdentity": "Custom XNCF",
   "shortName": "XNCF",
+  "description": "Template for XNCF Builder.",
   "tags": {
     "language": "C#",
     "type": "project"
@@ -129,7 +130,7 @@
       "defaultValue": "0.6.114-beta1"
     }
   },
-  "sourceName": "MyGroup.Xncf.MyModule",
+  "sourceName": "Template_OrgName.Xncf.Template_XncfName",
   "sources": [
     {
       "modifiers": [

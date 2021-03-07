@@ -83,7 +83,6 @@ namespace Senparc.Ncf.Core
             services.AddScoped<TenantInfoDto>();
             services.AddScoped<TenantInfoDbData>();
             
-
             return services;
         }
 

@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Tests\Senparc.Ncf.Core.Tests.csproj" />
-		<ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core.Tests\Senparc.Ncf.Core.Tests.csproj" />
+		<ProjectReference Include="..\..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

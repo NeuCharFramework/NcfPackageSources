@@ -35,6 +35,14 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                  new SelectionItem("new","生成新的 .sln 文件","如果不选择，将覆盖现有 .sln 文件（不会影响已有功能，但如果 sln 解决方案正在运行，可能会触发自动重启服务）,并推荐使用备份功能",false),
             });
 
+            [MaxLength(250)]
+            [Description("安装新模板||安装 XNCF 的模板，如果重新安装可能需要 30-40s，如果已安装过模板，可选择【已安装】，以节省模板获取时间。")]
+            public SelectionList TemplatePackage { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+                 new SelectionItem("online","在线获取（从 Nuget.org 等在线环境获取最新版本，时间会略长）","从 Nuget.org 等在线环境获取最新版本，时间会略长",false),
+                 new SelectionItem("local","本地安装（从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包）","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",false),
+                 new SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
+            });
+
             [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
             public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5）",true),
@@ -131,6 +139,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
         /// <returns></returns>
         private string BuildSample(Parameters typeParam, ref StringBuilder sb)
         {
+            Console.WriteLine("开始创建 XNCF 项目");
+
             string projectName = GetProjectName(typeParam);
             _outPutBaseDir = Path.GetDirectoryName(typeParam.SlnFilePath);  //Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, ".."/*, $"{projectName}"*/);//找到sln根目录即可
             //_outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
@@ -144,7 +154,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             //获取类库当前项目引用版本信息
             Func<string, string, string> getLibVersionParam = (dllName, paramName) =>
             {
-
                 var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
                 var libVBersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
@@ -187,33 +196,115 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
             var commandTexts = new List<string> {
                 $"cd {_outPutBaseDir}",
+                //"echo %DATE:~0,4%-%DATE:~5,2%-%DATE:~8,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%",
+                //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
                 $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };
 
-            Process p = new Process();
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.CreateNoWindow = true;
-            string strOutput = null;
+            Func<Process> GetNewProcess = () =>
+            {
+                Process p = new Process();
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+                return p;
+            };
+
+            Action<Process> CloseProcess = p =>
+            {
+                p.WaitForExit();
+                p.Close();
+            };
+
+            string strOutput;
             try
             {
-                p.Start();
+                #region 检查并安装模板
+
+                Process pListTemplate = GetNewProcess();
+                Console.WriteLine("dotnet new - l ：");
+                pListTemplate.StandardInput.WriteLine($"dotnet new -l");
+                pListTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                var output = pListTemplate.StandardOutput.ReadToEnd();
+                CloseProcess(pListTemplate);
+
+
+                Console.WriteLine("\t" + output);
+                var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
+                var installPackageCmd = string.Empty;
+                switch (typeParam.TemplatePackage.SelectedValues.First())
+                {
+                    case "online":
+                        Console.WriteLine("online");
+                        base.RecordLog(sb, "配置在线安装 XNCF 模板");
+                        installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
+                        break;
+                    case "local":
+                        Console.WriteLine("local");
+
+                        var slnDir = Directory.GetParent(typeParam.SlnFilePath).FullName;
+                        var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
+
+                        if (packageFile.IsNullOrEmpty())
+                        {
+                            base.RecordLog(sb, "本地未找到文件：Senparc.Xncf.XncfBuilder.Template.*.nupkg，转为在线安装");
+                            goto case "online";
+                        }
+                        base.RecordLog(sb, $"配置本地安装 XNCF 模板：{packageFile}");
+                        installPackageCmd = $"dotnet new -i {packageFile}";
+                        break;
+                    case "no":
+                        Console.WriteLine("no");
+
+                        base.RecordLog(sb, $"未要求安装 XNCF 模板");
+                        if (unInstallTemplatePackage)
+                        {
+                            base.RecordLog(sb, $"未发现已安装模板，转到在线安装");
+                            goto case "online";
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                if (!installPackageCmd.IsNullOrEmpty())
+                {
+                    var pInstallTemplate = GetNewProcess();
+                    base.RecordLog(sb, $"执行 XNCF 模板安装命令：" + installPackageCmd);
+                    pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
+                    pInstallTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                    CloseProcess(pInstallTemplate);
+                }
+                Console.WriteLine($"[{SystemTime.Now}] finish install template");
+
+                #endregion
+
+                var pCreate = GetNewProcess();
+
+                Console.WriteLine($"[{SystemTime.Now}] start to create xncf");
+
                 foreach (string item in commandTexts)
                 {
-                    p.StandardInput.WriteLine(item);
+                    Console.WriteLine("run:" + item);
+                    pCreate.StandardInput.WriteLine(item);
+                    Console.WriteLine($"[{SystemTime.Now}] run：{item}");
                 }
-                p.StandardInput.WriteLine("exit");
-                strOutput = p.StandardOutput.ReadToEnd();
+                pCreate.StandardInput.WriteLine("exit");
+                Console.WriteLine($"[{SystemTime.Now}] run：exit");
+
+                strOutput = pCreate.StandardOutput.ReadToEnd();
+                Console.WriteLine($"[{SystemTime.Now}] ReadToEnd()");
+
                 base.RecordLog(sb, strOutput);
 
                 //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
-                p.WaitForExit();
-                p.Close();
+                CloseProcess(pCreate);
             }
             catch (Exception e)
             {
@@ -285,6 +376,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     result.Message = $"解决方案文件未找到，请手动引用项目 {relativeFilePath}";
                     sb.AppendLine($"操作未全部完成：{result.Message}");
                 }
+
+
+                Console.WriteLine(outputStr);
+                Console.WriteLine(sb.ToString());
 
                 #endregion
 
