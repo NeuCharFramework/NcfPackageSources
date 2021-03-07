@@ -207,24 +207,28 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.CreateNoWindow = true;
-            string strOutput = null;
+            string strOutput;
             try
             {
                 p.Start();
 
                 #region 检查并安装模板
 
-                p.StandardInput.WriteLine($"dotnet new -u");
+                p.StandardInput.WriteLine($"dotnet new -l");
                 var output = p.StandardOutput.ReadToEnd();
-                var unInstallTemplatePackage = !output.Contains("XNCF");
+                Console.WriteLine("dotnet new -l:" + output);
+                var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
                 var installPackageCmd = string.Empty;
                 switch (typeParam.TemplatePackage.SelectedValues.First())
                 {
                     case "online":
+                        Console.WriteLine("online");
                         base.RecordLog(sb, "配置在线安装 XNCF 模板");
                         installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
                         break;
                     case "local":
+                        Console.WriteLine("local");
+
                         var slnDir = Directory.GetParent(typeParam.SlnFilePath).FullName;
                         var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").FirstOrDefault();
 
@@ -237,6 +241,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         installPackageCmd = $"dotnet new -i {packageFile}";
                         break;
                     case "no":
+                        Console.WriteLine("no");
+
                         base.RecordLog(sb, $"未要求安装 XNCF 模板");
                         if (unInstallTemplatePackage)
                         {
@@ -245,7 +251,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                         }
                         break;
                     default:
-                        break;
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 if (!installPackageCmd.IsNullOrEmpty())
@@ -258,6 +264,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 foreach (string item in commandTexts)
                 {
+                    Console.WriteLine("run:" + item);
                     p.StandardInput.WriteLine(item);
                 }
                 p.StandardInput.WriteLine("exit");
