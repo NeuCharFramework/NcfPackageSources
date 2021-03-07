@@ -220,21 +220,18 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 p.Close();
             };
 
-            Process p;
             string strOutput;
             try
             {
                 #region 检查并安装模板
 
-                p = GetNewProcess();
+                Process pListTemplate = GetNewProcess();
                 Console.WriteLine("dotnet new - l ：");
-                p.StandardInput.WriteLine($"dir");
-                p.StandardInput.WriteLine($"dotnet new -l");
-                p.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
-                var output = p.StandardOutput.ReadToEnd();
-                CloseProcess(p);
+                pListTemplate.StandardInput.WriteLine($"dotnet new -l");
+                pListTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                var output = pListTemplate.StandardOutput.ReadToEnd();
+                CloseProcess(pListTemplate);
 
-                p = GetNewProcess();
 
                 Console.WriteLine("\t" + output);
                 var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
@@ -276,24 +273,31 @@ namespace Senparc.Xncf.XncfBuilder.Functions
 
                 if (!installPackageCmd.IsNullOrEmpty())
                 {
+                    var pInstallTemplate = GetNewProcess();
                     base.RecordLog(sb, $"执行 XNCF 模板安装命令：" + installPackageCmd);
-                    p.StandardInput.WriteLine(installPackageCmd);
+                    pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
+                    pInstallTemplate.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                    CloseProcess(pInstallTemplate);
                 }
+                Console.WriteLine($"[{SystemTime.Now}] finish install template");
 
                 #endregion
 
-                p = GetNewProcess();
+                var pCreate = GetNewProcess();
+
+                Console.WriteLine($"[{SystemTime.Now}] start to create xncf");
+
                 foreach (string item in commandTexts)
                 {
                     Console.WriteLine("run:" + item);
-                    p.StandardInput.WriteLine(item);
+                    pCreate.StandardInput.WriteLine(item);
                 }
-                p.StandardInput.WriteLine("exit");
-                strOutput = p.StandardOutput.ReadToEnd();
+                pCreate.StandardInput.WriteLine("exit");
+                strOutput = pCreate.StandardOutput.ReadToEnd();
                 base.RecordLog(sb, strOutput);
 
                 //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
-                CloseProcess(p);
+                CloseProcess(pCreate);
             }
             catch (Exception e)
             {
