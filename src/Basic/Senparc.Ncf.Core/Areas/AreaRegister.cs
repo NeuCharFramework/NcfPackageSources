@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Exceptions;
 using Senparc.CO2NET.Trace;
@@ -23,7 +24,7 @@ namespace Senparc.Ncf.Core.Areas
         /// <param name="env"></param>
         /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
         /// <returns></returns>
-        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, IHostingEnvironment/*IWebHostEnvironment*/ env, Action<IAreaRegister> eachRegsiterAction = null)
+        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, IHostEnvironment/*IWebHostEnvironment*/ env, Action<IAreaRegister> eachRegsiterAction = null)
         {
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
