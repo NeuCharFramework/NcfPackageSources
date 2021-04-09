@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>0.6.127.7-beta1</Version>
+		<TargetFramework>net5.0</TargetFramework>
+		<Version>0.6.127.37-beta1</Version>
 		<AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
 		<RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -44,18 +44,18 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="7.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.3.21201.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0-preview.3.21201.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.3.21201.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Senparc.CO2NET" Version="1.3.200" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.3.21201.2" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.3.21201.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

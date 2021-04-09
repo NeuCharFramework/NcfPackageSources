@@ -23,7 +23,7 @@ namespace Senparc.Ncf.Core.Areas
         /// <param name="env"></param>
         /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
         /// <returns></returns>
-        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, Microsoft.Extensions.Hosting.IHostEnvironment/*IWebHostEnvironment*/ env, Action<IAreaRegister> eachRegsiterAction = null)
+        public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, IHostingEnvironment/*IWebHostEnvironment*/ env, Action<IAreaRegister> eachRegsiterAction = null)
         {
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
