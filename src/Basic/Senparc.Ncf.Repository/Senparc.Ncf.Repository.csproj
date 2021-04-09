@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
-    <Version>0.6.127.37-beta1</Version>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <Version>0.6.127.40-beta1</Version>
     <AssemblyName>Senparc.Ncf.Repository</AssemblyName>
     <RootNamespace>Senparc.Ncf.Repository</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
