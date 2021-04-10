@@ -98,9 +98,19 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     return;
                 }
 
-                var commandTexts = new List<string> {
-                                        @$"cd {typeParam.ProjectPath}",
-                                    };
+                
+
+                var commandTexts = new List<string>();
+
+                var databasePlantCsprojPath = Directory.GetFiles(typeParam.DatabasePlantPath, "*.csproj").FirstOrDefault();
+                var projectCsprojPath = Directory.GetFiles(typeParam.ProjectPath, "*.csproj").FirstOrDefault();
+
+                if (/*databasePlantCsprojPath != null &&*/ projectCsprojPath!=null)
+                {
+                    commandTexts.Add($"dotnet add {typeParam.DatabasePlantPath/*databasePlantCsprojPath*/} reference {typeParam.ProjectPath/*databasePlantCsprojPath*/}");
+                }
+
+                commandTexts.Add(@$"cd {typeParam.ProjectPath}");//进入项目目录
 
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
@@ -110,6 +120,12 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     commandTexts.Add($"dotnet ef migrations add {typeParam.MigrationName} -c {typeParam.DbContextName}{dbTypeSuffix} -s {typeParam.DatabasePlantPath} -o {migrationDir}{outputVerbose}");
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
+                }
+
+
+                if (/*databasePlantCsprojPath != null &&*/ projectCsprojPath != null)
+                {
+                    commandTexts.Add($"dotnet remove {typeParam.DatabasePlantPath/*databasePlantCsprojPath*/} reference {typeParam.ProjectPath/*databasePlantCsprojPath*/}");
                 }
 
                 Process p = new Process();
@@ -139,7 +155,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     strOutput = e.Message;
                 }
-
 
                 ////Pomelo-MySQL 命名有不统一的情况，需要处理
                 //if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
