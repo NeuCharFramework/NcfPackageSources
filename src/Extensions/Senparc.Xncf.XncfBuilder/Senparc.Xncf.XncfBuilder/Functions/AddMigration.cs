@@ -98,20 +98,15 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     return;
                 }
 
-                
-
                 var commandTexts = new List<string>();
 
-                var databasePlantCsprojPath = Directory.GetFiles(typeParam.DatabasePlantPath, "*.csproj").FirstOrDefault();
-                var projectCsprojPath = Directory.GetFiles(typeParam.ProjectPath, "*.csproj").FirstOrDefault();
+                //添加停机坪引用
+                commandTexts.Add($"dotnet add {typeParam.DatabasePlantPath} reference {typeParam.ProjectPath}");
 
-                if (/*databasePlantCsprojPath != null &&*/ projectCsprojPath!=null)
-                {
-                    commandTexts.Add($"dotnet add {typeParam.DatabasePlantPath/*databasePlantCsprojPath*/} reference {typeParam.ProjectPath/*databasePlantCsprojPath*/}");
-                }
+                //进入项目目录
+                commandTexts.Add(@$"cd {typeParam.ProjectPath}");
 
-                commandTexts.Add(@$"cd {typeParam.ProjectPath}");//进入项目目录
-
+                //执行迁移
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
                     string migrationDir = GetMigrationDir(typeParam, dbType);
@@ -122,11 +117,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
 
-
-                if (/*databasePlantCsprojPath != null &&*/ projectCsprojPath != null)
-                {
-                    commandTexts.Add($"dotnet remove {typeParam.DatabasePlantPath/*databasePlantCsprojPath*/} reference {typeParam.ProjectPath/*databasePlantCsprojPath*/}");
-                }
+                //移除停机坪引用
+                commandTexts.Add($"dotnet remove {typeParam.DatabasePlantPath} reference {typeParam.ProjectPath}");
 
                 Process p = new Process();
                 p.StartInfo.FileName = "cmd.exe";
