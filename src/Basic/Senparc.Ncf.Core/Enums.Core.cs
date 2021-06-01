@@ -1,7 +1,8 @@
 ﻿namespace Senparc.Ncf.Core.Enums
 {
-
-
+    /// <summary>
+    /// 消息类型（级别）
+    /// </summary>
     public enum MessageType
     {
         danger,
