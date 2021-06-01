@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
-		<Version>0.8.127.19-beta1</Version>
+		<Version>0.8.127.20-beta1</Version>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,12 +35,7 @@
 	<ItemGroup>
 		<!-- 说明：因为 Pomelo.EntityFrameworkCore.MySql 一个未充分解耦的问题，这里暂时先引用，待其升级后会取消，和具体数据库充分解耦
 	           官方反馈：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1205 -->
-		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Remove="Migrations.SQLServer\**" />
-		<EmbeddedResource Remove="Migrations.SQLServer\**" />
-		<None Remove="Migrations.SQLServer\**" />
+		<!--<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0" />-->
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="readme.md" />
@@ -64,8 +59,5 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Migrations\Migrations.SqlServer\" />
 	</ItemGroup>
 </Project>
