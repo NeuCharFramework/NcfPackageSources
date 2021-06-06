@@ -67,3 +67,5 @@ obj/
 /src/Extensions/Senparc.Xncf.XncfBuilder.Tests/App_Data/SenparcTraceLog
 /src/Extensions/Senparc.Xncf.DatabaseToolkit/Senparc.Xncf.DatabaseToolkit/App_Data/SenparcTraceLog
 /src/Extensions/Senparc.Xncf.XncfBuilder/Template_OrgName.Xncf.Template_XncfName/App_Data/SenparcTraceLog
+/src/test/ClassLibrary1/templates/mytemplate1
+/src/test/ClassLibrary1/ClassLibrary1.csproj

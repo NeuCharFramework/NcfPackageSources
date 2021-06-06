@@ -98,10 +98,17 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     return;
                 }
 
-                var commandTexts = new List<string> {
-                                        @$"cd {typeParam.ProjectPath}",
-                                    };
+                var commandTexts = new List<string>();
 
+                //添加停机坪引用（直接引用会有问题）
+                //var slnFilePath = Path.Combine(typeParam.DatabasePlantPath, "..\\");
+                //commandTexts.Add($"dotnet sln {slnFilePath} add {typeParam.ProjectPath}");
+                //commandTexts.Add($"dotnet add {typeParam.DatabasePlantPath} reference {typeParam.ProjectPath}");
+
+                //进入项目目录
+                commandTexts.Add(@$"cd {typeParam.ProjectPath}");
+
+                //执行迁移
                 foreach (var dbType in typeParam.DatabaseTypes.SelectedValues)
                 {
                     string migrationDir = GetMigrationDir(typeParam, dbType);
@@ -111,6 +118,10 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
+
+                ////移除停机坪引用（直接引用会有问题）
+                //commandTexts.Add($"dotnet remove {typeParam.DatabasePlantPath} reference {typeParam.ProjectPath}");
+                //commandTexts.Add($"dotnet sln {slnFilePath} remove {typeParam.ProjectPath}");
 
                 Process p = new Process();
                 p.StartInfo.FileName = "cmd.exe";
@@ -139,7 +150,6 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 {
                     strOutput = e.Message;
                 }
-
 
                 ////Pomelo-MySQL 命名有不统一的情况，需要处理
                 //if (typeParam.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
