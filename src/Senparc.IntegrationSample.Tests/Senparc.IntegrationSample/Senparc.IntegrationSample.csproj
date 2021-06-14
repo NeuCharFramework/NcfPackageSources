@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Configurations>Debug;Release;TemplateRelease</Configurations>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
+		<Configurations>Debug;Release;TemplateRelease</Configurations>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.AspNet" Version="0.3.200" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Senparc.CO2NET.AspNet" Version="0.3.200" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <ProjectReference Include="..\..\Extensions\Senparc.Xncf.ChangeNamespace\Senparc.Xncf.ChangeNamespace.csproj" />
-    <ProjectReference Include="..\..\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.ChangeNamespace\Senparc.Xncf.ChangeNamespace.csproj" />
+		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
+	</ItemGroup>
 </Project>
