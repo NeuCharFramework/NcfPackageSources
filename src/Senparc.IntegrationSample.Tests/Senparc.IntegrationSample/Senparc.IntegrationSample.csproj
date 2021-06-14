@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>6.0</TargetFramework>
+		<TargetFramework>5.0</TargetFramework>
 		<!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 	</PropertyGroup>
