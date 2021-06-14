@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Version>0.0.4-beta1</Version>
+        <Version>0.0.7-beta1</Version>
         <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
         <RootNamespace>Senparc.Xncf.Swagger</RootNamespace>
         <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
