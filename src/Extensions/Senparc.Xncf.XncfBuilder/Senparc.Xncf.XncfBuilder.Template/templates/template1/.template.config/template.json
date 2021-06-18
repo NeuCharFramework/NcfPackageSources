@@ -42,6 +42,11 @@
       "dataType": "bool",
       "defaultValue": "false"
     },
+    "UseWebApi": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    },
     "IntegrationToNcf": {
       "type": "parameter",
       "dataType": "bool",
