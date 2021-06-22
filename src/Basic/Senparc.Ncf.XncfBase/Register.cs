@@ -242,18 +242,21 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder<>));
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
+           
+            //支持 AutoMapper
+            //引入当前系统
+            services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
+            //引入所有模块
+            services.AddAutoMapper(z => z.AddProfile<AutoMapper.XncfModuleProfile>());
+
+            //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内呢能存在动态生成的程序集引发异常
+
             //微模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 xncfRegister.AddXncfModule(services, configuration);
             }
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
-
-            //支持 AutoMapper
-            //引入当前系统
-            services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
-            //引入所有模块
-            services.AddAutoMapper(z => z.AddProfile<AutoMapper.XncfModuleProfile>());
 
             return sb.ToString();
         }
