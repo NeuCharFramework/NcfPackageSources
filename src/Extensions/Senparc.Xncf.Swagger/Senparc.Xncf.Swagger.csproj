@@ -31,10 +31,6 @@
         <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="index.html" />
-        <None Remove="login.html" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.128-beta1" />
