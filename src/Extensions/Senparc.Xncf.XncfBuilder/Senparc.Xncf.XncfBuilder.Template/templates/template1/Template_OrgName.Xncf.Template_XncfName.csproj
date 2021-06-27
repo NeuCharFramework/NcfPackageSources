@@ -33,6 +33,11 @@
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
 	</PropertyGroup>
 
+  <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
+    <PackageReference Include="Senparc.Xncf.Swagger" Version="0.0.9-beta1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+  </ItemGroup>
+
 	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
