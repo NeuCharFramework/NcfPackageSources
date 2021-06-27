@@ -174,6 +174,8 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             var menuName = $" --MenuName \"{typeParam.MenuName}\"";
             string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
             string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
+            string ncfSwaggerVersion = getLibVersionParam("Senparc.Xncf.Swagger.dll", "NcfSwaggerVersion");
+            string microsoftMvcVersion = getLibVersionParam("Microsoft.AspNetCore.Mvc.Versioning.dll", "MicrosoftMvcVersion");
 
             //配置功能
             var isUseSample = typeParam.UseSammple.SelectedValues.Contains("1");
@@ -200,7 +202,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 $"cd {_outPutBaseDir}",
                 //"echo %DATE:~0,4%-%DATE:~5,2%-%DATE:~8,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%",
                 //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}{ncfSwaggerVersion}{microsoftMvcVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };

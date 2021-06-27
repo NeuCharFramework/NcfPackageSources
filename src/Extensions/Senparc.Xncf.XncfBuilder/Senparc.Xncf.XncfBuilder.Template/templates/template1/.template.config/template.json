@@ -133,6 +133,24 @@
       "replaces": "Template_NcfAreaBase_Version",
       "isRequired": true,
       "defaultValue": "0.6.114-beta1"
+    },
+    "NcfSwaggerVersion": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Senparc.Xncf.Swagger package version",
+      "fileRename": "Template_XncfSwagger_Version",
+      "replaces": "Template_XncfSwagger_Version",
+      "isRequired": true,
+      "defaultValue": "0.0.9-beta1"
+    },
+    "MicrosoftMvcVersion": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Microsoft.AspNetCore.Mvc.Versioning package version",
+      "fileRename": "Template_MicrosoftMvc_Version",
+      "replaces": "Template_MicrosoftMvc_Version",
+      "isRequired": true,
+      "defaultValue": "5.0.0"
     }
   },
   "sourceName": "Template_OrgName.Xncf.Template_XncfName",

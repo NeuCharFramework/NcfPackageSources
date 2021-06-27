@@ -34,8 +34,8 @@
 	</PropertyGroup>
 
   <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
-    <PackageReference Include="Senparc.Xncf.Swagger" Version="0.0.9-beta1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Senparc.Xncf.Swagger" Version="Template_XncfSwagger_Version" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="Template_MicrosoftMvc_Version" />
   </ItemGroup>
 
 	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
