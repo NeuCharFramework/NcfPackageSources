@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Senparc.CO2NET.WebApi;
+using Senparc.CO2NET.WebApi.WebApiEngines;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.Swagger.Builder;
 using Senparc.Xncf.Swagger.Models;
@@ -60,9 +62,16 @@ namespace Senparc.Xncf.Swagger
             ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
             ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => { };
 
+            #region 配置动态 API（必须在 Swagger 配置之前）
+
+            var docXmlPath = Path.Combine(ConfigurationHelper.WebHostEnvironment.ContentRootPath, "App_Data", "ApiDocXml");
+            var builder = services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
+
+            #endregion
+
             //接口文档
             #region swagger
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddApiVersioning(x =>
                 {
                     x.DefaultApiVersion = new ApiVersion(1, 0);
@@ -75,5 +84,6 @@ namespace Senparc.Xncf.Swagger
 
             return base.AddXncfModule(services, configuration);
         }
+
     }
 }
