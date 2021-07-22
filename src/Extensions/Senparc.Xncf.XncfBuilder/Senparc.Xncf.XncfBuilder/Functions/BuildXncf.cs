@@ -92,6 +92,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             public SelectionList UseModule { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("function","配置“函数”功能","是否需要使用函数模块（Function）",false),
                  new SelectionItem("database","配置“数据库”功能","是否需要使用数据库模块（Database），将配置空数据库",false),
+                 new SelectionItem("webapi","配置“WebApi”功能","是否需要使用WebApi模块（WebApi）",false),
                  new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web），如果选择，将忽略 .NET Standard 2.1配置，强制使用 .NET Core 3.1（默认），或 .NET 5（需要选中）",false),
             });
 
@@ -181,6 +182,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
             var isUseWeb = isUseSample || typeParam.UseModule.SelectedValues.Contains("web");
             var useWeb = getBoolParam(isUseWeb, "UseWeb");
             var useDatabase = getBoolParam(isUseSample, "UseDatabase");
+            var useWebApi = getBoolParam(typeParam.UseModule.SelectedValues.Contains("webapi"), "UseWebApi");
 
             //获取当前配置的 FrameworkVersion
             var frameworkVersion = typeParam.OtherFrameworkVersion.IsNullOrEmpty()
@@ -198,7 +200,7 @@ namespace Senparc.Xncf.XncfBuilder.Functions
                 $"cd {_outPutBaseDir}",
                 //"echo %DATE:~0,4%-%DATE:~5,2%-%DATE:~8,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%",
                 //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
+                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {typeParam.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };

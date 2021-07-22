@@ -20,33 +20,40 @@ namespace Senparc.Xncf.Swagger.Utils
             foreach (var assembly in assemblies)
             {
                 //类上的ApiVersion
-                var allTypes = assembly.GetTypes();
-                foreach (var t in allTypes)
+                try
                 {
-                    var classVersion = t.GetCustomAttributes(typeof(ApiVersionAttribute), true).OfType<ApiVersionAttribute>()
-                        .SelectMany(attr => attr.Versions).Distinct();
-                    versions.AddRange(classVersion);
-
-                    var methods = t.GetMethods().Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
-                    foreach (var method in methods)
+                    var allTypes = assembly.GetTypes();
+                    foreach (var t in allTypes)
                     {
-                        var methodVersion = method.GetCustomAttributes(typeof(ApiVersionAttribute), true).OfType<ApiVersionAttribute>()
+                        var classVersion = t.GetCustomAttributes(typeof(ApiVersionAttribute), true).OfType<ApiVersionAttribute>()
                             .SelectMany(attr => attr.Versions).Distinct();
-                        versions.AddRange(methodVersion);
+                        versions.AddRange(classVersion);
+
+                        var methods = t.GetMethods().Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
+                        foreach (var method in methods)
+                        {
+                            var methodVersion = method.GetCustomAttributes(typeof(ApiVersionAttribute), true).OfType<ApiVersionAttribute>()
+                                .SelectMany(attr => attr.Versions).Distinct();
+                            versions.AddRange(methodVersion);
+                        }
                     }
+                    ////方法上的apiversion
+                    //var subTypes = allTypes.Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
+                    //foreach (var t in subTypes)
+                    //{
+                    //    var methods = t.GetMethods().Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
+                    //    foreach (var method in methods)
+                    //    {
+                    //        var methodVersion = method.GetCustomAttributes(typeof(ApiVersionAttribute), true).OfType<ApiVersionAttribute>()
+                    //            .SelectMany(attr => attr.Versions).Distinct();
+                    //        versions.AddRange(methodVersion);
+                    //    }
+                    //}
                 }
-                ////方法上的apiversion
-                //var subTypes = allTypes.Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
-                //foreach (var t in subTypes)
-                //{
-                //    var methods = t.GetMethods().Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
-                //    foreach (var method in methods)
-                //    {
-                //        var methodVersion = method.GetCustomAttributes(typeof(ApiVersionAttribute), true).OfType<ApiVersionAttribute>()
-                //            .SelectMany(attr => attr.Versions).Distinct();
-                //        versions.AddRange(methodVersion);
-                //    }
-                //}
+                catch (Exception)
+                {
+                }
+             
             }
             return versions.Distinct().Select(s => $"v{s.MajorVersion}.{s.MinorVersion}".Trim('.')).OrderBy(o => o).ToList();
         }
