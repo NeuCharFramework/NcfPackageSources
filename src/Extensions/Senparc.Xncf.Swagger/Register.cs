@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
 using Senparc.Ncf.XncfBase;
@@ -42,6 +43,15 @@ namespace Senparc.Xncf.Swagger
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
+            #region 配置动态 API（必须在 Swagger 配置之前）
+
+            var docXmlPath = Path.Combine(ConfigurationHelper.WebHostEnvironment.ContentRootPath, "App_Data", "ApiDocXml");
+            var builder = services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
+
+            #endregion
+
+
             var serviceProvider = services.BuildServiceProvider();
             ConfigurationHelper.Configuration = configuration;
             ConfigurationHelper.HostEnvironment = serviceProvider.GetService<IWebHostEnvironment>();
@@ -62,16 +72,9 @@ namespace Senparc.Xncf.Swagger
             ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
             ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => { };
 
-            #region 配置动态 API（必须在 Swagger 配置之前）
-
-            var docXmlPath = Path.Combine(ConfigurationHelper.WebHostEnvironment.ContentRootPath, "App_Data", "ApiDocXml");
-            var builder = services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
-
-            #endregion
-
             //接口文档
-            #region swagger
+            #region Swagger
+
             services.AddApiVersioning(x =>
                 {
                     x.DefaultApiVersion = new ApiVersion(1, 0);
@@ -79,10 +82,17 @@ namespace Senparc.Xncf.Swagger
                     x.ReportApiVersions = true;
                     x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
                 });
-            services.AddSwaggerCustom();
+            services.AddSwaggerCustom(docXmlPath);
+
             #endregion
 
             return base.AddXncfModule(services, configuration);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseSwaggerCustom();
+            return base.UseXncfModule(app, registerService);
         }
 
     }
