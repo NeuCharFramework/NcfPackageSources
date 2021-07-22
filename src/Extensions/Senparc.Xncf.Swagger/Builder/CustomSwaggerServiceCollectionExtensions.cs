@@ -139,37 +139,39 @@ namespace Senparc.Xncf.Swagger.Builder
                 //{
                 //    c.SwaggerDoc(version, new OpenApiInfo { Title = options.ProjectName, Version = version });
                 //}
-                //分组
-                c.TagActionsBy(s =>
-                {
-                    var controller = s.ActionDescriptor.RouteValues["controller"];
-                    if (s.ActionDescriptor.RouteValues.ContainsKey("area"))
-                    {
-                        var area = s.ActionDescriptor.RouteValues["area"];
-                        if (area != null)
-                            return new string[] { $"{area}_{controller}" };
-                    }
-                    return new string[] { controller };
-                });
-                //版本
-                c.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)) return false;
 
-                    var methodVersions = methodInfo
-                        .GetCustomAttributes(true)
-                        .OfType<ApiVersionAttribute>()
-                        .SelectMany(attr => attr.Versions);
-                    var allow = methodVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
-                    if (allow) return true;
 
-                    var declaringTypeVersions = methodInfo.DeclaringType
-                        .GetCustomAttributes(true)
-                        .OfType<ApiVersionAttribute>()
-                        .SelectMany(attr => attr.Versions);
+                //分组  -- 当前分组策略无效，会导致所有 API 都不显示，暂时停用   —— Jeffrey Su 2021.7.22
+                //c.TagActionsBy(s =>
+                //{
+                //    var controller = s.ActionDescriptor.RouteValues["controller"];
+                //    if (s.ActionDescriptor.RouteValues.ContainsKey("area"))
+                //    {
+                //        var area = s.ActionDescriptor.RouteValues["area"];
+                //        if (area != null)
+                //            return new string[] { $"{area}_{controller}" };
+                //    }
+                //    return new string[] { controller };
+                //});
+                ////版本
+                //c.DocInclusionPredicate((docName, apiDesc) =>
+                //{
+                //    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)) return false;
 
-                    return declaringTypeVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
-                });
+                //    var methodVersions = methodInfo
+                //        .GetCustomAttributes(true)
+                //        .OfType<ApiVersionAttribute>()
+                //        .SelectMany(attr => attr.Versions);
+                //    var allow = methodVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
+                //    if (allow) return true;
+
+                //    var declaringTypeVersions = methodInfo.DeclaringType
+                //        .GetCustomAttributes(true)
+                //        .OfType<ApiVersionAttribute>()
+                //        .SelectMany(attr => attr.Versions);
+
+                //    return declaringTypeVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
+                //});
 
                 //c.OperationFilter<SwaggerDefaultValueFilter>();
                
