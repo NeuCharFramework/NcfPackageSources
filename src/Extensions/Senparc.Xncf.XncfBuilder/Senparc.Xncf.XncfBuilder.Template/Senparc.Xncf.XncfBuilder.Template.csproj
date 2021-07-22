@@ -22,7 +22,7 @@
 			v0.1 创世
 			v0.1.7 删除无用的日志文件
 		</PackageReleaseNotes>
-		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
 		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -22,7 +22,7 @@
 			v0.3 完成还原命名空间功能
 			v0.4 升级命名空间修改功能
 </PackageReleaseNotes>
-    <RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
