@@ -308,6 +308,27 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Swagger
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Swagger.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Xncf.Swagger- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Swagger.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Terminal
   inputs:
