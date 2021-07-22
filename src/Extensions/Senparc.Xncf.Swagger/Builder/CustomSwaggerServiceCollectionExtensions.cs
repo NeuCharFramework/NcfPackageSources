@@ -20,6 +20,8 @@ namespace Senparc.Xncf.Swagger.Builder
             var options = ConfigurationHelper.CustsomSwaggerOptions;
             services.AddSwaggerGen(c =>
             {
+                #region WebApiEngine
+
                 //为每个程序集创建文档
                 foreach (var apiAssembly in WebApiEngine.ApiAssemblyCollection)
                 {
@@ -123,6 +125,11 @@ namespace Senparc.Xncf.Swagger.Builder
                 */
 
 
+                #endregion
+
+                c.OperationFilter<SwaggerFileUploadFilter>();
+                options.AddSwaggerGenAction?.Invoke(c);
+
                 if (options.ApiVersions == null)
                 {
                     return;
@@ -164,8 +171,7 @@ namespace Senparc.Xncf.Swagger.Builder
                     return declaringTypeVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
                 });
                 //c.OperationFilter<SwaggerDefaultValueFilter>();
-                c.OperationFilter<SwaggerFileUploadFilter>();
-                options.AddSwaggerGenAction?.Invoke(c);
+               
             });
             return services;
         }

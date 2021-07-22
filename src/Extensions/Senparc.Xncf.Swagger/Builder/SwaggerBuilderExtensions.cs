@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 //using Senparc.Weixin.MP.AdvancedAPIs.Semantic;
 using Senparc.Xncf.Swagger.Models;
@@ -29,6 +30,28 @@ namespace Senparc.Xncf.Swagger.Builder
             })
             .UseSwaggerUI(c =>
             {
+                #region WebApiEngine
+
+                //c.DocumentTitle = "Senparc Weixin SDK Demo API";
+                c.InjectJavascript("/lib/jquery/dist/jquery.min.js");
+                c.InjectJavascript("/js/swagger.js");
+                //c.InjectJavascript("/js/tongji.js");
+                c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+
+                foreach (var co2netApiDocAssembly in WebApiEngine.ApiAssemblyCollection)
+                {
+
+                    //TODO:真实的动态版本号
+                    var verion = WebApiEngine.ApiAssemblyVersions[co2netApiDocAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
+                    var docName = WebApiEngine.GetDocName(co2netApiDocAssembly.Key);
+
+                    //Console.WriteLine($"\tAdd {docName}");
+
+                    c.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{co2netApiDocAssembly.Key} v{verion}");
+                }
+
+                #endregion
+
                 c.RoutePrefix = options.RoutePrefix;
                 c.DocumentTitle = options.ProjectName;
                 if (options.UseCustomIndex)

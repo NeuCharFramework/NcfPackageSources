@@ -10,6 +10,7 @@ using Senparc.CO2NET.AspNet;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AssembleScan;
+using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -50,7 +51,6 @@ namespace Senparc.IntegrationSample
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddSenparcGlobalServices(Configuration);
 
             services.AddRazorPages();
 
@@ -67,6 +67,9 @@ namespace Senparc.IntegrationSample
             services.Configure<SenparcCoreSetting>(Configuration.GetSection("SenparcCoreSetting"));
             services.Configure<SenparcSmsSetting>(Configuration.GetSection("SenparcSmsSetting"));
 
+
+            services.AddSenparcGlobalServices(Configuration);
+
             //自动依赖注入扫描
             services.ScanAssamblesForAutoDI();
             //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
@@ -74,6 +77,9 @@ namespace Senparc.IntegrationSample
             services.AddHttpContextAccessor();
             //激活 Xncf 扩展引擎（必须）
             services.StartEngine(Configuration);
+
+            services.ScanAssamblesForAutoDI();
+
             //指定数据库类型（可选），默认为 SQLiteMemoryDatabaseConfiguration
             services.AddDatabase<SQLServerDatabaseConfiguration>();
             //services.UseDatabase<SqliteMemoryDatabaseConfiguration>();

@@ -43,48 +43,53 @@ namespace Senparc.Xncf.Swagger
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
-            #region 配置动态 API（必须在 Swagger 配置之前）
-
-            var docXmlPath = Path.Combine(ConfigurationHelper.WebHostEnvironment.ContentRootPath, "App_Data", "ApiDocXml");
-            var builder = services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
-
-            #endregion
-
-
-            var serviceProvider = services.BuildServiceProvider();
-            ConfigurationHelper.Configuration = configuration;
-            ConfigurationHelper.HostEnvironment = serviceProvider.GetService<IWebHostEnvironment>();
-            ConfigurationHelper.WebHostEnvironment = serviceProvider.GetService<IWebHostEnvironment>();
-            ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
-
-            services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
-
-            ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>();
-            ConfigurationHelper.CustsomSwaggerOptions.AddSwaggerGenAction = c =>
+            using (var scope = services.BuildServiceProvider().CreateScope())
             {
-                var xmlList = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
-                foreach (var xml in xmlList)
+                var serviceProvider = scope.ServiceProvider;
+                var env = serviceProvider.GetService<IWebHostEnvironment>();
+
+                #region 配置动态 API（必须在 Swagger 配置之前）
+
+                var docXmlPath = Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
+                var builder = services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
+
+                #endregion
+
+                ConfigurationHelper.Configuration = configuration;
+                ConfigurationHelper.HostEnvironment = env;
+                ConfigurationHelper.WebHostEnvironment = env;
+                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
+
+                services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
+
+                ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>()
+                                                                ?? new CustsomSwaggerOptions();
+                ConfigurationHelper.CustsomSwaggerOptions.AddSwaggerGenAction = c =>
                 {
-                    c.IncludeXmlComments(xml, true);
-                }
-            };
-            ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
-            ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => { };
+                    var xmlList = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
+                    foreach (var xml in xmlList)
+                    {
+                        c.IncludeXmlComments(xml, true);
+                    }
+                };
+                ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
+                ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => { };
 
-            //接口文档
-            #region Swagger
+                //接口文档
+                #region Swagger
 
-            services.AddApiVersioning(x =>
-                {
-                    x.DefaultApiVersion = new ApiVersion(1, 0);
-                    x.AssumeDefaultVersionWhenUnspecified = true;
-                    x.ReportApiVersions = true;
-                    x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-                });
-            services.AddSwaggerCustom(docXmlPath);
+                services.AddApiVersioning(x =>
+                    {
+                        x.DefaultApiVersion = new ApiVersion(1, 0);
+                        x.AssumeDefaultVersionWhenUnspecified = true;
+                        x.ReportApiVersions = true;
+                        x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+                    });
+                services.AddSwaggerCustom(docXmlPath);
 
-            #endregion
+                #endregion
+            }
 
             return base.AddXncfModule(services, configuration);
         }
