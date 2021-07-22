@@ -51,7 +51,7 @@ namespace Senparc.Xncf.Swagger
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
                 var docXmlPath = Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
-                var builder = services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                var builder = services.AddMvcCore().AddApiExplorer().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                 services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
 
                 #endregion

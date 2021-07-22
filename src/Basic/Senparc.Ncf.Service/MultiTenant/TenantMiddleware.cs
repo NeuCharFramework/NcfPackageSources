@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
-using Senparc.Ncf.Core.Cache;
-using Senparc.Ncf.Core.Config;
-using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.Models.DataBaseModel;
-using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Threading.Tasks;
 

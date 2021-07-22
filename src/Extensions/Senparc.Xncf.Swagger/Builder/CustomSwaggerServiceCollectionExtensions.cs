@@ -170,6 +170,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
                     return declaringTypeVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
                 });
+
                 //c.OperationFilter<SwaggerDefaultValueFilter>();
                
             });
