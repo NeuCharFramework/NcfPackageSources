@@ -41,7 +41,7 @@ steps:
   inputs:
     command: 'custom'
     custom: 'dotnet'
-    arguments: '--info'
+    arguments: '--list-sdks'
   
 
 - task: NuGetCommand@2
