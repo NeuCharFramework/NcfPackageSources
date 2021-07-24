@@ -5,6 +5,7 @@ using Senparc.CO2NET.WebApi;
 using Senparc.Xncf.Swagger.Filters;
 using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
+using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.IO;
@@ -140,6 +141,38 @@ namespace Senparc.Xncf.Swagger.Builder
                 //    c.SwaggerDoc(version, new OpenApiInfo { Title = options.ProjectName, Version = version });
                 //}
 
+                //分组显示  https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo))
+                    {
+                        return false;
+                    }
+
+                    //获取方法上的特性
+                    var versions = methodInfo.GetCustomAttributes(true)
+                                              .OfType<SwaggerOperationAttribute>()
+                                              .Select(z => z.Tags[0].Split(':')[0]);
+
+                    //获取类上的特性
+                    if (versions?.Count() == 0)
+                    {
+                        versions = methodInfo.DeclaringType.GetCustomAttributes(true)
+                        .OfType<SwaggerOperationAttribute>()
+                          .Select(z => z.Tags[0].Split(':')[0]);
+                    }
+
+                    if (versions?.Count() == 0)
+                    {
+                        return false;//不符合要求的都不显示
+                    }
+
+
+                    //docName: $"{neucharApiDocAssembly.Key}-v1"
+                    return versions.Any(z => docName.StartsWith(z));
+                });
+
+
 
                 //分组  -- 当前分组策略无效，会导致所有 API 都不显示，暂时停用   —— Jeffrey Su 2021.7.22
                 //c.TagActionsBy(s =>
@@ -174,7 +207,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 //});
 
                 //c.OperationFilter<SwaggerDefaultValueFilter>();
-               
+
             });
             return services;
         }
