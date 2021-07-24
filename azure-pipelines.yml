@@ -40,7 +40,7 @@ steps:
   displayName: 'ViewVersion'
   inputs:
     command: 'custom'
-    custom: 'dotnet'
+    custom: ''
     arguments: '--info'
   
 
