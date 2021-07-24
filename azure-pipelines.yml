@@ -37,12 +37,10 @@ steps:
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
-  displayName: 'ViewVersion'
+  displayName: 'dotnet --list-sdks '
   inputs:
-    command: 'custom'
-    custom: 'dotnet'
-    arguments: '--list-sdks'
-  
+    command: custom
+    custom: '--list-sdks '
 
 - task: NuGetCommand@2
   inputs:
