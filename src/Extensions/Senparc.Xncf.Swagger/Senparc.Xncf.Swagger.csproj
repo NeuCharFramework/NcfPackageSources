@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
-		<LangVersion>lastest</LangVersion>
+		<!--<LangVersion>lastest</LangVersion>-->
+		<LangVersion>preview</LangVersion>
 		<Version>0.1.2.1-beta3</Version>
 		<AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Swagger</RootNamespace>
