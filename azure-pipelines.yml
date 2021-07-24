@@ -35,6 +35,14 @@ steps:
     packageType: 'sdk'
     includePreviewVersions: true
 
+- task: DotNetCoreCLI@2
+  displayName: 'ViewVersion'
+  inputs:
+    command: 'custom'
+    custom: 'dotnet'
+    arguments: '--version'
+  
+
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
