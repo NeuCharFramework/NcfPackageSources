@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.2.1</PackageVersion>
+		<PackageVersion>0.2.3</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>JeffreySu</Authors>
@@ -12,7 +12,7 @@
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<ContentTargetFolders>content</ContentTargetFolders>
-		<!-- IncludeBuildOutput=fals 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
+		<!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
 		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
@@ -21,6 +21,7 @@
 		<PackageReleaseNotes>
 			v0.1 创世
 			v0.1.7 删除无用的日志文件
+			v0.2.3 添加 UseWebApi 选项
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
@@ -41,7 +42,9 @@
 	  <None Remove="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="readme.md" />
+	  <Content Include="readme.md">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="templates\template1\App_Data\SenparcTraceLog\" />

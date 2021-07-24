@@ -13,7 +13,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.MySql
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlHelper.GetMySqlValueGenerationStrategy()/*MySqlValueGenerationStrategy.IdentityColumn*/)),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlHelper.GetMySqlValueGenerationStrategy()/*MySqlValueGenerationStrategy.IdentityColumn*/),
                     Flag = table.Column<bool>(nullable: false),
                     AddTime = table.Column<DateTime>(nullable: false),
                     LastUpdateTime = table.Column<DateTime>(nullable: false),
