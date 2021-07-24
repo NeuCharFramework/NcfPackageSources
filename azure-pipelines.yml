@@ -13,7 +13,7 @@ variables:
   solution: '**/NcfPackageSources.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  MSBuildSDKsPath: 'C:\hostedtoolcache\windows\dotnet\sdk\6.0.100-preview.4.21255.9\Sdks'
+  mSBuildSDKsPath: 'C:\hostedtoolcache\windows\dotnet\sdk\6.0.100-preview.6.21355.2\Sdks'
 
 steps:
 
@@ -32,7 +32,7 @@ steps:
 - task: UseDotNet@2
   displayName: 'Use .NET SDK 6'
   inputs:
-    version: '6.x'
+    version: '6.0.100-preview.6.21355.2'
     packageType: 'sdk'
     includePreviewVersions: true
 
