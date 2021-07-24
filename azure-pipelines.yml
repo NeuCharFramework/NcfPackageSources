@@ -41,7 +41,7 @@ steps:
   inputs:
     command: 'custom'
     custom: 'dotnet'
-    arguments: '--version'
+    arguments: '--info'
   
 
 - task: NuGetCommand@2
