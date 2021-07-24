@@ -13,7 +13,7 @@ variables:
   solution: '**/NcfPackageSources.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  mSBuildSDKsPath: 'C:\hostedtoolcache\windows\dotnet\sdk\6.0.100-preview.6.21355.2\Sdks'
+  msBuildSDKsPath: 'C:\hostedtoolcache\windows\dotnet\sdk\6.0.100-preview.6.21355.2\Sdks'
 
 steps:
 
@@ -34,6 +34,7 @@ steps:
   inputs:
     version: '6.0.100-preview.6.21355.2'
     packageType: 'sdk'
+    performMultiLevelLookup: true
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
