@@ -40,14 +40,13 @@ namespace Senparc.Xncf.Swagger.Builder
 
                 foreach (var co2netApiDocAssembly in WebApiEngine.ApiAssemblyCollection)
                 {
-
                     //TODO:真实的动态版本号
                     var verion = WebApiEngine.ApiAssemblyVersions[co2netApiDocAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
                     var docName = WebApiEngine.GetDocName(co2netApiDocAssembly.Key);
 
                     //Console.WriteLine($"\tAdd {docName}");
 
-                    c.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{co2netApiDocAssembly.Key} v{verion}");
+                    c.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{co2netApiDocAssembly.Key}");
                 }
 
                 #endregion
