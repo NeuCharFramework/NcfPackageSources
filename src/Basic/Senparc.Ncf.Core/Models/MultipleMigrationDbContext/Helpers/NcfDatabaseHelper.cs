@@ -11,6 +11,11 @@ namespace Senparc.Ncf.Core.Models
     public static class NcfDatabaseHelper
     {
         /// <summary>
+        /// 系统表的数据库前缀，使用此前缀，将使用 __EFMigrationsHistory 表储存迁移记录，取代模块自定义表
+        /// </summary>
+        public const string SYSTEM_UNIQUE_PREFIX = "SYSTEM";
+
+        /// <summary>
         /// 获取 EF Code First MigrationHistory 数据库表名
         /// </summary>
         /// <returns></returns>
@@ -18,6 +23,10 @@ namespace Senparc.Ncf.Core.Models
         {
             if (!databaseUniquePrefix.IsNullOrWhiteSpace())
             {
+                if (databaseUniquePrefix == SYSTEM_UNIQUE_PREFIX)
+                {
+                    return "__EFMigrationsHistory";
+                }
                 return "__" + databaseUniquePrefix + "_EFMigrationsHistory";
             }
             else
