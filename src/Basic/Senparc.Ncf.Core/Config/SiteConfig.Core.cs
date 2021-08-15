@@ -158,6 +158,11 @@ namespace Senparc.Ncf.Core.Config
         /// </summary>
         public static readonly bool IsUnitTest = false;
 
+        /// <summary>
+        /// 是否正在进行安装，如果是，则不抛出监测安装的异常
+        /// </summary>
+        public static bool IsInstalling = false;
+
         public static int PageViewCount { get; set; } //网站启动后前台页面浏览量
 
         //异步线程
