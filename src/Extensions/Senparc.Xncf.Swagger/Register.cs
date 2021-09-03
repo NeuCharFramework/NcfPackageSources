@@ -34,7 +34,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.2";//必须填写版本号
+        public override string Version => "0.1.3";//必须填写版本号
 
         public override string MenuName => "接口说明文档";
 
@@ -57,7 +57,17 @@ namespace Senparc.Xncf.Swagger
 
                 var docXmlPath = ApiDocXmlPathFunc?.Invoke(env);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
                 var builder = services.AddMvcCore().AddApiExplorer().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-                services.AddAndInitDynamicApi(builder, docXmlPath, ApiRequestMethod.Post, null, 400, false, true, m => null);
+                services.AddAndInitDynamicApi(builder, options =>
+                {
+                    options.DocXmlPath = docXmlPath;
+                    options.DefaultRequestMethod = ApiRequestMethod.Get;
+                    options.BaseApiControllerType = null;
+                    options.CopyCustomAttributes = true;
+                    options.TaskCount = Environment.ProcessorCount * 4;
+                    options.ShowDetailApiLog = true;
+                    options.AdditionalAttributeFunc = null;
+                    options.ForbiddenExternalAccess = true;
+                });
 
                 #endregion
 
@@ -68,8 +78,8 @@ namespace Senparc.Xncf.Swagger
 
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
 
-                ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>()
-                                                                ?? new CustsomSwaggerOptions();
+                ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger")
+                                                                .Get<CustsomSwaggerOptions>() ?? new CustsomSwaggerOptions();
                 ConfigurationHelper.CustsomSwaggerOptions.AddSwaggerGenAction = c =>
                 {
                     var xmlList = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
