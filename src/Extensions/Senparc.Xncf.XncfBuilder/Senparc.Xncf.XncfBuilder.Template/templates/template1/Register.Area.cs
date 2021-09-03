@@ -19,8 +19,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
 		public string HomeUrl => "/Admin/Template_XncfName/Index";
 
 		public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
-			 new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o"),
+						 new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+#if (UseSample)
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+#endif
 			 		};
 
 		public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
@@ -35,10 +37,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
 			return builder;
 		}
 
-		#endregion
+#endregion
 
-		#region IXncfRazorRuntimeCompilation 接口
+#region IXncfRazorRuntimeCompilation 接口
 		public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Template_OrgName.Xncf.Template_XncfName"));
-		#endregion
+#endregion
 	}
 }
