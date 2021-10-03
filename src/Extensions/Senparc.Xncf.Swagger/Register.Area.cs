@@ -1,14 +1,10 @@
 //using Enyim.Caching.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Config;
-using Senparc.Xncf.Swagger.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 

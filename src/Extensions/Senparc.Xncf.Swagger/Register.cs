@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
@@ -17,6 +11,9 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.Swagger.Builder;
 using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Senparc.Xncf.Swagger
 {

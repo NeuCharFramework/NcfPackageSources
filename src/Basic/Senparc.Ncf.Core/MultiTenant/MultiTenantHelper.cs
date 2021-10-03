@@ -4,8 +4,6 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Senparc.Ncf.Core.MultiTenant
 {
@@ -14,8 +12,6 @@ namespace Senparc.Ncf.Core.MultiTenant
     /// </summary>
     public static class MultiTenantHelper
     {
-        
-
         /// <summary>
         /// 获取 RequestTenantInfo，并且检查其是否匹配
         /// </summary>

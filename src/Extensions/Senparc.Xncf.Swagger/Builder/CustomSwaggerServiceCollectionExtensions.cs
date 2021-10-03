@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Senparc.CO2NET.WebApi;
 using Senparc.Xncf.Swagger.Filters;
-using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
