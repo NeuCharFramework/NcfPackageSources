@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.10.129-beta3</Version>
+    <Version>0.11.0-beta3</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -26,6 +26,7 @@
 			v0.1.103 添加检查数据库功能
 			v0.1.106 添加导出数据库功能
 			v0.5.0 添加可配置备份路径、周期，及自动备份功能
+			v0.11.0 重构 DDD 文件结构
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -49,10 +50,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Models\Dto\**" />
-    <EmbeddedResource Remove="Models\Dto\**" />
-    <None Remove="Models\Dto\**" />
+    <Compile Include="..ACL\Class1.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
@@ -69,4 +69,11 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ACL\Port\" />
+    <Folder Include="Domain\Exceptions\" />
+    <Folder Include="OHS\" />
+    <Folder Include="PL\" />
+  </ItemGroup>
+
 </Project>

@@ -16,6 +16,8 @@ using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.DatabaseToolkit.Functions
 {
+    //TODO:改成AOP，标注即可开放
+
     public class BackupDatabase : FunctionBase
     {
         public enum BackupDatabaseOptions

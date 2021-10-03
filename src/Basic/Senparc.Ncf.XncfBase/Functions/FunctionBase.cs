@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase
 {
+    //TODO:升级成AOP，标注即可开放
+
     public abstract class FunctionBase : IXncfFunction
     {
         /// <summary>
