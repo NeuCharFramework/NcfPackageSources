@@ -22,7 +22,5 @@ namespace Senparc.Xncf.DatabaseToolkit.Domain.Services
             }
             return obj.IsAutoBackup();// TO DTO
         }
-
-        //TODO: Modify
     }
 }

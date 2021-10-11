@@ -1,8 +1,5 @@
-﻿using Senparc.CO2NET.Exceptions;
+﻿using Senparc.Ncf.Core.AppServices.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Senparc.Ncf.Core.Models.AppServices;
 
 namespace Senparc.Xncf.DatabaseToolkit.Domain.Exceptions
 {

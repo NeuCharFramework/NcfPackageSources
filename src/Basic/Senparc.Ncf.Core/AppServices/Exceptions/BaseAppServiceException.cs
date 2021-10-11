@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Models.AppServices
+namespace Senparc.Ncf.Core.AppServices.Exceptions
 {
     public class BaseAppServiceException : BaseException
     {
