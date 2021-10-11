@@ -16,6 +16,22 @@ namespace Senparc.Xncf.DatabaseToolkit
         /// </summary>
         [Required]
         public int BackupCycleMinutes { get; private set; }
+
+
+        /// <summary>
+        /// 是否已经启用备份
+        /// </summary>
+        /// <returns></returns>
+        internal bool IsAutoBackup()
+        {
+            return this.BackupCycleMinutes > 0;
+        }
+
+        internal void ChangeBackupCycleMinutes(int bakupCycleMinutes) {
+
+            this.BackupCycleMinutes = bakupCycleMinutes;
+        }
+
         /// <summary>
         /// 备份物理路径
         /// </summary>

@@ -53,8 +53,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Senparc.CO2NET" Version="1.5.2-preview3" />
-    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="0.5.2-preview3" />
+    <PackageReference Include="Senparc.CO2NET" Version="1.5.2-preview4" />
+    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="0.5.2-preview4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />

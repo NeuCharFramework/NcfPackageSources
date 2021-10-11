@@ -18,6 +18,8 @@ namespace Senparc.Ncf.Core.Cache
      * 2、避免使用 INcfDbData，或者避免使用 BaseCache（因为 INcfDbData 默认注入对象为 NCF 模板中的 SenparcEntities，继承自 SenparcEntitiesBase）
      */
 
+    //TODO:临时增加的租户，也需要加入到缓存中
+
     /// <summary>
     /// 多租户信息缓存
     /// </summary>
@@ -40,7 +42,7 @@ namespace Senparc.Ncf.Core.Cache
             List<TenantInfo> list = null;
             try
             {
-                _senparcEntitiesMultiTenant.SetMultiTenantEnable(false);
+                _senparcEntitiesMultiTenant.SetMultiTenantEnable(false);//TODO:此处有线程安全问题，TenantInfos不具备多租户属性可以直接查询
                 list = await _senparcEntitiesMultiTenant.TenantInfos.Where(z => z.Enable).ToListAsync();
             }
             finally
