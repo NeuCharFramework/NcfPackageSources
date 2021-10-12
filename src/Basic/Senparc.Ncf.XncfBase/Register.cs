@@ -127,6 +127,8 @@ namespace Senparc.Ncf.XncfBase
                                 SetLog(sb, result);
                             }
 
+                            //配置 FunctionRender
+
                         }
                     }
                 }

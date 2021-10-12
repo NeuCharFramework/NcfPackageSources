@@ -9,5 +9,11 @@ namespace Senparc.Ncf.Core.AppServices
 
     public class BaseAppService : IBaseAppService
     {
+        protected IServiceProvider ServiceProvider { get; private set; }
+
+        public BaseAppService(IServiceProvider serviceProvider)
+        {
+            this.ServiceProvider = serviceProvider;
+        }
     }
 }
