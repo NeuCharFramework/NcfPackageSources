@@ -24,6 +24,8 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -36,6 +38,8 @@ namespace Senparc.Ncf.XncfBase
         /// 所有线程的集合
         /// </summary>
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; } = new ConcurrentDictionary<ThreadInfo, Thread>();
+
+        public static FunctionRenderCollection FunctionRenderCollection { get; set; } = new FunctionRenderCollection();
 
         /// <summary>
         /// 所有自动注册 Xncf 的数据库的 ConfigurationMapping 对象
@@ -128,7 +132,20 @@ namespace Senparc.Ncf.XncfBase
                             }
 
                             //配置 FunctionRender
+                            if (t.IsSubclassOf(typeof(AppServiceBase)))
+                            {
+                                //遍历其中具体方法
+                                var methods = t.GetMethods();
+                                foreach (var method in methods)
+                                {
+                                    var attr = method.GetCustomAttributes(typeof(FunctionRenderAttribute), true).FirstOrDefault() as FunctionRenderAttribute;
+                                    if (attr != null)
+                                    {
+                                        FunctionRenderCollection.Add(method, attr);
+                                    }
+                                }
 
+                            }
                         }
                     }
                 }
@@ -235,6 +252,15 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(Senparc.Ncf.Repository.ClientRepositoryBase<>));
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
             services.AddScoped(typeof(ServiceBase<>));
+            services.AddScoped(typeof(ServiceBase<>));
+
+            //AppService
+            services.AddScoped(typeof(AppRequestBase));
+            services.AddScoped(typeof(IAppRequest), typeof(AppRequestBase));
+
+            services.AddScoped(typeof(AppResponseBase));
+            services.AddScoped(typeof(AppResponseBase<>));
+            services.AddScoped(typeof(IAppService), typeof(AppResponseBase));
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingBase<>));
@@ -244,7 +270,7 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder<>));
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
-           
+
             //支持 AutoMapper
             //引入当前系统
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());

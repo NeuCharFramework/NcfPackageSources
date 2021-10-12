@@ -1,10 +1,13 @@
-﻿using Senparc.Ncf.Core.AppServices.Models;
+﻿using Senparc.Ncf.Core.AppServices;
 using System;
 using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.FunctionRenders
 {
-    public class BaseFunctionAppRequest : BaseAppRequest
+    /// <summary>
+    /// FunctionAppRequest 基类
+    /// </summary>
+    public class FunctionAppRequestBase : AppRequestBase
     {
         public virtual Task LoadData(IServiceProvider serviceProvider)
         {

@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.AppServices
 {
-    public interface IBaseAppService
+    public interface IAppServiceBase
     { }
 
-    public class BaseAppService : IBaseAppService
+    public abstract class AppServiceBase : IAppServiceBase
     {
         protected IServiceProvider ServiceProvider { get; private set; }
 
-        public BaseAppService(IServiceProvider serviceProvider)
+        public AppServiceBase(IServiceProvider serviceProvider)
         {
             this.ServiceProvider = serviceProvider;
         }

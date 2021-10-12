@@ -16,16 +16,16 @@ namespace Senparc.Ncf.Core.AppServices
     /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
     /// </summary>
     [Serializable]
-    public class BaseAppResponse : IAppService
+    public class AppResponseBase : IAppService
     {
         public int StateCode { get; set; }
         public bool Success { get; set; }
         public string ErrorMessage { get; set; }
         public object Data { get; set; }
 
-        public BaseAppResponse() { }
+        public AppResponseBase() { }
 
-        public BaseAppResponse(int stateCode, bool success, string errorMessage, object data)
+        public AppResponseBase(int stateCode, bool success, string errorMessage, object data)
         {
             StateCode = stateCode;
             Success = success;
@@ -39,13 +39,13 @@ namespace Senparc.Ncf.Core.AppServices
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class BaseAppResponse<T> : BaseAppResponse, IAppService
+    public class AppResponseBase<T> : AppResponseBase, IAppService
     {
-        public BaseAppResponse() : base() { }
+        public AppResponseBase() : base() { }
 
         public new T Data { get => (T)base.Data; set => base.Data = value; }
 
-        public BaseAppResponse(int stateCode, bool success, string errorMessage, T data)
+        public AppResponseBase(int stateCode, bool success, string errorMessage, T data)
             : base(stateCode, success, errorMessage, data)
         {
         }

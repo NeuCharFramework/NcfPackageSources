@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.AppServices;
-using Senparc.Ncf.Core.AppServices.Models;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
-    public class DatabaseConfigAppService : BaseAppService
+    public class DatabaseConfigAppService : AppServiceBase
     {
         public DatabaseConfigAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -24,10 +23,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 显示当前的数据库配置类型
         /// </summary>
         /// <returns></returns>
-        [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型")]
-        public BaseAppResponse<string> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
+        [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
+        public AppResponseBase<string> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
         {
-            return AppServiceHelper.GetResponse<BaseAppResponse<string>, string>(response =>
+            return AppServiceHelper.GetResponse<AppResponseBase<string>, string>(response =>
             {
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
                 var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
@@ -36,7 +35,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
 
-        public class SetConfigFunctionAppRequest : BaseFunctionAppRequest
+        public class SetConfigFunctionAppRequest : FunctionAppRequestBase
         {
             [Required]
             [MaxLength(300)]
@@ -59,10 +58,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             }
         }
 
-        [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数")]
-        public BaseAppResponse<string> SetConfig(SetConfigFunctionAppRequest request)
+        [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(Register))]
+        public AppResponseBase<string> SetConfig(SetConfigFunctionAppRequest request)
         {
-            return AppServiceHelper.GetResponse<BaseAppResponse<string>, string>(response =>
+            return AppServiceHelper.GetResponse<AppResponseBase<string>, string>(response =>
             {
                 var configService = base.ServiceProvider.GetService<ServiceBase<DbConfig>>();
                 var config = configService.GetObject(z => true);

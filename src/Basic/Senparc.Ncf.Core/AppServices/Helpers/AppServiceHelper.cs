@@ -17,7 +17,7 @@ namespace Senparc.Ncf.Core.AppServices
         /// <param name="exceptionHandler"></param>
         /// <returns></returns>
         public static TResponse GetResponse<TResponse,TData>(Func<TResponse,TData> func, Action<Exception, TResponse> exceptionHandler = null)
-            where TResponse : BaseAppResponse<TData>, new()
+            where TResponse : AppResponseBase<TData>, new()
         {
             var response = new TResponse();
             if (func == null)

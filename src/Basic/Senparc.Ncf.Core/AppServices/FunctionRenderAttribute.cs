@@ -15,11 +15,16 @@ namespace Senparc.Ncf.Core.AppServices
         /// 说明
         /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// 分类到 XNCF 模块的 Regster 类型
+        /// </summary>
+        public Type RegisterType { get; set; }
 
-        public FunctionRenderAttribute(string name, string description)
+        public FunctionRenderAttribute(string name, string description, Type registerType/*TODO：可提供系统模块的默认值*/)
         {
             Name = name;
             Description = description;
+            RegisterType = registerType;
         }
 
     }

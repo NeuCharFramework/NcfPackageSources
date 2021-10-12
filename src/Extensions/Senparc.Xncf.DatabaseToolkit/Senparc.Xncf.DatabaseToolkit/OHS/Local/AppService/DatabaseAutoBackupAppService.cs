@@ -2,15 +2,16 @@
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.DatabaseToolkit.Domain.Services;
 using Senparc.Xncf.DatabaseToolkit.OHS.Local.PL;
+using System;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     [ApiBind()]
-    internal class DatabaseAutoBackupAppService : BaseAppService
+    internal class DatabaseAutoBackupAppService : AppServiceBase
     {
         private readonly DbConfigQueryService _dbConfigQueryService;
 
-        public DatabaseAutoBackupAppService(DbConfigQueryService dbConfigQueryService)
+        public DatabaseAutoBackupAppService(IServiceProvider serviceProvider, DbConfigQueryService dbConfigQueryService) : base(serviceProvider)
         {
             this._dbConfigQueryService = dbConfigQueryService;
         }
