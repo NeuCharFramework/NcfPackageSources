@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.AppServices
 {
-    public interface IAppService
+    public interface IAppResponse
     {
         int StateCode { get; set; }
         bool Success { get; set; }
@@ -16,7 +16,7 @@ namespace Senparc.Ncf.Core.AppServices
     /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
     /// </summary>
     [Serializable]
-    public class AppResponseBase : IAppService
+    public class AppResponseBase : IAppResponse
     {
         public int StateCode { get; set; }
         public bool Success { get; set; }
@@ -39,7 +39,7 @@ namespace Senparc.Ncf.Core.AppServices
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class AppResponseBase<T> : AppResponseBase, IAppService
+    public class AppResponseBase<T> : AppResponseBase, IAppResponse
     {
         public AppResponseBase() : base() { }
 

@@ -136,15 +136,21 @@ namespace Senparc.Ncf.XncfBase
                             {
                                 //遍历其中具体方法
                                 var methods = t.GetMethods();
+                                var hasFunctionMethod = false;
                                 foreach (var method in methods)
                                 {
                                     var attr = method.GetCustomAttributes(typeof(FunctionRenderAttribute), true).FirstOrDefault() as FunctionRenderAttribute;
                                     if (attr != null)
                                     {
                                         FunctionRenderCollection.Add(method, attr);
+                                        hasFunctionMethod = true;
                                     }
                                 }
 
+                                if (hasFunctionMethod)
+                                {
+                                    services.AddScoped(t);
+                                }
                             }
                         }
                     }
@@ -260,7 +266,7 @@ namespace Senparc.Ncf.XncfBase
 
             services.AddScoped(typeof(AppResponseBase));
             services.AddScoped(typeof(AppResponseBase<>));
-            services.AddScoped(typeof(IAppService), typeof(AppResponseBase));
+            services.AddScoped(typeof(IAppResponse), typeof(AppResponseBase));
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingBase<>));
