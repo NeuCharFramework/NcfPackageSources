@@ -31,7 +31,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         public FunctionRenderBag Add(MethodInfo methodInfo, FunctionRenderAttribute functionRenderAttribute)
         {
             Type registerType = functionRenderAttribute.RegisterType;
-            if (this[registerType] == null)
+            if (!this.ContainsKey(registerType))
             {
                 this[registerType] = new ConcurrentDictionary<string, FunctionRenderBag>();
             }
