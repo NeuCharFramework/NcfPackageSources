@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.AppServices
 {
-    public interface IAppServiceBase
+    public interface IAppServiceBase//TODO:改名IAppService
     { }
 
     public abstract class AppServiceBase : IAppServiceBase
