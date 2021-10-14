@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.AppServices
             {
                 response.StateCode = 404;
                 response.ErrorMessage = "未提供处理过程";
-                logger.RecordLog("未提供处理过程");
+                logger.Append("未提供处理过程");
                 return response;
             }
 
@@ -42,16 +42,16 @@ namespace Senparc.Ncf.Core.AppServices
             catch (Exception ex)
             {
                 response.Success = false;
-                logger.RecordLog($"发生错误（{ex.GetType().FullName}）：");
-                logger.RecordLog(ex.Message);
-                logger.RecordLog(ex.StackTrace);
+                logger.Append($"发生错误（{ex.GetType().FullName}）：");
+                logger.Append(ex.Message);
+                logger.Append(ex.StackTrace);
 
 
                 if (ex is BaseAppServiceException appEx)
                 {
                     response.StateCode = appEx.StateCode;
                     response.ErrorMessage = appEx.Message;
-                    logger.RecordLog(appEx.InnerException?.StackTrace);
+                    logger.Append(appEx.InnerException?.StackTrace);
                 }
                 else
                 {

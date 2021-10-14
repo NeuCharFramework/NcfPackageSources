@@ -63,7 +63,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(Register))]
         public AppResponseBase<string> SetConfig(SetConfigFunctionAppRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response,logger) =>
+            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
             {
                 var configService = base.ServiceProvider.GetService<ServiceBase<DbConfig>>();
                 var config = configService.GetObject(z => true);
@@ -78,8 +78,15 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 configService.SaveObject(config);
 
-                return "设置已保存！";
-            });
+                var msg = $"设置间隔分钟：{request.BackupCycleMinutes}，路径：{request.BackupPath}";
+                logger.Append(msg);
+                return msg;
+            }, afterFunc: (response, logger) =>
+            {
+                logger.Append($"设置已保存！");
+            },
+            saveLogAfterFinished: true
+            );
         }
 
         #endregion
