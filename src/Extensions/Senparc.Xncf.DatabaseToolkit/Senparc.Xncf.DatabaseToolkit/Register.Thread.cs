@@ -5,7 +5,8 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Threads;
-using Senparc.Xncf.DatabaseToolkit.Functions;
+using Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService;
+using Senparc.Xncf.DatabaseToolkit.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -40,9 +41,9 @@ namespace Senparc.Xncf.DatabaseToolkit
                             }
 
                             //初始化数据库备份方法
-                            BackupDatabase backupDatabase = new BackupDatabase(serviceProvider);
+                            DatabaseBackupAppService backupDatabase = serviceProvider.GetService<DatabaseBackupAppService>();
                             //初始化参数
-                            var backupParam = new BackupDatabase.BackupDatabase_Parameters();
+                            var backupRequest = new DatabaseBackup_BackupRequest();
                             var dbConfigService = serviceProvider.GetService<ServiceBase<DbConfig>>();
                             var dbConfig = await dbConfigService.GetObjectAsync(z => true);
                             var stopBackup = false;
@@ -52,7 +53,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 {
                                     if (SystemTime.NowDiff(dbConfig.LastBackupTime) > TimeSpan.FromMinutes(dbConfig.BackupCycleMinutes))
                                     {
-                                        backupParam.Path = dbConfig.BackupPath;
+                                        backupRequest.Path = dbConfig.BackupPath;
                                         //await backupParam.LoadData(serviceProvider);
                                         //threadInfo.RecordStory("完成备份设置数据载入");
                                     }
@@ -82,19 +83,19 @@ namespace Senparc.Xncf.DatabaseToolkit
 
 
                             //执行备份方法
-                            threadInfo.RecordStory("备份开始：" + backupParam.Path);
-                            var result = backupDatabase.Run(backupParam);
+                            threadInfo.RecordStory("备份开始：" + backupRequest.Path);
+                            var result = backupDatabase.Backup(backupRequest);
                             if (!result.Success)
                             {
-                                threadInfo.RecordStory("执行备份发生异常：" + result.Message);
+                                threadInfo.RecordStory("执行备份发生异常：" + result.Data);
                                 throw new Exception("执行备份发生异常");
                             }
 
                             dbConfig.RecordBackupTime();
                             await dbConfigService.SaveObjectAsync(dbConfig);
 
-                            threadInfo.RecordStory("完成数据库自动备份：" + result.Message);
-                            SenparcTrace.SendCustomLog("完成数据库自动备份", backupParam.Path);
+                            threadInfo.RecordStory("完成数据库自动备份：" + result.Data);
+                            SenparcTrace.SendCustomLog("完成数据库自动备份", backupRequest.Path);
                         }
                     }
                     catch (NcfModuleException ex)

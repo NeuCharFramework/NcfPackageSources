@@ -19,21 +19,6 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
 
-        /// <summary>
-        /// 显示当前的数据库配置类型
-        /// </summary>
-        /// <returns></returns>
-        [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
-        public AppResponseBase<string> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
-        {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
-            {
-                var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-                var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
-                return $"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，数据库类型：{currentDatabaseConfiguration.MultipleDatabaseType}";
-            });
-        }
-
         #region SetConfig
 
         public class SetConfigFunctionAppRequest : FunctionAppRequestBase
@@ -91,5 +76,16 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
         #endregion
 
+
+        [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
+        public AppResponseBase<string> ShowDatabaseConfiguration()
+        {
+            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            {
+                var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
+                var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
+                return logger.Append($"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，数据库类型：{currentDatabaseConfiguration.MultipleDatabaseType}");
+            });
+        }
     }
 }

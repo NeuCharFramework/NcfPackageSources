@@ -36,7 +36,11 @@ namespace Senparc.Ncf.Core.AppServices
 
             try
             {
-                response.Data = func.Invoke(response, logger);
+                var result = func.Invoke(response, logger);
+                if (result != null)
+                {
+                    response.Data = result;
+                };
                 response.Success = true;
             }
             catch (Exception ex)

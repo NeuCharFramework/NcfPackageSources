@@ -29,17 +29,7 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Icon => "fa fa-database";
         public override string Description => "为方便数据库操作提供的工具包。请完全了解本工具各项功能特点后再使用，所有数据库操作都有损坏数据的可能，修改数据库前务必注意数据备份！";
 
-        /// <summary>
-        /// 注册当前模块需要支持的功能模块
-        /// </summary>
-        public override IList<Type> Functions => new[] {
-            typeof(Functions.SetConfig),
-            typeof(Functions.BackupDatabase),
-            typeof(Functions.ShowDatabaseConfiguration),
-            typeof(Functions.ExportSQL),
-            typeof(Functions.CheckUpdate),
-            typeof(Functions.UpdateDatabase),
-        };
+        public override IList<Type> Functions => new List<Type>();
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -66,14 +56,5 @@ namespace Senparc.Xncf.DatabaseToolkit
         }
 
         #endregion
-
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
-        {
-            base.AddAutoMapMapping(profile =>
-            {
-                profile.CreateMap<SetConfigFunctionAppRequest, DbConfig>();
-            });
-            return base.AddXncfModule(services, configuration);
-        }
     }
 }
