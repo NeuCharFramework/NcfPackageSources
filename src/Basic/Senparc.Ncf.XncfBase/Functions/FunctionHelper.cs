@@ -220,7 +220,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,
-                                            selectionList ?? new SelectionList(SelectionType.Unknown), value);
+                                                selectionList ?? new SelectionList(SelectionType.Unknown), value);
                 result.Add(functionParamInfo);
             }
             return result;

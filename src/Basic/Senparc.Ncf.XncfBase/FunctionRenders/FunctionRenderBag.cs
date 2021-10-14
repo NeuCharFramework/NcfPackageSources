@@ -14,7 +14,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             MethodInfo = methodInfo;
             FunctionRenderAttribute = functionRenderAttribute;
             Key = key;
-            FunctionParameterType = MethodInfo?.GetParameters().FirstOrDefault()?.GetType() ?? typeof(FunctionAppRequestBase);
+            FunctionParameterType = MethodInfo?.GetParameters().FirstOrDefault()?.ParameterType ?? typeof(FunctionAppRequestBase);
         }
 
         public string Key { get; set; }
