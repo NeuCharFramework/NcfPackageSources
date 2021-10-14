@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using static Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService.DatabaseConfigAppService;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
@@ -63,5 +66,14 @@ namespace Senparc.Xncf.DatabaseToolkit
         }
 
         #endregion
+
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        {
+            base.AddAutoMapMapping(profile =>
+            {
+                profile.CreateMap<SetConfigFunctionAppRequest, DbConfig>();
+            });
+            return base.AddXncfModule(services, configuration);
+        }
     }
 }

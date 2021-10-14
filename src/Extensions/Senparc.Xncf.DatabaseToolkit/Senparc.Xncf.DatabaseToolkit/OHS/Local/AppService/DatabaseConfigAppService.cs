@@ -34,6 +34,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             });
         }
 
+        #region SetConfig
 
         public class SetConfigFunctionAppRequest : FunctionAppRequestBase
         {
@@ -78,5 +79,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 return "设置已保存！";
             });
         }
+
+        #endregion
+
     }
 }
