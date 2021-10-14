@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,15 +155,11 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// <param name="functionRenderBag">FunctionRenderBag</param>
         /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
         /// <returns></returns>
-        public static async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, FunctionRenderBag? functionRenderBag = null, bool tryLoadData = true)
+        public static async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, FunctionRenderBag functionRenderBag, bool tryLoadData = true)
         {
-            var functionParameterType = functionRenderBag?.GetType();
-            if (functionParameterType == null)
-            {
-                functionParameterType = typeof(FunctionAppRequestBase);
-            }
+            var functionParameterType = functionRenderBag.FunctionParameterType;
 
-            var paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;
+            var paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO:通过 DI 生成
 
             if (tryLoadData && paraObj is FunctionAppRequestBase functionRequestPara)
             {
