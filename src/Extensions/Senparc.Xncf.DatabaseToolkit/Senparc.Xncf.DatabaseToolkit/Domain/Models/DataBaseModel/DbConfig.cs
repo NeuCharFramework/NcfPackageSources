@@ -52,6 +52,13 @@ namespace Senparc.Xncf.DatabaseToolkit
             LastBackupTime = SystemTime.Now.AddDays(-1).DateTime;
         }
 
+        public void SetConfig(int backupCycleMinutes, string backupPath)
+        {
+            BackupCycleMinutes = backupCycleMinutes;
+            BackupPath = backupPath;
+            RecordBackupTime();
+        }
+
         public void RecordBackupTime()
         {
             LastBackupTime = SystemTime.Now.DateTime;

@@ -42,6 +42,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             [MaxLength(300)]
             [Description("自动备份周期（分钟）||0 则为不自动备份")]
             public int BackupCycleMinutes { get; set; }
+
             [Required]
             [MaxLength(300)]
             [Description("备份路径||本地物理路径，如：E:\\Senparc\\Ncf\\NCF.bak")]
@@ -72,7 +73,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 else
                 {
-                    configService.Mapper.Map(request, config);
+                    //configService.Mapper.Map(request, config);
+                    config.SetConfig(request.BackupCycleMinutes, request.BackupPath);
                 }
                 configService.SaveObject(config);
 
