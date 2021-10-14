@@ -6,7 +6,6 @@ using System;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
-    [ApiBind()]
     internal class DatabaseAutoBackupAppService : AppServiceBase
     {
         private readonly DbConfigQueryService _dbConfigQueryService;
@@ -16,9 +15,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             this._dbConfigQueryService = dbConfigQueryService;
         }
 
+        [ApiBind]
         public DatabaseAutoBackup_IsAutoBackupResponse IsAutoBackup()
         {
-            return AppServiceHelper.GetResponse<DatabaseAutoBackup_IsAutoBackupResponse, bool>(response =>
+            return this.GetResponse<DatabaseAutoBackup_IsAutoBackupResponse, bool>((response, logger) =>
                 {
                     return _dbConfigQueryService.IsAutoBackup();
                 });

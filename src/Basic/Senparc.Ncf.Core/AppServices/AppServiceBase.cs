@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.AppServices
 {
-    public interface IAppServiceBase//TODO:改名IAppService
+    public interface IAppService
     { }
 
-    public abstract class AppServiceBase : IAppServiceBase
+    public abstract class AppServiceBase : IAppService
     {
         protected IServiceProvider ServiceProvider { get; private set; }
 

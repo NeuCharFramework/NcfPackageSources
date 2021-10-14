@@ -26,7 +26,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
         public AppResponseBase<string> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
         {
-            return AppServiceHelper.GetResponse<AppResponseBase<string>, string>(response =>
+            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
             {
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
                 var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
@@ -63,7 +63,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(Register))]
         public AppResponseBase<string> SetConfig(SetConfigFunctionAppRequest request)
         {
-            return AppServiceHelper.GetResponse<AppResponseBase<string>, string>(response =>
+            return this.GetResponse<AppResponseBase<string>, string>((response,logger) =>
             {
                 var configService = base.ServiceProvider.GetService<ServiceBase<DbConfig>>();
                 var config = configService.GetObject(z => true);
