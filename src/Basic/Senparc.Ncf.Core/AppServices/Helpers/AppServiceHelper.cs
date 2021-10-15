@@ -41,7 +41,11 @@ namespace Senparc.Ncf.Core.AppServices
                 {
                     response.Data = result;
                 };
-                response.Success = true;
+
+                if (response.Success == null)
+                {
+                    response.Success = true;
+                }
             }
             catch (Exception ex)
             {

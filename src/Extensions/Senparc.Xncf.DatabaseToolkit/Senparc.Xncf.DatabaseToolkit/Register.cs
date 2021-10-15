@@ -29,8 +29,6 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Icon => "fa fa-database";
         public override string Description => "为方便数据库操作提供的工具包。请完全了解本工具各项功能特点后再使用，所有数据库操作都有损坏数据的可能，修改数据库前务必注意数据备份！";
 
-        public override IList<Type> Functions => new List<Type>();
-
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //安装或升级版本时更新数据库

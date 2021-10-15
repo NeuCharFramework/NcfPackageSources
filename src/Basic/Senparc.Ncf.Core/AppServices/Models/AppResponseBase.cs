@@ -7,7 +7,7 @@ namespace Senparc.Ncf.Core.AppServices
     public interface IAppResponse
     {
         int StateCode { get; set; }
-        bool Success { get; set; }
+        bool? Success { get; set; }
         string ErrorMessage { get; set; }
         object Data { get; set; }
     }
@@ -19,13 +19,13 @@ namespace Senparc.Ncf.Core.AppServices
     public class AppResponseBase : IAppResponse
     {
         public int StateCode { get; set; }
-        public bool Success { get; set; }
+        public bool? Success { get; set; }
         public string ErrorMessage { get; set; }
         public object Data { get; set; }
 
         public AppResponseBase() { }
 
-        public AppResponseBase(int stateCode, bool success, string errorMessage, object data)
+        public AppResponseBase(int stateCode, bool? success, string errorMessage, object data)
         {
             StateCode = stateCode;
             Success = success;

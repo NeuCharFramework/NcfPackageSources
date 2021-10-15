@@ -1,17 +1,21 @@
-﻿using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.XncfBase;
-using Senparc.Ncf.XncfBase.Functions;
+﻿using Senparc.Ncf.Core.AppServices;
+using Senparc.Xncf.ChangeNamespace.OHS.PL;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Text;
 
-namespace Senparc.Xncf.ChangeNamespace.Functions
+namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 {
-    public class ChangeNamespace : FunctionBase
+    public class NameSpaceAppService : AppServiceBase
     {
+        public NameSpaceAppService(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        #region Change
+
         public class MatchNamespace
         {
             public string Prefix { get; set; }
@@ -19,55 +23,26 @@ namespace Senparc.Xncf.ChangeNamespace.Functions
             public string NewNamespace { get; set; }
         }
 
-        public class ChangeNamespace_Parameters : IFunctionParameter
+
+        [FunctionRender("修改命名空间", "修改所有源码在 .cs, .cshtml 中的命名空间", typeof(Register))]
+        public AppResponseBase<string> Change(NameSpace_ChangeRequest request)
         {
-            [Required]
-            [MaxLength(300)]
-            [Description("路径||本地物理路径，如：E:\\Senparc\\Ncf\\")]
-            public string Path { get; set; }
-            [Required]
-            [MaxLength(100)]
-            [Description("新命名空间||命名空间根，必须以.结尾，用于替换[Senparc.Ncf.]")]
-            public string NewNamespace { get; set; }
-        }
-
-
-        //注意：Name 必须在单个 Xncf 模块中唯一！
-        public override string Name => "修改命名空间";
-
-        public override string Description => "修改所有源码在 .cs, .cshtml 中的命名空间";
-
-        public override Type FunctionParameterType => typeof(ChangeNamespace_Parameters);
-
-        public ChangeNamespace(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
-
-        public string OldNamespaceKeyword { get; set; } = "Senparc.";
-
-        /// <summary>
-        /// 运行
-        /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
-        public override FunctionResult Run(IFunctionParameter param)
-        {
-            return FunctionHelper.RunFunction<ChangeNamespace_Parameters>(param, (typeParam, sb, result) =>
+            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
             {
-                base.RecordLog(sb, "开始运行 ChangeNamespace");
+                logger.Append("开始运行 ChangeNamespace");
 
-                var path = typeParam.Path;
-                var newNamespace = typeParam.NewNamespace;
+                var path = request.Path;
+                var newNamespace = request.NewNamespace;
+                var OldNamespaceKeyword = request.OldNamespaceKeyword;
 
                 if (!Directory.Exists(path))
                 {
-                    base.RecordLog(sb, $"path:{path} not exist");
-                    result.Success = false;
-                    result.Message = "路径不存在！";
-                    return;
+                    logger.Append($"path:{path} not exist");
+                    response.Success = false;
+                    return logger.Append("路径不存在！");
                 }
 
-                base.RecordLog(sb, $"path:{path} newNamespace:{newNamespace}");
+                logger.Append($"path:{path} newNamespace:{newNamespace}");
 
                 var meetRules = new List<MeetRule>() {
                 new MeetRule("namespace",OldNamespaceKeyword,$"{newNamespace}","*.cs"),
@@ -87,7 +62,7 @@ namespace Senparc.Xncf.ChangeNamespace.Functions
                     //扫描所有文件，将满足这一条规则替换条件的对象记录下来
                     foreach (var file in files)
                     {
-                        base.RecordLog(sb, $"扫描文件类型:{item.FileType} 数量:{files.Length}");
+                        logger.Append($"扫描文件类型:{item.FileType} 数量:{files.Length}");
 
                         //string content = null;
                         using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
@@ -155,7 +130,7 @@ namespace Senparc.Xncf.ChangeNamespace.Functions
                                 //替换旧的NameSpace
                                 if (content.IndexOf(oldNamespaceFull) > -1)
                                 {
-                                    base.RecordLog(sb, $"文件命中:{file} -> {oldNamespaceFull}");
+                                    logger.Append($"文件命中:{file} -> {oldNamespaceFull}");
                                     var newNameSpaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.NewNamespace}";
                                     content = content.Replace(oldNamespaceFull, newNameSpaceFull);
                                 }
@@ -175,9 +150,64 @@ namespace Senparc.Xncf.ChangeNamespace.Functions
 
                 }
 
-                result.Log = sb.ToString();
-                result.Message = "更新成功！您还可以使用【还原命名空间】功能进行还原！";
+                return logger.Append("更新成功！您还可以使用【还原命名空间】功能进行还原！");
+
+            }, saveLogAfterFinished: true);
+        }
+
+        #endregion
+
+        [FunctionRender("还原命名空间", "还原所有源码在 .cs, .cshtml 中的命名空间为 NCF 默认（建议在断崖式更新之前进行此操作）。", typeof(Register))]
+        public AppResponseBase<string> Restore(NameSpace_RestoreRequest request)
+        {
+            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            {
+                var changeNamespaceParam = new NameSpace_ChangeRequest()
+                {
+                    NewNamespace = "Senparc.",
+                    Path = request.Path
+                };
+
+                changeNamespaceParam.OldNamespaceKeyword = request.MyNamespace;
+                var newesult = this.Change(changeNamespaceParam);
+                if (newesult.Success == true)
+                {
+                    response.Data = "还原命名空间成功！";
+                }
+                return null;
             });
         }
+
+
+        [FunctionRender("下载官方 NCF 源码", "修改所有源码在 .cs, .cshtml 中的命名空间。", typeof(Register))]
+        public AppResponseBase<string> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
+        {
+            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            {
+                if (Enum.TryParse<NameSpace_DownloadSourceCodeRequest.Parameters_Site>(request.Site.SelectedValues.FirstOrDefault(), out var siteType))
+                {
+                    switch (siteType)
+                    {
+                        case NameSpace_DownloadSourceCodeRequest.Parameters_Site.GitHub:
+                            response.Data = "https://github.com/NeuCharFramework/NCF/archive/master.zip";
+                            break;
+                        case NameSpace_DownloadSourceCodeRequest.Parameters_Site.Gitee:
+                            response.Data = "https://gitee.com/NeuCharFramework/NCF/repository/archive/master.zip";
+                            break;
+                        default:
+                            response.Data = "未知的下载地址";
+                            response.Success = false;
+                            break;
+                    }
+                }
+                else
+                {
+                    response.Data = "未知的下载参数";
+                    response.Success = false;
+                }
+                return null;
+            });
+        }
+
     }
 }
