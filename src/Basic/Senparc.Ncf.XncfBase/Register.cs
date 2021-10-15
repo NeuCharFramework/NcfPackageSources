@@ -198,10 +198,10 @@ namespace Senparc.Ncf.XncfBase
                             }
                             XncfRegisterManager.RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
                             services.AddScoped(type);//DI 中注册
-                            foreach (var functionType in register.Functions)
-                            {
-                                services.AddScoped(functionType);//DI 中注册
-                            }
+                            //foreach (var functionType in register.Functions)
+                            //{
+                            //    services.AddScoped(functionType);//DI 中注册
+                            //}
                         }
 
                         //初始化数据库

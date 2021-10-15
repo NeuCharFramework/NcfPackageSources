@@ -52,10 +52,10 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         string Description { get; }
 
-        /// <summary>
-        /// 注册方法，注册的顺序决定了界面中排列的顺序
-        /// </summary>
-        IList<Type> Functions { get; }
+        ///// <summary>
+        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///// </summary>
+        //IList<Type> Functions { get; }
 
         /// <summary>
         /// 添加 AutoMap 映射

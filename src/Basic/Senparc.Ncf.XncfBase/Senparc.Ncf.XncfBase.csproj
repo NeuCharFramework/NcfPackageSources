@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>-->
-    <Version>0.7-beta4.5.4</Version>
+    <Version>0.7-beta4.6</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,6 +24,7 @@
 			v0.3.303 提供 IXncfThread 接口
 			v0.3.305 添加 XncfAutoConfigurationMapping 特性
 			v0.3.501 添加 Register.IsRegistered 方法
+			v0.7 升级 Function 为 FunctionRender
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

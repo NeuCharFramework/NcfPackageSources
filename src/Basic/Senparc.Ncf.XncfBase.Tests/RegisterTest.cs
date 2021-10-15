@@ -21,7 +21,7 @@ namespace Senparc.Ncf.XncfBase.Tests
 
         public override string Description => "这是测试模块的介绍";
 
-        public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
+        //public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
 
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
