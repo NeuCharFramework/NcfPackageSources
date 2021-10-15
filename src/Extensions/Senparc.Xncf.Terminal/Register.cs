@@ -70,12 +70,12 @@ namespace Senparc.Xncf.Terminal
                                       $"\r\n'XCOPY'," +
                                       $"\r\n'WMIC'";
 
-        /// <summary>
-        /// 注册当前模块需要支持的功能模块
-        /// </summary>
-        public override IList<Type> Functions => new[] { 
-            typeof(Functions.Terminal),
-        };
+        ///// <summary>
+        ///// 注册当前模块需要支持的功能模块
+        ///// </summary>
+        //public override IList<Type> Functions => new[] { 
+        //    typeof(Functions.Terminal),
+        //};
 
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

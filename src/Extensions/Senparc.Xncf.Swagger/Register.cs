@@ -39,7 +39,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Description => "接口说明文档";
 
-        public override IList<Type> Functions => new Type[] {  /*typeof(BuildXncf)*/ };
+        //public override IList<Type> Functions => new Type[] {  /*typeof(BuildXncf)*/ };
 
         #endregion
 

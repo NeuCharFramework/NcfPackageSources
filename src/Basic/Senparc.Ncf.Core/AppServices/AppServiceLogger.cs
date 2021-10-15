@@ -27,5 +27,10 @@ namespace Senparc.Ncf.Core.AppServices
         {
             SenparcTrace.SendCustomLog(name, GetLogs());
         }
+
+        public override string ToString()
+        {
+            return GetLogs();
+        }
     }
 }
