@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 {
@@ -25,9 +26,9 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
 
         [FunctionRender("修改命名空间", "修改所有源码在 .cs, .cshtml 中的命名空间", typeof(Register))]
-        public AppResponseBase<string> Change(NameSpace_ChangeRequest request)
+        public async Task<StringAppResponse> Change(NameSpace_ChangeRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 logger.Append("开始运行 ChangeNamespace");
 
@@ -158,9 +159,9 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         #endregion
 
         [FunctionRender("还原命名空间", "还原所有源码在 .cs, .cshtml 中的命名空间为 NCF 默认（建议在断崖式更新之前进行此操作）。", typeof(Register))]
-        public AppResponseBase<string> Restore(NameSpace_RestoreRequest request)
+        public async Task<StringAppResponse> Restore(NameSpace_RestoreRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var changeNamespaceParam = new NameSpace_ChangeRequest()
                 {
@@ -169,7 +170,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                 };
 
                 changeNamespaceParam.OldNamespaceKeyword = request.MyNamespace;
-                var newesult = this.Change(changeNamespaceParam);
+                var newesult = await this.Change(changeNamespaceParam);
                 if (newesult.Success == true)
                 {
                     response.Data = "还原命名空间成功！";
@@ -180,9 +181,9 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
 
         [FunctionRender("下载官方 NCF 源码", "修改所有源码在 .cs, .cshtml 中的命名空间。", typeof(Register))]
-        public AppResponseBase<string> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
+        public async Task<StringAppResponse> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 if (Enum.TryParse<NameSpace_DownloadSourceCodeRequest.Parameters_Site>(request.Site.SelectedValues.FirstOrDefault(), out var siteType))
                 {

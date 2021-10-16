@@ -5,7 +5,7 @@ using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 using System;
 using System.Threading.Tasks;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Services
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 {
     public class ColorService : ServiceBase<Color>
     {

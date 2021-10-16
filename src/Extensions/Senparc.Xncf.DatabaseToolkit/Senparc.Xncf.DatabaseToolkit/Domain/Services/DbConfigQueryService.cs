@@ -4,6 +4,7 @@ using Senparc.Xncf.DatabaseToolkit.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.Domain.Services
 {
@@ -13,9 +14,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Domain.Services
         {
         }
 
-        internal bool IsAutoBackup()
+        internal async Task<bool> IsAutoBackup()
         {
-            var obj = base.GetObject(z => true);
+            var obj = await base.GetObjectAsync(z => true);
             if (obj == null)
             {
                 throw new UnSetBackupException();

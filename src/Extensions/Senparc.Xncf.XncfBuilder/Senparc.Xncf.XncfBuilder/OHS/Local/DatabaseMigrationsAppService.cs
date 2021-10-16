@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
@@ -27,9 +28,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         [FunctionRender("Add-Migration 命令", "可视化完成多数据库的 add-migration 命令，使用 Code First 更新数据库。注意：根据计算机配置和数据库情况，执行过程可能在30-60秒不等，请耐心等待。", typeof(Register))]
-        public AppResponseBase<string> Migration(DatabaseMigrations_MigrationRequest request)
+        public async Task<StringAppResponse> Migration(DatabaseMigrations_MigrationRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 if (request.DatabaseTypes.SelectedValues.Count() == 0)
                 {

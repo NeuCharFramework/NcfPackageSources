@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
@@ -214,9 +215,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         [FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
-        public AppResponseBase<string> Build(BuildXncf_BuildRequest request)
+        public async Task<StringAppResponse> Build(BuildXncf_BuildRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var outputStr = BuildSample(request, logger); //执行模板生成
                 var projectFilePath = $"{request.OrgName}.Xncf.{request.XncfName}\\{request.OrgName}.Xncf.{request.XncfName}.csproj";

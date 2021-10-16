@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Terminal.OHS.Local.AppService
 {
@@ -165,9 +166,9 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         }
 
         [FunctionRender("命令提示符", "输入Windows命令提示符中的命令,即可返回相应的结果。请注意：命令将在服务器系统中执行！", typeof(Register))]
-        public AppResponseBase<string> Run(Terminal_RunRequest request)
+        public async Task<StringAppResponse> Run(Terminal_RunRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 logger.Append("开始运行 Terminal");
 

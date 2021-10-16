@@ -84,7 +84,7 @@ namespace Senparc.Xncf.DatabaseToolkit
 
                             //执行备份方法
                             threadInfo.RecordStory("备份开始：" + backupRequest.Path);
-                            var result = backupDatabase.Backup(backupRequest);
+                            var result = await backupDatabase.Backup(backupRequest);
                             if (result.Success == false)
                             {
                                 threadInfo.RecordStory("执行备份发生异常：" + result.Data);

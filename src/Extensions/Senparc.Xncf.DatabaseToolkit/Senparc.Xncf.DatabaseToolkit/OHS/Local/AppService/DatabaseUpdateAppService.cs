@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
@@ -19,17 +20,17 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [FunctionRender("检测数据库是否需要更新", "使用 Entity Framework Core 的 Code First 模式中的 Migration 功能，检测系统当前数据库是否有未被更新的版本，如果有，请使用“Merge EF Core”方法进行更新。", typeof(Register))]
-        public AppResponseBase<string> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
+        public async Task<StringAppResponse> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 logger.Append("开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntitiesDbContext)) as SenparcEntitiesBase;
                 logger.Append("获取 ISenparcEntities 对象成功");
                 logger.Append("开始检测未安装版本");
-                var pendingMigrations = senparcEntities.Database.GetPendingMigrations();
+                var pendingMigrations = await senparcEntities.Database.GetPendingMigrationsAsync();
 
-                var oldMigrations = senparcEntities.Database.GetAppliedMigrations();
+                var oldMigrations = await senparcEntities.Database.GetAppliedMigrationsAsync();
                 foreach (var item in oldMigrations)
                 {
                     response.Data = logger.Append("检测到当前已安装更新：" + item);
@@ -52,9 +53,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         [FunctionRender("Merge EF Core", "使用 Entity Framework Core 的 Code First 模式对数据库进行更新，使数据库和当前运行版本匹配。", typeof(Register))]
-        public AppResponseBase<string> UpdateDatabase()
+        public async Task<StringAppResponse> UpdateDatabase()
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 logger.Append("开始获取 ISenparcEntities 对象");
                 ISenparcEntitiesDbContext senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntitiesDbContext)) as ISenparcEntitiesDbContext;

@@ -8,6 +8,7 @@ using Senparc.Xncf.DatabaseToolkit.OHS.Local.PL;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
@@ -22,20 +23,20 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
         [ApiBind]
         [FunctionRender("检查自动备份状态", "必须已经设置过自动配分时间，且大于 0 才能启用自动备份", typeof(Register))]
-        public DatabaseAutoBackup_IsAutoBackupResponse IsAutoBackup()
+        public async Task<DatabaseAutoBackup_IsAutoBackupResponse> IsAutoBackup()
         {
-            return this.GetResponse<DatabaseAutoBackup_IsAutoBackupResponse, bool>((response, logger) =>
+            return await this.GetResponseAsync<DatabaseAutoBackup_IsAutoBackupResponse, bool>(async (response, logger) =>
                 {
-                    return _dbConfigQueryService.IsAutoBackup();
+                    return await _dbConfigQueryService.IsAutoBackup();
                 });
         }
 
         #region 备份
 
         [FunctionRender("备份数据库", "将当前使用的数据库备份到指定路径。友情提示：建议确保该路径不具备公开访问权限！", typeof(Register))]
-        public AppResponseBase<string> Backup(DatabaseBackup_BackupRequest request)
+        public async Task<StringAppResponse> Backup(DatabaseBackup_BackupRequest request)
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 try
                 {
@@ -116,9 +117,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
 
         [FunctionRender("导出当前数据库 SQL 脚本", "导出当前站点正在使用的所有表的 SQL 脚本", typeof(Register))]
-        public AppResponseBase<string> ExportSQL()
+        public async Task<StringAppResponse> ExportSQL()
         {
-            return this.GetResponse<AppResponseBase<string>, string>((response, logger) =>
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 logger.Append("开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntitiesDbContext)) as SenparcEntitiesBase;
