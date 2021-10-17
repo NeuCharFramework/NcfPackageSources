@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
@@ -70,13 +71,15 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 logger.Append($"设置已保存！");
             },
-            saveLogAfterFinished: true
+            saveLogAfterFinished: true,
+            saveLogName:"设置数据库信息"
             );
         }
 
         #endregion
 
 
+        [ApiBind]
         [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
         public async Task<StringAppResponse> ShowDatabaseConfiguration()
         {
