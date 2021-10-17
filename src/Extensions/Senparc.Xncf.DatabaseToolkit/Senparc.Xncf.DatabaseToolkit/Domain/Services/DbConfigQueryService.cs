@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.Domain.Services
 {
-    internal class DbConfigQueryService : ClientServiceBase<DbConfig>
+    public class DbConfigQueryService : ClientServiceBase<DbConfig>
     {
         public DbConfigQueryService(IClientRepositoryBase<DbConfig> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {

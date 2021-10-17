@@ -17,7 +17,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
         校验备份成功 = 1
     }
 
-    internal class DatabaseBackup_BackupRequest : FunctionAppRequestBase
+    public class DatabaseBackup_BackupRequest : FunctionAppRequestBase
     {
         [Required]
         [MaxLength(300)]

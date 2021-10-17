@@ -7,7 +7,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
     /// 
     /// </summary>
     [Serializable]
-    internal class DatabaseAutoBackup_IsAutoBackupResponse : AppResponseBase<bool>
+    public class DatabaseAutoBackup_IsAutoBackupResponse : AppResponseBase<bool>
     {
         public bool IsAutoBackup => base.Data;
 

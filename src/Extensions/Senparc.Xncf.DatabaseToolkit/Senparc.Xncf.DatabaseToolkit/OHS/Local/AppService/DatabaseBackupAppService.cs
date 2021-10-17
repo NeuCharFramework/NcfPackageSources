@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
-    internal class DatabaseBackupAppService : AppServiceBase
+    public class DatabaseBackupAppService : AppServiceBase
     {
         private readonly DbConfigQueryService _dbConfigQueryService;
 
@@ -21,7 +21,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             this._dbConfigQueryService = dbConfigQueryService;
         }
 
-        [ApiBind]
+        //[ApiBind]
         [FunctionRender("检查自动备份状态", "必须已经设置过自动配分时间，且大于 0 才能启用自动备份", typeof(Register))]
         public async Task<DatabaseAutoBackup_IsAutoBackupResponse> IsAutoBackup()
         {
@@ -97,7 +97,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     {
                         response.Data = "备份完成！";
                     }
-                    return response.Data;
+                    return "2222";
                 }
                 catch (Exception ex)
                 {
