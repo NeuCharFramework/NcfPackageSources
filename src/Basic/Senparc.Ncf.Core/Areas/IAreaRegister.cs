@@ -12,7 +12,7 @@ namespace Senparc.Ncf.Core.Areas
     public interface IAreaRegister
     {
         /// <summary>
-        /// 
+        /// 授权配置
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="env"></param>

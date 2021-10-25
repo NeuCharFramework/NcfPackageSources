@@ -52,10 +52,10 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         string Description { get; }
 
-        /// <summary>
-        /// 注册方法，注册的顺序决定了界面中排列的顺序
-        /// </summary>
-        IList<Type> Functions { get; }
+        ///// <summary>
+        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///// </summary>
+        //IList<Type> Functions { get; }
 
         /// <summary>
         /// 添加 AutoMap 映射
@@ -104,6 +104,11 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="mapping"></param>
         void AddAutoMapMapping(Action<Profile> mapping);
+
+        /// <summary>
+        /// 执行 AutoMapper 映射
+        /// </summary>
+        void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// 在 startup.cs 的 Configure() 方法中执行配置

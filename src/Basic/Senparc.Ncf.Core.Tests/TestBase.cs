@@ -43,6 +43,7 @@ namespace Senparc.Ncf.Core.Tests
 
             serviceCollection.AddSenparcGlobalServices(config);
             serviceCollection.AddMemoryCache();//Ê¹ÓÃÄÚ´æ»º´æ
+
         }
 
         /// <summary>

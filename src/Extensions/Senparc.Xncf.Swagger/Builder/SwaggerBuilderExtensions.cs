@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.AreaBase.Admin.Filters;
-//using Senparc.Weixin.MP.AdvancedAPIs.Semantic;
 using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
 using Swashbuckle.AspNetCore.SwaggerUI;

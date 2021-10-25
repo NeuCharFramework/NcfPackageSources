@@ -1,7 +1,6 @@
 ﻿using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
-using Senparc.Xncf.XncfBuilder.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +28,10 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Description => "快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用";
 
-        public override IList<Type> Functions => new Type[] {
-            typeof(BuildXncf),
-            typeof(AddMigration),
-        };
+        //public override IList<Type> Functions => new Type[] {
+        //    typeof(BuildXncf),
+        //    typeof(AddMigration),
+        //};
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

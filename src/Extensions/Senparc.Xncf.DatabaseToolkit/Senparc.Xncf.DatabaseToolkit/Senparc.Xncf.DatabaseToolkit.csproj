@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.10.129-beta3</Version>
+    <Version>0.12.11-beta6</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -20,12 +20,14 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-			v0.1 创世
-			v0.1.101 添加 Migrate 数据库功能
-			v0.1.102 添加备份数据库功能
-			v0.1.103 添加检查数据库功能
-			v0.1.106 添加导出数据库功能
-			v0.5.0 添加可配置备份路径、周期，及自动备份功能
+		v0.1 创世
+		v0.1.101 添加 Migrate 数据库功能
+		v0.1.102 添加备份数据库功能
+		v0.1.103 添加检查数据库功能
+		v0.1.106 添加导出数据库功能
+		v0.5.0 添加可配置备份路径、周期，及自动备份功能
+		v0.11.0 重构 DDD 文件结构
+		v0.12 升级到 FunctionRender
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -49,9 +51,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Models\Dto\**" />
-    <EmbeddedResource Remove="Models\Dto\**" />
-    <None Remove="Models\Dto\**" />
+    <Compile Remove="..ACL\**" />
+    <EmbeddedResource Remove="..ACL\**" />
+    <None Remove="..ACL\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
@@ -63,10 +65,28 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="0.2.8-preview4" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalDesignTimeBuildInput Remove="..ACL\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ACL\Port\" />
+    <Folder Include="OHS\Remote\" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Senparc.CO2NET.WebApi">
+      <Version>0.2.7-preview4</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="Senparc.CO2NET.WebApi">
+      <Version>0.2.7-preview4</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>

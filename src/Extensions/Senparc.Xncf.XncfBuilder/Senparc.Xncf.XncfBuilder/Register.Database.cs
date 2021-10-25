@@ -6,8 +6,8 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
-using Senparc.Xncf.XncfBuilder.Functions;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
+using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 
 namespace Senparc.Xncf.XncfBuilder
@@ -22,7 +22,7 @@ namespace Senparc.Xncf.XncfBuilder
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             services.AddScoped<Config>();
-            services.AddScoped<BuildXncf.Parameters>();
+            services.AddScoped<BuildXncf_BuildRequest>();
 
             //services.AddScoped<XncfBuilderEntities_SqlServer>();//注意：此处不能直接这样自动配置数据库实体，基类中已经统一配置 implementationFactory
 
@@ -31,8 +31,8 @@ namespace Senparc.Xncf.XncfBuilder
             {
                 profile.CreateMap<Config, ConfigDto>();
                 profile.CreateMap<ConfigDto, Config>();
-                profile.CreateMap<BuildXncf.Parameters, Config>();
-                profile.CreateMap<Config, BuildXncf.Parameters>();
+                profile.CreateMap<BuildXncf_BuildRequest, Config>();
+                profile.CreateMap<Config, BuildXncf_BuildRequest>();
             });
         }
 

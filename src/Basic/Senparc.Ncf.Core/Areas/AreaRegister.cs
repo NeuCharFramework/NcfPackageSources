@@ -32,13 +32,18 @@ namespace Senparc.Ncf.Core.Areas
                     var areaRegisterTypes = assembly.GetTypes()
                                 .Where(z => z.GetInterface(nameof(IAreaRegister)) != null)
                                 .ToArray();
-
                     foreach (var registerType in areaRegisterTypes)
                     {
+                        Console.WriteLine("areaRegisterTypes:" + registerType.FullName);
                         var register = Activator.CreateInstance(registerType, true) as IAreaRegister;
-                        if (register!=null)
+                        if (register != null)
                         {
+                            Console.WriteLine("areaRegisterTypes run AuthorizeConfig:" + register.AareaPageMenuItems.FirstOrDefault()?.Url);
+
                             register.AuthorizeConfig(builder, env);//进行注册
+
+                            Console.WriteLine("areaRegisterTypes run AuthorizeConfig finished:" + register.AareaPageMenuItems.FirstOrDefault()?.Url);
+
                             eachRegsiterAction?.Invoke(register);//执行额外的操作
                         }
                         else

@@ -4,8 +4,6 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Senparc.Ncf.Core.MultiTenant
 {
@@ -14,8 +12,6 @@ namespace Senparc.Ncf.Core.MultiTenant
     /// </summary>
     public static class MultiTenantHelper
     {
-        
-
         /// <summary>
         /// 获取 RequestTenantInfo，并且检查其是否匹配
         /// </summary>
@@ -34,7 +30,7 @@ namespace Senparc.Ncf.Core.MultiTenant
                 //如果未设置，则进行设定
                 if (!requestTenantInfo.TriedMatching)
                 {
-                    throw new NcfUninstallException("TriedMatching 为 false，推测系统未进行安装");
+                    throw new NcfUninstallException("TriedMatching 为 false，推测系统未进行安装。如果在调试状态下（F5）看到此消息请忽略，继续执行。");
                 }
 
                 if (!requestTenantInfo.MatchSuccess)

@@ -24,6 +24,8 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -36,6 +38,8 @@ namespace Senparc.Ncf.XncfBase
         /// 所有线程的集合
         /// </summary>
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; } = new ConcurrentDictionary<ThreadInfo, Thread>();
+
+        public static FunctionRenderCollection FunctionRenderCollection { get; set; } = new FunctionRenderCollection();
 
         /// <summary>
         /// 所有自动注册 Xncf 的数据库的 ConfigurationMapping 对象
@@ -127,6 +131,27 @@ namespace Senparc.Ncf.XncfBase
                                 SetLog(sb, result);
                             }
 
+                            //配置 FunctionRender
+                            if (t.IsSubclassOf(typeof(AppServiceBase)))
+                            {
+                                //遍历其中具体方法
+                                var methods = t.GetMethods();
+                                var hasFunctionMethod = false;
+                                foreach (var method in methods)
+                                {
+                                    var attr = method.GetCustomAttributes(typeof(FunctionRenderAttribute), true).FirstOrDefault() as FunctionRenderAttribute;
+                                    if (attr != null)
+                                    {
+                                        FunctionRenderCollection.Add(method, attr);
+                                        hasFunctionMethod = true;
+                                    }
+                                }
+
+                                if (hasFunctionMethod)
+                                {
+                                    services.AddScoped(t);
+                                }
+                            }
                         }
                     }
                 }
@@ -173,10 +198,10 @@ namespace Senparc.Ncf.XncfBase
                             }
                             XncfRegisterManager.RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
                             services.AddScoped(type);//DI 中注册
-                            foreach (var functionType in register.Functions)
-                            {
-                                services.AddScoped(functionType);//DI 中注册
-                            }
+                            //foreach (var functionType in register.Functions)
+                            //{
+                            //    services.AddScoped(functionType);//DI 中注册
+                            //}
                         }
 
                         //初始化数据库
@@ -186,25 +211,6 @@ namespace Senparc.Ncf.XncfBase
                         }
 
                     }
-
-                    #region 暂时不收录 IXncfFunction
-
-                    /* 暂时不收录 */
-                    ////再扫描具体方法
-                    //foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXncfFunction))))
-                    //{
-                    //    SetLog(sb, "扫描到 IXncfFunction：{type.FullName}");
-
-                    //    if (!ModuleFunctionCollection.ContainsKey(type))
-                    //    {
-                    //        throw new NCFExceptionBase($"{type.FullName} 未能提供正确的注册方法！");
-                    //    }
-
-                    //    var function = type as IXncfFunction;
-                    //    ModuleFunctionCollection[type].Add(function);
-                    //}
-
-                    #endregion
                 }
 
                 //处理 XncfAutoConfigurationMappingAttribute
@@ -233,6 +239,15 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(Senparc.Ncf.Repository.ClientRepositoryBase<>));
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
             services.AddScoped(typeof(ServiceBase<>));
+            services.AddScoped(typeof(ServiceBase<>));
+
+            //AppService
+            services.AddScoped(typeof(AppRequestBase));
+            services.AddScoped(typeof(IAppRequest), typeof(AppRequestBase));
+
+            services.AddScoped(typeof(AppResponseBase));
+            services.AddScoped(typeof(AppResponseBase<>));
+            services.AddScoped(typeof(IAppResponse), typeof(AppResponseBase));
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingBase<>));
@@ -242,16 +257,23 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder<>));
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
-           
-            //支持 AutoMapper
+
+            #region 支持 AutoMapper
+            //XNCF 模块进行 AutoMapper 映射
+            foreach (var xncfRegister in XncfRegisterManager.RegisterList)
+            {
+                xncfRegister.OnAutoMapMapping(services, configuration);
+            }
+
             //引入当前系统
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
             //引入所有模块
             services.AddAutoMapper(z => z.AddProfile<AutoMapper.XncfModuleProfile>());
+            #endregion
 
-            //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内呢能存在动态生成的程序集引发异常
+            //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内可能存在动态生成的程序集引发异常
 
-            //微模块进行 Service 注册
+            //XNCF 模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 xncfRegister.AddXncfModule(services, configuration);

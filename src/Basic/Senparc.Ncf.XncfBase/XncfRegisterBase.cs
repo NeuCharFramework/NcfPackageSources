@@ -55,10 +55,10 @@ namespace Senparc.Ncf.XncfBase
         /// 说明
         /// </summary>
         public abstract string Description { get; }
-        /// <summary>
-        /// 注册方法，注册的顺序决定了界面中排列的顺序
-        /// </summary>
-        public abstract IList<Type> Functions { get; }
+        ///// <summary>
+        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///// </summary>
+        //public abstract IList<Type> Functions { get; }
 
         /// <summary>
         /// 添加 AutoMap 映射
@@ -356,6 +356,15 @@ namespace Senparc.Ncf.XncfBase
             }
             AutoMapMappingConfigs.Add(mapping);
         }
+
+        /// <summary>
+        /// 执行 AutoMapper 映射 
+        /// </summary>
+        public virtual void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
+        {
+            //在 Register.StartEngine() 中调用，早于 AddXncfModule() 方法
+        }
+
 
         ///// <summary>
         ///// 数据库 DbContext 选项配置（附加配置）
