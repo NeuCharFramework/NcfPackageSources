@@ -106,6 +106,11 @@ namespace Senparc.Ncf.XncfBase
         void AddAutoMapMapping(Action<Profile> mapping);
 
         /// <summary>
+        /// 执行 AutoMapper 映射
+        /// </summary>
+        void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration);
+
+        /// <summary>
         /// 在 startup.cs 的 Configure() 方法中执行配置
         /// </summary>
         /// <param name="app"></param>

@@ -72,7 +72,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 logger.Append($"设置已保存！");
             },
             saveLogAfterFinished: true,
-            saveLogName:"设置数据库信息"
+            saveLogName:"设置数据库信息", 
+            exceptionHandler: async (ex,response, logger) => { 
+            
+            
+            }
             );
         }
 

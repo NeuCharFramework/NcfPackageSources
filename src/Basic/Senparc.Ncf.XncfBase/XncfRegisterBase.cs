@@ -357,6 +357,15 @@ namespace Senparc.Ncf.XncfBase
             AutoMapMappingConfigs.Add(mapping);
         }
 
+        /// <summary>
+        /// 执行 AutoMapper 映射 
+        /// </summary>
+        public virtual void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
+        {
+            //在 Register.StartEngine() 中调用，早于 AddXncfModule() 方法
+        }
+
+
         ///// <summary>
         ///// 数据库 DbContext 选项配置（附加配置）
         ///// <para>第1个参数：IRelationalDbContextOptionsBuilderInfrastructure</para>

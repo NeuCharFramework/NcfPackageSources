@@ -211,25 +211,6 @@ namespace Senparc.Ncf.XncfBase
                         }
 
                     }
-
-                    #region 暂时不收录 IXncfFunction
-
-                    /* 暂时不收录 */
-                    ////再扫描具体方法
-                    //foreach (var type in types.Where(z => z != null && z.GetInterfaces().Contains(typeof(IXncfFunction))))
-                    //{
-                    //    SetLog(sb, "扫描到 IXncfFunction：{type.FullName}");
-
-                    //    if (!ModuleFunctionCollection.ContainsKey(type))
-                    //    {
-                    //        throw new NCFExceptionBase($"{type.FullName} 未能提供正确的注册方法！");
-                    //    }
-
-                    //    var function = type as IXncfFunction;
-                    //    ModuleFunctionCollection[type].Add(function);
-                    //}
-
-                    #endregion
                 }
 
                 //处理 XncfAutoConfigurationMappingAttribute
@@ -277,15 +258,22 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
 
-            //支持 AutoMapper
+            #region 支持 AutoMapper
+            //XNCF 模块进行 AutoMapper 映射
+            foreach (var xncfRegister in XncfRegisterManager.RegisterList)
+            {
+                xncfRegister.OnAutoMapMapping(services, configuration);
+            }
+
             //引入当前系统
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
             //引入所有模块
             services.AddAutoMapper(z => z.AddProfile<AutoMapper.XncfModuleProfile>());
+            #endregion
 
-            //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内呢能存在动态生成的程序集引发异常
+            //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内可能存在动态生成的程序集引发异常
 
-            //微模块进行 Service 注册
+            //XNCF 模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 xncfRegister.AddXncfModule(services, configuration);
