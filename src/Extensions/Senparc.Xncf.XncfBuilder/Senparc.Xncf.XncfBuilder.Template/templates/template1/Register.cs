@@ -5,17 +5,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 #if (UseDatabase || UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 #endif
 #if (UseSample)
-using Template_OrgName.Xncf.Template_XncfName.Services;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 #endif
 
@@ -84,5 +82,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
+
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<ColorAppService>();
+            return base.AddXncfModule(services, configuration);
+        }
     }
 }

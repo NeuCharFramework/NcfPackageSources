@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL
 {
-    public class MyFunction_CaculateRequest
+    public class MyFunction_CaculateRequest: FunctionAppRequestBase
     {
         [Required]
         [MaxLength(50)]
