@@ -39,7 +39,9 @@ namespace Senparc.Ncf.Core.AppServices
             return $"RequestTempId-{domainCategory}{tempId}";
         }
 
-        public AppResponseBase() { }
+        public AppResponseBase()
+            : this(default(int), default(bool?), default(String), default(Object), null)
+        { }
 
         public AppResponseBase(int stateCode, bool? success, string errorMessage, object data, string domainCategoryForTempId = null)
         {

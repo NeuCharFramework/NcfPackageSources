@@ -9,6 +9,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Attributes\**" />
+	  <EmbeddedResource Remove="Attributes\**" />
+	  <None Remove="Attributes\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
 		<PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
 		<PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
@@ -23,10 +29,6 @@
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Core.Tests\Senparc.Ncf.Core.Tests.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Attributes\" />
 	</ItemGroup>
 
 </Project>
