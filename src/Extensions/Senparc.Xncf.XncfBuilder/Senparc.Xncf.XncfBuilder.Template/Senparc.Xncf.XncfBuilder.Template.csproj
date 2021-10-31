@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.2.3</PackageVersion>
+		<PackageVersion>0.2.10</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>JeffreySu</Authors>
@@ -37,6 +37,10 @@
 	<ItemGroup>
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
 		<Compile Remove="**\*" />
+		<Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="readme.md" />
@@ -47,8 +51,6 @@
 	  </Content>
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="templates\template1\App_Data\SenparcTraceLog\" />
-	  <Folder Include="templates\template1\OHS\Local\PL\" />
 	  <Folder Include="templates\template1\OHS\Remote\" />
 	  <Folder Include="templates\template1\ACL\" />
 	</ItemGroup>

@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-#if (UseFunction)
-using Template_OrgName.Xncf.Template_XncfName.Functions;
-#endif
+using System.Threading.Tasks;
+
 #if (UseDatabase || UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
+using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 #endif
@@ -37,14 +38,6 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Description => "Template_Description";
 
-#if (UseFunctions)
-        public override IList<Type> Functions => new Type[] { typeof(MyFunction) };
-#else
-        public override IList<Type> Functions => new Type[] { };
-#endif
-
-
-
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
 #if (UseDatabase || UseSample)
@@ -58,12 +51,8 @@ namespace Template_OrgName.Xncf.Template_XncfName
                     //新安装
 #if (UseSample)
             #region 初始化数据库数据
-                    var colorService = serviceProvider.GetService<ColorService>();
-                    var color = colorService.GetObject(z => true);
-                    if (color == null)//如果是纯第一次安装，理论上不会有残留数据
-                    {
-                        ColorDto colorDto = await colorService.CreateNewColor().ConfigureAwait(false);//创建默认颜色
-                    }
+                    var colorService = serviceProvider.GetService<ColorAppService>();
+                    ColorDto color = await colorService.GetOrInitColorDtoAsync();
             #endregion
 #endif
                     break;
