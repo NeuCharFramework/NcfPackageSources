@@ -2,16 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
-using Senparc.Ncf.Core.Tests;
 using Senparc.Ncf.XncfBase.FunctionRenders;
-using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Ncf.XncfBase.Tests;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Functions.Tests
