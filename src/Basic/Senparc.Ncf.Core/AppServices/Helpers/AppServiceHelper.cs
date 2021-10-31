@@ -1,4 +1,6 @@
-﻿using Senparc.Ncf.Core.AppServices.Exceptions;
+﻿using Senparc.CO2NET.Cache;
+using Senparc.Ncf.Core.AppServices.Exceptions;
+using Senparc.Ncf.Core.Config;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,13 +19,12 @@ namespace Senparc.Ncf.Core.AppServices
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="appService">AppService</param>
         /// <param name="func"></param>
-        /// <param name="cancellationToken"></param>
         /// <param name="exceptionHandler"></param>
         /// <param name="afterFunc"></param>
         /// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
         /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
         /// <returns></returns>
-        public static async Task<TResponse> GetResponseAsync<TResponse, TData>(this IAppService appService, Func<TResponse, AppServiceLogger, Task<TData>> func,            Action<Exception, TResponse, AppServiceLogger> exceptionHandler = null, Action<TResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
+        public static async Task<TResponse> GetResponseAsync<TResponse, TData>(this IAppService appService, Func<TResponse, AppServiceLogger, Task<TData>> func, Action<Exception, TResponse, AppServiceLogger> exceptionHandler = null, Action<TResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
             where TResponse : AppResponseBase<TData>, new()
         {
             var response = new TResponse();
@@ -80,7 +81,21 @@ namespace Senparc.Ncf.Core.AppServices
                     var name = saveLogName ?? $"完成执行：{appService.GetType().FullName}";
                     logger.SaveLogs(saveLogName);
                 }
+
+                try
+                {
+                    if (SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes > 0)
+                    {
+                        var tempId = response.RequestTempId;
+                        var cache = appService.ServiceProvider.GetObjectCacheStrategyInstance();
+                        //为了加快响应速度，不等待
+                        cache.SetAsync(tempId, logger.GetLogs(), TimeSpan.FromMinutes(SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes));
+                    }
+                }
+                finally { }
             }
+
+
 
             return response;
         }

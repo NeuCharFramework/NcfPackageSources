@@ -119,7 +119,6 @@ namespace Senparc.Ncf.Core.Config
         public static string SenparcConfigDirctory = "~/App_Data/DataBase/";
         public const string AntiForgeryTokenSalt = "SOUIDEA__SENPARC";
         public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //将取前8位
-        public static readonly long OfficalWeiboUserId = 2513419820;
         public const string DomainName = "https://ncf.senparc.com";
         public const string DefaultTemplate = "default";
         public const int SMSSENDWAITSECONDS = 60; //手机验证持续时间

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senparc.CO2NET.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,10 @@ namespace Senparc.Ncf.Core.AppServices
         bool? Success { get; set; }
         string ErrorMessage { get; set; }
         object Data { get; set; }
+        /// <summary>
+        /// 请求临时ID（用于调取日志）
+        /// </summary>
+        string RequestTempId { get; }
     }
 
     /// <summary>
@@ -22,15 +27,32 @@ namespace Senparc.Ncf.Core.AppServices
         public bool? Success { get; set; }
         public string ErrorMessage { get; set; }
         public object Data { get; set; }
+        /// <summary>
+        /// 请求临时ID（用于调取日志）
+        /// </summary>
+        public string RequestTempId { get; private set; }
+
+        private string GenerateTempId(string domainCategoryForTempId)
+        {
+            var tempId = $"{SystemTime.NowTicks}-{Guid.NewGuid().ToString("n").Substring(0, 8)}";
+            var domainCategory = (domainCategoryForTempId.IsNullOrEmpty() ? null : $"{domainCategoryForTempId}-");
+            return $"RequestTempId-{domainCategory}{tempId}";
+        }
 
         public AppResponseBase() { }
 
-        public AppResponseBase(int stateCode, bool? success, string errorMessage, object data)
+        public AppResponseBase(int stateCode, bool? success, string errorMessage, object data, string domainCategoryForTempId = null)
         {
             StateCode = stateCode;
             Success = success;
             ErrorMessage = errorMessage;
             Data = data;
+            RequestTempId = GenerateTempId(domainCategoryForTempId);
+        }
+
+        public void ChangeRequestTempId(string newTempId)
+        {
+            RequestTempId = newTempId;
         }
     }
 
