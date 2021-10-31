@@ -29,10 +29,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
                 /* 页面上点击“执行”后，将调用这里的方法
                   *
                   * 参数说明：
-                  * param：IFunctionParameter 类型对象
-                  * typeParam：SenparcDemo.Xncf.MyModule.MyFunction.Parameters 类型对象
-                  * sb：日志
-                  * result：返回结果
+                  * response：已经初始化后的返回结果
+                  * logger：日志
+                  * 
+                  * 如果直接对 response 的属性修改，则最终 return null，
+                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
                   */
 
                 double calcResult = request.Number1;

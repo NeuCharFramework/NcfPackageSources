@@ -1,9 +1,6 @@
 ﻿using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
-using Senparc.Xncf.Terminal.Functions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Terminal
