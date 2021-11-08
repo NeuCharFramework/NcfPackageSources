@@ -21,7 +21,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             this._dbConfigQueryService = dbConfigQueryService;
         }
 
-        //[ApiBind]
+        //[ApiBind("A","B",ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         [FunctionRender("检查自动备份状态", "必须已经设置过自动配分时间，且大于 0 才能启用自动备份", typeof(Register))]
         public async Task<DatabaseAutoBackup_IsAutoBackupResponse> IsAutoBackup()
         {

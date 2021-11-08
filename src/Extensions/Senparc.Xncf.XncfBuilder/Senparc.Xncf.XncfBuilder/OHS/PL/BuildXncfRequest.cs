@@ -36,7 +36,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5）",true),
                  new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
-                 new SelectionItem("net5.0","net5.0","使用 .NET 5.0",false),
+                 new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
             });
 
         [Description("自定义目标框架版本||其他目标框架版本，如果填写，将覆盖【目标框架版本】的选择")]
