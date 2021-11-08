@@ -74,7 +74,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             if (isUseWeb && frameworkVersion == "netstandard2.1")
             {
                 //需要使用网页，强制修正为支持 Host 的目标框架
-                frameworkVersion = "netcoreapp3.1";//TODO:后续将支持 .NET 5.0
+                frameworkVersion = "net6.0";
             }
 
             var targetFramework = $" --TargetFramework {frameworkVersion}";
