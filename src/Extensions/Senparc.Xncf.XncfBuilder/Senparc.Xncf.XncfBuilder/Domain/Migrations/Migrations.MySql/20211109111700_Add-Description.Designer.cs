@@ -2,73 +2,76 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.MySql
 {
-    [DbContext(typeof(XncfBuilderEntities_Sqlite))]
-    partial class XncfBuilderEntities_SqliteModelSnapshot : ModelSnapshot
+    [DbContext(typeof(XncfBuilderEntities_MySql))]
+    [Migration("20211109111700_Add-Description")]
+    partial class AddDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("Senparc.Xncf.XncfBuilder.Config", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(400)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(400)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("MenuName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("OrgName")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("SlnFilePath")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Version")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("XncfName")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 

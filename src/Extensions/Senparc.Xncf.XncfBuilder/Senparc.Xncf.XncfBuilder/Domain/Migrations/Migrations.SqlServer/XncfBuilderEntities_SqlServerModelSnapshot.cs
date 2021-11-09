@@ -17,7 +17,7 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.SqlServer
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("Senparc.Xncf.XncfBuilder.Config", b =>
                 {
@@ -32,6 +32,10 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.SqlServer
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");

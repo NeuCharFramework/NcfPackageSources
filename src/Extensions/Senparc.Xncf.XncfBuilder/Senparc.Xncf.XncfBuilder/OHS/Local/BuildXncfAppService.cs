@@ -2,6 +2,7 @@
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -275,19 +276,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 将当前设置保存到数据库
 
-                var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
-                var config = configService.GetObject(z => true);
-                if (config == null)
-                {
-                    config = new Config(request.SlnFilePath, request.OrgName, request.XncfName, request.Version, request.MenuName, request.Icon, request.Description);
-                }
-                else
-                {
-                    configService.Mapper.Map(request, config);
-                }
-                configService.SaveObject(config);
-
-                //result.Message += "\r\n\r\n" + outputStr;
+                var configService = base.ServiceProvider.GetService<ConfigService>();
+                configService.UpdateConfig(request);
 
                 #endregion
 
