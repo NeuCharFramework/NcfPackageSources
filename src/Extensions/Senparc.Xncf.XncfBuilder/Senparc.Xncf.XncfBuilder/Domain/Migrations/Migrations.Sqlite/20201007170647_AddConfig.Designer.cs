@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(XncfBuilderEntities))]
     [Migration("20201007170647_AddConfig")]

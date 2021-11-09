@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.MySql
+namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.MySql
 {
     [DbContext(typeof(XncfBuilderEntities_MySql))]
     partial class XncfBuilderEntities_MySqlModelSnapshot : ModelSnapshot
@@ -15,7 +15,7 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.MySql
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("Senparc.Xncf.XncfBuilder.Config", b =>
                 {
@@ -28,44 +28,48 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.MySql
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(400)
+                        .HasColumnType("varchar(400)");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("MenuName")
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("OrgName")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("SlnFilePath")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Version")
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("XncfName")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 

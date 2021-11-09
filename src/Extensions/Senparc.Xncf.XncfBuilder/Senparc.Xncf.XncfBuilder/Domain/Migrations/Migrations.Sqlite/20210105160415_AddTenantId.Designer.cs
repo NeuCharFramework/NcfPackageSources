@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.SQLite
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.SQLite
 {
     [DbContext(typeof(XncfBuilderEntities))]
     [Migration("20210105160415_AddTenantId")]

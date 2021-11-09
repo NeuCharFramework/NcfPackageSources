@@ -2,6 +2,7 @@
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             if (isUseWeb && frameworkVersion == "netstandard2.1")
             {
                 //需要使用网页，强制修正为支持 Host 的目标框架
-                frameworkVersion = "netcoreapp3.1";//TODO:后续将支持 .NET 5.0
+                frameworkVersion = "net6.0";
             }
 
             var targetFramework = $" --TargetFramework {frameworkVersion}";
@@ -275,19 +276,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 将当前设置保存到数据库
 
-                var configService = base.ServiceProvider.GetService<ServiceBase<Config>>();
-                var config = configService.GetObject(z => true);
-                if (config == null)
-                {
-                    config = new Config(request.SlnFilePath, request.OrgName, request.XncfName, request.Version, request.MenuName, request.Icon);
-                }
-                else
-                {
-                    configService.Mapper.Map(request, config);
-                }
-                configService.SaveObject(config);
-
-                //result.Message += "\r\n\r\n" + outputStr;
+                var configService = base.ServiceProvider.GetService<ConfigService>();
+                configService.UpdateConfig(request);
 
                 #endregion
 

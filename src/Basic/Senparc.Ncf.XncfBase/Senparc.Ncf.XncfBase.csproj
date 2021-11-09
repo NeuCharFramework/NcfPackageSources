@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <!--<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>-->
-    <Version>0.7.9-beta6</Version>
+    <!--<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>-->
+    <Version>0.8-beta6</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -49,7 +49,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.6" />
-    <PackageReference Include="Senparc.CO2NET" Version="1.5.2-preview4" />
+    <PackageReference Include="Senparc.CO2NET" Version="1.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
   </ItemGroup>

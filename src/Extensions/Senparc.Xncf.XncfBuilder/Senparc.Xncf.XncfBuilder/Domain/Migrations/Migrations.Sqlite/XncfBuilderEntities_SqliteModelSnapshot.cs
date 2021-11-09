@@ -3,18 +3,18 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Senparc.Xncf.XncfBuilder;
+using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.Sqlite
 {
-    [DbContext(typeof(XncfBuilderEntities))]
+    [DbContext(typeof(XncfBuilderEntities_Sqlite))]
     partial class XncfBuilderEntities_SqliteModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("Senparc.Xncf.XncfBuilder.Config", b =>
                 {
@@ -27,6 +27,10 @@ namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(400)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")

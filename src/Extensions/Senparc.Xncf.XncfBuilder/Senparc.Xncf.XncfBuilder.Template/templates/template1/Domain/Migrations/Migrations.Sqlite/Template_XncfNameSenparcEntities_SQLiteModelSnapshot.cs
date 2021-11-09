@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.Sqlite
+namespace Template_OrgName.Xncf.Template_XncfName.Deomain.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_Sqlite))]
     partial class Template_XncfNameSenparcEntities_SqliteModelSnapshot : ModelSnapshot

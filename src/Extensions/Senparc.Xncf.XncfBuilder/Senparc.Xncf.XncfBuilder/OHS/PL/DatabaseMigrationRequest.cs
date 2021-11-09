@@ -3,6 +3,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
-    public class DatabaseMigrations_MigrationRequest: FunctionAppRequestBase
+    public class DatabaseMigrations_MigrationRequest : FunctionAppRequestBase
     {
         [Required]
         [MaxLength(250)]
@@ -55,13 +56,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         {
             try
             {
-                ////低版本没有数据库，此处需要try
-                //var configService = serviceProvider.GetService<ServiceBase<Config>>();
-                //var config = await configService.GetObjectAsync(z => true);
-                //if (config != null)
-                //{
-                //    configService.Mapper.Map(config, this);
-                //}
+                //TODO:单独生成一个表来记录
+
+                //低版本没有数据库，此处需要try
+                var configService = serviceProvider.GetService<ConfigService>();
+                var config = await configService.GetObjectAsync(z => true);
+                if (config != null)
+                {
+                    configService.Mapper.Map(config, this);
+                }
             }
             catch
             {
