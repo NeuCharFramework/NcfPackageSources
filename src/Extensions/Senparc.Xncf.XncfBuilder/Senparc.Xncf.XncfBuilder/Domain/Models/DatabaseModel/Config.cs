@@ -48,9 +48,15 @@ namespace Senparc.Xncf.XncfBuilder
         [MaxLength(100)]
         public string Icon { get; private set; }
 
+        /// <summary>
+        /// 说明
+        /// </summary>
+        [MaxLength(400)]
+        public string Description { get; private set; }
+
         private Config() { }
 
-        public Config(string slnFilePath, string orgName, string xncfName, string version, string menuName, string icon)
+        public Config(string slnFilePath, string orgName, string xncfName, string version, string menuName, string icon, string description)
         {
             SlnFilePath = slnFilePath;
             OrgName = orgName;
@@ -58,6 +64,7 @@ namespace Senparc.Xncf.XncfBuilder
             Version = version;
             MenuName = menuName;
             Icon = icon;
+            Description = description;
         }
 
         private string GetDebuggerDisplay()
