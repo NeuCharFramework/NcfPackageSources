@@ -279,7 +279,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 var config = configService.GetObject(z => true);
                 if (config == null)
                 {
-                    config = new Config(request.SlnFilePath, request.OrgName, request.XncfName, request.Version, request.MenuName, request.Icon);
+                    config = new Config(request.SlnFilePath, request.OrgName, request.XncfName, request.Version, request.MenuName, request.Icon, request.Description);
                 }
                 else
                 {
