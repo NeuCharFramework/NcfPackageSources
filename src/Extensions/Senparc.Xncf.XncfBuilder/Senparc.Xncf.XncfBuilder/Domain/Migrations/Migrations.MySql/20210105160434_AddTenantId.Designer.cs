@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.MySql
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.MySql
 {
     [DbContext(typeof(XncfBuilderEntities_MySql))]
     [Migration("20210105160434_AddTenantId")]

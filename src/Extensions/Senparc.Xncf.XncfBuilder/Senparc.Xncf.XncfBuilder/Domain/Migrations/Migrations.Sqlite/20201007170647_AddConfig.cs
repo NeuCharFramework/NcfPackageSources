@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Migrations.Sqlite
 {
     public partial class AddConfig : Migration
     {
