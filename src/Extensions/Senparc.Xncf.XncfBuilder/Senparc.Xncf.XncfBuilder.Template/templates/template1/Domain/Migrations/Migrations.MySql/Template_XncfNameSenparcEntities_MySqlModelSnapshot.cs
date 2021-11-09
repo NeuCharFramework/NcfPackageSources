@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.MySql
+namespace Template_OrgName.Xncf.Template_XncfName.Deomain.Migrations.Migrations.MySql
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_MySql))]
     partial class Template_XncfNameSenparcEntities_MySqlModelSnapshot : ModelSnapshot

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.MySql
+namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.MySql
 {
     [DbContext(typeof(XncfBuilderEntities_MySql))]
     partial class XncfBuilderEntities_MySqlModelSnapshot : ModelSnapshot

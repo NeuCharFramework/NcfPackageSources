@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.Sqlite
 {
     [DbContext(typeof(XncfBuilderEntities))]
     partial class XncfBuilderEntities_SqliteModelSnapshot : ModelSnapshot

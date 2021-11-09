@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.SqlServer
 {
     [DbContext(typeof(XncfBuilderEntities_SqlServer))]
     partial class XncfBuilderEntities_SqlServerModelSnapshot : ModelSnapshot
