@@ -193,7 +193,7 @@ namespace Senparc.Ncf.XncfBase
                 //删除 Migration 记录
                 if (this is IXncfDatabase databaseRegister)
                 {
-                    var migrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
+                    var migrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
                     SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
                     string sqlStr = currentDatabaseConfiguration.GetDropTableSql(databaseDbContext, migrationHistoryTableName);
                     if (!sqlStr.IsNullOrEmpty())

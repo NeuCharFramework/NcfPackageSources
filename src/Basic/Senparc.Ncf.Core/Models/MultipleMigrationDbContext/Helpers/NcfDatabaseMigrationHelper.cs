@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Core.Models
     /// <summary>
     /// NCF 数据库帮助类
     /// </summary>
-    public static class NcfDatabaseHelper
+    public static class NcfDatabaseMigrationHelper
     {
         /// <summary>
         /// 系统表的数据库前缀，使用此前缀，将使用 __EFMigrationsHistory 表储存迁移记录，取代模块自定义表

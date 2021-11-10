@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Database.Sqlite
 {
+    /// <summary>
+    /// SQLite 数据库配置
+    /// </summary>
     public class SqliteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Sqlite;

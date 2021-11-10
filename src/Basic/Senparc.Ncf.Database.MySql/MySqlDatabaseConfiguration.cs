@@ -12,6 +12,9 @@ using System.Data.Common;
 
 namespace Senparc.Ncf.Database.MySql
 {
+    /// <summary>
+    /// MySQL 数据库配置
+    /// </summary>
     public class MySqlDatabaseConfiguration : DatabaseConfigurationBase<MySqlDbContextOptionsBuilder, MySqlOptionsExtension>
     {
         public MySqlDatabaseConfiguration() { }
