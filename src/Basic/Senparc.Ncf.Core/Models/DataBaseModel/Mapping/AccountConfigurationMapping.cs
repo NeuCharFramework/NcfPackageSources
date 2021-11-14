@@ -42,7 +42,7 @@ namespace Senparc.Ncf.Core.Models
                 .HasMaxLength(30)
                 .IsUnicode(false);
 
-            builder.Property(e => e.ThisLoginTime).HasColumnType("datetime");
+            //builder.Property(e => e.ThisLoginTime).HasColumnType("datetime");
 
 
             builder.Property(e => e.UserName)

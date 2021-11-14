@@ -27,6 +27,10 @@ namespace Senparc.Ncf.Database.PostgreSQL
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (optionsBuilder, xncfDatabaseData) =>
         {
             var typedBuilder = optionsBuilder as NpgsqlDbContextOptionsBuilder;
+
+            //解决 .NET 6.0 timestamp 问题： https://qiita.com/k-yamamoto/items/a87989569cb6f0415fbb
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             typedBuilder.EnableRetryOnFailure(
                        maxRetryCount: 5,
                        maxRetryDelay: TimeSpan.FromSeconds(5),
