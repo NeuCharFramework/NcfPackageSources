@@ -58,7 +58,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
             var commandTexts = new List<string> {
                 cmd,
             };
-          
+
             Func<Process> getNewProcess = () =>
             {
                 Process p = new Process();
@@ -84,7 +84,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
                 cmdProcess.StandardInput.WriteLine(cmd);
                 cmdProcess.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
                 var output = cmdProcess.StandardOutput.ReadToEnd();
-                Console.WriteLine("pg_dump.exe outupt: "+output);
+                Console.WriteLine("pg_dump.exe outupt: " + output);
                 closeProcess(cmdProcess);
             }
 
