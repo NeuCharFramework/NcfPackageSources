@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
-		<Version>0.9.1-beta6</Version>
+		<Version>0.9.2-beta6</Version>
 		<AssemblyName>Senparc.Ncf.Database.Sqlite</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Database.Sqlite</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -37,7 +37,6 @@
 		<PackageReference Include="Senparc.CO2NET" Version="1.6.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.12" />
 		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
