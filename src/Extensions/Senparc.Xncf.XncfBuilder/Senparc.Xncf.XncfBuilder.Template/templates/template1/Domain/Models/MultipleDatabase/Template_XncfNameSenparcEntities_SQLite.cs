@@ -22,7 +22,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
     /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -c Template_XncfNameSenparcEntities_Sqlite -o Migrations/Migrations.Sqlite </para>
+    /// <para>2、运行：PM> add-migration [更新名称] -c Template_XncfNameSenparcEntities_Sqlite -o Domain/Migrations/Migrations.Sqlite </para>
     /// </summary>
     public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<Template_XncfNameSenparcEntities_Sqlite, Register>
     {

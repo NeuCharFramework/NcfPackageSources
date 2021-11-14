@@ -23,7 +23,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
     /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitEntities_SqlServer -o Migrations/Migrations.SqlServer </para>
+    /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
     /// </summary>
     public class SenparcDbContextFactory_MySql : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities_MySql, Register>
     {
