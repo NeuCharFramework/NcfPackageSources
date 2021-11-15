@@ -13,7 +13,7 @@ namespace Senparc.Ncf.Core.Models
             builder.Property(e => e.UsedPoints).HasColumnType("decimal(18, 2)").IsRequired(false);
           
             builder.Property(e => e.AddIp).HasColumnType("varchar(50)").IsRequired(false);
-            builder.Property(e => e.CompleteTime).HasColumnType("datetime").IsRequired();
+            builder.Property(e => e.CompleteTime).IsRequired();
             builder.Property(e => e.Description).HasColumnType("varchar(250)").IsRequired();
             builder.Property(e => e.TradeNumber).HasColumnType("varchar(150)").IsRequired(false);
             builder.Property(e => e.PrepayId).HasColumnType("varchar(100)").IsRequired(false);
