@@ -22,7 +22,8 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             builder.Property(e => e.Icon).HasMaxLength(100);
 
             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
-            if (currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.MySql)
+            if (currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.MySql ||
+                currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.PostgreSQL)
             {
                 builder.Property(e => e.UpdateLog).HasColumnType("text").IsRequired();
             }

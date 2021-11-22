@@ -12,6 +12,9 @@ using System.Data.Common;
 
 namespace Senparc.Ncf.Database.SqlServer
 {
+    /// <summary>
+    /// SQL Server 数据库配置
+    /// </summary>
     public class SQLServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
         public SQLServerDatabaseConfiguration() { }

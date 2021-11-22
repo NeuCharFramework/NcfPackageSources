@@ -28,6 +28,6 @@ namespace Senparc.Ncf.Core.Models
         /// <summary>
         /// Migration History 表名
         /// </summary>
-        public string DatabaseMigrationHistoryTableName => NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(XncfDatabaseRegister.DatabaseUniquePrefix);
+        public string DatabaseMigrationHistoryTableName => NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(XncfDatabaseRegister.DatabaseUniquePrefix);
     }
 }

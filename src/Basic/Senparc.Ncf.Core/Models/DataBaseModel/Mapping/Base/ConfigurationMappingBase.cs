@@ -36,8 +36,8 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <param name="builder"></param>
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            builder.Property(e => e.AddTime).HasColumnType("datetime").IsRequired();
-            builder.Property(e => e.LastUpdateTime).HasColumnType("datetime").IsRequired();
+            //builder.Property(e => e.AddTime).HasColumnType("datetime").IsRequired();
+            //builder.Property(e => e.LastUpdateTime).HasColumnType("datetime").IsRequired();
         }
 
     }

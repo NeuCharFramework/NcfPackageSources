@@ -5,17 +5,19 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase.Database;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成 SQLite 数据库 Migration 信息的类，请勿修改
+    /// 用于生成 PostgreSQL 数据库 Migration 信息的类，请勿修改
     /// </summary>
-    [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
-    public class XncfBuilderEntities_Sqlite : XncfBuilderEntities, IMultipleMigrationDbContext
+    [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
+    public class XncfBuilderEntities_PostgreSQL : XncfBuilderEntities, IMultipleMigrationDbContext
     {
-        public XncfBuilderEntities_Sqlite(DbContextOptions<XncfBuilderEntities_Sqlite> dbContextOptions) : base(dbContextOptions)
+        public XncfBuilderEntities_PostgreSQL(DbContextOptions<XncfBuilderEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
         {
         }
     }
@@ -23,17 +25,17 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
     /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C XncfBuilderEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
+    /// <para>2、运行：PM> add-migration [更新名称] -C XncfBuilderEntities_PostgreSQL -o Domain/Migrations/Migrations.PostgreSQL </para>
     /// </summary>
-    public class SenparcDbContextFactory_SQLite : SenparcDesignTimeDbContextFactoryBase<XncfBuilderEntities_Sqlite, Register>
+    public class SenparcDbContextFactory_PostgreSQL : SenparcDesignTimeDbContextFactoryBase<XncfBuilderEntities_PostgreSQL, Register>
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
+            services.AddDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 
-        public SenparcDbContextFactory_SQLite()
+        public SenparcDbContextFactory_PostgreSQL()
             : base(
                  /* Debug模式下项目根目录
                  /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
