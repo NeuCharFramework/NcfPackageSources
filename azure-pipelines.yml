@@ -482,6 +482,25 @@ steps:
   condition: succeededOrFailed()
 
 
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.PostgreSQL
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.PostgreSQL.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.PostgreSQL- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.PostgreSQL.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.XncfBuilder.Template
