@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.2.17</PackageVersion>
+		<PackageVersion>0.2.18.1</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>JeffreySu</Authors>
@@ -22,6 +22,7 @@
 			v0.1 创世
 			v0.1.7 删除无用的日志文件
 			v0.2.3 添加 UseWebApi 选项
+			v0.2.18 添加 PostgreSQL 数据库
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>

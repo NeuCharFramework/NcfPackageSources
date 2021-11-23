@@ -112,9 +112,8 @@ namespace Senparc.Ncf.Database.PostgreSQL
         {
             //var schma = dbContext.Model.FindEntityType(type).GetSchema();
             //TODO: 增加 schma
-            return $"DROP TABLE {tableName}";
+            return $"DROP TABLE \"{tableName}\"";//CASCADE
         }
-
 
     }
 }

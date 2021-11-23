@@ -15,7 +15,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [Description("解决方案文件（.sln）路径||输入 NCF 项目的解决方案（.sln）文件完整物理路径，将在其并列位置生成模块目录，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\NCF.sln")]
+        [Description("解决方案文件（.sln）路径||输入 NCF 项目的解决方案（.sln）文件完整物理路径，将在其并列位置生成模块目录，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\NCF.sln")]
         public string SlnFilePath { get; set; }
 
         [Description("配置解决方案文件（.sln）||")]

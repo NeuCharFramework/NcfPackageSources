@@ -4,7 +4,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
-using Senparc.Xncf.XncfBuilder.Functions;
+using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,8 +25,8 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
         {
             using (var service = base.ServiceCollection.BuildServiceProvider())
             {
-                var function = new AddMigration(service);
-                var result = function.Run(new AddMigration.Parameters()
+                var function = new DatabaseMigrationsAppService(service);
+                var result = function.Migration(new OHS.PL.DatabaseMigrations_MigrationRequest
                 {
                     DatabaseTypes = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
                     {
