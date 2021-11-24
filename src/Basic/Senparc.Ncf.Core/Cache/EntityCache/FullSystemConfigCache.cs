@@ -29,7 +29,7 @@ namespace Senparc.Ncf.Core.Cache
             try
             {
 
-                systemConfig = (_dataContext.BaseDataContext as SenparcEntitiesBase).SystemConfigs.FirstOrDefault();
+                systemConfig = (_dataContext.BaseDataContext as SenparcEntitiesBase).Set<SystemConfig>().FirstOrDefault();
             }
             catch
             {
