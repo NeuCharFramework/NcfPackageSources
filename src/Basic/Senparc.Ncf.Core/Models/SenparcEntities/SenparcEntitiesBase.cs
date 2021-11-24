@@ -10,7 +10,7 @@ namespace Senparc.Ncf.Core.Models
     {
         #region 多租户
         public DbSet<TenantInfo> TenantInfos { get; set; }
-        
+
         #endregion
 
         #region 系统表（无特殊情况不要修改）
@@ -20,10 +20,6 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
 
-        /// <summary>
-        /// 用户信息
-        /// </summary>
-        public virtual DbSet<Account> Accounts { get; set; }
 
         /// <summary>
         /// 菜单
@@ -51,17 +47,6 @@ namespace Senparc.Ncf.Core.Models
         public DbSet<SysRoleAdminUserInfo> SysRoleAdminUserInfos { get; set; }
 
         /// <summary>
-        /// 用户积分日志
-        /// </summary>
-        public virtual DbSet<PointsLog> PointsLogs { get; set; }
-
-        /// <summary>
-        /// 用户支付日志
-        /// </summary>
-
-        public virtual DbSet<AccountPayLog> AccountPayLogs { get; set; }
-
-        /// <summary>
         /// 扩展模块
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
@@ -80,10 +65,6 @@ namespace Senparc.Ncf.Core.Models
 
             #region 不可修改系统表
             modelBuilder.ApplyConfiguration(new XncfModuleAccountConfigurationMapping());
-            modelBuilder.ApplyConfiguration(new AccountConfigurationMapping());
-            modelBuilder.ApplyConfiguration(new AccountPayLogConfigurationMapping());
-            modelBuilder.ApplyConfiguration(new PointsLogConfigurationMapping());
-
             #endregion
 
             base.OnModelCreating(modelBuilder);

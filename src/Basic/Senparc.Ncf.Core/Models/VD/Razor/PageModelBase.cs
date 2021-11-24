@@ -54,7 +54,7 @@ namespace Senparc.Ncf.Core.Models.VD
 
         public List<Messager> MessagerList { get; set; }
 
-        public FullAccount FullAccount { get; set; }
+        //public FullAccount FullAccount { get; set; }
 
         public DateTime PageStartTime { get; set; }
 
