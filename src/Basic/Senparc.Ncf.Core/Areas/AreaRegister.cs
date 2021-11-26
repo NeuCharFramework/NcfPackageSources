@@ -54,7 +54,11 @@ namespace Senparc.Ncf.Core.Areas
                 }
                 catch (Exception ex)
                 {
-                    SenparcTrace.SendCustomLog("AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName, ex.ToString());
+                    var title = "AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName;
+                    var message = ex.ToString();
+                    Console.WriteLine(title);
+                    Console.WriteLine(message);
+                    SenparcTrace.SendCustomLog(title, message);
                 }
             }, false);
             return builder;

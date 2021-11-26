@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
-    <Version>0.9.4.3-beta6</Version>
+    <Version>0.9.4.4-beta6</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,11 +17,12 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-			v0.1 创世
-			v0.1.1 完善自动部署模块 Xncf
-			v0.3.101 丰富 XncfModule 的数据库属性
-			v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
-</PackageReleaseNotes>
+		v0.1 创世
+		v0.1.1 完善自动部署模块 Xncf
+		v0.3.101 丰富 XncfModule 的数据库属性
+		v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
+		v0.9.4.4 完善出错日志输出
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
