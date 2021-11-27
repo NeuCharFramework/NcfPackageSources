@@ -190,8 +190,8 @@ namespace Senparc.Ncf.XncfBase
 
                 }
 
-                //删除 Migration 记录
-                if (this is IXncfDatabase databaseRegister)
+                //删除 Migration 记录，如果为系统表，则不删除
+                if (this is IXncfDatabase databaseRegister && databaseRegister.DatabaseUniquePrefix != NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX)
                 {
                     var migrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
                     SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
@@ -256,11 +256,11 @@ namespace Senparc.Ncf.XncfBase
         {
             if (this is IXncfDatabase databaseRegister)
             {
+
                 //遍历所有Register中的数据库进行注册
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
                     var dbContextTypes = XncfDatabaseDbContextPool.Instance[this.GetType()];
-
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
                         var dbOptionBuilderType = dbContextType.GetConstructors()
@@ -313,6 +313,7 @@ namespace Senparc.Ncf.XncfBase
                         };
                         //添加 XncfSenparcEntities 依赖注入配置
                         services.AddScoped(dbContextType, implementationFactory);
+
                         //注册当前数据库的对象（必须）
                         EntitySetKeys.TryLoadSetInfo(dbContextType);
                     }

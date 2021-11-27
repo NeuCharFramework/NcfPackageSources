@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <!--<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>-->
-    <Version>0.9.1.2-beta6</Version>
+    <Version>0.9.1.6-beta6</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -25,6 +25,7 @@
 			v0.3.305 添加 XncfAutoConfigurationMapping 特性
 			v0.3.501 添加 Register.IsRegistered 方法
 			v0.7 升级 Function 为 FunctionRender
+			v0.9.1.6 优化 DDD 分层，忽略系统表的删除 History 操作 
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
