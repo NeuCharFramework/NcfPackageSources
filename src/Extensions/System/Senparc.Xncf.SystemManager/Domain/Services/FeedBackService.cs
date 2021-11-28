@@ -1,7 +1,7 @@
 using System;
 using Senparc.Ncf.Log;
 using Senparc.Ncf.Service;
-using Senparc.Xncf.SystemManager.ACL;
+using Senparc.Xncf.SystemManager.ACL.Repository;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 namespace Senparc.Xncf.SystemManager.Domain.Services
