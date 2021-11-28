@@ -2,7 +2,7 @@
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
-namespace Senparc.Xncf.SystemManager.ACL
+namespace Senparc.Xncf.SystemManager.ACL.Repository
 {
     public interface IFeedBackRepository : IClientRepositoryBase<FeedBack>
     {
