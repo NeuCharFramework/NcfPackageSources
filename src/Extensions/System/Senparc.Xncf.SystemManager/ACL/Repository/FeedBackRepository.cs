@@ -1,7 +1,8 @@
 ﻿using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
+using Senparc.Xncf.SystemManager.Models;
 
-namespace Senparc.Xncf.SystemPermission.ACL
+namespace Senparc.Xncf.SystemManager.ACL.Repository
 {
     public interface IFeedBackRepository : IClientRepositoryBase<FeedBack>
     {

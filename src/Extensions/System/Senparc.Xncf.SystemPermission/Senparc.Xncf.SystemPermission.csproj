@@ -69,6 +69,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="ACL\Repository\" />
 		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
+		<Folder Include="Domain\Services\" />
 	</ItemGroup>
 </Project>
