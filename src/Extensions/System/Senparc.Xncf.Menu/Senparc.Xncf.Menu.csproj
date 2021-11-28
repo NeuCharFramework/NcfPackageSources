@@ -7,10 +7,10 @@
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
 		<Description>系统菜单管理</Description>
-		<Copyright>Senparc</Copyright>
+		<Copyright>NeuCharFramework</Copyright>
 		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Menu</PackageTags>
-		<Authors>Senparc</Authors>
-		<Owners>Senparc</Owners>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
 		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
 		<Title>菜单管理</Title>
 		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
@@ -42,24 +42,6 @@
 	<ItemGroup>
 		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>
-
-	<!--<ItemGroup>
-	  <Content Remove="templates\template1\App_Data\Database\SenparcConfig.config" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_ViewStart.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Menu\DatabaseSample.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Menu\Index.cshtml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="templates\template1\App_Data\Database\SenparcConfig.config" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_ViewStart.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Menu\DatabaseSample.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Menu\Index.cshtml" />
-	</ItemGroup>-->
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
