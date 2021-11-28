@@ -15,8 +15,9 @@ using Senparc.Ncf.Core.Exceptions;
 using AutoMapper.QueryableExtensions;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Service;
 
-namespace Senparc.Ncf.Service
+namespace Senparc.Xncf.Menu.Domain
 {
     /// <summary>
     /// 

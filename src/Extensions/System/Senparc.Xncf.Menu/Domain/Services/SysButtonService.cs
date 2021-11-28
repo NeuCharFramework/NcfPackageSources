@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Repository;
+using Senparc.Ncf.Service;
 using Senparc.Respository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Service
+namespace Senparc.Xncf.Menu.Domain
 {
     public class SysButtonService : ClientServiceBase<SysButton>
     {

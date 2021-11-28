@@ -59,7 +59,6 @@
 
 	<ItemGroup>
 		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
-		<Folder Include="Domain\Services\" />
 		<Folder Include="OHS\Local\AppService\" />
 	</ItemGroup>
 </Project>
