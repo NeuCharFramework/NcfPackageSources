@@ -98,6 +98,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.EmailExtension
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.SmsExtension", "Extensions\Unpublished\Senparc.Xncf.SmsExtension\Senparc.Xncf.SmsExtension.csproj", "{DAD20A24-09C4-4104-A930-99BD6A0216D5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{97BBCB28-782F-43D5-A604-0376298AF256}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Menu", "Extensions\System\Senparc.Xncf.Menu\Senparc.Xncf.Menu.csproj", "{023A95DB-D8AA-4123-9F9B-6A4616C7243A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -360,6 +364,14 @@ Global
 		{DAD20A24-09C4-4104-A930-99BD6A0216D5}.TemplateRelease|Any CPU.Build.0 = TemplateRelease|Any CPU
 		{DAD20A24-09C4-4104-A930-99BD6A0216D5}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{DAD20A24-09C4-4104-A930-99BD6A0216D5}.Test|Any CPU.Build.0 = Test|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.TemplateRelease|Any CPU.ActiveCfg = TemplateRelease|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.TemplateRelease|Any CPU.Build.0 = TemplateRelease|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -407,6 +419,8 @@ Global
 		{0B27A4D6-3E6F-485F-8150-FFAD27F6F8F7} = {4771E55A-AC48-4DB6-BA73-89B65DA24955}
 		{04FA0D71-27D0-485E-8CF3-4F9A76507919} = {4771E55A-AC48-4DB6-BA73-89B65DA24955}
 		{DAD20A24-09C4-4104-A930-99BD6A0216D5} = {4771E55A-AC48-4DB6-BA73-89B65DA24955}
+		{97BBCB28-782F-43D5-A604-0376298AF256} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
+		{023A95DB-D8AA-4123-9F9B-6A4616C7243A} = {97BBCB28-782F-43D5-A604-0376298AF256}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
