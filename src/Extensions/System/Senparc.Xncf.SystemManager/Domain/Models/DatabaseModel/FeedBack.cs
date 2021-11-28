@@ -3,7 +3,7 @@ using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Senparc.Ncf.Core.Models.DataBaseModel
+namespace Senparc.Xncf.SystemManager.Models
 {
     /// <summary>
     /// 意见反馈

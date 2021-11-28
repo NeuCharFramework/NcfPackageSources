@@ -4,6 +4,7 @@ using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Log;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.SystemManager.ACL.Repository;
 using System;
 using System.Threading.Tasks;
 

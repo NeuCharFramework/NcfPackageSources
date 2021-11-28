@@ -1,5 +1,4 @@
-﻿using Senparc.Core.Models;
-using Senparc.Ncf.Core.Models;
+﻿using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 
 namespace Senparc.Xncf.SystemManager.ACL.Repository

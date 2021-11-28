@@ -1,8 +1,8 @@
 using System;
 using Senparc.Ncf.Log;
-using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Repository;
+using Senparc.Xncf.SystemManager.Models;
 
 namespace Senparc.Xncf.SystemManager.Domain
 {
