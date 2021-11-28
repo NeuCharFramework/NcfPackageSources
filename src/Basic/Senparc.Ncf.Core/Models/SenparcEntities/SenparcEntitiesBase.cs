@@ -8,6 +8,7 @@ namespace Senparc.Ncf.Core.Models
 {
     public abstract class SenparcEntitiesBase : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
+        //TODO：迁移到独立模块中（SystemManager）
         #region 多租户
         public DbSet<TenantInfo> TenantInfos { get; set; }
 
