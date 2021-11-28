@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Senparc.Xncf.SystemManager.Models;
+using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 

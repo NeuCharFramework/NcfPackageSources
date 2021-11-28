@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Senparc.Xncf.SystemManager.Models
+namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
     /// SenparcDbContextFactory 的公共配置

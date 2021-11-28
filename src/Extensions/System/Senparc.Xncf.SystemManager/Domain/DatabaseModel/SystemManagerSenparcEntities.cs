@@ -4,7 +4,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 
-namespace Senparc.Xncf.SystemManager.Models
+namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     public class SystemManagerSenparcEntities : XncfDatabaseDbContext
     {

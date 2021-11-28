@@ -2,7 +2,7 @@ using System;
 using Senparc.Ncf.Log;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Repository;
-using Senparc.Xncf.SystemManager.Models;
+using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 namespace Senparc.Xncf.SystemManager.Domain
 {
@@ -12,7 +12,7 @@ namespace Senparc.Xncf.SystemManager.Domain
         {
         }
 
-        public FeedBack CreateOrUpdate( string content, int userId, string id = "")
+        public FeedBack CreateOrUpdate(string content, int userId, int id)
         {
             var obj = GetObject(z => z.Id == id) ?? new FeedBack()
             {

@@ -3,12 +3,12 @@ using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Senparc.Xncf.SystemManager.Models
+namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
     /// 意见反馈
     /// </summary>
-    public class FeedBack : EntityBase<string>
+    public class FeedBack : EntityBase<int>
     {
         public int AccountId { get; set; }
 

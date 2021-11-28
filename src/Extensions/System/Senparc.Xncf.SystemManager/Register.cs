@@ -7,6 +7,9 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Xncf.SystemManager
 {
@@ -25,15 +28,40 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => "系统管理";
+        public override string Description => "这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
+
+            //更新数据库
+            var pendingMigs = await senparcEntities.Database.GetPendingMigrationsAsync();
+            if (pendingMigs.Count() > 0)
+            {
+                senparcEntities.ResetMigrate();//重置合并状态
+
+                try
+                {
+                    var script = senparcEntities.Database.GenerateCreateScript();
+                    SenparcTrace.SendCustomLog("senparcEntities.Database.GenerateCreateScript", script);
+
+                    senparcEntities.Migrate();//进行合并
+                }
+                catch (Exception ex)
+                {
+                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
+                    SenparcTrace.BaseExceptionLog(new NcfDatabaseException(ex.Message, currentDatabaseConfiguration.GetType(), senparcEntities.GetType(), ex));
+                }
+            }
+
+            await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            await unsinstallFunc().ConfigureAwait(false);
+            //TODO：应该提供一个 BeforeUninstall 方法，阻止卸载。
+
+            await base.UninstallAsync(serviceProvider, unsinstallFunc);
         }
         #endregion
 

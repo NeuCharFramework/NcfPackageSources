@@ -7,7 +7,7 @@ using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 
-namespace Senparc.Xncf.SystemManager.Models
+namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
     public class SystemManagerSenparcEntities_Sqlite : SystemManagerSenparcEntities

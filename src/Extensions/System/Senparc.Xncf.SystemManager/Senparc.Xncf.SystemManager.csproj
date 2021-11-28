@@ -63,7 +63,6 @@
 		<Folder Include="Domain\Migrations\Migrations\PostgreSQL\" />
 		<Folder Include="Domain\Migrations\Migrations\Sqlite\" />
 		<Folder Include="Domain\Migrations\Migrations\SqlServer\" />
-		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
 		<Folder Include="OHS\Local\AppService\" />
 	</ItemGroup>
 </Project>
