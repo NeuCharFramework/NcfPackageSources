@@ -34,7 +34,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+		<!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>
@@ -59,6 +60,7 @@
 
 	<ItemGroup>
 		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
+		<Folder Include="Domain\Services\" />
 		<Folder Include="OHS\Local\AppService\" />
 	</ItemGroup>
 </Project>

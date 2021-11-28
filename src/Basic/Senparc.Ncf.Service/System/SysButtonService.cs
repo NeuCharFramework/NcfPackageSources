@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.Menu.Domain
+namespace Senparc.Ncf.Service
 {
     public class SysButtonService : ClientServiceBase<SysButton>
     {

@@ -17,7 +17,7 @@ using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Service;
 
-namespace Senparc.Xncf.Menu.Domain
+namespace Senparc.Ncf.Service
 {
     /// <summary>
     /// 
