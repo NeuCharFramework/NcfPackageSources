@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Xncf.SystemPermission
 {
@@ -16,8 +16,8 @@ namespace Senparc.Xncf.SystemPermission
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.SystemPermission";
-
-        public override string Uid => "0E7E2D66-DCAA-46B1-AADE-10935516FC3B";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        
+        public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_PERMISSION_UID;// "00000000-0000-0000-0000-000000000005";
 
         public override string Version => "0.1";//必须填写版本号
 
