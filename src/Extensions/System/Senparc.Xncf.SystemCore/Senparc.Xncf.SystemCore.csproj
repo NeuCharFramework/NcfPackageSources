@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>0.1.1</Version>
-		<AssemblyName>Senparc.Xncf.SystemPermission</AssemblyName>
-		<RootNamespace>Senparc.Xncf.SystemPermission</RootNamespace>
+		<Version>0.1</Version>
+		<AssemblyName>Senparc.Xncf.SystemCore</AssemblyName>
+		<RootNamespace>Senparc.Xncf.SystemCore</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-		<Description>系统权限管理</Description>
+		<Description>系统核心模块（运行系统必须）</Description>
 		<Copyright>NeuCharFramework</Copyright>
-		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.SystemPermission</PackageTags>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.SystemCore</PackageTags>
 		<Authors>NeuCharFramework</Authors>
 		<Owners>NeuCharFramework</Owners>
 		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
-		<Title>权限管理</Title>
+		<Title>菜单管理</Title>
 		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
@@ -25,7 +25,7 @@
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
-		<!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.SystemPermission.XML</DocumentationFile>
+		<!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.SystemCore.XML</DocumentationFile>
 		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
 		<Optimize>true</Optimize>
 		<DebugType>pdbonly</DebugType>
@@ -34,24 +34,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+		<!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="App_Data\SenparcTraceLog\*" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Remove="Domain\Migrations\**" />
-	  <Compile Remove="OHS\**" />
-	  <Content Remove="Domain\Migrations\**" />
-	  <Content Remove="OHS\**" />
-	  <EmbeddedResource Remove="Domain\Migrations\**" />
-	  <EmbeddedResource Remove="OHS\**" />
-	  <None Remove="Domain\Migrations\**" />
-	  <None Remove="OHS\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,8 +59,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="ACL\Repository\" />
-		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
 		<Folder Include="Domain\Services\" />
+		<Folder Include="OHS\Local\AppService\" />
 	</ItemGroup>
 </Project>

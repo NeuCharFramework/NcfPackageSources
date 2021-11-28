@@ -1,18 +1,19 @@
 using System;
 using Senparc.Ncf.Log;
 using Senparc.Ncf.Service;
-using Senparc.Ncf.Repository;
+using Senparc.Xncf.SystemManager.ACL;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
-namespace Senparc.Xncf.SystemManager.Domain
+namespace Senparc.Xncf.SystemManager.Domain.Services
 {
     public class FeedBackService : ClientServiceBase<FeedBack>
     {
-        public FeedBackService(IClientRepositoryBase<FeedBack> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public FeedBackService(FeedBackRepository repo, IServiceProvider serviceProvider)
+            : base(repo, serviceProvider)
         {
         }
 
-        public FeedBack CreateOrUpdate(string content, int userId, int id)
+        public FeedBack CreateOrUpdate( string content, int userId, int id = 0)
         {
             var obj = GetObject(z => z.Id == id) ?? new FeedBack()
             {

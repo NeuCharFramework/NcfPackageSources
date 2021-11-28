@@ -1,7 +1,6 @@
 ﻿
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
-using Senparc.Core.Models;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
@@ -15,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.XncfModuleManager.Models;
 
 namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 {
@@ -131,7 +131,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                     PermissionId = sysMemu.Id
                 };
                 //SenparcEntities db = _serviceProvider.GetService<SenparcEntities>();
-                SenparcEntities db = _serviceProvider.GetService<SenparcEntities>();
+                XncfModuleManagerSenparcEntities db = _serviceProvider.GetService<XncfModuleManagerSenparcEntities>();
                 db.Set<SysPermission>().Add(new SysPermission(sysPermissionDto));
                 await db.SaveChangesAsync();
                 var updateMenuDto = new UpdateMenuId_XncfModuleDto(register.Uid, sysMemu.Id);

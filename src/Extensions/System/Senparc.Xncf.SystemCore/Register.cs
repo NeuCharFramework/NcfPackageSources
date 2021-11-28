@@ -13,14 +13,14 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.SystemCore.Domain.DatabaseModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace Senparc.Xncf.SystemManager
+namespace Senparc.Xncf.SystemCore
 {
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
 
-        public override string Name => "Senparc.Xncf.SystemManager";
+        public override string Name => "Senparc.Xncf.SystemCore";
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_UID;// "00000000-0000-0000-0000-000000000001";
 
