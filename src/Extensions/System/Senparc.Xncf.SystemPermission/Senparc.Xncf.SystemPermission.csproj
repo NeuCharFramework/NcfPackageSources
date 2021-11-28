@@ -44,6 +44,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Domain\Migrations\**" />
+	  <Compile Remove="OHS\**" />
+	  <Content Remove="Domain\Migrations\**" />
+	  <Content Remove="OHS\**" />
+	  <EmbeddedResource Remove="Domain\Migrations\**" />
+	  <EmbeddedResource Remove="OHS\**" />
+	  <None Remove="Domain\Migrations\**" />
+	  <None Remove="OHS\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
@@ -58,8 +69,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Domain\Migrations\" />
 		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
-		<Folder Include="OHS\Local\AppService\" />
 	</ItemGroup>
 </Project>

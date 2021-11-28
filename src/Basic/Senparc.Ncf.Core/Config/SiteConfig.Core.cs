@@ -56,6 +56,7 @@ namespace Senparc.Ncf.Core.Config
         public const string SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0000-0000-000000000002";
         public const string SYSTEM_XNCF_MODULE_ACCOUNTS_UID = "00000000-0000-0000-0000-000000000003";
         public const string SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID = "00000000-0000-0000-0000-000000000004";
+        public const string SYSTEM_XNCF_MODULE_SYSTEM_PERMISSION_UID = "00000000-0000-0000-0000-000000000005";
 
         public const string TENANT_DEFAULT_NAME = "DEFAULT";//多租户 TenantName 默认值（不作为任何一个特殊租户）
 
