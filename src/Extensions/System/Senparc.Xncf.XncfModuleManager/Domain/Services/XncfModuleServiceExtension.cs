@@ -63,7 +63,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             {
                 installOrUpdateValue = installOrUpdate;
                 //底层系统模块此时还没有设置好初始化的菜单信息，不能设置菜单
-                if (register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_UID &&
+                if (register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID &&
                     register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID
                     )
                 {
@@ -105,7 +105,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 var order = 20;
                 switch (register.Uid)
                 {
-                    case SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_UID:
+                    case SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID:
                         order = 160;
                         break;
                     case SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID:

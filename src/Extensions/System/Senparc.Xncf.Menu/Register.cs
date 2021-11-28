@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Xncf.Menu
 {
@@ -18,7 +18,7 @@ namespace Senparc.Xncf.Menu
 
         public override string Name => "Senparc.Xncf.Menu";
 
-        public override string Uid => "E9226280-39A4-44DD-9DC9-98429042E495";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_MENU_UID;// "00000000-0000-0000-0000-000000000005";
 
         public override string Version => "0.1";//必须填写版本号
 
