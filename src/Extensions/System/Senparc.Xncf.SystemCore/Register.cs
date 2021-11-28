@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Senparc.Xncf.SystemCore
 {
     [XncfRegister]
+    [XncfOrder(5999)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口

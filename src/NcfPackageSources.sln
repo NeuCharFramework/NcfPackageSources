@@ -99,16 +99,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.SmsExtension", "Extensions\Unpublished\Senparc.Xncf.SmsExtension\Senparc.Xncf.SmsExtension.csproj", "{DAD20A24-09C4-4104-A930-99BD6A0216D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{97BBCB28-782F-43D5-A604-0376298AF256}"
+	ProjectSection(SolutionItems) = preProject
+		Extensions\System\readme.md = Extensions\System\readme.md
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Menu", "Extensions\System\Senparc.Xncf.Menu\Senparc.Xncf.Menu.csproj", "{023A95DB-D8AA-4123-9F9B-6A4616C7243A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5960]Senparc.Xncf.Menu", "Extensions\System\Senparc.Xncf.Menu\[5960]Senparc.Xncf.Menu.csproj", "{023A95DB-D8AA-4123-9F9B-6A4616C7243A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.SystemManager", "Extensions\System\Senparc.Xncf.SystemManager\Senparc.Xncf.SystemManager.csproj", "{DED3B5E4-D281-4399-BD0E-3F612FF419F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.SystemManager", "Extensions\System\Senparc.Xncf.SystemManager\[5990]Senparc.Xncf.SystemManager.csproj", "{DED3B5E4-D281-4399-BD0E-3F612FF419F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.XncfModuleManager", "Extensions\System\Senparc.Xncf.XncfModuleManager\Senparc.Xncf.XncfModuleManager.csproj", "{4135ED8B-229C-45C2-93E2-2A62E84E47ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5970]Senparc.Xncf.XncfModuleManager", "Extensions\System\Senparc.Xncf.XncfModuleManager\[5970]Senparc.Xncf.XncfModuleManager.csproj", "{4135ED8B-229C-45C2-93E2-2A62E84E47ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.SystemPermission", "Extensions\System\Senparc.Xncf.SystemPermission\Senparc.Xncf.SystemPermission.csproj", "{642255CD-4B42-4CEB-A80A-D7D83F6CA989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5980]Senparc.Xncf.SystemPermission", "Extensions\System\Senparc.Xncf.SystemPermission\[5980]Senparc.Xncf.SystemPermission.csproj", "{642255CD-4B42-4CEB-A80A-D7D83F6CA989}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.SystemCore", "Extensions\System\Senparc.Xncf.SystemCore\Senparc.Xncf.SystemCore.csproj", "{6BB6D7C5-DC0A-4A57-BA61-F310A2D37A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5999]Senparc.Xncf.SystemCore", "Extensions\System\Senparc.Xncf.SystemCore\[5999]Senparc.Xncf.SystemCore.csproj", "{6BB6D7C5-DC0A-4A57-BA61-F310A2D37A42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

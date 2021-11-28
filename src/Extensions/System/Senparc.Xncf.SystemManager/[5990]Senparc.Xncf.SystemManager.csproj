@@ -50,7 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.SystemCore\Senparc.Xncf.SystemCore.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.SystemCore\[5999]Senparc.Xncf.SystemCore.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Migrations\Migrations\MySql\" />

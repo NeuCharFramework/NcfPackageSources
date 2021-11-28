@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 namespace Senparc.Xncf.Menu
 {
     [XncfRegister]
+    [XncfOrder(5960)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口

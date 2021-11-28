@@ -11,6 +11,7 @@ using Senparc.Ncf.Core.Config;
 namespace Senparc.Xncf.SystemPermission
 {
     [XncfRegister]
+    [XncfOrder(5980)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
