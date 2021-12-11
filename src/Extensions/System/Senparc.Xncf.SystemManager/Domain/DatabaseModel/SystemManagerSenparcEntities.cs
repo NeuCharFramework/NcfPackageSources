@@ -6,6 +6,9 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
+    /// <summary>
+    /// 当前上下文不应该和租户无关
+    /// </summary>
     public class SystemManagerSenparcEntities : XncfDatabaseDbContext
     {
         public SystemManagerSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
@@ -16,12 +19,6 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         /// 系统设置
         /// </summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
-
-        #region 多租户
-        public DbSet<TenantInfo> TenantInfos { get; set; }
-
-        #endregion
-
 
         public DbSet<FeedBack> FeedBacks { get; set; }
 

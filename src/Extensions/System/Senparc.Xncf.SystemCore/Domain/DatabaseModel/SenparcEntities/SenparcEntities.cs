@@ -35,7 +35,7 @@ namespace Senparc.Xncf.SystemCore.Domain.DatabaseModel
 
             #endregion
 
-            #region 其他动态模块
+            #region 其他动态模块注入到当前 DbContext
 
             foreach (var databaseRegister in XncfRegisterManager.XncfDatabaseList)
             {
