@@ -10,7 +10,6 @@ using Senparc.Ncf.Core.Config;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 using Microsoft.EntityFrameworkCore;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
@@ -24,7 +23,7 @@ namespace Senparc.Xncf.Tenant
 
         public override string Name => "Senparc.Xncf.Tenant";
 
-        public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID;// "00000000-0000-0000-0000-000000000001";
+        public override string Uid => SiteConfig.SYSTEM_XNCF_TANENT_UID;// "00000000-0000-0000-0000-000000000006";
 
         public override string Version => "0.1";//必须填写版本号
 
@@ -48,7 +47,7 @@ namespace Senparc.Xncf.Tenant
                 try
                 {
                     var script = tenantEntities.Database.GenerateCreateScript();
-                    SenparcTrace.SendCustomLog("senparcEntities.Database.GenerateCreateScript", script);
+                    SenparcTrace.SendCustomLog("tenantEntities.Database.GenerateCreateScript", script);
 
                     tenantEntities.Migrate();//进行合并
                 }

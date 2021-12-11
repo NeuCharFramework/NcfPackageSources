@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Service", "Basi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.SMS", "Basic\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj", "{D67659FE-8708-4913-9A56-BE8ECB838405}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevelopmentTools", "DevelopmentTools", "{FEF3CC72-9596-49E1-A910-990F607E9E76}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FEF3CC72-9596-49E1-A910-990F607E9E76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{BBF132A7-018B-417A-9F56-396FB9CF391D}"
 EndProject
