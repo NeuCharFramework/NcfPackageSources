@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
+using Senparc.Xncf.XncfModuleManager.DataBaseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+            modelBuilder.ApplyConfiguration(new XncfModuleAccountConfigurationMapping());
         }
     }
 }

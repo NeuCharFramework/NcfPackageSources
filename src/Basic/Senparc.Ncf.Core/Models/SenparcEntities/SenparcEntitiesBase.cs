@@ -8,12 +8,6 @@ namespace Senparc.Ncf.Core.Models
 {
     public abstract class SenparcEntitiesBase : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
-        //TODO：迁移到独立模块中（SystemManager）
-        #region 多租户
-        public DbSet<TenantInfo> TenantInfos { get; set; }
-
-        #endregion
-
         protected SenparcEntitiesBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options, serviceProvider)
         {
         }
@@ -23,7 +17,6 @@ namespace Senparc.Ncf.Core.Models
             //Console.WriteLine("\t SenparcEntitiesBase OnModelCreating");
 
             #region 不可修改系统表
-            modelBuilder.ApplyConfiguration(new XncfModuleAccountConfigurationMapping());
             #endregion
 
             base.OnModelCreating(modelBuilder);

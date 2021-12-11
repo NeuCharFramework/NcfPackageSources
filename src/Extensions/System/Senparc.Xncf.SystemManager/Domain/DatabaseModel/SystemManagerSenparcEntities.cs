@@ -17,6 +17,12 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         /// </summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
 
+        #region 多租户
+        public DbSet<TenantInfo> TenantInfos { get; set; }
+
+        #endregion
+
+
         public DbSet<FeedBack> FeedBacks { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point

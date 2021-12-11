@@ -2,17 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(SystemManagerSenparcEntities_Sqlite))]
-    partial class SystemManagerSenparcEntities_SqliteModelSnapshot : ModelSnapshot
+    [Migration("20211211070737_Add_TenantInfo")]
+    partial class Add_TenantInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");

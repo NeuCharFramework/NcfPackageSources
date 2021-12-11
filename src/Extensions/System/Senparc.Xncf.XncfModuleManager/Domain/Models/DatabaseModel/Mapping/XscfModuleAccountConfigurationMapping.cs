@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Models.DataBaseModel
+namespace Senparc.Xncf.XncfModuleManager.DataBaseModel
 {
     public class XncfModuleAccountConfigurationMapping : ConfigurationMappingWithIdBase<XncfModule, int>
     {
