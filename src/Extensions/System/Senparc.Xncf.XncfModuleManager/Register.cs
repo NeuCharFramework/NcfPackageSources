@@ -36,6 +36,7 @@ namespace Senparc.Xncf.XncfModuleManager
             //安装或升级数据库
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
+            Console.WriteLine("1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
 
             //TODO：DI注入注册时候，根据指定数据库进行绑定
 

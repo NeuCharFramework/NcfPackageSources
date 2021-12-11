@@ -116,19 +116,20 @@ namespace Senparc.Ncf.XncfBase.Database
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="databaseRegister">实现了数据库接口的 Register，databaseRegister.TryGetXncfDatabaseDbContextType 必须返回 XncfDatabaseDbContext 的子类</param>
+        /// <param name="checkdbContextType">是否需要对 dbContextType 类型进行检查</param>
         /// <returns></returns>
-        public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister)
+        public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister, bool checkdbContextType = true)
         {
             Console.WriteLine("1211=== MigrateOnInstallAsync 01:" + databaseRegister.GetType().FullName);
-            var dbContext = serviceProvider.GetService(databaseRegister.TryGetXncfDatabaseDbContextType);
-            if (dbContext is XncfDatabaseDbContext xncfDatabaseDbContext)
+
+            var dbContextType = databaseRegister.TryGetXncfDatabaseDbContextType;
+            if (checkdbContextType && !dbContextType.IsSubclassOf(typeof(XncfDatabaseDbContext)))
             {
-                await MigrateOnInstallAsync(xncfDatabaseDbContext);
+                throw new NcfDatabaseException("dbContextType 参数必须继承自 XncfDatabaseDbContext", null, dbContextType);
             }
-            else
-            {
-                throw new NcfDatabaseException("DbContext 必须为 XncfDatabaseDbContext 的子类！", DatabaseConfigurationFactory.Instance.Current.GetType());
-            }
+
+            var xncfDatabaseDbContext = serviceProvider.GetService(dbContextType) as XncfDatabaseDbContext;
+            await MigrateOnInstallAsync(xncfDatabaseDbContext);
         }
 
 

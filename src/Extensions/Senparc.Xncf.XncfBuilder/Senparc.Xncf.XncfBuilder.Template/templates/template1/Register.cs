@@ -12,6 +12,7 @@ using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
+using Senparc.Ncf.XncfBase.Database;
 #endif
 #if (UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
@@ -40,7 +41,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         {
 #if (UseDatabase || UseSample)
             //安装或升级版本时更新数据库
-            await base.MigrateDatabaseAsync(serviceProvider);
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             //根据安装或更新不同条件执行逻辑
             switch (installOrUpdate)
