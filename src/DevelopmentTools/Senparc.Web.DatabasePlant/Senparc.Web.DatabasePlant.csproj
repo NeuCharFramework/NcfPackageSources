@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.SystemManager\[5990]Senparc.Xncf.SystemManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.Tenant\[6000]Senparc.Xncf.Tenant.csproj" />
 	</ItemGroup>
 
 </Project>

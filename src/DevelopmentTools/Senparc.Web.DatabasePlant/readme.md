@@ -32,25 +32,25 @@ Senparc.Ncf.DatabasePlant 引用了 NCF 官方实现的所有数据库的 Databa
 当手头没有可以直接执行的 NCF 项目（主要是 XncfBuilder 模块）时，可以使用手动命令行方式生成数据库，例如，以 SQLite 为例：
 
 ```
-dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_Sqlite -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Sqlite
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_Sqlite -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Sqlite
 ```
 
 以 MySql 为例：
 
 ```
-dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_MySql -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Mysql
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_MySql -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Mysql
 ```
 
 以 SqlServer 为例：
 
 ```
-dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_SqlServer -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\SqlServer
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_SqlServer -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\SqlServer
 ```
 
 以 PostgreSQL 为例：
 
 ```
-dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_PostgreSQL -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\PostgreSQL
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_PostgreSQL -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\PostgreSQL
 ```
 
 ## 更新说明
