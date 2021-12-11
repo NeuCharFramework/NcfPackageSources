@@ -11,7 +11,7 @@ using Senparc.Xncf.SystemPermission.Models;
 namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(SystemPermissionSenparcEntities_SQLite))]
-    [Migration("20211211135040_Init")]
+    [Migration("20211211165257_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

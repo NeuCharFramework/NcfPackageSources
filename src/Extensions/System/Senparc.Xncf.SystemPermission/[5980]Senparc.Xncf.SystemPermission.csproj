@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.1.4.5-beta6</Version>
+    <Version>0.1.4.7-beta6</Version>
     <AssemblyName>Senparc.Xncf.SystemPermission</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemPermission</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -32,24 +32,22 @@
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.1" />
+    <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+
+	  <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Domain\Migrations\**" />
     <Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Compile Remove="OHS\**" />
-    <Content Remove="Domain\Migrations\**" />
     <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Content Remove="OHS\**" />
-    <EmbeddedResource Remove="Domain\Migrations\**" />
     <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <EmbeddedResource Remove="OHS\**" />
-    <None Remove="Domain\Migrations\**" />
     <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <None Remove="OHS\**" />
   </ItemGroup>

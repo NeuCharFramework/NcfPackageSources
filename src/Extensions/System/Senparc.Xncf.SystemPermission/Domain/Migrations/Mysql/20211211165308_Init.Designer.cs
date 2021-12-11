@@ -11,7 +11,7 @@ using Senparc.Xncf.SystemPermission.Models;
 namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Mysql
 {
     [DbContext(typeof(SystemPermissionSenparcEntities_MySql))]
-    [Migration("20211211135049_Init")]
+    [Migration("20211211165308_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
