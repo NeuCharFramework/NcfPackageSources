@@ -119,6 +119,7 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <returns></returns>
         public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister)
         {
+            Console.WriteLine("1211=== MigrateOnInstallAsync 01:" + databaseRegister.GetType().FullName);
             var dbContext = serviceProvider.GetService(databaseRegister.TryGetXncfDatabaseDbContextType);
             if (dbContext is XncfDatabaseDbContext xncfDatabaseDbContext)
             {
@@ -139,12 +140,15 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <exception cref="ArgumentNullException"></exception>
         public static async Task MigrateOnInstallAsync(XncfDatabaseDbContext dbContext)
         {
+            Console.WriteLine("1211=== MigrateOnInstallAsync 02:" + dbContext.GetType().FullName);
+
             if (dbContext is null)
             {
                 throw new ArgumentNullException(nameof(dbContext));
             }
             //更新数据库
             var pendingMigs = await dbContext.Database.GetPendingMigrationsAsync();
+            Console.WriteLine("1211=== MigrateOnInstallAsync 02 - pendingMigs.Count:" + pendingMigs.Count());
             if (pendingMigs.Count() > 0)
             {
                 dbContext.ResetMigrate();//重置合并状态
