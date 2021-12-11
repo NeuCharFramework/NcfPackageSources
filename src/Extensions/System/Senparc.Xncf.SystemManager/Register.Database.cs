@@ -10,7 +10,7 @@ namespace Senparc.Xncf.SystemManager
 {
     public partial class Register : IXncfDatabase
     {
-        public const string DATABASE_PREFIX = NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，
+        public const string DATABASE_PREFIX = "SYSTEM_MANAGER_";//NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，
 
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 

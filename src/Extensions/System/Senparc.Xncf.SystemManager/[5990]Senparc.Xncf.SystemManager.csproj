@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.1.4-beta6</Version>
+    <Version>0.1.4.1-beta6</Version>
     <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
