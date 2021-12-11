@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Database;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -37,7 +38,7 @@ namespace Senparc.Xncf.XncfBuilder
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //更新数据库
-            await base.MigrateDatabaseAsync(serviceProvider);
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
