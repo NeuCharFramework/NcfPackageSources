@@ -5,14 +5,14 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
-using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
+using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.SystemCore
+namespace Senparc.Xncf.Tenant
 {
     public partial class Register : IXncfDatabase
     {

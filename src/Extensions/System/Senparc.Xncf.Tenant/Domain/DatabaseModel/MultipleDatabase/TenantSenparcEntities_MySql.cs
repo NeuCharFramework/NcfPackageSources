@@ -6,10 +6,11 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
+using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 
 namespace Senparc.Xncf.Tanent.Domain.DatabaseModel
 {
-    [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
+    [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Senparc.Xncf.Tenant.Register))]
     public class TenantSenparcEntities_MySql : TenantSenparcEntities
     {
         public TenantSenparcEntities_MySql(DbContextOptions<TenantSenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
@@ -22,7 +23,7 @@ namespace Senparc.Xncf.Tanent.Domain.DatabaseModel
     /// <para>1、切换至 Debug 模式</para>
     /// <para>2、运行：PM> add-migration [更新名称] -c TenantSenparcEntities_MySql -o Domain/Migrations/Migrations.MySql </para>
     /// </summary>
-    public class SenparcDbContextFactory_MySql : SenparcDesignTimeDbContextFactoryBase<TenantSenparcEntities_MySql, Register>
+    public class SenparcDbContextFactory_MySql : SenparcDesignTimeDbContextFactoryBase<TenantSenparcEntities_MySql, Senparc.Xncf.Tenant.Register>
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {

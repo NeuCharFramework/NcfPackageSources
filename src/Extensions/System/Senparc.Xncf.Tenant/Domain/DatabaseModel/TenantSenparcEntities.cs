@@ -4,7 +4,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 
-namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
+namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
     /// <summary>
     /// 当前上下文不应该和租户无关

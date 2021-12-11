@@ -11,7 +11,7 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
+using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 
 namespace Senparc.Xncf.Tenant
 {
