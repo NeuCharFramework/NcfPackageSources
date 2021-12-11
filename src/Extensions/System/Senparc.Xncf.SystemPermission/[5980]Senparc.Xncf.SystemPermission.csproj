@@ -41,12 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Domain\Migrations\**" />
+    <Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Compile Remove="OHS\**" />
     <Content Remove="Domain\Migrations\**" />
+    <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Content Remove="OHS\**" />
     <EmbeddedResource Remove="Domain\Migrations\**" />
+    <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <EmbeddedResource Remove="OHS\**" />
     <None Remove="Domain\Migrations\**" />
+    <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <None Remove="OHS\**" />
   </ItemGroup>
   <ItemGroup>
@@ -62,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ACL\Repository\" />
-    <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
     <Folder Include="Domain\Services\" />
   </ItemGroup>
 </Project>
