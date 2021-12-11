@@ -10,7 +10,7 @@ using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase;
 using System;
 
-namespace Senparc.Xncf.SystemCore.Domain.DatabaseModel
+namespace Senparc.Xncf.SystemCore.Domain.Database
 {
     public partial class SenparcEntities : SenparcEntitiesBase, ISenparcEntitiesDbContext
     {

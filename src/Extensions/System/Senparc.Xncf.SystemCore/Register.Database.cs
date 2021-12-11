@@ -5,7 +5,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
-using Senparc.Xncf.SystemCore.Domain.DatabaseModel;
+using Senparc.Xncf.SystemCore.Domain.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;

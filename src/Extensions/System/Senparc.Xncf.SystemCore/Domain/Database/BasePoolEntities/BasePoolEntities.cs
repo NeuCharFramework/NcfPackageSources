@@ -3,7 +3,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using System;
 
-namespace Senparc.Xncf.SystemCore.Domain.DatabaseModel
+namespace Senparc.Xncf.SystemCore.Domain.Database
 {
     //TODO: 如果后期没有明显变化，考虑合并 SenparcEntities，并取代之
 

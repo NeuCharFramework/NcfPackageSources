@@ -4,7 +4,7 @@ using Senparc.CO2NET;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
 
-namespace Senparc.Xncf.SystemCore.Domain.DatabaseModel
+namespace Senparc.Xncf.SystemCore.Domain.Database
 {
     public interface INcfClientDbData : INcfDbData
     {
