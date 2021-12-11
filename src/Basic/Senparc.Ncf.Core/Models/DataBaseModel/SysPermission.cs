@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
@@ -9,6 +10,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 角色菜单表
     /// </summary>
+    [Table("SysPermissions")]
     public class SysPermission : EntityBase<int>
     {
         public SysPermission()

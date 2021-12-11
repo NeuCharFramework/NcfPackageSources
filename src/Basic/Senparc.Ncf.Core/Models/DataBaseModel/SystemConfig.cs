@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Ncf.Core.Models
 {
     [Serializable]
+    [Table("SystemConfigs")]
     public partial class SystemConfig : EntityBase<int>
     {
         [Required]

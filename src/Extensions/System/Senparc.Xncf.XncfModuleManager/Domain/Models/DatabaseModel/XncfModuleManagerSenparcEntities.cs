@@ -10,6 +10,7 @@ namespace Senparc.Xncf.XncfModuleManager.Models
     {
         public XncfModuleManagerSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
+
         }
 
         /// <summary>

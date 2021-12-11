@@ -2,6 +2,7 @@
 using Senparc.Ncf.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
@@ -9,6 +10,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 扩展模块信息
     /// </summary>
+    [Table("XncfModules")]
     public class XncfModule : EntityBase<int>
     {
         public string Name { get; private set; }
