@@ -8,7 +8,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(SystemManagerSenparcEntities_PostgreSQL))]
     partial class SystemManagerSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot

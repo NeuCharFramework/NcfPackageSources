@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.MySql
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.MySql
 {
     public partial class Init : Migration
     {

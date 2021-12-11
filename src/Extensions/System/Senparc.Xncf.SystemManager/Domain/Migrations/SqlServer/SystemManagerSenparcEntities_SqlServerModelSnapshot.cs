@@ -8,7 +8,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(SystemManagerSenparcEntities_SqlServer))]
     partial class SystemManagerSenparcEntities_SqlServerModelSnapshot : ModelSnapshot

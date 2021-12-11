@@ -9,7 +9,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(SystemManagerSenparcEntities_SqlServer))]
     [Migration("20211128085726_Init")]

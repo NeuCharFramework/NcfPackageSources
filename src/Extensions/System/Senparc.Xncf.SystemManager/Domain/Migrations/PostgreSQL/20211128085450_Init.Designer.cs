@@ -9,7 +9,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(SystemManagerSenparcEntities_PostgreSQL))]
     [Migration("20211128085450_Init")]

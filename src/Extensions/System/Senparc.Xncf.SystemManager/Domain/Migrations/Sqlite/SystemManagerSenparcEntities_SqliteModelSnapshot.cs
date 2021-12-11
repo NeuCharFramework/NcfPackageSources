@@ -7,7 +7,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(SystemManagerSenparcEntities_Sqlite))]
     partial class SystemManagerSenparcEntities_SqliteModelSnapshot : ModelSnapshot
