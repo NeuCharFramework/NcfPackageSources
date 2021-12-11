@@ -53,10 +53,6 @@
     <ProjectReference Include="..\Senparc.Xncf.SystemCore\[5999]Senparc.Xncf.SystemCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\Migrations\Migrations\MySql\" />
-    <Folder Include="Domain\Migrations\Migrations\PostgreSQL\" />
-    <Folder Include="Domain\Migrations\Migrations\Sqlite\" />
-    <Folder Include="Domain\Migrations\Migrations\SqlServer\" />
     <Folder Include="OHS\Local\AppService\" />
   </ItemGroup>
 </Project>

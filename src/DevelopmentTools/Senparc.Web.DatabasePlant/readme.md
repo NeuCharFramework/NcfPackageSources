@@ -35,6 +35,23 @@ Senparc.Ncf.DatabasePlant 引用了 NCF 官方实现的所有数据库的 Databa
 dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_Sqlite -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Sqlite
 ```
 
+以 MySql 为例：
+
+```
+dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_MySql -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Mysql
+```
+
+以 SqlServer 为例：
+
+```
+dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_SqlServer -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\SqlServer
+```
+
+以 PostgreSQL 为例：
+
+```
+dotnet ef migrations add Add_TenantInfo -c SystemManagerSenparcEntities_PostgreSQL -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\PostgreSQL
+```
 
 ## 更新说明
 
