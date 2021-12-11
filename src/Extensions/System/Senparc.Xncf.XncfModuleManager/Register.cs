@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.XncfModuleManager
 {
@@ -31,6 +32,10 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            //安装或升级数据库
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
+
+
             //TODO：DI注入注册时候，根据指定数据库进行绑定
 
             XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
@@ -61,6 +66,24 @@ namespace Senparc.Xncf.XncfModuleManager
             services.AddScoped<XncfModuleServiceExtension>();
 
             return base.AddXncfModule(services, configuration);
+        }
+
+        /// <summary>
+        /// 安装模块并设置菜单
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        public async Task InstallModulesAndMenus(IServiceProvider serviceProvider)
+        {
+            XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
+            var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
+            if (systemModule == null)
+            {
+                //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
+                //常规模块中请勿在此方法中自动安装模块！
+                await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
+            }
+
         }
 
     }

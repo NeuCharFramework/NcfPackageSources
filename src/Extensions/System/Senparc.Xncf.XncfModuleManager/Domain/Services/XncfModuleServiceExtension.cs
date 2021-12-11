@@ -18,6 +18,9 @@ using Senparc.Xncf.XncfModuleManager.Models;
 
 namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 {
+    /// <summary>
+    /// TODO：此接口需要开放到 OHS，对外提供服务
+    /// </summary>
     public class XncfModuleServiceExtension : XncfModuleService
     {
         private readonly Lazy<SysMenuService> _sysMenuService;
@@ -62,13 +65,16 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             var result = await Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, _serviceProvider, async (register, installOrUpdate) =>
             {
                 installOrUpdateValue = installOrUpdate;
-                //底层系统模块此时还没有设置好初始化的菜单信息，不能设置菜单
-                if (register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID &&
-                    register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID
-                    )
+
+
+                ////底层系统模块此时还没有设置好初始化的菜单信息，不能设置菜单
+                //if (register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID &&
+                //    register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID
+                //    )
                 {
                     await InstallMenuAsync(register, installOrUpdate);
                 }
+
             }, uid).ConfigureAwait(false);
 
             //记录日志

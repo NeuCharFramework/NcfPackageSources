@@ -7,7 +7,7 @@ using Senparc.Xncf.Tanent.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemCore.Domain.Migrations.Mysql
+namespace Senparc.Xncf.Tenant.Domain.Migrations.Mysql
 {
     [DbContext(typeof(TenantSenparcEntities_MySql))]
     partial class TenantSenparcEntities_MySqlModelSnapshot : ModelSnapshot

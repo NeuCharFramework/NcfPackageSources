@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemCore.Domain.Migrations.Sqlite
+namespace Senparc.Xncf.Tenant.Domain.Migrations.Sqlite
 {
     public partial class Init : Migration
     {

@@ -8,7 +8,7 @@ using Senparc.Xncf.Tanent.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemCore.Domain.Migrations.Mysql
+namespace Senparc.Xncf.Tenant.Domain.Migrations.Mysql
 {
     [DbContext(typeof(TenantSenparcEntities_MySql))]
     [Migration("20211211105015_Init")]

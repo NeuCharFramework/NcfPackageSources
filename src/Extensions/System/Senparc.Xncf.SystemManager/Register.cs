@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.SystemCore.Domain.Database;
 using Microsoft.EntityFrameworkCore;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.SystemManager
 {
@@ -35,28 +36,14 @@ namespace Senparc.Xncf.SystemManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
-            BasePoolEntities basePoolEntities = serviceProvider.GetService<BasePoolEntities>();
+            //安装或升级数据库
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //更新数据库
-            var pendingMigs = await basePoolEntities.Database.GetPendingMigrationsAsync();
-            if (pendingMigs.Count() > 0)
-            {
-                basePoolEntities.ResetMigrate();//重置合并状态
+            ////SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
+            //BasePoolEntities basePoolEntities = serviceProvider.GetService<BasePoolEntities>();
 
-                try
-                {
-                    var script = basePoolEntities.Database.GenerateCreateScript();
-                    SenparcTrace.SendCustomLog("senparcEntities.Database.GenerateCreateScript", script);
-
-                    basePoolEntities.Migrate();//进行合并
-                }
-                catch (Exception ex)
-                {
-                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
-                    SenparcTrace.BaseExceptionLog(new NcfDatabaseException(ex.Message, currentDatabaseConfiguration.GetType(), basePoolEntities.GetType(), ex));
-                }
-            }
+            //var senparcEntities = serviceProvider.GetService(this.TryGetXncfDatabaseDbContextType) as TenantSenparcEntities;
+            //await XncfDatabaseDbContext.MigrateOnInstallAsync(senparcEntities);
 
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }

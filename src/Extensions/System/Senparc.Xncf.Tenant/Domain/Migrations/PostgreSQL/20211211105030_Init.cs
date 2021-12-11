@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemCore.Domain.Migrations.PostgreSQL
+namespace Senparc.Xncf.Tenant.Domain.Migrations.PostgreSQL
 {
     public partial class Init : Migration
     {

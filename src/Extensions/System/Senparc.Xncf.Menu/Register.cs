@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.Menu
 {
@@ -30,6 +31,8 @@ namespace Senparc.Xncf.Menu
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            //安装或升级数据库
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)

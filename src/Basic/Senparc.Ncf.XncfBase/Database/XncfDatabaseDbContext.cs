@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -8,6 +9,7 @@ using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Database
 {
@@ -108,5 +110,51 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         #endregion
+
+        /// <summary>
+        /// 安装过程中使用的 Migrate 系列操作
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="databaseRegister">实现了数据库接口的 Register，databaseRegister.TryGetXncfDatabaseDbContextType 必须返回 XncfDatabaseDbContext 的子类</param>
+        /// <returns></returns>
+        public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister)
+        {
+            var dbContext = serviceProvider.GetService(databaseRegister.TryGetXncfDatabaseDbContextType) as XncfDatabaseDbContext;
+            await MigrateOnInstallAsync(dbContext);
+        }
+
+
+        /// <summary>
+        /// 安装过程中使用的 Migrate 系列操作
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static async Task MigrateOnInstallAsync(XncfDatabaseDbContext dbContext)
+        {
+            if (dbContext is null)
+            {
+                throw new ArgumentNullException(nameof(dbContext));
+            }
+            //更新数据库
+            var pendingMigs = await dbContext.Database.GetPendingMigrationsAsync();
+            if (pendingMigs.Count() > 0)
+            {
+                dbContext.ResetMigrate();//重置合并状态
+
+                try
+                {
+                    var script = dbContext.Database.GenerateCreateScript();
+                    SenparcTrace.SendCustomLog($"{dbContext.GetType().Name}.Database.GenerateCreateScript", script);
+
+                    dbContext.Migrate();//进行合并
+                }
+                catch (Exception ex)
+                {
+                    var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
+                    SenparcTrace.BaseExceptionLog(new NcfDatabaseException(ex.Message, currentDatabaseConfiguration.GetType(), dbContext.GetType(), ex));
+                }
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ using Senparc.Xncf.Tanent.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemCore.Domain.Migrations.PostgreSQL
+namespace Senparc.Xncf.Tenant.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(TenantSenparcEntities_PostgreSQL))]
     partial class TenantSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot

@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.SystemCore.Domain.Database;
 using Microsoft.EntityFrameworkCore;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.SystemCore
 {
@@ -35,10 +36,13 @@ namespace Senparc.Xncf.SystemCore
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            //安装或升级数据库
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
+
+            /*
+            //更新数据库
             //SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
             BasePoolEntities basePoolEntities = serviceProvider.GetService<BasePoolEntities>();
-
-            //更新数据库
             var pendingMigs = await basePoolEntities.Database.GetPendingMigrationsAsync();
             if (pendingMigs.Count() > 0)
             {
@@ -57,6 +61,7 @@ namespace Senparc.Xncf.SystemCore
                     SenparcTrace.BaseExceptionLog(new NcfDatabaseException(ex.Message, currentDatabaseConfiguration.GetType(), basePoolEntities.GetType(), ex));
                 }
             }
+            */
 
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }

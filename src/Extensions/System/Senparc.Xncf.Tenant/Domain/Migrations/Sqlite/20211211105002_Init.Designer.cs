@@ -8,7 +8,7 @@ using Senparc.Xncf.Tanent.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemCore.Domain.Migrations.Sqlite
+namespace Senparc.Xncf.Tenant.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(TenantSenparcEntities_Sqlite))]
     [Migration("20211211105002_Init")]
