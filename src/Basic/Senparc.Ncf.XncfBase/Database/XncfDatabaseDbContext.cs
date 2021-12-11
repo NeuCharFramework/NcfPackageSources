@@ -119,8 +119,15 @@ namespace Senparc.Ncf.XncfBase.Database
         /// <returns></returns>
         public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister)
         {
-            var dbContext = serviceProvider.GetService(databaseRegister.TryGetXncfDatabaseDbContextType) as XncfDatabaseDbContext;
-            await MigrateOnInstallAsync(dbContext);
+            var dbContext = serviceProvider.GetService(databaseRegister.TryGetXncfDatabaseDbContextType);
+            if (dbContext is XncfDatabaseDbContext xncfDatabaseDbContext)
+            {
+                await MigrateOnInstallAsync(xncfDatabaseDbContext);
+            }
+            else
+            {
+                throw new NcfDatabaseException("DbContext 必须为 XncfDatabaseDbContext 的子类！", DatabaseConfigurationFactory.Instance.Current.GetType());
+            }
         }
 
 

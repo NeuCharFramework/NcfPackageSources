@@ -32,25 +32,26 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            Console.WriteLine("1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
             //安装或升级数据库
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
 
             //TODO：DI注入注册时候，根据指定数据库进行绑定
 
-            XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
-            //SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
+            //XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
+            ////SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
 
-            //更新数据库（目前不使用 BasePoolEntities 存放数据库模型）
-            //await base.MigrateDatabaseAsync<BasePoolEntities>(serviceProvider);
+            ////更新数据库（目前不使用 BasePoolEntities 存放数据库模型）
+            ////await base.MigrateDatabaseAsync<BasePoolEntities>(serviceProvider);
 
-            var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
-            if (systemModule == null)
-            {
-                //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
-                //常规模块中请勿在此方法中自动安装模块！
-                await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
-            }
+            //var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
+            //if (systemModule == null)
+            //{
+            //    //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
+            //    //常规模块中请勿在此方法中自动安装模块！
+            //    await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
+            //}
 
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
