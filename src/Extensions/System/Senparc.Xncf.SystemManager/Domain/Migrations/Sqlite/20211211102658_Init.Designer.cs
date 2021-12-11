@@ -11,7 +11,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(SystemManagerSenparcEntities_Sqlite))]
-    [Migration("20211128085504_Init")]
+    [Migration("20211211102658_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,43 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("SystemConfigs");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.SystemManager.Domain.DatabaseModel.FeedBack", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FeedBacks");
                 });
 #pragma warning restore 612, 618
         }

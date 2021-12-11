@@ -10,7 +10,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.SystemCore.Domain.DatabaseModel;
+using Senparc.Xncf.SystemCore.Domain.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Senparc.Xncf.SystemManager

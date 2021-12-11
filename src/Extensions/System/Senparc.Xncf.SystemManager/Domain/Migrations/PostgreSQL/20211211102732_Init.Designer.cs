@@ -12,8 +12,8 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(SystemManagerSenparcEntities_PostgreSQL))]
-    [Migration("20211211072141_Add_TenantInfo")]
-    partial class Add_TenantInfo
+    [Migration("20211211102732_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,50 +23,6 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.TenantInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<bool>("Enable")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("TenantKey")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TenantInfos");
-                });
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {

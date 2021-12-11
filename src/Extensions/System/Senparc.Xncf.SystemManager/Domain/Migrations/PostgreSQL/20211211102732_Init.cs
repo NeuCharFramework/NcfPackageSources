@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
 {
-    public partial class Add_TenantInfo : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,24 +31,26 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
                 });
 
             migrationBuilder.CreateTable(
-                name: "TenantInfos",
+                name: "SystemConfigs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Guid = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Enable = table.Column<bool>(type: "boolean", nullable: false),
-                    TenantKey = table.Column<string>(type: "text", nullable: false),
+                    SystemName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    MchId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    MchKey = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    TenPayAppId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    HideModuleManager = table.Column<bool>(type: "boolean", nullable: true),
                     Flag = table.Column<bool>(type: "boolean", nullable: false),
                     AddTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     LastUpdateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
                     AdminRemark = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
                     Remark = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TenantInfos", x => x.Id);
+                    table.PrimaryKey("PK_SystemConfigs", x => x.Id);
                 });
         }
 
@@ -58,7 +60,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
                 name: "FeedBacks");
 
             migrationBuilder.DropTable(
-                name: "TenantInfos");
+                name: "SystemConfigs");
         }
     }
 }

@@ -7,7 +7,7 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.MySql
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
 {
     [DbContext(typeof(SystemManagerSenparcEntities_MySql))]
     partial class SystemManagerSenparcEntities_MySqlModelSnapshot : ModelSnapshot
@@ -18,48 +18,6 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.MySql
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.TenantInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("varchar(300)");
-
-                    b.Property<bool>("Enable")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("varchar(300)");
-
-                    b.Property<string>("TenantKey")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TenantInfos");
-                });
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {

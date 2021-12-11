@@ -10,6 +10,26 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "FeedBacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AccountId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    Flag = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AddTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TenantId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AdminRemark = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
+                    Remark = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeedBacks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SystemConfigs",
                 columns: table => new
                 {
@@ -35,6 +55,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FeedBacks");
+
             migrationBuilder.DropTable(
                 name: "SystemConfigs");
         }

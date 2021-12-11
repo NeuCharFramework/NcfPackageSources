@@ -4,13 +4,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.MySql
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
 {
     public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "FeedBacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Flag = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AddTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    TenantId = table.Column<int>(type: "int", nullable: false),
+                    AdminRemark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Remark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeedBacks", x => x.Id);
+                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -46,6 +70,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.MySql
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FeedBacks");
+
             migrationBuilder.DropTable(
                 name: "SystemConfigs");
         }
