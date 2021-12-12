@@ -34,9 +34,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         /// 安装模块
         /// </summary>
         /// <param name="uid">模块 Uid</param>
+        /// <param name="addMenu">是否在安装完成后添加到管理员菜单</param>
         /// <returns></returns>
         //public async Task<Tuple<PagedList<XncfModule>, string, InstallOrUpdate?>> InstallModuleAsync(string uid)
-        public async Task<(PagedList<XncfModule> XncfModuleList, string scanAndInstallResult, InstallOrUpdate? InstallOrUpdate)> InstallModuleAsync(string uid)
+        public async Task<(PagedList<XncfModule> XncfModuleList, string scanAndInstallResult, InstallOrUpdate? InstallOrUpdate)> InstallModuleAsync(string uid, bool addMenu = true)
         {
             if (uid.IsNullOrEmpty())
             {
@@ -55,12 +56,9 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 throw new Exception("相同版本模块已安装，无需重复安装！");
             }
 
-            //限制在当前模块
-            //（TODO：这一步保存一个空对象而不是从该数据库读取，目前是多余的，这里保留代码仅作占位，未来可以扩展）
-            PagedList<XncfModule> xncfModules = new PagedList<XncfModule>(new List<XncfModule>(), 1, 1, 0);
+            /* 目前禁用自动升级，因此不从数据库访问所有记录 */
 
-            //目前禁用自动升级，因此不从数据库访问所有记录
-            //PagedList<XncfModule> xncfModules = await base.GetObjectListAsync(1, 999, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
+            PagedList<XncfModule> xncfModules = await base.GetObjectListAsync(1, 999, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
 
             var xncfModuleDtos = xncfModules.Select(z => base.Mapper.Map<CreateOrUpdate_XncfModuleDto>(z)).ToList();
 
@@ -74,11 +72,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             {
                 installOrUpdateValue = installOrUpdate;
 
-
-                ////底层系统模块此时还没有设置好初始化的菜单信息，不能设置菜单
-                //if (register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID &&
-                //    register.Uid != Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID
-                //    )
+                if (addMenu)
                 {
                     await InstallMenuAsync(register, installOrUpdate);
                 }
@@ -90,7 +84,6 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                                         ? (installOrUpdateValue.Value == InstallOrUpdate.Install ? "安装" : "更新")
                                         : "失败";
             SenparcTrace.SendCustomLog($"安装或更新模块（{installOrUpdateMsg}）", result.ToString());
-
             return (xncfModules, result, installOrUpdateValue);
         }
 
