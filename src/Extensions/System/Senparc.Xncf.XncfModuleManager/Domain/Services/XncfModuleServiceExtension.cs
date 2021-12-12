@@ -94,15 +94,12 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         /// <returns></returns>
         public async Task InstallMenuAsync(IXncfRegister register, InstallOrUpdate installOrUpdate)
         {
-            Console.WriteLine("1212===  01");
             var topMenu = await _sysMenuService.Value.GetObjectAsync(z => z.MenuName == "扩展模块").ConfigureAwait(false);
             var currentMenu = await _sysMenuService.Value.GetObjectAsync(z => z.ParentId == topMenu.Id && z.MenuName == register.MenuName).ConfigureAwait(false);
             SysMenuDto menuDto;
-            Console.WriteLine("1212===  02");
 
             if (installOrUpdate == InstallOrUpdate.Update && currentMenu != null)
             {
-            Console.WriteLine("1212===  02.1");
                 //更新菜单
                 menuDto = _sysMenuService.Value.Mapper.Map<SysMenuDto>(currentMenu);
                 menuDto.MenuName = register.MenuName;//更新菜单名称
@@ -110,8 +107,6 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             }
             else
             {
-                Console.WriteLine("1212===  03");
-
                 //新建菜单
                 var icon = register.Icon.IsNullOrEmpty() ? "fa fa-bars" : register.Icon;
                 var order = 20;
@@ -130,7 +125,6 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             }
 
             var sysMemu = await _sysMenuService.Value.CreateOrUpdateAsync(menuDto).ConfigureAwait(false);
-            Console.WriteLine("1212===  04");
 
             if (installOrUpdate == InstallOrUpdate.Install)
             {
@@ -148,8 +142,6 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 //XncfModuleManagerSenparcEntities db = _serviceProvider.GetService<XncfModuleManagerSenparcEntities>();
                 BasePoolEntities db = _serviceProvider.GetService<BasePoolEntities>();
 
-                Console.WriteLine("1212===  05");
-                
                 db.Set<SysRolePermission>().Add(new SysRolePermission(sysPermissionDto));
                 await db.SaveChangesAsync();
                 var updateMenuDto = new UpdateMenuId_XncfModuleDto(register.Uid, sysMemu.Id);
