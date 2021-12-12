@@ -10,13 +10,14 @@ using Senparc.Ncf.Core.Config;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.SystemCore.Domain.DatabaseModel;
+using Senparc.Xncf.SystemCore.Domain.Database;
 using Microsoft.EntityFrameworkCore;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.SystemCore
 {
     [XncfRegister]
-    [XncfOrder(5999)]
+    [XncfOrder(5980)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
@@ -27,7 +28,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "系统管理";
+        public override string MenuName => "系统核心模块";
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
@@ -35,10 +36,13 @@ namespace Senparc.Xncf.SystemCore
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            //SenparcEntities 不进行任何数据库实体的构建，只作为容器
+            //await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
+
+            /*
+            //更新数据库
             //SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
             BasePoolEntities basePoolEntities = serviceProvider.GetService<BasePoolEntities>();
-
-            //更新数据库
             var pendingMigs = await basePoolEntities.Database.GetPendingMigrationsAsync();
             if (pendingMigs.Count() > 0)
             {
@@ -57,6 +61,7 @@ namespace Senparc.Xncf.SystemCore
                     SenparcTrace.BaseExceptionLog(new NcfDatabaseException(ex.Message, currentDatabaseConfiguration.GetType(), basePoolEntities.GetType(), ex));
                 }
             }
+            */
 
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }

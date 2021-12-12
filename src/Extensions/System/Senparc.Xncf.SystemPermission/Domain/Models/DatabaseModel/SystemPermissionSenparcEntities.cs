@@ -16,7 +16,7 @@ namespace Senparc.Xncf.SystemPermission.Models
         /// <summary>
         /// 权限
         /// </summary>
-        public DbSet<SysPermission> SysPermissions { get; set; }
+        public DbSet<SysRolePermission> SysRolePermissions { get; set; }
 
         /// <summary>
         /// 系统角色

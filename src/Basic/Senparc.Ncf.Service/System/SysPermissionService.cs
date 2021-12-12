@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Senparc.Ncf.Service
 {
-    public class SysPermissionService : ClientServiceBase<SysPermission>
+    public class SysPermissionService : ClientServiceBase<SysRolePermission>
     {
         private readonly IDistributedCache _distributedCache;
 
@@ -26,7 +26,7 @@ namespace Senparc.Ncf.Service
         private readonly SysRoleService _sysRoleService;
         private const string PermissionKey = "Permission";
 
-        public SysPermissionService(ClientRepositoryBase<SysPermission> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public SysPermissionService(ClientRepositoryBase<SysRolePermission> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             this._distributedCache = _serviceProvider.GetService<IDistributedCache>();
             this._sysMenuService = _serviceProvider.GetService<SysMenuService>();
@@ -88,7 +88,7 @@ namespace Senparc.Ncf.Service
 
         public async Task<IEnumerable<SysPermissionDto>> DbToCacheAsync()
         {
-            IEnumerable<SysPermission> permissions = await GetFullListAsync(_ => true);
+            IEnumerable<SysRolePermission> permissions = await GetFullListAsync(_ => true);
             IEnumerable<SysPermissionDto> permissionDtos = Mapper.Map<IEnumerable<SysPermissionDto>>(permissions);
             await _distributedCache.RemoveAsync(PermissionKey);
             await _distributedCache.SetStringAsync(PermissionKey, Newtonsoft.Json.JsonConvert.SerializeObject(permissionDtos));
@@ -108,14 +108,14 @@ namespace Senparc.Ncf.Service
         /// <returns></returns>
         public async Task AddAsync(IEnumerable<SysPermissionDto> sysMenuDto)
         {
-            List<SysPermission> sysRoleMenus = new List<SysPermission>();
+            List<SysRolePermission> sysRoleMenus = new List<SysRolePermission>();
             string RoleId = sysMenuDto.FirstOrDefault().RoleId;
             SysRole sysRole = await _sysRoleService.GetObjectAsync(_ => _.Id == RoleId);
             //
             foreach (var item in sysMenuDto)
             {
                 item.RoleCode = sysRole.RoleCode;
-                SysPermission sysPermission = new SysPermission(item);
+                SysRolePermission sysPermission = new SysRolePermission(item);
                 sysRoleMenus.Add(sysPermission);
             }
             #region 正确方式1 传统方式
@@ -140,7 +140,7 @@ namespace Senparc.Ncf.Service
             // https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/connection-resiliency#execution-strategies-and-transactions
             await ServiceBase.ResilientTransaction.New(BaseData.BaseDB.BaseDataContext).ExecuteAsync(async () =>
             {
-                IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
+                IEnumerable<SysRolePermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
                 await DeleteAllAsync(entitis); // 此处会调用SaveChangeAsync
                 await SaveObjectListAsync(sysRoleMenus); // 此处会调用SaveChangeAsync
                 await DbToCacheAsync();//暂时
@@ -282,7 +282,7 @@ namespace Senparc.Ncf.Service
             IQueryable<string> roleIds = from roleAdmin in db.Set<SysRoleAdminUserInfo>()
                                          where roleAdmin.AccountId == currentAdminUserId && db.Set<SysRole>().Any(role => role.Id == roleAdmin.RoleId && role.Enabled)
                                          select roleAdmin.RoleId;// db.SysRoleAdminUserInfos.Where(_ => _.AccountId == currentAdminUserId).Select(_ => _.RoleId);
-            IQueryable<string> menuIds = from permission in db.Set<SysPermission>()
+            IQueryable<string> menuIds = from permission in db.Set<SysRolePermission>()
                                          where roleIds.Any(_ => _ == permission.RoleId)
                                          select permission.PermissionId;
             return db.Set<SysMenu>().Where(_ => _.Visible && menuIds.Contains(_.Id)).ProjectTo<SysMenuDto>(autoMapConfigurationProvider);

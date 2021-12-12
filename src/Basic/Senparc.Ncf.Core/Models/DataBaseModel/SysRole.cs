@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
@@ -9,6 +10,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 系统角色
     /// </summary>
+    [Table("SysRoles")]
     public class SysRole : EntityBase<string>
     {
 

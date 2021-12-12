@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
@@ -9,6 +10,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 菜单表
     /// </summary>
+    [Table("SysMenus")]
     public class SysMenu : EntityBase<string>
     {
 

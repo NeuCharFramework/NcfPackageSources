@@ -6,6 +6,9 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
+    /// <summary>
+    /// 当前上下文不应该和租户无关
+    /// </summary>
     public class SystemManagerSenparcEntities : XncfDatabaseDbContext
     {
         public SystemManagerSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)

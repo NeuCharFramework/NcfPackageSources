@@ -7,11 +7,12 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.XncfBase.Database;
 
 namespace Senparc.Xncf.SystemPermission
 {
     [XncfRegister]
-    [XncfOrder(5980)]
+    [XncfOrder(5960)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
@@ -30,6 +31,8 @@ namespace Senparc.Xncf.SystemPermission
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+            //安装或升级数据库
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)

@@ -8,6 +8,7 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
     /// <summary>
     /// 意见反馈
     /// </summary>
+    [Table("FeedBacks")]
     public class FeedBack : EntityBase<int>
     {
         public int AccountId { get; set; }
