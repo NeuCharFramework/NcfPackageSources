@@ -517,7 +517,7 @@ steps:
   displayName: Senparc.Xncf.Menu
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.Menu.*'
+    packagesToPush: '**/Senparc.Xncf.Menu.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
@@ -527,7 +527,7 @@ steps:
   displayName: Senparc.Xncf.XncfModuleManager
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.XncfModuleManager.*'
+    packagesToPush: '**/Senparc.Xncf.XncfModuleManager.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
@@ -537,7 +537,7 @@ steps:
   displayName: Senparc.Xncf.SystemPermission
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.SystemPermission.*'
+    packagesToPush: '**/Senparc.Xncf.SystemPermission.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
@@ -547,7 +547,7 @@ steps:
   displayName: Senparc.Xncf.SystemManager
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.SystemManager.*'
+    packagesToPush: '**/Senparc.Xncf.SystemManager.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
@@ -557,7 +557,7 @@ steps:
   displayName: Senparc.Xncf.SystemCore
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.SystemCore.*'
+    packagesToPush: '**/Senparc.Xncf.SystemCore.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
@@ -567,7 +567,7 @@ steps:
   displayName: Senparc.Xncf.Tenant
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.Tenant.*'
+    packagesToPush: '**/Senparc.Xncf.Tenant.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
