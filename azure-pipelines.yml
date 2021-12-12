@@ -512,6 +512,71 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+# 系统模块 开始
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Menu
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Menu.*'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.XncfModuleManager
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.XncfModuleManager.*'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.SystemPermission
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.SystemPermission.*'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.SystemManager
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.SystemManager.*'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.SystemCore
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.SystemCore.*'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Tenant
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Tenant.*'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+
+# 系统模块 结束
+
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
