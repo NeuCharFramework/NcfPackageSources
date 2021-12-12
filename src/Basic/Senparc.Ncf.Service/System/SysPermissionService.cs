@@ -217,7 +217,7 @@ namespace Senparc.Ncf.Service
         public async Task<bool> HasPermissionAsync(IEnumerable<string> codes, string url, bool isAjax)
         {
             int adminUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
-            IQueryable<SysMenuDto> permissions = getUserPermissions(adminUserId);
+            IQueryable<SysMenuDto> permissions = GetUserPermissions(adminUserId);
             if (isAjax)
             {
                 var userPermissionCodes = await permissions.Where(_ => _.ResourceCode != string.Empty).Select(_ => _.ResourceCode).Distinct().ToListAsync();
@@ -240,7 +240,7 @@ namespace Senparc.Ncf.Service
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType == MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await GetUserPermissions(currentAdminId).Where(_ => _.MenuType == MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
             return _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
@@ -253,7 +253,7 @@ namespace Senparc.Ncf.Service
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType == menuType).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await GetUserPermissions(currentAdminId).Where(_ => _.MenuType == menuType).OrderByDescending(_ => _.Sort).ToListAsync();
             return sysMenuDtos;// _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
@@ -266,7 +266,7 @@ namespace Senparc.Ncf.Service
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType > MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await GetUserPermissions(currentAdminId).Where(_ => _.MenuType > MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
             return sysMenuDtos;// _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
@@ -275,17 +275,17 @@ namespace Senparc.Ncf.Service
         /// </summary>
         /// <param name="currentAdminUserId"></param>
         /// <returns></returns>
-        private IQueryable<SysMenuDto> getUserPermissions(int currentAdminUserId)
+        private IQueryable<SysMenuDto> GetUserPermissions(int currentAdminUserId)
         {
             IConfigurationProvider autoMapConfigurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            IQueryable<string> roleIds = from roleAdmin in db.SysRoleAdminUserInfos
-                                         where roleAdmin.AccountId == currentAdminUserId && db.SysRoles.Any(role => role.Id == roleAdmin.RoleId && role.Enabled)
+            IQueryable<string> roleIds = from roleAdmin in db.Set<SysRoleAdminUserInfo>()
+                                         where roleAdmin.AccountId == currentAdminUserId && db.Set<SysRole>().Any(role => role.Id == roleAdmin.RoleId && role.Enabled)
                                          select roleAdmin.RoleId;// db.SysRoleAdminUserInfos.Where(_ => _.AccountId == currentAdminUserId).Select(_ => _.RoleId);
-            IQueryable<string> menuIds = from permission in db.SysPermission
+            IQueryable<string> menuIds = from permission in db.Set<SysPermission>()
                                          where roleIds.Any(_ => _ == permission.RoleId)
                                          select permission.PermissionId;
-            return db.SysMenus.Where(_ => _.Visible && menuIds.Contains(_.Id)).ProjectTo<SysMenuDto>(autoMapConfigurationProvider);
+            return db.Set<SysMenu>().Where(_ => _.Visible && menuIds.Contains(_.Id)).ProjectTo<SysMenuDto>(autoMapConfigurationProvider);
         }
     }
 }

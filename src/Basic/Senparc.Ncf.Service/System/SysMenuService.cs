@@ -15,6 +15,7 @@ using Senparc.Ncf.Core.Exceptions;
 using AutoMapper.QueryableExtensions;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Service;
 
 namespace Senparc.Ncf.Service
 {
@@ -56,13 +57,13 @@ namespace Senparc.Ncf.Service
                 {
                     return menu;//TODO：需要给出提示
                 }
-                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id);
+                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id);
                 menu.Update(sysMenuDto);
             }
             else
             {
                 menu = new SysMenu(sysMenuDto);
-                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
+                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
             }
             if (isRepeat && sysMenuDto.MenuType == MenuType.按钮)
             {
@@ -293,10 +294,10 @@ namespace Senparc.Ncf.Service
 
             try
             {
-                _senparcEntities.SysRoles.AddRange(sysRoles);
-                _senparcEntities.SysMenus.AddRange(sysMenus);
-                _senparcEntities.SysPermission.AddRange(sysPermissions);
-                _senparcEntities.SysRoleAdminUserInfos.AddRange(sysRoleAdminUserInfos);
+                _senparcEntities.Set<SysRole>().AddRange(sysRoles);
+                _senparcEntities.Set<SysMenu>().AddRange(sysMenus);
+                _senparcEntities.Set<SysPermission>().AddRange(sysPermissions);
+                _senparcEntities.Set<SysRoleAdminUserInfo>().AddRange(sysRoleAdminUserInfos);
                 _senparcEntities.SaveChanges();
             }
             catch (Exception ex)
@@ -314,7 +315,7 @@ namespace Senparc.Ncf.Service
         {
             List<SysMenuDto> selectListItems = null;
             IConfigurationProvider configurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
-            selectListItems = await _serviceProvider.GetService<SenparcEntitiesBase>().SysMenus.OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
+            selectListItems = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
             //List<SysMenu> sysMenus = (await GetFullListAsync(_ => _.Visible).ConfigureAwait(false)).OrderByDescending(z => z.Sort).ToList();
             //List<SysButton> sysButtons = (await _sysButtonService.GetFullListAsync(_ => true).ConfigureAwait(false)).OrderBy(z => z.Id).ToList();
             //selectListItems = Mapper.Map<List<SysMenuDto>>(sysMenus);

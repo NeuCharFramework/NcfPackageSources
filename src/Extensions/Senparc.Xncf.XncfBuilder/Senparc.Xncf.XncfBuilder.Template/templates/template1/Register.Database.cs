@@ -21,7 +21,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         /// <summary>
-        /// 数据库前缀
+        /// 动态获取数据库上下文
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 

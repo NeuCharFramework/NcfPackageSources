@@ -15,6 +15,7 @@ namespace Senparc.Xncf.XncfBuilder
     public partial class Register : IXncfDatabase
     {
         public const string DATABASE_PREFIX = "XncfBuilder";
+
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());

@@ -97,7 +97,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     {
                         response.Data = "备份完成！";
                     }
-                    return "2222";
+                    return null;
                 }
                 catch (Exception ex)
                 {
