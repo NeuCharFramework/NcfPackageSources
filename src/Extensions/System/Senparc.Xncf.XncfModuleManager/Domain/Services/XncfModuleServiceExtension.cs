@@ -138,7 +138,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 };
                 //SenparcEntities db = _serviceProvider.GetService<SenparcEntities>();
                 XncfModuleManagerSenparcEntities db = _serviceProvider.GetService<XncfModuleManagerSenparcEntities>();
-                db.Set<SysPermission>().Add(new SysPermission(sysPermissionDto));
+                db.Set<SysRolePermission>().Add(new SysRolePermission(sysPermissionDto));
                 await db.SaveChangesAsync();
                 var updateMenuDto = new UpdateMenuId_XncfModuleDto(register.Uid, sysMemu.Id);
                 await base.UpdateMenuIdAsync(updateMenuDto).ConfigureAwait(false);

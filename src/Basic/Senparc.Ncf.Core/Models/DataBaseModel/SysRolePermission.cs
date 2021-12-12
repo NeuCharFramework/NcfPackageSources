@@ -10,16 +10,20 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     /// <summary>
     /// 角色菜单表
     /// </summary>
-    [Table("SysPermissions")]
-    public class SysPermission : EntityBase<int>
+    [Table("SysRolePermissions")]
+    public class SysRolePermission : EntityBase<int>
     {
-        public SysPermission()
+        /* 注意：这里 Table 如果用 SysPermissions，将和 SQL Server 的系统表冲突
+         * 参考：https://docs.microsoft.com/zh-cn/sql/relational-databases/system-compatibility-views/sys-syspermissions-transact-sql?redirectedfrom=MSDN&view=sql-server-ver15
+         */
+
+        public SysRolePermission()
         {
             AddTime = DateTime.Now;
             LastUpdateTime = DateTime.Now;
         }
 
-        public SysPermission(SysPermissionDto item) : this()
+        public SysRolePermission(SysPermissionDto item) : this()
         {
             RoleId = item.RoleId;
             IsMenu = item.IsMenu;
