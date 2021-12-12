@@ -36,8 +36,8 @@ namespace Senparc.Xncf.SystemCore
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级数据库
-            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
+            //SenparcEntities 不进行任何数据库实体的构建，只作为容器
+            //await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             /*
             //更新数据库

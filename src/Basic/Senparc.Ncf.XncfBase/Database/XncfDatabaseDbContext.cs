@@ -123,7 +123,7 @@ namespace Senparc.Ncf.XncfBase.Database
             var dbContextType = databaseRegister.TryGetXncfDatabaseDbContextType;
             if (checkdbContextType && !dbContextType.IsSubclassOf(typeof(XncfDatabaseDbContext)))
             {
-                throw new NcfDatabaseException("dbContextType 参数必须继承自 XncfDatabaseDbContext", null, dbContextType);
+                throw new NcfDatabaseException($"dbContextType 参数必须继承自 XncfDatabaseDbContext，当前类型：{dbContextType.FullName}", null, dbContextType);
             }
 
             var xncfDatabaseDbContext = serviceProvider.GetService(dbContextType) as XncfDatabaseDbContext;

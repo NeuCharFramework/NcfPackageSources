@@ -5,7 +5,7 @@ using System;
 
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
-    //TODO: 如果后期没有明显变化，考虑合并 SenparcEntities，并取代之
+    //TODO: 如果后期没有明显变化（如额外扩展），考虑合并 SenparcEntities，并取代之
 
     /// <summary>
     /// 当前 Entities 只为帮助 SenparcEntities 生成 Migration 信息而存在，没有特别的操作意义。

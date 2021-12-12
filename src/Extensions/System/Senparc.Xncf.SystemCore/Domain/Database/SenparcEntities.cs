@@ -12,18 +12,14 @@ using System;
 
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
+    /// <summary>
+    /// 【注意】SenparcEntities 不存放任何实体，也不生成任何迁移文件
+    /// </summary>
     public partial class SenparcEntities : SenparcEntitiesBase, ISenparcEntitiesDbContext
     {
         public SenparcEntities(DbContextOptions/*<SenparcEntities>*/ dbContextOptions, IServiceProvider serviceProvider) : base(dbContextOptions, serviceProvider)
         {
         }
-
-        #region 系统表
-
-        //public virtual DbSet<AdminUserInfo> AdminUserInfos { get; set; }
-
-
-        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
