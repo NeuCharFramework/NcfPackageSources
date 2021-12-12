@@ -97,15 +97,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{97BBCB
 		Extensions\System\readme.md = Extensions\System\readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5960]Senparc.Xncf.Menu", "Extensions\System\Senparc.Xncf.Menu\[5960]Senparc.Xncf.Menu.csproj", "{023A95DB-D8AA-4123-9F9B-6A4616C7243A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5940]Senparc.Xncf.Menu", "Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj", "{023A95DB-D8AA-4123-9F9B-6A4616C7243A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.SystemManager", "Extensions\System\Senparc.Xncf.SystemManager\[5990]Senparc.Xncf.SystemManager.csproj", "{DED3B5E4-D281-4399-BD0E-3F612FF419F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5970]Senparc.Xncf.SystemManager", "Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj", "{DED3B5E4-D281-4399-BD0E-3F612FF419F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5970]Senparc.Xncf.XncfModuleManager", "Extensions\System\Senparc.Xncf.XncfModuleManager\[5970]Senparc.Xncf.XncfModuleManager.csproj", "{4135ED8B-229C-45C2-93E2-2A62E84E47ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5950]Senparc.Xncf.XncfModuleManager", "Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj", "{4135ED8B-229C-45C2-93E2-2A62E84E47ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5980]Senparc.Xncf.SystemPermission", "Extensions\System\Senparc.Xncf.SystemPermission\[5980]Senparc.Xncf.SystemPermission.csproj", "{642255CD-4B42-4CEB-A80A-D7D83F6CA989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5960]Senparc.Xncf.SystemPermission", "Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj", "{642255CD-4B42-4CEB-A80A-D7D83F6CA989}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5999]Senparc.Xncf.SystemCore", "Extensions\System\Senparc.Xncf.SystemCore\[5999]Senparc.Xncf.SystemCore.csproj", "{6BB6D7C5-DC0A-4A57-BA61-F310A2D37A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5980]Senparc.Xncf.SystemCore", "Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj", "{6BB6D7C5-DC0A-4A57-BA61-F310A2D37A42}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevelopmentTools", "DevelopmentTools", "{2BBB19E7-0703-405F-9101-59D811377ABD}"
 EndProject
@@ -113,7 +113,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.IntegrationSample",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Web.DatabasePlant", "DevelopmentTools\Senparc.Web.DatabasePlant\Senparc.Web.DatabasePlant.csproj", "{06CFA71C-9838-4280-B418-9BF96C46FA9A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[6000]Senparc.Xncf.Tenant", "Extensions\System\Senparc.Xncf.Tenant\[6000]Senparc.Xncf.Tenant.csproj", "{3DD8AA35-54A7-4343-8729-6F86F579C742}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.Tenant", "Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj", "{3DD8AA35-54A7-4343-8729-6F86F579C742}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

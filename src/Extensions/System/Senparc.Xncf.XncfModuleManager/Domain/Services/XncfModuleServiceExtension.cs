@@ -55,11 +55,18 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 throw new Exception("相同版本模块已安装，无需重复安装！");
             }
 
-            PagedList<XncfModule> xncfModules = await base.GetObjectListAsync(1, 999, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
+            //限制在当前模块
+            //（TODO：这一步保存一个空对象而不是从该数据库读取，目前是多余的，这里保留代码仅作占位，未来可以扩展）
+            PagedList<XncfModule> xncfModules = new PagedList<XncfModule>(new List<XncfModule>(), 1, 1, 0);
+
+            //目前禁用自动升级，因此不从数据库访问所有记录
+            //PagedList<XncfModule> xncfModules = await base.GetObjectListAsync(1, 999, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
 
             var xncfModuleDtos = xncfModules.Select(z => base.Mapper.Map<CreateOrUpdate_XncfModuleDto>(z)).ToList();
 
             //var se = _serviceProvider.GetService(typeof(BasePoolEntities_SqlServer));
+
+
 
             //进行模块扫描
             InstallOrUpdate? installOrUpdateValue = null;

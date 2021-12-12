@@ -12,7 +12,7 @@ using Senparc.Ncf.XncfBase.Database;
 namespace Senparc.Xncf.Menu
 {
     [XncfRegister]
-    [XncfOrder(5960)]
+    [XncfOrder(5940)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口

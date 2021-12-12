@@ -17,7 +17,7 @@ using Senparc.Ncf.XncfBase.Database;
 namespace Senparc.Xncf.SystemCore
 {
     [XncfRegister]
-    [XncfOrder(5999)]
+    [XncfOrder(5980)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "系统管理";
+        public override string MenuName => "系统核心模块";
 
         public override string Icon => "fa fa-university";//fa fa-cog
 

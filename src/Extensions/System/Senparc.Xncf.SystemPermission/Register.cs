@@ -12,7 +12,7 @@ using Senparc.Ncf.XncfBase.Database;
 namespace Senparc.Xncf.SystemPermission
 {
     [XncfRegister]
-    [XncfOrder(5980)]
+    [XncfOrder(5960)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口

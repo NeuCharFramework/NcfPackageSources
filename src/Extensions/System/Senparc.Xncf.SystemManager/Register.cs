@@ -17,7 +17,7 @@ using Senparc.Ncf.XncfBase.Database;
 namespace Senparc.Xncf.SystemManager
 {
     [XncfRegister]
-    [XncfOrder(5990)]
+    [XncfOrder(5970)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口

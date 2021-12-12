@@ -284,7 +284,8 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 扫描并安装
+        /// 扫描并安装（自动安装，无需手动）
+        /// TODO：放置到 Service 中，为系统模块自动升级
         /// </summary>
         /// <param name="xncfModuleDtos">现有已安装的模块</param>
         /// <param name="serviceProvider">IServiceProvider</param>
