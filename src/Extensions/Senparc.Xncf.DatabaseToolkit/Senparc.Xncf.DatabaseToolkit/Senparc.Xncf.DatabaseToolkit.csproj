@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.14.5.3-beta6</Version>
+    <Version>0.15-beta7</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>

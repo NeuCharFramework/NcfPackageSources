@@ -64,14 +64,11 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             //var se = _serviceProvider.GetService(typeof(BasePoolEntities_SqlServer));
 
-
-
             //进行模块扫描
             InstallOrUpdate? installOrUpdateValue = null;
             var result = await Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, _serviceProvider, async (register, installOrUpdate) =>
             {
                 installOrUpdateValue = installOrUpdate;
-
                 if (addMenu)
                 {
                     await InstallMenuAsync(register, installOrUpdate);
