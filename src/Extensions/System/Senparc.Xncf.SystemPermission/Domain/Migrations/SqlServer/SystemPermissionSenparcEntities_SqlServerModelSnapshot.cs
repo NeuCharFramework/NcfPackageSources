@@ -22,58 +22,6 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.SqlServer
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
 
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysPermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMenu")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PermissionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("ResourceCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SysPermissions");
-                });
-
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRole", b =>
                 {
                     b.Property<string>("Id")
@@ -158,6 +106,58 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.ToTable("SysRoleAdminUserInfos");
+                });
+
+            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsMenu")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PermissionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ResourceCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("RoleCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SysRolePermissions");
                 });
 #pragma warning restore 612, 618
         }

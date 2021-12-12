@@ -14,7 +14,33 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Mysql
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "SysPermissions",
+                name: "SysRoleAdminUserInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleCode = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Flag = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AddTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    TenantId = table.Column<int>(type: "int", nullable: false),
+                    AdminRemark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Remark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SysRoleAdminUserInfos", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SysRolePermissions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -39,33 +65,7 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Mysql
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SysPermissions", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "SysRoleAdminUserInfos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RoleCode = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Flag = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AddTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastUpdateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TenantId = table.Column<int>(type: "int", nullable: false),
-                    AdminRemark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Remark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SysRoleAdminUserInfos", x => x.Id);
+                    table.PrimaryKey("PK_SysRolePermissions", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -99,10 +99,10 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Mysql
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SysPermissions");
+                name: "SysRoleAdminUserInfos");
 
             migrationBuilder.DropTable(
-                name: "SysRoleAdminUserInfos");
+                name: "SysRolePermissions");
 
             migrationBuilder.DropTable(
                 name: "SysRoles");

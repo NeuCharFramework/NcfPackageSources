@@ -22,58 +22,6 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysPermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsMenu")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("PermissionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("ResourceCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SysPermissions");
-                });
-
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRole", b =>
                 {
                     b.Property<string>("Id")
@@ -158,6 +106,58 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
                     b.HasKey("Id");
 
                     b.ToTable("SysRoleAdminUserInfos");
+                });
+
+            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMenu")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("PermissionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("ResourceCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("RoleCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SysRolePermissions");
                 });
 #pragma warning restore 612, 618
         }

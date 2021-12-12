@@ -10,29 +10,6 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "SysPermissions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleCode = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    ResourceCode = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    RoleId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    IsMenu = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PermissionId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    Flag = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AddTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastUpdateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TenantId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AdminRemark = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
-                    Remark = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SysPermissions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SysRoleAdminUserInfos",
                 columns: table => new
                 {
@@ -51,6 +28,29 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SysRoleAdminUserInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SysRolePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleCode = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    ResourceCode = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    RoleId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
+                    IsMenu = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PermissionId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
+                    Flag = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AddTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TenantId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AdminRemark = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true),
+                    Remark = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SysRolePermissions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,10 +77,10 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SysPermissions");
+                name: "SysRoleAdminUserInfos");
 
             migrationBuilder.DropTable(
-                name: "SysRoleAdminUserInfos");
+                name: "SysRolePermissions");
 
             migrationBuilder.DropTable(
                 name: "SysRoles");

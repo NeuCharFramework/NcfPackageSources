@@ -17,56 +17,6 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
-            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysPermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsMenu")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PermissionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ResourceCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SysPermissions");
-                });
-
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRole", b =>
                 {
                     b.Property<string>("Id")
@@ -149,6 +99,56 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("SysRoleAdminUserInfos");
+                });
+
+            modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsMenu")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PermissionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ResourceCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SysRolePermissions");
                 });
 #pragma warning restore 612, 618
         }
