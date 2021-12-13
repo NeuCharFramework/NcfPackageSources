@@ -109,8 +109,8 @@ namespace Senparc.Ncf.Service
         public async Task AddAsync(IEnumerable<SysPermissionDto> sysMenuDto)
         {
             List<SysRolePermission> sysRoleMenus = new List<SysRolePermission>();
-            string RoleId = sysMenuDto.FirstOrDefault().RoleId;
-            SysRole sysRole = await _sysRoleService.GetObjectAsync(_ => _.Id == RoleId);
+            string roleId = sysMenuDto.FirstOrDefault().RoleId;
+            SysRole sysRole = await _sysRoleService.GetObjectAsync(_ => _.Id == roleId);
             //
             foreach (var item in sysMenuDto)
             {

@@ -130,7 +130,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 {
                     IsMenu = true,
                     ResourceCode = sysMemu.ResourceCode,
-                    RoleId = "1",
+                    RoleId = "1-1",
                     RoleCode = "administrator",
                     PermissionId = sysMemu.Id
                 };
