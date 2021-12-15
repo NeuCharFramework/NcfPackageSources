@@ -8,7 +8,7 @@ using Senparc.Ncf.XncfBase;
 using System;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.BaseAreas
+namespace Senparc.Xncf.AreasBase
 {
     [XncfRegister]
     [XncfOrder(5955)]
@@ -16,7 +16,7 @@ namespace Senparc.Xncf.BaseAreas
     {
         #region IXncfRegister 接口
 
-        public override string Name => "Senparc.Xncf.BaseAreas";
+        public override string Name => "Senparc.Xncf.AreasBase";
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_BASE_AREAS;// "00000000-0000-0000-0001-000000000006";
 

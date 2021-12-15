@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Senparc.Ncf.Core.Areas;
+using Senparc.Ncf.Core.Config;
 using System.Collections.Generic;
 
-namespace Senparc.Xncf.BaseAreas
+namespace Senparc.Xncf.AreasBase
 {
     public partial class Register : IAreaRegister
     {
@@ -17,7 +19,7 @@ namespace Senparc.Xncf.BaseAreas
             {
                 //opt.RootDirectory = "/";
             })
-              .AddNcfAreas(env)//注册所有 Ncf 的 Area 模块（必须）
+              .AddNcfAreas(env)//注册所有 Ncf 的 Area 模块（必须）  TODO：需要在外部引用，这个是入口！！！
               .AddXmlSerializerFormatters()
               .AddJsonOptions(options =>
               {
@@ -36,6 +38,17 @@ namespace Senparc.Xncf.BaseAreas
                   //自动注册  防止跨站请求伪造（XSRF/CSRF）攻击
                   options.Conventions.Add(new Senparc.Ncf.AreaBase.Conventions.AutoValidateAntiForgeryTokenModelConvention());
               });
+
+            //提供网站根目录
+            if (env.ContentRootPath != null)
+            {
+                SiteConfig.ApplicationPath = env.ContentRootPath;
+                if (env is IWebHostEnvironment webEnv)
+                {
+                    SiteConfig.WebRootPath = webEnv.WebRootPath;
+                }
+            }
+
             return builder;
         }
     }
