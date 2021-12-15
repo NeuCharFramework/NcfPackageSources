@@ -70,6 +70,11 @@ namespace Senparc.Xncf.BaseAreas
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
             return base.UseXncfModule(app, registerService);
         }
     }
