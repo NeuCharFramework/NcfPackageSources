@@ -34,7 +34,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Name => "Senparc.Xncf.SystemCore";
 
-        public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID;// "00000000-0000-0000-0000-000000000001";
+        public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID;// "00000000-0000-0000-0001-000000000001";
 
         public override string Version => "0.1";//必须填写版本号
 
@@ -86,31 +86,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
-
-#if DEBUG
-            //Razor启用运行时编译，多个项目不需要手动编译。
-            if (env.IsDevelopment())
-            {
-                builder.AddRazorRuntimeCompilation(options =>
-                {
-                    //自动索引所有需要使用 RazorRuntimeCompilation 的模块
-                    foreach (var razorRegister in XncfRegisterManager.RegisterList.Where(z => z is IXncfRazorRuntimeCompilation))
-                    {
-                        try
-                        {
-                            var libraryPath = ((IXncfRazorRuntimeCompilation)razorRegister).LibraryPath;
-                            options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
-                        }
-                        catch (Exception ex)
-                        {
-                            SenparcTrace.BaseExceptionLog(ex);
-                        }
-                    }
-                });
-            }
-#endif
-
-
+            services.AddSenparcGlobalServices(configuration);//注册 CO2NET 基础引擎所需服务
 
             //解决中文进行编码问题
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
@@ -136,7 +112,6 @@ namespace Senparc.Xncf.SystemCore
             services.AddScoped<ISysButtonRespository, SysButtonRespository>();
 
             services.AddScoped<IAdminWorkContextProvider, AdminWorkContextProvider>();
-
 
             //忽略某些 API
             //Senparc.CO2NET.WebApi.Register.OmitCategoryList.Add(Senparc.NeuChar.PlatformType.WeChat_Work.ToString());
