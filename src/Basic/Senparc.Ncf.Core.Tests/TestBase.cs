@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Senparc.CO2NET;
@@ -14,6 +15,8 @@ namespace Senparc.Ncf.Core.Tests
     {
         public IServiceCollection ServiceCollection { get; }
         public static IConfiguration Configuration { get; set; }
+
+        public static IHostEnvironment Env { get; set; }
 
         protected static IRegisterService registerService;
         protected static SenparcSetting _senparcSetting;
@@ -52,10 +55,12 @@ namespace Senparc.Ncf.Core.Tests
         public static void RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
             //注册
-            var mockEnv = new Mock<Microsoft.Extensions.Hosting.IHostEnvironment/*IHostingEnvironment*/>();
+            var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
             mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
 
-            registerService = Senparc.CO2NET.AspNet.RegisterServices.RegisterService.Start(mockEnv.Object, _senparcSetting)
+            Env = mockEnv.Object;
+
+            registerService = Senparc.CO2NET.AspNet.RegisterServices.RegisterService.Start(Env, _senparcSetting)
                 .UseSenparcGlobal(autoScanExtensionCacheStrategies);
 
             //配置全局使用Redis缓存（按需，独立）

@@ -28,7 +28,7 @@
   <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
     <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.10.0-beta7" />
-	  <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
+    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
     <PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
