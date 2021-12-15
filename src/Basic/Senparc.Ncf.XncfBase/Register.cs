@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -69,14 +70,13 @@ namespace Senparc.Ncf.XncfBase
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
-        public static string StartEngine(this IServiceCollection services, IConfiguration configuration)
+        public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
             var scanTypesCount = 0;
             var hideTypeCount = 0;
             ConcurrentDictionary<Type, ScanTypeKind> types = new ConcurrentDictionary<Type, ScanTypeKind>();
-
 
             //所有 XNCF 模块，包括被忽略的。
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
@@ -276,7 +276,7 @@ namespace Senparc.Ncf.XncfBase
             //XNCF 模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
-                xncfRegister.AddXncfModule(services, configuration);
+                xncfRegister.AddXncfModule(services, configuration, env);
             }
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
 

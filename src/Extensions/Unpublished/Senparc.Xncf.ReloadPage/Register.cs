@@ -6,26 +6,30 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.SignalR;
+using Senparc.Xncf.ReloadPage.OHS.Hubs;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
 using Microsoft.Extensions.Hosting;
 
-namespace Senparc.Xncf.EmailExtension
+namespace Senparc.Xncf.ReloadPage
 {
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
 
-        public override string Name => "Senparc.Xncf.EmailExtension";
+        public override string Name => "Senparc.Xncf.ReloadPage";
 
-        public override string Uid => "9439B96F-A6BE-0910-EE93-B46420ADC704";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "F1415647-9AF8-9025-D21E-7943F553901C";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "Email 插件";
+        public override string MenuName => "自动重载页面模块";
 
         public override string Icon => "fa fa-file-word-o";
 
-        public override string Description => "Email 插件";
+        public override string Description => "自动重载页面模块";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -39,7 +43,15 @@ namespace Senparc.Xncf.EmailExtension
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            var hubContext = app.ApplicationServices.GetServices<IHubContext<ReloadPageHub>>();
+
+            return base.UseXncfModule(app, registerService);
         }
     }
 }

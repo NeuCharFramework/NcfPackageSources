@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.XncfBase.Database;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.Menu
 {
@@ -41,9 +42,9 @@ namespace Senparc.Xncf.Menu
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
     }
 }

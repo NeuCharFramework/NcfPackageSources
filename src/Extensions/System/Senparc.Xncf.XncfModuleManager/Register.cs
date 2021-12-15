@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
 using Senparc.Ncf.XncfBase.Database;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.XncfModuleManager
 {
@@ -65,11 +66,11 @@ namespace Senparc.Xncf.XncfModuleManager
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<XncfModuleServiceExtension>();
 
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
 
         ///// <summary>

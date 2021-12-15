@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -254,7 +255,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             if (this is IXncfDatabase databaseRegister)
             {

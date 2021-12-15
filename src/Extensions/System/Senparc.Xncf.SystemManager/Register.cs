@@ -13,6 +13,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.SystemCore.Domain.Database;
 using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.XncfBase.Database;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.SystemManager
 {
@@ -56,9 +57,9 @@ namespace Senparc.Xncf.SystemManager
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
     }
 }

@@ -13,6 +13,13 @@ using Senparc.Ncf.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 using Senparc.Ncf.XncfBase.Database;
+using Senparc.Ncf.Core;
+using Senparc.Ncf.Repository;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Ncf.Service.MultiTenant;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.Tenant
 {
@@ -37,7 +44,7 @@ namespace Senparc.Xncf.Tenant
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //安装或升级数据库
-            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider,this);
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
@@ -50,9 +57,26 @@ namespace Senparc.Xncf.Tenant
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            return base.AddXncfModule(services, configuration);
+            services.AddMultiTenant();//注册多租户（按需）
+            EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));//注册多租户数据库的对象（按需）
+            services.AddScoped<ITenantInfoDbData, TenantInfoDbData>();
+            services.AddScoped<TenantInfoRepository>();
+            services.AddScoped<IClientRepositoryBase<TenantInfo>, TenantInfoRepository>();
+
+
+            return base.AddXncfModule(services, configuration, env);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            #region 多租户
+
+            app.UseMiddleware<TenantMiddleware>();//如果不启用多租户功能，可以删除此配置
+
+            #endregion
+            return base.UseXncfModule(app, registerService);
         }
 
         #region 扩展

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.XncfBase.Database;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.SystemPermission
 {
@@ -18,7 +19,7 @@ namespace Senparc.Xncf.SystemPermission
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.SystemPermission";
-        
+
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_PERMISSION_UID;// "00000000-0000-0000-0000-000000000003";
 
         public override string Version => "0.1";//必须填写版本号
@@ -41,9 +42,9 @@ namespace Senparc.Xncf.SystemPermission
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
     }
 }

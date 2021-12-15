@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
@@ -43,16 +44,19 @@ namespace Senparc.Xncf.Swagger
 
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             using (var scope = services.BuildServiceProvider().CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
-                var env = serviceProvider.GetService<IWebHostEnvironment>();
-
+                //var env = serviceProvider.GetService<IWebHostEnvironment>();
+                IWebHostEnvironment webEnv = (env is IWebHostEnvironment webHostEnv)
+                                            ? webHostEnv
+                                            : serviceProvider.GetService<IWebHostEnvironment>();
+                
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
-                var docXmlPath = ApiDocXmlPathFunc?.Invoke(env);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
+                var docXmlPath = ApiDocXmlPathFunc?.Invoke(webEnv);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
                 var builder = services.AddMvcCore().AddApiExplorer().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                 services.AddAndInitDynamicApi(builder, options =>
                 {
@@ -70,7 +74,7 @@ namespace Senparc.Xncf.Swagger
 
                 ConfigurationHelper.Configuration = configuration;
                 ConfigurationHelper.HostEnvironment = env;
-                ConfigurationHelper.WebHostEnvironment = env;
+                ConfigurationHelper.WebHostEnvironment = webEnv;
                 ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
 
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
@@ -103,7 +107,7 @@ namespace Senparc.Xncf.Swagger
                 #endregion
             }
 
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
