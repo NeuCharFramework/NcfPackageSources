@@ -16,5 +16,6 @@
 |--------------|-----------------|
 |  src/Basic       |  必须安装的基础官方库，以 `Separc.Ncf.` 开头
 |  src/Extensions  |  可选的扩展包，以 `Senparc.Xncf.` 开头
+|  src/Extensions/System  | 系统模块
 
 ## 欢迎贡献代码！
