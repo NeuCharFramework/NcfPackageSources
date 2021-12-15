@@ -6,26 +6,29 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Senparc.Ncf.SMS;
+using Microsoft.AspNetCore.SignalR;
+using Senparc.Xncf.ReloadPage.OHS.Hubs;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
 
-namespace Senparc.Xncf.SmsExtension
+namespace Senparc.Xncf.ReloadPage
 {
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
 
-        public override string Name => "Senparc.Xncf.SmsExtension";
+        public override string Name => "Senparc.Xncf.ReloadPage";
 
-        public override string Uid => "7917897C-796E-B02A-B329-5CA9007A9217";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "F1415647-9AF8-9025-D21E-7943F553901C";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "短信 插件";
+        public override string MenuName => "自动重载页面模块";
 
         public override string Icon => "fa fa-file-word-o";
 
-        public override string Description => "短信 插件";
+        public override string Description => "自动重载页面模块";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -39,9 +42,15 @@ namespace Senparc.Xncf.SmsExtension
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<SenparcSmsSetting>(configuration.GetSection("SenparcSmsSetting"));
 
             return base.AddXncfModule(services, configuration);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            var hubContext = app.ApplicationServices.GetServices<IHubContext<ReloadPageHub>>();
+
+            return base.UseXncfModule(app, registerService);
         }
     }
 }
