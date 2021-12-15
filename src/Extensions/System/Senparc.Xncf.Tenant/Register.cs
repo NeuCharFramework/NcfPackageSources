@@ -19,6 +19,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Service.MultiTenant;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.Tenant
 {
@@ -56,7 +57,7 @@ namespace Senparc.Xncf.Tenant
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddMultiTenant();//注册多租户（按需）
             EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));//注册多租户数据库的对象（按需）
@@ -65,7 +66,7 @@ namespace Senparc.Xncf.Tenant
             services.AddScoped<IClientRepositoryBase<TenantInfo>, TenantInfoRepository>();
 
 
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase.Database;
@@ -96,8 +97,9 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="services">IServiceCollection</param>
         /// <param name="configuration">Configuration</param>
+        /// <param name="env"></param>
         /// <returns></returns>
-        IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration);
+        IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env);
 
         /// <summary>
         /// 添加AutoMap的映射关系

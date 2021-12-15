@@ -18,5 +18,6 @@
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.ChangeNamespace\Senparc.Xncf.ChangeNamespace.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
+		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
 	</ItemGroup>
 </Project>

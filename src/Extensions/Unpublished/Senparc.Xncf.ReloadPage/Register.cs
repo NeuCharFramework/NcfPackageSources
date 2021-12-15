@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Senparc.Xncf.ReloadPage.OHS.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.ReloadPage
 {
@@ -40,10 +41,10 @@ namespace Senparc.Xncf.ReloadPage
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
 
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)

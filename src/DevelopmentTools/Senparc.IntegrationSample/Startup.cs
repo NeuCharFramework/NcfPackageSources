@@ -9,6 +9,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core;
+using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
@@ -76,7 +77,7 @@ namespace Senparc.IntegrationSample
             AssembleScanHelper.RunScan();
             services.AddHttpContextAccessor();
             //激活 Xncf 扩展引擎（必须）
-            services.StartEngine(Configuration);
+            services.StartWebEngine(Configuration, Env);
 
             services.ScanAssamblesForAutoDI();
 

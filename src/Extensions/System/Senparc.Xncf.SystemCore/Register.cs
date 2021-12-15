@@ -23,6 +23,7 @@ using Senparc.Ncf.Core.WorkContext.Provider;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using System.Text;
+using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.SystemCore
 {
@@ -84,7 +85,7 @@ namespace Senparc.Xncf.SystemCore
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddSenparcGlobalServices(configuration);//注册 CO2NET 基础引擎所需服务
 
@@ -93,7 +94,7 @@ namespace Senparc.Xncf.SystemCore
             //使用内存缓存
             services.AddMemoryCache();
 
-          
+
             //注册 Lazy<T>
             services.AddTransient(typeof(Lazy<>));
 
@@ -119,7 +120,7 @@ namespace Senparc.Xncf.SystemCore
             //Senparc.CO2NET.WebApi.Register.OmitCategoryList.Add(Senparc.NeuChar.PlatformType.WeChat_Open.ToString());
             //Senparc.CO2NET.WebApi.Register.OmitCategoryList.Add(Senparc.NeuChar.PlatformType.WeChat_OfficialAccount.ToString());
 
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)

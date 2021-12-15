@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
@@ -196,7 +197,11 @@ namespace Senparc.Ncf.XncfBase.Database
             var configBuilder = new ConfigurationBuilder();
             var config = configBuilder.Build();
             var senparcSetting = new SenparcSetting() { IsDebug = true };
-            serviceCollection.AddSenparcGlobalServices(config);
+            var services = serviceCollection.AddSenparcGlobalServices(config);
+
+            //TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
+            var env = services.BuildServiceProvider().GetService<IHostEnvironment>();
+
             serviceCollection.AddMemoryCache();//使用内存缓存
             //修复 https://github.com/NeuCharFramework/NCF/issues/13 发现的问题（在非Web环境下无法得到网站根目录路径）
             IRegisterService register = RegisterService.Start(senparcSetting);
@@ -219,7 +224,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine("");
             Console.WriteLine("=======  Start XNCF Engine  =======");
             var dt1 = DateTime.Now;
-            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartEngine(serviceCollection, config);
+            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartEngine(serviceCollection, config, env);//TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
             if (!startEngineRresult.IsNullOrEmpty())
             {
                 Console.Write(startEngineRresult);
