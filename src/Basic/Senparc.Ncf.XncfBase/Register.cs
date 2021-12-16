@@ -353,9 +353,12 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="app"></param>
         /// <param name="registerService">CO2NET 注册对象</param>
+        /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService)
+        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting)
         {
+            Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting = senparcCoreSetting;
+
             foreach (var register in XncfRegisterManager.RegisterList)
             {
                 try
