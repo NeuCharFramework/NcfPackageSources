@@ -562,7 +562,16 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
-  
+
+  - task: NuGetCommand@2
+  displayName: Senparc.Xncf.AreaBase
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.AreaBase.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Tenant
   inputs:
