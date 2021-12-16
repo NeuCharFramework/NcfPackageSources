@@ -88,7 +88,8 @@ namespace Senparc.Xncf.SystemCore
             services.AddScoped(typeof(INcfDbData), typeof(NcfClientDbData));
 
             //预加载 EntitySetKey
-            EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntities));
+            //EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntities));
+            EntitySetKeys.TryLoadSetInfo(typeof(BasePoolEntities));
         }
 
         public void OnModelCreating(ModelBuilder modelBuilder)

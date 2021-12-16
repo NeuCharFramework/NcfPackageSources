@@ -22,7 +22,6 @@ namespace Senparc.Xncf.XncfBuilder
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            services.AddScoped<Config>();
             services.AddScoped<BuildXncf_BuildRequest>();
 
             //services.AddScoped<XncfBuilderEntities_SqlServer>();//注意：此处不能直接这样自动配置数据库实体，基类中已经统一配置 implementationFactory
