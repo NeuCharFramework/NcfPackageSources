@@ -98,7 +98,7 @@ namespace Senparc.IntegrationSample
                  });
 
             //XncfModules£¨±ØÐë£©
-            Senparc.Ncf.XncfBase.Register.UseXncfModules(app, registerService);
+            Senparc.Ncf.XncfBase.Register.UseXncfModules(app, registerService, senparcCoreSetting.Value);
 
             if (env.IsDevelopment())
             {
