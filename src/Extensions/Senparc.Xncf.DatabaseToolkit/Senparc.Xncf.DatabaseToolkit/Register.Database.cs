@@ -19,9 +19,6 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXncfDatabaseModule");
-            services.AddScoped<DbConfig>();
-
             //AutoMap映射
             base.AddAutoMapMapping(profile =>
             {
