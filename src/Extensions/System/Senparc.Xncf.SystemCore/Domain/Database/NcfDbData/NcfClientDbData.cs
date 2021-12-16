@@ -8,25 +8,25 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
 {
     public interface INcfClientDbData : INcfDbData
     {
-        SenparcEntities DataContext { get; }
+        BasePoolEntities DataContext { get; }
     }
 
     //[Pluggable("ClientDatabase")]
     public class NcfClientDbData : NcfDbData, INcfDbData, INcfClientDbData
     {
-        private SenparcEntities dataContext;
+        private BasePoolEntities dataContext;
 
-        public NcfClientDbData(SenparcEntities senparcEntities)
+        public NcfClientDbData(BasePoolEntities senparcEntities)
         {
             dataContext = senparcEntities;
         }
 
 
-        public SenparcEntities DataContext
+        public BasePoolEntities DataContext
         {
             get
             {
-                return BaseDataContext as SenparcEntities;
+                return BaseDataContext as BasePoolEntities;
             }
         }
 
