@@ -564,10 +564,10 @@ steps:
   condition: succeededOrFailed()
 
   - task: NuGetCommand@2
-  displayName: Senparc.Xncf.AreaBase
+  displayName: Senparc.Xncf.AreasBase
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.AreaBase.*.nupkg'
+    packagesToPush: '**/Senparc.Xncf.AreasBase.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
