@@ -369,7 +369,11 @@ namespace Senparc.Ncf.XncfBase
                     //TODO: 后期改为远程（其他模块）查找租户
 
                     // 是否已经载入过数据库功能的 Database
-                    if (!SiteConfig.DatabaseXncfLoaded && register is IXncfDatabase)
+                    if (!SiteConfig.DatabaseXncfLoaded
+                        //SystemCore 需要支持 IXncfDatabase，但并不属于实际运作的数据库模块，因此需要排除
+                        && register.Uid != SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID
+                        && register is IXncfDatabase
+                        )
                     {
                         SiteConfig.DatabaseXncfLoaded = true;
                     }
