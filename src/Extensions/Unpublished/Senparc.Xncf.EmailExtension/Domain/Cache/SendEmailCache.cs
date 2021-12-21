@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Senparc.CO2NET;
+using Senparc.Ncf.Core.Cache;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.DI;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Utility;
+using Senparc.Xncf.EmailExtension.Domain.Models;
 
-namespace Senparc.Ncf.Core.Cache
+namespace Senparc.Xncf.EmailExtension.Domain.Cache
 {
     public interface ISendEmailCache : IBaseCache<List<AutoSendEmail>>
     {
@@ -39,7 +42,7 @@ namespace Senparc.Ncf.Core.Cache
 
         public override List<AutoSendEmail> Update()
         {
-            int maxSendCount = Config.SiteConfig.MaxSendEmailTimes;//最大重复发送次数
+            int maxSendCount = Register.MaxSendEmailTimes;//最大重复发送次数
             List<AutoSendEmail> data = this.GetAllList()
                                         .Where(z => z.SendCount < maxSendCount).OrderBy(z => z.SendCount).OrderBy(z => z.Id).ToList();
             base.SetData(data, base.TimeOut, null);

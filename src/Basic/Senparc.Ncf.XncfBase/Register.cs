@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Microsoft.Extensions.Hosting;
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -364,6 +365,14 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     register.UseXncfModule(app, registerService);
+
+                    //TODO: 后期改为远程（其他模块）查找租户
+
+                    // 是否已经载入过数据库功能的 Database
+                    if (!SiteConfig.DatabaseXncfLoaded && register is IXncfDatabase)
+                    {
+                        SiteConfig.DatabaseXncfLoaded = true;
+                    }
                 }
                 catch
                 {

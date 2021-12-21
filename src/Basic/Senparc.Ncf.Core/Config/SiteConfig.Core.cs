@@ -143,10 +143,6 @@ namespace Senparc.Ncf.Core.Config
         public static readonly string WBSFormat = "000";
 
         /// <summary>
-        /// 最大自动发送Email次数
-        /// </summary>
-        public static readonly int MaxSendEmailTimes = 5;
-        /// <summary>
         /// 用户在线不活动过期时间(分钟)
         /// </summary>
         public static readonly int UserOnlineTimeoutMinutes = 10;
@@ -173,6 +169,11 @@ namespace Senparc.Ncf.Core.Config
         public static bool IsInstalling = false;
 
         public static int PageViewCount { get; set; } //网站启动后前台页面浏览量
+
+        /// <summary>
+        /// 是否应有数据库模块载入
+        /// </summary>
+        public static bool DatabaseXncfLoaded { get; set; }
 
         //异步线程
         public static Dictionary<string, Thread> AsynThread = new Dictionary<string, Thread>(); //后台运行线程

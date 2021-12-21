@@ -10,6 +10,7 @@ namespace Senparc.Xncf.EmailExtension
     using Senparc.Ncf.Core.Cache;
     using Senparc.Ncf.Core.Extensions;
     using Senparc.Ncf.Log;
+    using Senparc.Xncf.EmailExtension.Domain.Cache;
 
     /// <summary>
     /// 自动发送邮件类
@@ -66,7 +67,7 @@ namespace Senparc.Xncf.EmailExtension
                     }
 
                     AutoSendCount++;
-                    if (email.SendCount > SiteConfig.MaxSendEmailTimes)
+                    if (email.SendCount > Register.MaxSendEmailTimes)
                     {
                         continue;
                     }

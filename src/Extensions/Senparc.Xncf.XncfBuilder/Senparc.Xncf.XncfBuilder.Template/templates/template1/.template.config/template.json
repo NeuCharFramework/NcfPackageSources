@@ -132,7 +132,7 @@
       "fileRename": "Template_NcfAreaBase_Version",
       "replaces": "Template_NcfAreaBase_Version",
       "isRequired": true,
-      "defaultValue": "0.6.114-beta1"
+      "defaultValue": "0.11-beta7"
     }
   },
   "sourceName": "Template_OrgName.Xncf.Template_XncfName",
@@ -150,7 +150,7 @@
         {
           "condition": "(!UseFunction)", //如果不添加 Function，排除下面的文件
           "exclude": [
-            "Functions/**"
+            "OHS/Local/AppService/MyFuctionAppService.cs"
           ]
         },
         {
@@ -164,8 +164,10 @@
           "condition": "(!UseDatabase && !UseSample)", //如果不添加 数据库，排除下面的文件
           "exclude": [
             "Register.Database.cs",
-            "Models/**",
-            "Migrations/**"
+            "Domain/Models/**",
+            "Domain/Migrations/**",
+            "Domain/Services/**",
+            "OHS/Local/AppService/ColorAppService.cs"
           ]
         }
       ]
