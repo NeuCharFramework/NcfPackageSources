@@ -67,7 +67,7 @@ namespace Senparc.Xncf.Swagger
                     options.TaskCount = Environment.ProcessorCount * 4;
                     options.ShowDetailApiLog = true;
                     options.AdditionalAttributeFunc = null;
-                    options.ForbiddenExternalAccess = true;
+                    options.ForbiddenExternalAccess = false;
                 });
 
                 #endregion
