@@ -13,6 +13,11 @@ namespace Senparc.Xncf.EmailExtension
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        /// <summary>
+        /// 最大自动发送Email次数
+        /// </summary>
+        public static readonly int MaxSendEmailTimes = 5;
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.EmailExtension";

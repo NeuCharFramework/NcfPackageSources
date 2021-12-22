@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Microsoft.Extensions.Hosting;
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -364,6 +365,18 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     register.UseXncfModule(app, registerService);
+
+                    //TODO: 后期改为远程（其他模块）查找租户
+
+                    // 是否已经载入过数据库功能的 Database
+                    if (!SiteConfig.DatabaseXncfLoaded
+                        //SystemCore 需要支持 IXncfDatabase，但并不属于实际运作的数据库模块，因此需要排除
+                        && register.Uid != SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID
+                        && register is IXncfDatabase
+                        )
+                    {
+                        SiteConfig.DatabaseXncfLoaded = true;
+                    }
                 }
                 catch
                 {

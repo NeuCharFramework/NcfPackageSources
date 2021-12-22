@@ -146,15 +146,6 @@ namespace Senparc.Ncf.Core.Utility
             return result;
         }
 
-        public List<AutoSendEmail> GetAutoSendEmailList()
-        {
-            return this.GetXmlList<AutoSendEmail>();
-        }
-
-        public List<AutoSendEmailBak> GetAutoSendEmailBakList()
-        {
-            return this.GetXmlList<AutoSendEmailBak>();
-        }
 
         ///// <summary>
         ///// 重设密码

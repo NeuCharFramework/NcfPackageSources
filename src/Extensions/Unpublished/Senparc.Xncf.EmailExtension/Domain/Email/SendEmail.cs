@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Net.Mail;
 using System.Reflection;
+using System.Text;
 
 namespace Senparc.Ncf.Core.Email
 {
-    using Senparc.Ncf.Core.Models;
-    using Senparc.Ncf.Core.Config;
-    using Senparc.Ncf.Core.Extensions;
+    using Senparc.CO2NET.Extensions;
     using Senparc.Ncf.Core.Enums;
-    using Senparc.Ncf.Core.Cache;
     using Senparc.Ncf.Core.Utility;
     using Senparc.Ncf.Log;
+    using Senparc.Xncf.EmailExtension.Domain.Cache;
+    using Senparc.Xncf.EmailExtension.Domain.Models;
+    using Senparc.Xncf.EmailExtension.Domain.Xml;
     using System.IO;
-    using Senparc.CO2NET.Extensions;
 
     interface ISendEmail
     {
@@ -47,7 +46,7 @@ namespace Senparc.Ncf.Core.Email
         {
             if (toUse != null)
             {
-                ConfigNode = XmlConfig.GetEmailConfig((SendEmailType)toUse);//获取模板的节点内容
+                ConfigNode = EmailXmlConfig.GetEmailConfig((SendEmailType)toUse);//获取模板的节点内容
                 Subject = ConfigNode.Subject;
                 Body = ConfigNode.Body.HtmlDecode();
             }
@@ -214,7 +213,7 @@ namespace Senparc.Ncf.Core.Email
                         Address = sendEmailParameter.ToEmail,
                         Subject = SentSubject,
                         Body = this.GetEmailTemplate(SentBody, this.UseEmailTemplate),//内容 + 模板
-                        SendCount = sendImmediately ? 0 : (SiteConfig.MaxSendEmailTimes + 200),//如果不要求马上发送，则仅存于缓存中
+                        SendCount = sendImmediately ? 0 : (Senparc.Xncf.EmailExtension.Register.MaxSendEmailTimes + 200),//如果不要求马上发送，则仅存于缓存中
                         LastSendTime = DateTime.Now
                     };
                     bool insertSuccess = cache.InsertEmail(email);
