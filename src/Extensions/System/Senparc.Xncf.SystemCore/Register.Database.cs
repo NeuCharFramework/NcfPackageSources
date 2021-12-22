@@ -54,13 +54,7 @@ namespace Senparc.Xncf.SystemCore
 
             #region 不属于任何模块
 
-            //这个配置面相基类，不属于任何模块
-            Func<IServiceProvider, SenparcEntitiesMultiTenant> multiTenantImplementationFactory = s =>
-            {
-                var multipleDatabasePool = MultipleDatabasePool.Instance;
-                return multipleDatabasePool.GetDbContext<SenparcEntitiesMultiTenant>(serviceProvider: s);
-            };
-            services.AddScoped<SenparcEntitiesMultiTenant>(multiTenantImplementationFactory);//继承自 SenparcEntitiesMultiTenantBase
+
 
             Func<IServiceProvider, SenparcEntities> senparcEntitiesImplementationFactory = s =>
             {

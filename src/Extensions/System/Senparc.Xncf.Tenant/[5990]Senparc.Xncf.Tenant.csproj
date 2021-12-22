@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.3.0.1-beta7</Version>
+    <Version>0.3.0.5-beta7</Version>
     <AssemblyName>Senparc.Xncf.Tenant</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -53,9 +53,7 @@
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ACL\Repository\" />
     <Folder Include="Domain\DatabaseModel\Mapping\" />
-    <Folder Include="Domain\Services\" />
     <Folder Include="OHS\Local\AppService\" />
   </ItemGroup>
   <ItemGroup>

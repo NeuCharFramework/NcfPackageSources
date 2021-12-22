@@ -187,8 +187,6 @@ namespace Senparc.Ncf.Core.Models
             }
         }
 
-
-
         /// <summary>
         /// 设置当前 DbContext 是否启用上下文
         /// </summary>

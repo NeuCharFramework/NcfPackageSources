@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
+using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Core.Models
+namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
     /* 说明：
      * 把 SenparcEntitiesMultiTenantBase 独立出来做一层的意义在于剥离必须需要支持多租户的对象（如系统表），
@@ -25,10 +27,10 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     public sealed class SenparcEntitiesMultiTenant : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
-        ///// <summary>
-        ///// 多租户信息
-        ///// </summary>
-        //public DbSet<TenantInfo> TenantInfos { get; set; }
+        /// <summary>
+        /// 多租户信息
+        /// </summary>
+        public DbSet<TenantInfo> TenantInfos { get; set; }
 
 
         public SenparcEntitiesMultiTenant(DbContextOptions options, IServiceProvider serviceProvider) : base(options, serviceProvider)
