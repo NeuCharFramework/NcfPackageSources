@@ -563,7 +563,7 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-  - task: NuGetCommand@2
+- task: NuGetCommand@2
   displayName: Senparc.Xncf.AreasBase
   inputs:
     command: push
@@ -572,7 +572,7 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
-  
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Tenant
   inputs:
