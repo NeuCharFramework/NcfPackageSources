@@ -10,23 +10,23 @@ namespace Senparc.Ncf.Core.AppServices
         int StateCode { get; set; }
         bool? Success { get; set; }
         string ErrorMessage { get; set; }
-        object Data { get; set; }
         /// <summary>
         /// 请求临时ID（用于调取日志）
         /// </summary>
         string RequestTempId { get; }
     }
 
-    /// <summary>
-    /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
-    /// </summary>
-    [Serializable]
-    public class AppResponseBase : IAppResponse
+    public interface IAppResponse<T> : IAppResponse
+    {
+        T Data { get; set; }
+    }
+
+
+    public class AppResponseBase: IAppResponse
     {
         public int StateCode { get; set; }
         public bool? Success { get; set; }
         public string ErrorMessage { get; set; }
-        public object Data { get; set; }
         /// <summary>
         /// 请求临时ID（用于调取日志）
         /// </summary>
@@ -40,15 +40,14 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         public AppResponseBase()
-            : this(default(int), default(bool?), default(String), default(Object), null)
+            : this(default(int), default(bool?), default(String), null)
         { }
 
-        public AppResponseBase(int stateCode, bool? success, string errorMessage, object data, string domainCategoryForTempId = null)
+        public AppResponseBase(int stateCode, bool? success, string errorMessage,string domainCategoryForTempId = null)
         {
             StateCode = stateCode;
             Success = success;
             ErrorMessage = errorMessage;
-            Data = data;
             RequestTempId = GenerateTempId(domainCategoryForTempId);
         }
 
@@ -63,15 +62,17 @@ namespace Senparc.Ncf.Core.AppServices
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class AppResponseBase<T> : AppResponseBase, IAppResponse
+    public class AppResponseBase<T> : AppResponseBase, IAppResponse<T>
     {
-        public AppResponseBase() : base() { }
+        public T Data { get; set; }
+        
+        public AppResponseBase()
+            : this(default(int), default(bool?), default(String), default(T), null)
+        { }
 
-        public new T Data { get => (T)base.Data; set => base.Data = value; }
-
-        public AppResponseBase(int stateCode, bool success, string errorMessage, T data)
-            : base(stateCode, success, errorMessage, data)
+        public AppResponseBase(int stateCode, bool? success, string errorMessage, T data, string domainCategoryForTempId = null): base (stateCode, success, errorMessage, domainCategoryForTempId)
         {
+            Data = data;
         }
     }
 }
