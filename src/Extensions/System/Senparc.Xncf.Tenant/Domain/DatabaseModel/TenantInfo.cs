@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Cache;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.MultiTenant;
+using Senparc.Xncf.Tenant.Domain.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Core.Models.DataBaseModel
+namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
 {
     /// <summary>
     /// 租户信息

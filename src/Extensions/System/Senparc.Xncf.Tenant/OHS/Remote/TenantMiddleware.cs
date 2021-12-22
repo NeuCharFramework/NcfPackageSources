@@ -3,10 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Config;
+using Senparc.Xncf.Tenant.Domain.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Service.MultiTenant
+namespace Senparc.Xncf.Tenant.OHS.Remote
 {
     /// <summary>
     /// 多租户中间件

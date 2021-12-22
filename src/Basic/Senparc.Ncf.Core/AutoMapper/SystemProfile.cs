@@ -31,8 +31,6 @@ namespace Senparc.Ncf.Core.AutoMapper
 
             CreateMap<XncfModule, CreateOrUpdate_XncfModuleDto>();
             CreateMap<XncfModule, XncfModuleDto>();
-
-            CreateMap<TenantInfo, TenantInfoDto>();
         }
     }
 }

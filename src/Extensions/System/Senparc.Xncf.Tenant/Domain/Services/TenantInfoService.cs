@@ -8,12 +8,16 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
+using Senparc.Ncf.Service;
+using Senparc.Xncf.Tenant.ACL.Repository;
+using Senparc.Xncf.Tenant.Domain.Cache;
+using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Service
+namespace Senparc.Xncf.Tenant.Domain.Services
 {
     public class TenantInfoService : ClientServiceBase<TenantInfo>
     {
