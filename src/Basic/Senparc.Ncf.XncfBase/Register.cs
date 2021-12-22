@@ -249,6 +249,7 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(AppResponseBase));
             services.AddScoped(typeof(AppResponseBase<>));
             services.AddScoped(typeof(IAppResponse), typeof(AppResponseBase));
+            //services.AddScoped(typeof(IAppResponse<>), typeof(AppResponseBase<>));
 
             //ConfigurationMapping
             services.AddScoped(typeof(ConfigurationMappingBase<>));
