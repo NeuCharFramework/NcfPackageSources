@@ -572,6 +572,7 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
+  
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Tenant
   inputs:
