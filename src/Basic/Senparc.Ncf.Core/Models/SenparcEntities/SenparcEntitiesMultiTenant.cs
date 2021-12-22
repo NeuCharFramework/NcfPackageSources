@@ -25,10 +25,10 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     public sealed class SenparcEntitiesMultiTenant : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
-        /// <summary>
-        /// 多租户信息
-        /// </summary>
-        public DbSet<TenantInfo> TenantInfos { get; set; }
+        ///// <summary>
+        ///// 多租户信息
+        ///// </summary>
+        //public DbSet<TenantInfo> TenantInfos { get; set; }
 
 
         public SenparcEntitiesMultiTenant(DbContextOptions options, IServiceProvider serviceProvider) : base(options, serviceProvider)
