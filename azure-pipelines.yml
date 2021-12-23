@@ -573,6 +573,17 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Tenant.Interface
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Tenant.Interface.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Tenant
   inputs:
