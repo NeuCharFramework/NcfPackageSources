@@ -111,6 +111,8 @@ namespace Senparc.Xncf.SystemCore
 
             //Repository & Service
             services.AddScoped<ISysButtonRespository, SysButtonRespository>();
+            services.AddScoped<ISysRolePermissionRepository, SysRolePermissionRepository>();
+            services.AddScoped<Ncf.Core.Authorization.ICheckPermission, Ncf.Service.SysPermissionService>();
 
             services.AddScoped<IAdminWorkContextProvider, AdminWorkContextProvider>();
 
