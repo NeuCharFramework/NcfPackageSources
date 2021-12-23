@@ -1,7 +1,8 @@
-﻿using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.Models.DataBaseModel;
+﻿using Senparc.Ncf.Repository;
+using Senparc.Xncf.Tenant.Domain.DataBaseModel;
+using Senparc.Xncf.Tenant.Domain.Models;
 
-namespace Senparc.Ncf.Repository
+namespace Senparc.Xncf.Tenant.ACL.Repository
 {
     /// <summary>
     /// 租户 TenantInfo 的专用 TenantInfoClientRepositoryBase

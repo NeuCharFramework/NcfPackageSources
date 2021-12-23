@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Models
+namespace Senparc.Xncf.Tenant.Domain.Models
 {
     public interface ITenantInfoDbData : INcfDbData
     {

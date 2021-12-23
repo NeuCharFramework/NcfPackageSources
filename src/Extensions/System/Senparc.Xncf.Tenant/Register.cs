@@ -18,8 +18,15 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
-using Senparc.Ncf.Service.MultiTenant;
 using Microsoft.Extensions.Hosting;
+using Senparc.Xncf.Tenant.OHS.Remote;
+using Senparc.Xncf.Tenant.ACL.Repository;
+using Senparc.Xncf.Tenant.Domain.DataBaseModel;
+using Senparc.Xncf.Tenant.Domain.Models;
+using Senparc.Ncf.Core.MultiTenant;
+using AutoMapper;
+using Senparc.Xncf.Tenant.Domain.DatabaseModel.AutoMapper;
+using Senparc.Ncf.Database;
 
 namespace Senparc.Xncf.Tenant
 {
@@ -59,12 +66,15 @@ namespace Senparc.Xncf.Tenant
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            services.AddMultiTenant();//注册多租户（按需）
+            AddMultiTenant(services);//注册多租户（按需）
             EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));//注册多租户数据库的对象（按需）
+            //EntitySetKeys.TryLoadSetInfo(typeof(TenantSenparcEntities));//注册多租户数据库的对象（按需）
             services.AddScoped<ITenantInfoDbData, TenantInfoDbData>();
             services.AddScoped<TenantInfoRepository>();
             services.AddScoped<IClientRepositoryBase<TenantInfo>, TenantInfoRepository>();
 
+            //引入当前系统
+            services.AddAutoMapper(z => z.AddProfile<TenantInfoProfile>());
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -151,6 +161,29 @@ namespace Senparc.Xncf.Tenant
         //}
 
         #endregion
+
+
+        /// <summary>
+        /// 添加多租户
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public IServiceCollection AddMultiTenant(IServiceCollection services)
+        {
+            services.AddScoped<TenantInfoDto>();
+            services.AddScoped<TenantInfoDbData>();
+
+            //这个配置面相基类，不属于任何模块
+            Func<IServiceProvider, SenparcEntitiesMultiTenant> multiTenantImplementationFactory = s =>
+            {
+                var multipleDatabasePool = MultipleDatabasePool.Instance;
+                return multipleDatabasePool.GetDbContext<SenparcEntitiesMultiTenant>(serviceProvider: s);
+            };
+            services.AddScoped<SenparcEntitiesMultiTenant>(multiTenantImplementationFactory);//继承自 SenparcEntitiesMultiTenantBase
+
+            return services;
+        }
+
 
     }
 }

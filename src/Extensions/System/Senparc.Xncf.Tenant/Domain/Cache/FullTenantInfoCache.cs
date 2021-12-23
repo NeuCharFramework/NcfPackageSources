@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Senparc.CO2NET;
+using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.DI;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Xncf.Tenant.Domain.DatabaseModel;
+using Senparc.Xncf.Tenant.Domain.DataBaseModel;
+using Senparc.Xncf.Tenant.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Core.Cache
+namespace Senparc.Xncf.Tenant.Domain.Cache
 {
     /* 需要关注及优化：
      * 1、当前依赖注入的对象 INcfDbData 仍然会注入 SenparcEntitiesBase，
@@ -43,7 +47,7 @@ namespace Senparc.Ncf.Core.Cache
             try
             {
                 _senparcEntitiesMultiTenant.SetMultiTenantEnable(false);//TODO:此处有线程安全问题，TenantInfos不具备多租户属性可以直接查询
-                list = await _senparcEntitiesMultiTenant.TenantInfos.Where(z => z.Enable).ToListAsync();
+                list = await _senparcEntitiesMultiTenant.Set<TenantInfo>().Where(z => z.Enable).ToListAsync();
             }
             finally
             {

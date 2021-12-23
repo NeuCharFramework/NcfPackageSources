@@ -28,6 +28,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Microsoft.Extensions.Hosting;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -259,6 +260,8 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder<>));
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
+            //多租户
+            services.AddScoped<RequestTenantInfo>();
 
             #region 支持 AutoMapper
             //XNCF 模块进行 AutoMapper 映射

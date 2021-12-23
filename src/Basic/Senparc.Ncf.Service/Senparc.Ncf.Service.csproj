@@ -51,4 +51,7 @@
     <ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MultiTenant\" />
+  </ItemGroup>
 </Project>

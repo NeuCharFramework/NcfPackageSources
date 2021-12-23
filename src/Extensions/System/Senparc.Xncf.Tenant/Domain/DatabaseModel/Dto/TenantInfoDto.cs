@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Senparc.Ncf.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Models.DataBaseModel
+namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
 {
     public class TenantInfoDto : DtoBase
     {
