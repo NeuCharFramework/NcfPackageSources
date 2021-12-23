@@ -71,7 +71,6 @@ namespace Senparc.Ncf.XncfBase
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
 
-
         #region 执行 Migrate 更新数据 MigrateDatabaseAsync()
         /*
         /// <summary>
