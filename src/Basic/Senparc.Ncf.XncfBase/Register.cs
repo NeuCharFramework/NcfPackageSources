@@ -360,7 +360,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting)
+        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting, bool autoRunInstall = false)
         {
             Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting = senparcCoreSetting;
 
@@ -413,6 +413,23 @@ namespace Senparc.Ncf.XncfBase
                     }
                 }
             }
+
+            //自动运行安装
+
+            if (autoRunInstall)
+            {
+                Task.Factory.StartNew(async () =>
+                {
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        foreach (var register in XncfRegisterManager.RegisterList)
+                        {
+                            await register.InstallOrUpdateAsync(scope.ServiceProvider, InstallOrUpdate.Install);
+                        }
+                    }
+                }).GetAwaiter().GetResult();
+            }
+
             return app;
         }
 
