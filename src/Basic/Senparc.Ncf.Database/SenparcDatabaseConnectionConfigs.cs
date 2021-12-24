@@ -1,4 +1,6 @@
-﻿using Senparc.Ncf.Core.Cache;
+﻿using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Utility;
@@ -30,7 +32,7 @@ namespace Senparc.Ncf.Core.Config
                     }
                     catch (Exception e)
                     {
-                        //Console.WriteLine(e.Message);
+                        Console.WriteLine("=== NCF === 读取数据库配置错误：" + e.ToString());
                         LogUtility.WebLogger.ErrorFormat("SenparcConfigs.Configs 读取错误：" + e.Message, e);
                     }
                     return configs;
@@ -58,7 +60,17 @@ namespace Senparc.Ncf.Core.Config
                 }
                 else
                 {
-                    throw new NcfExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置");
+                    var code = 0;
+                    if (SenparcDatabaseConnectionConfigs.Configs == null)
+                    {
+                        code = 101;
+                    }
+                    else if (!SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
+                    {
+                        code = 102;
+                        Console.WriteLine("SenparcDatabaseConnectionConfigs.Configs 配置：" + SenparcDatabaseConnectionConfigs.Configs.ToJson(true));
+                    }
+                    throw new NcfExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置（ErrCode: {code}）！");
                 }
             }
         }
