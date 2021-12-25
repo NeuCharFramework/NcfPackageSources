@@ -23,6 +23,19 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return colorDto;
         }
 
+        public async Task<ColorDto> GetOrInitColor()
+        {
+            var color = await base.GetObjectAsync(z => true);
+            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+            {
+                //创建默认颜色
+                ColorDto colorDto = await this.CreateNewColor().ConfigureAwait(false);
+                return colorDto;
+            }
+
+            return base.Mapper.Map<ColorDto>(color);
+        }
+
         public async Task<ColorDto> Brighten()
         {
             //TODO:异步方法需要添加排序功能
