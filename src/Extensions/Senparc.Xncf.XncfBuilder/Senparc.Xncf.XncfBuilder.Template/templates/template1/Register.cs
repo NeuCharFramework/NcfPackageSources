@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 #if (UseDatabase || UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
@@ -84,10 +85,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-            return base.AddXncfModule(services, configuration);
+            return base.AddXncfModule(services, configuration, env);
         }
     }
 }
