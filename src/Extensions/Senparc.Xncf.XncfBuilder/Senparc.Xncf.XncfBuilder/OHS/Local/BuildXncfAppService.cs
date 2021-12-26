@@ -65,7 +65,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             var useFunction = getBoolParam(request.UseModule.SelectedValues.Contains("function"), "UseFunction");
             var isUseWeb = isUseSample || request.UseModule.SelectedValues.Contains("web");
             var useWeb = getBoolParam(isUseWeb, "UseWeb");
-            var useDatabase = getBoolParam(isUseSample, "UseDatabase");
+            var useDatabase = getBoolParam(useDatabase, "UseDatabase");
             var useWebApi = getBoolParam(request.UseModule.SelectedValues.Contains("webapi"), "UseWebApi");
 
             //获取当前配置的 FrameworkVersion
