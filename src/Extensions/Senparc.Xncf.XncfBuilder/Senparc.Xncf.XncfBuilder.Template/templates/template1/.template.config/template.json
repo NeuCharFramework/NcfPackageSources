@@ -167,7 +167,14 @@
             "Domain/Models/**",
             "Domain/Migrations/**",
             "Domain/Services/**",
-            "OHS/Local/AppService/ColorAppService.cs"
+            "OHS/Local/AppService/ColorAppService.cs",
+            "OHS/Local/PL/ColorAppService.cs"
+          ]
+        },
+        {
+          "condition": "(!UseWebApi)", //如果不添加 数据库，排除下面的文件
+          "exclude": [
+            "OHS/Local/AppService/ApiAppService.cs"
           ]
         }
       ]

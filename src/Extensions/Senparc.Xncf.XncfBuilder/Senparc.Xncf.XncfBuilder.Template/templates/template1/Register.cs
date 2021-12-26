@@ -87,7 +87,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+#if (UseDatabase || UseSample)
             services.AddScoped<ColorAppService>();
+#endif
             return base.AddXncfModule(services, configuration, env);
         }
     }

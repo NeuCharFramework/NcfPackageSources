@@ -12,17 +12,14 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 {
     public class ColorAppService : AppServiceBase
     {
-        private ColorService _colorService;
-        public ColorAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
+        public ColorAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _colorService = colorService;
         }
 
         /// <summary>
         /// 获取或初始化一个 ColorDto 对象
         /// </summary>
         /// <returns></returns>
-        [ApiBind]//使用 [ApiBind] 可快速创建动态 WebApi（可选）
         public async Task<AppResponseBase<Color_CaculateResponse>> GetOrInitColorDtoAsync()
         {
             return await this.GetResponseAsync<AppResponseBase<Color_CaculateResponse>, Color_CaculateResponse>(async (response, logger) =>
