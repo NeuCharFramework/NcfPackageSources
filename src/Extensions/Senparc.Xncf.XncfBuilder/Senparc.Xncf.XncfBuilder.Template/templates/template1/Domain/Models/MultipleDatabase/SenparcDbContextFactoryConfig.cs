@@ -21,9 +21,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
             {
                 if (_rootDictionaryPath == null)
                 {
-                    var projectPath = Path.GetFullPath("..\\..\\..\\", AppContext.BaseDirectory);//项目根目录
+                    var projectPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}", AppContext.BaseDirectory);//项目根目录
 
-                    var webPath = Path.GetFullPath("..\\Senparc.Web",/*找到 Web目录，以获取统一的数据库连接字符串配置*/
+                    var webPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Senparc.Web",/*找到 Web目录，以获取统一的数据库连接字符串配置*/
                                                    projectPath);
                     if (Directory.Exists(webPath))
                     {
