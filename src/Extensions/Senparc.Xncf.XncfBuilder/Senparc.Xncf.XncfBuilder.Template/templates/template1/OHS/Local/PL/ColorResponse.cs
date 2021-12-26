@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL
 {
-    public class Color_CaculateResponse
+    public class Color_GetOrInitColorResponse
     {
         /// <summary>
         /// 颜色码，0-255
@@ -25,7 +25,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL
         /// </summary>
         public double CostMillionSeconds { get; set; }
 
-        public Color_CaculateResponse(int red, int green, int blue, double costMillionSeconds)
+        public Color_GetOrInitColorResponse(int red, int green, int blue, double costMillionSeconds)
         {
             Red = red;
             Green = green;

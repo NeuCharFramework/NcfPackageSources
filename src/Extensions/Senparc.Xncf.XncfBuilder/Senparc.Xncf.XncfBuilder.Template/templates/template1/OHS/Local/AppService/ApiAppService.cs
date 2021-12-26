@@ -1,8 +1,8 @@
 ﻿using Senparc.CO2NET;
+using Senparc.Ncf.Core.AppServices;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 {
@@ -28,22 +28,33 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<int>, int>(async (response, logger) =>
             {
                 await Task.Delay(100);
-                return 666;
+                return 200;
             });
         }
 
         /// <summary>
-        /// 将 AppService 暴露为 WebApi，自定义 API 名称
+        /// 自定义 Post 类型和复杂参数，同时测试异常抛出和自定义状态码
         /// </summary>
         /// <returns></returns>
-        [ApiBind("MyCategory","MyApi")]
-        public async Task<StringAppResponse> MyCustomApi()
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
             //StringAppResponse 是 AppResponseBase<string> 的快捷写法
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                await Task.Delay(100);
-                return "This is MyCustomApi";
+                throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
+                response.StateCode = 100;
+            },
+            exceptionHandler: (ex, response, logger) =>
+            {
+                logger.Append($"正在处理异常，信息：{ex.Message}");
+            },
+            afterFunc: (response, logger) =>
+            {
+                if (response.Success != true)
+                {
+                    response.StateCode = 101;
+                }
             });
         }
     }

@@ -20,9 +20,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         /// 获取或初始化一个 ColorDto 对象
         /// </summary>
         /// <returns></returns>
-        public async Task<AppResponseBase<Color_CaculateResponse>> GetOrInitColorDtoAsync()
+        public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
-            return await this.GetResponseAsync<AppResponseBase<Color_CaculateResponse>, Color_CaculateResponse>(async (response, logger) =>
+            return await this.GetResponseAsync<AppResponseBase<Color_GetOrInitColorResponse>, Color_GetOrInitColorResponse>(async (response, logger) =>
             {
                 var dt1 = SystemTime.Now;//开始计时
 
@@ -30,7 +30,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 
                 var costMs = SystemTime.DiffTotalMS(dt1);//记录耗时
 
-                Color_CaculateResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
+                Color_GetOrInitColorResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
 
                 return result;
             });

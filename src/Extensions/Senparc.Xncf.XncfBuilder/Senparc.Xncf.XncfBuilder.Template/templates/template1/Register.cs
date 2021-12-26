@@ -52,7 +52,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 #if (UseSample)
             #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
-                    var colorResult = await colorService.GetOrInitColorDtoAsync();
+                    var colorResult = await colorService.GetOrInitColorAsync();
             #endregion
 #endif
                     break;
