@@ -1,6 +1,8 @@
-﻿using Senparc.Ncf.Core.AppServices;
+﻿using Senparc.CO2NET;
+using Senparc.Ncf.Core.AppServices;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,27 +12,32 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 {
     public class ColorAppService : AppServiceBase
     {
-        private ColorService _colorService;
+        private readonly ColorService _colorService;
+
         public ColorAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
-            _colorService = colorService;
+            this._colorService = colorService;
         }
+
 
         /// <summary>
         /// 获取或初始化一个 ColorDto 对象
         /// </summary>
         /// <returns></returns>
-        public async Task<ColorDto> GetOrInitColorDtoAsync()
+        public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
-            var color = _colorService.GetObject(z => true);
-            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+            return await this.GetResponseAsync<AppResponseBase<Color_GetOrInitColorResponse>, Color_GetOrInitColorResponse>(async (response, logger) =>
             {
-                //创建默认颜色
-                ColorDto colorDto = await _colorService.CreateNewColor().ConfigureAwait(false);
-                return colorDto;
-            }
+                var dt1 = SystemTime.Now;//开始计时
 
-            return _colorService.Mapper.Map<ColorDto>(color);
+                var colorDto = await _colorService.GetOrInitColor();//获取或初始化颜色参数
+
+                var costMs = SystemTime.DiffTotalMS(dt1);//记录耗时
+
+                Color_GetOrInitColorResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
+
+                return result;
+            });
         }
     }
 }

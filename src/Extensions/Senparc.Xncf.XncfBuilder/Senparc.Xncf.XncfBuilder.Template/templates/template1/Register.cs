@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 #if (UseDatabase || UseSample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
@@ -51,7 +52,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 #if (UseSample)
             #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
-                    ColorDto color = await colorService.GetOrInitColorDtoAsync();
+                    var colorResult = await colorService.GetOrInitColorAsync();
             #endregion
 #endif
                     break;
@@ -84,10 +85,12 @@ namespace Template_OrgName.Xncf.Template_XncfName
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+#if (UseDatabase || UseSample)
             services.AddScoped<ColorAppService>();
-            return base.AddXncfModule(services, configuration);
+#endif
+            return base.AddXncfModule(services, configuration, env);
         }
     }
 }

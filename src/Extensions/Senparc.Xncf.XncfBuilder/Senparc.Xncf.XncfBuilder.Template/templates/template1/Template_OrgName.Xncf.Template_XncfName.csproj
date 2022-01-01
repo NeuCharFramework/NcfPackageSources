@@ -27,16 +27,17 @@
 	</PropertyGroup>
 	<ItemGroup Condition=" '$(UseWebApi)' == 'true'">
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
-		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.10.0-beta7" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>
 	<ItemGroup Condition=" '$(UseWeb)' == 'true' or '$(UseSample)' == 'true'">
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
 	</ItemGroup>
+	<ItemGroup Condition=" '$(UseSample)' == 'true' or '$(UseDatabase)' == 'true' ">
+		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.10.0-beta7" />
+	</ItemGroup>
 	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
-		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
 		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>
 	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">

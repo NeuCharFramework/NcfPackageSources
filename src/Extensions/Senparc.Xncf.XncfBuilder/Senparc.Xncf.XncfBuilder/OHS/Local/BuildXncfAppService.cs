@@ -61,11 +61,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             //配置功能
             var isUseSample = request.UseSammple.SelectedValues.Contains("1");
+            var isUseDatabase = isUseSample || request.UseModule.SelectedValues.Contains("database");
             var useSample = getBoolParam(isUseSample, "UseSample");
             var useFunction = getBoolParam(request.UseModule.SelectedValues.Contains("function"), "UseFunction");
             var isUseWeb = isUseSample || request.UseModule.SelectedValues.Contains("web");
             var useWeb = getBoolParam(isUseWeb, "UseWeb");
-            var useDatabase = getBoolParam(isUseSample, "UseDatabase");
+            var useDatabase = getBoolParam(isUseDatabase, "UseDatabase");
             var useWebApi = getBoolParam(request.UseModule.SelectedValues.Contains("webapi"), "UseWebApi");
 
             //获取当前配置的 FrameworkVersion
@@ -260,6 +261,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
 
                     response.Data = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
+                    response.Success = true;
                 }
                 else
                 {
