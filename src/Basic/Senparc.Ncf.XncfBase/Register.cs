@@ -288,6 +288,21 @@ namespace Senparc.Ncf.XncfBase
             return sb.ToString();
         }
 
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        /// </summary>
+        /// <returns></returns>
+        public static string StartEngine<TDatabaseConfiguration>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        {
+            //添加数据库
+            services.AddDatabase<TDatabaseConfiguration>();
+            //调用 StartEngine() 方法，完成全局必要的注册
+            return StartEngine(services, configuration, env);
+        }
+#endif
+
         /// <summary>
         /// 扫描并安装（自动安装，无需手动）
         /// TODO：放置到 Service 中，为系统模块自动升级

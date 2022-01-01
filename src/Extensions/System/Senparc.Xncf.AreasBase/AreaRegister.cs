@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Exceptions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AssembleScan;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Linq;
@@ -83,5 +86,36 @@ namespace Senparc.Ncf.Core.Areas
 
             return services.StartEngine(configuration, env);
         }
+
+#if NET6_0_OR_GREATER
+
+        /// <summary>
+        /// 启动带 Web 功能的 NCF 引擎（如不需要使用 Web，如 RazorPage，可以直接使用 <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>）
+        /// </summary>
+        /// <typeparam name="TDatabaseConfiguration">数据库类型</typeparam>
+        /// <param name="builder">WebApplicationBuilder</param>
+        /// <param name="configuration"></param>
+        /// <param name="env"></param>
+        /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
+        /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
+        /// <returns></returns>
+        public static string StartWebEngine<TDatabaseConfiguration>(this WebApplicationBuilder builder,
+        Action<RazorPagesOptions>? addRazorPagesConfig = null,
+        Action<IAreaRegister> eachRegsiterAction = null)
+        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        {
+            var services = builder.Services;
+
+            //添加数据库
+            builder.Services.AddDatabase<TDatabaseConfiguration>();
+
+            //添加 RazorPage 和 Area
+            var mvcBuilder = services.AddRazorPages(addRazorPagesConfig)
+                            //注册所有 Ncf 的 Area 模块（必须）
+                            .AddNcfAreas(builder.Environment, eachRegsiterAction);
+
+            return services.StartEngine(builder.Configuration, builder.Environment);
+        }
+#endif
     }
 }
