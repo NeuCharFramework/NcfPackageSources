@@ -13,10 +13,11 @@ using Senparc.Ncf.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Senparc.Respository;
 
 namespace Senparc.Ncf.Service
 {
-    public class SysPermissionService : ClientServiceBase<SysRolePermission>
+    public class SysPermissionService : ClientServiceBase<SysRolePermission>, Core.Authorization.ICheckPermission
     {
         private readonly IDistributedCache _distributedCache;
 
@@ -25,13 +26,14 @@ namespace Senparc.Ncf.Service
         private readonly IAdminWorkContextProvider _adminWorkContextProvider;
         private readonly SysRoleService _sysRoleService;
         private const string PermissionKey = "Permission";
-
-        public SysPermissionService(ClientRepositoryBase<SysRolePermission> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        private readonly ISysRolePermissionRepository _repo;
+        public SysPermissionService(ISysRolePermissionRepository repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             this._distributedCache = _serviceProvider.GetService<IDistributedCache>();
             this._sysMenuService = _serviceProvider.GetService<SysMenuService>();
             this._adminWorkContextProvider = _serviceProvider.GetService<IAdminWorkContextProvider>();
             this._sysRoleService = _serviceProvider.GetService<SysRoleService>();
+            _repo = repo;
         }
 
         public async Task<bool> HasPermissionAsync(string url)
@@ -286,6 +288,43 @@ namespace Senparc.Ncf.Service
                                          where roleIds.Any(_ => _ == permission.RoleId)
                                          select permission.PermissionId;
             return db.Set<SysMenu>().Where(_ => _.Visible && menuIds.Contains(_.Id)).ProjectTo<SysMenuDto>(autoMapConfigurationProvider);
+        }
+
+        /// <summary>
+        /// 检查当前用户是否权限
+        /// </summary>
+        /// <param name="resourceCodes">资源codes</param>
+        /// <param name="adminUserInfoId">当前用户Id</param>
+        /// <returns></returns>
+        public async Task<bool> HasPermissionAsync(string[] resourceCodes, int adminUserInfoId)
+        {
+            if (!resourceCodes.Any())
+            {
+                return false;
+            }
+            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // 缓存当前用户的所有资源
+            var distributedCache = _serviceProvider.GetService<IDistributedCache>();
+            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // 尝试从缓存读取用户的资源
+            IEnumerable<string> codes = null;
+            if (string.IsNullOrEmpty(codesJsonValue))
+            {
+                codes = await _repo.GetAllResouceCodesByAccountIdAsync(adminUserInfoId);
+                codesJsonValue = Newtonsoft.Json.JsonConvert.SerializeObject(codes);
+                await distributedCache.SetStringAsync(cacheKey, codesJsonValue, new DistributedCacheEntryOptions()
+                {
+                    SlidingExpiration = TimeSpan.FromHours(8)
+                }); // 缓存 8 小时
+            }
+            else
+            {
+                codes = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<string>>(codesJsonValue);
+            }
+            if (codes.Any())
+            {
+                return false;
+            }
+            //获取当前用户的所有资源code
+            return codes.Intersect(resourceCodes).Any();
         }
     }
 }
