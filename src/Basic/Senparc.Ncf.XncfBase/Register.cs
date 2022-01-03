@@ -29,6 +29,7 @@ using Senparc.Ncf.XncfBase.FunctionRenders;
 using Microsoft.Extensions.Hosting;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.MultiTenant;
+using Microsoft.Extensions.Options;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -375,8 +376,16 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting, bool autoRunInstall = false)
+        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
         {
+            if (senparcCoreSetting == null)
+            {
+                using (var scope = app.ApplicationServices.CreateAsyncScope())
+                {
+                    senparcCoreSetting = scope.ServiceProvider.GetService<IOptions<SenparcCoreSetting>>()?.Value;
+                }
+            }
+
             Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting = senparcCoreSetting;
 
             foreach (var register in XncfRegisterManager.RegisterList)
