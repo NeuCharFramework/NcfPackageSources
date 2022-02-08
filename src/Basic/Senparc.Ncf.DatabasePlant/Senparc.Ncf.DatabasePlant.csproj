@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
-    <Version>0.11.0.7-beta8</Version>
+    <Version>0.11.2-beta7</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -15,11 +15,11 @@
     <PackageTags>NeuCharFramework,NCF</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.DatabasePlant</Title>
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世
 </PackageReleaseNotes>
@@ -51,6 +51,9 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
   </ItemGroup>-->
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />

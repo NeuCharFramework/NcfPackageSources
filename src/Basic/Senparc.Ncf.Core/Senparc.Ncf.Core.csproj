@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
-    <Version>0.11.0.7-beta7</Version>
+    <Version>0.11.2-beta7</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -11,17 +11,17 @@
     <PackageTags>NeuCharFramework,NCF</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.Core</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
-		v0.1.1 完善自动部署模块 Xncf
-		v0.3.101 丰富 XncfModule 的数据库属性
-		v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
-		v0.9.4.4 完善出错日志输出
+			v0.1 创世
+			v0.1.1 完善自动部署模块 Xncf
+			v0.3.101 丰富 XncfModule 的数据库属性
+			v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
+			v0.9.4.4 完善出错日志输出
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -44,6 +44,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />

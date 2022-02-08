@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.12-beta7</Version>
+    <Version>0.12.2-beta7</Version>
     <AssemblyName>Senparc.Xncf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xncf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -11,11 +11,11 @@
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.ChangeNamespace</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>XNCF 更改命名空间模块</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世
 			v0.2 完成修改命名空间功能
@@ -43,6 +43,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>

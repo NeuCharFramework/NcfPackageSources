@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
-    <Version>0.2.0.2-beta7</Version>
+    <Version>0.2.2-beta7</Version>
     <AssemblyName>Senparc.Xncf.AreasBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.AreasBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -11,11 +11,11 @@
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.AreasBase</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
+    <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
     <Title>菜单管理</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世
 </PackageReleaseNotes>
@@ -25,6 +25,9 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <!--<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->

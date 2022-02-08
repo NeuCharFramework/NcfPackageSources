@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
-    <Version>0.11-beta7</Version>
+    <Version>0.11.2-beta7</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -11,11 +11,11 @@
     <PackageTags>NeuCharFramework,NCF</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.AreaBase</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世，从 NCF 模板项目提炼移植
 </PackageReleaseNotes>
@@ -40,6 +40,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />

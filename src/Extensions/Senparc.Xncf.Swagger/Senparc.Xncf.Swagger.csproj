@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
-    <Version>0.6.0.1-beta7</Version>
+    <Version>0.6.2-beta7</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -12,11 +12,11 @@
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Swagger</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>接口说明文档</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世
 </PackageReleaseNotes>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
     <Compile Remove="Models\DataBaseModel\**" />

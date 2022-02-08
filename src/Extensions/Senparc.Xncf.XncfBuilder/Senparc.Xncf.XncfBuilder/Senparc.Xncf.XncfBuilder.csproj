@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
-    <Version>0.13.0.3-beta7</Version>
+    <Version>0.13.2-beta7</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -12,11 +12,11 @@
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.XncfBuilder</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>XNCF 模块生成器</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世
 			v0.8.127 使用 .NET Core 命令行创建模板，取代原有的 T4 模板
@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <!-- 说明：因为 Pomelo.EntityFrameworkCore.MySql 一个未充分解耦的问题，这里暂时先引用，待其升级后会取消，和具体数据库充分解耦
 	           官方反馈：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1205 -->
