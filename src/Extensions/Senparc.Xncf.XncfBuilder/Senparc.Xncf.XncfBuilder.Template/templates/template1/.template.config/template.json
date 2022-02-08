@@ -150,7 +150,8 @@
         {
           "condition": "(!UseFunction)", //如果不添加 Function，排除下面的文件
           "exclude": [
-            "OHS/Local/AppService/MyFuctionAppService.cs"
+            "OHS/Local/AppService/MyFuctionAppService.cs",
+            "OHS/Local/PL/MyFunctionRequest.cs"
           ]
         },
         {
@@ -167,7 +168,15 @@
             "Domain/Models/**",
             "Domain/Migrations/**",
             "Domain/Services/**",
-            "OHS/Local/AppService/ColorAppService.cs"
+            "OHS/Local/AppService/ColorAppService.cs",
+            "OHS/Local/PL/ColorResponse.cs"
+          ]
+        },
+        {
+          "condition": "(!UseWebApi)", //如果不添加 数据库，排除下面的文件
+          "exclude": [
+            "OHS/Local/AppService/ApiAppService.cs",
+            "OHS/Local/PL/ApiRequest.cs"
           ]
         }
       ]

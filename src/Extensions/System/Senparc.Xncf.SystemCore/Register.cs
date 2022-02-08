@@ -24,6 +24,9 @@ using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using System.Text;
 using Microsoft.Extensions.Hosting;
+using log4net;
+using log4net.Config;
+using System.IO;
 
 namespace Senparc.Xncf.SystemCore
 {
@@ -87,6 +90,17 @@ namespace Senparc.Xncf.SystemCore
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            //读取Log配置文件
+            try
+            {
+                var repository = LogManager.CreateRepository("NETCoreRepository");
+                XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+            }
+
             services.AddSenparcGlobalServices(configuration);//注册 CO2NET 基础引擎所需服务
 
             //解决中文进行编码问题

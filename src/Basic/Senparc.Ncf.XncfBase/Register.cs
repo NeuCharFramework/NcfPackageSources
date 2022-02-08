@@ -29,6 +29,7 @@ using Senparc.Ncf.XncfBase.FunctionRenders;
 using Microsoft.Extensions.Hosting;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.MultiTenant;
+using Microsoft.Extensions.Options;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -288,6 +289,21 @@ namespace Senparc.Ncf.XncfBase
             return sb.ToString();
         }
 
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        /// </summary>
+        /// <returns></returns>
+        public static string StartEngine<TDatabaseConfiguration>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        {
+            //添加数据库
+            services.AddDatabase<TDatabaseConfiguration>();
+            //调用 StartEngine() 方法，完成全局必要的注册
+            return StartEngine(services, configuration, env);
+        }
+#endif
+
         /// <summary>
         /// 扫描并安装（自动安装，无需手动）
         /// TODO：放置到 Service 中，为系统模块自动升级
@@ -360,8 +376,16 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting)
+        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
         {
+            if (senparcCoreSetting == null)
+            {
+                using (var scope = app.ApplicationServices.CreateAsyncScope())
+                {
+                    senparcCoreSetting = scope.ServiceProvider.GetService<IOptions<SenparcCoreSetting>>()?.Value;
+                }
+            }
+
             Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting = senparcCoreSetting;
 
             foreach (var register in XncfRegisterManager.RegisterList)
@@ -413,6 +437,23 @@ namespace Senparc.Ncf.XncfBase
                     }
                 }
             }
+
+            //自动运行安装
+
+            if (autoRunInstall)
+            {
+                Task.Factory.StartNew(async () =>
+                {
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        foreach (var register in XncfRegisterManager.RegisterList)
+                        {
+                            await register.InstallOrUpdateAsync(scope.ServiceProvider, InstallOrUpdate.Install);
+                        }
+                    }
+                }).GetAwaiter().GetResult();
+            }
+
             return app;
         }
 

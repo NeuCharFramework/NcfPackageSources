@@ -11,8 +11,8 @@
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Tenant</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
-    <Title>菜单管理</Title>
+	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>租户管理</Title>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
@@ -54,8 +54,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Domain\DatabaseModel\Dto\" />
     <Folder Include="Domain\DatabaseModel\Mapping\" />
     <Folder Include="OHS\Local\AppService\" />
   </ItemGroup>

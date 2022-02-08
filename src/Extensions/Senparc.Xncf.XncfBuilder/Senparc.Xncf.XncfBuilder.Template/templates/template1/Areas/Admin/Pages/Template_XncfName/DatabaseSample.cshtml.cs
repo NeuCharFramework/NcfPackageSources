@@ -31,8 +31,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         public async Task OnGetAsync()
         {
             var color = _colorService.GetObject(z => true, z => z.Id, OrderingType.Descending);
-            ColorDto = color == null 
-                        ? (await _colorService.CreateNewColor()) 
+            ColorDto = color == null
+                        ? (await _colorService.CreateNewColor())
                         : _colorService.Mapper.Map<ColorDto>(color);
         }
 
