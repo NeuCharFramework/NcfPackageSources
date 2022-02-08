@@ -36,9 +36,9 @@
     <OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
     <OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
-	<ItemGroup>
-		<None Include=".\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Include=".\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
     <Compile Remove="**\*" />

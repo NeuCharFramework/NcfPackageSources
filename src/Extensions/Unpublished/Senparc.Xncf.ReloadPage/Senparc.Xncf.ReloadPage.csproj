@@ -1,52 +1,52 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>0.3-beta7</Version>
-		<AssemblyName>Senparc.Xncf.ReloadPage</AssemblyName>
-		<RootNamespace>Senparc.Xncf.ReloadPage</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<Description>Office 插件</Description>
-		<Copyright>Senparc</Copyright>
-		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.ReloadPage</PackageTags>
-		<Authors>Senparc</Authors>
-		<Owners>Senparc</Owners>
-		<!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
-		<Title>自动重载页面模块</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>0.3.1-beta7</Version>
+    <AssemblyName>Senparc.Xncf.ReloadPage</AssemblyName>
+    <RootNamespace>Senparc.Xncf.ReloadPage</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>Office 插件</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.ReloadPage</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
+    <Title>自动重载页面模块</Title>
+    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>-->
-		<PackageReleaseNotes>
+    <PackageReleaseNotes>
 			v0.1 创世
-		</PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\..\BuildOutPut</OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="EPPlus" Version="5.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.12" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="App_Data\SenparcTraceLog\*" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
-		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />-->
-		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-		<!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.21" />-->
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Domain\" />
-		<Folder Include="OHS\Local\AppService\" />
-		<Folder Include="OHS\Local\PL\" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-	</ItemGroup>
+</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\SenparcTraceLog\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
+    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />-->
+    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
+    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.21" />-->
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\" />
+    <Folder Include="OHS\Local\AppService\" />
+    <Folder Include="OHS\Local\PL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
 </Project>
