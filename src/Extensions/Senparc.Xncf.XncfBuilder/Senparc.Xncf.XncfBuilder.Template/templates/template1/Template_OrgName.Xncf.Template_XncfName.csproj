@@ -11,11 +11,11 @@
 		<PackageTags>Template_OrgName,NeuCharFramework,NCF,Template_OrgName.Xncf.Template_XncfName</PackageTags>
 		<Authors>Template_OrgName</Authors>
 		<Owners>Template_OrgName</Owners>
-		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<Title>Template_MenuName</Title>
 		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
+		<PackageIcon>icon.jpg</PackageIcon>
 		<PackageReleaseNotes>
 			vTemplate_Version 创世
 		</PackageReleaseNotes>
