@@ -119,7 +119,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.ReloadPage", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5955]Senparc.Xncf.AreasBase", "Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj", "{FDEA0DB9-BC50-48A7-A6C1-13A4990D4F22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[5990]Senparc.Xncf.Tenant.Interface", "Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj", "{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.Tenant.Interface", "Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj", "{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[5990]Senparc.Xncf.TenantTests", "Extensions\System\[5990]Senparc.Xncf.TenantTests\[5990]Senparc.Xncf.TenantTests.csproj", "{85538E83-BD0B-4DD7-9B8F-479732AEFC59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -458,6 +460,13 @@ Global
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.TemplateRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{85538E83-BD0B-4DD7-9B8F-479732AEFC59}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

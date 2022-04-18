@@ -30,6 +30,9 @@ namespace Senparc.Xncf.DatabaseToolkit
         {
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
+
+            
+
         }
     }
 }

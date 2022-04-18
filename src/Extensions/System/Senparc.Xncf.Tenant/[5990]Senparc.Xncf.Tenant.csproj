@@ -45,6 +45,12 @@
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Domain\DatabaseModel\Dto\**" />
+    <Content Remove="Domain\DatabaseModel\Dto\**" />
+    <EmbeddedResource Remove="Domain\DatabaseModel\Dto\**" />
+    <None Remove="Domain\DatabaseModel\Dto\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
@@ -57,7 +63,6 @@
     <ProjectReference Include="..\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\DatabaseModel\Dto\" />
     <Folder Include="Domain\DatabaseModel\Mapping\" />
     <Folder Include="OHS\Local\AppService\" />
   </ItemGroup>
