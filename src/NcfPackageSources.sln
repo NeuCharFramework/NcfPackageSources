@@ -119,7 +119,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.ReloadPage", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5955]Senparc.Xncf.AreasBase", "Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj", "{FDEA0DB9-BC50-48A7-A6C1-13A4990D4F22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[5990]Senparc.Xncf.Tenant.Interface", "Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj", "{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.Tenant.Interface", "Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj", "{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.Oracle", "Basic\Senparc.Ncf.Database.Oracle\Senparc.Ncf.Database.Oracle.csproj", "{52F24539-98C1-4002-8489-948B2AE5D951}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -458,6 +460,14 @@ Global
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.TemplateRelease|Any CPU.ActiveCfg = TemplateRelease|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.TemplateRelease|Any CPU.Build.0 = TemplateRelease|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{52F24539-98C1-4002-8489-948B2AE5D951}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -514,6 +524,7 @@ Global
 		{6F00E79E-F405-4DC6-9A70-7D7065AC05B1} = {4771E55A-AC48-4DB6-BA73-89B65DA24955}
 		{FDEA0DB9-BC50-48A7-A6C1-13A4990D4F22} = {97BBCB28-782F-43D5-A604-0376298AF256}
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF} = {97BBCB28-782F-43D5-A604-0376298AF256}
+		{52F24539-98C1-4002-8489-948B2AE5D951} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
