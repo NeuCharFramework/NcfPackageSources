@@ -4,67 +4,67 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.Menu.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.Menu.Domain.Migrations.Oracle
 {
-    [DbContext(typeof(MenuSenparcEntities_PostgreSQL))]
-    [Migration("20211128080857_Init")]
+    [DbContext(typeof(MenuSenparcEntities_Oracle))]
+    [Migration("20220818143505_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysButton", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ButtonName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("MenuId")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("OpearMark")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(350)
-                        .HasColumnType("character varying(350)");
+                        .HasColumnType("NVARCHAR2(350)");
 
                     b.HasKey("Id");
 
@@ -75,60 +75,60 @@ namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<bool>("IsLocked")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("MenuName")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<int>("MenuType")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("ParentId")
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ResourceCode")
                         .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("NVARCHAR2(30)");
 
                     b.Property<int>("Sort")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(350)
-                        .HasColumnType("character varying(350)");
+                        .HasColumnType("NVARCHAR2(350)");
 
                     b.Property<bool>("Visible")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.HasKey("Id");
 

@@ -2,20 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
 #nullable disable
 
-namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.PostgreSQL
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_PostgreSQL))]
-    [Migration("20211123094731_Init")]
-    partial class Init
+    partial class Template_XncfNameSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

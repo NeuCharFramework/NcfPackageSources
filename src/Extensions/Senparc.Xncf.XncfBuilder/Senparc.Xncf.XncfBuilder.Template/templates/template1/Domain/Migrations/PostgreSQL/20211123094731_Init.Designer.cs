@@ -4,65 +4,65 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Oracle.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
 #nullable disable
 
-namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Oracle
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.PostgreSQL
 {
-    [DbContext(typeof(Template_XncfNameSenparcEntities_Oracle))]
-    [Migration("20220817163945_Init")]
+    [DbContext(typeof(Template_XncfNameSenparcEntities_PostgreSQL))]
+    [Migration("20211123094731_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Template_OrgName.Xncf.Template_XncfName.Color", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("AdditionNote")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("text");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("character varying(300)");
 
                     b.Property<int>("Blue")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Green")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Red")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("character varying(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

@@ -2,19 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.Menu.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.Menu.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(MenuSenparcEntities_Sqlite))]
-    [Migration("20211128080352_Init")]
-    partial class Init
+    partial class MenuSenparcEntities_SqliteModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");

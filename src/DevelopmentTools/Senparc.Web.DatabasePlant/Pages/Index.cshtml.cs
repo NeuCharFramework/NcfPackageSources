@@ -30,10 +30,11 @@ namespace Senparc.Web.DatabasePlant.Pages
                 var fullDatabaseName = $"{xncfName}SenparcEntities_{databaseName}";
                 //@"dotnet ef migrations add Init -c AdminSenparcEntities_Sqlite -s E:\Senparc项目\NeuCharFramework\NCF\src\back-end\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NCF\src\back-end\Senparc.Areas.Admin\Domain\Migrations\Sqlite";
 
-                var cmdStr = $"dotnet ef migrations add {note} -c {fullDatabaseName} -s {startProject} -o {projectPath}\\Migrations\\{databaseName}";
+                var cmdStr = @$"cd {projectPath}
+dotnet ef migrations add {note} -c {fullDatabaseName} -s {startProject} -o {projectPath}\Domain\Migrations\{databaseName}
+";
 
                 sb.AppendLine(cmdStr);
-                sb.AppendLine();
             }
 
             ViewData["GenerateCodeResult"] = sb.ToString();

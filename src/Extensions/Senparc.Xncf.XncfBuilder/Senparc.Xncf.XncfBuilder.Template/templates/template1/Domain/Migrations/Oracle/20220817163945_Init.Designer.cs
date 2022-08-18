@@ -2,18 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
 #nullable disable
 
-namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Oracle
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Oracle
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_Oracle))]
-    partial class Template_XncfNameSenparcEntities_OracleModelSnapshot : ModelSnapshot
+    [Migration("20220817163945_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

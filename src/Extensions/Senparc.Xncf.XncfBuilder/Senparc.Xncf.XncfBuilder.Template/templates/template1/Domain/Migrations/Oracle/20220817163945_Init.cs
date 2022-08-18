@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Oracle
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Oracle
 {
     public partial class Init : Migration
     {

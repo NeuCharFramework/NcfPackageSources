@@ -7,7 +7,7 @@ using Senparc.Xncf.Menu.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.MySql
+namespace Senparc.Xncf.Menu.Domain.Migrations.MySql
 {
     [DbContext(typeof(MenuSenparcEntities_MySql))]
     partial class MenuSenparcEntities_MySqlModelSnapshot : ModelSnapshot

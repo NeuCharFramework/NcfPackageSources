@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.Menu.Domain.Migrations.PostgreSQL
 {
     public partial class Init : Migration
     {

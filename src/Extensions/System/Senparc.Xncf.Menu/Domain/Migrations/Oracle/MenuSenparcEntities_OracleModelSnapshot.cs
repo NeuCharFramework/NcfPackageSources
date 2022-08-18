@@ -3,61 +3,66 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.Menu.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.Menu.Domain.Migrations.Oracle
 {
-    [DbContext(typeof(MenuSenparcEntities_Sqlite))]
-    partial class MenuSenparcEntities_SqliteModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MenuSenparcEntities_Oracle))]
+    partial class MenuSenparcEntities_OracleModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysButton", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ButtonName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("MenuId")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("OpearMark")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(350)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(350)");
 
                     b.HasKey("Id");
 
@@ -68,60 +73,60 @@ namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.Sqlite
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<bool>("IsLocked")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("MenuName")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<int>("MenuType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("ParentId")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ResourceCode")
                         .HasMaxLength(30)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(30)");
 
                     b.Property<int>("Sort")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(350)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(350)");
 
                     b.Property<bool>("Visible")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("NUMBER(1)");
 
                     b.HasKey("Id");
 

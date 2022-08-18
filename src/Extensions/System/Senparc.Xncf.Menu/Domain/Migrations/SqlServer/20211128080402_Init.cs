@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Senparc.Xncf.Menu.Domain.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.Menu.Domain.Migrations.SqlServer
 {
     public partial class Init : Migration
     {
