@@ -14,7 +14,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
+	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 	</ItemGroup>
 
 </Project>
