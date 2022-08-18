@@ -502,6 +502,27 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.Oracle
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Oracle.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.Oracle- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Oracle.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.XncfBuilder.Template
   inputs:
