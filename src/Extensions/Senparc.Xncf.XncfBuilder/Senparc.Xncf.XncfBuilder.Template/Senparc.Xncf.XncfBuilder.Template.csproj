@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.4.0.9</PackageVersion>
+    <PackageVersion>0.4.1</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
