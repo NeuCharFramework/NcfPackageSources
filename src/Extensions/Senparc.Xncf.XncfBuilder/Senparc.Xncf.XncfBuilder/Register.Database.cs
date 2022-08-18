@@ -24,7 +24,7 @@ namespace Senparc.Xncf.XncfBuilder
         {
             services.AddScoped<BuildXncf_BuildRequest>();
 
-            //services.AddScoped<XncfBuilderEntities_SqlServer>();//注意：此处不能直接这样自动配置数据库实体，基类中已经统一配置 implementationFactory
+            //services.AddScoped<XncfBuilderSenparcEntities_SqlServer>();//注意：此处不能直接这样自动配置数据库实体，基类中已经统一配置 implementationFactory
 
             //AutoMap映射
             base.AddAutoMapMapping(profile =>
