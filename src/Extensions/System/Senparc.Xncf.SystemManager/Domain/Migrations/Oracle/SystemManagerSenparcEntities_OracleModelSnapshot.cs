@@ -28,7 +28,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
 
                     b.Property<int>("AccountId")
                         .HasColumnType("NUMBER(10)");
