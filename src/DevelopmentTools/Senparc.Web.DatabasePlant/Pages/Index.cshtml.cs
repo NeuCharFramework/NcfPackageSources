@@ -18,10 +18,10 @@ namespace Senparc.Web.DatabasePlant.Pages
 
         }
 
-        public void GenerateCode(string srcRootDir, string projects, string note, string databaseName)
+        public void OnPostGenerateCode(string srcRootDir, string projects, string note, string databaseName)
         {
             StringBuilder sb = new StringBuilder();
-            var startProject = Path.Combine(srcRootDir, "Senparc.Web.DatabasePlant");
+            var startProject = Path.Combine(srcRootDir, "DevelopmentTools", "Senparc.Web.DatabasePlant");
             var projectArr = projects.Split(new[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var proj in projectArr)
             {
