@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Sqlite
 {
     [DbContext(typeof(DatabaseToolkitEntities))]
     [Migration("20201022044836_Init")]

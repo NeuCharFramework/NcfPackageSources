@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.MySql
 {
     public partial class Add_TenantId : Migration
     {

@@ -7,40 +7,40 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.SqlServer
 {
-    [DbContext(typeof(DatabaseToolkitEntities_SqlServer))]
-    [Migration("20210105155838_Add_TenantId")]
-    partial class Add_TenantId
+    [DbContext(typeof(DatabaseToolkitSenparcEntities_SqlServer))]
+    [Migration("20201022044812_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Senparc.Xncf.DatabaseToolkit.DbConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
 
                     b.Property<int>("BackupCycleMinutes")
                         .HasColumnType("int");
 
                     b.Property<string>("BackupPath")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
@@ -52,11 +52,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
 
                     b.HasKey("Id");
 

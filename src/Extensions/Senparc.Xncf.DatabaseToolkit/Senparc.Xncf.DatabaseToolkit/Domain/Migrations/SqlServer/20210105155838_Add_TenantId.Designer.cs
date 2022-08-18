@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.SqlServer
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.SqlServer
 {
-    [DbContext(typeof(DatabaseToolkitEntities_SqlServer))]
-    partial class DatabaseToolkitEntities_SqlServerModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DatabaseToolkitSenparcEntities_SqlServer))]
+    [Migration("20210105155838_Add_TenantId")]
+    partial class Add_TenantId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

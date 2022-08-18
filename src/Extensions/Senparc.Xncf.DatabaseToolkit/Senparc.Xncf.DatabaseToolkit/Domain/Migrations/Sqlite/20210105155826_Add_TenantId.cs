@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.Sqlite
 {
     public partial class Add_TenantId : Migration
     {

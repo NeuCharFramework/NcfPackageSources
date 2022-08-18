@@ -15,9 +15,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 SQLServer 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
-    public class DatabaseToolkitEntities_SqlServer : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitSenparcEntities_SqlServer : DatabaseToolkitEntities, IMultipleMigrationDbContext
     {
-        public DatabaseToolkitEntities_SqlServer(DbContextOptions<DatabaseToolkitEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
+        public DatabaseToolkitSenparcEntities_SqlServer(DbContextOptions<DatabaseToolkitSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
     }
@@ -25,9 +25,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
     /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
+    /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitSenparcEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
     /// </summary>
-    public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitEntities_SqlServer, Register>
+    public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitSenparcEntities_SqlServer, Register>
     {
         protected override Action<IServiceCollection> ServicesAction => services =>
         {

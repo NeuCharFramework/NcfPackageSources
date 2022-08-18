@@ -1,8 +1,7 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
+namespace Senparc.Xncf.DatabaseToolkit.Migrations.SqlServer
 {
     public partial class Init : Migration
     {
@@ -13,7 +12,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Migrations.Migrations.MySql
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlHelper.GetMySqlValueGenerationStrategy()/*MySqlValueGenerationStrategy.IdentityColumn*/),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Flag = table.Column<bool>(nullable: false),
                     AddTime = table.Column<DateTime>(nullable: false),
                     LastUpdateTime = table.Column<DateTime>(nullable: false),
