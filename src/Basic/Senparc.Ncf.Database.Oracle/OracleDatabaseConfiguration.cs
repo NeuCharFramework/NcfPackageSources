@@ -15,8 +15,8 @@ using Senparc.CO2NET.Extensions;
 namespace Senparc.Ncf.Database.Oracle
 {
     /// <summary>
-    /// Oracle 数据库配置
-    /// <para>注意：如果使用 Oracle 12 以下的版本（11），需要在调用 <code>services.AddDatabase&lt;OracleDatabaseConfiguration&gt;();</code> 之前，使用 <code>SetUseOracleSQLCompatibility(string useOracleSQLCompatibility)</code> 方法设置版本号，如 11.2，则输入 "11"</para>
+    /// Oracle 数据库配置，Oracle 版本不小于 V12
+    /// <para>注意：如果使用 Oracle 12 以下的版本（11），请直接使用 <code>OracleDatabaseConfigurationForV11</code>。或使用手动方法控制（不推荐）：在调用 <code>services.AddDatabase&lt;OracleDatabaseConfiguration&gt;();</code> 之前，使用 <code>SetUseOracleSQLCompatibility(string useOracleSQLCompatibility)</code> 方法设置版本号，如 11.2，则输入 "11"</para>
     /// </summary>
     public class OracleDatabaseConfiguration : DatabaseConfigurationBase<OracleDbContextOptionsBuilder, OracleOptionsExtension>
     {
