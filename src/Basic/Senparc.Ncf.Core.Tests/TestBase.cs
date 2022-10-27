@@ -75,7 +75,6 @@ namespace Senparc.Ncf.Core.Tests
                 Senparc.CO2NET.Cache.Redis.Register.SetConfigurationOption(redisConfigurationStr);
                 Console.WriteLine("完成 Redis 设置");
 
-
                 //以下会立即将全局缓存设置为 Redis
                 Senparc.CO2NET.Cache.Redis.Register.UseKeyValueRedisNow();//键值对缓存策略（推荐）
                 Console.WriteLine("启用 Redis UseKeyValue 策略");
