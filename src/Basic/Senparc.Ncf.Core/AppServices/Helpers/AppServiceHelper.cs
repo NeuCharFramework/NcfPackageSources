@@ -49,6 +49,13 @@ namespace Senparc.Ncf.Core.AppServices
                 {
                     response.Success = true;
                 }
+
+                ////判断文件类型
+                //if (result is INcfFile)
+                //{
+
+                //}
+
             }
             catch (Exception ex)
             {
@@ -56,7 +63,6 @@ namespace Senparc.Ncf.Core.AppServices
                 logger.Append($"发生错误（{ex.GetType().FullName}）：");
                 logger.Append(ex.Message);
                 logger.Append(ex.StackTrace);
-
 
                 if (ex is BaseAppServiceException appEx)
                 {
