@@ -319,7 +319,7 @@ namespace Senparc.Ncf.Service
             {
                 codes = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<string>>(codesJsonValue);
             }
-            if (codes.Any())
+            if (!codes.Any())
             {
                 return false;
             }
