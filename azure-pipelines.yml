@@ -17,11 +17,11 @@ variables:
 
 steps:
 
-- task: UseDotNet@2
-  displayName: 'Use .NET Core SDK 3'
-  inputs:
-    version: '3.1.x'
-    packageType: 'sdk'
+# - task: UseDotNet@2
+#   displayName: 'Use .NET Core SDK 3'
+#   inputs:
+#     version: '3.1.x'
+#     packageType: 'sdk'
 
 # - task: UseDotNet@2
 #   displayName: 'Use .NET SDK 5'
@@ -70,10 +70,16 @@ steps:
 #     configuration: '$(buildConfiguration)'
 
 
+# - task: NuGetToolInstaller@1
+#   displayName: 'Use NuGet 5.2.0'
+#   inputs:
+#     versionSpec: 5.2.0
+#     checkLatest: true
+
 - task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 5.2.0'
+  displayName: 'Use NuGet 6.3.0'
   inputs:
-    versionSpec: 5.2.0
+    versionSpec: '6.3.0'
     checkLatest: true
 
 - task: NuGetCommand@2
