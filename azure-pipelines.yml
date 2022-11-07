@@ -43,6 +43,14 @@ steps:
     command: custom
     custom: '--list-sdks '
 
+
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet 6.3.0'
+  inputs:
+    versionSpec: '6.3.0'
+    checkLatest: true
+
+    
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
@@ -76,11 +84,6 @@ steps:
 #     versionSpec: 5.2.0
 #     checkLatest: true
 
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 6.3.0'
-  inputs:
-    versionSpec: '6.3.0'
-    checkLatest: true
 
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Core -V0
