@@ -1,23 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <PackageType>Template</PackageType>
-    <PackageVersion>0.4.1</PackageVersion>
-    <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
-    <Title>XNCF Template</Title>
-    <Authors>JeffreySu</Authors>
-    <Owners>JeffreySu</Owners>
-    <Description>Templates to use when creating an XNCF module for NCF project.</Description>
-    <PackageTags>NeuCharFramework;NCF;XNCF;template</PackageTags>
-    <IncludeContentInPack>true</IncludeContentInPack>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <ContentTargetFolders>content</ContentTargetFolders>
-    <!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<PackageType>Template</PackageType>
+		<PackageVersion>0.4.1.1</PackageVersion>
+		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
+		<Title>XNCF Template</Title>
+		<Authors>JeffreySu</Authors>
+		<Owners>JeffreySu</Owners>
+		<Description>Templates to use when creating an XNCF module for NCF project.</Description>
+		<PackageTags>NeuCharFramework;NCF;XNCF;template;dotnet-new;templates</PackageTags>
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<ContentTargetFolders>content</ContentTargetFolders>
+		<!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
+		<NoWarn>$(NoWarn);NU5128</NoWarn>
+		<NoDefaultExcludes>true</NoDefaultExcludes>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
 			v0.1 创世
 			v0.1.7 删除无用的日志文件
 			v0.2.3 添加 UseWebApi 选项
@@ -26,40 +28,40 @@
 			v0.3 进一步升级 DDD 架构
 			v0.4 修复模板生成后部分代码错误的问题
 			v0.4.0.8 修复命名空间问题
-</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
-    <OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
-    <Compile Remove="**\*" />
-    <Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="readme.md" />
-    <None Remove="templates\template1\App_Data\Database\SenparcConfig.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="readme.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="templates\template1\OHS\Remote\" />
-    <Folder Include="templates\template1\ACL\" />
-  </ItemGroup>
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
+		<OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
+		<OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
+		<Compile Remove="**\*" />
+		<Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="readme.md" />
+		<None Remove="templates\template1\App_Data\Database\SenparcConfig.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="readme.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="templates\template1\OHS\Remote\" />
+		<Folder Include="templates\template1\ACL\" />
+	</ItemGroup>
 </Project>

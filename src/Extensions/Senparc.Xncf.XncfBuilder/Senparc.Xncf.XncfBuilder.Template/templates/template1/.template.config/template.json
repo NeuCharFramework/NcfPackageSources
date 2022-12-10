@@ -12,6 +12,17 @@
     "type": "project"
   },
   "preferNameDirectory": true,
+  "constraints": {
+    "sdk-only": {
+      "type": "host",
+      "args": [
+        {
+          "hostname": "dotnetcli",
+          "version": "[6.0.100, )"
+        }
+      ]
+    }
+  },
   "symbols": {
     "TargetFramework": {
       "type": "parameter",
@@ -140,7 +151,7 @@
     {
       "modifiers": [
         {
-          "condition": "(!UseSample)", //Èç¹û²»Ìí¼Ó Sample£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!UseSample)", /* ä¸ä½¿ç”¨ Sample */
           "exclude": [
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
@@ -148,21 +159,21 @@
           ]
         },
         {
-          "condition": "(!UseFunction)", //Èç¹û²»Ìí¼Ó Function£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!UseFunction)", /* ä¸ä½¿ç”¨ Function æ¼”ç¤º */
           "exclude": [
             "OHS/Local/AppService/MyFuctionAppService.cs",
             "OHS/Local/PL/MyFunctionRequest.cs"
           ]
         },
         {
-          "condition": "(!UseWeb && !UseSample)", //Èç¹û²»Ìí¼Ó UseWeb£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!UseWeb && !UseSample)", /* ä¸åŒ…å«ä»»ä½• Web æˆ–è€… Sample */
           "exclude": [
             "Register.Area.cs",
             "Areas/**"
           ]
         },
         {
-          "condition": "(!UseDatabase && !UseSample)", //Èç¹û²»Ìí¼Ó Êı¾İ¿â£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!UseDatabase && !UseSample)", /* ä¸åŒ…å«ä»»ä½•æ•°æ®åº“æˆ–è€… Sample */
           "exclude": [
             "Register.Database.cs",
             "Domain/Models/**",
@@ -173,7 +184,7 @@
           ]
         },
         {
-          "condition": "(!UseWebApi)", //Èç¹û²»Ìí¼Ó Êı¾İ¿â£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!UseWebApi)", /* ä¸ä½¿ç”¨ WebAPI */
           "exclude": [
             "OHS/Local/AppService/ApiAppService.cs",
             "OHS/Local/PL/ApiRequest.cs"
