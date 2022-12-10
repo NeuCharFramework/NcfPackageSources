@@ -62,11 +62,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             //配置功能
             var isUseSample = request.UseSammple.SelectedValues.Contains("1");
             var isUseDatabase = isUseSample || request.UseModule.SelectedValues.Contains("database");
-            var useSample = getBoolParam(isUseSample, "UseSample");
-            var useFunction = getBoolParam(request.UseModule.SelectedValues.Contains("function"), "UseFunction");
+            var useSample = getBoolParam(isUseSample, "Sample");
+            var useFunction = getBoolParam(request.UseModule.SelectedValues.Contains("function"), "Function");
             var isUseWeb = isUseSample || request.UseModule.SelectedValues.Contains("web");
-            var useWeb = getBoolParam(isUseWeb, "UseWeb");
-            var useDatabase = getBoolParam(isUseDatabase, "UseDatabase");
+            var useWeb = getBoolParam(isUseWeb, "Web");
+            var useDatabase = getBoolParam(isUseDatabase, "Database");
             var useWebApi = getBoolParam(request.UseModule.SelectedValues.Contains("webapi"), "UseWebApi");
 
             //获取当前配置的 FrameworkVersion
@@ -85,7 +85,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 $"cd {_outPutBaseDir}",
                 //"echo %DATE:~0,4%-%DATE:~5,2%-%DATE:~8,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%",
                 //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
-                $"dotnet new xncf -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
+                $"dotnet new XNCF -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                 $"dotnet sln {request.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
             };

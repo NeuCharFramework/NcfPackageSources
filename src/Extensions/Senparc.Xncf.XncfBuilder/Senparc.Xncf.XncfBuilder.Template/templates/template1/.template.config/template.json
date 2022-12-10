@@ -12,17 +12,17 @@
     "type": "project"
   },
   "preferNameDirectory": true,
-  "constraints": {
-    "sdk-only": {
-      "type": "host",
-      "args": [
-        {
-          "hostname": "dotnetcli",
-          "version": "[6.0.100, )"
-        }
-      ]
-    }
-  },
+  //"constraints": {
+  //  "sdk-only": {
+  //    "type": "host",
+  //    "args": [
+  //      {
+  //        "hostname": "dotnetcli",
+  //        "version": "[6.0.100, )"
+  //      }
+  //    ]
+  //  }
+  //},
   "symbols": {
     "TargetFramework": {
       "type": "parameter",
@@ -33,22 +33,22 @@
       "isRequired": true,
       "defaultValue": "netstandard2.1"
     },
-    "UseSample": {
+    "Sample": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "UseWeb": {
+    "Web": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "UseFunction": {
+    "Function": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "UseDatabase": {
+    "Database": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
@@ -134,7 +134,7 @@
       "fileRename": "Template_XncfBase_Version",
       "replaces": "Template_XncfBase_Version",
       "isRequired": true,
-      "defaultValue": "0.6.106-beta1"
+      "defaultValue": "0.11.4-beta8"
     },
     "NcfAreaBaseVersion": {
       "type": "parameter",
@@ -143,7 +143,7 @@
       "fileRename": "Template_NcfAreaBase_Version",
       "replaces": "Template_NcfAreaBase_Version",
       "isRequired": true,
-      "defaultValue": "0.11-beta7"
+      "defaultValue": "0.11.4-beta8"
     }
   },
   "sourceName": "Template_OrgName.Xncf.Template_XncfName",
@@ -151,7 +151,7 @@
     {
       "modifiers": [
         {
-          "condition": "(!UseSample)", /* 不使用 Sample */
+          "condition": "(!Sample)", /* 不使用 Sample */
           "exclude": [
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
@@ -159,21 +159,21 @@
           ]
         },
         {
-          "condition": "(!UseFunction)", /* 不使用 Function 演示 */
+          "condition": "(!Function)", /* 不使用 Function 演示 */
           "exclude": [
             "OHS/Local/AppService/MyFuctionAppService.cs",
             "OHS/Local/PL/MyFunctionRequest.cs"
           ]
         },
         {
-          "condition": "(!UseWeb && !UseSample)", /* 不包含任何 Web 或者 Sample */
+          "condition": "(!Web && !Sample)", /* 不包含任何 Web 或者 Sample */
           "exclude": [
             "Register.Area.cs",
             "Areas/**"
           ]
         },
         {
-          "condition": "(!UseDatabase && !UseSample)", /* 不包含任何数据库或者 Sample */
+          "condition": "(!Database && !Sample)", /* 不包含任何数据库或者 Sample */
           "exclude": [
             "Register.Database.cs",
             "Domain/Models/**",
