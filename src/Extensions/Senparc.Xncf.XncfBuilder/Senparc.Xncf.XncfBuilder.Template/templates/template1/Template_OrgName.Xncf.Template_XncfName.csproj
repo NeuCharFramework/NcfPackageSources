@@ -29,10 +29,10 @@
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
-  <ItemGroup Condition=" '$(UseWeb)' == 'true' or '$(UseSample)' == 'true'">
+  <ItemGroup Condition=" '$(Web)' == 'true' or '$(Sample)' == 'true'">
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(UseSample)' == 'true' or '$(UseDatabase)' == 'true' ">
+  <ItemGroup Condition=" '$(Sample)' == 'true' or '$(Database)' == 'true' ">
     <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.11.4-beta7" />
   </ItemGroup>
   <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">

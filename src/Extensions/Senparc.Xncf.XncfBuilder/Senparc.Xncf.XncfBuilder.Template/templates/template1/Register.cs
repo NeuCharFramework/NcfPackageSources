@@ -8,14 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-#if (UseDatabase || UseSample)
+#if (Database || Sample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 #endif
-#if (UseSample)
+#if (Sample)
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 #endif
 
@@ -40,7 +40,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-#if (UseDatabase || UseSample)
+#if (Database || Sample)
             //安装或升级版本时更新数据库
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
@@ -49,7 +49,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
             {
                 case InstallOrUpdate.Install:
                     //新安装
-#if (UseSample)
+#if (Sample)
             #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
@@ -67,7 +67,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-#if (UseDatabase || UseSample)
+#if (Database || Sample)
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -87,7 +87,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-#if (UseDatabase || UseSample)
+#if (Database || Sample)
             services.AddScoped<ColorAppService>();
 #endif
             return base.AddXncfModule(services, configuration, env);
