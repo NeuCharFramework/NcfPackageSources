@@ -17,7 +17,9 @@ namespace Senparc.Xncf.Swagger
         public string HomeUrl => "/Admin/Swagger/Index";
 
 
-        public List<AreaPageMenuItem> AreaPageMenuItems => throw new System.NotImplementedException();
+        public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
+             new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                     };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
