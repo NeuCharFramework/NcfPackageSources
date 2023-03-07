@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
-    <Version>0.13.6-beta8</Version>
+    <Version>0.13.7-beta9</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -23,7 +23,7 @@
 		v0.13.3 添加 Oracle 数据库 Migration 支持
 		v0.13.4.1 添加 Oracle 数据库迁移代码
 		v0.13.6 更新 XncfBuilder，适配 .NET 7.0 CLI
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
