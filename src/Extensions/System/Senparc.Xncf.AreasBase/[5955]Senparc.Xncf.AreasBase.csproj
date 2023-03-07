@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
-    <Version>0.2.5-beta9</Version>
+    <Version>0.2.5.1-beta9</Version>
     <AssemblyName>Senparc.Xncf.AreasBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.AreasBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -32,7 +32,7 @@
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <!--<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.2.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.3.3.7" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' and '$(Configuration)' == 'Debug' ">
@@ -49,7 +49,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
+    <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.32" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />

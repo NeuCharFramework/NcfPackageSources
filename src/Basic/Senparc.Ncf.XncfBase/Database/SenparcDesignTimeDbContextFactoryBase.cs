@@ -72,8 +72,8 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
 
-        protected SenparcDesignTimeDbContextFactoryBase(string rootDictionaryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
-            : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDictionaryPath, databaseName, note)
+        protected SenparcDesignTimeDbContextFactoryBase(string rootDirectoryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
+            : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDirectoryPath, databaseName, note)
         {
             _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
             //var databaseRegister = _register as IXncfRegister;
@@ -157,10 +157,10 @@ namespace Senparc.Ncf.XncfBase.Database
         /// SenparcDesignTimeDbContextFactoryBase 构造函数
         /// </summary>
         /// <param name="ncfVersion">NCF 版本号</param>
-        /// <param name="rootDictionaryPath">将要设置的CO2NET.Config.RootDictionaryPath，一般为 Senparc.Web 或具有 App_Data/Database/SenparcConfig.config 配置文件的目录</param>
+        /// <param name="rootDirectoryPath">将要设置的CO2NET.Config.RootDirectoryPath，一般为 Senparc.Web 或具有 App_Data/Database/SenparcConfig.config 配置文件的目录</param>
         /// <param name="databaseName">数据库名称，默认为 Local，即 Senparc.Web/appsettings.json 中的 DatabaseName</param>
         /// <param name="note">在日志中输出额外信息</param>
-        public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDictionaryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
+        public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDirectoryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
             string databaseName = "Local", string note = null)
         {
             //注释可能出现中文，对中文环境可以配置使用 GB2312
@@ -168,7 +168,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.OutputEncoding = Encoding.GetEncoding("GB2312");
 
             SiteConfig.SenparcCoreSetting.DatabaseName = databaseName;
-            CO2NET.Config.RootDictionaryPath = rootDictionaryPath;
+            CO2NET.Config.RootDirectoryPath= rootDirectoryPath;
             //XncfDatabaseData = xncfDatabaseData;
             this._ncfVersion = ncfVersion;
             this._note = note;
