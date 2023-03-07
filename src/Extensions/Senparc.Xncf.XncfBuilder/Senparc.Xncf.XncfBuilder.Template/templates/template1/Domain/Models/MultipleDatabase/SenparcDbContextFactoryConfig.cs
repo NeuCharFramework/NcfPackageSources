@@ -10,16 +10,16 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
     /// </summary>
     public static class SenparcDbContextFactoryConfig
     {
-        private static string _rootDictionaryPath = null;
+        private static string _rootDirectoryPath = null;
 
         /// <summary>
         /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
         /// </summary>
-        public static string RootDictionaryPath
+        public static string RootDirectoryPath
         {
             get
             {
-                if (_rootDictionaryPath == null)
+                if (_rootDirectoryPath == null)
                 {
                     var projectPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}", AppContext.BaseDirectory);//项目根目录
 
@@ -27,11 +27,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
                                                    projectPath);
                     if (Directory.Exists(webPath))
                     {
-                        _rootDictionaryPath = webPath;//优先使用Web统一配置
+                        _rootDirectoryPath = webPath;//优先使用Web统一配置
                     }
-                    _rootDictionaryPath = projectPath;
+                    _rootDirectoryPath = projectPath;
                 }
-                return _rootDictionaryPath;
+                return _rootDirectoryPath;
             }
         }
     }
