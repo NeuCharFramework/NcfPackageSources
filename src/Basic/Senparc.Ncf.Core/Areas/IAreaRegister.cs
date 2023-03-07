@@ -28,6 +28,6 @@ namespace Senparc.Ncf.Core.Areas
         /// <summary>
         /// 菜单项
         /// </summary>
-        List<AreaPageMenuItem> AareaPageMenuItems { get; }
+        List<AreaPageMenuItem> AreaPageMenuItems { get; }
     }
 }
