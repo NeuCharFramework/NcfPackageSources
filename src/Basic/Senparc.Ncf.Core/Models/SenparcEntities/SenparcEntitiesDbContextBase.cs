@@ -26,6 +26,7 @@ namespace Senparc.Ncf.Core.Models
         private static readonly bool[] _migrated = { true };
         private IServiceProvider _serviceProvider;
         //private IServiceScope _serviceScope;
+        private RequestTenantInfo _tenantInfo;
 
         /// <summary>
         /// SenparcDI 储存的 GlobalServiceCollection 生成的 ServiceProvider
@@ -44,6 +45,21 @@ namespace Senparc.Ncf.Core.Models
                     //_serviceProvider = _serviceScope.ServiceProvider;// ((IInfrastructure<IServiceProvider>)this).Instance;
                 }
                 return _serviceProvider;
+            }
+        }
+
+        /// <summary>
+        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        /// </summary>
+        protected RequestTenantInfo TenantInfo
+        {
+            get
+            {
+                if (this.EnableMultiTenant && _tenantInfo == null)
+                {
+                    _tenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesDbContextBase.TenantInfo", this);
+                }
+                return _tenantInfo;
             }
         }
 
@@ -142,7 +158,7 @@ namespace Senparc.Ncf.Core.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             Console.WriteLine($"\t SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name}");
-      
+
             var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
             //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
             foreach (var entityType in types)
@@ -177,8 +193,7 @@ namespace Senparc.Ncf.Core.Models
             if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
                 //多租户 + 软删除
-                RequestTenantInfo requestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesDbContextBase.SetGlobalQuery<{typeof(T).Name}>(ModelBuilder builder)", this);
-                entityBuilder.HasQueryFilter(z => z.TenantId == requestTenantInfo.Id && !z.Flag);
+                entityBuilder.HasQueryFilter(z => z.TenantId == TenantInfo.Id && !z.Flag);
             }
             else
             {
