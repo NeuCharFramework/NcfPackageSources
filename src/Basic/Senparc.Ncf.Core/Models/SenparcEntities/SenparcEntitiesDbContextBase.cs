@@ -157,9 +157,10 @@ namespace Senparc.Ncf.Core.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            Console.WriteLine($"\t SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name}");
-
             var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
+           
+            Console.WriteLine($"\t SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name} ({types.Count()} types)");
+
             //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
             foreach (var entityType in types)
             {

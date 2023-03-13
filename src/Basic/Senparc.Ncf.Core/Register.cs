@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using log4net;
+﻿using log4net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
@@ -7,9 +6,6 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.DI;
-using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.Models.DataBaseModel;
-using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Linq;
 

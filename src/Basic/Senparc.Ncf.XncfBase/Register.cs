@@ -265,16 +265,26 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped<RequestTenantInfo>();
 
             #region 支持 AutoMapper
+
+            //Console.WriteLine("----------");
+            //Console.WriteLine("XNCF 模块进行 AutoMapper 映射 foreach (var xncfRegister in XncfRegisterManager.RegisterList)");
+            //Console.WriteLine("----------");
             //XNCF 模块进行 AutoMapper 映射
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 xncfRegister.OnAutoMapMapping(services, configuration);
             }
 
+            //Console.WriteLine("----------");
+            //Console.WriteLine("引入当前系统");
+            //Console.WriteLine("----------");
+            
             //引入当前系统
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
-            //引入所有模块
+
+            //引入所有模块    TODO:XncfModuleProfile 构造函数会在“XNCF 模块进行 AutoMapper 映射”之后就执行，导致 XNCF 模块的 AutoMapper 映射无效
             services.AddAutoMapper(z => z.AddProfile<AutoMapper.XncfModuleProfile>());
+            
             #endregion
 
             //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内可能存在动态生成的程序集引发异常
