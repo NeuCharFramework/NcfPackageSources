@@ -52,6 +52,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         }
 
                         logger.Append("检测到同名文件，已经移动到（并覆盖）：" + copyPath);
+                        File.Delete(copyPath);
                         File.Move(path, copyPath);
                     }
 
