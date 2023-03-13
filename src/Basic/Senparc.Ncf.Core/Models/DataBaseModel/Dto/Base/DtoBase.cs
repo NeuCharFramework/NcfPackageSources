@@ -1,15 +1,12 @@
-﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
     /// 数据库 Dto 基类
     /// </summary>
-    public class DtoBase: IDtoBase
+    public class DtoBase : IDtoBase
     {
         /// <summary>
         /// 是否软删除
