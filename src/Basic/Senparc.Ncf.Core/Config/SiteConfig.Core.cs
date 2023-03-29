@@ -52,8 +52,18 @@ namespace Senparc.Ncf.Core.Config
         public const decimal PROJECTDMANDDEPOSIT = 1000; //任务默认押金
         public const string CERT_P12_ADDRESS = @"E:\";//微信支付数字证书存放地址
 
-        public const string SYSTEM_XNCF_MODULE_SERVICE_UID = "00000000-0000-0000-0000-000000000001";
-        public const string SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0000-0000-000000000002";
+        /* UID 建议格式： NCF公司ID-项目类型-保留字段(可随机)-内部类别1-内部类别2*/
+        public const string SYSTEM_XNCF_TANENT_UID = "00000000-0000-0000-0000-000000000001";
+        public const string SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID = "00000000-0000-0000-0001-000000000001";
+        public const string SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID = "00000000-0000-0000-0001-000000000002";
+        public const string SYSTEM_XNCF_MODULE_SYSTEM_PERMISSION_UID = "00000000-0000-0000-0001-000000000003";
+        public const string SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID = "00000000-0000-0000-0001-000000000004";
+        public const string SYSTEM_XNCF_MODULE_MENU_UID = "00000000-0000-0000-0001-000000000005";
+        public const string SYSTEM_XNCF_BASE_AREAS = "00000000-0000-0000-0001-000000000006";
+
+
+        public const string SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0001-0001-000000000001";
+        public const string SYSTEM_XNCF_MODULE_ACCOUNTS_UID = "00000000-0000-0001-0001-000000000002";
 
         public const string TENANT_DEFAULT_NAME = "DEFAULT";//多租户 TenantName 默认值（不作为任何一个特殊租户）
 
@@ -119,7 +129,6 @@ namespace Senparc.Ncf.Core.Config
         public static string SenparcConfigDirctory = "~/App_Data/DataBase/";
         public const string AntiForgeryTokenSalt = "SOUIDEA__SENPARC";
         public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //将取前8位
-        public static readonly long OfficalWeiboUserId = 2513419820;
         public const string DomainName = "https://ncf.senparc.com";
         public const string DefaultTemplate = "default";
         public const int SMSSENDWAITSECONDS = 60; //手机验证持续时间
@@ -133,10 +142,6 @@ namespace Senparc.Ncf.Core.Config
         /// </summary>
         public static readonly string WBSFormat = "000";
 
-        /// <summary>
-        /// 最大自动发送Email次数
-        /// </summary>
-        public static readonly int MaxSendEmailTimes = 5;
         /// <summary>
         /// 用户在线不活动过期时间(分钟)
         /// </summary>
@@ -158,7 +163,17 @@ namespace Senparc.Ncf.Core.Config
         /// </summary>
         public static readonly bool IsUnitTest = false;
 
+        /// <summary>
+        /// 是否正在进行安装，如果是，则不抛出监测安装的异常
+        /// </summary>
+        public static bool IsInstalling = false;
+
         public static int PageViewCount { get; set; } //网站启动后前台页面浏览量
+
+        /// <summary>
+        /// 是否应有数据库模块载入
+        /// </summary>
+        public static bool DatabaseXncfLoaded { get; set; }
 
         //异步线程
         public static Dictionary<string, Thread> AsynThread = new Dictionary<string, Thread>(); //后台运行线程

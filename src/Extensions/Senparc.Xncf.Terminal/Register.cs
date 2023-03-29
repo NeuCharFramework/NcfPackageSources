@@ -1,9 +1,6 @@
 ﻿using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
-using Senparc.Xncf.Terminal.Functions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Terminal
@@ -70,12 +67,12 @@ namespace Senparc.Xncf.Terminal
                                       $"\r\n'XCOPY'," +
                                       $"\r\n'WMIC'";
 
-        /// <summary>
-        /// 注册当前模块需要支持的功能模块
-        /// </summary>
-        public override IList<Type> Functions => new[] { 
-            typeof(Functions.Terminal),
-        };
+        ///// <summary>
+        ///// 注册当前模块需要支持的功能模块
+        ///// </summary>
+        //public override IList<Type> Functions => new[] { 
+        //    typeof(Functions.Terminal),
+        //};
 
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

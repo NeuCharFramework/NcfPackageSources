@@ -32,13 +32,18 @@ namespace Senparc.Ncf.Core.Areas
                     var areaRegisterTypes = assembly.GetTypes()
                                 .Where(z => z.GetInterface(nameof(IAreaRegister)) != null)
                                 .ToArray();
-
                     foreach (var registerType in areaRegisterTypes)
                     {
+                        Console.WriteLine("areaRegisterTypes:" + registerType.FullName);
                         var register = Activator.CreateInstance(registerType, true) as IAreaRegister;
-                        if (register!=null)
+                        if (register != null)
                         {
+                            Console.WriteLine("areaRegisterTypes run AuthorizeConfig:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
+
                             register.AuthorizeConfig(builder, env);//进行注册
+
+                            Console.WriteLine("areaRegisterTypes run AuthorizeConfig finished:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
+
                             eachRegsiterAction?.Invoke(register);//执行额外的操作
                         }
                         else
@@ -49,7 +54,11 @@ namespace Senparc.Ncf.Core.Areas
                 }
                 catch (Exception ex)
                 {
-                    SenparcTrace.SendCustomLog("AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName, ex.ToString());
+                    var title = "AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName;
+                    var message = ex.ToString();
+                    Console.WriteLine(title);
+                    Console.WriteLine(message);
+                    SenparcTrace.SendCustomLog(title, message);
                 }
             }, false);
             return builder;

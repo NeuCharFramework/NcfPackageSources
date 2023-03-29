@@ -13,10 +13,11 @@ using Senparc.Ncf.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Senparc.Respository;
 
 namespace Senparc.Ncf.Service
 {
-    public class SysPermissionService : ClientServiceBase<SysPermission>
+    public class SysPermissionService : ClientServiceBase<SysRolePermission>, Core.Authorization.ICheckPermission
     {
         private readonly IDistributedCache _distributedCache;
 
@@ -25,13 +26,14 @@ namespace Senparc.Ncf.Service
         private readonly IAdminWorkContextProvider _adminWorkContextProvider;
         private readonly SysRoleService _sysRoleService;
         private const string PermissionKey = "Permission";
-
-        public SysPermissionService(ClientRepositoryBase<SysPermission> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        private readonly ISysRolePermissionRepository _repo;
+        public SysPermissionService(ISysRolePermissionRepository repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             this._distributedCache = _serviceProvider.GetService<IDistributedCache>();
             this._sysMenuService = _serviceProvider.GetService<SysMenuService>();
             this._adminWorkContextProvider = _serviceProvider.GetService<IAdminWorkContextProvider>();
             this._sysRoleService = _serviceProvider.GetService<SysRoleService>();
+            _repo = repo;
         }
 
         public async Task<bool> HasPermissionAsync(string url)
@@ -88,7 +90,7 @@ namespace Senparc.Ncf.Service
 
         public async Task<IEnumerable<SysPermissionDto>> DbToCacheAsync()
         {
-            IEnumerable<SysPermission> permissions = await GetFullListAsync(_ => true);
+            IEnumerable<SysRolePermission> permissions = await GetFullListAsync(_ => true);
             IEnumerable<SysPermissionDto> permissionDtos = Mapper.Map<IEnumerable<SysPermissionDto>>(permissions);
             await _distributedCache.RemoveAsync(PermissionKey);
             await _distributedCache.SetStringAsync(PermissionKey, Newtonsoft.Json.JsonConvert.SerializeObject(permissionDtos));
@@ -108,14 +110,14 @@ namespace Senparc.Ncf.Service
         /// <returns></returns>
         public async Task AddAsync(IEnumerable<SysPermissionDto> sysMenuDto)
         {
-            List<SysPermission> sysRoleMenus = new List<SysPermission>();
-            string RoleId = sysMenuDto.FirstOrDefault().RoleId;
-            SysRole sysRole = await _sysRoleService.GetObjectAsync(_ => _.Id == RoleId);
+            List<SysRolePermission> sysRoleMenus = new List<SysRolePermission>();
+            string roleId = sysMenuDto.FirstOrDefault().RoleId;
+            SysRole sysRole = await _sysRoleService.GetObjectAsync(_ => _.Id == roleId);
             //
             foreach (var item in sysMenuDto)
             {
                 item.RoleCode = sysRole.RoleCode;
-                SysPermission sysPermission = new SysPermission(item);
+                SysRolePermission sysPermission = new SysRolePermission(item);
                 sysRoleMenus.Add(sysPermission);
             }
             #region 正确方式1 传统方式
@@ -140,7 +142,7 @@ namespace Senparc.Ncf.Service
             // https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/connection-resiliency#execution-strategies-and-transactions
             await ServiceBase.ResilientTransaction.New(BaseData.BaseDB.BaseDataContext).ExecuteAsync(async () =>
             {
-                IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
+                IEnumerable<SysRolePermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
                 await DeleteAllAsync(entitis); // 此处会调用SaveChangeAsync
                 await SaveObjectListAsync(sysRoleMenus); // 此处会调用SaveChangeAsync
                 await DbToCacheAsync();//暂时
@@ -217,7 +219,7 @@ namespace Senparc.Ncf.Service
         public async Task<bool> HasPermissionAsync(IEnumerable<string> codes, string url, bool isAjax)
         {
             int adminUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
-            IQueryable<SysMenuDto> permissions = getUserPermissions(adminUserId);
+            IQueryable<SysMenuDto> permissions = GetUserPermissions(adminUserId);
             if (isAjax)
             {
                 var userPermissionCodes = await permissions.Where(_ => _.ResourceCode != string.Empty).Select(_ => _.ResourceCode).Distinct().ToListAsync();
@@ -240,7 +242,7 @@ namespace Senparc.Ncf.Service
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType == MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await GetUserPermissions(currentAdminId).Where(_ => _.MenuType == MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
             return _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
@@ -253,7 +255,7 @@ namespace Senparc.Ncf.Service
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType == menuType).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await GetUserPermissions(currentAdminId).Where(_ => _.MenuType == menuType).OrderByDescending(_ => _.Sort).ToListAsync();
             return sysMenuDtos;// _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
@@ -266,7 +268,7 @@ namespace Senparc.Ncf.Service
             //IEnumerable<SysMenuTreeItemDto> sysMenuTreeItems = null;//
             int currentAdminId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            List<SysMenuDto> sysMenuDtos = await getUserPermissions(currentAdminId).Where(_ => _.MenuType > MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
+            List<SysMenuDto> sysMenuDtos = await GetUserPermissions(currentAdminId).Where(_ => _.MenuType > MenuType.菜单).OrderByDescending(_ => _.Sort).ToListAsync();
             return sysMenuDtos;// _sysMenuService.GetSysMenuTreesMainRecursive(sysMenuDtos);
         }
 
@@ -275,17 +277,54 @@ namespace Senparc.Ncf.Service
         /// </summary>
         /// <param name="currentAdminUserId"></param>
         /// <returns></returns>
-        private IQueryable<SysMenuDto> getUserPermissions(int currentAdminUserId)
+        private IQueryable<SysMenuDto> GetUserPermissions(int currentAdminUserId)
         {
             IConfigurationProvider autoMapConfigurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
             SenparcEntitiesBase db = _serviceProvider.GetService<SenparcEntitiesBase>();
-            IQueryable<string> roleIds = from roleAdmin in db.SysRoleAdminUserInfos
-                                         where roleAdmin.AccountId == currentAdminUserId && db.SysRoles.Any(role => role.Id == roleAdmin.RoleId && role.Enabled)
+            IQueryable<string> roleIds = from roleAdmin in db.Set<SysRoleAdminUserInfo>()
+                                         where roleAdmin.AccountId == currentAdminUserId && db.Set<SysRole>().Any(role => role.Id == roleAdmin.RoleId && role.Enabled)
                                          select roleAdmin.RoleId;// db.SysRoleAdminUserInfos.Where(_ => _.AccountId == currentAdminUserId).Select(_ => _.RoleId);
-            IQueryable<string> menuIds = from permission in db.SysPermission
+            IQueryable<string> menuIds = from permission in db.Set<SysRolePermission>()
                                          where roleIds.Any(_ => _ == permission.RoleId)
                                          select permission.PermissionId;
-            return db.SysMenus.Where(_ => _.Visible && menuIds.Contains(_.Id)).ProjectTo<SysMenuDto>(autoMapConfigurationProvider);
+            return db.Set<SysMenu>().Where(_ => _.Visible && menuIds.Contains(_.Id)).ProjectTo<SysMenuDto>(autoMapConfigurationProvider);
+        }
+
+        /// <summary>
+        /// 检查当前用户是否权限
+        /// </summary>
+        /// <param name="resourceCodes">资源codes</param>
+        /// <param name="adminUserInfoId">当前用户Id</param>
+        /// <returns></returns>
+        public async Task<bool> HasPermissionAsync(string[] resourceCodes, int adminUserInfoId)
+        {
+            if (!resourceCodes.Any())
+            {
+                return false;
+            }
+            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // 缓存当前用户的所有资源
+            var distributedCache = _serviceProvider.GetService<IDistributedCache>();
+            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // 尝试从缓存读取用户的资源
+            IEnumerable<string> codes = null;
+            if (string.IsNullOrEmpty(codesJsonValue))
+            {
+                codes = await _repo.GetAllResouceCodesByAccountIdAsync(adminUserInfoId);
+                codesJsonValue = Newtonsoft.Json.JsonConvert.SerializeObject(codes);
+                await distributedCache.SetStringAsync(cacheKey, codesJsonValue, new DistributedCacheEntryOptions()
+                {
+                    SlidingExpiration = TimeSpan.FromHours(8)
+                }); // 缓存 8 小时
+            }
+            else
+            {
+                codes = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<string>>(codesJsonValue);
+            }
+            if (!codes.Any())
+            {
+                return false;
+            }
+            //获取当前用户的所有资源code
+            return codes.Intersect(resourceCodes).Any();
         }
     }
 }

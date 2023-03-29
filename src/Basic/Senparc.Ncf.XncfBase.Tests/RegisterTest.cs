@@ -21,7 +21,7 @@ namespace Senparc.Ncf.XncfBase.Tests
 
         public override string Description => "这是测试模块的介绍";
 
-        public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
+        //public override IList<Type> Functions => new List<Type>() { typeof(FunctionBaseTest_Function) };
 
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -42,7 +42,7 @@ namespace Senparc.Ncf.XncfBase.Tests
         [TestMethod]
         public void StartEngineTest()
         {
-            var result = base.ServiceCollection.StartEngine(TestBase.Configuration);
+            var result = base.ServiceCollection.StartEngine(TestBase.Configuration, TestBase.Env);
             Console.WriteLine(result);
             Assert.IsTrue(Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList.Count > 0);
         }

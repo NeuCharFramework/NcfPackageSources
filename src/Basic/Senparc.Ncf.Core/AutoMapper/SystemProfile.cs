@@ -17,7 +17,7 @@ namespace Senparc.Ncf.Core.AutoMapper
         {
             CreateMap<SysMenu, SelectListItem>().ForMember(_ => _.Text, opt => opt.MapFrom(_ => _.MenuName))
                .ForMember(_ => _.Value, opt => opt.MapFrom(_ => _.Id));
-            CreateMap<SysPermission, SysPermissionDto>();
+            CreateMap<SysRolePermission, SysPermissionDto>();
             CreateMap<SysMenu, SysMenuDto>().ForMember(_ => _.IsMenu, opt => opt.MapFrom(_ => true));
             CreateMap<SysButton, SysMenuDto>().ForMember(_ => _.IsMenu, opt => opt.MapFrom(_ => false))
                 .ForMember(_ => _.MenuName, opt => opt.MapFrom(_ => _.ButtonName))
@@ -31,8 +31,6 @@ namespace Senparc.Ncf.Core.AutoMapper
 
             CreateMap<XncfModule, CreateOrUpdate_XncfModuleDto>();
             CreateMap<XncfModule, XncfModuleDto>();
-
-            CreateMap<TenantInfo, TenantInfoDto>();
         }
     }
 }

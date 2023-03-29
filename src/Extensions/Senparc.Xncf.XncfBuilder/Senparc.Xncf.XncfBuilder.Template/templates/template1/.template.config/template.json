@@ -12,6 +12,17 @@
     "type": "project"
   },
   "preferNameDirectory": true,
+  //"constraints": {
+  //  "sdk-only": {
+  //    "type": "host",
+  //    "args": [
+  //      {
+  //        "hostname": "dotnetcli",
+  //        "version": "[6.0.100, )"
+  //      }
+  //    ]
+  //  }
+  //},
   "symbols": {
     "TargetFramework": {
       "type": "parameter",
@@ -22,22 +33,22 @@
       "isRequired": true,
       "defaultValue": "netstandard2.1"
     },
-    "UseSample": {
+    "Sample": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "UseWeb": {
+    "Web": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "UseFunction": {
+    "Function": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
     },
-    "UseDatabase": {
+    "Database": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
@@ -123,7 +134,7 @@
       "fileRename": "Template_XncfBase_Version",
       "replaces": "Template_XncfBase_Version",
       "isRequired": true,
-      "defaultValue": "0.6.106-beta1"
+      "defaultValue": "0.11.4-beta8"
     },
     "NcfAreaBaseVersion": {
       "type": "parameter",
@@ -132,25 +143,7 @@
       "fileRename": "Template_NcfAreaBase_Version",
       "replaces": "Template_NcfAreaBase_Version",
       "isRequired": true,
-      "defaultValue": "0.6.114-beta1"
-    },
-    "NcfSwaggerVersion": {
-      "type": "parameter",
-      "datatype": "text",
-      "description": "Senparc.Xncf.Swagger package version",
-      "fileRename": "Template_XncfSwagger_Version",
-      "replaces": "Template_XncfSwagger_Version",
-      "isRequired": true,
-      "defaultValue": "0.0.9-beta1"
-    },
-    "MicrosoftMvcVersion": {
-      "type": "parameter",
-      "datatype": "text",
-      "description": "Microsoft.AspNetCore.Mvc.Versioning package version",
-      "fileRename": "Template_MicrosoftMvc_Version",
-      "replaces": "Template_MicrosoftMvc_Version",
-      "isRequired": true,
-      "defaultValue": "5.0.0"
+      "defaultValue": "0.11.4-beta8"
     }
   },
   "sourceName": "Template_OrgName.Xncf.Template_XncfName",
@@ -158,7 +151,7 @@
     {
       "modifiers": [
         {
-          "condition": "(!UseSample)", //Èç¹û²»Ìí¼Ó Sample£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!Sample)", /* ä¸ä½¿ç”¨ Sample */
           "exclude": [
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
@@ -166,24 +159,35 @@
           ]
         },
         {
-          "condition": "(!UseFunction)", //Èç¹û²»Ìí¼Ó Function£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!Function)", /* ä¸ä½¿ç”¨ Function æ¼”ç¤º */
           "exclude": [
-            "Functions/**"
+            "OHS/Local/AppService/MyFuctionAppService.cs",
+            "OHS/Local/PL/MyFunctionRequest.cs"
           ]
         },
         {
-          "condition": "(!UseWeb && !UseSample)", //Èç¹û²»Ìí¼Ó UseWeb£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!Web && !Sample)", /* ä¸åŒ…å«ä»»ä½• Web æˆ–è€… Sample */
           "exclude": [
             "Register.Area.cs",
             "Areas/**"
           ]
         },
         {
-          "condition": "(!UseDatabase && !UseSample)", //Èç¹û²»Ìí¼Ó Êı¾İ¿â£¬ÅÅ³ıÏÂÃæµÄÎÄ¼ş
+          "condition": "(!Database && !Sample)", /* ä¸åŒ…å«ä»»ä½•æ•°æ®åº“æˆ–è€… Sample */
           "exclude": [
             "Register.Database.cs",
-            "Models/**",
-            "Migrations/**"
+            "Domain/Models/**",
+            "Domain/Migrations/**",
+            "Domain/Services/**",
+            "OHS/Local/AppService/ColorAppService.cs",
+            "OHS/Local/PL/ColorResponse.cs"
+          ]
+        },
+        {
+          "condition": "(!UseWebApi)", /* ä¸ä½¿ç”¨ WebAPI */
+          "exclude": [
+            "OHS/Local/AppService/ApiAppService.cs",
+            "OHS/Local/PL/ApiRequest.cs"
           ]
         }
       ]

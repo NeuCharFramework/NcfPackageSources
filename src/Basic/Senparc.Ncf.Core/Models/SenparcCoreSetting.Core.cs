@@ -40,7 +40,14 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
-        ///
+        /// <summary>
+        /// MemcachedAddresses
+        /// </summary>
         public string MemcachedAddresses { get; set; }
+
+        /// <summary>
+        /// 缓存中的请求暂存日志缓存时间（分钟），0 则不缓存
+        /// </summary>
+        public int RequestTempLogCacheMinutes { get; set; }
     }
 }

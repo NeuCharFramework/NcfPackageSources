@@ -1,14 +1,10 @@
 //using Enyim.Caching.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Config;
-using Senparc.Xncf.Swagger.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -20,7 +16,8 @@ namespace Senparc.Xncf.Swagger
 
         public string HomeUrl => "/Admin/Swagger/Index";
 
-        public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
+
+        public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
              new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
                      };
 
@@ -51,6 +48,7 @@ namespace Senparc.Xncf.Swagger
 
         #region IXncfRazorRuntimeCompilation 接口
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.Swagger"));
+
         #endregion
     }
 }

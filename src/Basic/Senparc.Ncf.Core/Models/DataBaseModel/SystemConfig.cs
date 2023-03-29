@@ -6,19 +6,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Ncf.Core.Models
 {
     [Serializable]
+    [Table("SystemConfigs")]
     public partial class SystemConfig : EntityBase<int>
     {
         [Required]
-        [Column(TypeName = "nvarchar(100)")]
+        [MaxLength(100)]
         public string SystemName { get; private set; }
 
-        [Column(TypeName = "varchar(100)")]
+        [MaxLength(100)]
         public string MchId { get; private set; }
 
-        [Column(TypeName = "varchar(300)")]
+        [MaxLength(300)]
         public string MchKey { get; private set; }
 
-        [Column(TypeName = "varchar(100)")]
+        [MaxLength(100)]
         public string TenPayAppId { get; private set; }
 
         /// <summary>

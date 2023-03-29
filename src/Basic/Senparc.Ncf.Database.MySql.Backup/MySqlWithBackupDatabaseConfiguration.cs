@@ -14,6 +14,9 @@ using Senparc.Ncf.Database.MySql;
 
 namespace Senparc.Ncf.Database.MySql.Backup
 {
+    /// <summary>
+    /// MySQL（附带备份） 数据库配置，处于等待官方更新中，目前无效
+    /// </summary>
     public class MySqlWithBackupDatabaseConfiguration : MySqlDatabaseConfiguration
     {
         public MySqlWithBackupDatabaseConfiguration() { }

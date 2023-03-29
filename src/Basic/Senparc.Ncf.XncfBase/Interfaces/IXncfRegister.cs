@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase.Database;
@@ -52,10 +53,10 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         string Description { get; }
 
-        /// <summary>
-        /// 注册方法，注册的顺序决定了界面中排列的顺序
-        /// </summary>
-        IList<Type> Functions { get; }
+        ///// <summary>
+        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///// </summary>
+        //IList<Type> Functions { get; }
 
         /// <summary>
         /// 添加 AutoMap 映射
@@ -96,14 +97,20 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="services">IServiceCollection</param>
         /// <param name="configuration">Configuration</param>
+        /// <param name="env"></param>
         /// <returns></returns>
-        IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration);
+        IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env);
 
         /// <summary>
         /// 添加AutoMap的映射关系
         /// </summary>
         /// <param name="mapping"></param>
         void AddAutoMapMapping(Action<Profile> mapping);
+
+        /// <summary>
+        /// 执行 AutoMapper 映射
+        /// </summary>
+        void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// 在 startup.cs 的 Configure() 方法中执行配置

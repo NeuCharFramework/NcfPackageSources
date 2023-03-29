@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -55,10 +56,10 @@ namespace Senparc.Ncf.XncfBase
         /// 说明
         /// </summary>
         public abstract string Description { get; }
-        /// <summary>
-        /// 注册方法，注册的顺序决定了界面中排列的顺序
-        /// </summary>
-        public abstract IList<Type> Functions { get; }
+        ///// <summary>
+        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///// </summary>
+        //public abstract IList<Type> Functions { get; }
 
         /// <summary>
         /// 添加 AutoMap 映射
@@ -69,8 +70,9 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
-        #region 执行 Migrate 更新数据 MigrateDatabaseAsync()
 
+        #region 执行 Migrate 更新数据 MigrateDatabaseAsync()
+        /*
         /// <summary>
         /// 执行 Migrate 更新数据
         /// </summary>
@@ -113,7 +115,7 @@ namespace Senparc.Ncf.XncfBase
         {
             await MigrateDatabaseAsync(serviceProvider, typeof(TSenparcEntities));
         }
-
+        */
         #endregion
 
         /// <summary>
@@ -190,10 +192,10 @@ namespace Senparc.Ncf.XncfBase
 
                 }
 
-                //删除 Migration 记录
-                if (this is IXncfDatabase databaseRegister)
+                //删除 Migration 记录，如果为系统表，则不删除
+                if (this is IXncfDatabase databaseRegister && databaseRegister.DatabaseUniquePrefix != NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX)
                 {
-                    var migrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
+                    var migrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
                     SenparcTrace.SendCustomLog("开始删除 DatabaseMigrationHistory 表格", $"[{migrationHistoryTableName}]");
                     string sqlStr = currentDatabaseConfiguration.GetDropTableSql(databaseDbContext, migrationHistoryTableName);
                     if (!sqlStr.IsNullOrEmpty())
@@ -252,15 +254,15 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration)
+        public virtual IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             if (this is IXncfDatabase databaseRegister)
             {
+
                 //遍历所有Register中的数据库进行注册
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
                     var dbContextTypes = XncfDatabaseDbContextPool.Instance[this.GetType()];
-
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
                         var dbOptionBuilderType = dbContextType.GetConstructors()
@@ -313,6 +315,7 @@ namespace Senparc.Ncf.XncfBase
                         };
                         //添加 XncfSenparcEntities 依赖注入配置
                         services.AddScoped(dbContextType, implementationFactory);
+
                         //注册当前数据库的对象（必须）
                         EntitySetKeys.TryLoadSetInfo(dbContextType);
                     }
@@ -356,6 +359,15 @@ namespace Senparc.Ncf.XncfBase
             }
             AutoMapMappingConfigs.Add(mapping);
         }
+
+        /// <summary>
+        /// 执行 AutoMapper 映射 
+        /// </summary>
+        public virtual void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
+        {
+            //在 Register.StartEngine() 中调用，早于 AddXncfModule() 方法
+        }
+
 
         ///// <summary>
         ///// 数据库 DbContext 选项配置（附加配置）

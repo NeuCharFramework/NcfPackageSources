@@ -1,81 +1,55 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework Condition=" '$(IntegrationToNcf)' != 'true' ">netstandard2.1</TargetFramework>
-		<TargetFramework Condition=" '$(IntegrationToNcf)' == 'true' ">Template_TargetFramework</TargetFramework>
-		<Version Condition=" '$(IntegrationToNcf)' == 'true' ">Template_Version</Version>
-		<AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
-		<RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<Description>Template_Description</Description>
-		<Copyright>Template_OrgName</Copyright>
-		<PackageTags>Template_OrgName,NeuCharFramework,NCF,Template_OrgName.Xncf.Template_XncfName</PackageTags>
-		<Authors>Template_OrgName</Authors>
-		<Owners>Template_OrgName</Owners>
-		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
-		<Title>Template_MenuName</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
-		<PackageReleaseNotes>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework Condition=" '$(IntegrationToNcf)' != 'true' ">netstandard2.1</TargetFramework>
+    <TargetFramework Condition=" '$(IntegrationToNcf)' == 'true' ">Template_TargetFramework</TargetFramework>
+    <Version Condition=" '$(IntegrationToNcf)' == 'true' ">Template_Version</Version>
+    <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
+    <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>Template_Description</Description>
+    <Copyright>Template_OrgName</Copyright>
+    <PackageTags>Template_OrgName,NeuCharFramework,NCF,Template_OrgName.Xncf.Template_XncfName</PackageTags>
+    <Authors>Template_OrgName</Authors>
+    <Owners>Template_OrgName</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>Template_MenuName</Title>
+    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			vTemplate_Version 创世
-		</PackageReleaseNotes>
-		<RepositoryUrl> https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\..\BuildOutPut</OutputPath>
-		<!--<DocumentationFile>..\..\..\BuildOutPut\Template_OrgName.Xncf.Template_XncfName.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
-	</PropertyGroup>
-
+</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
   <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
-    <PackageReference Include="Senparc.Xncf.Swagger" Version="Template_XncfSwagger_Version" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="Template_MicrosoftMvc_Version" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
-
-	<ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
-		<PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
-		<PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
-		<ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
-		<ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
-		<None Include="App_Data\SenparcTraceLog\*" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">
-		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-
-		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-		<ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-	</ItemGroup>
-
-	<!--<ItemGroup>
-	  <Content Remove="templates\template1\App_Data\Database\SenparcConfig.config" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_ViewStart.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml" />
-	  <Content Remove="templates\template1\Areas\Admin\Pages\Template_XncfName\Index.cshtml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="templates\template1\App_Data\Database\SenparcConfig.config" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Shared\_ViewStart.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml" />
-	  <None Include="templates\template1\Areas\Admin\Pages\Template_XncfName\Index.cshtml" />
-	</ItemGroup>-->
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
-		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-		<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
-	</ItemGroup>
+  <ItemGroup Condition=" '$(Web)' == 'true' or '$(Sample)' == 'true'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Sample)' == 'true' or '$(Database)' == 'true' ">
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.11.5-beta8" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
+    <PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
+    <PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
+    <None Include="App_Data\SenparcTraceLog\*" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">
+    <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
+    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
+    <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
+  </ItemGroup>
 </Project>

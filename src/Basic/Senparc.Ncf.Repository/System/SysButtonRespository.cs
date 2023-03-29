@@ -40,7 +40,8 @@ namespace Senparc.Respository
             //升级至 EF Core 5.0 后方法无效
             //return await _senparcEntities.Database.ExecuteSqlCommandAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
 
-            return await _senparcEntities.Database.ExecuteSqlRawAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
+            //return await _senparcEntities.Database.ExecuteSqlRawAsync($"DELETE {nameof(_senparcEntitie.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId); 
+            return await _senparcEntities.Database.ExecuteSqlRawAsync($"DELETE {"SysButtons"} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
         }
     }
 }

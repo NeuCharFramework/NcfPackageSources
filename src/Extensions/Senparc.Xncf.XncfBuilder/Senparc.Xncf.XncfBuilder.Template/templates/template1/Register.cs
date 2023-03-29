@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-#if (UseFunction)
-using Template_OrgName.Xncf.Template_XncfName.Functions;
-#endif
-#if (UseDatabase || UseSample)
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+
+#if (Database || Sample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
+using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
+using Senparc.Ncf.XncfBase.Database;
 #endif
-#if (UseSample)
-using Template_OrgName.Xncf.Template_XncfName.Services;
+#if (Sample)
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 #endif
 
@@ -37,33 +38,21 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Description => "Template_Description";
 
-#if (UseFunctions)
-        public override IList<Type> Functions => new Type[] { typeof(MyFunction) };
-#else
-        public override IList<Type> Functions => new Type[] { };
-#endif
-
-
-
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-#if (UseDatabase || UseSample)
+#if (Database || Sample)
             //安装或升级版本时更新数据库
-            await base.MigrateDatabaseAsync(serviceProvider);
+            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             //根据安装或更新不同条件执行逻辑
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
                     //新安装
-#if (UseSample)
+#if (Sample)
             #region 初始化数据库数据
-                    var colorService = serviceProvider.GetService<ColorService>();
-                    var color = colorService.GetObject(z => true);
-                    if (color == null)//如果是纯第一次安装，理论上不会有残留数据
-                    {
-                        ColorDto colorDto = await colorService.CreateNewColor().ConfigureAwait(false);//创建默认颜色
-                    }
+                    var colorService = serviceProvider.GetService<ColorAppService>();
+                    var colorResult = await colorService.GetOrInitColorAsync();
             #endregion
 #endif
                     break;
@@ -78,7 +67,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-#if (UseDatabase || UseSample)
+#if (Database || Sample)
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -95,5 +84,13 @@ namespace Template_OrgName.Xncf.Template_XncfName
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
+
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        {
+#if (Database || Sample)
+            services.AddScoped<ColorAppService>();
+#endif
+            return base.AddXncfModule(services, configuration, env);
+        }
     }
 }

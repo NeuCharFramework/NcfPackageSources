@@ -17,7 +17,7 @@ namespace Senparc.Ncf.XncfBase
         #region 静态方法
 
         /// <summary>
-        /// 模块和方法集合。
+        /// 模块和方法集合。模块已经按照 Order 倒叙排序（优先级从高到低）
         /// </summary>
         public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
 

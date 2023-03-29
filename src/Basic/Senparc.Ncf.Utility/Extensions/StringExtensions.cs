@@ -8,7 +8,28 @@ namespace Senparc.Ncf.Core.Extensions
 {
     public static class StringExtensions
     {
-     
+        //public static HtmlString RenderMeta(this HtmlHelper helper)
+        //{
+        //    if (!(helper.ViewData.Model is IBaseVD))
+        //    {
+        //        return new HtmlString("");
+        //    }
+
+        //    IBaseVD model = helper.ViewData.Model as IBaseVD;
+        //    MetaCollection metaCollection = model.MetaCollection as MetaCollection;
+        //    string result = null;
+        //    foreach (var item in metaCollection)
+        //    {
+        //        if (!string.IsNullOrEmpty(item.Value))
+        //        {
+        //            result += string.Format("<meta name=\"{0}\" content=\"{1}\" />\r\n", item.Key.ToString(),
+        //                //helper.AttributeEncode(item.Value) //COCONET 此方法已失效
+        //                item.Value
+        //                );
+        //        }
+        //    }
+        //    return new HtmlString(result);
+        //}
 
         //public static string HtmlDnc(this string InputString)
         //{
@@ -48,7 +69,7 @@ namespace Senparc.Ncf.Core.Extensions
         //    return str.ToString();
         //}
 
-       
+
         //public static T ShowWhenNullOrEmpty<T>(this T obj, T defaultConent)
         //{
         //    if (obj == null)

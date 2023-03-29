@@ -1,0 +1,29 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Senparc.Web.DatabasePlant 数据库停机坪";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Migration 批量生成器</h1>
+    <form method="post">
+        <p>src 根目录：<input type="text" name="srcRootDir" value="E:\Senparc项目\NeuCharFramework\NcfPackageSources\src" size="100" /></p>
+        <p>
+            项目路径：<textarea rows="20" cols="100" name="projects">Extensions\System\Senparc.Xncf.Menu
+Extensions\System\Senparc.Xncf.XncfModuleManager
+Extensions\System\Senparc.Xncf.SystemPermission
+Extensions\System\Senparc.Xncf.SystemManager
+Extensions\System\Senparc.Xncf.Tenant
+Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder
+Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Template
+Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit
+</textarea>
+        </p>
+        <p>
+            Migration 备注：<input type="text" name="note" size="20" />
+            数据库名称（必须是 MultipleDatabaseType 枚举值）：<input type="text" name="databaseName" size="20" />
+        </p>
+        <p><input type="submit" value="生成代码" asp-page-handler="GenerateCode" /></p>
+    </form>
+    <p>执行代码：<textarea rows="20" cols="150">@ViewData["GenerateCodeResult"]</textarea></p>
+</div>

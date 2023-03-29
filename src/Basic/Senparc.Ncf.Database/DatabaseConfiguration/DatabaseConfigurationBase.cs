@@ -40,7 +40,7 @@ namespace Senparc.Ncf.Database
                  //DbContext的程序集名称（或强制指定生成 add-migration 的程序集名称
                  var dbContextAssemblyName = xncfDatabaseData.AssemblyName ?? dbContextType.Assembly.FullName;
                  //Migration History 的表名
-                 var databaseMigrationHistoryTableName = NcfDatabaseHelper.GetDatabaseMigrationHistoryTableName(xncfDatabaseData.XncfDatabaseRegister);
+                 var databaseMigrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(xncfDatabaseData.XncfDatabaseRegister);
 
                  typedBuilder.MigrationsAssembly(dbContextAssemblyName)
                         .MigrationsHistoryTable(databaseMigrationHistoryTableName);

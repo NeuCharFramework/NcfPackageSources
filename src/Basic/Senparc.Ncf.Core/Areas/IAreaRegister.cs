@@ -12,7 +12,7 @@ namespace Senparc.Ncf.Core.Areas
     public interface IAreaRegister
     {
         /// <summary>
-        /// 
+        /// 授权配置
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="env"></param>
@@ -28,6 +28,6 @@ namespace Senparc.Ncf.Core.Areas
         /// <summary>
         /// 菜单项
         /// </summary>
-        List<AreaPageMenuItem> AareaPageMenuItems { get; }
+        List<AreaPageMenuItem> AreaPageMenuItems { get; }
     }
 }

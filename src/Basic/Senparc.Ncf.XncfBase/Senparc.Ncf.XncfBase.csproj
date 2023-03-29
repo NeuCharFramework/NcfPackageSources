@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <!--<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>-->
-    <Version>0.6.129-beta1</Version>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+    <!--<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>-->
+    <Version>0.11.6.12-beta9</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -12,11 +12,11 @@
     <PackageTags>NeuCharFramework,NCF</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
-    <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>XNCF 模块基础库</Title>
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1 创世
 			v0.2.100 完成基础架构，功能跑通
@@ -24,6 +24,9 @@
 			v0.3.303 提供 IXncfThread 接口
 			v0.3.305 添加 XncfAutoConfigurationMapping 特性
 			v0.3.501 添加 Register.IsRegistered 方法
+			v0.7 升级 Function 为 FunctionRender
+			v0.9.1.6 优化 DDD 分层，忽略系统表的删除 History 操作
+			v0.11.3.1 重新开启线程 XncfThread
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -47,10 +50,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.6" />
-    <PackageReference Include="Senparc.CO2NET" Version="1.3.200" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />-->
+    <PackageReference Include="Senparc.CO2NET" Version="2.1.7.3" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.12" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

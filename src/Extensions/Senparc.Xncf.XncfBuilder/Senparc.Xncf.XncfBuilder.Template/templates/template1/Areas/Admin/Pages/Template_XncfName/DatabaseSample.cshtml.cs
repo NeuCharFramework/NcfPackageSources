@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
-using Template_OrgName.Xncf.Template_XncfName.Services;
 using System;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.Models;
@@ -31,8 +31,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         public async Task OnGetAsync()
         {
             var color = _colorService.GetObject(z => true, z => z.Id, OrderingType.Descending);
-            ColorDto = color == null 
-                        ? (await _colorService.CreateNewColor()) 
+            ColorDto = color == null
+                        ? (await _colorService.CreateNewColor())
                         : _colorService.Mapper.Map<ColorDto>(color);
         }
 

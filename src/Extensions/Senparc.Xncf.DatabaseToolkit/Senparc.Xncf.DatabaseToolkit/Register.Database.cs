@@ -5,8 +5,8 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
-using Senparc.Xncf.DatabaseToolkit.Functions;
 using System;
+using static Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService.DatabaseConfigAppService;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
@@ -19,16 +19,10 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.AddXncfDatabaseModule");
-            services.AddScoped<DbConfig>();
-            services.AddScoped<SetConfig>();
-            services.AddScoped<SetConfig.SetConfig_Parameters>();
-
             //AutoMap映射
             base.AddAutoMapMapping(profile =>
             {
-                profile.CreateMap<SetConfig.SetConfig_Parameters, SetConfig>();
-                profile.CreateMap<SetConfig.SetConfig_Parameters, DbConfig>();
+                profile.CreateMap<SetConfigFunctionAppRequest, DbConfig>();
             });
         }
 
