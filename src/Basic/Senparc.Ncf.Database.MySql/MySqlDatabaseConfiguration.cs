@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Database.MySql
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
-            return $"DROP TABLE '{tableName}'";
+            return $"DROP TABLE `{tableName}`";
         }
     }
 }
