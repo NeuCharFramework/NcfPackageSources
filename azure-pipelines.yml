@@ -13,21 +13,44 @@ variables:
   solution: '**/NcfPackageSources.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  MSBuildSDKsPath: 'C:\\hostedtoolcache\\windows\\dotnet\\sdk\\6.0.100\\Sdks'
 
 steps:
 
-- task: UseDotNet@2
-  displayName: 'Use .NET Core SDK 3'
-  inputs:
-    version: '3.1.x'
-    packageType: 'sdk'
+# - task: UseDotNet@2
+#   displayName: 'Use .NET Core SDK 3'
+#   inputs:
+#     version: '3.1.x'
+#     packageType: 'sdk'
 
+# - task: UseDotNet@2
+#   displayName: 'Use .NET SDK 5'
+#   inputs:
+#     version: '5.0.x'
+#     packageType: 'sdk'
+    
 - task: UseDotNet@2
-  displayName: 'Use .NET SDK 5'
+  displayName: 'Use .NET SDK 6'
   inputs:
-    version: '5.0.x'
+    version: '6.0.407'
     packageType: 'sdk'
+    performMultiLevelLookup: true
+    includePreviewVersions: true
 
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet --list-sdks '
+  inputs:
+    command: custom
+    custom: '--list-sdks '
+
+
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet 6.3.0'
+  inputs:
+    versionSpec: '6.3.0'
+    checkLatest: true
+
+    
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
@@ -55,11 +78,12 @@ steps:
 #     configuration: '$(buildConfiguration)'
 
 
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 5.2.0'
-  inputs:
-    versionSpec: 5.2.0
-    checkLatest: true
+# - task: NuGetToolInstaller@1
+#   displayName: 'Use NuGet 5.2.0'
+#   inputs:
+#     versionSpec: 5.2.0
+#     checkLatest: true
+
 
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Core -V0
@@ -302,6 +326,27 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Swagger
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Swagger.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Xncf.Swagger- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Swagger.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Terminal
   inputs:
@@ -424,6 +469,164 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.Sqlite
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Sqlite.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.Sqlite- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Sqlite.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.PostgreSQL
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.PostgreSQL.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.PostgreSQL- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.PostgreSQL.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.Oracle
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Oracle.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.Oracle- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Oracle.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.XncfBuilder.Template
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.XncfBuilder.Template.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# 系统模块 开始
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Menu
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Menu.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.XncfModuleManager
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.XncfModuleManager.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.SystemPermission
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.SystemPermission.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.SystemManager
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.SystemManager.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.SystemCore
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.SystemCore.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.AreasBase
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.AreasBase.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Tenant.Interface
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Tenant.Interface.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.Tenant
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.Tenant.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+
+# 系统模块 结束
 
 - task: DotNetCoreCLI@2
   displayName: Publish
