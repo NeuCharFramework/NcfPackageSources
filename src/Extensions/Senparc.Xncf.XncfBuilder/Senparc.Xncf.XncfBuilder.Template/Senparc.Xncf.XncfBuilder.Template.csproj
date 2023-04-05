@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.4.3</PackageVersion>
+		<PackageVersion>0.4.4</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>JeffreySu</Authors>
@@ -29,6 +29,7 @@
 			v0.4 修复模板生成后部分代码错误的问题
 			v0.4.0.8 修复命名空间问题
 			v0.4.3 优化模板，为 .NET 7.0 CLI 优化
+			v0.4.4 修复模板命名错误
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
