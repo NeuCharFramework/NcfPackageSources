@@ -13,7 +13,7 @@
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
-		<NoWarn>$(NoWarn);NU5128</NoWarn>
+		<NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
 		<NoDefaultExcludes>true</NoDefaultExcludes>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
