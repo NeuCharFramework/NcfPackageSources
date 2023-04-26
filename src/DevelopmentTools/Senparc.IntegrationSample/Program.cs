@@ -1,26 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace Senparc.IntegrationSample
+using Senparc.Ncf.Database.SqlServer;
+
+using Senparc.IntegrationSample;
+using Senparc.Xncf.DatabaseToolkit.Domain.Services;
+using Senparc.Xncf.SystemCore.Domain.Database;
+
+var builder = WebApplication.CreateBuilder(args);
+
+//添加（注册） Ncf 服务（必须）
+builder.AddNcf<SQLServerDatabaseConfiguration>();
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    app.UseDeveloperExceptionPage();
 }
+
+//Use NCF（必须）
+app.UseNcf();
+
+app.UseStaticFiles();
+
+app.UseCookiePolicy();
+
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+});
+app.Run();
