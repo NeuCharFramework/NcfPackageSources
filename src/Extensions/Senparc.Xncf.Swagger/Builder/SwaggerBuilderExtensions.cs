@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
+
 using Swashbuckle.AspNetCore.SwaggerUI;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +22,10 @@ namespace Senparc.Xncf.Swagger.Builder
         public static IApplicationBuilder UseSwaggerCustom(this IApplicationBuilder app)
         {
             var options = ConfigurationHelper.CustsomSwaggerOptions;
+            if (!options.Enabled)
+            {
+                return app;
+            }
             app
             //.UseSwaggerCustomAuth(options)
             .UseSwagger(opt =>

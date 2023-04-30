@@ -1,7 +1,9 @@
 using Senparc.Xncf.Swagger.Utils;
+
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
+
 using System;
 using System.Collections.Generic;
 
@@ -15,6 +17,11 @@ namespace Senparc.Xncf.Swagger.Models
             ProjectName = projectName;
             ApiVersions = apiVersions;
         }
+
+        /// <summary>
+        /// 是否启用
+        /// </summary>
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// 项目发布路径 子应用程序的目录名（虚拟站点）

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
@@ -12,6 +13,7 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.Swagger.Builder;
 using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +55,7 @@ namespace Senparc.Xncf.Swagger
                 IWebHostEnvironment webEnv = (env is IWebHostEnvironment webHostEnv)
                                             ? webHostEnv
                                             : serviceProvider.GetService<IWebHostEnvironment>();
-                
+
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
                 var docXmlPath = ApiDocXmlPathFunc?.Invoke(webEnv);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
@@ -75,34 +77,37 @@ namespace Senparc.Xncf.Swagger
                 ConfigurationHelper.Configuration = configuration;
                 ConfigurationHelper.HostEnvironment = env;
                 ConfigurationHelper.WebHostEnvironment = webEnv;
-                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
-
+                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder().AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
 
-                ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger")
-                                                                .Get<CustsomSwaggerOptions>() ?? new CustsomSwaggerOptions();
-                ConfigurationHelper.CustsomSwaggerOptions.AddSwaggerGenAction = c =>
+                ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>() ?? new CustsomSwaggerOptions();
+
+                services.AddApiVersioning(x =>
                 {
-                    var xmlList = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
-                    foreach (var xml in xmlList)
-                    {
-                        c.IncludeXmlComments(xml, true);
-                    }
-                };
-                ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
-                ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => { };
+                    x.DefaultApiVersion = new ApiVersion(1, 0);
+                    x.AssumeDefaultVersionWhenUnspecified = true;
+                    x.ReportApiVersions = true;
+                    x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+                });
 
                 //接口文档
                 #region Swagger
 
-                services.AddApiVersioning(x =>
-                    {
-                        x.DefaultApiVersion = new ApiVersion(1, 0);
-                        x.AssumeDefaultVersionWhenUnspecified = true;
-                        x.ReportApiVersions = true;
-                        x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-                    });
-                services.AddSwaggerCustom(docXmlPath);
+                if (ConfigurationHelper.CustsomSwaggerOptions.Enabled)
+                {
+                    ConfigurationHelper.CustsomSwaggerOptions.AddSwaggerGenAction = c =>
+                               {
+                                   var xmlList = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
+                                   foreach (var xml in xmlList)
+                                   {
+                                       c.IncludeXmlComments(xml, true);
+                                   }
+                               };
+                    ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
+                    ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => { };
+
+                    services.AddSwaggerCustom(docXmlPath);
+                }
 
                 #endregion
             }
