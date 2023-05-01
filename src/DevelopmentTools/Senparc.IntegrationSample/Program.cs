@@ -7,7 +7,7 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Ìí¼Ó£¨×¢²á£© Ncf ·şÎñ£¨±ØĞë£©
+//æ·»åŠ ï¼ˆæ³¨å†Œï¼‰ Ncf æœåŠ¡ï¼ˆå¿…é¡»ï¼‰
 builder.AddNcf<SQLServerDatabaseConfiguration>();
 var app = builder.Build();
 
@@ -16,7 +16,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-//Use NCF£¨±ØĞë£©
+//Use NCFï¼ˆå¿…é¡»ï¼‰
 app.UseNcf();
 
 app.UseStaticFiles();
