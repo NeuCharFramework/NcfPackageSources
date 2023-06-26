@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
-    <Version>0.11.5.2-beta9</Version>
+    <Version>0.11.6-beta9</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -23,6 +23,7 @@
 		v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
 		v0.9.4.4 完善出错日志输出
 		v0.11.5.2 完善系统启动自检信息输出
+		v0.11.6 添加 SenparcCoreSetting.PasswordSaltToken 参数
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
