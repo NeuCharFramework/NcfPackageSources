@@ -49,5 +49,10 @@ namespace Senparc.Ncf.Core.Models
         /// 缓存中的请求暂存日志缓存时间（分钟），0 则不缓存
         /// </summary>
         public int RequestTempLogCacheMinutes { get; set; }
+
+        /// <summary>
+        /// 密码加密加强选项，此值在首个账号生成后不修改，否则会导致所有密码失效
+        /// </summary>
+        public string PasswordSaltToken { get; set; }
     }
 }
