@@ -275,15 +275,15 @@ namespace Senparc.Ncf.Service
             await RepositoryBase.DeleteAsync(obj, true);
         }
 
-        public virtual async Task DeleteAllAsync(Expression<Func<T, bool>> where, bool softDelete = false)
+        public virtual async Task DeleteAllAsync(Expression<Func<T, bool>> where, Action<T> deleteItemAction = null, bool softDelete = false)
         {
             var list = await GetFullListAsync(where);
-            await RepositoryBase.DeleteAllAsync(list, softDelete);
+            await RepositoryBase.DeleteAllAsync(list, deleteItemAction, softDelete);
         }
 
-        public virtual async Task DeleteAllAsync(IEnumerable<T> objects, bool softDelete = false)
+        public virtual async Task DeleteAllAsync(IEnumerable<T> objects, Action<T> deleteItemAction = null, bool softDelete = false)
         {
-            await RepositoryBase.DeleteAllAsync(objects, softDelete);
+            await RepositoryBase.DeleteAllAsync(objects, deleteItemAction, softDelete);
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace Senparc.Ncf.Service
         /// 开启事务
         /// </summary>
         /// <returns></returns>
-        public  async Task BeginTransactionAsync()
+        public async Task BeginTransactionAsync()
         {
             await RepositoryBase.BeginTransactionAsync();
         }

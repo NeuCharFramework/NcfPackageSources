@@ -105,9 +105,10 @@ namespace Senparc.Ncf.Repository
         /// 批量删除
         /// </summary>
         /// <param name="objs"></param>
+        /// <param name="deleteItemAction">删除每一个对象的操作</param>
         /// <param name="softDelete"></param>
         /// <returns></returns>
-        Task DeleteAllAsync(IEnumerable<T> objs, bool softDelete = false);
+        Task DeleteAllAsync(IEnumerable<T> objs, Action<T> deleteItemAction = null, bool softDelete = false);
 
         /// <summary>
         /// 批量添加
