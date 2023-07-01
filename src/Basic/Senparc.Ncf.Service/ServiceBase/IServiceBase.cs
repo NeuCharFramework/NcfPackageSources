@@ -26,8 +26,8 @@ namespace Senparc.Ncf.Service
         Task BeginTransactionAsync(Func<Task> bodyAsync, Func<Exception, Task<Exception>> rollbackActionAsync);
         void CommitTransaction();
         void DeleteAll(IEnumerable<T> objects);
-        Task DeleteAllAsync(Expression<Func<T, bool>> where, bool softDelete = false);
-        Task DeleteAllAsync(IEnumerable<T> objects, bool softDelete = false);
+        Task DeleteAllAsync(Expression<Func<T, bool>> where, Action<T> deleteItemAction = null, bool softDelete = false);
+        Task DeleteAllAsync(IEnumerable<T> objects, Action<T> deleteItemAction = null, bool softDelete = false);
         void DeleteObject(Expression<Func<T, bool>> predicate);
         void DeleteObject(T obj);
         Task DeleteObjectAsync(Expression<Func<T, bool>> predicate);
