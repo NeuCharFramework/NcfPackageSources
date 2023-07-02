@@ -38,7 +38,9 @@ namespace Senparc.Ncf.Service
         Task<int> GetCountAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
         PagedList<T> GetFullList<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
         PagedList<T> GetFullList<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes);
+        Task<PagedList<T>> GetFullListAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes);
         Task<PagedList<T>> GetFullListAsync(Expression<Func<T, bool>> where, string orderField = null, params string[] includes);
+        Task<PagedList<T>> GetFullListAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
         Task<PagedList<T>> GetFullListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc, string orderField = null);
         T GetObject(Expression<Func<T, bool>> where, params string[] includes);
         T GetObject<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
