@@ -29,14 +29,38 @@ namespace Senparc.Ncf.Service
             Mapper = _serviceProvider.GetService<IMapper>();//确保 Mapper 中有值
         }
 
+        #region Insert & DetectChange
+
+        /// <summary>
+        /// 强制将实体设置为Modified状态
+        /// </summary>
+        /// <param name="obj"></param>
+        public virtual void TryDetectChange(T obj)
+        {
+            if (!IsInsert(obj))
+            {
+                RepositoryBase.BaseDB.BaseDataContext.Entry(obj).State = EntityState.Modified;
+            }
+        }
+
         public virtual bool IsInsert(T obj)
         {
             return RepositoryBase.IsInsert(obj);
         }
 
+        #endregion
+
+
+        #region GetObject
+
         public virtual T GetObject(Expression<Func<T, bool>> where, params string[] includes)
         {
             return RepositoryBase.GetFirstOrDefaultObject(where, includes);
+        }
+
+        public virtual async Task<T> GetObjectAsync(Expression<Func<T, bool>> where, params string[] includes)
+        {
+            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includes);
         }
 
         public virtual T GetObject<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -44,18 +68,64 @@ namespace Senparc.Ncf.Service
             return RepositoryBase.GetFirstOrDefaultObject(where, includesNavigationPropertyPathFunc);
         }
 
+        public virtual async Task<T> GetObjectAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includesNavigationPropertyPathFunc);
+        }
+
+
         public virtual T GetObject<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return RepositoryBase.GetFirstOrDefaultObject(where, orderBy, orderingType, includes);
         }
+
+        public virtual async Task<T> GetObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        {
+            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includes);
+        }
+
         public virtual T GetObject<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return RepositoryBase.GetFirstOrDefaultObject<TK, TIncludesProperty>(where, orderBy, orderingType, includesNavigationPropertyPathFunc);
         }
 
+        public virtual async Task<T> GetObjectAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includesNavigationPropertyPathFunc);
+        }
+
+        #endregion
+
+        #region GetFullList
+
         public virtual PagedList<T> GetFullList<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return this.GetObjectList(0, 0, where, orderBy, orderingType, includes);
+        }
+
+        /// <summary>
+        /// 获取所有数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public virtual async Task<PagedList<T>> GetFullListAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
+        {
+            return await this.GetObjectListAsync(0, 0, where, orderBy, orderingType, includes);
+        }
+
+        /// <summary>
+        /// 获取所有数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where"></param>
+        /// <param name="orderField">xxx desc, yyy asc</param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public virtual async Task<PagedList<T>> GetFullListAsync(Expression<Func<T, bool>> where, string orderField = null, params string[] includes)
+        {
+            return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includes);
         }
 
         public virtual PagedList<T> GetFullList<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -64,7 +134,40 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 
+        /// 获取所有数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TIncludesProperty"></typeparam>
+        /// <param name="where"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="orderingType"></param>
+        /// <param name="includesNavigationPropertyPathFunc"></param>
+        /// <returns></returns>
+        public virtual async Task<PagedList<T>> GetFullListAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return await RepositoryBase.GetObjectListAsync(where, orderBy, orderingType, 0, 0, includesNavigationPropertyPathFunc);
+        }
+
+        /// <summary>
+        /// 获取所有数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TIncludesProperty"></typeparam>
+        /// <param name="where"></param>
+        /// <param name="orderField">xxx desc, yyy asc</param>
+        /// <param name="includesNavigationPropertyPathFunc"></param>
+        /// <returns></returns>
+        public virtual async Task<PagedList<T>> GetFullListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc, string orderField = null)
+        {
+            return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includesNavigationPropertyPathFunc);
+        }
+
+        #endregion
+
+        #region GetObjectList（分页）
+
+        /// <summary>
+        /// 获取分页数据
         /// </summary>
         /// <typeparam name="TK"></typeparam>
         /// <param name="pageIndex"></param>
@@ -77,39 +180,6 @@ namespace Senparc.Ncf.Service
         public virtual PagedList<T> GetObjectList<TK>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return RepositoryBase.GetObjectList(where, orderBy, orderingType, pageIndex, pageCount, includes);
-        }
-
-        public virtual PagedList<T> GetObjectList<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
-        {
-            return RepositoryBase.GetObjectList<TK, TIncludesProperty>(where, orderBy, orderingType, pageIndex, pageCount, includesNavigationPropertyPathFunc);
-        }
-
-        /// <summary>
-        /// 获取分页数据
-        /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public virtual async Task<PagedList<T>> GetObjectListAsync(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, params string[] includes)
-        {
-            return await RepositoryBase.GetObjectListAsync(where, orderBy, pageIndex, pageCount, includes);
-        }
-
-        /// <summary>
-        /// 获取分页数据
-        /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
-        {
-            return await RepositoryBase.GetObjectListAsync<TIncludesProperty>(where, orderBy, pageIndex, pageCount, includesNavigationPropertyPathFunc);
         }
 
         /// <summary>
@@ -131,21 +201,66 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 获取分页数据
         /// </summary>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageCount">每页数量</param>
+        /// <param name="where">条件</param>
+        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public virtual async Task<PagedList<T>> GetObjectListAsync(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, params string[] includes)
+        {
+            return await RepositoryBase.GetObjectListAsync(where, orderBy, pageIndex, pageCount, includes);
+        }
+
+        public virtual PagedList<T> GetObjectList<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return RepositoryBase.GetObjectList<TK, TIncludesProperty>(where, orderBy, orderingType, pageIndex, pageCount, includesNavigationPropertyPathFunc);
+        }
+
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageCount">每页数量</param>
+        /// <param name="where">条件</param>
+        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
+        /// <param name="includesNavigationPropertyPathFunc"></param>
+        /// <returns></returns>
+        public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return await RepositoryBase.GetObjectListAsync<TIncludesProperty>(where, orderBy, pageIndex, pageCount, includesNavigationPropertyPathFunc);
+        }
+
+
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
         /// <typeparam name="TK"></typeparam>
         /// <param name="pageIndex">页码</param>
         /// <param name="pageCount">每页数量</param>
         /// <param name="where">条件</param>
         /// <param name="orderBy">排序字段</param>
         /// <param name="orderingType">正序|倒叙</param>
+        /// <param name="includesNavigationPropertyPathFunc"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetObjectListAsync<TK, TIncludesProperty>(where, orderBy, orderingType, pageIndex, pageCount, includesNavigationPropertyPathFunc);
         }
 
+
+        #endregion
+
+        #region GetCount
+
         public virtual int GetCount(Expression<Func<T, bool>> where, params string[] includes)
         {
             return RepositoryBase.ObjectCount(where, includes);
+        }
+
+        public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>> where, params string[] includes)
+        {
+            return await RepositoryBase.ObjectCountAsync(where, includes);
         }
 
         public virtual int GetCount<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -153,90 +268,20 @@ namespace Senparc.Ncf.Service
             return RepositoryBase.ObjectCount(where, includesNavigationPropertyPathFunc);
         }
 
+        public virtual async Task<int> GetCountAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
+        {
+            return await RepositoryBase.ObjectCountAsync(where, includesNavigationPropertyPathFunc);
+        }
+
+        #endregion
+
+        #region GetSum
 
         public virtual decimal GetSum(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
             return RepositoryBase.GetSum(where, sum, includes);
         }
 
-        /// <summary>
-        /// 强制将实体设置为Modified状态
-        /// </summary>
-        /// <param name="obj"></param>
-        public virtual void TryDetectChange(T obj)
-        {
-            if (!IsInsert(obj))
-            {
-                RepositoryBase.BaseDB.BaseDataContext.Entry(obj).State = EntityState.Modified;
-            }
-        }
-
-        public virtual void SaveObject(T obj)
-        {
-            if (RepositoryBase.BaseDB.ManualDetectChangeObject)
-            {
-                TryDetectChange(obj);
-            }
-            RepositoryBase.Save(obj);
-        }
-
-        public virtual void SaveChanges()
-        {
-            RepositoryBase.SaveChanges();
-        }
-
-        public virtual void DeleteObject(Expression<Func<T, bool>> predicate)
-        {
-            T obj = GetObject(predicate);
-            DeleteObject(obj);
-        }
-
-        public virtual void DeleteObject(T obj)
-        {
-            RepositoryBase.Delete(obj);
-        }
-
-        public virtual void DeleteAll(IEnumerable<T> objects)
-        {
-            var list = objects.ToList();
-            for (int i = 0; i < list.Count; i++)
-            {
-                DeleteObject(list[i]);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="where"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public virtual async Task<T> GetObjectAsync(Expression<Func<T, bool>> where, params string[] includes)
-        {
-            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includes);
-        }
-        public virtual async Task<T> GetObjectAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
-        {
-            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includesNavigationPropertyPathFunc);
-        }
-
-        public virtual async Task<T> GetObjectAsync<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
-        {
-            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includes);
-        }
-        public virtual async Task<T> GetObjectAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
-        {
-            return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includesNavigationPropertyPathFunc);
-        }
-
-        public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>> where, params string[] includes)
-        {
-            return await RepositoryBase.ObjectCountAsync(where, includes);
-        }
-        public virtual async Task<int> GetCountAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
-        {
-            return await RepositoryBase.ObjectCountAsync(where, includesNavigationPropertyPathFunc);
-        }
 
         public virtual async Task<decimal> GetSumAsync(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, params string[] includes)
         {
@@ -249,6 +294,18 @@ namespace Senparc.Ncf.Service
         }
 
 
+        #endregion
+
+        #region SaveObject & SaveChanges
+
+        public virtual void SaveObject(T obj)
+        {
+            if (RepositoryBase.BaseDB.ManualDetectChangeObject)
+            {
+                TryDetectChange(obj);
+            }
+            RepositoryBase.Save(obj);
+        }
 
         public virtual async Task SaveObjectAsync(T obj)
         {
@@ -259,9 +316,31 @@ namespace Senparc.Ncf.Service
             await RepositoryBase.SaveAsync(obj).ConfigureAwait(false);
         }
 
+        public virtual async Task SaveObjectListAsync(IEnumerable<T> objs)
+        {
+            await RepositoryBase.SaveObjectListAsync(objs);
+        }
+
+        public virtual void SaveChanges()
+        {
+            RepositoryBase.SaveChanges();
+        }
+
         public virtual async Task SaveChangesAsync()
         {
             await RepositoryBase.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+
+        #endregion
+
+        #region Delete
+
+
+        public virtual void DeleteObject(Expression<Func<T, bool>> predicate)
+        {
+            T obj = GetObject(predicate);
+            DeleteObject(obj);
         }
 
         public virtual async Task DeleteObjectAsync(Expression<Func<T, bool>> predicate)
@@ -270,9 +349,24 @@ namespace Senparc.Ncf.Service
             await DeleteObjectAsync(obj);
         }
 
+
+        public virtual void DeleteObject(T obj)
+        {
+            RepositoryBase.Delete(obj);
+        }
+
         public virtual async Task DeleteObjectAsync(T obj)
         {
             await RepositoryBase.DeleteAsync(obj, true);
+        }
+
+        public virtual void DeleteAll(IEnumerable<T> objects)
+        {
+            var list = objects.ToList();
+            for (int i = 0; i < list.Count; i++)
+            {
+                DeleteObject(list[i]);
+            }
         }
 
         public virtual async Task DeleteAllAsync(Expression<Func<T, bool>> where, Action<T> deleteItemAction = null, bool softDelete = false)
@@ -286,38 +380,9 @@ namespace Senparc.Ncf.Service
             await RepositoryBase.DeleteAllAsync(objects, deleteItemAction, softDelete);
         }
 
-        /// <summary>
-        /// 获取所有数据
-        /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        /// <param name="where"></param>
-        /// <param name="orderField">xxx desc, yyy asc</param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public virtual async Task<PagedList<T>> GetFullListAsync(Expression<Func<T, bool>> where, string orderField = null, params string[] includes)
-        {
-            return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includes);
-        }
+        #endregion
 
-
-        /// <summary>
-        /// 获取所有数据
-        /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        /// <param name="where"></param>
-        /// <param name="orderField">xxx desc, yyy asc</param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public virtual async Task<PagedList<T>> GetFullListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc, string orderField = null)
-        {
-            return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includesNavigationPropertyPathFunc);
-        }
-
-        public virtual async Task SaveObjectListAsync(IEnumerable<T> objs)
-        {
-            await RepositoryBase.SaveObjectListAsync(objs);
-        }
-
+        #region Transaction
 
         /// <summary>
         /// 开启事务
@@ -459,5 +524,8 @@ namespace Senparc.Ncf.Service
         {
             RepositoryBase.CommitTransaction();
         }
+
+        #endregion
+
     }
 }

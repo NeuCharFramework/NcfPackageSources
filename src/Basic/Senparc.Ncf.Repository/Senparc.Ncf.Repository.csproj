@@ -52,7 +52,6 @@
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="MultiTenant\" />
     <Folder Include="System\" />
   </ItemGroup>
 </Project>
