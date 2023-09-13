@@ -26,14 +26,14 @@
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.4.2" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup Condition=" '$(Web)' == 'true' or '$(Sample)' == 'true'">
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Sample)' == 'true' or '$(Database)' == 'true' ">
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.11.5-beta8" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.11.7-beta10" />
   </ItemGroup>
   <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
     <PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
