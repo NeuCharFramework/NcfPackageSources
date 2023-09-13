@@ -126,7 +126,7 @@ namespace Senparc.Ncf.Core.Config
         //public const string GLOBAL_PASSWORD_SALT = "senparc@20131113";
 
         public const string VERSION = "0.0.1";
-        public static string SenparcConfigDirctory = "~/App_Data/DataBase/";
+        public static string SenparcConfigDirctory = "~/App_Data/Database/";
         public const string AntiForgeryTokenSalt = "SOUIDEA__SENPARC";
         public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //将取前8位
         public const string DomainName = "https://ncf.senparc.com";

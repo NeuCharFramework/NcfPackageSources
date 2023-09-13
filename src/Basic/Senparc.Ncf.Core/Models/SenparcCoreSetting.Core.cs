@@ -19,7 +19,7 @@ namespace Senparc.Ncf.Core.Models
         public bool IsTestSite { get; set; }
 
         /// <summary>
-        /// 对应：AppData/DataBase/SenparcConfig.config 中，所需要使用的数据库连接的 &lt;SenparcConfig&gt; 节点的 Name
+        /// 对应：AppData/Database/SenparcConfig.config 中，所需要使用的数据库连接的 &lt;SenparcConfig&gt; 节点的 Name
         /// </summary>
         public string DatabaseName { get; set; }
         /// <summary>

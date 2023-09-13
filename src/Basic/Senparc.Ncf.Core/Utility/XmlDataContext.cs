@@ -33,7 +33,7 @@ namespace Senparc.Ncf.Core.Utility
         /// <param name="fileName"></param>
         public XmlDataContext(string databaseDictionary, string fileName = null)
         {
-            DatabaseDictionary = string.IsNullOrEmpty(databaseDictionary) ? "~/App_Data/DataBase/" : databaseDictionary;
+            DatabaseDictionary = string.IsNullOrEmpty(databaseDictionary) ? "~/App_Data/Database/" : databaseDictionary;
             if (!DatabaseDictionary.EndsWith("/"))
             {
                 DatabaseDictionary += "/";
