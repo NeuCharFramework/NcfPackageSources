@@ -57,8 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="..ACL\**" />
+    <Compile Remove="OHS\Remote\**" />
     <EmbeddedResource Remove="..ACL\**" />
+    <EmbeddedResource Remove="OHS\Remote\**" />
     <None Remove="..ACL\**" />
+    <None Remove="OHS\Remote\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
@@ -87,6 +90,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ACL\Port\" />
-    <Folder Include="OHS\Remote\" />
   </ItemGroup>
 </Project>
