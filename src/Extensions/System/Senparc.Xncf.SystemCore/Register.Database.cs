@@ -55,7 +55,6 @@ namespace Senparc.Xncf.SystemCore
             #region 不属于任何模块
 
 
-
             Func<IServiceProvider, SenparcEntities> senparcEntitiesImplementationFactory = s =>
             {
                 var multipleDatabasePool = MultipleDatabasePool.Instance;
