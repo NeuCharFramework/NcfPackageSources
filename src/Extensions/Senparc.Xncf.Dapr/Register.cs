@@ -3,7 +3,7 @@ using Senparc.Ncf.XncfBase;
 using System;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.Dapr
+namespace Senparc.Xncf.DaprClient
 {
     [XncfRegister]
     public class Register : XncfRegisterBase, IXncfRegister
@@ -13,13 +13,13 @@ namespace Senparc.Xncf.Dapr
 
         #region IXncfRegister 接口
 
-        public override string Name => "Senparc.Xncf.Dapr";
+        public override string Name => "Senparc.Xncf.DaprClient";
         public override string Uid => "E2D87F61-BCA9-4F3E-9E5C-2A14B3F0C6D7";//必须确保全局唯一，生成后必须固定
         public override string Version => "0.0.1";//必须填写版本号
 
-        public override string MenuName => "Dapr模块";
-        public override string Icon => "fa fa-terminal";
-        public override string Description => $"此模块为其他模块提供Dapr的功能";
+        public override string MenuName => "Dapr客户端模块";
+        public override string Icon => "fa fa-car";
+        public override string Description => $"此模块为其他模块提供Dapr客户端的功能";
 
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

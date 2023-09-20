@@ -123,7 +123,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.Tenant.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.Oracle", "Basic\Senparc.Ncf.Database.Oracle\Senparc.Ncf.Database.Oracle.csproj", "{52F24539-98C1-4002-8489-948B2AE5D951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.Dapr", "Extensions\Senparc.Xncf.Dapr\Senparc.Xncf.Dapr.csproj", "{CE6A5915-3454-4055-BDCB-CAECB3417FB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.DaprClient", "Extensions\Senparc.Xncf.Dapr\Senparc.Xncf.DaprClient.csproj", "{CE6A5915-3454-4055-BDCB-CAECB3417FB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
