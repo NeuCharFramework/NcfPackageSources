@@ -20,7 +20,7 @@ namespace Senparc.Xncf.DaprClient
             throw new NotImplementedException();
         }
 
-        public async Task SetStateAsync<T>(string key, T data)
+        public async Task SetStateAsync<T>(string key, T data, int ttl = -1)
         {
             throw new NotImplementedException();
         }

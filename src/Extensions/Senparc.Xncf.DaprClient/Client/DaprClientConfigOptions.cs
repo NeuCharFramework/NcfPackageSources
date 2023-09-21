@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DaprClient
 {
-    public class DaprClientInitOptions
+    public class DaprClientConfigOptions
     {
         public string StateStoreName { get; set; }
         public string PubSubName { get; set; }
