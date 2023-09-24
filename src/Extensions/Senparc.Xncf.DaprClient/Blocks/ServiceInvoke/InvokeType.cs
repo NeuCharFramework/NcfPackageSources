@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.DaprClient.Blocks.ServiceInvoke
+namespace Senparc.Xncf.Dapr.Blocks.ServiceInvoke
 {
     public enum InvokeType
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.DaprClient
+namespace Senparc.Xncf.Dapr
 {
     public class DaprClientOptions
     {

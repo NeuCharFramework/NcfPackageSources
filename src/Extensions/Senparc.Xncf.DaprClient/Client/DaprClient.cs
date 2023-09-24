@@ -1,21 +1,26 @@
 ﻿using Microsoft.Extensions.Logging;
-using Senparc.Xncf.DaprClient.Blocks.ServiceInvoke;
-using Senparc.Xncf.DaprClient.Blocks.StateStore;
+using Senparc.Xncf.Dapr.Utils.Serializer;
+using Senparc.Xncf.Dapr.Blocks.ServiceInvoke;
+using Senparc.Xncf.Dapr.Blocks.StateStore;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
 
-namespace Senparc.Xncf.DaprClient
+namespace Senparc.Xncf.Dapr
 {
     public class DaprClient
     {
         private readonly HttpClient _httpClient;
-        private readonly Logger<DaprClient> _logger;
+        private readonly ILogger<DaprClient> _logger;
+        private readonly ISerializer _serializer;
         public static DaprClientOptions options = new() { HttpApiPort = 3500, DaprConnectionRetryCount=3 };//使用默认的Api端口
-        public DaprClient(HttpClient httpClient, Logger<DaprClient> logger)
+        public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _serializer = serializer;
         }
         /// <summary>
         /// 服务调用
@@ -28,7 +33,7 @@ namespace Senparc.Xncf.DaprClient
         /// <param name="options">json序列化选项</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<TResult> InvokeMethodAsync<TResult>(InvokeType invokeType, string serviceId, string methodName, object? data = null, JsonSerializerOptions? options = default)
+        public async Task<TResult> InvokeMethodAsync<TResult>(InvokeType invokeType, string serviceId, string methodName, object? data = null)
         {
             MessageType messageType;
             switch (invokeType)
@@ -53,7 +58,7 @@ namespace Senparc.Xncf.DaprClient
             TResult result;
             try
             {
-                result = JsonSerializer.Deserialize<TResult>(json, options);
+                result = _serializer.DeserializesJson<TResult>(json);
             }
             catch(Exception ex)
             {
@@ -96,7 +101,7 @@ namespace Senparc.Xncf.DaprClient
         /// <param name="key">缓存键</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<object> GetStateAsync<TResult>(string key)
+        public async Task<TResult> GetStateAsync<TResult>(string key)
         {
             if (options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
@@ -110,10 +115,21 @@ namespace Senparc.Xncf.DaprClient
         /// <param name="stateStore">状态存储组件名称</param>
         /// <param name="key">缓存键</param>
         /// <returns></returns>
-        public async Task<object> GetStateAsync<TResult>(string stateStore, string key)
+        public async Task<TResult> GetStateAsync<TResult>(string stateStore, string key)
         {
             var request = BuildMessage(MessageType.GetState, stateStore, key);
-            return await _httpClient.SendAsync(request);
+            var response = await SendMessageAsync(request);
+            string json = await response.Content.ReadAsStringAsync();
+            TResult result;
+            try
+            {
+                result = _serializer.DeserializesJson<TResult>(json);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
         /// <summary>
         /// 保存状态
@@ -121,10 +137,9 @@ namespace Senparc.Xncf.DaprClient
         /// <typeparam name="TValue">状态类型</typeparam>
         /// <param name="key">缓存键</param>
         /// <param name="data">缓存数据</param>
-        /// <param name="ttl">缓存生命周期</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task SetStateAsync<TValue>(string key, TValue data, int ttl = -1)
+        public async Task SetStateAsync<TValue>(string key, TValue data)
         {
             if (options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
@@ -137,13 +152,12 @@ namespace Senparc.Xncf.DaprClient
         /// <param name="stateStore">状态存储组件名称</param>
         /// <param name="key">缓存键</param>
         /// <param name="data">缓存数据</param>
-        /// <param name="ttl">缓存生命周期</param>
         /// <returns></returns>
-        public async Task SetStateAsync<TValue>(string stateStore, string key, TValue data, int ttl = -1)
+        public async Task SetStateAsync<TValue>(string stateStore, string key, TValue data)
         {
-            var state = new StateStore(key, data, ttl);
+            var state = new StateStore(key, data);
             var request = BuildMessage(MessageType.SetState, stateStore, key, state);
-            await _httpClient.SendAsync(request);
+            await SendMessageAsync(request);
         }
         /// <summary>
         /// 删除状态
@@ -258,7 +272,7 @@ namespace Senparc.Xncf.DaprClient
                     request = new(HttpMethod.Post, url) { Version = new Version(1, 1) };
                     break;
                 case MessageType.SetState:
-                    url = $"{bathUrl}/{version}/state/{host}/{path}";
+                    url = $"{bathUrl}/{version}/state/{host}";
                     request = new(HttpMethod.Post, url) { Version = new Version(1, 1) };
                     break;
                 case MessageType.GetState:
@@ -275,9 +289,9 @@ namespace Senparc.Xncf.DaprClient
             //构建请求体
             if (data != null)
             {
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue($"application/json");
-                string json = JsonSerializer.Serialize(data);
-                request.Content = new StringContent(json);
+                //request.Content.Headers.ContentType = new MediaTypeHeaderValue($"application/json");
+                string json = _serializer.SerializesJson(data);
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
             return request;

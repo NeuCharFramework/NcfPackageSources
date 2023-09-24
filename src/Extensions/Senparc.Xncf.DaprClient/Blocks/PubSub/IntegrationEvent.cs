@@ -1,4 +1,4 @@
-﻿namespace Senparc.Xncf.DaprClient.Blocks.PubSub;
+﻿namespace Senparc.Xncf.Dapr.Blocks.PubSub;
 public record IntegrationEvent
 {
     public Guid Id { get; }

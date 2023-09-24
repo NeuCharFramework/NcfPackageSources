@@ -4,19 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.DaprClient.Blocks.StateStore
+namespace Senparc.Xncf.Dapr.Blocks.StateStore
 {
     public class StateStore
     {
         public string Key { get; set; }
         public object Value { get; set; }
-        public int TtlInSeconds { get; set; }
 
-        public StateStore(string key, object value, int ttlInSeconds)
+        public StateStore(string key, object value)
         {
             Key = key;
             Value = value;
-            TtlInSeconds = ttlInSeconds;
         }
     }
 }
