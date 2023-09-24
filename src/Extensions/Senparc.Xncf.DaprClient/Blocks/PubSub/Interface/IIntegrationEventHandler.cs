@@ -1,6 +1,4 @@
-﻿using Senparc.Xncf.DaprClient.EventBus;
-
-namespace Senparc.Xncf.DaprClient.EventBus.Interface;
+﻿namespace Senparc.Xncf.DaprClient.Blocks.PubSub.Interface;
 
 public interface IIntegrationEventHandler<in TIntegrationEvent> : IIntegrationEventHandler
     where TIntegrationEvent : IntegrationEvent

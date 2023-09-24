@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Senparc.Xncf.DaprClient;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Senparc.Xncf.DaprClient
 {
     public static class DaprClientServiceCollectionExtensions
     {

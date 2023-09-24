@@ -1,4 +1,4 @@
-﻿namespace Senparc.Xncf.DaprClient.EventBus.Interface;
+﻿namespace Senparc.Xncf.DaprClient.Blocks.PubSub.Interface;
 
 public interface IEventBus
 {

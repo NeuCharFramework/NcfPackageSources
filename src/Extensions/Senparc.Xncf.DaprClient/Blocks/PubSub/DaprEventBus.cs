@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
-using Senparc.Xncf.DaprClient.EventBus.Interface;
+using Senparc.Xncf.DaprClient.Blocks.PubSub.Interface;
 
-namespace Senparc.Xncf.DaprClient.EventBus;
+namespace Senparc.Xncf.DaprClient.Blocks.PubSub;
 
 public class DaprEventBus : IEventBus
 {
