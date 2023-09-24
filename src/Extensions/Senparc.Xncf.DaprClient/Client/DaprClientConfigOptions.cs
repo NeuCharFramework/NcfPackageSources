@@ -8,17 +8,19 @@ namespace Senparc.Xncf.DaprClient.Client
 {
     public class DaprClientConfigOptions
     {
+        //Dapr Api监听端口
+        private int httpApiPort;
         public int HttpApiPort
         {
             get
             {
-                return HttpApiPort;
+                return httpApiPort;
             }
             set
             {
                 if (value > 0 & value < 65536)
                 {
-                    HttpApiPort = value;
+                    httpApiPort = value;
                 }
                 else
                 {
@@ -26,7 +28,22 @@ namespace Senparc.Xncf.DaprClient.Client
                 }
             }
         }
+        //状态存储组件名称
         public string? StateStoreName { get; set; }
+
+        //发布订阅组件名称
         public string? PubSubName { get; set; }
+
+        //Dapr重连最大尝试次数
+        private int daprConnectionRetryCount;
+        public int DaprConnectionRetryCount
+        {
+            get { return daprConnectionRetryCount; }
+            set
+            {
+                if(value > 0)
+                    daprConnectionRetryCount = value;
+            }
+        }
     }
 }
