@@ -1,4 +1,8 @@
-﻿using Senparc.Xncf.DaprClient.Blocks.ServiceInvoke;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
+using Senparc.CO2NET.HttpUtility;
+using Senparc.Xncf.DaprClient.Blocks.ServiceInvoke;
 using Senparc.Xncf.DaprClient.Blocks.StateStore;
 using System.Net;
 using System.Net.Http;
@@ -52,27 +56,57 @@ namespace Senparc.Xncf.DaprClient.Client
             var result = JsonSerializer.Deserialize<TResult>(json, options);
             return result;
         }
+        public async Task PublishEventAsync(string topicName, object data)
+        {
+            if(options.PubSubName == null)
+                throw new Exception("没有配置全局PubSubName");
+            await PublishEventAsync(options.PubSubName, topicName, data);
+        }
 
         public async Task PublishEventAsync(string pubSubName, string topicName, object data)
         {
-            throw new NotImplementedException();
+            var request = BuildMessage(MessageType.Publish, pubSubName, topicName, data);
+            await SendMessageAsync(request);
         }
 
-        public async Task<object> GetStateAsync<T>(string host, string key)
+        public async Task<object> GetStateAsync<TResult>(string key)
         {
-            var request = BuildMessage(MessageType.GetState, host, key);
+            if (options.StateStoreName == null)
+                throw new Exception("没有配置全局StateStoreName");
+            return await GetStateAsync<TResult>(options.StateStoreName, key);
+        }
+
+        public async Task<object> GetStateAsync<TResult>(string stateStore, string key)
+        {
+            var request = BuildMessage(MessageType.GetState, stateStore, key);
             return await _httpClient.SendAsync(request);
         }
 
-        public async Task SetStateAsync<TValue>(string host, string key, TValue data, int ttl = -1)
+        public async Task SetStateAsync<TValue>(string key, TValue data, int ttl = -1)
+        {
+            if (options.StateStoreName == null)
+                throw new Exception("没有配置全局StateStoreName");
+            await SetStateAsync<TValue>(options.StateStoreName, key, data);
+        }
+
+        public async Task SetStateAsync<TValue>(string stateStore, string key, TValue data, int ttl = -1)
         {
             var state = new StateStore(key, data, ttl);
-            var request = BuildMessage(MessageType.SetState, host, key, data);
+            var request = BuildMessage(MessageType.SetState, stateStore, key, state);
+            await _httpClient.SendAsync(request);
         }
 
         public async Task DelStateAsync(string key)
         {
-            throw new NotImplementedException();
+            if (options.StateStoreName == null)
+                throw new Exception("没有配置全局StateStoreName");
+            await DelStateAsync(options.StateStoreName, key);
+        }
+
+        public async Task DelStateAsync(string stateStore, string key)
+        {
+            var request = BuildMessage(MessageType.DeleteState, stateStore, key);
+            await _httpClient.SendAsync(request);
         }
 
         public async Task<bool> HealthCheckAsync()
