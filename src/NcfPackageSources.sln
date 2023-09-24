@@ -123,7 +123,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5990]Senparc.Xncf.Tenant.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.Oracle", "Basic\Senparc.Ncf.Database.Oracle\Senparc.Ncf.Database.Oracle.csproj", "{52F24539-98C1-4002-8489-948B2AE5D951}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.DaprClient", "Extensions\Senparc.Xncf.DaprClient\Senparc.Xncf.DaprClient.csproj", "{CE6A5915-3454-4055-BDCB-CAECB3417FB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Dapr", "Extensions\Senparc.Xncf.Dapr\Senparc.Xncf.Dapr.csproj", "{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -469,14 +469,14 @@ Global
 		{52F24539-98C1-4002-8489-948B2AE5D951}.TemplateRelease|Any CPU.Build.0 = TemplateRelease|Any CPU
 		{52F24539-98C1-4002-8489-948B2AE5D951}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{52F24539-98C1-4002-8489-948B2AE5D951}.Test|Any CPU.Build.0 = Test|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.TemplateRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.Test|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.TemplateRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -534,7 +534,7 @@ Global
 		{FDEA0DB9-BC50-48A7-A6C1-13A4990D4F22} = {97BBCB28-782F-43D5-A604-0376298AF256}
 		{FFDF7FD9-2405-4E62-A1B0-1D5AC005D2EF} = {97BBCB28-782F-43D5-A604-0376298AF256}
 		{52F24539-98C1-4002-8489-948B2AE5D951} = {06D46E79-A4B2-457A-93DB-E3060A12CFD0}
-		{CE6A5915-3454-4055-BDCB-CAECB3417FB6} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
+		{935FEC5B-8A3A-4660-A6C9-AF62CAC40E5C} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
