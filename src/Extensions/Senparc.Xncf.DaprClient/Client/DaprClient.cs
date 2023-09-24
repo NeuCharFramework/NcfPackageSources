@@ -10,18 +10,20 @@ using System.Text.Json;
 
 namespace Senparc.Xncf.Dapr
 {
+    //TODO: 返回DaprAPI文档中提供的状态码信息
     public class DaprClient
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<DaprClient> _logger;
         private readonly ISerializer _serializer;
-        public static DaprClientOptions options = new() { HttpApiPort = 3500, DaprConnectionRetryCount=3 };//使用默认的Api端口
+        public static DaprClientOptions options = new() { ApiPort = 3500, DaprConnectionRetryCount = 3 };//使用默认的Api端口
         public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer)
         {
             _httpClient = httpClient;
             _logger = logger;
             _serializer = serializer;
         }
+
         /// <summary>
         /// 服务调用
         /// </summary>
@@ -131,6 +133,7 @@ namespace Senparc.Xncf.Dapr
             }
             return result;
         }
+
         /// <summary>
         /// 保存状态
         /// </summary>
@@ -145,6 +148,7 @@ namespace Senparc.Xncf.Dapr
                 throw new Exception("没有配置全局StateStoreName");
             await SetStateAsync<TValue>(options.StateStoreName, key, data);
         }
+
         /// <summary>
         /// 保存状态
         /// </summary>
@@ -159,6 +163,7 @@ namespace Senparc.Xncf.Dapr
             var request = BuildMessage(MessageType.SetState, stateStore, key, state);
             await SendMessageAsync(request);
         }
+
         /// <summary>
         /// 删除状态
         /// </summary>
@@ -171,6 +176,7 @@ namespace Senparc.Xncf.Dapr
                 throw new Exception("没有配置全局StateStoreName");
             await DelStateAsync(options.StateStoreName, key);
         }
+
         /// <summary>
         /// 删除状态
         /// </summary>
@@ -182,6 +188,7 @@ namespace Senparc.Xncf.Dapr
             var request = BuildMessage(MessageType.DeleteState, stateStore, key);
             await _httpClient.SendAsync(request);
         }
+
         /// <summary>
         /// 确认Dapr Sidecar是否正常运行
         /// </summary>
@@ -196,7 +203,7 @@ namespace Senparc.Xncf.Dapr
                 {
                     try
                     {
-                        var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, "http://localhost:3500/v1.0/healthz"));
+                        var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"http://localhost:{options.ApiPort}/v1.0/healthz"));
                         if (response.StatusCode == HttpStatusCode.NoContent)
                         {
                             isHealth = true;
@@ -238,7 +245,7 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="ArgumentException"></exception>
         private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object? data = null)
         {
-            string bathUrl = $"http://localhost:{options.HttpApiPort}";
+            string bathUrl = $"http://localhost:{options.ApiPort}";
             string version = "v1.0";
             string url;
 

@@ -23,10 +23,12 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             options.AllowTrailingCommas = true;//允许数组末尾多余的逗号
             return options;
         });
+
         public Serializer(ILogger<Serializer> logger)
         {
             _logger = logger;
         }
+
         /// <summary>
         /// 序列化T为JSON字符串
         /// </summary>
@@ -71,6 +73,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             }
             return default;
         }
+
         /// <summary>
         /// 序列化JSON字符串为object
         /// </summary>

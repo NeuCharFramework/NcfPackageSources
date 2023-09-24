@@ -9,18 +9,18 @@ namespace Senparc.Xncf.Dapr
     public class DaprClientOptions
     {
         //Dapr Api监听端口
-        private int httpApiPort;
-        public int HttpApiPort
+        private int apiport;
+        public int ApiPort
         {
             get
             {
-                return httpApiPort;
+                return apiport;
             }
             set
             {
                 if (value > 0 & value < 65536)
                 {
-                    httpApiPort = value;
+                    apiport = value;
                 }
                 else
                 {
@@ -43,6 +43,8 @@ namespace Senparc.Xncf.Dapr
             {
                 if(value > 0)
                     daprConnectionRetryCount = value;
+                else
+                    daprConnectionRetryCount = 0;
             }
         }
     }
