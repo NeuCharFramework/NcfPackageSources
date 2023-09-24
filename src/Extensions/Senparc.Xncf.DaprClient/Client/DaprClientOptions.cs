@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.DaprClient.Client
+namespace Senparc.Xncf.DaprClient
 {
-    public class DaprClientConfigOptions
+    public class DaprClientOptions
     {
         //Dapr Api监听端口
         private int httpApiPort;

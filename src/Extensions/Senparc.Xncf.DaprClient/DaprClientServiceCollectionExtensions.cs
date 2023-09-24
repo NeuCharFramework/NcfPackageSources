@@ -2,13 +2,12 @@
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Senparc.Xncf.DaprClient
+namespace Senparc.Xncf.DaprClient;
+
+public static class DaprClientServiceCollectionExtensions
 {
-    public static class DaprClientServiceCollectionExtensions
+    public static void AddDaprClient(this IServiceCollection services)
     {
-        public static void AddDaprClient(this IServiceCollection services)
-        {
-            services.AddHttpClient<DaprClient>();
-        }
+        services.AddHttpClient<DaprClient>();
     }
 }

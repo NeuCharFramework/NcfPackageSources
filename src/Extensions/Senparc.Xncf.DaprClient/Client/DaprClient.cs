@@ -5,13 +5,13 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
-namespace Senparc.Xncf.DaprClient.Client
+namespace Senparc.Xncf.DaprClient
 {
     public class DaprClient
     {
         private readonly HttpClient _httpClient;
         private readonly Logger<DaprClient> _logger;
-        public static DaprClientConfigOptions options = new() { HttpApiPort = 3500, DaprConnectionRetryCount=3 };//使用默认的Api端口
+        public static DaprClientOptions options = new() { HttpApiPort = 3500, DaprConnectionRetryCount=3 };//使用默认的Api端口
         public DaprClient(HttpClient httpClient, Logger<DaprClient> logger)
         {
             _httpClient = httpClient;
