@@ -57,10 +57,6 @@
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\Services\" />
-    <Folder Include="OHS\Local\AppService\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Update="App_Data\Database\SenparcConfig.config">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
