@@ -1,4 +1,3 @@
-using Dapr.Client;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.DaprClient.EventBus.Interface;
 

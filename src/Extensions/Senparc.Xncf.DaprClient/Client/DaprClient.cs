@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Policy;
+using System.Text.Json;
 
 namespace Senparc.Xncf.DaprClient
 {
@@ -15,24 +13,29 @@ namespace Senparc.Xncf.DaprClient
             _httpClient = httpClient;
         }
 
-        public async Task<object> GetStateAsync<T>(string key)
+        public async Task<object> GetStateAsync<T>(string host, string key)
         {
-            throw new NotImplementedException();
+            var request = BuildMessage(MessageType.GetState, host, key);
+            return await _httpClient.SendAsync(request);
         }
 
-        public async Task SetStateAsync<T>(string key, T data, int ttl = -1)
+        public async Task SetStateAsync<T>(string host, string key, T data, int ttl = -1)
         {
-            throw new NotImplementedException();
+            var request = BuildMessage(MessageType.Invoke, host, key, data);
         }
 
         public async Task DelStateAsync(string key)
         {
             throw new NotImplementedException();
-        }
+        }   
 
-        public async Task InvokeMethodAsync(string key)
+        public async Task<TResult> InvokeMethodAsync<TResult>(HttpMethod methodType ,string host, string path, object data, JsonSerializerOptions? options)
         {
-            throw new NotImplementedException();
+            var request = BuildMessage(MessageType.Invoke, host, path, data, methodType);
+            var response = await _httpClient.SendAsync(request);
+            string json = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<TResult>(json, options);
+            return result;
         }
 
         public async Task PublishEventAsync(string pubSubName, string topicName, object data)
@@ -40,18 +43,26 @@ namespace Senparc.Xncf.DaprClient
             throw new NotImplementedException();
         }
 
-        public async Task CheckServiceHealth(string serviceName)
+        public async Task<bool> HealthCheckAsync()
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, "http://localhost:3500/v1.0/healthz"));
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        private async Task SendMessage(MessageType requestType, string host, string path, object data)
+        private async Task SendMessage(MessageType requestType, string host, string path, object? data = null, HttpMethod? methodType = null)
         {
-            var request = BuildMessage(requestType, host, path, data);
+            var request = BuildMessage(requestType, host, path, data, methodType);
             var response = await _httpClient.SendAsync(request);
         }
 
-        private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object data)
+        private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object? data = null, HttpMethod? methodType = null)
         {
             string bathUrl = "http://localhost:3500";
             string url;
@@ -60,7 +71,11 @@ namespace Senparc.Xncf.DaprClient
             {
                 case MessageType.Invoke:
                     url = $"{bathUrl}/v1.0/invoke/{host}/method/{path}";
-                    request = new(HttpMethod.Post, url) { Version = new Version(1, 1) };
+                    if(methodType == null) throw new NotImplementedException();
+                    request = new(methodType, url) { Version = new Version(1, 1) };
+                    string json = JsonSerializer.Serialize(data);
+                    request.Content = new StringContent(json);
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue($"application/json");
                     break;
                 case MessageType.Publish:
                     url = $"{bathUrl}/v1.0/publish/{host}/{path}";
