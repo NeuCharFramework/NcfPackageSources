@@ -1,5 +1,6 @@
 ﻿using log4net.Repository.Hierarchy;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Xncf.Dapr.Blocks.HealthCheck.Interface;
 using Senparc.Xncf.Dapr.Blocks.PubSub.Interface;
@@ -19,12 +20,12 @@ namespace Senparc.Xncf.Dapr
         private readonly ILogger<DaprClient> _logger;
         private readonly ISerializer _serializer;
         private readonly DaprClientOptions _options;
-        public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer, DaprClientOptions options)
+        public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer, IOptions<DaprClientOptions> options)
         {
             _httpClient = httpClient;
             _logger = logger;
             _serializer = serializer;
-            _options = options;
+            _options = options.Value;
         }
 
         /// <summary>
@@ -103,9 +104,9 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="Exception"></exception>
         public async Task PublishEventAsync(string topicName, object data)
         {
-            if(options.PubSubName == null)
+            if(_options.PubSubName == null)
                 throw new Exception("没有配置全局PubSubName");
-            await PublishEventAsync(options.PubSubName, topicName, data);
+            await PublishEventAsync(_options.PubSubName, topicName, data);
         }
 
         /// <summary>
@@ -130,9 +131,9 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="Exception"></exception>
         public async Task<TResult> GetStateAsync<TResult>(string key)
         {
-            if (options.StateStoreName == null)
+            if (_options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
-            return await GetStateAsync<TResult>(options.StateStoreName, key);
+            return await GetStateAsync<TResult>(_options.StateStoreName, key);
         }
 
         /// <summary>
@@ -179,9 +180,9 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="Exception"></exception>
         public async Task SetStateAsync<TValue>(string key, TValue value)
         {
-            if (options.StateStoreName == null)
+            if (_options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
-            await SetStateAsync<TValue>(options.StateStoreName, key, value);
+            await SetStateAsync<TValue>(_options.StateStoreName, key, value);
         }
 
         /// <summary>
@@ -208,9 +209,9 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="Exception"></exception>
         public async Task SetStatesAsync(IEnumerable<StateStore> values)
         {
-            if (options.StateStoreName == null)
+            if (_options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
-            await SetStatesAsync(options.StateStoreName, values);
+            await SetStatesAsync(_options.StateStoreName, values);
         }
 
         /// <summary>
@@ -242,9 +243,9 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="Exception"></exception>
         public async Task DelStateAsync(string key)
         {
-            if (options.StateStoreName == null)
+            if (_options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
-            await DelStateAsync(options.StateStoreName, key);
+            await DelStateAsync(_options.StateStoreName, key);
         }
 
         /// <summary>
@@ -276,11 +277,11 @@ namespace Senparc.Xncf.Dapr
             bool isHealth = false;
             if (!isHealth)
             {
-                while (retryCount < options.DaprConnectionRetryCount)
+                while (retryCount < _options.DaprConnectionRetryCount)
                 {
                     try
                     {
-                        var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"http://localhost:{options.ApiPort}/v1.0/healthz"));
+                        var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"http://localhost:{_options.ApiPort}/v1.0/healthz"));
                         if (response.StatusCode == HttpStatusCode.NoContent)
                         {
                             isHealth = true;
@@ -322,7 +323,7 @@ namespace Senparc.Xncf.Dapr
         /// <exception cref="ArgumentException"></exception>
         private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object? data = null)
         {
-            string bathUrl = $"http://localhost:{options.ApiPort}";
+            string bathUrl = $"http://localhost:{_options.ApiPort}";
             string version = "v1.0";
             string url;
 

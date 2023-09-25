@@ -29,7 +29,7 @@ public static class DaprClientServiceCollectionExtensions
             options.ApiPort = 3500;
             options.DaprConnectionRetryCount = 3;
         };
-        services.Configure(configOptions);
+        services.Configure<DaprClientOptions>(configOptions);
 
         services.AddHttpClient<DaprClient>();
         services.AddScoped<ISerializer, TSerializer>();
