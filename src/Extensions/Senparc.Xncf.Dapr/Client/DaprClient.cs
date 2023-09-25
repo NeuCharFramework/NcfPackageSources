@@ -34,7 +34,6 @@ namespace Senparc.Xncf.Dapr
         /// <param name="serviceId">服务名称 (App-Id)</param>
         /// <param name="methodName">方法路径</param>
         /// <param name="data">请求数据</param>
-        /// <param name="options">json序列化选项</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         public async Task<TResult> InvokeMethodAsync<TResult>(InvokeType invokeType, string serviceId, string methodName, object? data = null)
@@ -60,7 +59,7 @@ namespace Senparc.Xncf.Dapr
             var response = await SendMessageAsync(request);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
-                _logger.LogError("未提供方法名称");
+                _logger.LogError("未提供的方法名称");
             else if (response.StatusCode == HttpStatusCode.Forbidden)
                 _logger.LogError("访问控制禁止调用");
             else if (response.StatusCode == HttpStatusCode.InternalServerError)
@@ -257,6 +256,7 @@ namespace Senparc.Xncf.Dapr
         {
             var request = BuildMessage(MessageType.DeleteState, stateStore, key);
             var response = await _httpClient.SendAsync(request);
+
             if (response.StatusCode == HttpStatusCode.NoContent)
                 _logger.LogInformation("状态删除成功");
             else if (response.StatusCode == HttpStatusCode.BadRequest)
