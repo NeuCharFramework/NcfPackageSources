@@ -155,6 +155,12 @@ namespace Senparc.Ncf.XncfBase
                                     services.AddScoped(t);
                                 }
                             }
+
+                            //配置 ServiceBase
+                            if (t.IsSubclassOf(typeof(ServiceBase<>)))
+                            {
+                                services.AddScoped(t);
+                            }
                         }
                     }
                 }
@@ -170,7 +176,7 @@ namespace Senparc.Ncf.XncfBase
                     //筛选
                     var allTypes = types.Where(z => z.Value == ScanTypeKind.IXncfRegister/* && z.Key.GetInterfaces().Contains(typeof(IXncfRegister))*/)
                         .Select(z => z.Key);
-                    //按照优先级进行排序
+                    //按照优先级进行排序（降序，数字越大越在前）
                     var orderedTypes = allTypes.OrderByDescending(z =>
                     {
                         var orderAttribute = z.GetCustomAttributes(true).FirstOrDefault(attr => attr is XncfOrderAttribute) as XncfOrderAttribute;
