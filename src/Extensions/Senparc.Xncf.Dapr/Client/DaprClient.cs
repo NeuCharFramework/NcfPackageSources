@@ -18,12 +18,13 @@ namespace Senparc.Xncf.Dapr
         private readonly HttpClient _httpClient;
         private readonly ILogger<DaprClient> _logger;
         private readonly ISerializer _serializer;
-        public static DaprClientOptions options = new() { ApiPort = 3500, DaprConnectionRetryCount = 3 };//使用默认的Api端口
-        public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer)
+        private readonly DaprClientOptions _options;
+        public DaprClient(HttpClient httpClient, ILogger<DaprClient> logger, ISerializer serializer, DaprClientOptions options)
         {
             _httpClient = httpClient;
             _logger = logger;
             _serializer = serializer;
+            _options = options;
         }
 
         /// <summary>
