@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using log4net.Repository.Hierarchy;
+using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Xncf.Dapr.Blocks.HealthCheck.Interface;
 using Senparc.Xncf.Dapr.Blocks.PubSub.Interface;
 using Senparc.Xncf.Dapr.Blocks.ServiceInvoke;
@@ -11,7 +13,6 @@ using System.Text;
 
 namespace Senparc.Xncf.Dapr
 {
-    //TODO: 返回DaprAPI文档中提供的状态码信息
     public class DaprClient : IServiceInvoke, IEventPublish, IStateManage, IHealthCheck
     {
         private readonly HttpClient _httpClient;
@@ -57,6 +58,14 @@ namespace Senparc.Xncf.Dapr
             var request = BuildMessage(messageType, serviceId, methodName, data);
 
             var response = await SendMessageAsync(request);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                _logger.LogError("未提供方法名称");
+            else if (response.StatusCode == HttpStatusCode.Forbidden)
+                _logger.LogError("访问控制禁止调用");
+            else if (response.StatusCode == HttpStatusCode.InternalServerError)
+                _logger.LogError("请求失败");
+
             string json = await response.Content.ReadAsStringAsync();
             TResult result;
             try
@@ -109,7 +118,7 @@ namespace Senparc.Xncf.Dapr
         public async Task PublishEventAsync(string pubSubName, string topicName, object data)
         {
             var request = BuildMessage(MessageType.Publish, pubSubName, topicName, data);
-            await SendMessageAsync(request);
+            var response = await SendMessageAsync(request);
         }
 
         /// <summary>
@@ -137,6 +146,16 @@ namespace Senparc.Xncf.Dapr
         {
             var request = BuildMessage(MessageType.GetState, stateStore, key);
             var response = await SendMessageAsync(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+                _logger.LogInformation("获取状态成功");
+            else if (response.StatusCode == HttpStatusCode.NoContent)
+                _logger.LogWarning("状态键不存在");
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+                _logger.LogError("状态存贮不存在或者配置错误");
+            else if (response.StatusCode == HttpStatusCode.InternalServerError)
+                _logger.LogError("状态获取失败");
+
             string json = await response.Content.ReadAsStringAsync();
             TResult result;
             try
@@ -205,7 +224,14 @@ namespace Senparc.Xncf.Dapr
         public async Task SetStatesAsync(string stateStore, IEnumerable<StateStore> values)
         {
             var request = BuildMessage(MessageType.SetState, stateStore, "", values);
-            await SendMessageAsync(request);
+            var response = await SendMessageAsync(request);
+
+            if (response.StatusCode == HttpStatusCode.NoContent)
+                _logger.LogInformation("状态保存成功");
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+                _logger.LogError("状态存储丢失或配置错误或请求格式错误");
+            else if(response.StatusCode == HttpStatusCode.InternalServerError)
+                _logger.LogError($"状态保存失败");
         }
 
         /// <summary>
@@ -230,7 +256,13 @@ namespace Senparc.Xncf.Dapr
         public async Task DelStateAsync(string stateStore, string key)
         {
             var request = BuildMessage(MessageType.DeleteState, stateStore, key);
-            await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
+            if (response.StatusCode == HttpStatusCode.NoContent)
+                _logger.LogInformation("状态删除成功");
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+                _logger.LogError("状态存储丢失或配置错误");
+            else if (response.StatusCode == HttpStatusCode.InternalServerError)
+                _logger.LogError($"状态删除失败");
         }
 
         /// <summary>
@@ -275,8 +307,7 @@ namespace Senparc.Xncf.Dapr
         /// <returns>Http返回消息</returns>
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
         {
-            var result = await _httpClient.SendAsync(message);
-            return result;
+            return await _httpClient.SendAsync(message);
         }
 
         /// <summary>
