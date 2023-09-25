@@ -66,6 +66,21 @@ namespace Senparc.Xncf.Dapr
             return result;
         }
 
+        public async Task<TResult> PatchAsync<TResult>(string serviceId, string methodName, object? data = null) =>
+            await InvokeMethodAsync<TResult>(InvokeType.Patch, serviceId, methodName, data);
+
+        public async Task<TResult> GetAsync<TResult>(string serviceId, string methodName, object? data = null) =>
+            await InvokeMethodAsync<TResult>(InvokeType.Get, serviceId, methodName, data);
+
+        public async Task<TResult> PostAsync<TResult>(string serviceId, string methodName, object? data = null) =>
+            await InvokeMethodAsync<TResult>(InvokeType.Post, serviceId, methodName, data);
+
+        public async Task<TResult> PutAsync<TResult>(string serviceId, string methodName, object? data = null) =>
+            await InvokeMethodAsync<TResult>(InvokeType.Put, serviceId, methodName, data);
+
+        public async Task<TResult> DeleteAsync<TResult>(string serviceId, string methodName, object? data = null) =>
+            await InvokeMethodAsync<TResult>(InvokeType.Delete, serviceId, methodName, data);
+
         /// <summary>
         /// 发布事件
         /// </summary>
