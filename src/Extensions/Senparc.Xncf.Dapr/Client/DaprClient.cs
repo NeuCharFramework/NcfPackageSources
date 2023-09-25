@@ -160,7 +160,8 @@ namespace Senparc.Xncf.Dapr
         public async Task SetStateAsync<TValue>(string stateStore, string key, TValue data)
         {
             var state = new StateStore(key, data);
-            var request = BuildMessage(MessageType.SetState, stateStore, key, state);
+            var vList = new List<StateStore>() { state };
+            var request = BuildMessage(MessageType.SetState, stateStore, key, vList);
             await SendMessageAsync(request);
         }
 
@@ -231,7 +232,8 @@ namespace Senparc.Xncf.Dapr
         /// <returns>Http返回消息</returns>
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
         {
-            return await _httpClient.SendAsync(message);
+            var result = await _httpClient.SendAsync(message);
+            return result;
         }
 
         /// <summary>
