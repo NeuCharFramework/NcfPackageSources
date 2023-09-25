@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Senparc.Xncf.Dapr.Utils.Serializer;
 using Senparc.Xncf.Dapr.Blocks.ServiceInvoke;
-using Senparc.Xncf.Dapr.Blocks.StateStore;
+using Senparc.Xncf.Dapr.Blocks.StateManage;
+using Senparc.Xncf.Dapr.Utils.Serializer;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Reflection;
 using System.Text;
-using System.Text.Json;
 
 namespace Senparc.Xncf.Dapr
 {
@@ -139,14 +136,14 @@ namespace Senparc.Xncf.Dapr
         /// </summary>
         /// <typeparam name="TValue">状态类型</typeparam>
         /// <param name="key">缓存键</param>
-        /// <param name="data">缓存数据</param>
+        /// <param name="value">缓存数据</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task SetStateAsync<TValue>(string key, TValue data)
+        public async Task SetStateAsync<TValue>(string key, TValue value)
         {
             if (options.StateStoreName == null)
                 throw new Exception("没有配置全局StateStoreName");
-            await SetStateAsync<TValue>(options.StateStoreName, key, data);
+            await SetStateAsync<TValue>(options.StateStoreName, key, value);
         }
 
         /// <summary>
@@ -155,13 +152,40 @@ namespace Senparc.Xncf.Dapr
         /// <typeparam name="TValue">状态类型</typeparam>
         /// <param name="stateStore">状态存储组件名称</param>
         /// <param name="key">缓存键</param>
-        /// <param name="data">缓存数据</param>
+        /// <param name="value">缓存数据</param>
         /// <returns></returns>
-        public async Task SetStateAsync<TValue>(string stateStore, string key, TValue data)
+        public async Task SetStateAsync<TValue>(string stateStore, string key, TValue value)
         {
-            var state = new StateStore(key, data);
-            var vList = new List<StateStore>() { state };
-            var request = BuildMessage(MessageType.SetState, stateStore, key, vList);
+            var state = new StateStore(key, value);
+            await SetStatesAsync(stateStore, new List<StateStore> { state });
+        }
+
+        /// <summary>
+        /// 保存多个状态
+        /// </summary>
+        /// <typeparam name="TValue">状态类型</typeparam>
+        /// <param name="key">缓存键</param>
+        /// <param name="values">缓存数据</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task SetStatesAsync(IEnumerable<StateStore> values)
+        {
+            if (options.StateStoreName == null)
+                throw new Exception("没有配置全局StateStoreName");
+            await SetStatesAsync(options.StateStoreName, values);
+        }
+
+        /// <summary>
+        /// 保存多个状态
+        /// </summary>
+        /// <typeparam name="TValue">状态类型</typeparam>
+        /// <param name="stateStore">状态存储组件名称</param>
+        /// <param name="key">缓存键</param>
+        /// <param name="values">缓存数据</param>
+        /// <returns></returns>
+        public async Task SetStatesAsync(string stateStore, IEnumerable<StateStore> values)
+        {
+            var request = BuildMessage(MessageType.SetState, stateStore, "", values);
             await SendMessageAsync(request);
         }
 

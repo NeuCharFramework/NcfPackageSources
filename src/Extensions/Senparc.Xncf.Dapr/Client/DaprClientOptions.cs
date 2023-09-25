@@ -29,10 +29,38 @@ namespace Senparc.Xncf.Dapr
             }
         }
         //状态存储组件名称
-        public string? StateStoreName { get; set; }
+        private string? stateStoreName;
+        public string? StateStoreName 
+        {
+            get
+            {
+                return stateStoreName;
+            }
+            set
+            {
+                if(!string.IsNullOrEmpty(value)) 
+                {
+                    stateStoreName = value;
+                }
+            }
+        }
 
         //发布订阅组件名称
-        public string? PubSubName { get; set; }
+        private string? pubSubName;
+        public string? PubSubName 
+        {
+            get
+            {
+                return pubSubName;
+            }
+            set
+            {
+                if(!string.IsNullOrEmpty(value))
+                {
+                    pubSubName = value;
+                }
+            }
+        }
 
         //Dapr重连最大尝试次数
         private int daprConnectionRetryCount;
