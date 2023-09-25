@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Senparc.Xncf.Dapr.Blocks.HealthCheck.Interface;
+using Senparc.Xncf.Dapr.Blocks.PubSub.Interface;
 using Senparc.Xncf.Dapr.Blocks.ServiceInvoke;
+using Senparc.Xncf.Dapr.Blocks.ServiceInvoke.Interface;
 using Senparc.Xncf.Dapr.Blocks.StateManage;
+using Senparc.Xncf.Dapr.Blocks.StateManage.Interface;
 using Senparc.Xncf.Dapr.Utils.Serializer;
 using System.Net;
 using System.Text;
@@ -8,7 +12,7 @@ using System.Text;
 namespace Senparc.Xncf.Dapr
 {
     //TODO: 返回DaprAPI文档中提供的状态码信息
-    public class DaprClient
+    public class DaprClient : IServiceInvoke, IEventPublish, IStateManage, IHealthCheck
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<DaprClient> _logger;
