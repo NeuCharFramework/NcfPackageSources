@@ -33,7 +33,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptType switch
             {
                 XncfBuilderPromptType.EntityClass => @"请按照以下示例，根据[Prompt]生成全新的类：
-```
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
@@ -114,10 +113,11 @@ namespace Senparc.Xncf.PromptRange
             Blue = Math.Max(0, Blue - 10);
         }
     }
-}
-```
-[Prompt]:{0}
-".FormatWith(prompt),
+}"+
+@$"
+
+[Prompt]:{prompt}
+",
                 _ => $"{prompt}"
             };
         }
@@ -133,12 +133,13 @@ namespace Senparc.Xncf.PromptRange
         /// <param name="promptType"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<string> GetPromptResult(XncfBuilderPromptType promptType, string prompt)
+        public async Task<string> GetPromptResultAsync(XncfBuilderPromptType promptType, string prompt)
         {
             //创建一个 Kernel
             var iWantToRun = this._aiHandler.IWantTo()
                 //TODO:model-name 可以使用工厂配置
                 .ConfigModel(AI.ConfigModel.TextCompletion, "XncfPrompt", "text-davinci-003")
+                .ConfigModel(AI.ConfigModel.TextEmbedding, "XncfPrompt", "text-embedding-ada-002")
                 .BuildKernel(b => b.WithMemoryStorage(new VolatileMemoryStore()));
 
             //创建一个请求对象

@@ -17,7 +17,7 @@
             <param name="prompt"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResult(Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType,System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType,System.String)">
             <summary>
             获取 Prompt 结果
             </summary>

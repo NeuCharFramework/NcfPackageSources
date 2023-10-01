@@ -42,7 +42,7 @@ namespace Senparc.Ncf.XncfBase.Tests
         [TestMethod]
         public void StartEngineTest()
         {
-            var result = base.ServiceCollection.StartEngine(TestBase.Configuration, TestBase.Env);
+            var result = base.ServiceCollection.StartEngine(base.Configuration, base.Env);
             Console.WriteLine(result);
             Assert.IsTrue(Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList.Count > 0);
         }
