@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Senparc.Xncf.PromptRange</name>
+    </assembly>
+    <members>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType">
+            <summary>
+            XncfBuilder 的 Prompt 类型
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPrompt(Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType,System.String)">
+            <summary>
+            获取最终 Prompt 文字
+            </summary>
+            <param name="promptType"></param>
+            <param name="prompt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResult(Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType,System.String)">
+            <summary>
+            获取 Prompt 结果
+            </summary>
+            <param name="promptType"></param>
+            <param name="prompt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Color">
+            <summary>
+            Color 实体类
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Color.Red">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Color.Green">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Color.Blue">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Color.AdditionNote">
+            <summary>
+            附加列，测试多次数据库 Migrate
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.ColorDto.Red">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.ColorDto.Green">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.ColorDto.Blue">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_MySql">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_MySql -o Domain/Migrations/Migrations.MySql </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Oracle">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_Oracle -o Domain/Migrations/Migrations.Oracle </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_PostgreSQL">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_PostgreSQL -o Migrations/Migrations.PostgreSQL </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Sqlite">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_Sqlite -o Domain/Migrations/Migrations.Sqlite </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_SqlServer">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactoryConfig">
+            <summary>
+            SenparcDbContextFactory 的公共配置
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactoryConfig.RootDirectoryPath">
+            <summary>
+            用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
+            <summary>
+            将 AppService 暴露为 WebApi
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyCustomApi(Senparc.Xncf.PromptRange.OHS.Local.PL.Api_MyCustomApiRequest)">
+            <summary>
+            自定义 Post 类型和复杂参数，同时测试异常抛出和自定义状态码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ColorAppService.GetOrInitColorAsync">
+            <summary>
+            获取或初始化一个 ColorDto 对象
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Color_GetOrInitColorResponse.Red">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Color_GetOrInitColorResponse.Green">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Color_GetOrInitColorResponse.Blue">
+            <summary>
+            颜色码，0-255
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Color_GetOrInitColorResponse.CostMillionSeconds">
+            <summary>
+            花费时间
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">
+            <summary>
+            数据库前缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Register.DatabaseUniquePrefix">
+            <summary>
+            数据库前缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Register.TryGetXncfDatabaseDbContextType">
+            <summary>
+            动态获取数据库上下文
+            </summary>
+        </member>
+    </members>
+</doc>

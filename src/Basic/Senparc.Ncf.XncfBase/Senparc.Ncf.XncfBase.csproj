@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <!--<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>-->
-    <Version>0.11.8-beta10</Version>
+    <Version>0.11.9-beta10</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -27,7 +27,8 @@
 		v0.7 升级 Function 为 FunctionRender
 		v0.9.1.6 优化 DDD 分层，忽略系统表的删除 History 操作
 		v0.11.3.1 重新开启线程 XncfThread
-		v0.11.8 添加 ServiceBase 子类的自动依赖注入注册 
+		v0.11.8 添加 ServiceBase 子类的自动依赖注入注册
+		v0.11.9 添加 IServiceDataBase 类型自动注册
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

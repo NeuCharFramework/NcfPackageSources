@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
-    <Version>0.13.9.1-beta10</Version>
+    <Version>0.13.9.7-beta10</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,6 +24,7 @@
 		v0.13.4.1 添加 Oracle 数据库迁移代码
 		v0.13.6 更新 XncfBuilder，适配 .NET 7.0 CLI
 		v0.13.9 数据库 migration 命令中的路径添加引号，防止路径中出现空格
+		v0.13.10 XNCF Builder 自动记录上次填写的内容，并且首次自动探索 .sln 文件
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -10,6 +10,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
+        /// <param name="IngoreOptions"></param>
         /// <returns></returns>
         string SerializesJson<T>(T input, bool IngoreOptions = false);
 
