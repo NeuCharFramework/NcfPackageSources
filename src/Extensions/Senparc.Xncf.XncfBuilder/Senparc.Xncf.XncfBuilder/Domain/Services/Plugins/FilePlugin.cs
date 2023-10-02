@@ -12,7 +12,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
     public class FilePlugin
     {
         [SKFunction, SKName("BuildEntityClass"), Description("创建实体类")]
-        public async Task<string> Create(
+        public async Task<string> CreateAsync(
          [Description("文件名，包含路径")]
         string fullPathFileName,
          [Description("文件内容")]
