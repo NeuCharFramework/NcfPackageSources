@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.Xncf.PromptRange.Domain.Services.PromptPlugins;
 using Microsoft.SemanticKernel;
 using System.IO;
 using Microsoft.SemanticKernel.SkillDefinition;

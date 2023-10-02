@@ -9,11 +9,6 @@
             XncfBuilder 的 Prompt 类型
             </summary>
         </member>
-        <member name="T:Senparc.Xncf.PromptRange.Domain.Services.PromptPlugins.XncfBuilderPlugin">
-            <summary>
-            XNCF 模块生成插件
-            </summary>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPrompt(Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType,System.String)">
             <summary>
             获取最终 Prompt 文字
