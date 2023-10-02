@@ -66,3 +66,5 @@ obj/
 /src/NcfPackageSources.sln-backup-*.sln
 *.DS_Store
 /src/Extensions/Senparc.Xncf.PromptRange.Tests/appsettings.test.json
+/src/Extensions/Senparc.Xncf.PromptRange/Domain/PromptPlugins/XncfBuilderPlugin/
+/src/Extensions/Senparc.Xncf.PromptRange.Tests/Domain/PromptPlugins/XncfBuilderPlugin/

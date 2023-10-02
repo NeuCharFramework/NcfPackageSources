@@ -1,4 +1,6 @@
 ﻿using Microsoft.SemanticKernel.Memory;
+using Senparc.AI.Entities;
+using Senparc.AI;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
@@ -11,6 +13,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Senparc.Xncf.PromptRange.Domain.Services.PromptPlugins;
+using Microsoft.SemanticKernel;
+using System.IO;
+using Microsoft.SemanticKernel.SkillDefinition;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -113,7 +119,7 @@ namespace Senparc.Xncf.PromptRange
             Blue = Math.Max(0, Blue - 10);
         }
     }
-}"+
+}" +
 @$"
 
 [Prompt]:{prompt}
@@ -127,26 +133,103 @@ namespace Senparc.Xncf.PromptRange
             this._aiHandler = (SemanticAiHandler)aiHandler;
         }
 
-        /// <summary>
-        /// 获取 Prompt 结果
-        /// </summary>
-        /// <param name="promptType"></param>
-        /// <param name="prompt"></param>
-        /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(XncfBuilderPromptType promptType, string prompt)
-        {
-            //创建一个 Kernel
-            var iWantToRun = this._aiHandler.IWantTo()
-                //TODO:model-name 可以使用工厂配置
-                .ConfigModel(AI.ConfigModel.TextCompletion, "XncfPrompt", "text-davinci-003")
-                .ConfigModel(AI.ConfigModel.TextEmbedding, "XncfPrompt", "text-embedding-ada-002")
-                .BuildKernel(b => b.WithMemoryStorage(new VolatileMemoryStore()));
+        ///// <summary>
+        ///// 获取 Prompt 结果
+        ///// </summary>
+        ///// <param name="promptType"></param>
+        ///// <param name="prompt"></param>
+        ///// <returns></returns>
+        //public async Task<string> GetPromptResultAsync(XncfBuilderPromptType promptType, string prompt)
+        //{
+        //    //创建一个 Kernel
+        //    var iWantToRun = this._aiHandler.IWantTo()
+        //        //TODO:model-name 可以使用工厂配置
+        //        .ConfigModel(AI.ConfigModel.TextCompletion, "XncfPrompt", "text-davinci-003")
+        //        .ConfigModel(AI.ConfigModel.TextEmbedding, "XncfPrompt", "text-embedding-ada-002")
+        //        .BuildKernel(b => b.WithMemoryStorage(new VolatileMemoryStore()));
 
-            //创建一个请求对象
-            var request = iWantToRun.CreateRequest(true);
-            //填充 Prompt
-            request.RequestContent = GetPrompt(promptType, prompt);
-            //执行
+        //    //创建一个请求对象
+        //    var request = iWantToRun.CreateRequest(true);
+        //    //填充 Prompt
+        //    request.RequestContent = GetPrompt(promptType, prompt);
+        //    //执行
+        //    var result = await iWantToRun.RunAsync(request);
+        //    return result.Output;
+        //}
+
+        //public async Task<string> GetPromptResultAsync(XncfBuilderPromptType promptType, string input)
+        //{
+        //    var handler = new SemanticAiHandler();
+
+        //    //定义 AI 接口调用参数和 Token 限制等
+        //    var promptParameter = new PromptConfigParameter()
+        //    {
+        //        MaxTokens = 2000,
+        //        Temperature = 0.7,
+        //        TopP = 0.5,
+        //    };
+
+        //    //准备运行
+        //    var userId = "JeffreySu";//区分用户
+        //    var modelName = "text-davinci-003";//默认使用模型
+        //    var iWantToRun =
+        //         handler.IWantTo()
+        //               .ConfigModel(AI.ConfigModel.TextCompletion, "XncfPrompt", "text-davinci-003")
+        //                .ConfigModel(ConfigModel.TextCompletion, userId, modelName)
+        //    .BuildKernel();
+
+        //    //TODO:外部输入
+        //    var xncfBuilderPlugin = new XncfBuilderPlugin();
+        //    //输入 skill
+        //    var skills = iWantToRun.Kernel.ImportSkill(xncfBuilderPlugin);
+
+        //    //var function = iWantToRun.Kernel.Skills.GetFunction(nameof(xncfBuilderPlugin.BuildEntityClass));
+        //    var function = skills[nameof(xncfBuilderPlugin.BuildEntityClass)];
+
+        //    //构建请求对象
+        //    var request = iWantToRun.CreateRequest(input, true, new[] { function });
+        //    //请求
+        //    var result = await iWantToRun.RunAsync(request);
+        //    return result.Output;
+        //}
+
+        /// <summary>
+        /// 根据 Plugin 的 Prompt 获取结果
+        /// </summary>
+        /// <param name="input">用户输入</param>
+        /// <param name="skills">所有需要引用的 Skill（Plugin） 和 Function 的清单
+        /// <para>Key：Skill Name</para>
+        /// <para>Value：Function Name List</para>
+        /// </param>
+        /// <returns></returns>
+        public async Task<string> GetPromptResultAsync(string input, Dictionary<string, List<string>> skills)
+        {
+            var handler = new SemanticAiHandler();
+
+            //准备运行
+            var userId = "XncfBuilder";//区分用户
+            var modelName = "text-davinci-003";//默认使用模型
+            var iWantToRun =
+                 handler.IWantTo()
+                        .ConfigModel(ConfigModel.TextCompletion, userId, modelName)
+                        .BuildKernel();
+
+            List<ISKFunction> functionPiple = new List<ISKFunction>();
+            var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+            foreach (var skillName in skills)
+            {
+                var functionResults = iWantToRun.ImportSkillFromDirectory(pluginDir, skillName.Key);
+
+                foreach (var functionName in skillName.Value)
+                {
+                    functionPiple.Add(functionResults.skillList[functionName]);
+                }
+            }
+
+
+            //构建请求对象
+            var request = iWantToRun.CreateRequest(input, true, functionPiple.ToArray());
+            //请求
             var result = await iWantToRun.RunAsync(request);
             return result.Output;
         }

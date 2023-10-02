@@ -1,11 +1,7 @@
-﻿using Senparc.CO2NET;
-using Senparc.Ncf.Core.AppServices;
+﻿using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService

@@ -127,7 +127,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PromptRange", "PromptRange"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.PromptRange", "Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj", "{31ACB9D0-E318-42F7-A7D7-F7D40AE75548}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.PromptRange.Tests", "Extensions\Senparc.Xncf.PromptRange.Tests\Senparc.Xncf.PromptRange.Tests.csproj", "{1328935B-885B-494D-AFF0-0FEEE18612A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.PromptRange.Tests", "Extensions\Senparc.Xncf.PromptRange.Tests\Senparc.Xncf.PromptRange.Tests.csproj", "{1328935B-885B-494D-AFF0-0FEEE18612A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Obsoleted", "Obsoleted", "{44527D1D-604E-495C-8E15-963508F26C7F}"
 EndProject
@@ -235,8 +235,8 @@ Global
 		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.TemplateRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
-		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Test|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{AE7AF7D8-0B89-45F5-99D7-593BFFC2BA6D}.Test|Any CPU.Build.0 = Test|Any CPU
 		{4E18BD15-9397-43A0-87F4-770FDF434403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E18BD15-9397-43A0-87F4-770FDF434403}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E18BD15-9397-43A0-87F4-770FDF434403}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -496,8 +496,8 @@ Global
 		{1328935B-885B-494D-AFF0-0FEEE18612A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1328935B-885B-494D-AFF0-0FEEE18612A7}.TemplateRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{1328935B-885B-494D-AFF0-0FEEE18612A7}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
-		{1328935B-885B-494D-AFF0-0FEEE18612A7}.Test|Any CPU.ActiveCfg = Debug|Any CPU
-		{1328935B-885B-494D-AFF0-0FEEE18612A7}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{1328935B-885B-494D-AFF0-0FEEE18612A7}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{1328935B-885B-494D-AFF0-0FEEE18612A7}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
