@@ -12,39 +12,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Domain\PromptPlugins\XncfBuilderPlugin\XncfBuilderPlugin\**" />
-	  <EmbeddedResource Remove="Domain\PromptPlugins\XncfBuilderPlugin\XncfBuilderPlugin\**" />
-	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\XncfBuilderPlugin\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Compile Remove="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\config.json" />
-	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\skprompt.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\skprompt.txt">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\config.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\skprompt.txt">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
 
@@ -67,6 +40,10 @@
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Domain\PromptPlugins\" />
 	</ItemGroup>
 
 </Project>

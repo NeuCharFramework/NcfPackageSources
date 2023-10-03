@@ -1,6 +1,8 @@
 ﻿using Microsoft.SemanticKernel.SkillDefinition;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
+using Senparc.AI.Kernel.Entities;
+using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -53,7 +55,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
             }
 
-            var promptResult = await _promptService.GetPromptResultAsync(input, null, plugins);
+            var context = new SenparcAiContext();
+            context.ContextVariables["input"] = input;
+
+            var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
 
             await Console.Out.WriteLineAsync(promptResult);
 
@@ -64,10 +69,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                 //输入生成文件的项目路径
                 //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
-                var context = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
+                var fileContext = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
 
-                context.ContextVariables["fileBasePath"] = projectPath;
-                context.ContextVariables["fileGenerateResult"] = promptResult;
+                fileContext.ContextVariables["fileBasePath"] = projectPath;
+                fileContext.ContextVariables["fileGenerateResult"] = promptResult;
 
                 var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
 
@@ -77,7 +82,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                 ISKFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
 
-                promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
+                promptResult = await _promptService.GetPromptResultAsync("", fileContext, null, functionPiple);
 
                 #endregion
 
@@ -89,10 +94,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         var updateFunctionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
 
-                        context.ContextVariables["projectPath"] = projectPath;
-                        context.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0]; ;
+                        fileContext.ContextVariables["projectPath"] = projectPath;
+                        fileContext.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        promptResult = await _promptService.GetPromptResultAsync("", context, null, updateFunctionPiple);
+                        promptResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
 
                         #endregion
 
@@ -110,7 +115,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     default:
                         break;
                 }
-
             }
 
             return promptResult;

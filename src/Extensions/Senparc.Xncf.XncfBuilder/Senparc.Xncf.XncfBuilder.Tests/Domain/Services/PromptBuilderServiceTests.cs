@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Ncf.Core.Annotations;
 using Senparc.Xncf.PromptRange.Tests;
 using System;
 using System.IO;
@@ -34,15 +35,18 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             await Console.Out.WriteLineAsync("Run Prompt Result");
             await Console.Out.WriteLineAsync(result);
 
-            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "PromptGroup.cs")));
+            var promptGroupFilePath = Path.Combine(projectPath, "PromptGroup.cs");
+            Assert.IsTrue(File.Exists(promptGroupFilePath));
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Dto/PromptGroupDto.cs")));
 
+            var promptGroupFileContent = File.ReadAllText(promptGroupFilePath);
+            Assert.IsTrue(promptGroupFileContent.Contains("public class PromptGroup"));
 
             var senparcEntitiesFile = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
 
-            var newContent = File.ReadAllText(senparcEntitiesFile);
-            Assert.IsTrue(newContent.Contains("public PromptGroup PromptGroups { get; private set; }"));
+            var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
+            Assert.IsTrue(newSenparcEntitiesContent.Contains("public DbSet<PromptGroup> PromptGroups { get; set; }"));
         }
 
     }
