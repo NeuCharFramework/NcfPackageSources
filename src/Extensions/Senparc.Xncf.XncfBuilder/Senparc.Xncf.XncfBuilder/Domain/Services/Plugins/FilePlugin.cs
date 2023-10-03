@@ -62,7 +62,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         {
             string fileContent = null;
 
-            var databaseModelPath = Path.Combine(projectPath, "Domain","Models", "DatabaseModel");
+            var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");
             var databaseFile = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs")[0];
             using (var fs = new FileStream(databaseFile, FileMode.Open))
             {
@@ -80,18 +80,18 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                         //    };
 
                         var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                        _iWantToRun.ImportSkillFromDirectory(pluginDir, "UpdateSenparcEntities");
+                        var skills = _iWantToRun.ImportSkillFromDirectory(pluginDir, "XncfBuilderPlugin");
 
                         //运行
-                        var request = _iWantToRun.CreateRequest(true);
+                        var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
                         request.SetTempContext("Code", fileContent);
                         request.SetTempContext("EntityName", entityName);
 
                         var result = await _iWantToRun.RunAsync(request);
 
-                        fileContent = result.Output;
+                       var newFileContent = result.Output;
 
-                        await sw.WriteAsync(fileContent);
+                        await sw.WriteAsync(newFileContent);
                         await sw.FlushAsync();
 
                         return $"已更新文件：{databaseFile}";

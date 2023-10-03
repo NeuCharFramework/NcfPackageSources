@@ -11,6 +11,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json" />
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\skprompt.txt" />
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\config.json" />
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\skprompt.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\skprompt.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\config.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\skprompt.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
