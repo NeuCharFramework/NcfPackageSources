@@ -33,6 +33,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         {
             var plugins = new Dictionary<string, List<string>>();
 
+            //选择需要执行的生成方式
             switch (buildType)
             {
                 case PromptBuildType.EntityClass:
@@ -59,7 +60,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             //需要保存文件
             if (!projectPath.IsNullOrEmpty())
             {
-                //创建文件
+                #region 创建文件
 
                 //输入生成文件的项目路径
                 //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
@@ -78,18 +79,23 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                 promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
 
-                //更新 SenparcEntities
+                #endregion
+
                 switch (buildType)
                 {
                     case PromptBuildType.EntityClass:
-                        functionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
+
+                        #region 更新 SenparcEntities
+
+                        var updateFunctionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
 
                         context.ContextVariables["projectPath"] = projectPath;
-                        context.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0];
-                        context.ContextVariables["Code"] = projectPath;
-                        context.ContextVariables["EntityName"] = promptResult;
+                        context.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
+                        promptResult = await _promptService.GetPromptResultAsync("", context, null, updateFunctionPiple);
+
+                        #endregion
+
                         break;
                     case PromptBuildType.Repository:
                         break;
@@ -104,6 +110,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     default:
                         break;
                 }
+
             }
 
             return promptResult;

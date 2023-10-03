@@ -37,12 +37,6 @@
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
 
 		<EmbeddedResource Include="wwwroot\**\*" />
-
-		<None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClassBak\skprompt.txt" />
-
-		<Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClassBak\skprompt.txt">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
@@ -64,5 +58,10 @@
 		<PackageReference Include="Senparc.Xncf.SystemManager" Version="0.3.6-beta10" />
 		<PackageReference Include="Senparc.Xncf.XncfModuleManager" Version="0.3.6-beta10" />
 		<PackageReference Include="Senparc.Xncf.Tenant" Version="0.3.6-beta10" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="Domain\PromptPlugins\" />
 	</ItemGroup>
 </Project>
