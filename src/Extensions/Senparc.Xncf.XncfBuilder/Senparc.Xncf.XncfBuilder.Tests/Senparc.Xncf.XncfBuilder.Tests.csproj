@@ -7,6 +7,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />

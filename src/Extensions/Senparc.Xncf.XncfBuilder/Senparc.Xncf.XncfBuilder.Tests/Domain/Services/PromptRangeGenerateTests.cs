@@ -33,9 +33,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 
             var projectPath = Path.Combine("Y:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
 
-            
-            //Directory.Delete(projectPath, true);//不能删除目录！！！
-
+           
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);
 
             var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);

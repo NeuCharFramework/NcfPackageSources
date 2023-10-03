@@ -33,8 +33,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             var projectPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "XncfBuilderTest");
             
-            Directory.Delete(projectPath, true);//清空目录
-
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);//重建目录
 
             var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);
