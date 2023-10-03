@@ -59,17 +59,17 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Name">
             <summary>
-            组名
+            PromptGroup 名称
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.MaxToken">
             <summary>
-            最大 Token 数量
+            MaxToken
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Temperature">
             <summary>
-            温度
+            Temperature
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.TopP">
@@ -79,32 +79,32 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.FrequencyPenalty">
             <summary>
-            频率惩罚
+            FrequencyPenalty
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.ResultsPerPrompt">
             <summary>
-            每个 Prompt 的结果数量
+            ResultsPerPrompt
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.StopSequences">
             <summary>
-            停止序列
+            StopSequences
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.ChatSystemPrompt">
             <summary>
-            聊天系统 Prompt
+            ChatSystemPrompt
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.TokenSelectionBiases">
             <summary>
-            Token 选择偏好
+            TokenSelectionBiases
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.EvaluationParameters">
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.EvaluationMetrics">
             <summary>
-            评估参数
+            EvaluationMetrics
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.PromptGroupId">
@@ -209,17 +209,17 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.Name">
             <summary>
-            组名
+            PromptGroup 名称
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.MaxToken">
             <summary>
-            最大 Token 数量
+            MaxToken
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.Temperature">
             <summary>
-            温度
+            Temperature
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.TopP">
@@ -229,32 +229,32 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.FrequencyPenalty">
             <summary>
-            频率惩罚
+            FrequencyPenalty
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.ResultsPerPrompt">
             <summary>
-            每个 Prompt 的结果数量
+            ResultsPerPrompt
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.StopSequences">
             <summary>
-            停止序列
+            StopSequences
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.ChatSystemPrompt">
             <summary>
-            聊天系统 Prompt
+            ChatSystemPrompt
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptGroup.TokenSelectionBiases">
             <summary>
-            Token 选择偏好
+            TokenSelectionBiases
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptGroup.EvaluationParameters">
+        <member name="P:Senparc.Xncf.PromptRange.PromptGroup.EvaluationMetrics">
             <summary>
-            评估参数
+            EvaluationMetrics
             </summary>
         </member>
         <member name="T:Senparc.Xncf.PromptRange.PromptItem">

@@ -2,6 +2,7 @@
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
@@ -68,6 +69,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 context.ExtendContext["fileBasePath"] = projectPath;
                 context.ExtendContext["fileGenerateResult"] = promptResult;
 
+                var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
+
                 //添加保存文件的 Plugin
                 var filePlugin = new FilePlugin(_promptService.IWantToRun);
                 var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, "FilePlugin");
@@ -81,6 +84,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 {
                     case PromptBuildType.EntityClass:
                         functionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
+
+                        context.ExtendContext["projectPath"] = projectPath;
+                        context.ExtendContext["entityName"] = fileGenerateResult[0].FileName.Split('.')[0];
+                        context.ExtendContext["Code"] = projectPath;
+                        context.ExtendContext["EntityName"] = promptResult;
 
                         promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
                         break;

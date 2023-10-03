@@ -84,8 +84,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
                         //运行
                         var request = _iWantToRun.CreateRequest(true);
-                        request.SetTempContext("Code", "fileContent");
-                        request.SetTempContext("EntityName", "entityName");
+                        request.SetTempContext("Code", fileContent);
+                        request.SetTempContext("EntityName", entityName);
 
                         var result = await _iWantToRun.RunAsync(request);
 

@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 {
-
+    /// <summary>
+    /// PromptBuilder 测试
+    /// </summary>
     [TestClass()]
     public class PromptBuilderServiceTest : XncfBuilderTestBase
     {
@@ -33,6 +35,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);
 
+            Directory.Delete(projectPath, true);
+
             var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);
 
             Assert.IsTrue(result.Contains("保存文件"));
@@ -40,6 +44,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "PromptGroup.cs")));
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Dto/PromptGroupDto.cs")));
+
+
+            var senparcEntitiesFile = Path.Combine(projectPath, "PromptRangeSenparcEntities.cs");
+            Assert.IsTrue(File.Exists(senparcEntitiesFile));
+
+            var newContent = File.ReadAllText(senparcEntitiesFile);
+            Assert.IsTrue(newContent.Contains("public PromptGroup PromptGroups { get; private set; }"));
         }
 
     }
