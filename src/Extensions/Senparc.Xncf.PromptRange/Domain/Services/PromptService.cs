@@ -49,13 +49,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// 根据 Plugin 的 Prompt 获取结果
         /// </summary>
         /// <param name="input">用户输入</param>
-        /// <param name="skills">所有需要引用的 Skill（Plugin） 和 Function 的清单
+        /// <param name="context">上下文参数</param>
+        /// <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
         /// <para>Key：Skill Name</para>
         /// <para>Value：Function Name List</para>
         /// </param>
-        /// <param name="context">上下文参数</param>
+        /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(string input, Dictionary<string, List<string>> skills, SenparcAiContext context = null)
+        public async Task<string> GetPromptResultAsync(string input, SenparcAiContext context = null, Dictionary<string, List<string>> plugins = null, params ISKFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
@@ -63,27 +64,32 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             var iWantToRun = IWantToRun ?? ReBuildKernel();
 
-            List<ISKFunction> functionPiple = new List<ISKFunction>();
+            List<ISKFunction> allFunctionPiple = new List<ISKFunction>();
             var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-            foreach (var skillName in skills)
+            foreach (var skillName in plugins)
             {
                 var functionResults = iWantToRun.ImportSkillFromDirectory(pluginDir, skillName.Key);
 
                 foreach (var functionName in skillName.Value)
                 {
-                    functionPiple.Add(functionResults.skillList[functionName]);
+                    allFunctionPiple.Add(functionResults.skillList[functionName]);
                 }
             }
 
-            if (context!=null)
+            if (functionPiple?.Length>0)
+            {
+                allFunctionPiple.AddRange(functionPiple);
+            }
+
+            if (context != null)
             {
                 context.ExtendContext["input"] = input;
             }
 
             //构建请求对象
             var request = context == null
-                ? iWantToRun.CreateRequest(input, true, functionPiple.ToArray())
-                : iWantToRun.CreateRequest(context.ExtendContext, true, functionPiple.ToArray());
+                ? iWantToRun.CreateRequest(input, true, allFunctionPiple.ToArray())
+                : iWantToRun.CreateRequest(context.ExtendContext, true, allFunctionPiple.ToArray());
             //请求
             var result = await iWantToRun.RunAsync(request);
             return result.Output;

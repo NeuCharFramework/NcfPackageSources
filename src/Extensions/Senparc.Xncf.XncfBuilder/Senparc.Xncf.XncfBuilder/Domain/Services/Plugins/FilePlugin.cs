@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel.SkillDefinition;
+using Senparc.CO2NET.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,25 +12,33 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 {
     public class FilePlugin
     {
-        [SKFunction, SKName("BuildEntityClass"), Description("创建实体类")]
-        public async Task<string> CreateAsync(
-         [Description("文件名，包含路径")]
-        string fullPathFileName,
-         [Description("文件内容")]
-        string fileContnet
+        [SKFunction, SKName("Create"), Description("创建实体类")]
+        public async Task<string> Create(
+         [Description("文件路径")]
+        string fileBasePath,
+         [Description("通过 AI 生成的文件内容")]
+        string fileGenerateResult
          )
         {
-            using (var fs = new FileStream(fullPathFileName, FileMode.Create))
+            var log = new StringBuilder();
+            var result = fileGenerateResult.GetObject<FileGenerateResult[]>();
+            foreach (var fileInfo in result)
             {
-                using (var sw = new StreamWriter(fs))
+                var fullPathFileName = Path.GetFullPath(Path.Combine(fileBasePath, fileInfo.FileName));
+                using (var fs = new FileStream(fullPathFileName, FileMode.Create))
                 {
-                    await sw.WriteAsync(fileContnet);
-                    await sw.FlushAsync();
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        await sw.WriteAsync(fileInfo.FileContent);
+                        await sw.FlushAsync();
+                    }
+                    await fs.FlushAsync();
                 }
-                await fs.FlushAsync();
+
+                log.AppendLine($"已保存文件：{fullPathFileName}");
             }
 
-            return "已保存：" + fullPathFileName;
+            return log.ToString();
         }
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）

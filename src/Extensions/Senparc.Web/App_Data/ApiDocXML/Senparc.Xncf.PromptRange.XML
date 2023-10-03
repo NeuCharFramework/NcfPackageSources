@@ -4,16 +4,17 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Senparc.AI.Kernel.Entities.SenparcAiContext)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.SkillDefinition.ISKFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
             </summary>
             <param name="input">用户输入</param>
-            <param name="skills">所有需要引用的 Skill（Plugin） 和 Function 的清单
+            <param name="context">上下文参数</param>
+            <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
             <para>Key：Skill Name</para>
             <para>Value：Function Name List</para>
             </param>
-            <param name="context">上下文参数</param>
+            <param name="functionPiple">functionPiple</param>
             <returns></returns>
         </member>
         <member name="T:Senparc.Xncf.PromptRange.Color">

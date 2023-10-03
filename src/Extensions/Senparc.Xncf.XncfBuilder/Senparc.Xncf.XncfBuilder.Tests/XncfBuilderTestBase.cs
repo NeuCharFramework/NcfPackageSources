@@ -6,6 +6,7 @@ using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.XncfBuilder.Domain.Services;
 using System;
 
 namespace Senparc.Xncf.PromptRange.Tests
@@ -23,6 +24,8 @@ namespace Senparc.Xncf.PromptRange.Tests
             base.registerService.UseSenparcAI(senparcAiSetting);
 
             base.ServiceCollection.AddScoped<PromptService>();
+            base.ServiceCollection.AddScoped<PromptBuilderService>();
+
             base.ServiceCollection.AddScoped<IAiHandler, SemanticAiHandler>();
 
             _serviceProvder = base.ServiceCollection.BuildServiceProvider();
