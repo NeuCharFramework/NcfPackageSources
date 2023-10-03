@@ -1,6 +1,7 @@
 ﻿using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
@@ -13,6 +14,8 @@ namespace Senparc.Xncf.PromptRange
     [Serializable]
     public class PromptItem : EntityBase<int>
     {
+        public int PromptGroupId { get; private set; }
+
         /// <summary>
         /// 最大 Token 数
         /// </summary>
@@ -58,10 +61,13 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public int EvaluationScore { get; private set; }
 
+        public PromptGroup PromptGroup { get; private set; }
+
         private PromptItem() { }
 
-        public PromptItem(int maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string[] stopSequences, string chatSystemPrompt, float[] tokenSelectionBiases, int evaluationScore)
+        public PromptItem(int promptGroupId, int maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string[] stopSequences, string chatSystemPrompt, float[] tokenSelectionBiases, int evaluationScore)
         {
+            PromptGroupId = promptGroupId;
             MaxToken = maxToken;
             Temperature = temperature;
             TopP = topP;

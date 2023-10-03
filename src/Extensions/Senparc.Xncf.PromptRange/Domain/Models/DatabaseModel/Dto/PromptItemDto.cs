@@ -5,6 +5,11 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
     public class PromptItemDto : DtoBase
     {
         /// <summary>
+        /// PromptGroupId
+        /// </summary>
+        public int PromptGroupId { get; private set; }
+
+        /// <summary>
         /// 最大 Token 数
         /// </summary>
         public int MaxToken { get; private set; }

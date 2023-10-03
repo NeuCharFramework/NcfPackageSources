@@ -1,6 +1,7 @@
 ﻿using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.PromptRange
@@ -62,6 +63,7 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public string EvaluationMetrics { get; private set; }
 
+        public List<PromptItem> PromptItems { get; set; }=new List<PromptItem>();
 
         private PromptGroup() { }
 
