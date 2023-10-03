@@ -12,6 +12,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	<ItemGroup>
 	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json" />
 	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\skprompt.txt" />
 	</ItemGroup>
