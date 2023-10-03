@@ -1,11 +1,9 @@
 ﻿using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services
@@ -28,7 +26,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="input"></param>
         /// <param name="projectPath"></param>
         /// <returns></returns>
-        public async Task<string> RunPrompt(PromptBuildType buildType, string input, string projectPath)
+        public async Task<string> RunPrompt(PromptBuildType buildType, string input, string projectPath = null)
         {
             var functions = new Dictionary<string, List<string>>();
 
@@ -51,14 +49,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
             }
 
-            var filePlugin = new FilePlugin();
-
-            var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, nameof(filePlugin.CreateAsync));
-
             //输入生成文件的项目路径
             //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
             var context = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
-            context.ExtendContext["ProjectPath"] = projectPath;
+
+            //需要保存文件
+            if (!projectPath.IsNullOrEmpty())
+            {
+                context.ExtendContext["fullPathFileName"] = projectPath;
+                context.ExtendContext["fileContnet"] = projectPath;
+
+                //添加保存文件的 Plugin
+                var filePlugin = new FilePlugin();
+                var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, nameof(filePlugin.CreateAsync));
+                //加入到管道中
+                functions.Add(nameof(filePlugin), new() { nameof(filePlugin.CreateAsync) });
+            }
 
             var promptResult = await _promptService.GetPromptResultAsync(input, functions, context);
 

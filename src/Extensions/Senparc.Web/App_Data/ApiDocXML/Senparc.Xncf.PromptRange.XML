@@ -4,20 +4,7 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
-        <member name="T:Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType">
-            <summary>
-            XncfBuilder 的 Prompt 类型
-            </summary>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPrompt(Senparc.Xncf.PromptRange.Domain.XncfBuilderPromptType,System.String)">
-            <summary>
-            获取最终 Prompt 文字
-            </summary>
-            <param name="promptType"></param>
-            <param name="prompt"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}})">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Senparc.AI.Kernel.Entities.SenparcAiContext)">
             <summary>
             根据 Plugin 的 Prompt 获取结果
             </summary>
@@ -26,6 +13,7 @@
             <para>Key：Skill Name</para>
             <para>Value：Function Name List</para>
             </param>
+            <param name="context">上下文参数</param>
             <returns></returns>
         </member>
         <member name="T:Senparc.Xncf.PromptRange.Color">
