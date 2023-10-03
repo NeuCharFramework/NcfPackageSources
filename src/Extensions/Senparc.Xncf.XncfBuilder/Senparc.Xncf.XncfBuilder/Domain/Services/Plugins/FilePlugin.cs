@@ -62,7 +62,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         {
             string fileContent = null;
 
-            var databaseModelPath = Path.Combine(projectPath, "Domain", "DatabaseModel");
+            var databaseModelPath = Path.Combine(projectPath, "Domain","Models", "DatabaseModel");
             var databaseFile = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs")[0];
             using (var fs = new FileStream(databaseFile, FileMode.Open))
             {

@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs" />
+	  <Compile Remove="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs">
+	  <Content Include="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json">
