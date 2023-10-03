@@ -24,7 +24,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
         [TestMethod()]
         public async Task RunPromptTest()
         {
-            var input = "这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：PromptGroup，用于管理一组相关联的 Prompt，并统一配置其参数。其中必须要包含 LLM 被调用时的所需的所有参数，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等，除此以外，还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等属于“Group”类型的实体类应该有的参数。";
+            var entityName = "MyClass";
+
+            var input = $"这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：{entityName}，用于管理一组相关联的 Prompt，并统一配置其参数。其中必须要包含 LLM 被调用时的所需的所有参数，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等，除此以外，还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等属于“Group”类型的实体类应该有的参数。";
+
+
 
             var projectPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "XncfBuilderTest");
 
@@ -35,18 +39,18 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             await Console.Out.WriteLineAsync("Run Prompt Result");
             await Console.Out.WriteLineAsync(result);
 
-            var promptGroupFilePath = Path.Combine(projectPath, "PromptGroup.cs");
+            var promptGroupFilePath = Path.Combine(projectPath, $"{entityName}.cs");
             Assert.IsTrue(File.Exists(promptGroupFilePath));
-            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Dto/PromptGroupDto.cs")));
+            Assert.IsTrue(File.Exists(Path.Combine(projectPath, $"Dto/{entityName}.cs")));
 
             var promptGroupFileContent = File.ReadAllText(promptGroupFilePath);
-            Assert.IsTrue(promptGroupFileContent.Contains("public class PromptGroup"));
+            Assert.IsTrue(promptGroupFileContent.Contains($"public class {entityName}"));
 
             var senparcEntitiesFile = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
 
             var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
-            Assert.IsTrue(newSenparcEntitiesContent.Contains("public DbSet<PromptGroup> PromptGroups { get; set; }"));
+            Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}es {{ get; set; }}"));
         }
 
     }

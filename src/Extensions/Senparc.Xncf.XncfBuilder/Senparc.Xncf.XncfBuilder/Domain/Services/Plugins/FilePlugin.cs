@@ -38,7 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                 {
                     using (var sw = new StreamWriter(fs))
                     {
-                        await sw.WriteAsync(fileInfo.FileContent);
+                        await sw.WriteAsync(fileInfo.EntityCode);
                         await sw.FlushAsync();
                     }
                 }
