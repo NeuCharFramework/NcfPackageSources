@@ -33,7 +33,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);
 
-            var result = await _service.RunPrompt(PromptBuildType.EntityClass, input, projectPath);
+            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);
 
             Assert.IsTrue(result.Contains("保存文件"));
             await Console.Out.WriteLineAsync(result);

@@ -1,22 +1,12 @@
-﻿using Microsoft.SemanticKernel.Memory;
-using Senparc.AI.Entities;
+﻿using Microsoft.SemanticKernel.SkillDefinition;
 using Senparc.AI;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.Helpers;
-using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.Repository;
-using Senparc.Ncf.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SemanticKernel;
-using System.IO;
-using Microsoft.SemanticKernel.SkillDefinition;
 using Senparc.AI.Kernel.Entities;
+using Senparc.AI.Kernel.Handlers;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -65,18 +55,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var iWantToRun = IWantToRun ?? ReBuildKernel();
 
             List<ISKFunction> allFunctionPiple = new List<ISKFunction>();
-            var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-            foreach (var skillName in plugins)
-            {
-                var functionResults = iWantToRun.ImportSkillFromDirectory(pluginDir, skillName.Key);
 
-                foreach (var functionName in skillName.Value)
+            if (plugins?.Count > 0)
+            {
+                var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+                foreach (var skillName in plugins)
                 {
-                    allFunctionPiple.Add(functionResults.skillList[functionName]);
+                    var functionResults = iWantToRun.ImportSkillFromDirectory(pluginDir, skillName.Key);
+
+                    foreach (var functionName in skillName.Value)
+                    {
+                        allFunctionPiple.Add(functionResults.skillList[functionName]);
+                    }
                 }
             }
 
-            if (functionPiple?.Length>0)
+            if (functionPiple?.Length > 0)
             {
                 allFunctionPiple.AddRange(functionPiple);
             }

@@ -4,6 +4,7 @@ using Senparc.AI.Kernel;
 using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="input"></param>
         /// <param name="projectPath"></param>
         /// <returns></returns>
-        public async Task<string> RunPrompt(PromptBuildType buildType, string input, string projectPath = null)
+        public async Task<string> RunPromptAsync(PromptBuildType buildType, string input, string projectPath = null)
         {
             var plugins = new Dictionary<string, List<string>>();
 
@@ -50,26 +51,30 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
             }
 
-            //输入生成文件的项目路径
-            //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
-            var context = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
-            context.TryInitExtendContext();
+            var promptResult = await _promptService.GetPromptResultAsync(input, null, plugins);
 
-            List<ISKFunction> functioPiple = new List<ISKFunction>();
+            await Console.Out.WriteLineAsync(promptResult);
 
             //需要保存文件
             if (!projectPath.IsNullOrEmpty())
             {
+                //输入生成文件的项目路径
+                //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
+                var context = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
+                context.TryInitExtendContext();
+
                 context.ExtendContext["fileBasePath"] = projectPath;
+                context.ExtendContext["fileGenerateResult"] = promptResult;
 
                 //添加保存文件的 Plugin
                 var filePlugin = new FilePlugin();
                 var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, "FilePlugin");
 
-                functioPiple.Add(skills["Create"]);
+                ISKFunction[] functionPiple = new[] { skills["Create"] };
+
+                promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
             }
 
-            var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins, functioPiple.ToArray());
 
             return promptResult;
         }

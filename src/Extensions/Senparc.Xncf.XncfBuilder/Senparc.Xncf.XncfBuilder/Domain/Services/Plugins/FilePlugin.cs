@@ -25,6 +25,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             foreach (var fileInfo in result)
             {
                 var fullPathFileName = Path.GetFullPath(Path.Combine(fileBasePath, fileInfo.FileName));
+
+                CO2NET.Helpers.FileHelper.TryCreateDirectory(Path.GetDirectoryName(fullPathFileName));
+
                 using (var fs = new FileStream(fullPathFileName, FileMode.Create))
                 {
                     using (var sw = new StreamWriter(fs))
@@ -32,7 +35,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                         await sw.WriteAsync(fileInfo.FileContent);
                         await sw.FlushAsync();
                     }
-                    await fs.FlushAsync();
                 }
 
                 log.AppendLine($"已保存文件：{fullPathFileName}");
