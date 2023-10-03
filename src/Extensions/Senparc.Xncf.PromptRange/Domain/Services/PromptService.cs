@@ -77,13 +77,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (context != null)
             {
-                context.ExtendContext["input"] = input;
+                context.ContextVariables["input"] = input;
             }
 
             //构建请求对象
             var request = context == null
                 ? iWantToRun.CreateRequest(input, true, allFunctionPiple.ToArray())
-                : iWantToRun.CreateRequest(context.ExtendContext, true, allFunctionPiple.ToArray());
+                : iWantToRun.CreateRequest(context.ContextVariables, true, allFunctionPiple.ToArray());
             //请求
             var result = await iWantToRun.RunAsync(request);
             return result.Output;

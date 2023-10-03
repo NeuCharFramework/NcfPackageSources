@@ -84,12 +84,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
                         //运行
                         var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
+
+
+                        request.TempAiContext = new AI.Kernel.Entities.SenparcAiContext();
                         request.SetTempContext("Code", fileContent);
                         request.SetTempContext("EntityName", entityName);
 
                         var result = await _iWantToRun.RunAsync(request);
 
-                       var newFileContent = result.Output;
+                        var newFileContent = result.Output;
 
                         await sw.WriteAsync(newFileContent);
                         await sw.FlushAsync();

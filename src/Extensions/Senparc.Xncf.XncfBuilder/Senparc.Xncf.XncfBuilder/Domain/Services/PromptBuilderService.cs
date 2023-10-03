@@ -64,10 +64,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 //输入生成文件的项目路径
                 //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
                 var context = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
-                context.TryInitExtendContext();
 
-                context.ExtendContext["fileBasePath"] = projectPath;
-                context.ExtendContext["fileGenerateResult"] = promptResult;
+                context.ContextVariables["fileBasePath"] = projectPath;
+                context.ContextVariables["fileGenerateResult"] = promptResult;
 
                 var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
 
@@ -85,10 +84,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     case PromptBuildType.EntityClass:
                         functionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
 
-                        context.ExtendContext["projectPath"] = projectPath;
-                        context.ExtendContext["entityName"] = fileGenerateResult[0].FileName.Split('.')[0];
-                        context.ExtendContext["Code"] = projectPath;
-                        context.ExtendContext["EntityName"] = promptResult;
+                        context.ContextVariables["projectPath"] = projectPath;
+                        context.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0];
+                        context.ContextVariables["Code"] = projectPath;
+                        context.ContextVariables["EntityName"] = promptResult;
 
                         promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
                         break;
