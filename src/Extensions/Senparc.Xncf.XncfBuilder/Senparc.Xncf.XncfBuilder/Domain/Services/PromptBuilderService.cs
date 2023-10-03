@@ -58,6 +58,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             //需要保存文件
             if (!projectPath.IsNullOrEmpty())
             {
+                //创建文件
+
                 //输入生成文件的项目路径
                 //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
                 var context = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
@@ -67,14 +69,35 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 context.ExtendContext["fileGenerateResult"] = promptResult;
 
                 //添加保存文件的 Plugin
-                var filePlugin = new FilePlugin();
+                var filePlugin = new FilePlugin(_promptService.IWantToRun);
                 var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, "FilePlugin");
 
-                ISKFunction[] functionPiple = new[] { skills["Create"] };
+                ISKFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
 
                 promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
-            }
 
+                //更新 SenparcEntities
+                switch (buildType)
+                {
+                    case PromptBuildType.EntityClass:
+                        functionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
+
+                        promptResult = await _promptService.GetPromptResultAsync("", context, null, functionPiple);
+                        break;
+                    case PromptBuildType.Repository:
+                        break;
+                    case PromptBuildType.Service:
+                        break;
+                    case PromptBuildType.AppService:
+                        break;
+                    case PromptBuildType.PL:
+                        break;
+                    case PromptBuildType.DbContext:
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             return promptResult;
         }

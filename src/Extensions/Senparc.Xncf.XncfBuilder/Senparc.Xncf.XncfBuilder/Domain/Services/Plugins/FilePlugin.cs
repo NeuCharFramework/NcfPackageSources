@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.SemanticKernel.SkillDefinition;
+﻿using Microsoft.SemanticKernel.SkillDefinition;
+using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET.Helpers;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -12,12 +11,19 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 {
     public class FilePlugin
     {
-        [SKFunction, SKName("Create"), Description("创建实体类")]
-        public async Task<string> Create(
-         [Description("文件路径")]
-        string fileBasePath,
-         [Description("通过 AI 生成的文件内容")]
-        string fileGenerateResult
+        private readonly IWantToRun _iWantToRun;
+
+        public FilePlugin(IWantToRun iWantToRun)
+        {
+            this._iWantToRun = iWantToRun;
+        }
+
+        [SKFunction, SKName("CreateFile"), Description("创建实体类")]
+        public async Task<string> CreateFile(
+             [Description("文件路径")]
+            string fileBasePath,
+             [Description("通过 AI 生成的文件内容")]
+            string fileGenerateResult
          )
         {
             var log = new StringBuilder();
@@ -44,6 +50,56 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         }
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
+
+
+        [SKFunction, SKName("UpdateSenparcEntities"), Description("读取数据库上下文")]
+        public async Task<string> UpdateSenparcEntities(
+            [Description("项目路径")]
+            string projectPath,
+            [Description("新实体的名字")]
+            string entityName
+            )
+        {
+            string fileContent = null;
+
+            var databaseModelPath = Path.Combine(projectPath, "Domain", "DatabaseModel");
+            var databaseFile = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs")[0];
+            using (var fs = new FileStream(databaseFile, FileMode.Open))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+                    fileContent = sr.ReadToEnd();
+
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        fs.Seek(0, SeekOrigin.Begin);
+
+                        //运行 plugin
+                        //var plugins = new Dictionary<string, List<string>>() {
+                        //        {"XncfBuilderPlugin",new(){ "UpdateSenparcEntities" } }
+                        //    };
+
+                        var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+                        _iWantToRun.ImportSkillFromDirectory(pluginDir, "UpdateSenparcEntities");
+
+                        //运行
+                        var request = _iWantToRun.CreateRequest(true);
+                        request.SetTempContext("Code", "fileContent");
+                        request.SetTempContext("EntityName", "entityName");
+
+                        var result = await _iWantToRun.RunAsync(request);
+
+                        fileContent = result.Output;
+
+                        await sw.WriteAsync(fileContent);
+                        await sw.FlushAsync();
+
+                        return $"已更新文件：{databaseFile}";
+                    }
+                }
+            }
+
+        }
 
 
     }

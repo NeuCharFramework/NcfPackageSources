@@ -14,7 +14,9 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 {
     /// <summary>
     /// PromptRange 模块的初始化代码
+    /// <para>注意：这会直接修改现有代码！</para>
     /// </summary>
+    [TestClass]
     public class PromptRangeGenerateTests : XncfBuilderTestBase
     {
         protected PromptBuilderService _service;
@@ -31,6 +33,8 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 
             var projectPath = Path.Combine("Y:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
 
+            //Directory.Delete(projectPath, true);
+
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);
 
             var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);
@@ -40,7 +44,12 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "PromptGroup.cs")));
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Dto/PromptGroupDto.cs")));
-        }
 
+            var senparcEntitiesFile = Path.Combine(projectPath, "PromptRangeSenparcEntities.cs");
+            Assert.IsTrue(File.Exists(senparcEntitiesFile));
+
+          var newContent = File.ReadAllText(senparcEntitiesFile);
+            Assert.IsTrue(newContent.Contains("public PromptGroup PromptGroups { get; private set; }"));
+        }
     }
 }
