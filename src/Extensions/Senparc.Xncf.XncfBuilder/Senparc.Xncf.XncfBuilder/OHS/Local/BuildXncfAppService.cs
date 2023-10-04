@@ -288,7 +288,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             });
         }
 
-        [FunctionRender("生成数据库实体", "生成符合 DDD 约束的数据库实体及其包含的方法。注意：请在开发环境中使用此方法，系统将自动检测。", typeof(Register))]
+        [FunctionRender("生成数据库实体", "生成符合 DDD 约束的数据库实体及其包含的方法。注意：1、请在开发环境中使用此方法，系统将自动检测。2、请做好代码备份，建议切换一个干净的分支。", typeof(Register))]
         public async Task<StringAppResponse> CreateDatabaseEntity(CreateDatabaseEntityRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>

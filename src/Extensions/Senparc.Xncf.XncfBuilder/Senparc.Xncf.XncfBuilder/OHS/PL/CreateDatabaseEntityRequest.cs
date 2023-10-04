@@ -71,9 +71,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                     {
                         InjectDomain.Items.Add(
                             new SelectionItem(
-                                registerFilePath,
-                             Path.GetFileName(Path.GetDirectoryName(registerFilePath)),
-                                Path.GetDirectoryName(registerFilePath)));
+                                projectFolder,
+                             Path.GetFileName(projectFolder),
+                                Path.GetDirectoryName(projectFolder)));
                     }
                 }
             }
