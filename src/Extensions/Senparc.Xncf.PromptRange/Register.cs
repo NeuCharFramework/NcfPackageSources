@@ -85,7 +85,6 @@ namespace Senparc.Xncf.PromptRange
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
             registerService.UseSenparcAI(SenparcAiSetting);
 
             return base.UseXncfModule(app, registerService);
@@ -98,6 +97,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptService>();
             services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
+            SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
             configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
 
             return base.AddXncfModule(services, configuration, env);
