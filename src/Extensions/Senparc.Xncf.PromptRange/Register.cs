@@ -17,6 +17,9 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.CO2NET;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -78,11 +81,22 @@ namespace Senparc.Xncf.PromptRange
         }
         #endregion
 
+        private static SenparcAiSetting SenparcAiSetting { get; set; }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            registerService.UseSenparcAI(SenparcAiSetting);
+
+            return base.UseXncfModule(app, registerService);
+        }
+
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<PromptService>();
             services.AddScoped<IAiHandler, SemanticAiHandler>();
+
+            configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
 
             return base.AddXncfModule(services, configuration, env);
         }
