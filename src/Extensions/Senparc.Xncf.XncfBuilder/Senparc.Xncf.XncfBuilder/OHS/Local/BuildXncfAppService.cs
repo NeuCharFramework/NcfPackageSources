@@ -3,6 +3,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
+using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -286,5 +287,26 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return null;
             });
         }
+
+        [FunctionRender("生成数据库实体", "生成符合 DDD 约束的数据库实体及其包含的方法", typeof(Register))]
+        public async Task<StringAppResponse> CreateDatabaseEntity(CreateDatabaseEntityRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+
+                var input = request.Requirement;
+
+                var projectPath = request.InjectDomain.SelectedValues.FirstOrDefault();
+                if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
+                {
+                    throw new Exception("没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！");
+                }
+
+                var result = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, projectPath);
+
+                return result;
+            });
+        }
+
     }
-}

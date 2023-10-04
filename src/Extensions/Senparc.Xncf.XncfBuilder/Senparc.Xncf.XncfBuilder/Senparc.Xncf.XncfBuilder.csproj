@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
 		<!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>-->
-		<Version>0.14.0-beta10</Version>
+		<Version>0.15.0-beta10</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -26,6 +26,8 @@
 			v0.13.6 更新 XncfBuilder，适配 .NET 7.0 CLI
 			v0.13.9 数据库 migration 命令中的路径添加引号，防止路径中出现空格
 			v0.13.10 XNCF Builder 自动记录上次填写的内容，并且首次自动探索 .sln 文件
+			V0.14.0 移除对 netstandard2.1 的编译，保留 netcoreapp3.1;net6.0
+			v0.15.0 集成 Senparc.Xncf.PromptRange 项目，使用 AI 自动生成项目
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -8,7 +8,7 @@
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 		<DocumentationFile>../Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.PromptRange.XML</DocumentationFile>
 		<Configurations>Debug;Release;Debug-Dapr</Configurations>
-		<Version>0.1</Version>
+		<Version>0.1.1</Version>
 		<AssemblyName>Senparc.Xncf.PromptRange</AssemblyName>
 		<RootNamespace>Senparc.Xncf.PromptRange</RootNamespace>
 
