@@ -70,6 +70,6 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public DateTime LastRunTime { get; private set; }
 
-        private PromptItemDto() { }
+        public PromptItemDto() { }
     }
 }

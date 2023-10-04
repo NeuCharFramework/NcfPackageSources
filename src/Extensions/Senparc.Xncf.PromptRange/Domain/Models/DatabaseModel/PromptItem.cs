@@ -1,9 +1,11 @@
 ﻿using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -66,6 +68,7 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public string Version { get; private set; }
 
+
         /// <summary>
         /// 最后一次运行时间
         /// </summary>
@@ -104,6 +107,64 @@ namespace Senparc.Xncf.PromptRange
             EvaluationScore = promptItemDto.EvaluationScore;
             Version = promptItemDto.Version;
             LastRunTime = promptItemDto.LastRunTime;
+        }
+
+        /// <summary>
+        /// 获取版本信息
+        /// </summary>
+        /// <param name="version">如果留空则默认获取当前示例的 Version</param>
+        /// <returns></returns>
+        public VersionInfo GetVersionInfo(string version = null)
+        {
+            version ??= Version ?? "";
+
+            string regexPattern = @"(\d+)\.(\d+)\.(\d+)\.(\d+)";
+            Match match = Regex.Match(version, regexPattern);
+            if (match.Success)
+            {
+                int ConverToInt(string str) => int.Parse(str);
+
+                int major = ConverToInt(match.Groups[1].Value);
+                int minor = ConverToInt(match.Groups[2].Value);
+                int patch = ConverToInt(match.Groups[3].Value);
+                int build = ConverToInt(match.Groups[4].Value);
+
+                return new VersionInfo(major, minor, patch, build);
+            }
+            else
+            {
+                return new VersionInfo(0, 0, 0, 0);
+            }
+        }
+
+        /// <summary>
+        /// 生成新的版本号
+        /// </summary>
+        /// <param name="lastVersion"></param>
+        /// <returns></returns>
+        public VersionInfo GenerateNewVersion(string lastVersion)
+        {
+            var today = SystemTime.Now;
+            int major = today.Year;
+            int minor = today.Month;
+            int patch = today.Day;
+
+            var lastVersionInfo = GetVersionInfo(lastVersion);
+            if (lastVersionInfo.Major != 0 &&
+                lastVersionInfo.Major == major &&
+                lastVersionInfo.Minor == minor &&
+                lastVersionInfo.Patch == patch)
+            {
+                //当天版本，Build 号加 1
+                lastVersionInfo.Build++;
+                return lastVersionInfo;
+            }
+            else
+            {
+                //返回当天第一个版本
+                var versionInfo = new VersionInfo(major, minor, patch, 1);
+                return versionInfo;
+            }
         }
     }
 }

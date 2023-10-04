@@ -1,0 +1,60 @@
+﻿using LibNoise.Combiner;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Xncf.PromptRange;
+using Senparc.Xncf.PromptRange.Domain.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Senparc.Xncf.PromptRange.Tests
+{
+    [TestClass()]
+    public class PromptItemTests
+    {
+        [TestMethod()]
+        public void GenerateNewVersionTest()
+        {
+            VersionInfo testVersion(DateTime date, int build)
+            {
+                int major = date.Year;
+                int minor = date.Month;
+                int patch = date.Day;
+                var lastVersion = $"{major}.{minor}.{patch}.{build}";
+
+                var promptItem = new PromptItem(new PromptItemDto());
+                return promptItem.GenerateNewVersion(lastVersion);
+            }
+
+            var today = SystemTime.Now.DateTime;
+
+            //测试当天时间
+            var newVersion = testVersion(today, 3);
+            Assert.AreEqual(today.Year, newVersion.Major);
+            Assert.AreEqual(today.Month, newVersion.Minor);
+            Assert.AreEqual(today.Day, newVersion.Patch);
+            Assert.AreEqual(3 + 1, newVersion.Build);//版本号 +1
+
+            //测试过去时间
+            newVersion = testVersion(today.AddDays(-1), 4);
+            Assert.AreEqual(today.Year, newVersion.Major);
+            Assert.AreEqual(today.Month, newVersion.Minor);
+            Assert.AreEqual(today.Day, newVersion.Patch);
+            Assert.AreEqual(1, newVersion.Build);//版本号从 1 开始
+        }
+
+        [TestMethod()]
+        public void GetVersionInfoTest()
+        {
+            var lastVersion = "2023.10.1.2";
+            var promptItem = new PromptItem(new PromptItemDto());
+            var versionInfo = promptItem.GetVersionInfo(lastVersion);
+            Assert.AreEqual(2023, versionInfo.Major);
+            Assert.AreEqual(10, versionInfo.Minor);
+            Assert.AreEqual(1, versionInfo.Patch);
+            Assert.AreEqual(2, versionInfo.Build);
+        }
+    }
+}

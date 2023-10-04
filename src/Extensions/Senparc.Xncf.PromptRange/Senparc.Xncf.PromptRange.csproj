@@ -64,4 +64,11 @@
 	<ItemGroup>
 	  <Folder Include="Domain\PromptPlugins\" />
 	</ItemGroup>
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	  <PackageReference Include="MiNET">
+	    <Version>1.0.2304</Version>
+	  </PackageReference>
+	</ItemGroup>
 </Project>

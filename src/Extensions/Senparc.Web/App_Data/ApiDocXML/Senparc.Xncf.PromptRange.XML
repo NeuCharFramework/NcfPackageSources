@@ -4,6 +4,11 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo">
+            <summary>
+            版本号信息
+            </summary>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.SkillDefinition.ISKFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
@@ -157,6 +162,21 @@
             评估参数
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvaluationMetrics">
+            <summary>
+            EvaluationMetrics
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Version">
+            <summary>
+            版本号，格式为 yyyy.MM.dd.Version
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.LastRunTime">
+            <summary>
+            最后一次运行时间
+            </summary>
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_MySql">
             <summary>
             设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
@@ -306,6 +326,30 @@
             <summary>
             评估参数
             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Version">
+            <summary>
+            版本号，格式为 yyyy.MM.dd.Version
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.LastRunTime">
+            <summary>
+            最后一次运行时间
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.GetVersionInfo(System.String)">
+            <summary>
+            获取版本信息
+            </summary>
+            <param name="version">如果留空则默认获取当前示例的 Version</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.GenerateNewVersion(System.String)">
+            <summary>
+            生成新的版本号
+            </summary>
+            <param name="lastVersion"></param>
+            <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>
