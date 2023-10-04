@@ -1,5 +1,4 @@
-﻿using LibNoise.Combiner;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Senparc.Xncf.PromptRange;
 using Senparc.Xncf.PromptRange.Domain.Models;

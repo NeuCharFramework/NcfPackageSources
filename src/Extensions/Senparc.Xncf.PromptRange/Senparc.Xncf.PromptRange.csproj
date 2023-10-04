@@ -30,12 +30,12 @@
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<OutputPath>..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
-
+		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
 		<EmbeddedResource Include="wwwroot\**\*" />
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0" />
@@ -62,13 +62,6 @@
 
 
 	<ItemGroup>
-	  <Folder Include="Domain\PromptPlugins\" />
-	</ItemGroup>
-
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-	  <PackageReference Include="MiNET">
-	    <Version>1.0.2304</Version>
-	  </PackageReference>
+		<Folder Include="Domain\PromptPlugins\" />
 	</ItemGroup>
 </Project>
