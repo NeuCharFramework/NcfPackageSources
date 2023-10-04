@@ -95,7 +95,7 @@ namespace Senparc.Xncf.PromptRange
             //services.AddScoped<ColorDto>();
             //services.AddScoped<ColorService>();
             services.AddScoped<PromptService>();
-            services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
             SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
             configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);

@@ -20,10 +20,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private string _modelName = "text-davinci-003";//默认使用模型
 
 
-        public PromptService(IAiHandler aiHandler)
+        public PromptService(/*IAiHandler aiHandler*/)
         {
-            this._aiHandler = (SemanticAiHandler)aiHandler;
-
+            //this._aiHandler = (SemanticAiHandler)aiHandler;
+            this._aiHandler = new SemanticAiHandler();
             ReBuildKernel();
         }
 

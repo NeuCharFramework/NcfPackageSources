@@ -60,9 +60,8 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-
-            services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<PromptRange.Domain.Services.PromptService>();
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();

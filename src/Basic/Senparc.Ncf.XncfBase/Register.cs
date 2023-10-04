@@ -157,7 +157,9 @@ namespace Senparc.Ncf.XncfBase
                             }
 
                             //配置 ServiceBase
-                            if (t.IsSubclassOf(typeof(ServiceBase<>)) || t.IsInstanceOfType(typeof(IServiceDataBase)))
+                            if (t.IsSubclassOf(typeof(ServiceBase<>)) 
+                                //|| t.IsInstanceOfType(typeof(IServiceDataBase))
+                                )
                             {
                                 services.AddScoped(t);
                             }

@@ -18,9 +18,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         private readonly SemanticAiHandler _aiHandler;
         private readonly PromptService _promptService;
 
-        public PromptBuilderService(IAiHandler aiHandler, PromptService promptService)
+        public PromptBuilderService(/*IAiHandler aiHandler,*/ PromptService promptService)
         {
-            this._aiHandler = (SemanticAiHandler)aiHandler;
+            //this._aiHandler = (SemanticAiHandler)aiHandler;
+            this._aiHandler = promptService.IWantToRun.SemanticAiHandler;
             this._promptService = promptService;
         }
 
