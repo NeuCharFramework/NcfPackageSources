@@ -51,8 +51,7 @@ namespace Senparc.Xncf.PromptRange
                 case InstallOrUpdate.Install:
                     //新安装
                     #region 初始化数据库数据
-                    var colorService = serviceProvider.GetService<ColorAppService>();
-                    var colorResult = await colorService.GetOrInitColorAsync();
+           
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
@@ -92,8 +91,9 @@ namespace Senparc.Xncf.PromptRange
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            services.AddScoped<ColorService>();
-            services.AddScoped<ColorAppService>();
+            //services.AddScoped<Color>();
+            //services.AddScoped<ColorDto>();
+            //services.AddScoped<ColorService>();
             services.AddScoped<PromptService>();
             services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
