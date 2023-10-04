@@ -140,10 +140,12 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 生成新的版本号
         /// </summary>
-        /// <param name="lastVersion"></param>
+        /// <param name="lastVersion">上一个版本，如果为 null，则使用当前实例的 Version</param>
         /// <returns></returns>
-        public VersionInfo GenerateNewVersion(string lastVersion)
+        public VersionInfo GenerateNewVersion(string lastVersion = null)
         {
+            lastVersion ??= Version ?? "";
+
             var today = SystemTime.Now;
             int major = today.Year;
             int minor = today.Month;
@@ -166,5 +168,14 @@ namespace Senparc.Xncf.PromptRange
                 return versionInfo;
             }
         }
+
+        /// <summary>
+        /// 更新版本号
+        /// </summary>
+        public void UpdateVersion()
+        {
+            Version = GenerateNewVersion(Version).ToString();
+        }
+
     }
 }

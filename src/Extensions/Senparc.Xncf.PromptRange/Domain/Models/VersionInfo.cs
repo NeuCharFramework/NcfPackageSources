@@ -21,5 +21,27 @@ namespace Senparc.Xncf.PromptRange.Domain.Models
             Patch = patch;
             Build = build;
         }
+
+        /// <summary>
+        /// 生成版本号字符串
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{Major}.{Minor}.{Patch}.{Build}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is VersionInfo vi)
+            {
+                return vi.Major == Major && vi.Minor == Minor &&
+                       vi.Patch == Patch && vi.Build == Build;
+            }
+            else
+            {
+                return base.Equals(obj);
+            }
+        }
     }
 }

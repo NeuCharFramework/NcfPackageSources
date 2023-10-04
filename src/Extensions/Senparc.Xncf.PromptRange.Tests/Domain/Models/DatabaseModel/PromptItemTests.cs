@@ -1,5 +1,6 @@
 ﻿using LibNoise.Combiner;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Senparc.Xncf.PromptRange;
 using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -24,7 +25,10 @@ namespace Senparc.Xncf.PromptRange.Tests
                 int patch = date.Day;
                 var lastVersion = $"{major}.{minor}.{patch}.{build}";
 
-                var promptItem = new PromptItem(new PromptItemDto());
+                var moqDto = new Mock<PromptItemDto>();
+                moqDto.Setup(z => z.Version).Returns("");
+
+                var promptItem = new PromptItem(moqDto.Object);
                 return promptItem.GenerateNewVersion(lastVersion);
             }
 
@@ -48,13 +52,33 @@ namespace Senparc.Xncf.PromptRange.Tests
         [TestMethod()]
         public void GetVersionInfoTest()
         {
+            var moqDto = new Mock<PromptItemDto>();
+            moqDto.Setup(z => z.Version).Returns("");
+
             var lastVersion = "2023.10.1.2";
-            var promptItem = new PromptItem(new PromptItemDto());
+            var promptItem = new PromptItem(moqDto.Object);
             var versionInfo = promptItem.GetVersionInfo(lastVersion);
             Assert.AreEqual(2023, versionInfo.Major);
             Assert.AreEqual(10, versionInfo.Minor);
             Assert.AreEqual(1, versionInfo.Patch);
             Assert.AreEqual(2, versionInfo.Build);
+        }
+
+        [TestMethod()]
+        public void UpdateVersionTest()
+        {
+            var moqDto = new Mock<PromptItemDto>(MockBehavior.Loose, new string[0]);
+            moqDto.Setup(z => z.Version).Returns("2021.2.1.3");
+
+            var promptItem = new PromptItem(moqDto.Object);
+            promptItem.UpdateVersion();
+
+            var today = SystemTime.Now.DateTime;
+            var newVersion = promptItem.GetVersionInfo();
+            var todayFirstVersion = new VersionInfo(today.Year, today.Month, today.Day, 1);
+
+            Assert.IsTrue(todayFirstVersion.Equals(newVersion));
+            Assert.AreEqual(todayFirstVersion, newVersion);
         }
     }
 }

@@ -9,6 +9,12 @@
             版本号信息
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo.ToString">
+            <summary>
+            生成版本号字符串
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.SkillDefinition.ISKFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
@@ -348,8 +354,13 @@
             <summary>
             生成新的版本号
             </summary>
-            <param name="lastVersion"></param>
+            <param name="lastVersion">上一个版本，如果为 null，则使用当前实例的 Version</param>
             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.UpdateVersion">
+            <summary>
+            更新版本号
+            </summary>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>
