@@ -85,6 +85,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
+            SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
             registerService.UseSenparcAI(SenparcAiSetting);
 
             return base.UseXncfModule(app, registerService);
@@ -92,9 +93,10 @@ namespace Senparc.Xncf.PromptRange
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            services.AddScoped<ColorService>();
             services.AddScoped<ColorAppService>();
             services.AddScoped<PromptService>();
-            services.AddScoped<IAiHandler, SemanticAiHandler>();
+            services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
             configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
 
