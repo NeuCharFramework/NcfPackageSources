@@ -20,35 +20,49 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
     public class PromptRangeGenerateTests : XncfBuilderTestBase
     {
         protected PromptBuilderService _service;
+        private string _projectPath = Path.Combine("Y:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
+
+        /// <summary>
+        /// 创建实体
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <returns></returns>
+        private async Task RunPromptBaseTest(string entityName)
+        {
+            var input = $"这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：{entityName}，用于管理一组相关联的 Prompt，并统一配置其参数。生成的属性中需要包含常规的 LLM 被调用时的所需的参数，尽可能完整，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等；除此以外，属性还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等常规实体类应该有的参数。";
+
+            CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);
+
+            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, _projectPath);
+
+            Assert.IsTrue(result.Contains("保存文件"));
+            await Console.Out.WriteLineAsync(result);
+
+            var promptGroupFilePath = Path.Combine(_projectPath, $"{entityName}.cs");
+            Assert.IsTrue(File.Exists(promptGroupFilePath));
+            Assert.IsTrue(File.Exists(Path.Combine(_projectPath, $"Dto/{entityName}Dto.cs")));
+
+            var promptGroupFileContent = File.ReadAllText(promptGroupFilePath);
+            Assert.IsTrue(promptGroupFileContent.Contains($"public class {entityName}"));
+
+            var senparcEntitiesFile = Path.Combine(_projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
+            Assert.IsTrue(File.Exists(senparcEntitiesFile));
+
+            var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
+            Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}es {{ get; set; }}"));
+        }
 
         public PromptRangeGenerateTests()
         {
             _service = base._serviceProvder.GetRequiredService<PromptBuilderService>();
         }
 
+
+
         [TestMethod()]
-        public async Task RunPromptTest()
+        public async Task PromptGroupTest()
         {
-            var input = "这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：PromptGroup，用于管理一组相关联的 Prompt，并统一配置其参数。其中必须要包含 LLM 被调用时的所需的所有参数，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等，除此以外，还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等属于“Group”类型的实体类应该有的参数。";
-
-            var projectPath = Path.Combine("Y:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
-
-           
-            CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);
-
-            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);
-
-            Assert.IsTrue(result.Contains("保存文件"));
-            await Console.Out.WriteLineAsync(result);
-
-            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "PromptGroup.cs")));
-            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Dto/PromptGroupDto.cs")));
-
-            var senparcEntitiesFile = Path.Combine(projectPath, "PromptRangeSenparcEntities.cs");
-            Assert.IsTrue(File.Exists(senparcEntitiesFile));
-
-          var newContent = File.ReadAllText(senparcEntitiesFile);
-            Assert.IsTrue(newContent.Contains("public PromptGroup PromptGroups { get; private set; }"));
+            await RunPromptBaseTest("PromptGroup");
         }
     }
 }
