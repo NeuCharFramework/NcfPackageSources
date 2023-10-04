@@ -63,7 +63,8 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public string EvaluationMetrics { get; private set; }
 
-        public List<PromptItem> PromptItems { get; set; }=new List<PromptItem>();
+
+        public List<PromptItem> PromptItems { get; set; } = new List<PromptItem>();
 
         private PromptGroup() { }
 
@@ -79,6 +80,20 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = promptGroupDto.ChatSystemPrompt;
             TokenSelectionBiases = promptGroupDto.TokenSelectionBiases;
             EvaluationMetrics = promptGroupDto.EvaluationMetrics;
+        }
+
+        public PromptGroup(string name, int maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string stopSequences, string chatSystemPrompt, string tokenSelectionBiases, string evaluationMetrics)
+        {
+            Name = name;
+            MaxToken = maxToken;
+            Temperature = temperature;
+            TopP = topP;
+            FrequencyPenalty = frequencyPenalty;
+            ResultsPerPrompt = resultsPerPrompt;
+            StopSequences = stopSequences;
+            ChatSystemPrompt = chatSystemPrompt;
+            TokenSelectionBiases = tokenSelectionBiases;
+            EvaluationMetrics = evaluationMetrics;
         }
     }
 }

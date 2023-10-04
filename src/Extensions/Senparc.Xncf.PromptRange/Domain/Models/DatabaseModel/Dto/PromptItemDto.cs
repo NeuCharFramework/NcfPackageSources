@@ -1,4 +1,5 @@
 ﻿using Senparc.Ncf.Core.Models;
+using System;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
@@ -53,6 +54,21 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// 评估参数
         /// </summary>
         public int EvaluationScore { get; private set; }
+        /// <summary>
+        /// EvaluationMetrics
+        /// </summary>
+        public string EvaluationMetrics { get; private set; }
+
+
+        /// <summary>
+        /// 版本号，格式为 yyyy.MM.dd.Version
+        /// </summary>
+        public string Version { get; private set; }
+
+        /// <summary>
+        /// 最后一次运行时间
+        /// </summary>
+        public DateTime LastRunTime { get; private set; }
 
         private PromptItemDto() { }
     }

@@ -61,11 +61,21 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public int EvaluationScore { get; private set; }
 
+        /// <summary>
+        /// 版本号，格式为 yyyy.MM.dd.Version
+        /// </summary>
+        public string Version { get; private set; }
+
+        /// <summary>
+        /// 最后一次运行时间
+        /// </summary>
+        public DateTime LastRunTime { get; private set; }
+
         public PromptGroup PromptGroup { get; private set; }
 
         private PromptItem() { }
 
-        public PromptItem(int promptGroupId, int maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string[] stopSequences, string chatSystemPrompt, float[] tokenSelectionBiases, int evaluationScore)
+        public PromptItem(int promptGroupId, int maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string[] stopSequences, string chatSystemPrompt, float[] tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
         {
             PromptGroupId = promptGroupId;
             MaxToken = maxToken;
@@ -77,6 +87,8 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = chatSystemPrompt;
             TokenSelectionBiases = tokenSelectionBiases;
             EvaluationScore = evaluationScore;
+            Version = version;
+            LastRunTime = lastRunTime;
         }
 
         public PromptItem(PromptItemDto promptItemDto)
@@ -90,6 +102,8 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
             TokenSelectionBiases = promptItemDto.TokenSelectionBiases;
             EvaluationScore = promptItemDto.EvaluationScore;
+            Version = promptItemDto.Version;
+            LastRunTime = promptItemDto.LastRunTime;
         }
     }
 }
