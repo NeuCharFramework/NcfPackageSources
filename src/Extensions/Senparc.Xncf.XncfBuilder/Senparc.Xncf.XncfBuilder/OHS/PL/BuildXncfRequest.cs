@@ -156,8 +156,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             }
         }
 
-
-
         /// <summary>
         /// 判断当前路径下是否包含 .sln 文件
         /// </summary>

@@ -9,6 +9,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services
@@ -34,6 +35,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <returns></returns>
         public async Task<string> RunPromptAsync(PromptBuildType buildType, string input, string projectPath = null)
         {
+            StringBuilder sb = new StringBuilder();
             var plugins = new Dictionary<string, List<string>>();
 
             //选择需要执行的生成方式
@@ -60,7 +62,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             context.ContextVariables["input"] = input;
 
             var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
+            
+            sb.AppendLine(promptResult);
 
+            await Console.Out.WriteLineAsync($"{buildType.ToString()} 信息：");
             await Console.Out.WriteLineAsync(promptResult);
 
             //需要保存文件
@@ -83,7 +88,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                 ISKFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
 
-                promptResult = await _promptService.GetPromptResultAsync("", fileContext, null, functionPiple);
+                var createFileResult = await _promptService.GetPromptResultAsync("", fileContext, null, functionPiple);
+
+                sb.AppendLine();
+                sb.AppendLine($"[{SystemTime.Now.ToString()}]");
+                sb.AppendLine(createFileResult);
+                await Console.Out.WriteLineAsync(createFileResult);
 
                 #endregion
 
@@ -98,7 +108,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         fileContext.ContextVariables["projectPath"] = projectPath;
                         fileContext.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        promptResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
+                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
+
+                        sb.AppendLine();
+                        sb.AppendLine($"[{SystemTime.Now.ToString()}]");
+                        sb.AppendLine(updateSenparcEntitiesResult);
+                        await Console.Out.WriteLineAsync(updateSenparcEntitiesResult);
 
                         #endregion
 
@@ -118,7 +133,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 }
             }
 
-            return promptResult;
+            return sb.ToString();
         }
     }
 }
