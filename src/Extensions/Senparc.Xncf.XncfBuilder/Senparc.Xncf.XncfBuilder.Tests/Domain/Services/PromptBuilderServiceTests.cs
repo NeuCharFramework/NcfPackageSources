@@ -32,7 +32,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);//重建目录
 
-            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath);
+            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, projectPath,"Senparc.Xncf.UnitTestProject");
 
             await Console.Out.WriteLineAsync("Run Prompt Result");
             await Console.Out.WriteLineAsync(result);

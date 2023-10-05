@@ -9,6 +9,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,10 +33,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="buildType"></param>
         /// <param name="input"></param>
         /// <param name="projectPath"></param>
+        /// <param name="namespace"></param>
         /// <returns></returns>
-        public async Task<string> RunPromptAsync(PromptBuildType buildType, string input, string projectPath = null)
+        public async Task<string> RunPromptAsync(PromptBuildType buildType, string input, string projectPath = null, string @namespace = null)
         {
             StringBuilder sb = new StringBuilder();
+
+            string createFilePath = projectPath;
+
             var plugins = new Dictionary<string, List<string>>();
 
             //选择需要执行的生成方式
@@ -43,6 +48,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             {
                 case PromptBuildType.EntityClass:
                     plugins["XncfBuilderPlugin"] = new List<string>() { "GenerateEntityClass" };
+                    if (projectPath!=null)
+                    {
+                        createFilePath = Path.Combine(createFilePath, "Domain", "Models", "DatabaseModel");
+                    }
                     break;
                 case PromptBuildType.Repository:
                     break;
@@ -60,6 +69,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
             var context = new SenparcAiContext();
             context.ContextVariables["input"] = input;
+            context.ContextVariables["namespace"] = @namespace;
 
             var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
             
@@ -74,6 +84,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 #region 创建文件
 
                 //输入生成文件的项目路径
+
+               
                 //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
                 var fileContext = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
 

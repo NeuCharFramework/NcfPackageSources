@@ -308,7 +308,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     throw new Exception("没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！");
                 }
 
-                var result = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, projectPath);
+                var @namespace = Path.GetFileName(projectPath);
+
+                var result = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, projectPath, @namespace);
 
                 logger.Append(result);
 
