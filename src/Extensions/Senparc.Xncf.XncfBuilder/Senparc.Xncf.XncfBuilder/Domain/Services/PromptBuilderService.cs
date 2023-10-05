@@ -39,6 +39,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         {
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine();
+            sb.AppendLine($"[{SystemTime.Now.ToString()}]");
+            sb.AppendLine($"开始生成，任务类型：{buildType.ToString()}");
+
             string createFilePath = projectPath;
 
             var plugins = new Dictionary<string, List<string>>();
@@ -48,7 +52,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             {
                 case PromptBuildType.EntityClass:
                     plugins["XncfBuilderPlugin"] = new List<string>() { "GenerateEntityClass" };
-                    if (projectPath!=null)
+                    if (!projectPath.IsNullOrEmpty())
                     {
                         createFilePath = Path.Combine(createFilePath, "Domain", "Models", "DatabaseModel");
                     }
@@ -72,7 +76,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             context.ContextVariables["namespace"] = @namespace;
 
             var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
-            
+
             sb.AppendLine(promptResult);
 
             await Console.Out.WriteLineAsync($"{buildType.ToString()} 信息：");
@@ -85,11 +89,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                 //输入生成文件的项目路径
 
-               
+
                 //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
                 var fileContext = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
 
-                fileContext.ContextVariables["fileBasePath"] = projectPath;
+                fileContext.ContextVariables["fileBasePath"] = createFilePath;
                 fileContext.ContextVariables["fileGenerateResult"] = promptResult;
 
                 var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
