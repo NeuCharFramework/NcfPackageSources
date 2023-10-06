@@ -60,45 +60,39 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             string entityName
             )
         {
-            string fileContent = null;
 
             var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");
             var databaseFile = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs")[0];
+
+            string fileContent = await File.ReadAllTextAsync(databaseFile);
+
             using (var fs = new FileStream(databaseFile, FileMode.Open))
             {
-                using (var sr = new StreamReader(fs))
+                using (var sw = new StreamWriter(fs))
                 {
-                    fileContent = sr.ReadToEnd();
+                    //运行 plugin
+                    //var plugins = new Dictionary<string, List<string>>() {
+                    //        {"XncfBuilderPlugin",new(){ "UpdateSenparcEntities" } }
+                    //    };
 
-                    using (var sw = new StreamWriter(fs))
-                    {
-                        fs.Seek(0, SeekOrigin.Begin);
+                    var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+                    var skills = _iWantToRun.ImportSkillFromDirectory(pluginDir, "XncfBuilderPlugin");
 
-                        //运行 plugin
-                        //var plugins = new Dictionary<string, List<string>>() {
-                        //        {"XncfBuilderPlugin",new(){ "UpdateSenparcEntities" } }
-                        //    };
+                    //运行
+                    var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
 
-                        var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                        var skills = _iWantToRun.ImportSkillFromDirectory(pluginDir, "XncfBuilderPlugin");
+                    request.TempAiContext = new AI.Kernel.Entities.SenparcAiContext();
+                    request.SetTempContext("Code", fileContent);
+                    request.SetTempContext("EntityName", entityName);
 
-                        //运行
-                        var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
+                    var result = await _iWantToRun.RunAsync(request);
 
+                    var newFileContent = result.Output;
 
-                        request.TempAiContext = new AI.Kernel.Entities.SenparcAiContext();
-                        request.SetTempContext("Code", fileContent);
-                        request.SetTempContext("EntityName", entityName);
+                    await sw.WriteAsync(newFileContent);
+                    await sw.FlushAsync();
 
-                        var result = await _iWantToRun.RunAsync(request);
-
-                        var newFileContent = result.Output;
-
-                        await sw.WriteAsync(newFileContent);
-                        await sw.FlushAsync();
-
-                        return $"已更新文件：{databaseFile}";
-                    }
+                    return $"已更新文件：{databaseFile}";
                 }
             }
 

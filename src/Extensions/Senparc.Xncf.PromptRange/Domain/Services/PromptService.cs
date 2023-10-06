@@ -17,7 +17,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public IWantToRun IWantToRun { get; set; }
 
         private string _userId = "XncfBuilder";//区分用户
-        private string _modelName = "text-davinci-00f3";//默认使用模型
+        private string _modelName = "text-davinci-003";//默认使用模型
 
         public PromptService(/*IAiHandler aiHandler*/)
         {

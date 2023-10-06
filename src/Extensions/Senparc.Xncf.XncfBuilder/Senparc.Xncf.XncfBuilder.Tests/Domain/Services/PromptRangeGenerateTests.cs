@@ -16,7 +16,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
     /// PromptRange 模块的初始化代码
     /// <para>注意：这会直接修改现有代码！</para>
     /// </summary>
-    [TestClass]
+    //[TestClass]//此测试用于项目代码的直接测试，默认情况下请关闭
     public class PromptRangeGenerateTests : XncfBuilderTestBase
     {
         protected PromptBuilderService _service;
