@@ -148,7 +148,6 @@ namespace Senparc.Xncf.SystemCore
 
             #endregion
 
-
             #region Senparc.Core 设置
 
             //用于解决HttpContext.Connection.RemoteIpAddress为null的问题

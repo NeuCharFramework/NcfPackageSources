@@ -3,6 +3,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
+using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public class BuildXncfAppService : AppServiceBase
     {
+  
+        public BuildXncfAppService(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        #region 生成 XNCF 项目
+
         private string _outPutBaseDir;
 
         /// <summary>
@@ -212,10 +220,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return $"{request.OrgName}.Xncf.{request.XncfName}";
         }
 
-        public BuildXncfAppService(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
-
         [FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
         public async Task<StringAppResponse> Build(BuildXncf_BuildRequest request)
         {
@@ -286,5 +290,33 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return null;
             });
         }
+
+        #endregion
+
+        [FunctionRender("[AI] 生成数据库实体", "生成符合 DDD 约束的数据库实体及其包含的方法。注意：1、请在开发环境中使用此方法，系统将自动检测。2、请做好代码备份，建议切换一个干净的分支。", typeof(Register))]
+        public async Task<StringAppResponse> CreateDatabaseEntity(CreateDatabaseEntityRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+
+                var input = request.Requirement;
+
+                var projectPath = request.InjectDomain.SelectedValues.FirstOrDefault();
+                if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
+                {
+                    throw new Exception("没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！");
+                }
+
+                var @namespace = Path.GetFileName(projectPath);
+
+                var result = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, projectPath, @namespace);
+
+                logger.Append(result);
+
+                return result;
+            });
+        }
+
     }
 }

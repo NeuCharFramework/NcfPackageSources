@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
@@ -6,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
-    public class BuildXncf_BuildRequest: FunctionAppRequestBase
+    public class BuildXncf_BuildRequest : FunctionAppRequestBase
     {
         [Required]
         [MaxLength(250)]
@@ -98,20 +102,69 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         /// <returns></returns>
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
+            Config config = null;
             try
             {
                 //低版本没有数据库，此处需要try
                 var configService = serviceProvider.GetService<ServiceBase<Config>>();
-                var config = await configService.GetObjectAsync(z => true);
+                config = await configService.GetObjectAsync(z => true);
                 if (config != null)
                 {
-                    configService.Mapper.Map(config, this);
+                    #region 自动载入上次配置
+
+                    //SenparcTrace.SendCustomLog("Xncf Builder Config", config.ToJson(true));
+
+                    //configService.Mapper.Map(config, this);
+
+                    //SenparcTrace.SendCustomLog("Xncf Builder Config - 2", this.ToJson(true));
+
+                    SlnFilePath = config.SlnFilePath;
+                    XncfName = config.XncfName;
+                    MenuName = config.MenuName;
+                    Description = config.Description;
+                    OrgName = config.OrgName;
+                    Version = config.Version;
+                    Icon = config.Icon;
+
+                    #endregion
+                }
+                else
+                {
+                    #region 自动查找当前项目的解决方案路径
+
+                    //当前程序目录
+                    var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+
+                    //向上查找，直到找到
+                    while (!IsSlnDir(currentDir) && currentDir != null)
+                    {
+                        currentDir = Directory.GetParent(currentDir).FullName;
+                    }
+
+                    if (currentDir != null)
+                    {
+                        SlnFilePath = Path.Combine(currentDir, Directory.GetFiles(currentDir, "*.sln").FirstOrDefault());
+                    }
+
+                    #endregion
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                SenparcTrace.BaseExceptionLog(ex);
+                SenparcTrace.SendCustomLog("Xncf Builder Config - Ex", ex.Message + "///" + ex.StackTrace);
             }
-
         }
+
+        /// <summary>
+        /// 判断当前路径下是否包含 .sln 文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private bool IsSlnDir(string path)
+        {
+            return Directory.GetFiles(path, "*.sln").Length > 0;
+        }
+
     }
 }

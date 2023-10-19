@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
-    public class GenerateAppServiceInterface_GenerateRequest: FunctionAppRequestBase
+    public class GenerateAppServiceInterface_GenerateRequest : FunctionAppRequestBase
     {
         [Required]
         [Description("目标项目路径||需要生成接口的项目路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Xncf.Installer")]
@@ -26,5 +28,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Required]
         [Description("生成目的地项目路径||需要生成接口的项目路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Xncf.MyNewProject")]
         public string DestinationProjectPath { get; set; }
+
+     
     }
 }

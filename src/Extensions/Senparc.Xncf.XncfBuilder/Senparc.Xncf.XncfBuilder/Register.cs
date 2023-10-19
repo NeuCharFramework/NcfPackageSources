@@ -11,6 +11,8 @@ using Senparc.Ncf.Database;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
+using Senparc.Xncf.XncfBuilder.Domain.Services;
+using Senparc.AI.Kernel;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -58,7 +60,12 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            //services.AddScoped<PromptRange.Domain.Services.PromptService>();
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+
             services.AddScoped<ConfigService>();
+            services.AddScoped<PromptBuilderService>();
+
             return base.AddXncfModule(services, configuration, env);
         }
 
