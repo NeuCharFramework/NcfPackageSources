@@ -11,19 +11,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityDtoClass\config.json" />
-	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityDtoClass\skprompt.txt" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClassBak2\config.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClassBak2\skprompt.txt">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
