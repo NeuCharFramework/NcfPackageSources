@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.SemanticKernel.SkillDefinition;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
@@ -36,10 +37,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="projectPath"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        public async Task<(string Result, SenparcAiContext Context)> RunPromptAsync(PromptBuildType buildType, string input, SenparcAiContext context = null, string projectPath = null, string @namespace = null)
+        public async Task<(string Result, string ResponseText, SenparcAiContext Context)> RunPromptAsync(PromptBuildType buildType, string input, SenparcAiContext context = null, string projectPath = null, string @namespace = null)
         {
             StringBuilder sb = new StringBuilder();
             context ??= new SenparcAiContext();
+            string responseText = string.Empty;
 
             sb.AppendLine();
             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -75,6 +77,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
 
+                        responseText = promptResult;
+
                         sb.AppendLine(promptResult);
 
                         await Console.Out.WriteLineAsync($"{buildType.ToString()} 信息：");
@@ -86,7 +90,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                             #region 创建文件
 
                             //输入生成文件的项目路径
-
 
                             //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
                             var fileContext = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
@@ -110,27 +113,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                             await Console.Out.WriteLineAsync(createFileResult);
 
                             #endregion
-
-                            switch (buildType)
-                            {
-                                case PromptBuildType.EntityClass:
-
-
-
-                                    break;
-                                case PromptBuildType.Repository:
-                                    break;
-                                case PromptBuildType.Service:
-                                    break;
-                                case PromptBuildType.AppService:
-                                    break;
-                                case PromptBuildType.PL:
-                                    break;
-                                case PromptBuildType.DbContext:
-                                    break;
-                                default:
-                                    break;
-                            }
                         }
                     }
                     break;
@@ -148,6 +130,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         fileContext.ContextVariables["entityName"] = input;// fileGenerateResult[0].FileName.Split('.')[0]; ;
 
                         var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
+                        responseText = updateSenparcEntitiesResult;
 
                         sb.AppendLine();
                         sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -172,7 +155,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             }
 
 
-            return (Result: sb.ToString(), Context: context);
+            return (Result: sb.ToString(), ResponseText: responseText, Context: context);
         }
     }
 }

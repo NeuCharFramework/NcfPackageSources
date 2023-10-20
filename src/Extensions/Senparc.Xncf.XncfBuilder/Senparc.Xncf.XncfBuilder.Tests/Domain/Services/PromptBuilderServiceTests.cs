@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Annotations;
 using Senparc.Xncf.PromptRange.Tests;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -51,7 +54,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             #region Entity DTO 生成
 
-            var entityDtoResult = await _service.RunPromptAsync(PromptBuildType.EntityDtoClass, input, null, projectPath, "Senparc.Xncf.UnitTestProject");
+            var entityCode = entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
+
+            var entityDtoResult = await _service.RunPromptAsync(PromptBuildType.EntityDtoClass, entityCode, null, projectPath, "Senparc.Xncf.UnitTestProject");
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain","Models", "DatabaseModel", $"Dto/{entityName}Dto.cs")));
 
             await Console.Out.WriteLineAsync(entityDtoResult.Result);
