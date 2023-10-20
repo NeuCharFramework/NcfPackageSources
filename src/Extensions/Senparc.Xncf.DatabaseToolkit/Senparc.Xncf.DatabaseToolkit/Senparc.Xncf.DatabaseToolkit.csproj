@@ -75,7 +75,7 @@
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
   </ItemGroup>
   <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.61" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />

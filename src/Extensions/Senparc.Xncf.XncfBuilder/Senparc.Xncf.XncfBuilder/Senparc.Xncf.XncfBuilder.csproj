@@ -46,9 +46,7 @@
 	  <EmbeddedResource Remove="ACL\**" />
 	  <None Remove="ACL\**" />
 	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Domain\Services\PromptBuilderService.cs~RF15237f.TMP" />
-	</ItemGroup>
+
 	<ItemGroup>
 		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
 	</ItemGroup>
@@ -71,7 +69,7 @@
 		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
 	<!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
 		<PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.61" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
