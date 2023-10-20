@@ -17,7 +17,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public class BuildXncfAppService : AppServiceBase
     {
-  
+
         public BuildXncfAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
@@ -310,11 +310,27 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var @namespace = Path.GetFileName(projectPath);
 
-                var result = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, projectPath, @namespace);
+                #region 生成实体
 
-                logger.Append(result);
+                var entityResult = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, null, projectPath, @namespace);
+                logger.Append("生成实体：");
+                logger.Append(entityResult.Result);
 
-                return result;
+                #endregion
+
+                #region 生成实体 DTO
+
+                var entityDtoResult = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityDtoClass, input, null, projectPath, @namespace);
+                logger.Append("生成实体 DTO：");
+                logger.Append(entityResult.Result);
+
+                #endregion
+
+                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityDtoClass, input, entityResult.Context, projectPath, @namespace);
+                logger.Append("更新 SenparcEntities：");
+                logger.Append(entityResult.Result);
+
+                return logger.ToString();
             });
         }
 

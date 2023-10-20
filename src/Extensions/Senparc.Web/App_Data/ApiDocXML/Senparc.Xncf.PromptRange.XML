@@ -164,6 +164,30 @@
             用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
             </summary>
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo">
+            <summary>
+            版本号信息
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo.ToString">
+            <summary>
+            生成版本号字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.SkillDefinition.ISKFunction[])">
+            <summary>
+            根据 Plugin 的 Prompt 获取结果
+            </summary>
+            <param name="input">用户输入</param>
+            <param name="context">上下文参数</param>
+            <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
+            <para>Key：Skill Name</para>
+            <para>Value：Function Name List</para>
+            </param>
+            <param name="functionPiple">functionPiple</param>
+            <returns></returns>
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.PromptGroup">
             <summary>
             PromptGroup
@@ -297,30 +321,6 @@
             <summary>
             更新版本号
             </summary>
-        </member>
-        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo">
-            <summary>
-            版本号信息
-            </summary>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo.ToString">
-            <summary>
-            生成版本号字符串
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.SkillDefinition.ISKFunction[])">
-            <summary>
-            根据 Plugin 的 Prompt 获取结果
-            </summary>
-            <param name="input">用户输入</param>
-            <param name="context">上下文参数</param>
-            <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
-            <para>Key：Skill Name</para>
-            <para>Value：Function Name List</para>
-            </param>
-            <param name="functionPiple">functionPiple</param>
-            <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>

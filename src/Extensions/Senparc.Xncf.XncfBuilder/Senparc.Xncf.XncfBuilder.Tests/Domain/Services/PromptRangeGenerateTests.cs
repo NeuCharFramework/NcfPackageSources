@@ -31,10 +31,10 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
         {
             CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);
 
-            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, _projectPath);
+            var result = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, null, _projectPath);
 
-            Assert.IsTrue(result.Contains("保存文件"));
-            await Console.Out.WriteLineAsync(result);
+            Assert.IsTrue(result.Result.Contains("保存文件"));
+            await Console.Out.WriteLineAsync(result.Result);
 
             var promptGroupFilePath = Path.Combine(_projectPath, $"{entityName}.cs");
             Assert.IsTrue(File.Exists(promptGroupFilePath));

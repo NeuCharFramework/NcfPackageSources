@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel.SkillDefinition;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.SemanticKernel.SkillDefinition;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Entities;
@@ -35,9 +36,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="projectPath"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        public async Task<string> RunPromptAsync(PromptBuildType buildType, string input, string projectPath = null, string @namespace = null)
+        public async Task<(string Result, SenparcAiContext Context)> RunPromptAsync(PromptBuildType buildType, string input, SenparcAiContext context = null, string projectPath = null, string @namespace = null)
         {
             StringBuilder sb = new StringBuilder();
+            context ??= new SenparcAiContext();
 
             sb.AppendLine();
             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -51,10 +53,108 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
             switch (buildType)
             {
                 case PromptBuildType.EntityClass:
-                    plugins["XncfBuilderPlugin"] = new List<string>() { "GenerateEntityClass" };
-                    if (!projectPath.IsNullOrEmpty())
+                case PromptBuildType.EntityDtoClass:
                     {
-                        createFilePath = Path.Combine(createFilePath, "Domain", "Models", "DatabaseModel");
+                        plugins["XncfBuilderPlugin"] = new List<string>();
+                        if (buildType == PromptBuildType.EntityClass)
+                        {
+                            plugins["XncfBuilderPlugin"].Add("GenerateEntityClass");
+                        }
+                        else
+                        {
+                            plugins["XncfBuilderPlugin"].Add("GenerateEntityDtoClass");
+                        }
+
+                        if (!projectPath.IsNullOrEmpty())
+                        {
+                            createFilePath = Path.Combine(createFilePath, "Domain", "Models", "DatabaseModel");
+                        }
+
+                        context.ContextVariables["input"] = input;
+                        context.ContextVariables["namespace"] = @namespace;
+
+                        var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
+
+                        sb.AppendLine(promptResult);
+
+                        await Console.Out.WriteLineAsync($"{buildType.ToString()} 信息：");
+                        await Console.Out.WriteLineAsync(promptResult);
+
+                        //需要保存文件
+                        if (!projectPath.IsNullOrEmpty())
+                        {
+                            #region 创建文件
+
+                            //输入生成文件的项目路径
+
+
+                            //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
+                            var fileContext = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
+
+                            fileContext.ContextVariables["fileBasePath"] = createFilePath;
+                            fileContext.ContextVariables["fileGenerateResult"] = promptResult;
+
+                            var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
+
+                            //添加保存文件的 Plugin
+                            var filePlugin = new FilePlugin(_promptService.IWantToRun);
+                            var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, "FilePlugin");
+
+                            ISKFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
+
+                            var createFileResult = await _promptService.GetPromptResultAsync("", fileContext, null, functionPiple);
+
+                            sb.AppendLine();
+                            sb.AppendLine($"[{SystemTime.Now.ToString()}]");
+                            sb.AppendLine(createFileResult);
+                            await Console.Out.WriteLineAsync(createFileResult);
+
+                            #endregion
+
+                            switch (buildType)
+                            {
+                                case PromptBuildType.EntityClass:
+
+
+
+                                    break;
+                                case PromptBuildType.Repository:
+                                    break;
+                                case PromptBuildType.Service:
+                                    break;
+                                case PromptBuildType.AppService:
+                                    break;
+                                case PromptBuildType.PL:
+                                    break;
+                                case PromptBuildType.DbContext:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                case PromptBuildType.UpdateSenparcEntities:
+                    {
+                        #region 更新 SenparcEntities
+                        //添加保存文件的 Plugin
+                        var filePlugin = new FilePlugin(_promptService.IWantToRun);
+                        var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, "FilePlugin");
+
+                        var updateFunctionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
+
+                        var fileContext = context;
+                        fileContext.ContextVariables["projectPath"] = projectPath;
+                        fileContext.ContextVariables["entityName"] = input;// fileGenerateResult[0].FileName.Split('.')[0]; ;
+
+                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
+
+                        sb.AppendLine();
+                        sb.AppendLine($"[{SystemTime.Now.ToString()}]");
+                        sb.AppendLine(updateSenparcEntitiesResult);
+                        await Console.Out.WriteLineAsync(updateSenparcEntitiesResult);
+
+                        #endregion
                     }
                     break;
                 case PromptBuildType.Repository:
@@ -71,85 +171,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
             }
 
-            var context = new SenparcAiContext();
-            context.ContextVariables["input"] = input;
-            context.ContextVariables["namespace"] = @namespace;
 
-            var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
-
-            sb.AppendLine(promptResult);
-
-            await Console.Out.WriteLineAsync($"{buildType.ToString()} 信息：");
-            await Console.Out.WriteLineAsync(promptResult);
-
-            //需要保存文件
-            if (!projectPath.IsNullOrEmpty())
-            {
-                #region 创建文件
-
-                //输入生成文件的项目路径
-
-
-                //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
-                var fileContext = new AI.Kernel.Entities.SenparcAiContext();//TODO：简化
-
-                fileContext.ContextVariables["fileBasePath"] = createFilePath;
-                fileContext.ContextVariables["fileGenerateResult"] = promptResult;
-
-                var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
-
-                //添加保存文件的 Plugin
-                var filePlugin = new FilePlugin(_promptService.IWantToRun);
-                var skills = _promptService.IWantToRun.Kernel.ImportSkill(filePlugin, "FilePlugin");
-
-                ISKFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
-
-                var createFileResult = await _promptService.GetPromptResultAsync("", fileContext, null, functionPiple);
-
-                sb.AppendLine();
-                sb.AppendLine($"[{SystemTime.Now.ToString()}]");
-                sb.AppendLine(createFileResult);
-                await Console.Out.WriteLineAsync(createFileResult);
-
-                #endregion
-
-                switch (buildType)
-                {
-                    case PromptBuildType.EntityClass:
-
-                        #region 更新 SenparcEntities
-
-                        var updateFunctionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
-
-                        fileContext.ContextVariables["projectPath"] = projectPath;
-                        fileContext.ContextVariables["entityName"] = fileGenerateResult[0].FileName.Split('.')[0]; ;
-
-                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
-
-                        sb.AppendLine();
-                        sb.AppendLine($"[{SystemTime.Now.ToString()}]");
-                        sb.AppendLine(updateSenparcEntitiesResult);
-                        await Console.Out.WriteLineAsync(updateSenparcEntitiesResult);
-
-                        #endregion
-
-                        break;
-                    case PromptBuildType.Repository:
-                        break;
-                    case PromptBuildType.Service:
-                        break;
-                    case PromptBuildType.AppService:
-                        break;
-                    case PromptBuildType.PL:
-                        break;
-                    case PromptBuildType.DbContext:
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            return sb.ToString();
+            return (Result: sb.ToString(), Context: context);
         }
     }
 }
