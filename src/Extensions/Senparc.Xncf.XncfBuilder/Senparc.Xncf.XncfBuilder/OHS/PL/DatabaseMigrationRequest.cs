@@ -17,7 +17,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 netcoreapp3.1 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Web.DatabasePlant\\")]
+        [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 net6.0 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Web.DatabasePlant\\")]
         public string DatabasePlantPath { get; set; }
 
         [Required]
