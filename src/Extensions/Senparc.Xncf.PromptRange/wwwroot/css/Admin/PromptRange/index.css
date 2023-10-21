@@ -1,0 +1,138 @@
+.indexPage{
+    position:relative;
+    overflow:auto;
+
+}
+    .indexPage > .headRow {
+        min-width: 1381px;
+        height: 182px;
+        position: relative;
+        border-radius: 10px;
+        background-color: #E0EBFF;
+        overflow: hidden;
+    }
+    .indexPage > .headRow > .leftBox {
+        position: absolute;
+        left: 64px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 4;
+    }
+            .indexPage>.headRow>.leftBox>.title {
+                font-size: 36px;
+                font-style: normal;
+                font-weight: 600;
+                background: linear-gradient(118deg, #00E7CB 1.51%, #0075FF 81.2%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            .indexPage>.headRow>.leftBox>.btn {
+                margin-top: 20px;
+                width: 88px;
+                height: 30px;
+                line-height: 30px; /* 150% */
+                color: #FFF;
+                text-align: center;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                border-radius: 4px;
+                background: var(--4, linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%));
+                /* 按钮投影-默认 */
+                box-shadow: 0px 2px 2px 0px rgba(0, 131, 255, 0.25);
+            }
+        .indexPage>.headRow>.headBg {
+            position: absolute;
+            left: 28px;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .indexPage>.headRow>.headRightIcon1 {
+            position: absolute;
+            right: 209px;
+            top: 0;
+            width: 182px;
+            height: 182px;
+            flex-shrink: 0;
+            z-index: 3;
+        }
+        .indexPage>.headRow>.headRightIcon2 {
+            position: absolute;
+            right: 384px;
+            top: 68px;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            z-index: 4;
+        }
+        .indexPage>.headRow>.headRightIcon3 {
+            position: absolute;
+            right: 154px;
+            top: 82px;
+            width: 63px;
+            height: 56px;
+            flex-shrink: 0;
+            z-index: 4;
+        }
+
+    .indexPage>.mainBox {
+        margin-top:12px;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap:10px;
+    }
+.mainBox > .leftBox {
+    width: 53%;
+    height: 642px;
+    overflow:auto;
+    flex-shrink: 0;
+}
+    .mainBox>.rightBox {
+        width: 47%;
+        height: 340px;
+    }
+    .mainBox .cardBox {
+        position: relative;
+        overflow: auto;
+        border-radius: 10px;
+        background: #FFF;
+    }
+    .mainBox .cardBox .title {
+        position: relative;
+        word-break: break-all;
+        color: #333;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+        .mainBox .cardBox .title::before {
+            content: '';
+            margin-right:6px;
+            display: inline-block;
+            width: 5px;
+            height: 12px;
+            border-radius: 4px;
+            background: var(--4, linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%));
+        }
+        .mainBox .cardBox .title .activeText {
+            position: relative;
+            color: #0083FF;
+        }
+            .mainBox .cardBox .title .activeText::before {
+                content: '';
+                display: inline-block;
+                position:absolute;
+                left:50%;
+                bottom:10px;
+                transform:translateX(-50%);
+                width: 50%;
+                height: 4px;
+                border-radius: 4px;
+                background: #0083FF;
+            }

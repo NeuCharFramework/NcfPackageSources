@@ -2,9 +2,7 @@
 using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Senparc.Xncf.PromptRange
@@ -16,12 +14,19 @@ namespace Senparc.Xncf.PromptRange
     [Serializable]
     public class PromptItem : EntityBase<int>
     {
+        public float PresencePenalty { get; private set; }
+        public string Name { get; private set; }
+
+        public string Content { get; private set; }
+
+        public int ModelId { get; private set; }
+
         public int PromptGroupId { get; private set; }
 
         /// <summary>
         /// 最大 Token 数
         /// </summary>
-        public int MaxToken { get; private set; }
+        public float MaxToken { get; private set; }
 
         /// <summary>
         /// 温度
@@ -44,9 +49,9 @@ namespace Senparc.Xncf.PromptRange
         public int ResultsPerPrompt { get; private set; }
 
         /// <summary>
-        /// 停止序列
+        /// 停止序列（JSON 数组）
         /// </summary>
-        public string[] StopSequences { get; private set; }
+        public string StopSequences { get; private set; }
 
         /// <summary>
         /// 聊天系统 Prompt
@@ -56,7 +61,7 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// Token 选择偏好
         /// </summary>
-        public float[] TokenSelectionBiases { get; private set; }
+        public string TokenSelectionBiases { get; private set; }
 
         /// <summary>
         /// 评估参数
@@ -74,12 +79,18 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public DateTime LastRunTime { get; private set; }
 
-        public PromptGroup PromptGroup { get; private set; }
+        public bool Show { get; private set; }
+
+        //public PromptGroup PromptGroup { get; private set; }
 
         private PromptItem() { }
 
-        public PromptItem(int promptGroupId, int maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string[] stopSequences, string chatSystemPrompt, float[] tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
+        public PromptItem(float presencePenalty, string name, string content, int modelId, int promptGroupId, float maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string stopSequences, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
         {
+            PresencePenalty = presencePenalty;
+            Name = name;
+            Content = content;
+            ModelId = modelId;
             PromptGroupId = promptGroupId;
             MaxToken = maxToken;
             Temperature = temperature;
@@ -93,6 +104,7 @@ namespace Senparc.Xncf.PromptRange
             Version = version;
             LastRunTime = lastRunTime;
         }
+
 
         public PromptItem(PromptItemDto promptItemDto)
         {
@@ -177,5 +189,18 @@ namespace Senparc.Xncf.PromptRange
             Version = GenerateNewVersion(Version).ToString();
         }
 
+        public PromptItem Switch(bool show)
+        {
+            this.Show = show;
+
+            return this;
+        }
+
+        public PromptItem ModifyName(string name)
+        {
+            this.Name = name;
+
+            return this;
+        }
     }
 }

@@ -1,10 +1,17 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Helpers;
+using Senparc.Ncf.Core.Models;
 using System;
+using System.Collections.Generic;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
     public class PromptItemDto : DtoBase
     {
+        /// <summary>
+        /// Prompt内容
+        /// </summary>
+        public string PromptContent { get; private set; }
         /// <summary>
         /// PromptGroupId
         /// </summary>
@@ -36,9 +43,14 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public int ResultsPerPrompt { get; private set; }
 
         /// <summary>
-        /// 停止序列
+        /// 停止序列（JSON 数组）
         /// </summary>
-        public string[] StopSequences { get; private set; }
+        public string StopSequences { get; private set; }
+
+        /// <summary>
+        /// 从 StopSequences 自动获取数组，如果为空，则返回空对象
+        /// </summary>
+        public string[] StopSequencesArray => (StopSequences ?? "[]").GetObject<string[]>();
 
         /// <summary>
         /// 聊天系统 Prompt
@@ -48,7 +60,12 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// Token 选择偏好
         /// </summary>
-        public float[] TokenSelectionBiases { get; private set; }
+        public string TokenSelectionBiases { get; private set; }
+
+        /// <summary>
+        /// 从 TokenSelectionBiases 自动获取数组，如果为空，则返回空对象
+        /// </summary>
+        public float[] TokenSelectionBiasesArray => (TokenSelectionBiases ?? "[]").GetObject<float[]>();
 
         /// <summary>
         /// 评估参数

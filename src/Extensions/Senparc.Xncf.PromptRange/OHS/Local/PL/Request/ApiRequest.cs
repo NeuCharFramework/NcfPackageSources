@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Senparc.Xncf.PromptRange.OHS.Local.PL
+﻿namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class Api_MyCustomApiRequest
     {

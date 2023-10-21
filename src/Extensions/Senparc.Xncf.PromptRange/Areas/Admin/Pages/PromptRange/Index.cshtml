@@ -4,40 +4,52 @@
     ViewData["Title"] = "PromptRange 首页";
     Layout = "_Layout_Vue";
 }
-
+@section Style{
+    <link href="~/css/Admin/PromptRange/index.css" rel="stylesheet" />
+}
 @section breadcrumbs{
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div>
-    <el-container>
-        <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
-        </el-header>
-
-        <!-- 此处也可以加 SideMenu -->
-        @*<el-aside width="200px">
-            <el-menu background-color="#304156" default-active="1"
-                        text-color="#bfcbd9" active-text-color="#409eff">
-                @(await Html.PartialAsync("_SideMenu"))
-            </el-menu>
-        </el-aside>*@
-        <el-main>
-            <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
-            <h4>@Model.XncfRegister.Description</h4>
-            <br />
-            <i>当前模块为自动生成模块</i>
-        </el-main>
-    </el-container>
+<div class="indexPage">
+    <div class="headRow">
+        <div class="leftBox">
+            <div class="title">
+                <div>PromptRange</div>
+                <div>提示词靶场</div>
+            </div>
+            <div class="btn">
+                新增模型
+            </div>
+        </div>
+        <img src="~/image/Admin/PromptRange/index_headBg.png" class="headBg" />
+        <img src="~/image/Admin/PromptRange/index_headRight1.png" class="headRightIcon1" />
+        <img src="~/image/Admin/PromptRange/index_headRight2.png" class="headRightIcon2" />
+        <img src="~/image/Admin/PromptRange/index_headRight3.png" class="headRightIcon3" />
+    </div>
+    <div class="mainBox">
+        <div class="leftBox cardBox">
+            <div class="title">热门Prompt及Model</div>
+            <div class="hotMainBox"></div>
+        </div>
+        <div class="rightBox">
+            <div class="cardBox">
+                <div class="title">
+                    <span class="activeText">已测试Prompt</span>
+                    <span class="">已使用模型</span>
+                </div>
+                <div class="hotMainBox"></div>
+            </div>
+            <div class="cardBox">
+                <div class="title">Prompt分数趋势图</div>
+                <div class="hotMainBox"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
 @section scripts{
-    <script>
-        new Vue({
-            el: "#app"
-        });
-    </script>
+    <script src="~/js/Admin/PromptRange/index.js"></script>
 }
