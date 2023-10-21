@@ -625,6 +625,26 @@ steps:
   condition: succeededOrFailed()
 
 
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.PromptRange
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.PromptRange.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Xncf.PromptRange- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.PromptRange.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Dapr
