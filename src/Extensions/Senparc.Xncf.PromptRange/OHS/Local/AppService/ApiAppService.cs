@@ -2,7 +2,7 @@
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.PromptRange.OHS.Local.PL;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Threading.Tasks;
 

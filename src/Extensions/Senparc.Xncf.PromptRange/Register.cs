@@ -20,6 +20,9 @@ using Senparc.AI.Kernel;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
+using AutoMapper;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -32,7 +35,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.5";//必须填写版本号
 
         public override string MenuName => "提示词靶场";
 
@@ -51,7 +54,7 @@ namespace Senparc.Xncf.PromptRange
                 case InstallOrUpdate.Install:
                     //新安装
                     #region 初始化数据库数据
-           
+
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
@@ -85,7 +88,10 @@ namespace Senparc.Xncf.PromptRange
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             registerService.UseSenparcAI(SenparcAiSetting);
-
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
             return base.UseXncfModule(app, registerService);
         }
 
@@ -95,10 +101,24 @@ namespace Senparc.Xncf.PromptRange
             //services.AddScoped<ColorDto>();
             //services.AddScoped<ColorService>();
             services.AddScoped<PromptService>();
+            services.AddScoped<PromptItemService>();
+            services.AddScoped<PromptResultService>();
+            services.AddScoped<LlmModelService>();
+
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
             SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
             configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
+
+            services.AddAutoMapper(z =>
+            {
+                z.CreateMap<PromptItem, PromptItemDto>();
+                z.CreateMap<PromptItemDto, PromptItem>();
+                z.CreateMap<PromptResult, PromptResultDto>();
+                z.CreateMap<PromptResultDto, PromptResult>();
+
+                //TODO:morek
+            });
 
             return base.AddXncfModule(services, configuration, env);
         }

@@ -16,10 +16,12 @@ namespace Senparc.Xncf.PromptRange
     {
         #region IAreaRegister 接口
 
-        public string HomeUrl => "/Admin/PromptRange/Index";
+        public string HomeUrl => "/Admin/PromptRange/";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Index"),"首页","fa fa-laptop"),
+                          new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Model"),"模型","fa fa-laptop"),
+                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Prompt"),"Prompt","fa fa-laptop"),
                           //new AreaPageMenuItem(GetAreaUrl($"/Admin/PromptRange/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
                      };
 

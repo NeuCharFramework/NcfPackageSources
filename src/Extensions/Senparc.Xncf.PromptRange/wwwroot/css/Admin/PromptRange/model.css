@@ -1,0 +1,41 @@
+.modelPage {
+    position: relative;
+    overflow: hidden;
+}
+
+    .modelPage .filterRow {
+        margin-bottom:10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+        .modelPage .filterRow .leftBox {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .modelPage .filterRow .rightBox {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+    .modelPage .tableArea {
+        
+        width: 100%;
+    }
+
+    .modelPage .footer_pag {
+        margin-top:10px;
+    }
+.dialog-footer{
+    position:relative;
+}
