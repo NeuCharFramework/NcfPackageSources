@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Version>0.2.0</Version>
+		<Version>0.2.0.1024</Version>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<LangVersion>9.0</LangVersion>
@@ -25,6 +25,7 @@
 		<PackageReleaseNotes>
 			v0.1 创世
 			v0.2.0 完成数据库和基本测试功能
+			v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
@@ -70,7 +71,7 @@
 
 	<ItemGroup>
 
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.4.0-beta1" />
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.6.0.1024-beta1" />
 	</ItemGroup>
 
 	<ItemGroup>

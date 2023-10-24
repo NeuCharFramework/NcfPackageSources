@@ -1,4 +1,4 @@
-﻿using Microsoft.SemanticKernel.SkillDefinition;
+﻿using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
@@ -58,13 +58,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (plugins?.Count > 0)
             {
                 var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                foreach (var skillName in plugins)
+                foreach (var plubName in plugins)
                 {
-                    var functionResults = iWantToRun.ImportSkillFromDirectory(pluginDir, skillName.Key);
+                    var pluginResults = iWantToRun.ImportPluginFromDirectory(pluginDir, plubName.Key);
 
-                    foreach (var functionName in skillName.Value)
+                    foreach (var functionName in plubName.Value)
                     {
-                        allFunctionPiple.Add(functionResults.skillList[functionName]);
+                        allFunctionPiple.Add(pluginResults.skillList[functionName]);
                     }
                 }
             }
