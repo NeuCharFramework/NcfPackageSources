@@ -1,4 +1,4 @@
-﻿using Microsoft.SemanticKernel.SkillDefinition;
+﻿using Microsoft.SemanticKernel;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET.Helpers;
 using System.Collections.Generic;
@@ -76,7 +76,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     //    };
 
                     var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                    var skills = _iWantToRun.ImportSkillFromDirectory(pluginDir, "XncfBuilderPlugin");
+                    var skills = _iWantToRun.ImportPluginFromDirectory(pluginDir, "XncfBuilderPlugin");
 
                     //运行
                     var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
