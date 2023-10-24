@@ -42,9 +42,13 @@
 		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
 		<EmbeddedResource Include="wwwroot\**\*" />
 		<Compile Remove="objForNcf\**" />
+		<Compile Remove="obj\**" />
 		<Content Remove="objForNcf\**" />
+		<Content Remove="obj\**" />
 		<EmbeddedResource Remove="objForNcf\**" />
+		<EmbeddedResource Remove="obj\**" />
 		<None Remove="objForNcf\**" />
+		<None Remove="obj\**" />
 
 		<Content Remove="wwwroot\css\Admin\PromptRange\index.css" />
 		<Content Remove="wwwroot\css\Admin\PromptRange\model.css" />
