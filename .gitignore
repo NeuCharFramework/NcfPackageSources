@@ -69,3 +69,4 @@ obj/
 /src/Extensions/Senparc.Xncf.PromptRange/Domain/PromptPlugins/XncfBuilderPlugin/
 /src/Extensions/Senparc.Xncf.PromptRange.Tests/Domain/PromptPlugins/XncfBuilderPlugin/
 /src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Tests/Domain/PromptPlugins/XncfBuilderPlugin
+/src/Extensions/Senparc.Xncf.PromptRange/objForNcf
