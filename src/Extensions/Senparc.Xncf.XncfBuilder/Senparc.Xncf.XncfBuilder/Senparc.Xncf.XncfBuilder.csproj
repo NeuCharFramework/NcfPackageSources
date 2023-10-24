@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Version>0.16.2-beta10</Version>
+		<Version>0.16.2.1024-beta10</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -28,6 +28,7 @@
 			V0.14.0 移除对 netstandard2.1 的编译，保留 netcoreapp3.1;net6.0
 			v0.15.0 集成 Senparc.Xncf.PromptRange 项目，使用 AI 自动生成项目
 			v0.16.0 优化 AI 生成过程，添加对 EntityClass、EntityDtoClass、SenparcEntities 的独立生成过程
+			v0.16.2.1024 升级至 1024 特别版，支持 2023.10.24 特别版 Senparc.Xncf.PromptRange
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
