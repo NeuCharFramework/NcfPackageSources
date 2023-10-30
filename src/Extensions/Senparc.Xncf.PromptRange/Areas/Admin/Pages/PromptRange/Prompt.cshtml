@@ -13,273 +13,181 @@
     <el-breadcrumb-item>Prompt</el-breadcrumb-item>
 }
 <div class="promptPage">
-    <div class="tabsArea">
-        <div class="tabsAreaItem" :class="{'activeTabsItem':tabsActive === '1'}" onclick="app.tabsChange('1')">Prompt111</div>
-        <div class="tabsAreaItem" :class="{'activeTabsItem':tabsActive === '2'}" onclick="app.tabsChange('2')">Prompt管理</div>
-    </div>
-    @*prompt面板*@
-    <div v-if="tabsActive === '1'" class="promptPanelArea">
-        <div class="leftBox">
-            <div class="titleRow">
-                <div class="titlelLeft">
-                    <img class="titlelLeftIcon" src="~/image/Admin/PromptRange/prompt_model.svg" />
-                    <span class="titlelLeftText">选择模型</span>
-                </div>
-                <div class="titlelRight">
-                    <el-button type="primary">新增模型</el-button>
-                    <el-button>重置</el-button>
-                </div>
-            </div>
-            <el-select v-model="parameter.modelid" placeholder="请选择模型" class="selectRow">
-                <el-option v-for="item in modelOpt"
-                           :key="item.id"
-                           :label="item.label"
-                           :value="item.value"
-                           :disabled="item.disabled">
-                </el-option>
-            </el-select>
-            <div class="lableRow requir">
-                参数设置
-            </div>
-            <div class="parameterRow">
-                <div class="parameterRowItem">
-                    <div class="lableRow">
-                        <div class="lableBtn">
-                            <i class="el-icon-warning-outline"></i>
-                            <span>Top_p</span>
-                        </div>
-                    </div>
-                    <input v-model="app.parameter.topP" class="inputBox" />
-                    <div class="sliderBox">
-                        <span>0</span>
-                        <el-slider v-model="app.parameter.topP" :min="0" :max="1" :step="0.1" class="slider"></el-slider>
-                        <span>1</span>
-                    </div>
-                </div>
-                <div class="parameterRowItem">
-                    <div class="lableRow">
-                        <div class="lableBtn">
-                            <i class="el-icon-warning-outline"></i>
-                            <span>Temperature</span>
-                        </div>
-                    </div>
-                    <input v-model="app.parameter.temperature" class="inputBox" />
-                    <div class="sliderBox">
-                        <span>0</span>
-                        <el-slider v-model="app.parameter.temperature" :min="0" :max="1" :step="0.1" class="slider"></el-slider>
-                        <span>1</span>
-                    </div>
-                </div>
-            </div>
-            <div class="parameterRow">
-                <div class="parameterRowItem">
-                    <div class="lableRow">
-                        <div class="lableBtn">
-                            <i class="el-icon-warning-outline"></i>
-                            <span>MaxToken</span>
-                        </div>
-                    </div>
-                    <input v-model="app.parameter.maxToken" class="inputBox" />
-                    @*<div class="sliderBox">
-                        <span>0</span>
-                        <el-slider v-model="app.parameter.maxToken" :min="0" :max="1000" :step="1" class="slider"></el-slider>
-                        <span>3</span>
-                    </div>*@
-                </div>
-                <div class="parameterRowItem">
-                    <div class="lableRow">
-                        <div class="lableBtn">
-                            <i class="el-icon-warning-outline"></i>
-                            <span>Frequeny_penalty</span>
-                        </div>
-                    </div>
-                    <input v-model="app.parameter.frequencyPenalty" class="inputBox" />
-                    <div class="sliderBox">
-                        <span>-2</span>
-                        <el-slider v-model="app.parameter.frequencyPenalty" :min="-2" :max="2" :step="0.1" class="slider"></el-slider>
-                        <span>2</span>
-                    </div>
-                </div>
-            </div>
-            <div class="parameterRow">
-                <div class="parameterRowItem">
-                    <div class="lableRow">
-                        <div class="lableBtn">
-                            <i class="el-icon-warning-outline"></i>
-                            <span>Presence_penalty</span>
-                        </div>
-                    </div>
-                    <input v-model="app.parameter.presencePenalty" class="inputBox" />
-                    <div class="sliderBox">
-                        <span>0</span>
-                        <el-slider v-model="app.parameter.presencePenalty" :min="0" :max="1" :step="0.1" class="slider"></el-slider>
-                        <span>1</span>
-                    </div>
-                </div>
-                <div class="parameterRowItem"></div>
-            </div>
-            <div class="lableRow">
-                <img src="~/image/Admin/PromptRange/prompt_edit.svg" style="width: 14px;height: 14px;margin-right: 4px;" />
-                @*<i class="el-icon-edit" style="margin-right: 4px;"></i>*@
-                输入Prompt
-            </div>
-            <el-input type="textarea"
-                      :rows="13"
-                      placeholder="请输入内容"
-                      v-model="app.parameter.content" style="margin-top:10px">
-            </el-input>
-            <div class="footerRow">
-                <el-button type="primary" @@click="testHandel">测试</el-button>
-            </div>
-        </div>
-        <div class="rightBox">
-            <div class="outputWrap">
+   @*左侧 输入测试 *@
+    <div class="promptPage_leftArea">
+        @*配置*@
+        <div class="boxCard configurineArea">
+            @*选择靶场*@
+            <div class="configurineAreaItem rangeBox">
                 <div class="titleRow">
-                    <img class="imgIcon" src="~/image/Admin/PromptRange/prompt_seeInput.svg" />
-                    <span class="titleText">查看输出</span>
+                    <div class="titleRow_leftBox">
+                        <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                        <div class="titleContent">选择靶场</div>
+                    </div>
+                    <el-button type="primary" size="mini" icon="el-icon-plus">新增靶场</el-button>
                 </div>
-                <div class="contentRow">
-                    {{outPutVal}}
+                <el-select v-model="promptid" placeholder="请选择靶场" class="selectRow">
+                    <el-option v-for="item in modelOpt"
+                               :key="item.id"
+                               :label="item.label"
+                               :value="item.value"
+                               :disabled="item.disabled">
+                    </el-option>
+                </el-select>
+            </div>
+            @*选择模型*@
+            <div class="configurineAreaItem modelBox">
+                <div class="titleRow">
+                    <div class="titleRow_leftBox">
+                        <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon" />
+                        <div class="titleContent">选择模型</div>
+                    </div>
+                    <el-button type="primary" size="mini" icon="el-icon-plus">新增模型</el-button>
+                </div>
+                <el-select v-model="modelid" placeholder="请选择模型" class="selectRow">
+                    <el-option v-for="item in modelOpt"
+                               :key="item.id"
+                               :label="item.label"
+                               :value="item.value"
+                               :disabled="item.disabled">
+                    </el-option>
+                </el-select>
+            </div>
+            @*参数设置*@
+            <div class="configurineAreaItem paramBox">
+                <div class="titleRow">
+                    <div class="titleRow_leftBox">
+                        <i class="requirIcon">*</i>
+                        <div class="titleContent">参数设置</div>
+                    </div>
+                    <el-button size="mini">重置</el-button>
+                </div>
+                <div class="paramBox_contentBox">
+                    <div v-for="item in parameterViewList" :key="item.formField" class="paramBox_contentBox_item">
+                        <div class="lableRow">
+                            <div class="lableBtn">
+                                <span>{{ item.label }}</span>
+                                <i class="el-icon-warning-outline"></i>
+                            </div>
+                        </div>
+                        <el-input v-model="item.value" placeholder="" class="inputBox"></el-input>
+                        <div v-if="item.isSlider" class="sliderBox">
+                            <span>{{item.sliderMin}}</span>
+                            <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider"></el-slider>
+                            <span>{{item.sliderMax}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="recordInfoWrap">
-                <div class="tabsArea">
-                    <div class="tabsAreaItem" :class="{'activeTabsItem':recordInfoTabsActive === '1'}" onclick="app.recordInfoTabsChange('1')">历史记录</div>
-                    <div class="tabsAreaItem" :class="{'activeTabsItem':recordInfoTabsActive === '2'}" onclick="app.recordInfoTabsChange('2')">版本信息</div>
+        </div>
+        @*输入*@
+        <div class="boxCard inputPromptArea">
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/Admin/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">输入Prompt</div>
                 </div>
-                <div v-if="recordInfoTabsActive === '1'" class="contentArea">
-                    <div v-if="app.historyData&&app.historyData.length>0" v-for="item in app.historyData" :key="item.id" class="historyItem">
-                        <div class="time">{{item.time}} (用时{{item.costTime}}ms)</div>
-                        <div class="recordwrap">
-                            <img src="~/image/Admin/PromptRange/prompt_record1.svg" class="leftIcon" />
-                            <div class="rightContent">
-                                <div class="askRow">{{item.ask}}</div>
-                                <div class="answerRow">{{item.answer}}</div>
+                <div class="titleRow_rightBox">
+                    <el-button type="primary" size="mini">替换</el-button>
+                    <el-button size="mini">重置</el-button>
+                </div>
+            </div>
+            <div class="inputPromptArea_contentBox">
+                <el-input v-model="content" type="textarea"
+                          :rows="10"
+                          placeholder="请输入内容"
+                          class="promptInput">
+                </el-input>
+                <div class="remarkRow">
+                    <el-input v-model="remarks" type="textarea"
+                              :rows="2"
+                              maxlength="200"
+                              show-word-limit
+                              placeholder="请输入备注" class="remarkInputBox">
+                    </el-input>
+                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="testHandel">打靶</el-button>
+                </div>
+            </div>
+        </div>
+   </div>
+   @*右侧 评分分析*@
+    <div class="promptPage_rightArea">
+        @*输出*@
+        <div class="boxCard outputArea">
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/Admin/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">输出</div>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>平均分:</span>
+
+                </div>
+            </div>
+            <div class="outputArea_contentBox">
+                <div v-for="(item,index) in outputList" :key="item.id" @@click="app.outputSelectSwitch(index)" class="contentBoxItem" :class="{'contentBoxActiveItem':outputActive === index}">
+                    <div class="infoRow">
+                        <span>#{{item.time}}</span>
+                        <span>#{{item.costTime}}</span>
+                        <span>版本: {{item.version}}</span>
+                    </div>
+                    <div class="contentRow">
+                        {{item.answer}}
+                    </div>
+                    <div class="operateRow">
+                        <div v-if="!item.isScore" class="operateRow_item" @@click="app.showRatingView(index)">
+                            <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span>评分</span>
+</div>
+                        <div v-if="item.isScore" class="operateRow_item">重置</div>
+                        <div v-if="item.isScore">分数：{{item.scoreVal}}</div>
+                    </div>
+                    <div v-if="item.isScoreView" class="scoreRow">
+                        <div class="tabsArea">
+                            <div class="tabsAreaItem" :class="{'activeTabsItem':item.scoreType === '1'}" @@click="app.alBtnScoring(index)">AI评分</div>
+                            <div class="tabsAreaItem" :class="{'activeTabsItem':item.scoreType === '2'}" @@click="app.manualBtnScoring(index)">手动评分</div>
+                        </div>
+                        <div v-if="item.scoreType === '1'" class="alScoreArea">
+                            <div v-for="(elItem,elindex) in item.alResultList" :key="elindex" class="valFormItem">
+                                <span class="label">{{elItem.label}}</span>
+                                <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
+                            </div>
+                            <div class="aiOperation">
+                                <el-button type="primary">开始打分</el-button>
+                                <el-button type="primary" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
+                            </div>
+                        </div>
+                        <div v-if="item.scoreType === '2'" class="manualScoreArea">
+                            <div class="sliderTextRow">
+                                <span>0</span>
+                                <span>100</span>
+                            </div>
+                            <el-slider v-model="item.scoreVal" :min="0" :max="100" :step="1"></el-slider>
+                            @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
+                            <div class="manualOperation">
+                                <el-button type="primary" @@click="saveManualScore(index)">保存</el-button>
                             </div>
                         </div>
                     </div>
-                    <div v-if="app.historyData.length === 0" class="emptyData">暂无数据</div>
                 </div>
-                <el-table v-if="recordInfoTabsActive === '2'" :data="versionData" class="tableArea">
-                    <el-table-column prop="modelName" label="模型名称" min-width="100"></el-table-column>
-                    <el-table-column prop="promptName" label="Prompt" min-width="100"></el-table-column>
-                    <el-table-column prop="time" label="时间" min-width="100"></el-table-column>
-                    <el-table-column prop="version" label="版本" min-width="60"></el-table-column>
-                </el-table>
             </div>
         </div>
-    </div>
-    @*prompt管理*@
-    <div v-if="tabsActive === '2'" class="promptManageArea">
-        <div class="leftArea">
+        @*分数趋势图*@
+        <div class="boxCard analysisArea">
             <div class="titleRow">
-                Prompt
-            </div>
-            <el-select v-model="promptSelectVal" placeholder="请选择Prompt" class="selectRow" @@change="getPromptetail">
-                <el-option v-for="item in promptOpt"
-                           :key="item.id"
-                           :label="item.label"
-                           :value="item.value"
-                           :disabled="item.disabled">
-                </el-option>
-            </el-select>
-            <div v-if="promptSelectVal" class="promptDetail">
-                <img src="~/image/Admin/PromptRange/prompt_record2.svg" class="imgIcon" />
-                <div class="rightValBox">
-                    <div class="askRow">
-                        {{promptDetail.promptName}}
-                    </div>
-                    <div class="answerRow">
-                        {{promptDetail.resultString}}
-                    </div>
+                <div class="titleRow_leftBox">
+                    <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">分数趋势图</div>
                 </div>
             </div>
-            <div class="scoreBtnArea">
-                <el-button plain @@click="app.alBtnScoring()">AI打分</el-button>
-                <el-button plain @@click="app.manualBtnScoring()">手动打分</el-button>
-            </div>
-            <div v-if="scoringType === '1'" class="alScoreArea">
-                <div class="titleRow">AI打分</div>
-                <div v-for="(item,index) in alScoreList" :key="index" class="valFormItem">
-                    <span class="label">{{item.label}}</span>
-                    <el-input v-model="item.value" clearable placeholder="请输入" class="input" />
-                </div>
-                <div class="aiOperation">
-                    <el-button type="primary">开始打分</el-button>
-                    <el-button type="primary" icon="el-icon-plus" circle @@click="app.addAlScoring()"></el-button>
-                </div>
-            </div>
-            <div v-if="scoringType === '2'" class="manualScoreArea">
-                <div class="titleRow">手动打分</div>
-                <div class="sliderTextRow">
-                    <span>0</span>
-                    <span>100</span>
-                </div>
-                <el-slider v-model="manualScorVal" :min="0" :max="100" :step="1" class=""></el-slider>
-                @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
-                <div class="manualOperation">
-                    <el-button type="primary" @@click="saveManualScore">保存</el-button>
-                </div>
-            </div>
+            <div id="scoreChart" class="echartsBox"></div>
         </div>
-        <div class="rightArea">
-            <div class="filterRow">
-                <div class="leftBox">
-                    <el-input placeholder="请输入内容" v-model="manageQueryList.modelName">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
-                    </el-input>
-                </div>
-                <div class="rightBox">
-                    <el-button type="primary" @@click="app.btnBatchExport()">批量导出</el-button>
-                    <el-button type="danger" @@click="app.btnBatchDelete()">批量删除</el-button>
-                </div>
-            </div>
+   </div>
+   @*版本记录 抽屉*@
 
-            <el-table ref="ManageTable" :data="manageTableData" class="tableArea" @@selection-change="app.handleSelectionChange">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column type="index" :index="indexMethod" label="序号" width="50"></el-table-column>
-                <el-table-column prop="promptName" label="Prompt名称" min-width="120"></el-table-column>
-                <el-table-column prop="modelName" label="模型名称" min-width="120"></el-table-column>
-                <el-table-column prop="time" label="时间" min-width="120"></el-table-column>
-                <el-table-column prop="version" label="版本" min-width="100"></el-table-column>
-                <el-table-column prop="score" label="分数" min-width="50"></el-table-column>
-                <el-table-column label="是否公开" min-width="100">
-                    <template slot-scope="scope">
-                        <el-switch v-model="scope.row.show" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作" width="50">
-                    <template slot-scope="scope">
-                        <el-popover placement="bottom-end"
-                                    width="100"
-                                    trigger="hover">
-                            <div>
-                                <div @@click="btnDetailHandle(scope.row)">详情</div>
-                                <div @@click="btnEditHandle(scope.row)">编辑</div>
-                                @*<div>生成代码</div>*@
-                                <div @@click="btnDeleteHandle(scope.row)">删除</div>
-                            </div>
-                            <i slot="reference" class="el-icon-more"></i>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-            </el-table>
-
-            @*<div class="footer_pag">
-                <el-pagination background
-                               layout="total, sizes, prev, pager, next, jumper"
-                               :page-size="manageQueryList.size"
-                               :current-page.sync="manageQueryList.page"
-                               :page-sizes="app.pageSizes"
-                               :total="app.manageTableTotal"
-                               @@size-change="handleSizeChange"
-                               @@current-change="handleCurrentChange">
-                </el-pagination>
-            </div>*@
-        </div>
-    </div>
 </div>
 
 @section scripts{
+    <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/PromptRange/prompt.js"></script>
 }
