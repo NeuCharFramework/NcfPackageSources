@@ -14,12 +14,12 @@ namespace Senparc.Ncf.Core.Tests
     public class TestBase
     {
         public IServiceCollection ServiceCollection { get; }
-        public static IConfiguration Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
 
-        public static IHostEnvironment Env { get; set; }
+        public IHostEnvironment Env { get; set; }
 
-        protected static IRegisterService registerService;
-        protected static SenparcSetting _senparcSetting;
+        protected IRegisterService registerService;
+        protected SenparcSetting _senparcSetting;
 
         public TestBase()
         {
@@ -33,11 +33,11 @@ namespace Senparc.Ncf.Core.Tests
         /// <summary>
         /// ×¢²á IServiceCollection ºÍ MemoryCache
         /// </summary>
-        public static void RegisterServiceCollection()
+        public void RegisterServiceCollection()
         {
             var serviceCollection = new ServiceCollection();
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddJsonFile("appsettings.json", false, false);
+            configBuilder.AddJsonFile(UnitTestHelper.GetAppSettingsFile(), false, false);
             var config = configBuilder.Build();
             Configuration = config;
 
@@ -52,7 +52,7 @@ namespace Senparc.Ncf.Core.Tests
         /// <summary>
         /// ×¢²á RegisterService.Start()
         /// </summary>
-        public static void RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
+        public void RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
             //×¢²á
             var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();

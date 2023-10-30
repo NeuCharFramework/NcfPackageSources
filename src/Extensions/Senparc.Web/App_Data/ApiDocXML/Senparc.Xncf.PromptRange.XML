@@ -1,0 +1,685 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Senparc.Xncf.PromptRange</name>
+    </assembly>
+    <members>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo">
+            <summary>
+            版本号信息
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.VersionInfo.ToString">
+            <summary>
+            生成版本号字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.ISKFunction[])">
+            <summary>
+            根据 Plugin 的 Prompt 获取结果
+            </summary>
+            <param name="input">用户输入</param>
+            <param name="context">上下文参数</param>
+            <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
+            <para>Key：Skill Name</para>
+            <para>Value：Function Name List</para>
+            </param>
+            <param name="functionPiple">functionPiple</param>
+            <returns></returns>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.Name">
+            <summary>
+            名称（必须）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.Endpoint">
+            <summary>
+            Endpoint（必须）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.OrganizationId">
+            <summary>
+            OrganizationId（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.ApiKey">
+            <summary>
+            ApiKey（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.ApiVersion">
+            <summary>
+            ApiVersion（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.Note">
+            <summary>
+            Note（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.MaxToken">
+            <summary>
+            MaxToken（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.TextCompletionModelName">
+            <summary>
+            TextCompletionModelName（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.TextEmbeddingModelName">
+            <summary>
+            TextEmbeddingModelName（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.OtherModelName">
+            <summary>
+            OtherModelName（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Name">
+            <summary>
+            PromptGroup 名称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.MaxToken">
+            <summary>
+            MaxToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Temperature">
+            <summary>
+            Temperature
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.FrequencyPenalty">
+            <summary>
+            FrequencyPenalty
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.ResultsPerPrompt">
+            <summary>
+            ResultsPerPrompt
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.StopSequences">
+            <summary>
+            StopSequences
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.ChatSystemPrompt">
+            <summary>
+            ChatSystemPrompt
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.TokenSelectionBiases">
+            <summary>
+            TokenSelectionBiases
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.EvaluationMetrics">
+            <summary>
+            EvaluationMetrics
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.PromptContent">
+            <summary>
+            Prompt内容
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.PromptGroupId">
+            <summary>
+            PromptGroupId
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.MaxToken">
+            <summary>
+            最大 Token 数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Temperature">
+            <summary>
+            温度
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.FrequencyPenalty">
+            <summary>
+            频率惩罚
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ResultsPerPrompt">
+            <summary>
+            每个 Prompt 的结果数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.StopSequences">
+            <summary>
+            停止序列（JSON 数组）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.StopSequencesArray">
+            <summary>
+            从 StopSequences 自动获取数组，如果为空，则返回空对象
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ChatSystemPrompt">
+            <summary>
+            聊天系统 Prompt
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.TokenSelectionBiases">
+            <summary>
+            Token 选择偏好
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.TokenSelectionBiasesArray">
+            <summary>
+            从 TokenSelectionBiases 自动获取数组，如果为空，则返回空对象
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvaluationScore">
+            <summary>
+            评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvaluationMetrics">
+            <summary>
+            EvaluationMetrics
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Version">
+            <summary>
+            版本号，格式为 yyyy.MM.dd.Version
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.LastRunTime">
+            <summary>
+            最后一次运行时间
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptGroupId">
+            <summary>
+            PromptGroup 的 Id
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlmModelId">
+            <summary>
+            LlmModel 的 Id
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.ResultString">
+            <summary>
+            结果字符串
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.CostTime">
+            <summary>
+            花费时间，单位：毫秒
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.RobotScore">
+            <summary>
+            机器人打分，0-100分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.HumanScore">
+            <summary>
+            人类打分，0-100分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.RobotTestExceptedResult">
+            <summary>
+            机器人测试期望结果
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.IsRobotTestExactlyEquat">
+            <summary>
+            是否机器人测试结果完全相等
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.TestType">
+            <summary>
+            测试类型，枚举中包含：文字、图形、声音
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptCostToken">
+            <summary>
+            提示花费的 Token 数量
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.ResultCostToken">
+            <summary>
+            结果花费的 Token 数量
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.TotalCostToken">
+            <summary>
+            总共花费的 Token 数量
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlmModel">
+            <summary>
+            LlmModel 类型的 LlmModel
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItemVersion">
+            <summary>
+            string类型的PromptItemVersion
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.LlmModel">
+            <summary>
+            LlmModel 数据库实体
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.Name">
+            <summary>
+            名称（必须）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.Endpoint">
+            <summary>
+            Endpoint（必须）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.OrganizationId">
+            <summary>
+            OrganizationId（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.ApiKey">
+            <summary>
+            ApiKey（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.ApiVersion">
+            <summary>
+            ApiVersion（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.Note">
+            <summary>
+            Note（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.MaxToken">
+            <summary>
+            MaxToken（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.TextCompletionModelName">
+            <summary>
+            TextCompletionModelName（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.TextEmbeddingModelName">
+            <summary>
+            TextEmbeddingModelName（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.OtherModelName">
+            <summary>
+            OtherModelName（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.Show">
+            <summary>
+            是否展示
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.PromptGroups">
+            <summary>
+            数据库中的 PromptGrpups 实体
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.PromptItems">
+            <summary>
+            数据库中的 PromptItems 实体
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.PromptResults">
+            <summary>
+            数据库中的 PromptResult 实体
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.PromptResult">
+            <summary>
+            PromptResult 数据库实体
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.PromptGroupId">
+            <summary>
+            PromptGroupId，并添加PromptGroup类作为属性
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.LlmModelId">
+            <summary>
+            LlmModelId，并添加LlmModel类作为属性
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.ResultString">
+            <summary>
+            结果字符串
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.CostTime">
+            <summary>
+            花费时间，单位：毫秒
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScore">
+            <summary>
+            机器人打分，0-100分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.HumanScore">
+            <summary>
+            人类打分，0-100分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.RobotTestExceptedResult">
+            <summary>
+            RobotTestExceptedResult
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.IsRobotTestExactlyEquat">
+            <summary>
+            IsRobotTestExactlyEquat
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.TestType">
+            <summary>
+            测试类型，枚举中包含：文字、图形、声音
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.PromptCostToken">
+            <summary>
+            PromptCostToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.ResultCostToken">
+            <summary>
+            ResultCostToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.TotalCostToken">
+            <summary>
+            TotalCostToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.PromptItemId">
+            <summary>
+            PromptItem，并添加PromptItem类作为属性
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.PromptItemVersion">
+            <summary>
+            PromptItemVersion
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.TestType">
+            <summary>
+            测试类型枚举
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Models.TestType.Text">
+            <summary>
+            文字
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Models.TestType.Graph">
+            <summary>
+            图形
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Models.TestType.Voice">
+            <summary>
+            声音
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_MySql">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_MySql -o Domain/Migrations/Migrations.MySql </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Oracle">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_Oracle -o Domain/Migrations/Migrations.Oracle </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_PostgreSQL">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_PostgreSQL -o Migrations/Migrations.PostgreSQL </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Sqlite">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_Sqlite -o Domain/Migrations/Migrations.Sqlite </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_SqlServer">
+            <summary>
+            设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+            <para>1、切换至 Debug 模式</para>
+            <para>2、运行：PM> add-migration [更新名称] -c PromptRangeSenparcEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactoryConfig">
+            <summary>
+            SenparcDbContextFactory 的公共配置
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactoryConfig.RootDirectoryPath">
+            <summary>
+            用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.PromptGroup">
+            <summary>
+            PromptGroup
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.PromptItem">
+            <summary>
+            PromptItem
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.MaxToken">
+            <summary>
+            最大 Token 数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Temperature">
+            <summary>
+            温度
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.FrequencyPenalty">
+            <summary>
+            频率惩罚
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ResultsPerPrompt">
+            <summary>
+            每个 Prompt 的结果数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.StopSequences">
+            <summary>
+            停止序列（JSON 数组）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ChatSystemPrompt">
+            <summary>
+            聊天系统 Prompt
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.TokenSelectionBiases">
+            <summary>
+            Token 选择偏好
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.EvaluationScore">
+            <summary>
+            评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Version">
+            <summary>
+            版本号，格式为 yyyy.MM.dd.Version
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.LastRunTime">
+            <summary>
+            最后一次运行时间
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.GetVersionInfo(System.String)">
+            <summary>
+            获取版本信息
+            </summary>
+            <param name="version">如果留空则默认获取当前示例的 Version</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.GenerateNewVersion(System.String)">
+            <summary>
+            生成新的版本号
+            </summary>
+            <param name="lastVersion">上一个版本，如果为 null，则使用当前实例的 Version</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.UpdateVersion">
+            <summary>
+            更新版本号
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
+            <summary>
+            将 AppService 暴露为 WebApi
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyCustomApi(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.Api_MyCustomApiRequest)">
+            <summary>
+            自定义 Post 类型和复杂参数，同时测试异常抛出和自定义状态码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest)">
+            <summary>
+            添加模型
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Modify(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_ModifyRequest)">
+            <summary>
+            编辑模型
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.GetLlmModelList(System.Int32,System.Int32,System.String)">
+            <summary>
+            获取model
+            </summary>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.BatchDelete(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            模型删除
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Endpoint">
+            <summary>
+            Endpoint（必须）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ApiKey">
+            <summary>
+            ApiKey
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.Temperature">
+            <summary>
+            温度
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.MaxToken">
+            <summary>
+            最大 Token 数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.FrequencyPenalty">
+            <summary>
+            频率惩罚
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Name">
+            <summary>
+            模型名称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Developer">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">
+            <summary>
+            数据库前缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Register.DatabaseUniquePrefix">
+            <summary>
+            数据库前缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Register.TryGetXncfDatabaseDbContextType">
+            <summary>
+            动态获取数据库上下文
+            </summary>
+        </member>
+    </members>
+</doc>

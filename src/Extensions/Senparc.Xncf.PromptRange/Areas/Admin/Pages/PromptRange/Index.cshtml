@@ -1,0 +1,55 @@
+﻿@page
+@model Senparc.Xncf.PromptRange.Areas.PromptRange.Pages.Index
+@{
+    ViewData["Title"] = "PromptRange 首页";
+    Layout = "_Layout_Vue";
+}
+@section Style{
+    <link href="~/css/Admin/PromptRange/index.css" rel="stylesheet" />
+}
+@section breadcrumbs{
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
+    <el-breadcrumb-item>首页</el-breadcrumb-item>
+}
+
+<div class="indexPage">
+    <div class="headRow">
+        <div class="leftBox">
+            <div class="title">
+                <div>PromptRange</div>
+                <div>提示词靶场</div>
+            </div>
+            <div class="btn">
+                新增模型
+            </div>
+        </div>
+        <img src="~/image/Admin/PromptRange/index_headBg.png" class="headBg" />
+        <img src="~/image/Admin/PromptRange/index_headRight1.png" class="headRightIcon1" />
+        <img src="~/image/Admin/PromptRange/index_headRight2.png" class="headRightIcon2" />
+        <img src="~/image/Admin/PromptRange/index_headRight3.png" class="headRightIcon3" />
+    </div>
+    <div class="mainBox">
+        <div class="leftBox cardBox">
+            <div class="title">热门Prompt及Model</div>
+            <div class="hotMainBox"></div>
+        </div>
+        <div class="rightBox">
+            <div class="cardBox">
+                <div class="title">
+                    <span class="activeText">已测试Prompt</span>
+                    <span class="">已使用模型</span>
+                </div>
+                <div class="hotMainBox"></div>
+            </div>
+            <div class="cardBox">
+                <div class="title">Prompt分数趋势图</div>
+                <div class="hotMainBox"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/Admin/PromptRange/index.js"></script>
+}

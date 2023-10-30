@@ -1,0 +1,193 @@
+﻿@page
+@model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
+@{
+    ViewData["Title"] = "PromptRange Prompt";
+    Layout = "_Layout_Vue";
+}
+@section Style{
+    <link href="~/css/Admin/PromptRange/prompt.css" rel="stylesheet" />
+}
+@section breadcrumbs{
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
+    <el-breadcrumb-item>Prompt</el-breadcrumb-item>
+}
+<div class="promptPage">
+   @*左侧 输入测试 *@
+    <div class="promptPage_leftArea">
+        @*配置*@
+        <div class="boxCard configurineArea">
+            @*选择靶场*@
+            <div class="configurineAreaItem rangeBox">
+                <div class="titleRow">
+                    <div class="titleRow_leftBox">
+                        <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                        <div class="titleContent">选择靶场</div>
+                    </div>
+                    <el-button type="primary" size="mini" icon="el-icon-plus">新增靶场</el-button>
+                </div>
+                <el-select v-model="promptid" placeholder="请选择靶场" class="selectRow">
+                    <el-option v-for="item in modelOpt"
+                               :key="item.id"
+                               :label="item.label"
+                               :value="item.value"
+                               :disabled="item.disabled">
+                    </el-option>
+                </el-select>
+            </div>
+            @*选择模型*@
+            <div class="configurineAreaItem modelBox">
+                <div class="titleRow">
+                    <div class="titleRow_leftBox">
+                        <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon" />
+                        <div class="titleContent">选择模型</div>
+                    </div>
+                    <el-button type="primary" size="mini" icon="el-icon-plus">新增模型</el-button>
+                </div>
+                <el-select v-model="modelid" placeholder="请选择模型" class="selectRow">
+                    <el-option v-for="item in modelOpt"
+                               :key="item.id"
+                               :label="item.label"
+                               :value="item.value"
+                               :disabled="item.disabled">
+                    </el-option>
+                </el-select>
+            </div>
+            @*参数设置*@
+            <div class="configurineAreaItem paramBox">
+                <div class="titleRow">
+                    <div class="titleRow_leftBox">
+                        <i class="requirIcon">*</i>
+                        <div class="titleContent">参数设置</div>
+                    </div>
+                    <el-button size="mini">重置</el-button>
+                </div>
+                <div class="paramBox_contentBox">
+                    <div v-for="item in parameterViewList" :key="item.formField" class="paramBox_contentBox_item">
+                        <div class="lableRow">
+                            <div class="lableBtn">
+                                <span>{{ item.label }}</span>
+                                <i class="el-icon-warning-outline"></i>
+                            </div>
+                        </div>
+                        <el-input v-model="item.value" placeholder="" class="inputBox"></el-input>
+                        <div v-if="item.isSlider" class="sliderBox">
+                            <span>{{item.sliderMin}}</span>
+                            <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider"></el-slider>
+                            <span>{{item.sliderMax}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*输入*@
+        <div class="boxCard inputPromptArea">
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/Admin/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">输入Prompt</div>
+                </div>
+                <div class="titleRow_rightBox">
+                    <el-button type="primary" size="mini">替换</el-button>
+                    <el-button size="mini">重置</el-button>
+                </div>
+            </div>
+            <div class="inputPromptArea_contentBox">
+                <el-input v-model="content" type="textarea"
+                          :rows="10"
+                          placeholder="请输入内容"
+                          class="promptInput">
+                </el-input>
+                <div class="remarkRow">
+                    <el-input v-model="remarks" type="textarea"
+                              :rows="2"
+                              maxlength="200"
+                              show-word-limit
+                              placeholder="请输入备注" class="remarkInputBox">
+                    </el-input>
+                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="testHandel">打靶</el-button>
+                </div>
+            </div>
+        </div>
+   </div>
+   @*右侧 评分分析*@
+    <div class="promptPage_rightArea">
+        @*输出*@
+        <div class="boxCard outputArea">
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/Admin/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">输出</div>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>平均分:</span>
+
+                </div>
+            </div>
+            <div class="outputArea_contentBox">
+                <div v-for="(item,index) in outputList" :key="item.id" @@click="app.outputSelectSwitch(index)" class="contentBoxItem" :class="{'contentBoxActiveItem':outputActive === index}">
+                    <div class="infoRow">
+                        <span>#{{item.time}}</span>
+                        <span>#{{item.costTime}}</span>
+                        <span>版本: {{item.version}}</span>
+                    </div>
+                    <div class="contentRow">
+                        {{item.answer}}
+                    </div>
+                    <div class="operateRow">
+                        <div v-if="!item.isScore" class="operateRow_item" @@click="app.showRatingView(index)">
+                            <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span>评分</span>
+</div>
+                        <div v-if="item.isScore" class="operateRow_item">重置</div>
+                        <div v-if="item.isScore">分数：{{item.scoreVal}}</div>
+                    </div>
+                    <div v-if="item.isScoreView" class="scoreRow">
+                        <div class="tabsArea">
+                            <div class="tabsAreaItem" :class="{'activeTabsItem':item.scoreType === '1'}" @@click="app.alBtnScoring(index)">AI评分</div>
+                            <div class="tabsAreaItem" :class="{'activeTabsItem':item.scoreType === '2'}" @@click="app.manualBtnScoring(index)">手动评分</div>
+                        </div>
+                        <div v-if="item.scoreType === '1'" class="alScoreArea">
+                            <div v-for="(elItem,elindex) in item.alResultList" :key="elindex" class="valFormItem">
+                                <span class="label">{{elItem.label}}</span>
+                                <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
+                            </div>
+                            <div class="aiOperation">
+                                <el-button type="primary">开始打分</el-button>
+                                <el-button type="primary" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
+                            </div>
+                        </div>
+                        <div v-if="item.scoreType === '2'" class="manualScoreArea">
+                            <div class="sliderTextRow">
+                                <span>0</span>
+                                <span>100</span>
+                            </div>
+                            <el-slider v-model="item.scoreVal" :min="0" :max="100" :step="1"></el-slider>
+                            @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
+                            <div class="manualOperation">
+                                <el-button type="primary" @@click="saveManualScore(index)">保存</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*分数趋势图*@
+        <div class="boxCard analysisArea">
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">分数趋势图</div>
+                </div>
+            </div>
+            <div id="scoreChart" class="echartsBox"></div>
+        </div>
+   </div>
+   @*版本记录 抽屉*@
+
+</div>
+
+@section scripts{
+    <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script src="~/js/Admin/PromptRange/prompt.js"></script>
+}
