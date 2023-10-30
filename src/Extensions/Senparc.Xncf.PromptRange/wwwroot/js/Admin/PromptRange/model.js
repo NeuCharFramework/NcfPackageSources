@@ -20,11 +20,28 @@ var app = new Vue({
             modifyFlag: true,
             modifyName:"",
             newModelForm: {
+                value:'',
                 modelName: '',
                 modelAPI: '',
                 modelAPIkey: ''
             },
+            options: [{
+                value: 0,
+                label: 'OpenAI'
+            }, {
+                value: 1,
+                label: 'AzureOpenAI'
+            }, {
+                value: 2,
+                label: 'NeuCharOpenAI'
+            }, {
+                value: 3,
+                label: 'HugginFace'
+            }],
             rules: {
+                modelType: [
+                    { required: true, message: 'Please select a model type', trigger: 'change' }
+                ],
                 modelName: [
                     { required: true, message: 'Please enter a model name', trigger: 'blur' }
                 ],
