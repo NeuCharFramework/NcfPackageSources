@@ -1,23 +1,44 @@
 ﻿.promptPage {
-    padding: 15px;
-    min-width: 1240px;
-    overflow: auto;
+    /*padding: 15px;*/
+
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    /*align-items:flex-start;*/
+    justify-content:flex-start;
+    gap:15px;
+
     position: relative;
+    box-sizing: border-box;
+    /*min-width: 1240px;
+    overflow: auto;
     border-radius: 10px;
     background-color: #FFF;
-    box-sizing:border-box;
+    */
 }
-
-    .promptPage > .tabsArea {
+    /*空数据*/
+    .promptPage .emptyDataArea {
+        width:100%;
+        height:100%;
+        text-align:center;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#666;
+        font-size:14px;
+    }
+    /*tabs*/
+    .promptPage .tabsArea {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: flex-start;
-        gap: 30px;
+        gap: 20px;
         box-sizing: border-box;
     }
-        .promptPage > .tabsArea > .tabsAreaItem {
-            padding: 5px 10px;
+
+        .promptPage  .tabsArea > .tabsAreaItem {
+            padding: 5px 0px;
             position: relative;
             color: #333;
             font-size: 14px;
@@ -27,10 +48,12 @@
             box-sizing: border-box;
             cursor: pointer;
         }
-        .promptPage > .tabsArea > .activeTabsItem {
+
+        .promptPage  .tabsArea > .activeTabsItem {
             color: #0083FF;
         }
-            .promptPage > .tabsArea > .activeTabsItem::before {
+
+            .promptPage  .tabsArea > .activeTabsItem::before {
                 content: '';
                 display: inline-block;
                 position: absolute;
@@ -42,473 +65,520 @@
                 border-radius: 4px;
                 background-color: #0083FF;
             }
-/*prompt 面板*/
-.promptPage > .promptPanelArea {
-    margin-top: 30px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    box-sizing: border-box;
-}
-    /*prompt 面板 左侧*/
-        .promptPage > .promptPanelArea > .leftBox {
-            flex: 1;
-            min-height: 748px;
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid #DCDFE6;
-            background-color: #FFF;
-            box-sizing: border-box;
-        }
-            .promptPage > .promptPanelArea > .leftBox > .titleRow {
-                display:flex;
-                flex-wrap:nowrap;
-                align-items:center;
-                justify-content:space-between;
-                box-sizing: border-box;
-            }
-                .promptPage > .promptPanelArea > .leftBox > .titleRow > .titlelLeft {
-                    display: flex;
-                    flex-wrap: nowrap;
-                    align-items: center;
-                    gap:10px;
-                    box-sizing: border-box;
-                }
-                    .promptPage > .promptPanelArea > .leftBox > .titleRow > .titlelLeft > .titlelLeftIcon {
-                        flex-shrink:0;
-                        width: 14px;
-                        height: 13px;
-                    }
-.promptPage > .promptPanelArea > .leftBox > .titleRow > .titlelLeft > .titlelLeftText {
-    color: #333;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal; /* 137.5% */
-}
-                .promptPage > .promptPanelArea > .leftBox > .titleRow > .titlelRight {
-                    box-sizing: border-box;
-                }
-            .promptPage > .promptPanelArea > .leftBox > .lableRow {
-                margin-top:20px;
-                color: #333;
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 400;
-                display:flex;
-                align-items:center;
-            }
-                .promptPage > .promptPanelArea > .leftBox > .requir:before {
-                    content: "*";
-                    color: #f56c6c;
-                    margin-right: 4px;
-                    color: #F5232D;
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 400;
-                }
-            .promptPage > .promptPanelArea > .leftBox > .selectRow {
-                margin-top:10px;
-                display:block;
-            }
 
-            .promptPage > .promptPanelArea > .leftBox > .parameterRow {
-                margin-top: 10px;
-                display: flex;
-                flex-wrap: nowrap;
-                align-items: center;
-                gap: 20px;
-            }
-                .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem {
-                    flex:1;
-                    display: flex;
-                    flex-wrap: nowrap;
-                    align-items: center;
-                    gap:10px;
-                }
-                    .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem > .lableRow {
-                        width: 136px;
-                    }
-                        .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem > .lableRow > .lableBtn {
-                            display:inline-block;
-                            padding: 5px;
-                            border-radius: 5px;
-                            border: 1px solid #DCDFE6;
-                            background: #FFF;
-                            color: #333;
-                            font-size: 12px;
-                            font-style: normal;
-                            font-weight: 400;
-                            line-height: normal;
-                        }
-                    .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem > .inputBox {
-                        padding:0 5px;
-                        width: 34px;
-                        height: 30px;
-                        outline:none;
-                        border-radius: 5px;
-                        border: 1px solid #DCDFE6;
-                        background: #FFF;
-                    }
-                    .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem > .sliderBox {
-                        flex: 1;
-                        display: flex;
-                        flex-wrap: nowrap;
-                        align-items: center;
-                        gap: 10px;
 
-                        color: #333;
-                        font-size: 12px;
-                        font-style: normal;
-                        font-weight: 400;
-                        line-height: normal;
-                    }
-                        .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem > .sliderBox > .slider {
-                            flex:auto;
-                            min-width:60px;
-                        }
-                            .promptPage > .promptPanelArea > .leftBox > .parameterRow > .parameterRowItem > .sliderBox > .slider .el-slider__button {
-                                width: 2px !important;
-                                border-radius: 4px !important;
-                            }
-            .promptPage > .promptPanelArea > .leftBox > .footerRow {
-                margin-top: 20px;
-                display: flex;
-                flex-wrap: nowrap;
-                align-items: center;
-                justify-content: flex-end;
-            }
-/*prompt 面板 右侧*/
-.promptPage > .promptPanelArea > .rightBox {
-    width: 44%;
-    min-height: 748px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    gap: 20px;
-    box-sizing: border-box;
-}
-    .promptPage > .promptPanelArea > .rightBox > .outputWrap {
-        min-height: 150px;
+    /*卡片*/
+    .promptPage .boxCard {
         padding: 15px;
-        border-radius: 6px;
-        border: 1px solid #DCDFE6;
+
+        overflow: hidden;
+        position: relative;
+        box-sizing: border-box;
+
+        border-radius: 8px;
         background-color: #FFF;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
     }
-                .promptPage > .promptPanelArea > .rightBox > .outputWrap > .titleRow {
-                   
-                    display: flex;
-                    flex-wrap: nowrap;
-                    align-items: center;
-                    gap: 10px;
-                    box-sizing: border-box;
-                }
 
-.promptPage > .promptPanelArea > .rightBox > .outputWrap > .titleRow > .imgIcon {
-    flex-shrink: 0;
-    width: 14px;
-    height: 13px;
-}
 
-                    .promptPage > .promptPanelArea > .rightBox > .outputWrap > .titleRow > .titleText {
-                        color: #333;
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 400;
-                        line-height: normal; /* 137.5% */
-                    }
-        .promptPage > .promptPanelArea > .rightBox > .outputWrap > .contentRow {
-            color: #333;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
- 
-            overflow: auto;
-            box-sizing: border-box;
-        }
-.promptPage > .promptPanelArea > .rightBox > .recordInfoWrap {
-    flex: 1;
-    padding:15px;
-    border-radius: 6px;
-    border: 1px solid #DCDFE6;
-    background-color: #FFF;
-    box-sizing: border-box;
-    word-break:break-all;
-}
-    .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .tabsArea {
+
+    /*标题行*/
+    .promptPage .titleRow {
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: row;
+        flex-wrap: nowrap;
         align-items: center;
-        justify-content: flex-start;
-        gap: 30px;
+        justify-content: space-between;
+        overflow: hidden;
+        position: relative;
         box-sizing: border-box;
     }
 
-        .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .tabsArea > .tabsAreaItem {
-            padding: 5px 10px;
-            position: relative;
-            color: #333;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: normal;
-            box-sizing: border-box;
-            cursor:pointer;
-        }
-
-        .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .tabsArea > .activeTabsItem {
-            color: #0083FF;
-        }
-
-            .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .tabsArea > .activeTabsItem::before {
-                content: '';
-                display: inline-block;
-                position: absolute;
-                left: 50%;
-                bottom: -5px;
-                transform: translateX(-50%);
-                width: 50%;
-                height: 3px;
-                border-radius: 4px;
-                background-color: #0083FF;
-            }
-    .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea {
-        overflow: auto;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap .emptyData {
-        padding:15px 0px;
-        text-align: center;
-        color: #666;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-    }
-.promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem {
-    margin: 10px 0px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-            .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem > .time {
-                text-align: center;
-                color: #666;
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 400;
-            }
-            .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem>.recordwrap{
-                display:flex;
-                align-items:flex-start;
-                flex-wrap:nowrap;
-                gap:7px;
-            }
-                .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem > .recordwrap > .leftIcon {
-                    width: 14px;
-                    height: 54px;
-                    flex-shrink: 0;
-                }
-                .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem > .recordwrap > .rightContent {
-                    display:flex;
-                    flex-direction:column;
-                    gap:10px;
-                }
-                    .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem > .recordwrap > .rightContent > .askRow {
-                        padding:10px;
-                        border-radius: 5px;
-                        border: 1px solid #DCDFE6;
-                        background: #FFF;
-                    }
-                    .promptPage > .promptPanelArea > .rightBox > .recordInfoWrap > .contentArea > .historyItem > .recordwrap > .rightContent > .answerRow {
-                        padding: 10px;
-                        border-radius: 5px;
-                        border: 1px solid #DCDFE6;
-                        background: #FFF;
-                    }
-
-
-/*prompt管理 面板*/
-.promptPage > .promptManageArea {
-    margin-top: 30px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    box-sizing: border-box;
-}
-
-/*prompt管理 面板 左侧*/
-.promptPage > .promptManageArea>.leftArea {
-    padding:15px;
-    width: 34%;
-    border-radius: 6px;
-    border: 1px solid #DCDFE6;
-    background: #FFF;
-    box-sizing: border-box;
-}
-    .promptPage > .promptManageArea > .leftArea > .titleRow {
-        color: #333;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-    }
-    .promptPage > .promptManageArea > .leftArea > .selectRow {
-        display:block;
-        margin-top:10px;
-    }
-    .promptPage > .promptManageArea > .leftArea > .promptDetail {
-        margin-top:15px;
-        display:flex;
-        align-items:flex-start;
-        flex-wrap:nowrap;
-        gap:6px;
-
-    }
-        .promptPage > .promptManageArea > .leftArea > .promptDetail > .imgIcon {
-            width: 14px;
-            height: 124px;
-        }
-        .promptPage > .promptManageArea > .leftArea > .promptDetail > .rightValBox {
-            position:relative;
-            display:flex;
-            flex-direction:column;
-            gap:20px;
-            word-break:break-all;
-        }
-            .promptPage > .promptManageArea > .leftArea > .promptDetail > .rightValBox > .askRow {
-                padding: 15px;
-                width: 356px;
-                height: 100px;
-                overflow: auto;
-                box-sizing: border-box;
-                border-radius: 6px;
-                border: 1px solid #DCDFE6;
-                background: #FFF;
-            }
-            .promptPage > .promptManageArea > .leftArea > .promptDetail > .rightValBox > .answerRow {
-                padding: 15px;
-                width: 356px;
-                height: 87px;
-                overflow: auto;
-                box-sizing: border-box;
-                border-radius: 6px;
-                border: 1px solid #DCDFE6;
-                background: #FFF;
-            }
-.promptPage > .promptManageArea > .leftArea > .scoreBtnArea {
-    margin-top: 10px;
-    padding-left: 20px;
-    display: flex;
-    align-items: center;
-}
-    .promptPage > .promptManageArea > .leftArea > .alScoreArea {
-        position:relative;
-    }
-        .promptPage > .promptManageArea > .leftArea > .alScoreArea > .titleRow {
-            margin-top: 10px;
-            color: #333;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
-        }
-        .promptPage > .promptManageArea > .leftArea > .alScoreArea > .valFormItem {
-            margin-top: 10px;
+        .promptPage .titleRow > .titleRow_leftBox {
             display: flex;
-            align-items: center;
+            flex-direction: row;
             flex-wrap: nowrap;
+            align-items: center;
             gap: 5px;
+            box-sizing: border-box;
         }
-            .promptPage > .promptManageArea > .leftArea > .alScoreArea > .valFormItem > .label {
-                color: #333;
+
+            .promptPage .titleRow > .titleRow_leftBox > .imgIcon {
+                flex-shrink: 0;
+                width: 14px;
+                height: 14px;
+            }
+            .promptPage .titleRow > .titleRow_leftBox > .requirIcon {
+                color: #F5232D;
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 400;
                 line-height: normal;
             }
-            .promptPage > .promptManageArea > .leftArea > .alScoreArea > .valFormItem > .input {
-                flex:1;
+            .promptPage .titleRow > .titleRow_leftBox > .titleContent {
+                box-sizing: border-box;
+                color: #333;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 22px; /*22px*/
             }
-        .promptPage > .promptManageArea > .leftArea > .alScoreArea > .aiOperation {
-            margin-top:15px;
-            padding-left:10px;
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap;
-            justify-content:space-between;
+
+        .promptPage .titleRow > .titleRow_rightBox {
+            display:flex;
+            flex-wrap:nowrap;
+            gap:10px;
         }
-    .promptPage > .promptManageArea > .leftArea > .manualScoreArea > .titleRow {
-        margin-top: 20px;
-        color: #333;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-    }
-    .promptPage > .promptManageArea > .leftArea > .manualScoreArea > .sliderTextRow {
-        margin-top: 10px;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        flex-wrap:nowrap;
-        font-size:14px;
-        color:#333;
-        font-weight:400;
-    }
-.promptPage > .promptManageArea > .leftArea > .manualScoreArea > .input {
-    margin-top: 10px;
+/*左侧模块*/
+.promptPage > .promptPage_leftArea {
+    min-width: 632px;
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 15px;
 }
-
-    .promptPage > .promptManageArea > .leftArea > .manualScoreArea > .manualOperation {
-        margin-top: 15px;
-        padding-left: 10px;
-    }
-/*prompt管理 面板 右侧*/
-.promptPage > .promptManageArea > .rightArea {
-    padding: 15px;
-    flex: auto;
-    border-radius: 6px;
-    border: 1px solid #DCDFE6;
-    background: #FFF;
-    box-sizing: border-box;
+/*左侧模块 配置区域\输入prompt区域*/
+.promptPage_leftArea > .configurineArea, .promptPage_leftArea > .inputPromptArea {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 15px;
 }
-
-    .promptPage > .promptManageArea > .rightArea> .filterRow {
-        margin-bottom: 10px;
+    /*左侧模块 配置 行 区域*/
+    .promptPage_leftArea > .configurineArea > .configurineAreaItem {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
+        flex-wrap: nowrap;
         gap: 10px;
     }
-
-        .promptPage > .promptManageArea > .rightArea > .filterRow> .leftBox {
+        /*左侧模块 配置 下拉选择 区域*/
+        .promptPage_leftArea > .configurineArea > .configurineAreaItem >.selectRow {
+            width: 100%;
+        }
+    /*左侧模块 配置 参数 内容 区域*/
+    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox {
+        display: flex;
+        flex-direction:row;
+        flex-wrap: wrap;
+        gap: 10px 4%;
+    }
+        .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item {
+            width: 48%; 
             display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
-            justify-content: flex-start;
+            gap: 8px;
+        }
+            .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow {
+                flex-shrink:0;
+                width: 130px;
+            }
+                .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow > .lableBtn {
+                    display: inline-block;
+                    padding: 5px;
+                    border-radius: 5px;
+                    border: 1px solid #DCDFE6;
+                    background: #FFF;
+                    color: #333;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+            .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox {
+                flex-shrink: 0;
+                width: 45px;
+                /*padding: 0 5px;
+                height: 30px;
+                outline: none;
+                border-radius: 5px;
+                border: 1px solid #DCDFE6;
+                background: #FFF;*/
+            }
+                .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox .el-input__inner {
+                    padding: 0 5px;
+                    height: 30px;
+                    line-height: 30px;
+                }
+            .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox {
+                flex: 1;
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 10px;
+                color: #333;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+                .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider {
+                    flex: auto;
+                    min-width: 60px;
+                }
+                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button-wrapper{
+                        top:50%;
+                        transform:translate(-50%,-50%);
+                    }
+                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button {
+                        width: 2px !important;
+                        border-radius: 4px !important;
+                    }
+                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__bar {
+                        height: 18px;
+                        background: linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%);
+                    }
+                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__runway {
+                        height: 18px;
+                        margin:0;
+                    }
+    /*输入prompt输入框盒子*/
+    .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+        .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .promptInput .el-textarea__inner {
+            color: #333;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+.promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 10px;
+}
+            .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow > .remarkInputBox {
+                position: relative;
+                
+            }
+                .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
+                    padding: 5px 15px 5px 55px;
+                    color: #333;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+                .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow > .remarkInputBox::before {
+                    content:'备注:';
+                    position: absolute;
+                    left:15px;
+                    top:5px;
+                    color: #333;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                }
+/*右侧模块*/
+.promptPage > .promptPage_rightArea {
+    min-width: 628px;
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 15px;
+}
+/*右侧模块 输出区域*/
+.promptPage_rightArea > .outputArea {
+    flex:1;
+    /*min-height:169px;*/
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 15px;
+}
+    .promptPage_rightArea > .outputArea > .titleRow {
+        justify-content:flex-start;
+        gap:30px;
+    }
+        .promptPage_rightArea > .outputArea > .titleRow > .titleRow_scoreBox {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 5px;
+            color: #333;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+        }
+.promptPage_rightArea > .outputArea > .outputArea_contentBox {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-y: auto;
+}
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
+            padding:10px 15px;
+            border-radius: 5px;
+            border: 1px solid #DCDFE6;
+            word-break:break-all;
+        }
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxActiveItem {
+            border-color:#3EC5AF;
+        }
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .infoRow {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            color: #999;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow {
+            margin-top: 5px;
+            color: #333;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-end;
             gap: 10px;
+            color: #0083FF;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+           
         }
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 3px;
+                cursor: pointer;
+            }
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item >.imgIcon {
+                    flex-shrink: 0;
+                    width: 9px;
+                    height: 11px;
+                }
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow {
+            margin-top: 6px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #DCDFE6;
+            background-color: #FFF;
+        }
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .scoreBtnArea {
+                margin-top: 5px;
+                padding-left: 20px;
+                display: flex;
+                align-items: center;
+            }
 
-        .promptPage > .promptManageArea > .rightArea > .filterRow> .rightBox {
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .alScoreArea {
+                position: relative;
+            }
+
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .alScoreArea > .titleRow {
+                    margin-top: 10px;
+                    color: #333;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                }
+
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .alScoreArea > .valFormItem {
+                    margin-top: 10px;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                    gap: 5px;
+                }
+
+                    .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .alScoreArea > .valFormItem > .label {
+                        color: #333;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                    }
+
+                    .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .alScoreArea > .valFormItem > .input {
+                        flex: 1;
+                    }
+
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .alScoreArea > .aiOperation {
+                    margin-top: 15px;
+                    padding-left: 10px;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                    justify-content: space-between;
+                }
+
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .manualScoreArea > .titleRow {
+                margin-top: 20px;
+                color: #333;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+            }
+
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .manualScoreArea > .sliderTextRow {
+                margin-top: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                font-size: 14px;
+                color: #333;
+                font-weight: 400;
+            }
+
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .manualScoreArea > .input {
+                margin-top: 10px;
+            }
+
+            .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .manualScoreArea > .manualOperation {
+                margin-top: 15px;
+                padding-left: 10px;
+            }
+        /*右侧模块 分析区域*/
+        .promptPage_rightArea > .analysisArea {
+            width:100%;
             display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: center;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            gap: 3px;
+            box-sizing:border-box;
         }
+            .promptPage_rightArea > .analysisArea > .echartsBox {
+                width: 100%;
+                min-width:598px;
+                height: 200px;
+                box-sizing: border-box;
+            }
 
-    .promptPage > .promptManageArea > .rightArea > .tableArea {
+/*版本记录 btn*/
+.promptPage > .versionBtn {
+    position: fixed;
+    right: 0;
+    top: 90px;
+    padding-right:5px;
+    width: 60px;
+    height: 22px;
+    line-height:22px;
+    text-align:right;
+    border-radius: 14px 0px 0px 14px;
+    opacity: 0.9;
+    background: linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
+    color: #FFF;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    cursor:pointer;
+}
+.promptPage > .versionBtn:hover{
+    transform:scale(1.1);
+}
+/*版本记录 抽屉*/
+.promptPage .versionDrawerArea {
+    padding:10px;
+    position:relative;
+    height:100%;
+    box-sizing:border-box;
+}
+.versionDrawerArea > .versionDrawerArea_titleRow {
+    margin:5px 0px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:nowrap;
+}
+    .versionDrawerArea > .versionDrawerArea_titleRow > .leftBox {
+        color: #333;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+    }
+    .versionDrawerArea > .versionDrawerArea_titleRow > .imgIcon {
+        flex-shrink:0;
+        width: 12px;
+        height: 12px;
+        cursor:pointer;
+    }
+.versionDrawerArea > .versionDrawerArea_inputRow {
+    margin-top: 15px;
+}
+.versionDrawerArea > .versionDrawerArea_contentRow {
+    margin-top: 15px;
+}
+    .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node {
+        flex: 1;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+        .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node .treeLabelBox {
+            color: #666;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            word-break: break-all;
+        }
+        .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node .treeMoreIcon {
+            flex-shrink: 0;
+            width: 12px;
+            height: 2px;
+        }
+/*tree 更多提示操作区域*/
+.versionTreeMorePopover{
+    padding:0 !important;
+}
+    .versionTreeMorePopover > .operateArea {
+        border-radius: 4px;
+        background: #FFF;
+    }
+
+    .versionTreeMorePopover > .operateArea > .operateItem {
         width: 100%;
+        height: 32px;
+        color: #333;
+        text-align: center;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
     }
 
-    .promptPage > .promptManageArea > .rightArea > .footer_pag {
-        margin-top: 10px;
-    }
+        .versionTreeMorePopover > .operateArea > .operateItem:hover {
+            background-color: #F3F4F6;
+        }
+/*替换-对话框*/
+.promptPage .formItem {
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:20px;
+    position: relative;
+    box-sizing: border-box;
+}
+.promptPage .addVariableRow {
+    padding-right:20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
