@@ -4,7 +4,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
-
         public int PromptGroupId { get; set; }
 
         /// <summary>

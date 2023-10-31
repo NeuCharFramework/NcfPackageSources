@@ -20,7 +20,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public LlmModel Add(LlmModel_AddRequest request)
         {
-            LlmModel model = new LlmModel(request.Name, request.Endpoint, "", request.ApiKey, "", "", 0, "", "", "");
+            LlmModel model = new LlmModel(request.Name, request.Endpoint, request.OrganizationId, request.ApiKey, "", "", 0, "", "", "");
 
             model.Switch(true);
             return model;

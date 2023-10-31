@@ -14,24 +14,18 @@ namespace Senparc.Xncf.PromptRange
     [Serializable]
     public class PromptItem : EntityBase<int>
     {
-        public float PresencePenalty { get; private set; }
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Prompt内容
+        /// </summary>
         public string Content { get; private set; }
 
         public int ModelId { get; private set; }
 
         public int PromptGroupId { get; private set; }
 
-        /// <summary>
-        /// 最大 Token 数
-        /// </summary>
-        public float MaxToken { get; private set; }
-
-        /// <summary>
-        /// 温度
-        /// </summary>
-        public float Temperature { get; private set; }
+        //public PromptGroup PromptGroup { get; private set; }
 
         /// <summary>
         /// TopP
@@ -39,9 +33,21 @@ namespace Senparc.Xncf.PromptRange
         public float TopP { get; private set; }
 
         /// <summary>
+        /// 温度
+        /// </summary>
+        public float Temperature { get; private set; }
+
+        /// <summary>
+        /// 最大 Token 数
+        /// </summary>
+        public float MaxToken { get; private set; }
+
+        /// <summary>
         /// 频率惩罚
         /// </summary>
         public float FrequencyPenalty { get; private set; }
+
+        public float PresencePenalty { get; private set; }
 
         /// <summary>
         /// 每个 Prompt 的结果数
@@ -73,15 +79,12 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public string Version { get; private set; }
 
-
         /// <summary>
         /// 最后一次运行时间
         /// </summary>
         public DateTime LastRunTime { get; private set; }
 
         public bool Show { get; private set; }
-
-        //public PromptGroup PromptGroup { get; private set; }
 
         private PromptItem() { }
 
@@ -202,5 +205,16 @@ namespace Senparc.Xncf.PromptRange
 
             return this;
         }
+
+        //public PromptItem SetDefaultName()
+        //{
+        //    if (string.IsNullOrWhiteSpace(Content))
+        //    {
+        //        Name = string.Empty;
+        //        return this;
+        //    }
+
+        //    int maxLength = 
+        //}
     }
 }
