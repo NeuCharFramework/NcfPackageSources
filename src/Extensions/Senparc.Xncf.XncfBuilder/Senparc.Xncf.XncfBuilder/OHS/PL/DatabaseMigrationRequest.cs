@@ -42,8 +42,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(100)]
-        [Description("自定义 DbContext 名称||如：MyDemoSenparcEntities（注意：不需要加数据库类型后缀）")]
-        public string DbContextName { get; set; }
+        [Description("自定义 DbContext 名称||如：MyDemoSenparcEntities（注意：不需要加数据库类型后缀）。输入[Default]自动获取")]
+        public string DbContextName { get; set; } = "[Default]";
 
         [Required]
         [MaxLength(100)]
@@ -75,14 +75,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 {
                     if (!config.SlnFilePath.IsNullOrEmpty())
                     {
-                        this.DatabasePlantPath = Path.Combine(Path.GetFullPath(config.SlnFilePath), "Senparc.Web.DatabasePlant");
+                        this.DatabasePlantPath = Path.Combine(Path.GetDirectoryName(config.SlnFilePath), "Senparc.Web.DatabasePlant");
                     }
 
                     //添加当前解决方案的项目选项
                     var projectList = FunctionHelper.LoadXncfProjects(false);
                     projectList.ForEach(z => ProjectPath.Items.Add(z));
-
-
                 }
             }
             catch

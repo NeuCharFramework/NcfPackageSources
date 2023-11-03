@@ -1,6 +1,7 @@
 ﻿using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     string migrationDir = GetMigrationDir(request, dbType);
                     var outputVerbose = request.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
                     var dbTypeSuffix = $"_{dbType}";
-                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {request.DbContextName}{dbTypeSuffix} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
+
+                    var dbContextName = request.DbContextName;
+                    if (dbContextName == "[Default]")
+                    {
+                        dbContextName = FunctionHelper.GetSenparcEntitiesFilePath(projectPath);
+                    }
+
+                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {dbContextName}{dbTypeSuffix} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
