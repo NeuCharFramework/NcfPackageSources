@@ -97,7 +97,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public  string GetProjectPath(DatabaseMigrations_MigrationRequest request)
+        public string GetProjectPath(DatabaseMigrations_MigrationRequest request)
         {
             var projectPath = request.ProjectPath.SelectedValues.FirstOrDefault();
             if (projectPath == "N/A")
