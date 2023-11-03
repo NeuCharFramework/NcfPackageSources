@@ -73,9 +73,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                     {
                         this.DatabasePlantPath = Path.Combine(Path.GetFullPath(config.SlnFilePath), "Senparc.Web.DatabasePlant");
                     }
-                } 
 
-                //添加当前项目选项
+
+                    //添加当前项目选项
+                    var projectList = FunctionHelper.LoadXncfProjects(false);
+                }
+
+
             }
             catch
             {

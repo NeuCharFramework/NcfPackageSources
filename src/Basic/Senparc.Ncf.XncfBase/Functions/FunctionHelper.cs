@@ -110,7 +110,7 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// （扫描当前解决方案包含的所有领域项目）
         /// </summary>
         /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
-        public static List<SelectionItem> LoadXncfProjects( bool mustHaveXncfModule = false)
+        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false)
         {
             var selectList = new List<SelectionItem>();
 
@@ -153,7 +153,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                         selectList.Add(
                             new SelectionItem(
                                 projectFolder,
-                             Path.GetFileName(projectFolder),
+                                Path.GetDirectoryName(projectFolder)) /*Path.GetFileName(projectFolder)*/,
                                 Path.GetDirectoryName(projectFolder)));
                     }
                 }
