@@ -153,7 +153,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                         selectList.Add(
                             new SelectionItem(
                                 projectFolder,
-                                Path.GetDirectoryName(projectFolder)) /*Path.GetFileName(projectFolder)*/,
+                                Path.GetDirectoryName(projectFolder), /*Path.GetFileName(projectFolder)*/
                                 Path.GetDirectoryName(projectFolder)));
                     }
                 }
