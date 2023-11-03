@@ -26,7 +26,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(250)]
-        [Description("XNCF 项目路径||选择 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
+        [Description("XNCF 项目路径||选择 XNCF 项目根目录的完整物理路径")]
         public SelectionList ProjectPath { get; set; } = new SelectionList(SelectionType.DropDownList);
 
         [MaxLength(250)]
@@ -80,8 +80,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                         this.DatabasePlantPath = Path.Combine(Path.GetFullPath(config.SlnFilePath), "Senparc.Web.DatabasePlant");
                     }
 
-                    //添加当前项目选项
+                    //添加当前解决方案的项目选项
                     var projectList = FunctionHelper.LoadXncfProjects(false);
+                    projectList.ForEach(z => ProjectPath.Items.Add(z));
+
+
                 }
             }
             catch
