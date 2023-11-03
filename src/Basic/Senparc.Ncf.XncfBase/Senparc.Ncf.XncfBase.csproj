@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <!--<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>-->
-    <Version>0.13.0-beta11</Version>
+    <Version>0.13.1-beta11</Version>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -30,6 +30,7 @@
 		v0.11.8 添加 ServiceBase 子类的自动依赖注入注册
 		v0.11.9 添加 IServiceDataBase 类型自动注册
 		v0.13.0 添加 FunctionHelper.LoadXncfProjects() 方法
+		v0.13.1 添加 FunctionHelper.GetSenparcEntitiesFilePath() 方法
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,5 +1,6 @@
 ﻿using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
@@ -110,7 +111,7 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// （扫描当前解决方案包含的所有领域项目）
         /// </summary>
         /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
-        public static List<SelectionItem> LoadXncfProjects( bool mustHaveXncfModule = false)
+        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false)
         {
             var selectList = new List<SelectionItem>();
 
@@ -153,12 +154,11 @@ namespace Senparc.Ncf.XncfBase.Functions
                         selectList.Add(
                             new SelectionItem(
                                 projectFolder,
-                             Path.GetFileName(projectFolder),
-                                Path.GetDirectoryName(projectFolder)));
+                                projectFolder, /*Path.GetFileName(projectFolder)*/
+                                projectFolder/*Path.GetDirectoryName(projectFolder)*/));
                     }
                 }
             }
-
 
             if (mustHaveXncfModule && (currentDir == null || selectList.Count == 0))
             {
@@ -169,6 +169,26 @@ namespace Senparc.Ncf.XncfBase.Functions
             }
 
             return selectList;
+        }
+
+        /// <summary>
+        /// 获取 xxxSenparcEntities.cs 数据库文件
+        /// </summary>
+        /// <param name="projectPath"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public static string GetSenparcEntitiesFilePath(string projectPath)
+        {
+            var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");
+            var files = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs");
+            if (files.Length == 0)
+            {
+                throw new NcfExceptionBase($"目录 {databaseModelPath} 下没有找到 SenparcEntities.cs 结尾的文件");
+            }
+
+            var databaseFile = files[0];
+
+            return databaseFile;
         }
     }
 }

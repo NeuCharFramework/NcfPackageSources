@@ -29,9 +29,8 @@ namespace Senparc.Ncf.XncfBase.Functions
         //public SelectionList() { }
 
 
-        public SelectionList(SelectionType selectionType)
+        public SelectionList(SelectionType selectionType) : this(selectionType, null)
         {
-            SelectionType = selectionType;
         }
 
         public SelectionList(SelectionType selectionType, IList<SelectionItem> items)
