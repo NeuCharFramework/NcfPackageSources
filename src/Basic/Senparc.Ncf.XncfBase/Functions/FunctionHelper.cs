@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET.Trace;
+﻿using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -175,9 +176,10 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// 获取 xxxSenparcEntities.cs 数据库文件
         /// </summary>
         /// <param name="projectPath"></param>
+        /// <param name="dbType">数据库类型</param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public static string GetSenparcEntitiesFilePath(string projectPath)
+        public static string GetSenparcEntitiesFilePath(string projectPath, string dbType)
         {
             var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");
             var files = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs");
@@ -186,7 +188,12 @@ namespace Senparc.Ncf.XncfBase.Functions
                 throw new NcfExceptionBase($"目录 {databaseModelPath} 下没有找到 SenparcEntities.cs 结尾的文件");
             }
 
-            var databaseFile = files[0];
+            var databaseFile = Path.GetFileName(files[0]).Replace(".cs", "");
+
+            if (!dbType.IsNullOrEmpty())
+            {
+                databaseFile += "_" + dbType;
+            }
 
             return databaseFile;
         }

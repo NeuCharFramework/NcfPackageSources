@@ -60,15 +60,21 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 {
                     string migrationDir = GetMigrationDir(request, dbType);
                     var outputVerbose = request.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
-                    var dbTypeSuffix = $"_{dbType}";
 
+                    //数据库上下文实体名称
                     var dbContextName = request.DbContextName;
                     if (dbContextName == "[Default]")
                     {
-                        dbContextName = FunctionHelper.GetSenparcEntitiesFilePath(projectPath);
+                        //会自动拼接数据类型
+                        dbContextName = FunctionHelper.GetSenparcEntitiesFilePath(projectPath, dbType);
+                    }
+                    else
+                    {
+                        var dbTypeSuffix = $"_{dbType}";
+                        dbContextName += dbTypeSuffix;
                     }
 
-                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {dbContextName}{dbTypeSuffix} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
+                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
