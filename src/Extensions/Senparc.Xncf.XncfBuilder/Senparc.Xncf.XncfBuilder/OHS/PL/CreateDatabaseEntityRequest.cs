@@ -32,60 +32,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public override Task LoadData(IServiceProvider serviceProvider)
         {
             //扫描当前解决方案包含的所有领域项目
-
-            var currentDir = System.IO.Directory.GetCurrentDirectory();
-
-            while (currentDir != null)
-            {
-                var slnFile = Directory.GetFiles(currentDir, "*.sln");
-                if (slnFile.Length > 0)
-                {
-                    break;
-                }
-                currentDir = Directory.GetParent(currentDir).FullName;
-            }
-
-            if (currentDir != null)
-            {
-                //找到了 SLN 文件，开始展开地毯式搜索
-
-                //第一步：查找 XNCF
-
-                var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", SearchOption.AllDirectories);
-
-                foreach (var projectFolder in projectFolders)
-                {
-                    //第二步：查看 Register 文件是否存在
-                    var registerFilePath = Path.Combine(projectFolder, "Register.cs");
-                    if (!File.Exists(registerFilePath))
-                    {
-                        continue;//不存在则跳过
-                    }
-
-                    //第三步：检查 Register 文件是否合格
-
-                    var registerContent = File.ReadAllText(registerFilePath);
-                    if (registerContent.Contains("[XncfRegister]") &&
-                        registerContent.Contains("IXncfRegister") &&
-                        registerContent.Contains("Uid"))
-                    {
-                        InjectDomain.Items.Add(
-                            new SelectionItem(
-                                projectFolder,
-                             Path.GetFileName(projectFolder),
-                                Path.GetDirectoryName(projectFolder)));
-                    }
-                }
-            }
-
-
-            if (currentDir == null || InjectDomain.Items.Count == 0)
-            {
-                InjectDomain.Items.Add(
-                             new SelectionItem(
-                                 "N/A",
-                                 "没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！"));
-            }
+            var newItems = FunctionHelper.LoadXncfProjects(true);
+            newItems.ForEach(z => InjectDomain.Items.Add(z));
 
             return base.LoadData(serviceProvider);
         }
