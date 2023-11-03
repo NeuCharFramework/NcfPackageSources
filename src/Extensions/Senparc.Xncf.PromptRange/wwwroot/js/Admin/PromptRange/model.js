@@ -2,7 +2,7 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            // ²éÑ¯ÁĞ±í ²ÎÊı
+            // æŸ¥è¯¢åˆ—è¡¨ å‚æ•°
             queryList: {
                 page: 1,
                 size: 10,
@@ -10,17 +10,17 @@ var app = new Vue({
             },
             pageSizes: [10, 20, 30, 50],
             tableTotal: 0,
-            tableData: [], // Ä£ĞÍÁĞ±í
-            multipleSelection: {}, // Ñ¡ÖĞµÄÄ£ĞÍ
+            tableData: [], // æ¨¡å‹åˆ—è¡¨
+            multipleSelection: {}, // é€‰ä¸­çš„æ¨¡å‹
             dialogFormVisible: false,
-            dialogFormTitle: 'Create Model',
+            dialogFormTitle: 'æ–°å¢æ¨¡å‹',
             formLabelWidth: '',
             editModelName: true,
             modifyId: "",
             modifyFlag: true,
-            modifyName:"",
+            modifyName: "",
             newModelForm: {
-                value:'',
+                modelType: '',
                 modelName: '',
                 modelAPI: '',
                 modelAPIkey: ''
@@ -63,7 +63,7 @@ var app = new Vue({
         //}
     },
     created: function () {
-        // »ñÈ¡tableÁĞ±íÊı¾İ
+        // è·å–tableåˆ—è¡¨æ•°æ®
         this.getList();
     },
     methods: {
@@ -86,9 +86,9 @@ var app = new Vue({
                 }
             });
         },
-        // ĞÂÔöÄ£ĞÍ btn
+        // æ–°å¢æ¨¡å‹ btn
         async createBtnFrom() {
-            this.dialogFormTitle = 'Create Model'
+            this.dialogFormTitle = 'æ–°å¢æ¨¡å‹'
             this.editModelName = true
             this.dialogFormVisible = true
         },
@@ -104,9 +104,9 @@ var app = new Vue({
                 alert('success!');
             }
         },
-        // ±à¼­Ä£ĞÍ btn
+        // ç¼–è¾‘æ¨¡å‹ btn
         editBtnFrom(row) {
-            this.dialogFormTitle = 'Edit Model'
+            this.dialogFormTitle = 'ç¼–è¾‘æ¨¡å‹'
             this.newModelForm = {
                 ...row
             }
@@ -116,7 +116,7 @@ var app = new Vue({
             this.modifyFlag = row.show
             this.modifyName = row.name
         },
-        async modifyModelName(id,name,flag) {
+        async modifyModelName(id, name, flag) {
             const updatedData = {
                 id,
                 name,
@@ -130,19 +130,19 @@ var app = new Vue({
                 alert("error")
             }
         },
-        // É¾³ıÄ£ĞÍ 
+        // åˆ é™¤æ¨¡å‹ 
         deleteHandle(row) {
             console.log("row.id", row.id)
             const idsToDelete = []
             idsToDelete.push(row.id)
             this.deletModel(idsToDelete)
         },
-        // É¾³ı
+        // åˆ é™¤
         async deletModel(idsToDelete) {
             const res = await service.request({
                 method: 'delete',
                 url: '/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete',
-                data: idsToDelete // ½« ID ÁĞ±í×÷ÎªÇëÇóÌåÊı¾İ·¢ËÍ
+                data: idsToDelete // å°† ID åˆ—è¡¨ä½œä¸ºè¯·æ±‚ä½“æ•°æ®å‘é€
             });
             console.log(res)
             if (res.data.success) {
@@ -151,10 +151,10 @@ var app = new Vue({
                 alert("error")
             }
         },
-        // btn ÅúÁ¿É¾³ı
+        // btn æ‰¹é‡åˆ é™¤
         btnBatchdelete() {
-            console.log('ÅúÁ¿É¾³ı', this.multipleSelection)
-            // Ñ­»· this.multipleSelection
+            console.log('æ‰¹é‡åˆ é™¤', this.multipleSelection)
+            // å¾ªç¯ this.multipleSelection
             // this.$refs.multipleTable.toggleRowSelection(row);
             const idsToDelete = []
             this.multipleSelection[1].forEach(item => {
@@ -162,42 +162,42 @@ var app = new Vue({
             });
             this.deletModel(idsToDelete)
         },
-        // async  »ñÈ¡tableÁĞ±íÊı¾İ
+        // async  è·å–tableåˆ—è¡¨æ•°æ®
         async getList() {
             const res = await service.get(`/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetLlmModelList?pageIndex=${this.queryList.page}&pageSize=${this.queryList.size}&key=${this.queryList.modelName}`);
             this.tableData = res.data.data.list;
             this.tableTotal = res.data.data.totalCount;
         },
 
-        // table ×Ô¶¨ÒåĞĞºÅ
+        // table è‡ªå®šä¹‰è¡Œå·
         indexMethod(index) {
             let { page, size } = this.queryList
             return (page - 1) * size + index + 1;
             //return  index + 1;
         },
-        // table Ñ¡ÖĞÁĞ
+        // table é€‰ä¸­åˆ—
         handleSelectionChange(val) {
             let { page } = this.queryList
             this.multipleSelection[page] = val;
-            // °´ÕÕ Ò³Âë ¼ÇÂ¼¶ÔÓ¦Ò³Ñ¡ÔñµÄÊıÁ¿
-            console.log('tbale Ñ¡Ôñ', this.multipleSelection)
+            // æŒ‰ç…§ é¡µç  è®°å½•å¯¹åº”é¡µé€‰æ‹©çš„æ•°é‡
+            console.log('tbale é€‰æ‹©', this.multipleSelection)
         },
-        // ·ÖÒ³ Ò³´óĞ¡
+        // åˆ†é¡µ é¡µå¤§å°
         handleSizeChange(val) {
             this.queryList.size = val
             this.getList()
         },
-        // ·ÖÒ³ Ò³Âë
+        // åˆ†é¡µ é¡µç 
         handleCurrentChange(val) {
             this.queryList.page = val
             this.getList()
         },
-        // µã»÷ËÑË÷
+        // ç‚¹å‡»æœç´¢
         clickSearch() {
             this.getList()
         },
         changeStatue(row, flag) {
-            this.modifyModelName(row.id, row.name,flag)
+            this.modifyModelName(row.id, row.name, flag)
         }
     }
 });

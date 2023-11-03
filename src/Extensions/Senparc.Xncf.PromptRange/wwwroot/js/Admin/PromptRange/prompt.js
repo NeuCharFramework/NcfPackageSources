@@ -2,12 +2,14 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            // ÅäÖÃ ÊäÈë ---start
-            promptid: '',// Ñ¡Ôñ°Ğ³¡
-            modelid: '',// Ñ¡ÔñÄ£ĞÍ
-            content: '',// prompt ÊäÈëÄÚÈİ
-            remarks: '', // prompt ÊäÈëµÄ±¸×¢
-            // ²ÎÊıÉèÖÃ ÊÓÍ¼ÅäÖÃÁĞ±í
+            // é…ç½® è¾“å…¥ ---start
+            promptOpt: [], // promptåˆ—è¡¨
+            modelOpt: [], // æ¨¡å‹åˆ—è¡¨
+            promptid: '',// é€‰æ‹©é¶åœº
+            modelid: '',// é€‰æ‹©æ¨¡å‹
+            content: '',// prompt è¾“å…¥å†…å®¹
+            remarks: '', // prompt è¾“å…¥çš„å¤‡æ³¨
+            // å‚æ•°è®¾ç½® è§†å›¾é…ç½®åˆ—è¡¨
             parameterViewList: [
                 {
                     tips: '',
@@ -33,7 +35,7 @@ var app = new Vue({
                     tips: '',
                     formField: 'maxToken',
                     label: 'MaxToken',
-                    value: '',
+                    value: 0,
                     isSlider: false,
                     sliderMin: 0,
                     sliderMax: 'Infinity',
@@ -60,78 +62,78 @@ var app = new Vue({
                     sliderStep: 0.1
                 }
             ],
-            // ÅäÖÃ ÊäÈë ---end
-            // Êä³ö ---start
-            outputActive: '', // Êä³öÁĞ±íÑ¡ÖĞ²é¿´|ÆÀ·Ö
-            outputList: [
-                {
-                    id:1,
-                    time: '2023-10-25 19:55:55',
-                    costTime: '4s',
-                    version: '1-4',
-                    answer: 'ÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİÊäÈëÄÚÈİ',
-                    scoreType: '1', // 1 ai¡¢2ÊÖ¶¯ 
-                    isScore: false, // ÊÇ·ñÒÑ¾­ÆÀ·Ö
-                    isScoreView:false, // ÊÇ·ñÏÔÊ¾ÆÀ·ÖÊÓÍ¼
-                    scoreVal: '',
-                    alResultList: [
-                        {
-                            id: 1,
-                            label: 'Expected Answer 1',
-                            value: ''
-                        }, {
-                            id: 2,
-                            label: 'Expected Answer 2',
-                            value: ''
-                        }, {
-                            id: 3,
-                            label: 'Expected Answer 3',
-                            value: ''
-                        }
-                    ],
-
-                }
-            ],
-            // Êä³ö ---end
-            tabsActive: '1',
-            // prompt Ãæ°å
-            modelSelectVal: '',
-            parameter: {
-                promptGroupId: 0,
-                topP: 0,
-                temperature: 0,
-                maxToken: 0,
-                frequencyPenalty: 0,
-                presencePenalty: 0,
-                modelid: '',
-                content: ''
+            // é…ç½® è¾“å…¥ ---end
+            // è¾“å‡º ---start
+            outputAverage: '',// è¾“å‡ºåˆ—è¡¨çš„å¹³å‡åˆ†
+            outputActive: '', // è¾“å‡ºåˆ—è¡¨é€‰ä¸­æŸ¥çœ‹|è¯„åˆ†
+            outputList: [],  // è¾“å‡ºåˆ—è¡¨
+            chartData:[], // å›¾è¡¨æ•°æ®
+            chartInstance:null, // å›¾è¡¨å®ä¾‹
+            // è¾“å‡º ---end
+            // ç‰ˆæœ¬è®°å½• ---start
+            versionDrawer: false,// æŠ½å±‰
+            versionSearchVal: '', // ç‰ˆæœ¬æœç´¢
+            versionTreeProps: {
+                children: 'children',
+                label: 'label'
             },
-            inputPromptVal: '',
-            outPutVal: '',
-            recordInfoTabsActive: '1',
-            modelOpt: [],
+            versionTreeData:[],
+            // ç‰ˆæœ¬è®°å½• ---end
+            replaceFormVisible: false,
+            modelFormVisible: false,
+            modelFormSubmitLoading:false,
+            replaceForm: {
+                prefix: '',
+                suffix:'',
+                variableList:[]
+            },
+            modelForm: {
+                modelType: '',
+                modelName: '',
+                modelAPI: '',
+                modelAPIkey: ''
+            },
+            modelTypeOpt: [{
+                value: 0,
+                label: 'OpenAI'
+            }, {
+                value: 1,
+                label: 'AzureOpenAI'
+            }, {
+                value: 2,
+                label: 'NeuCharOpenAI'
+            }, {
+                value: 3,
+                label: 'HugginFace'
+            }],
+            rules: {
+                prefix: [
+                    { required: true, message: 'è¯·è¾“å…¥å‰ç¼€', trigger: 'blur' }
+                ],
+                suffix: [
+                    { required: true, message: 'è¯·è¾“å…¥åç¼€', trigger: 'blur' }
+                ],
+                variableName: [
+                    { required: true, message: 'è¯·è¾“å…¥å˜é‡å', trigger: 'blur' }
+                ],
+                variableValue: [
+                    { required: true, message: 'è¯·è¾“å…¥å˜é‡å€¼', trigger: 'blur' }
+                ],
+                modelType: [
+                    { required: true, message: 'è¯·é€‰æ‹©æ¨¡å‹ç±»å‹', trigger: 'change' }
+                ],
+                modelName: [
+                    { required: true, message: 'è¯·è¾“å…¥æ¨¡å‹åç§°', trigger: 'blur' }
+                ],
+                modelAPI: [
+                    { required: true, message: 'è¯·è¾“å…¥æ¨¡å‹API', trigger: 'blur' }
+                ],
+                modelAPIkey: [
+                    { required: true, message: 'è¯·è¾“å…¥API key', trigger: 'blur' }
+                ]
+            },
             versionData: [],
-            historyData: [],
-            // ¹ÜÀíÃæ°å
-            scoringType: '', // 1 2
-            alScoreList: [],
-            manualScorVal: '',
-            promptSelectVal: '',
-            promptDetail: {},
-            promptSelectValObj: {
-                ask: '123',
-                answer: '123'
-            },
-            manageQueryList: {
-                page: 1,
-                size: 10,
-                modelName: ''
-            },
-            pageSizes: [10, 20, 30, 50],
-            manageTableTotal: 0,
-            manageTableData: [],
-            promptOpt: [],
-            multipleSelection: {}
+            promptDetail: {}
         };
     },
     watch: {
@@ -141,15 +143,48 @@ var app = new Vue({
         //    immediate: true,
         //    //deep:true
         //}
+        versionSearchVal(val) {
+            this.$refs.versionTree.filter(val);
+        }
     },
-    created: function () {
+    mounted() {
+        this.getPromptOptData()
         this.getModelOptData()
-        this.getScoringTrendData()
+        // å›¾è¡¨è‡ªé€‚åº”
+        let self = this;
+        const viewElem = document.body;
+        const resizeObserver = new ResizeObserver(() => {
+            // åŠ ä¸ªifçº¦æŸï¼Œå½“Echartså­˜åœ¨æ—¶å†æ‰§è¡Œresize()ï¼Œå¦åˆ™å›¾è¡¨ä¸å­˜åœ¨æ—¶è¿è¡Œåˆ°è¿™ä¼šæŠ¥é”™ã€‚
+            if (self.chartInstance) {
+                self.chartInstance.resize();
+            }
+
+        });
+        resizeObserver.observe(viewElem);
         //this.getHistoryData()
         //this.getVersionData()
     },
     methods: {
-        // »ñÈ¡Ä£ĞÍÁĞ±í
+        // é…ç½® è·å–prompt ä¸‹æ‹‰åˆ—è¡¨æ•°æ®
+        async getPromptOptData() {
+            let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
+            /*console.log('getModelOptData:', res)*/
+            if (res.data.success) {
+                //console.log('getModelOptData:', res.data)
+                let _optList = res.data.data || []
+                this.promptOpt = _optList.map(item => {
+                    return {
+                        id: item.id,
+                        label: item.name,
+                        value: item.id,
+                        disabled: false
+                    }
+                })
+            } else {
+                alert('error');
+            }
+        },
+        // é…ç½® è·å–æ¨¡å‹ ä¸‹æ‹‰åˆ—è¡¨æ•°æ®
         async getModelOptData() {
             let res = await service.get('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetIdAndName')
             /*console.log('getModelOptData:', res)*/
@@ -168,72 +203,257 @@ var app = new Vue({
                 alert('error');
             }
         },
-        // ´ò°Ğ
-        async testHandel() {
-            //promptid: ''// Ñ¡Ôñ°Ğ³¡
-            //modelid: ''// Ñ¡ÔñÄ£ĞÍ
-            //content: ''// prompt ÊäÈëÄÚÈİ
-            //remarks: '' // prompt ÊäÈëµÄ±¸×¢
-            //// ²ÎÊıÉèÖÃ ÊÓÍ¼ÅäÖÃÁĞ±í
-            //parameterViewList: [] 
-            //tips: ''
-            //    formField: 'topP'
-            //        label: 'Top_p'
-            //            value: ''
-            //                isSlider: true
-            //                    sliderMin: 0
-            //                        sliderMax: 1
-            //                            sliderStep: 0.1
-            // ´¦ÀíÉÏÊö²ÎÊı
-            let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', this.parameter)
-            //console.log('testHandel res ', res.data)
-
-            if (res.data.success) {
-                //console.log('testHandel res data:', res.data.data)
-                //let { resultString = '', addTime = '', costTime = '' } = res.data.data || {}
-                //this.outPutVal = resultString
-                // ĞÂÔöµ½ÀúÊ·¾ç¼ÇÂ¼ÖĞ
-                //this.historyData.push({
-                //    id: this.historyData.length + 1,
-                //    time: new Date(addTime).toLocaleString(),
-                //    costTime,
-                //    ask: content || '',
-                //    answer: resultString
-                //})
-            } else {
-                alert('error!');
-            }
+        //// é…ç½® æ–°å¢é¶åœº
+        //addPromptBtn() { },
+        //// é…ç½® æ–°å¢æ¨¡å‹
+        //addModelBtn() { },
+        // é…ç½® é‡ç½®å‚æ•°
+        resetConfigurineParam() {
+            //console.log('é…ç½®å‚æ•° é‡ç½®:', this.parameterViewList)
         },
-        // Êä³ö Ñ¡ÖĞÇĞ»»
+        // é…ç½® è¾“å…¥Prompt é‡ç½® 
+        resetInputPrompt() {
+            //console.log('è¾“å…¥Prompt é‡ç½®:', this.content)
+        },
+        // é…ç½® æ‰“é¶
+        async testHandel() {
+            let _postData = {
+                promptid: this.promptid,// é€‰æ‹©é¶åœº
+                modelid: this.modelid,// é€‰æ‹©æ¨¡å‹
+                content: this.content,// prompt è¾“å…¥å†…å®¹
+                remarks: this.remarks, // prompt è¾“å…¥çš„å¤‡æ³¨
+            }
+            this.parameterViewList.forEach(item => {
+                _postData[item.formField] = item.value
+            })
+            // æ¨¡æ‹Ÿæ“ä½œæˆåŠŸ
+            // è·å–è¾“å‡ºåˆ—è¡¨å’Œå¹³å‡åˆ†
+            this.getOutputList()
+            // è·å–åˆ†æ•°è¶‹åŠ¿å›¾è¡¨æ•°æ®
+            this.getScoringTrendData()
+            //let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+            //// console.log('testHandel res ', res.data)
+
+            //if (res.data.success) {
+            //    // è·å–è¾“å‡ºåˆ—è¡¨å’Œå¹³å‡åˆ†
+            //    this.getOutputList()
+            //    // è·å–åˆ†æ•°è¶‹åŠ¿å›¾è¡¨æ•°æ®
+            //    this.getScoringTrendData()
+            //    //console.log('testHandel res data:', res.data.data)
+            //    //let { resultString = '', addTime = '', costTime = '' } = res.data.data || {}
+            //    //this.outPutVal = resultString
+            //    // æ–°å¢åˆ°å†å²å‰§è®°å½•ä¸­
+            //    //this.historyData.push({
+            //    //    id: this.historyData.length + 1,
+            //    //    time: new Date(addTime).toLocaleString(),
+            //    //    costTime,
+            //    //    ask: content || '',
+            //    //    answer: resultString
+            //    //})
+            //}
+        },
+
+        // è¾“å‡º åˆ†æ•°è¶‹åŠ¿å›¾åˆå§‹åŒ–
+        chartInitialization(){
+            let scoreChart = document.getElementById('promptPage_scoreChart');
+            let chartOption = {
+                tooltip: {
+                    trigger: "axis",
+                    formatter: '{b}: {c}åˆ† ',
+                },
+                grid: {
+                    top: '35',
+                    right: '35',
+                    bottom: '0',
+                    left: '15',
+                    containLabel: true
+                },
+                xAxis: {
+                    name: "ç‰ˆæœ¬", // 
+                    nameGap: 5,  // è¡¨ç°ä¸ºä¸Šä¸‹ä½ç½®
+                    nameTextStyle: {
+                        verticalAlign: "bottom",//æ ‡é¢˜ä½ç½®
+                        padding: [0, 0, 40, 0],//æ§åˆ¶Xè½´æ ‡é¢˜ä½ç½®
+                        color: "#999",
+                        fontSize: 12,
+                    },
+                    type: 'category',
+                    boundaryGap: false,
+                    data: [],
+                    axisTick: {
+                        show: true,
+                        alignWithLabel: true,
+                        lineStyle: {
+                            color: '#999',
+                        }
+
+                    },
+                    axisLabel: {
+                        //interval: 0,
+                        textStyle: {
+                            fontSize: 12,
+                            // fontWeight: '400',
+                            color: '#999'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999',
+                        }
+                    },
+                    splitLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#EBEEF5'
+                        }
+                    }
+                },
+                yAxis: {
+                    name: 'å¹³å‡åˆ†',// å¹³å‡åˆ†
+                    nameGap: 15,  // è¡¨ç°ä¸ºä¸Šä¸‹ä½ç½®
+                    nameTextStyle: {
+                        verticalAlign: 'left',//æ ‡é¢˜ä½ç½®
+                        padding: [0, 0, 0, -40],//æ§åˆ¶yè½´æ ‡é¢˜ä½ç½®
+                        color: "#999",
+                        fontSize: 12
+                    },
+                    type: 'value',
+                    //axisPointer: {
+                    //    show: true,
+                    //},
+                    axisTick: {
+                        show: false,
+                        alignWithLabel: true,
+                    },
+                    axisLabel: {
+                        /*formatter: '{value}',*/
+                        textStyle: {
+                            fontSize: 12,
+                            // fontWeight: '400',
+                            color: '#999'
+                        }
+                    },
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#EBEEF5',
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#EBEEF5'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'åˆ†æ•°è¶‹åŠ¿å›¾',
+                    type: 'line',
+                    data: [],
+                    itemStyle: {
+                        //emphasis: {
+                        //    color: "rgb(7,162,148)",
+                        //    borderColor: "rgba(7,162,148,0.6)",
+                        //    borderWidth: 20
+                        //},
+                        normal: {
+                            color: "#0083ff",
+                            //borderColor: "rgb(6,65,95)",
+                            //lineStyle: {
+                            //    color: "rgb(101,184,196)"
+                            //}
+                        }
+                    },
+                    areaStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: "#0083ff" }, { offset: 1, color: "#fff" }], false)
+                        }
+                    }
+                }]
+            };
+            let chartInstance = echarts.init(scoreChart);
+            chartInstance.setOption(chartOption);
+            this.chartInstance = chartInstance
+        },
+        // è¾“å‡º è·å–è¯„åˆ†è¶‹åŠ¿ å›¾è¡¨æ•°æ®
+        getScoringTrendData() {
+            // to do æ¥å£å¯¹æ¥ async await
+            this.chartData = {
+                xData: ['1-4', '1-4-2', '1-4-3', '1-4-4', '1-4-5', '1-4-6', '1-4-7', '1-4-8', '1-4-9', '1-4-10', '1-4-11', '1-4-12'],
+                vData: [1, 8, 6, 7, 0, 0, 3, 7, 4, 9, 1, 8]
+            }
+            // åˆå§‹åŒ–å›¾è¡¨ æ¥å£è°ƒç”¨æˆåŠŸ
+            this.chartInitialization()
+            let _setOption = {
+                xAxis: {
+                    data: this.chartData.xData || []
+                },
+                series: [{
+                    data: this.chartData.vData || []
+                }]
+            }
+            this.chartInstance.setOption(_setOption);
+        },
+        // è·å–è¾“å‡ºåˆ—è¡¨
+        getOutputList() {
+            this.outputList = [{
+                id: 1,
+                time: '2023-10-25 19:55:55',
+                costTime: '4s',
+                version: '1-4',
+                answer: 'è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹è¾“å…¥å†…å®¹',
+                scoreType: '1', // 1 aiã€2æ‰‹åŠ¨ 
+                isScore: false, // æ˜¯å¦å·²ç»è¯„åˆ†
+                isScoreView: false, // æ˜¯å¦æ˜¾ç¤ºè¯„åˆ†è§†å›¾
+                scoreVal: '',
+                alResultList: [
+                    {
+                        id: 1,
+                        label: 'é¢„æœŸç»“æœ1',
+                        value: ''
+                    }, {
+                        id: 2,
+                        label: 'é¢„æœŸç»“æœ2',
+                        value: ''
+                    }, {
+                        id: 3,
+                        label: 'é¢„æœŸç»“æœ3',
+                        value: ''
+                    }
+                ]
+            }]
+            this.outputAverage = '8'
+            // to do æ¥å£å¯¹æ¥ async await
+        },
+        // è¾“å‡º é€‰ä¸­åˆ‡æ¢
         outputSelectSwitch(index) {
             if (this.outputActive !== '' && this.outputActive !== index) {
                 this.outputList[this.outputActive].isScoreView = false
             }
             this.outputActive = index
         },
-        // ÏÔÊ¾ÆÀ·ÖÊÓÍ¼
+        // è¾“å‡º æ˜¾ç¤ºè¯„åˆ†è§†å›¾
         showRatingView(index) {
             //event.stopPropagation()
             this.outputList[index].isScoreView = true
         },
-        // Êä³ö ÇĞ»»aiÆÀ·Ö
+        // è¾“å‡º åˆ‡æ¢aiè¯„åˆ†
         alBtnScoring(index) {
             this.outputList[index].scoreType = '1'
         },
-        // Êä³ö aiÆÀ·Ö Ôö¼Ó½á¹ûĞĞ
+        // è¾“å‡º aiè¯„åˆ† å¢åŠ ç»“æœè¡Œ
         addAlScoring(index) {
             let _len = this.outputList[index].alResultList.length
             this.outputList[index].alResultList.push({
                 id: _len + 1,
-                label: `Expected Answer ${_len + 1}`,
+                label: `é¢„æœŸç»“æœ${_len + 1}`,
                 value: ''
             })
         },
-        // Êä³ö ÇĞ»»ÊÖ¶¯ÆÀ·Ö
+        // è¾“å‡º åˆ‡æ¢æ‰‹åŠ¨è¯„åˆ†
         manualBtnScoring(index) {
             this.outputList[index].scoreType = '2'
         },
-        // ±£´æÆÀ·Ö
+        // è¾“å‡º ä¿å­˜è¯„åˆ†
         async saveManualScore() {
             //console.log('manualScorVal', this.promptSelectVal, this.manualScorVal)
 
@@ -246,7 +466,7 @@ var app = new Vue({
                 //console.log('testHandel res data:', res.data.data)
                 //let { resultString = '', addTime = '' } = res.data.data || {}
                 //this.outPutVal = resultString
-                //// ĞÂÔöµ½ÀúÊ·¾ç¼ÇÂ¼ÖĞ
+                //// æ–°å¢åˆ°å†å²å‰§è®°å½•ä¸­
                 //this.manageTableData.push({
                 //    ...this.promptDetail,
                 //    score: this.manualScorVal
@@ -255,47 +475,181 @@ var app = new Vue({
                 alert('error!');
             }
         },
-        // »ñÈ¡ÆÀ·ÖÇ÷ÊÆ
-        getScoringTrendData() {
-            let scoreChart = document.getElementById('scoreChart');
-            let chartOption = {
-                xAxis: {
-                    name: 'Æ½¾ù·Ö',
-                    type: 'category',
-                    data: ['1-4', '1-4-2', '1-4-3', '1-4-4', '1-4-5', '1-4-6', '1-4-7', '1-4-8', '1-4-9', '1-4-10', '1-4-11', '1-4-12']
-                },
-                yAxis: {
-                    name:'°æ±¾',
-                    type: 'value',
-                    axisLabel: {
-                        formatter: '{value} Ôª'
-                    }
-                },
-                series: [{
-                    name: '·ÖÊıÇ÷ÊÆÍ¼',
-                    type: 'line',
-                    data: [1, 8, 6, 7, 0, 0, 3, 7, 4, 9, 1, 8]
+
+
+        // ç‰ˆæœ¬è®°å½• è·å–ç‰ˆæœ¬è®°å½• æ ‘å½¢æ•°æ®
+        getVersionRecordData() {
+            // æ¨¡æ‹Ÿæ•°æ®
+            this.versionTreeData = [{
+                id: 1,
+                label: 'ä¸€çº§ 1',
+                isPublic: false,
+                children: [{
+                    id: 4,
+                    label: 'äºŒçº§ 1-1',
+                    isPublic: false,
+                    children: [{
+                        id: 9,
+                        label: 'ä¸‰çº§ 1-1-1',
+                        isPublic: false
+                    }, {
+                        id: 10,
+                        label: 'ä¸‰çº§ 1-1-2',
+                        isPublic: false
+                    }]
                 }]
-            };
-
-            let chartInstance = echarts.init(scoreChart);
-            chartInstance.setOption(chartOption);
+            }, {
+                id: 2,
+                label: 'ä¸€çº§ 2',
+                isPublic: false,
+                children: [{
+                    id: 5,
+                    label: 'äºŒçº§ 2-1',
+                    isPublic: false
+                }, {
+                    id: 6,
+                    label: 'äºŒçº§ 2-2',
+                    isPublic: false
+                }]
+            }, {
+                id: 3,
+                label: 'ä¸€çº§ 3',
+                isPublic: false,
+                children: [{
+                    id: 7,
+                    label: 'äºŒçº§ 3-1',
+                    isPublic: false
+                }, {
+                    id: 8,
+                    label: 'äºŒçº§ 3-2',
+                    isPublic: false
+                }]
+                }]
+            // to do æ¥å£å¯¹æ¥ async await
+        },
+        // ç‰ˆæœ¬è®°å½• æŸ¥çœ‹
+        seeVersionRecord() {
+            this.versionDrawer = true
+            // é‡æ–°è·å–æ•°æ®
+            this.getVersionRecordData()
+        },
+        // ç‰ˆæœ¬è®°å½• æ ‘å½¢æ§ä»¶ è¿‡æ»¤èŠ‚ç‚¹
+        versionTreeFilterNode(value, data) {
+            if (!value) return true;
+            return data.label.indexOf(value) !== -1;
+        },
+        // ç‰ˆæœ¬è®°å½• æŠ½å±‰å…³é—­
+        versionDrawerClose() {
+            this.versionSearchVal = ''
+        },
+        // ç‰ˆæœ¬è®°å½• æ˜¯å¦å…¬å¼€
+        versionRecordIsPublic(itemData) {
+            // console.log('ç‰ˆæœ¬è®°å½• æ˜¯å¦å…¬å¼€:', itemData)
+            // to do æ¥å£å¯¹æ¥ async await
+        },
+        // ç‰ˆæœ¬è®°å½• ç¼–è¾‘
+        versionRecordEdit(itemData) {
+            //console.log('ç‰ˆæœ¬è®°å½• ç¼–è¾‘:', itemData)
+            // to do æ¥å£å¯¹æ¥ async await
+            // è·å–è¾“å‡ºåˆ—è¡¨å’Œå¹³å‡åˆ†
+            //this.getOutputList()
+            // è·å–åˆ†æ•°è¶‹åŠ¿å›¾è¡¨æ•°æ®
+            //this.getScoringTrendData()
+        },
+        // ç‰ˆæœ¬è®°å½• ç”Ÿæˆä»£ç 
+        versionRecordGenerateCode(itemData) {
+            //console.log('ç‰ˆæœ¬è®°å½• ç”Ÿæˆä»£ç :', itemData)
+            // to do æ¥å£å¯¹æ¥ async await
+        },
+        // ç‰ˆæœ¬è®°å½• æŸ¥çœ‹å¤‡æ³¨
+        versionRecordViewNotes(itemData) {
+            //console.log('ç‰ˆæœ¬è®°å½• æŸ¥çœ‹å¤‡æ³¨:', itemData)
+            // to do æ¥å£å¯¹æ¥ async await
+        },
+        // ç‰ˆæœ¬è®°å½• åˆ é™¤
+        versionRecordDelete(itemData) {
+            //console.log('ç‰ˆæœ¬è®°å½• åˆ é™¤:', itemData)
+            // to do æ¥å£å¯¹æ¥ async await
         },
 
 
 
-
-
-        closeDialog() {
-            this.$refs.newDialogModelForm.resetFields();
-        },
-        // 
-        async getPromptetail(item) {
-            //if (item) {
-
+        // æ›¿æ¢ dialog å…³é—­
+        replaceFormCloseDialog() {
+            //replaceForm: {
+            //    prefix: '',
+            //        suffix: '',
+            //            variableList: []
             //}
+            this.replaceForm = {
+                prefix: '',
+                suffix: '',
+                variableList: []
+            }
+            this.$refs.replaceForm.resetFields();
+            
+        },
+        // æ›¿æ¢ dialog æ·»åŠ å˜é‡è¡Œbtn
+        addVariableBtn() {
+            this.replaceForm.variableList.push({
+                name: '',
+                value:''
+            })
+        },
+        // æ›¿æ¢ dialog åˆ é™¤å˜é‡è¡Œbtn
+        deleteVariableBtn(index) {
+            this.replaceForm.variableList.splice(index,1)
+        },
+        // æ›¿æ¢ dialog æäº¤
+        replaceFormSubmit() {
+            //console.log('æ›¿æ¢ dialog æäº¤:', this.replaceForm)
+            // to do æ¥å£å¯¹æ¥ async await
+        },
+
+        // æ–°å¢æ¨¡å‹ dialog å…³é—­
+        modelFormCloseDialog() {
+            this.modelForm = {
+                modelType: '',
+                modelName: '',
+                modelAPI: '',
+                modelAPIkey: ''
+            }
+            this.$refs.modelForm.resetFields();
+        },
+        // æ–°å¢æ¨¡å‹ dialog æäº¤
+        modelFormSubmitBtn() {
+            this.$refs.modelForm.validate(async (valid) => {
+                if (valid) {
+                    this.modelFormSubmitLoading = true
+                    const request = {
+                        type: this.modelForm.modelType,
+                        name: this.modelForm.modelName,
+                        endpoint: this.modelForm.modelAPI,
+                        apiKey: this.modelForm.modelAPIkey,
+                    }
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', request)
+                    if (res.data.success) {
+                        this.modelFormSubmitLoading = false
+                        // é‡æ–°è·å–æ¨¡å‹åˆ—è¡¨
+                        this.getModelOptData()
+                        // å…³é—­dialog
+                        this.modelFormVisible = false
+                    } else {
+                        this.modelFormSubmitLoading = false
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+
+
+
+        
+        // è·å– prompt è¯¦æƒ…
+        async getPromptetail(item) {
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${item}`,)
-            console.log('getPromptetail:', res)
+            /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
                 this.promptDetail  = res.data.data
@@ -303,96 +657,20 @@ var app = new Vue({
                 alert('error');
             }
         },
-        // prompt¹ÜÀí ÅúÁ¿µ¼³ö
-        btnBatchExport() {
-            // to do ¶Ô½Ó½Ó¿Ú
-        },
-        // prompt¹ÜÀí ÅúÁ¿É¾³ı
-        btnBatchDelete() {
-            // to do ¶Ô½Ó½Ó¿Ú
-        },
-        // É¾³ı prompt btn
+        // åˆ é™¤ prompt 
         async btnDeleteHandle(row) {
-            
             const res = await service.request({
                 method: 'delete',
                 url: '/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Del',
-                data: idsToDelete // ½« ID ÁĞ±í×÷ÎªÇëÇóÌåÊı¾İ·¢ËÍ
+                data: idsToDelete // å°† ID åˆ—è¡¨ä½œä¸ºè¯·æ±‚ä½“æ•°æ®å‘é€
             });
             if (res.data.success) {
-                this.getList()
+                //é‡æ–°è·å– promptåˆ—è¡¨
             } else {
                 alert("error")
             }
         },
-        // ÏêÇé prompt btn
-        btnDetailHandle() {
-
-        },
-        // ±à¼­ prompt btn
-        btnEditHandle(row) {
-            // this.dialogFormTitle = '±à¼­Ä£ĞÍ'
-            // this.dialogFormVisible = true
-        },
-        // Ãæ°å  prompt | prompt¹ÜÀí tabs ÇĞ»»
-        tabsChange(indexStr = '1') {
-            if (indexStr === '1') {
-                this.getModelOptData();
-                this.getHistoryData()
-                this.getVersionData()
-            }
-            if (indexStr === '2') {
-                this.getPromptOptData()
-                this.getManageData()
-            }
-            this.tabsActive = indexStr
-        },
-        // ÀúÊ·¼ÇÂ¼ | °æ±¾ĞÅÏ¢ tabs ÇĞ»»
-        recordInfoTabsChange(indexStr = '1') {
-            if (indexStr === '1') {
-                this.getHistoryData()
-            }
-            if (indexStr === '2') {
-                this.getVersionData()
-            }
-            this.recordInfoTabsActive = indexStr
-
-        },
- // »ñÈ¡ 
-        getManageData() {
-            //this.manageTableData = []
-            this.manageTableTotal = 0
-            // to do ¶Ô½Ó½Ó¿Ú queryList
-            //const _tableData = await service.get('/Admin/XncfModule/Index?handler=Mofules');
-            //this.tableData = tableData.data.data.result;
-        },
-        // »ñÈ¡ Prompt ÁĞ±í
-        async getPromptOptData() {
-            // to do  ¶Ô½Ó½Ó¿Ú
-            
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
-            /*console.log('getModelOptData:', res)*/
-            if (res.data.success) {
-                //console.log('getModelOptData:', res.data)
-                let _optList = res.data.data || []
-                this.promptOpt = _optList.map(item => {
-                    return {
-                        id: item.id,
-                        label: item.name,
-                        value: item.id,
-                        disabled: false
-                    }
-                })
-            } else {
-                alert('error');
-            }
-        },
-       // »ñÈ¡ÀúÊ·¼ÇÂ¼
-        getHistoryData() {
-            // to do  ¶Ô½Ó½Ó¿Ú
-            this.historyData = []
-        },
-        // »ñÈ¡°æ±¾ĞÅÏ¢
+        // è·å–ç‰ˆæœ¬ä¿¡æ¯
         async getVersionData() {
             let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetVersionInfoList')
             //console.log('getVersionData:', res)
@@ -402,29 +680,6 @@ var app = new Vue({
             } else {
                 alert('error!');
             }
-        },
-        // table ×Ô¶¨ÒåĞĞºÅ
-        indexMethod(index) {
-            let { page, size } = this.manageQueryList
-            return (page - 1) * size + index + 1;
-            //return  index + 1;
-        },
-        // table Ñ¡ÖĞÁĞ
-        handleSelectionChange(val) {
-            let { page } = this.manageQueryList
-            this.multipleSelection[page] = val;
-            // °´ÕÕ Ò³Âë ¼ÇÂ¼¶ÔÓ¦Ò³Ñ¡ÔñµÄÊıÁ¿
-            //console.log('tbale Ñ¡Ôñ', this.multipleSelection)
-        },
-        // ·ÖÒ³ Ò³´óĞ¡
-        handleSizeChange(val) {
-            this.manageQueryList.size = val
-            this.getManageData()
-        },
-        // ·ÖÒ³ Ò³Âë
-        handleCurrentChange(val) {
-            this.manageQueryList.page = val
-            this.getManageData()
-        },
+        }
     }
 });

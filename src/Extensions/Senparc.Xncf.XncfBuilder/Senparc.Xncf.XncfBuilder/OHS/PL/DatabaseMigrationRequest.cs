@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,13 +25,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Required]
         [MaxLength(250)]
         [Description("XNCF 项目路径||输入 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
-        public string ProjectPath { get; set; }
+        public SelectionList ProjectPath { get; set; } = new SelectionList(SelectionType.DropDownList);
 
         [Description("生成数据库类型||更多类型陆续添加中")]
         public SelectionList DatabaseTypes { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem(MultipleDatabaseType.Sqlite.ToString(),MultipleDatabaseType.Sqlite.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.SqlServer.ToString(),MultipleDatabaseType.SqlServer.ToString(),"",true),
-                 new SelectionItem(MultipleDatabaseType.MySql.ToString(),MultipleDatabaseType.MySql.ToString(),"",true), 
+                 new SelectionItem(MultipleDatabaseType.MySql.ToString(),MultipleDatabaseType.MySql.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.PostgreSQL.ToString(),MultipleDatabaseType.PostgreSQL.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.Oracle.ToString(),MultipleDatabaseType.Oracle.ToString(),"",true),
             });
@@ -60,13 +62,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             {
                 //TODO:单独生成一个表来记录
 
-                //低版本没有数据库，此处需要try
+                this.ProjectPath.Items.Add(new SelectionItem("custom", "自定义路径", "", true));
+
+                //添加“停机坪”路径
                 var configService = serviceProvider.GetService<ConfigService>();
                 var config = await configService.GetObjectAsync(z => true);
                 if (config != null)
                 {
-                    configService.Mapper.Map(config, this);
-                }
+                    if (!config.SlnFilePath.IsNullOrEmpty())
+                    {
+                        this.DatabasePlantPath = Path.Combine(Path.GetFullPath(config.SlnFilePath), "Senparc.Web.DatabasePlant");
+                    }
+                } 
+
+                //添加当前项目选项
             }
             catch
             {

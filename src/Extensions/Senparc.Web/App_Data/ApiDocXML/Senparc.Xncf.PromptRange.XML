@@ -503,9 +503,14 @@
             PromptItem
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.MaxToken">
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Content">
             <summary>
-            最大 Token 数
+            Prompt内容
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.TopP">
+            <summary>
+            TopP
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Temperature">
@@ -513,9 +518,9 @@
             温度
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.TopP">
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.MaxToken">
             <summary>
-            TopP
+            最大 Token 数
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.FrequencyPenalty">
@@ -634,6 +639,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ApiKey">
             <summary>
             ApiKey
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.OrganizationId">
+            <summary>
+            OrganizationId
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.TopP">

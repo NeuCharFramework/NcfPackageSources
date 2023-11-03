@@ -2,7 +2,7 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            // ²éÑ¯ÁĞ±í ²ÎÊı
+            // æŸ¥è¯¢åˆ—è¡¨ å‚æ•°
             queryList: {
                 page: 1,
                 size: 10,
@@ -10,10 +10,10 @@ var app = new Vue({
             },
             pageSizes: [10, 20, 30, 50],
             tableTotal: 0,
-            tableData: [], // Ä£ĞÍÁĞ±í
-            multipleSelection: {}, // Ñ¡ÖĞµÄÄ£ĞÍ
+            tableData: [], // æ¨¡å‹åˆ—è¡¨
+            multipleSelection: {}, // é€‰ä¸­çš„æ¨¡å‹
             dialogFormVisible: false,
-            dialogFormTitle: 'ĞÂÔöÄ£ĞÍ',
+            dialogFormTitle: 'æ–°å¢æ¨¡å‹',
             formLabelWidth: '',
             newModelForm: {
                 modelName: '',
@@ -22,13 +22,13 @@ var app = new Vue({
             },
             rules: {
                 modelName: [
-                    { required: true, message: 'ÇëÊäÈëÄ£ĞÍÃû³Æ', trigger: 'blur' }
+                    { required: true, message: 'è¯·è¾“å…¥æ¨¡å‹åç§°', trigger: 'blur' }
                 ],
                 modelAPI: [
-                    { required: true, message: 'ÇëÊäÈëÄ£ĞÍAPI', trigger: 'blur' }
+                    { required: true, message: 'è¯·è¾“å…¥æ¨¡å‹API', trigger: 'blur' }
                 ],
                 modelAPIkey: [
-                    { required: true, message: 'ÇëÊäÈëAPI key', trigger: 'blur' }
+                    { required: true, message: 'è¯·è¾“å…¥API key', trigger: 'blur' }
                 ]
             }
         };
@@ -42,7 +42,7 @@ var app = new Vue({
         //}
     },
     created: function () {
-        // »ñÈ¡tableÁĞ±íÊı¾İ
+        // è·å–tableåˆ—è¡¨æ•°æ®
         this.getList();
     },
     methods: {
@@ -60,75 +60,75 @@ var app = new Vue({
                 }
             });
         },
-        // ĞÂÔöÄ£ĞÍ btn
+        // æ–°å¢æ¨¡å‹ btn
         createBtnFrom() {
-            this.dialogFormTitle = 'ĞÂÔöÄ£ĞÍ'
+            this.dialogFormTitle = 'æ–°å¢æ¨¡å‹'
             this.dialogFormVisible = true
         },
-        // ±à¼­Ä£ĞÍ btn
+        // ç¼–è¾‘æ¨¡å‹ btn
         editBtnFrom(row) {
-            this.dialogFormTitle = '±à¼­Ä£ĞÍ'
+            this.dialogFormTitle = 'ç¼–è¾‘æ¨¡å‹'
             this.newModelForm = {
                 ...row
             }
             this.dialogFormVisible = true
         },
-        // É¾³ıÄ£ĞÍ 
+        // åˆ é™¤æ¨¡å‹ 
         deleteHandle(row) {
-            console.log('É¾³ı', row)
+            console.log('åˆ é™¤', row)
         },
-        // btn ÅúÁ¿É¾³ı
+        // btn æ‰¹é‡åˆ é™¤
         btnBatchdelete() {
-            console.log('ÅúÁ¿É¾³ı', this.multipleSelection)
-            // Ñ­»· this.multipleSelection
+            console.log('æ‰¹é‡åˆ é™¤', this.multipleSelection)
+            // å¾ªç¯ this.multipleSelection
             // this.$refs.multipleTable.toggleRowSelection(row);
         },
-        // async  »ñÈ¡tableÁĞ±íÊı¾İ
+        // async  è·å–tableåˆ—è¡¨æ•°æ®
         getList() {
             this.tableData = [{
                 id: 1,
-                modelName: 'PromptÃû³Æ1',
-                developer: 'ÍõĞ¡»¢',
+                modelName: 'Promptåç§°1',
+                developer: 'ç‹å°è™',
                 isItPublic: false,
                 date: '2016-05-03'
             }, {
                 id: 2,
-                modelName: 'PromptÃû³Æ2',
-                developer: 'ÍõĞ¡»¢',
+                modelName: 'Promptåç§°2',
+                developer: 'ç‹å°è™',
                 isItPublic: true,
                 date: '2016-05-04'
             }, {
                 id: 3,
-                modelName: 'PromptÃû³Æ3',
-                developer: 'ÍõĞ¡»¢',
+                modelName: 'Promptåç§°3',
+                developer: 'ç‹å°è™',
                 isItPublic: false,
                 date: '2016-05-05'
             }]
             this.tableTotal = 3
-            // to do ¶Ô½Ó½Ó¿Ú queryList
+            // to do å¯¹æ¥æ¥å£ queryList
             //const _tableData = await service.get(`/Admin/PromptRange/Index?handler=Mofules`);
             //this.tableData = tableData.data.data.result;
         },
 
-        // table ×Ô¶¨ÒåĞĞºÅ
+        // table è‡ªå®šä¹‰è¡Œå·
         indexMethod(index) {
             let { page, size } = this.queryList
             return (page - 1) * size + index + 1;
             //return  index + 1;
         },
-        // table Ñ¡ÖĞÁĞ
+        // table é€‰ä¸­åˆ—
         handleSelectionChange(val) {
             let { page } = this.queryList
             this.multipleSelection[page] = val;
-            // °´ÕÕ Ò³Âë ¼ÇÂ¼¶ÔÓ¦Ò³Ñ¡ÔñµÄÊıÁ¿
-            console.log('tbale Ñ¡Ôñ', this.multipleSelection)
+            // æŒ‰ç…§ é¡µç  è®°å½•å¯¹åº”é¡µé€‰æ‹©çš„æ•°é‡
+            console.log('tbale é€‰æ‹©', this.multipleSelection)
         },
-        // ·ÖÒ³ Ò³´óĞ¡
+        // åˆ†é¡µ é¡µå¤§å°
         handleSizeChange(val) {
             this.queryList.size = val
             this.getList()
         },
-        // ·ÖÒ³ Ò³Âë
+        // åˆ†é¡µ é¡µç 
         handleCurrentChange(val) {
             this.queryList.page = val
             this.getList()
