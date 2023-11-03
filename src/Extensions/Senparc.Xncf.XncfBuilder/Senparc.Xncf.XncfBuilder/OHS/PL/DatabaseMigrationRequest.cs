@@ -21,7 +21,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 net6.0 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Web.DatabasePlant\\")]
+        [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 net6.0 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Web.DatabasePlant\\。请确保需要操作的 XNCF 项目已被此项目引用！")]
         public string DatabasePlantPath { get; set; }
 
         [Description("XNCF 项目路径||选择 XNCF 项目根目录的完整物理路径")]
@@ -42,7 +42,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(100)]
-        [Description("自定义 DbContext 名称||如：MyDemoSenparcEntities（注意：不需要加数据库类型后缀）。输入[Default]自动获取")]
+        [Description("自定义 DbContext 名称||如：MyDemoSenparcEntities（注意：不需要加数据库类型后缀）。输入[Default]可自动获取由 XncfBuilder 自动生成的模块的 SenparcEntities。")]
         public string DbContextName { get; set; } = "[Default]";
 
         [Required]
