@@ -188,7 +188,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                 throw new NcfExceptionBase($"目录 {databaseModelPath} 下没有找到 SenparcEntities.cs 结尾的文件");
             }
 
-            var databaseFile = files[0].Replace(".cs", "");
+            var databaseFile = Path.GetFileName(files[0]).Replace(".cs", "");
 
             if (!dbType.IsNullOrEmpty())
             {
