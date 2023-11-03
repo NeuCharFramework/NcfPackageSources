@@ -51,7 +51,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //commandTexts.Add($"dotnet add {request.DatabasePlantPath} reference {request.ProjectPath}");
 
                 //进入项目目录
-                commandTexts.Add(@$"cd {request.ProjectPath}");
+                var projectPath = request.GetProjectPath(request);
+                commandTexts.Add(@$"cd {projectPath}");
 
                 //执行迁移
                 foreach (var dbType in request.DatabaseTypes.SelectedValues)
