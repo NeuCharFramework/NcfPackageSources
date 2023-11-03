@@ -24,7 +24,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Description("Senparc.Web.DatabasePlant 项目物理路径||用于使用 net6.0 等目标框架启动迁移操作，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\Senparc.Web.DatabasePlant\\")]
         public string DatabasePlantPath { get; set; }
 
-        [MaxLength(250)]
         [Description("XNCF 项目路径||选择 XNCF 项目根目录的完整物理路径")]
         public SelectionList ProjectPath { get; set; } = new SelectionList(SelectionType.DropDownList);
 
