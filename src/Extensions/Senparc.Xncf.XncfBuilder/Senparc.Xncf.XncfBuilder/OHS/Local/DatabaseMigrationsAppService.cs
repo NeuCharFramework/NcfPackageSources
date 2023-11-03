@@ -1,4 +1,6 @@
-﻿using Senparc.Ncf.Core.AppServices;
+﻿using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         private string GetMigrationDir(DatabaseMigrations_MigrationRequest request, string dbType)
         {
-            return Path.Combine(request.ProjectPath, "Domain", "Migrations", $"Migrations.{dbType}");
+            string projectPath = request.GetProjectPath(request);
+
+            return Path.Combine(projectPath, "Domain", "Migrations", $"Migrations.{dbType}");
         }
 
         public DatabaseMigrationsAppService(IServiceProvider serviceProvider) : base(serviceProvider)

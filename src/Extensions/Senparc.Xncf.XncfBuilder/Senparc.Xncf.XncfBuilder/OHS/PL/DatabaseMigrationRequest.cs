@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,8 +26,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(250)]
-        [Description("XNCF 项目路径||输入 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
+        [Description("XNCF 项目路径||选择 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
         public SelectionList ProjectPath { get; set; } = new SelectionList(SelectionType.DropDownList);
+
+        [MaxLength(250)]
+        [Description("自定义 XNCF 项目路径||仅当“XNCF 项目路径”选择“自定义路径”时有效。输入 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
+        public string CustomProjectPath { get; set; }
 
         [Description("生成数据库类型||更多类型陆续添加中")]
         public SelectionList DatabaseTypes { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
@@ -62,7 +68,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             {
                 //TODO:单独生成一个表来记录
 
-                this.ProjectPath.Items.Add(new SelectionItem("custom", "自定义路径", "", true));
+                this.ProjectPath.Items.Add(new SelectionItem("N/A", "自定义路径", "", true));
 
                 //添加“停机坪”路径
                 var configService = serviceProvider.GetService<ConfigService>();
@@ -74,17 +80,36 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                         this.DatabasePlantPath = Path.Combine(Path.GetFullPath(config.SlnFilePath), "Senparc.Web.DatabasePlant");
                     }
 
-
                     //添加当前项目选项
                     var projectList = FunctionHelper.LoadXncfProjects(false);
                 }
-
-
             }
             catch
             {
             }
-
         }
+
+
+        /// <summary>
+        /// 获取项目路径
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public  string GetProjectPath(DatabaseMigrations_MigrationRequest request)
+        {
+            var projectPath = request.ProjectPath.SelectedValues.FirstOrDefault();
+            if (projectPath == "N/A")
+            {
+                projectPath = request.CustomProjectPath;
+                if (projectPath.IsNullOrEmpty())
+                {
+                    throw new NcfExceptionBase("请填写“自定义 XNCF 项目路径”！");
+                }
+            }
+
+            return projectPath;
+        }
+
     }
 }

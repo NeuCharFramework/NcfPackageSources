@@ -159,7 +159,6 @@ namespace Senparc.Ncf.XncfBase.Functions
                 }
             }
 
-
             if (mustHaveXncfModule && (currentDir == null || selectList.Count == 0))
             {
                 selectList.Add(
