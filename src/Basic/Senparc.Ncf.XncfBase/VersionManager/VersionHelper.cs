@@ -20,6 +20,8 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?$";
         private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?$";
 
+        private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
+
 
         /// <summary>  
         /// 解析版本字符串并返回一个 VersionInfo 对象。  
@@ -49,8 +51,59 @@ namespace Senparc.Ncf.XncfBase.VersionManager
             return versionInfo;
         }
 
+        /// <summary>
+        /// 从 Register.cs 代码中获取版本号
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static VersionInfo ParseFromCode(string code)
+        {
+            var regex = new Regex(VersionInCodeRegex);
+            var match = regex.Match(code);
 
+            if (!match.Success)
+            {
+                throw new ArgumentException("无法从代码中找到有效的版本字符串。", nameof(code));
+            }
 
+            var versionString = $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}";
+
+            if (match.Groups[4].Success)
+            {
+                versionString += $".{match.Groups[4].Value}";
+            }
+
+            if (match.Groups[5].Success)
+            {
+                versionString += $"-{match.Groups[5].Value}";
+            }
+
+            if (match.Groups[7].Success)
+            {
+                versionString += $"+{match.Groups[7].Value}";
+            }
+
+            return Parse(versionString);
+        }
+
+        /// <summary>
+        /// 替换版本号
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="oldVersionInfo"></param>
+        /// <param name="newVersionInfo"></param>
+        /// <returns></returns>
+        public static string ReplaceVersionInCode(string code, VersionInfo oldVersionInfo, VersionInfo newVersionInfo)
+        {
+            var oldVersionString = oldVersionInfo.ToString();
+            var newVersionString = newVersionInfo.ToString();
+
+            var regex = new Regex(Regex.Escape($"Version => \"{oldVersionString}\""));
+            var replacedCode = regex.Replace(code, $"Version => \"{newVersionString}\"");
+
+            return replacedCode;
+        }
     }
 
 }
