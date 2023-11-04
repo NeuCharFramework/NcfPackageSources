@@ -223,7 +223,10 @@ namespace Senparc.Xncf.XncfBuilder
 }
 ";
 
-            VersionInfo oldVersionInfo = VersionHelper.ParseFromCode(code);
+            var  result =  VersionHelper.ParseFromCode(code);
+            VersionInfo oldVersionInfo = result.VersionInfo;
+
+            Assert.AreEqual("Version => \"0.10.1\"", result.RawVersionString);
 
             // 修改版本号  
             VersionInfo newVersionInfo = new VersionInfo
@@ -235,7 +238,7 @@ namespace Senparc.Xncf.XncfBuilder
                 Metadata = oldVersionInfo.Metadata
             };
 
-            string replacedCode = VersionHelper.ReplaceVersionInCode(code, oldVersionInfo, newVersionInfo);
+            string replacedCode = VersionHelper.ReplaceVersionInCode(code, result.RawVersionString, newVersionInfo);
             Assert.AreEqual(exceptedCode, replacedCode);
             Console.WriteLine(replacedCode); // 输出：public override string Version => "0.6.1";  
         }

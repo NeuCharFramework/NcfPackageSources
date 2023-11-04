@@ -150,7 +150,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                 //获取 Register.cs 文件内容
                                 var fileContent = File.ReadAllText(registerFile);
                                 //获取版本号
-                                var oldVersion = VersionHelper.ParseFromCode(fileContent);
+                                var result = VersionHelper.ParseFromCode(fileContent);
+                                var oldVersion = result.VersionInfo;
                                 logger.Append($"当前版本号：{oldVersion.ToString()}");
 
                                 var newVersion = new VersionInfo();
@@ -169,7 +170,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                         throw new NcfExceptionBase("无法识别的版本更新类型");
                                 }
                                 //更新代码
-                                var newCode = VersionHelper.ReplaceVersionInCode(fileContent, oldVersion, newVersion);
+                                var newCode = VersionHelper.ReplaceVersionInCode(fileContent, result.RawVersionString, newVersion);
                                 //保存代码
                                 using (var fw = new FileStream(registerFile, FileMode.Create))
                                 {

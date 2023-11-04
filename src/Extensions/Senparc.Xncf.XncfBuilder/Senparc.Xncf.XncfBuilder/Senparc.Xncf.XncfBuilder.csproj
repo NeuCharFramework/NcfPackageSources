@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Version>0.18.0-beta12</Version>
+		<Version>0.18.0-beta13</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>

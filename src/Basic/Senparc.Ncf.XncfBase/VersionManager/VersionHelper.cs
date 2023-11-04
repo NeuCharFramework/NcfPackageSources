@@ -60,7 +60,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         /// <param name="code"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static VersionInfo ParseFromCode(string code)
+        public static (VersionInfo VersionInfo, string RawVersionString) ParseFromCode(string code)
         {
             var regex = new Regex(VersionInCodeRegex);
             var match = regex.Match(code);
@@ -91,7 +91,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
                 versionString += $"+{match.Groups[7].Value}";
             }
 
-            return Parse(versionString);
+            return (VersionInfo: Parse(versionString), RawVersionString: match.Value);
         }
 
 
@@ -99,15 +99,14 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         /// 替换版本号
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="oldVersionInfo"></param>
+        /// <param name="rawVersionString">原始版本定位字符串，如：<code>Version => "0.1.1"</code></param>
         /// <param name="newVersionInfo"></param>
         /// <returns></returns>
-        public static string ReplaceVersionInCode(string code, VersionInfo oldVersionInfo, VersionInfo newVersionInfo)
+        public static string ReplaceVersionInCode(string code, string rawVersionString, VersionInfo newVersionInfo)
         {
-            var oldVersionString = oldVersionInfo.ToString();
             var newVersionString = newVersionInfo.ToString();
 
-            var regex = new Regex(Regex.Escape($"Version => \"{oldVersionString}\""));
+            var regex = new Regex(Regex.Escape(rawVersionString));
             var replacedCode = regex.Replace(code, $"Version => \"{newVersionString}\"");
 
             return replacedCode;
