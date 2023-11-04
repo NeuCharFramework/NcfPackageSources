@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Version>0.17.1.2-beta10</Version>
+		<Version>0.18.0-beta14</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -31,6 +31,7 @@
 			v0.16.2.1024 升级至 1024 特别版，支持 2023.10.24 特别版 Senparc.Xncf.PromptRange
 			v0.17.0 优化 Add-Migration，支持自动选择 XNCF 项目
 			v0.17.1 优化 Add-Migration，支持自动扫描 *SenparcEntities.cs 文件
+			v0.18.0 优化 Add-Migration，可自动更新 Register.cs 版本号
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

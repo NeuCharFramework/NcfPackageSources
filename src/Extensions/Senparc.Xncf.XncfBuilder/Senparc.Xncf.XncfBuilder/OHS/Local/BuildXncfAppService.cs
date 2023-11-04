@@ -2,6 +2,7 @@
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase.VersionManager;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
@@ -66,6 +67,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             var menuName = $" --MenuName \"{request.MenuName}\"";
             string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
             string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
+
+            //版本号标准化处理：按照语义化版本规范（semver）
+            try
+            {
+                logger.Append($"规范版本号格式开始：{version}");
+                var versionInfo = VersionHelper.Parse(version);
+                version = versionInfo.ToString();
+                logger.Append($"规范版本号格式结束，最终输出：{version}");
+
+            }
+            catch (Exception ex)
+            {
+                logger.Append($"规范版本号格式失败，保留原有字符串。失败信息：{ex.Message}");
+            }
 
             //配置功能
             var isUseSample = request.UseSammple.SelectedValues.Contains("1");
