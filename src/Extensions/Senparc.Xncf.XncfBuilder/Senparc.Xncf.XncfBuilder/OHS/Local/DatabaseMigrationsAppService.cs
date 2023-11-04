@@ -1,4 +1,7 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.XncfBase.Functions;
@@ -169,6 +172,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                     default:
                                         throw new NcfExceptionBase("无法识别的版本更新类型");
                                 }
+
+
                                 //更新代码
                                 var newCode = VersionHelper.ReplaceVersionInCode(fileContent, result.RawVersionString, newVersion);
                                 //保存代码

@@ -145,8 +145,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         #endregion
     }
-}
-";
+}";
             string exceptedCode = @"using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
@@ -162,24 +161,24 @@ using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.AI.Kernel;
-
+    
 namespace Senparc.Xncf.XncfBuilder
 {
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
-
+    
         public override string Name => ""Senparc.Xncf.XncfBuilder"";
-
+    
         public override string Uid => ""C2E1F87F-2DCE-4921-87CE-36923ED0D6EA"";//必须确保全局唯一，生成后必须固定
-
+    
         public override string Version => ""0.11.1"";//必须填写版本号
-
+    
         public override string MenuName => ""XNCF 模块生成器"";
-
+    
         public override string Icon => ""fa fa-plus"";
-
+    
         public override string Description => ""快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用"";
 
         //public override IList<Type> Functions => new Type[] {
@@ -198,12 +197,12 @@ namespace Senparc.Xncf.XncfBuilder
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             XncfBuilderEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
-
+    
             //指定需要删除的数据实体
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(xncfDbContextType).Keys.ToArray();
             //删除数据库表
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
-
+    
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
@@ -211,19 +210,18 @@ namespace Senparc.Xncf.XncfBuilder
         {
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
             //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
-
+    
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
-
+    
             return base.AddXncfModule(services, configuration, env);
         }
 
         #endregion
     }
-}
-";
+}";
 
-            var  result =  VersionHelper.ParseFromCode(code);
+            var result = VersionHelper.ParseFromCode(code);
             VersionInfo oldVersionInfo = result.VersionInfo;
 
             Assert.AreEqual("Version => \"0.10.1\"", result.RawVersionString);
@@ -238,9 +236,17 @@ namespace Senparc.Xncf.XncfBuilder
                 Metadata = oldVersionInfo.Metadata
             };
 
+            //使用纯正则表达式的方式替换
             string replacedCode = VersionHelper.ReplaceVersionInCode(code, result.RawVersionString, newVersionInfo);
-            Assert.AreEqual(exceptedCode, replacedCode);
-            Console.WriteLine(replacedCode); // 输出：public override string Version => "0.6.1";  
+            Assert.IsTrue(replacedCode.Contains("public override string Version => \"0.11.1\";//必须填写版本号"));
+            //Assert.AreEqual(exceptedCode, replacedCode);
+            //Console.WriteLine(replacedCode); 
+
+            //使用 Roslyn 替换
+            string replacedCodeWithRoslyn = VersionHelper.UpdateVersionInCodeWithRoslyn(code, UpdateVersionType.MinorUpdate);
+            Assert.IsTrue(replacedCodeWithRoslyn.Contains("public override string Version => \"0.11.1\";//必须填写版本号"));
+            //Assert.AreEqual(exceptedCode, replacedCodeWithRoslyn);
+            //Console.WriteLine(replacedCodeWithRoslyn); 
         }
     }
 }

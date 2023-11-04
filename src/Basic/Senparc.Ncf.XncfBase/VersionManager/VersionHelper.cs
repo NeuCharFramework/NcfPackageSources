@@ -1,7 +1,13 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System.Net.WebSockets;
+using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Ncf.XncfBase.VersionManager
 {
@@ -111,6 +117,60 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
             return replacedCode;
         }
-    }
 
+
+        public static string UpdateVersionInCodeWithRoslyn(string fileContent, UpdateVersionType updateType)
+        {
+            // 使用 Roslyn 解析 C# 代码  
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(fileContent);
+            CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
+
+            // 查找 Version 属性所在的节点  
+            PropertyDeclarationSyntax versionProperty = root.DescendantNodes()
+                .OfType<PropertyDeclarationSyntax>()
+                .FirstOrDefault(p => p.Identifier.Text == "Version");
+
+            if (versionProperty != null)
+            {
+                //获取旧的版本号
+                var oldVersionString = versionProperty.ExpressionBody.Expression.ToString().Replace("\"", "");
+                Console.WriteLine("oldVersionString:" + oldVersionString);
+                var oldVersion = Parse(oldVersionString);
+
+                // 如果找到了 Version 属性，修改其值  
+                var newVersion = new VersionInfo();
+
+                switch (updateType)
+                {
+                    case UpdateVersionType.NoUpdate:
+                        break;
+                    case UpdateVersionType.MajorUpdate:
+                        newVersion = oldVersion with { Major = oldVersion.Major + 1 };
+                        break;
+                    case UpdateVersionType.MinorUpdate:
+                        newVersion = oldVersion with { Minor = oldVersion.Minor + 1 };
+                        break;
+                    case UpdateVersionType.PatchUpdate:
+                        newVersion = oldVersion with { Patch = oldVersion.Patch + 1 };
+                        break;
+                    default:
+                        throw new NcfExceptionBase("无法识别的版本更新类型");
+
+                }
+
+                ExpressionSyntax newVersionExpression = SyntaxFactory.ParseExpression($"\"{newVersion}\"");
+                ArrowExpressionClauseSyntax newExpressionBody = SyntaxFactory.ArrowExpressionClause(newVersionExpression);
+                PropertyDeclarationSyntax newVersionProperty = versionProperty.WithExpressionBody(newExpressionBody);
+
+                // 将修改后的语法树规范化并转换为字符串，并写回到原始的 .cs 文件中  
+                SyntaxNode newRoot = root.ReplaceNode(versionProperty, newVersionProperty);
+                string newContent = newRoot
+                    //.NormalizeWhitespace()
+                    .ToFullString();
+
+                return newContent;
+            }
+            return null;
+        }
+    }
 }
