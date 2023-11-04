@@ -7,25 +7,25 @@ namespace Senparc.Ncf.XncfBase.VersionManager
     /// <summary>  
     /// 软件版本信息
     /// </summary>  
-    public class VersionInfo
+    public record class VersionInfo
     {
         /// <summary>  
-        /// 主版本号  
+        /// 主版本
         /// </summary>  
         public int Major { get; set; }
 
         /// <summary>  
-        /// 次版本号  
+        /// 次版本
         /// </summary>  
         public int Minor { get; set; }
 
         /// <summary>  
-        /// 修订版本号  
+        /// 修订版本
         /// </summary>  
         public int Patch { get; set; }
 
         /// <summary>  
-        /// 可选的构建版本号  
+        /// 可选的构建版本
         /// </summary>  
         public int? Build { get; set; }
 

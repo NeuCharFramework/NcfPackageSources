@@ -2,6 +2,7 @@
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Ncf.XncfBase.VersionManager;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -129,6 +130,65 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 if (strOutput.Contains("Build FAILED", StringComparison.InvariantCultureIgnoreCase))
                 {
                     response.Data += "重要提示：可能出现错误，请检查日志！";
+                }
+                else
+                {
+                    //更新版本号
+                    logger.Append("");
+                    logger.Append("==== 版本号更新 ====");
+
+                    var updateVesionType = request.UpdateVersion.SelectedValues.FirstOrDefault();
+                    if (updateVesionType != "0")
+                    {
+                        var registerFile = Path.Combine(projectPath, "Register.cs");
+                        if (File.Exists(registerFile))
+                        {
+                            logger.Append("Register.cs 文件存在，开始更新版本号");
+
+                            //获取 Register.cs 文件内容
+                            var fileContent = File.ReadAllText(registerFile);
+                            //获取版本号
+                            var oldVersion = VersionHelper.ParseFromCode(fileContent);
+                            logger.Append($"当前版本号：{oldVersion.ToString()}");
+
+                            var newVersion = new VersionInfo();
+                            switch (updateVesionType)
+                            {
+                                case "1":
+                                    newVersion = oldVersion with { Major = oldVersion.Major + 1 };
+                                    break;
+                                case "2":
+                                    newVersion = oldVersion with { Minor = oldVersion.Minor + 1 };
+                                    break;
+                                case "3":
+                                    newVersion = oldVersion with { Patch = oldVersion.Patch + 1 };
+                                    break;
+                                default:
+                                    throw new NcfExceptionBase("无法识别的版本更新类型");
+                            }
+                            //更新代码
+                            var newCode = VersionHelper.ReplaceVersionInCode(fileContent, oldVersion, newVersion);
+                            //保存代码
+                            using (var fw = new FileStream(registerFile, FileMode.Create))
+                            {
+                                using (var sw = new StreamWriter(fw))
+                                {
+                                    await sw.WriteLineAsync(newCode);
+                                    await sw.FlushAsync();
+                                }
+                            }
+                            logger.Append($"已替换为新版本号：{newVersion.ToString()}");
+                        }
+                        else
+                        {
+                            logger.Append("Register.cs 文件不存在，跳过");
+                        }
+                    }
+                    else
+                    {
+                        logger.Append("不要求自动更新版本号，跳过");
+
+                    }
                 }
 
                 return null;

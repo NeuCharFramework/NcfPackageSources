@@ -54,7 +54,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Description("自动更新版本号||自动更新 Register.cs 中的版本号")]
         public SelectionList UpdateVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("0","不更新","",true),
-                 new SelectionItem("1","是","",false)
+                 new SelectionItem("1","主版本号（Major） + 1","",false),
+                 new SelectionItem("2","次版本号（Minor） + 1","",false),
+                 new SelectionItem("3","修订版本号（Patch） + 1","",false)
             });
 
 
