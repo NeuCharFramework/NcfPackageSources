@@ -134,60 +134,67 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 else
                 {
                     //更新版本号
-                    logger.Append("");
-                    logger.Append("==== 版本号更新 ====");
-
-                    var updateVesionType = request.UpdateVersion.SelectedValues.FirstOrDefault();
-                    if (updateVesionType != "0")
+                    try
                     {
-                        var registerFile = Path.Combine(projectPath, "Register.cs");
-                        if (File.Exists(registerFile))
+                        logger.Append("");
+                        logger.Append("==== 版本号更新 ====");
+
+                        var updateVesionType = request.UpdateVersion.SelectedValues.FirstOrDefault();
+                        if (updateVesionType != "0")
                         {
-                            logger.Append("Register.cs 文件存在，开始更新版本号");
-
-                            //获取 Register.cs 文件内容
-                            var fileContent = File.ReadAllText(registerFile);
-                            //获取版本号
-                            var oldVersion = VersionHelper.ParseFromCode(fileContent);
-                            logger.Append($"当前版本号：{oldVersion.ToString()}");
-
-                            var newVersion = new VersionInfo();
-                            switch (updateVesionType)
+                            var registerFile = Path.Combine(projectPath, "Register.cs");
+                            if (File.Exists(registerFile))
                             {
-                                case "1":
-                                    newVersion = oldVersion with { Major = oldVersion.Major + 1 };
-                                    break;
-                                case "2":
-                                    newVersion = oldVersion with { Minor = oldVersion.Minor + 1 };
-                                    break;
-                                case "3":
-                                    newVersion = oldVersion with { Patch = oldVersion.Patch + 1 };
-                                    break;
-                                default:
-                                    throw new NcfExceptionBase("无法识别的版本更新类型");
-                            }
-                            //更新代码
-                            var newCode = VersionHelper.ReplaceVersionInCode(fileContent, oldVersion, newVersion);
-                            //保存代码
-                            using (var fw = new FileStream(registerFile, FileMode.Create))
-                            {
-                                using (var sw = new StreamWriter(fw))
+                                logger.Append("Register.cs 文件存在，开始更新版本号");
+
+                                //获取 Register.cs 文件内容
+                                var fileContent = File.ReadAllText(registerFile);
+                                //获取版本号
+                                var oldVersion = VersionHelper.ParseFromCode(fileContent);
+                                logger.Append($"当前版本号：{oldVersion.ToString()}");
+
+                                var newVersion = new VersionInfo();
+                                switch (updateVesionType)
                                 {
-                                    await sw.WriteLineAsync(newCode);
-                                    await sw.FlushAsync();
+                                    case "1":
+                                        newVersion = oldVersion with { Major = oldVersion.Major + 1 };
+                                        break;
+                                    case "2":
+                                        newVersion = oldVersion with { Minor = oldVersion.Minor + 1 };
+                                        break;
+                                    case "3":
+                                        newVersion = oldVersion with { Patch = oldVersion.Patch + 1 };
+                                        break;
+                                    default:
+                                        throw new NcfExceptionBase("无法识别的版本更新类型");
                                 }
+                                //更新代码
+                                var newCode = VersionHelper.ReplaceVersionInCode(fileContent, oldVersion, newVersion);
+                                //保存代码
+                                using (var fw = new FileStream(registerFile, FileMode.Create))
+                                {
+                                    using (var sw = new StreamWriter(fw))
+                                    {
+                                        await sw.WriteLineAsync(newCode);
+                                        await sw.FlushAsync();
+                                    }
+                                }
+                                logger.Append($"已替换为新版本号：{newVersion.ToString()}");
                             }
-                            logger.Append($"已替换为新版本号：{newVersion.ToString()}");
+                            else
+                            {
+                                logger.Append("Register.cs 文件不存在，跳过");
+                            }
                         }
                         else
                         {
-                            logger.Append("Register.cs 文件不存在，跳过");
+                            logger.Append("不要求自动更新版本号，跳过");
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        logger.Append("不要求自动更新版本号，跳过");
-
+                        logger.Append("更新版本出错：" + ex.Message);
+                        new NcfExceptionBase(ex.Message, ex);
                     }
                 }
 
