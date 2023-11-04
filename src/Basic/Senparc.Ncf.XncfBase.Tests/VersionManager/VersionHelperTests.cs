@@ -244,7 +244,7 @@ namespace Senparc.Xncf.XncfBuilder
 
             //使用 Roslyn 替换
             string replacedCodeWithRoslyn = VersionHelper.UpdateVersionInCodeWithRoslyn(code, UpdateVersionType.MinorUpdate);
-            Assert.IsTrue(replacedCodeWithRoslyn.Contains("public override string Version => \"0.11.1\";//必须填写版本号"));
+            Assert.IsTrue(replacedCodeWithRoslyn.Contains("public override string Version =>\"0.11.1\";//必须填写版本号"));
             //Assert.AreEqual(exceptedCode, replacedCodeWithRoslyn);
             //Console.WriteLine(replacedCodeWithRoslyn); 
         }
