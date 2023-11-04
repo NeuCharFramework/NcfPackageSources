@@ -50,6 +50,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Description("更新名称||可使用英文、数字、下划线，不可以有空格，如：Add_Config")]
         public string MigrationName { get; set; }
 
+
+        [Description("自动更新版本号||自动更新 Register.cs 中的版本号")]
+        public SelectionList UpdateVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+                 new SelectionItem("0","不更新","",true),
+                 new SelectionItem("1","是","",false)
+            });
+
+
         [Description("输出详细日志||使用 add-migration 的 -v 参数")]
         public SelectionList OutputVerbose { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("1","使用","",false)
