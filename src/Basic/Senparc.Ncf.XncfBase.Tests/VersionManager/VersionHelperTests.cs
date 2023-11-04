@@ -18,9 +18,10 @@ namespace Senparc.Ncf.XncfBase.VersionManager.Tests
         public void TestParseValidVersionStrings()
         {
             // 测试基本语义化版本号  
+            ValidateParse("1.0", 1, 0, 0, null, null, null);//虽然不标准，但是也需要在特殊形况下支持
             ValidateParse("1.0.0", 1, 0, 0, null, null, null);
             ValidateParse("2.3.4", 2, 3, 4, null, null, null);
-            ValidateParse("99.99.99", 99, 99, 99, null, null, null);
+            ValidateParse("99.99.99", 99, 99, 99, null, null, null);//虽然不标准，但是也需要在特殊形况下支持
 
             // 测试带有四个数字的版本号  
             ValidateParse("99.99.99.888", 99, 99, 99, 888, null, null);
@@ -41,7 +42,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager.Tests
         {
             // 测试无效的版本号  
             Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1"));
-            Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0"));
+            //Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0"));//为了兼容较早版本，暂时允许
             Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0.0.0.0"));
             //Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0.0-alpha+build."));
             Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0.0-alpha+build!123"));

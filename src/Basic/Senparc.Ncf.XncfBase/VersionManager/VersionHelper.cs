@@ -18,10 +18,12 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z\d\-]+))?(?:\.(\d+))?(?:\+([a-zA-Z\d\-]+))?$";
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-]+))?$";
         //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?$";
-        private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?$";
+        //private const string VersionRegex = @"^(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?$";
+        private const string VersionRegex = @"^(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?$";
 
-        private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
 
+        //private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
+        private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
 
         /// <summary>  
         /// 解析版本字符串并返回一个 VersionInfo 对象。  
@@ -42,7 +44,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
             {
                 Major = int.Parse(match.Groups[1].Value),
                 Minor = int.Parse(match.Groups[2].Value),
-                Patch = int.Parse(match.Groups[3].Value),
+                Patch = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0, // 如果不存在 Patch，则使用默认值 0  
                 Build = match.Groups[4].Success ? int.Parse(match.Groups[4].Value) : (int?)null,
                 PreRelease = match.Groups[5].Success ? match.Groups[5].Value : null,
                 Metadata = match.Groups[7].Success ? match.Groups[7].Value : null
@@ -50,6 +52,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
             return versionInfo;
         }
+
 
         /// <summary>
         /// 从 Register.cs 代码中获取版本号
@@ -67,7 +70,11 @@ namespace Senparc.Ncf.XncfBase.VersionManager
                 throw new ArgumentException("无法从代码中找到有效的版本字符串。", nameof(code));
             }
 
-            var versionString = $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}";
+            var major = int.Parse(match.Groups[1].Value);
+            var minor = int.Parse(match.Groups[2].Value);
+            var patch = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : 0; // 如果不存在 Patch，则使用默认值 0  
+
+            var versionString = $"{major}.{minor}.{patch}";
 
             if (match.Groups[4].Success)
             {
@@ -86,6 +93,7 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
             return Parse(versionString);
         }
+
 
         /// <summary>
         /// 替换版本号
