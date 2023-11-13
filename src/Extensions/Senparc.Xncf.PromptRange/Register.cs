@@ -35,7 +35,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.5.1";//必须填写版本号
+        public override string Version => "0.5.2";//必须填写版本号
 
         public override string MenuName => "提示词靶场";
 

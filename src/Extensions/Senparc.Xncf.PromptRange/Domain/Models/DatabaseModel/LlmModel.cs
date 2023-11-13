@@ -27,6 +27,12 @@ namespace Senparc.Xncf.PromptRange.Models
         public string Endpoint { get; private set; }
 
         /// <summary>
+        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        /// </summary>
+        [Required, MaxLength(20)]
+        public string ModelType { get; private set; }
+
+        /// <summary>
         /// OrganizationId（可选）
         /// </summary>
         [MaxLength(200)]
@@ -80,10 +86,11 @@ namespace Senparc.Xncf.PromptRange.Models
 
         private LlmModel() { }
 
-        public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
+        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
         {
             Name = name;
             Endpoint = endpoint;
+            ModelType = modelType;
             OrganizationId = organizationId;
             ApiKey = apiKey;
             ApiVersion = apiVersion;
@@ -93,6 +100,20 @@ namespace Senparc.Xncf.PromptRange.Models
             TextEmbeddingModelName = textEmbeddingModelName;
             OtherModelName = otherModelName;
         }
+
+        //public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
+        //{
+        //    Name = name;
+        //    Endpoint = endpoint;
+        //    OrganizationId = organizationId;
+        //    ApiKey = apiKey;
+        //    ApiVersion = apiVersion;
+        //    Note = note;
+        //    MaxToken = maxToken;
+        //    TextCompletionModelName = textCompletionModelName;
+        //    TextEmbeddingModelName = textEmbeddingModelName;
+        //    OtherModelName = otherModelName;
+        //}
 
         public LlmModel(LlmModelDto llmModelDto)
         {

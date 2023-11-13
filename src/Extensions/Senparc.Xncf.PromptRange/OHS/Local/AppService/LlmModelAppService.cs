@@ -36,13 +36,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Add(LlmModel_AddRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            StringAppResponse resp = await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var model = _llmModelService.Add(request);
 
                 await _llmModelService.SaveObjectAsync(model);
                 return "ok";
             });
+            return resp;
         }
 
         /// <summary>
@@ -129,7 +130,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<List<LlmModel_GetIdAndNameResponse>>, List<LlmModel_GetIdAndNameResponse>>(async (response, logger) =>
             {
-                return (await _llmModelService.GetFullListAsync(p => true, p => p.Id, Ncf.Core.Enums.OrderingType.Ascending)).Select(p => new LlmModel_GetIdAndNameResponse
+                return (await _llmModelService
+                .GetFullListAsync(p => true, p => p.Id, Ncf.Core.Enums.OrderingType.Ascending))
+                .Select(p => new LlmModel_GetIdAndNameResponse
                 {
                     Id = p.Id,
                     Name = p.Name

@@ -2,6 +2,7 @@
 using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
@@ -21,11 +22,14 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public string Content { get; private set; }
 
+        [Required]
         public int ModelId { get; private set; }
 
-        public int PromptGroupId { get; private set; }
+        //public int PromptGroupId { get; private set; }
 
         //public PromptGroup PromptGroup { get; private set; }
+
+        #region Model Config
 
         /// <summary>
         /// TopP
@@ -50,14 +54,16 @@ namespace Senparc.Xncf.PromptRange
         public float PresencePenalty { get; private set; }
 
         /// <summary>
-        /// 每个 Prompt 的结果数
-        /// </summary>
-        public int ResultsPerPrompt { get; private set; }
-
-        /// <summary>
         /// 停止序列（JSON 数组）
         /// </summary>
         public string StopSequences { get; private set; }
+        #endregion
+
+        /// <summary>
+        /// 每个 Prompt 的结果数
+        /// </summary>
+        public int NumsOfResults { get; private set; } = 0;
+
 
         /// <summary>
         /// 聊天系统 Prompt
@@ -75,8 +81,9 @@ namespace Senparc.Xncf.PromptRange
         public int EvaluationScore { get; private set; }
 
         /// <summary>
-        /// 版本号，格式为 yyyy.MM.dd.Version
+        /// 版本号，格式为 yyyy.MM.dd.Build
         /// </summary>
+        [Required]
         public string Version { get; private set; }
 
         /// <summary>
@@ -84,23 +91,23 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public DateTime LastRunTime { get; private set; }
 
+        [Required]
         public bool Show { get; private set; }
 
         private PromptItem() { }
 
-        public PromptItem(float presencePenalty, string name, string content, int modelId, int promptGroupId, float maxToken, float temperature, float topP, float frequencyPenalty, int resultsPerPrompt, string stopSequences, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
+        public PromptItem(string name, string content, int modelId, float topP, float temperature, float maxToken, float frequencyPenalty, float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
         {
-            PresencePenalty = presencePenalty;
             Name = name;
             Content = content;
             ModelId = modelId;
-            PromptGroupId = promptGroupId;
-            MaxToken = maxToken;
-            Temperature = temperature;
             TopP = topP;
+            Temperature = temperature;
+            MaxToken = maxToken;
             FrequencyPenalty = frequencyPenalty;
-            ResultsPerPrompt = resultsPerPrompt;
+            PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
+            NumsOfResults = numsOfResults;
             ChatSystemPrompt = chatSystemPrompt;
             TokenSelectionBiases = tokenSelectionBiases;
             EvaluationScore = evaluationScore;
@@ -115,7 +122,7 @@ namespace Senparc.Xncf.PromptRange
             Temperature = promptItemDto.Temperature;
             TopP = promptItemDto.TopP;
             FrequencyPenalty = promptItemDto.FrequencyPenalty;
-            ResultsPerPrompt = promptItemDto.ResultsPerPrompt;
+            NumsOfResults = promptItemDto.ResultsPerPrompt;
             StopSequences = promptItemDto.StopSequences;
             ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
             TokenSelectionBiases = promptItemDto.TokenSelectionBiases;
@@ -124,72 +131,83 @@ namespace Senparc.Xncf.PromptRange
             LastRunTime = promptItemDto.LastRunTime;
         }
 
-        /// <summary>
-        /// 获取版本信息
-        /// </summary>
-        /// <param name="version">如果留空则默认获取当前示例的 Version</param>
-        /// <returns></returns>
-        public VersionInfo GetVersionInfo(string version = null)
-        {
-            version ??= Version ?? "";
+        ///// <summary>
+        ///// 获取版本信息
+        ///// </summary>
+        ///// <param name="version">如果留空则默认获取当前示例的 Version</param>
+        ///// <returns></returns>
+        //public VersionInfo GetVersionInfo(string version = null)
+        //{
+        //    // TODO: 正则快还是split快
+        //    string regexPattern = @"(\d+)\.(\d+)\.(\d+)\.(\d+)";
+        //    Match match = Regex.Match(version, regexPattern);
+        //    if (match.Success)
+        //    {
+        //        int ConverToInt(string str) => int.Parse(str);
 
-            string regexPattern = @"(\d+)\.(\d+)\.(\d+)\.(\d+)";
-            Match match = Regex.Match(version, regexPattern);
-            if (match.Success)
-            {
-                int ConverToInt(string str) => int.Parse(str);
+        //        int major = ConverToInt(match.Groups[1].Value);
+        //        int minor = ConverToInt(match.Groups[2].Value);
+        //        int patch = ConverToInt(match.Groups[3].Value);
+        //        int build = ConverToInt(match.Groups[4].Value);
 
-                int major = ConverToInt(match.Groups[1].Value);
-                int minor = ConverToInt(match.Groups[2].Value);
-                int patch = ConverToInt(match.Groups[3].Value);
-                int build = ConverToInt(match.Groups[4].Value);
+        //        return new VersionInfo(major, minor, patch, build);
+        //    }
+        //    else
+        //    {
+        //        return new VersionInfo(0, 0, 0, 0);
+        //    }
+        //}
 
-                return new VersionInfo(major, minor, patch, build);
-            }
-            else
-            {
-                return new VersionInfo(0, 0, 0, 0);
-            }
-        }
+        ///// <summary>
+        ///// 生成新的版本号
+        ///// </summary>
+        ///// <param name="lastVersion">上一个版本，如果为 null，则使用当前实例的 Version</param>
+        ///// <returns></returns>
+        //public VersionInfo GenerateNewVersion(string lastVersion = null)
+        //{
+        //    var today = SystemTime.Now;
 
-        /// <summary>
-        /// 生成新的版本号
-        /// </summary>
-        /// <param name="lastVersion">上一个版本，如果为 null，则使用当前实例的 Version</param>
-        /// <returns></returns>
-        public VersionInfo GenerateNewVersion(string lastVersion = null)
-        {
-            lastVersion ??= Version ?? "";
+        //    if (string.IsNullOrWhiteSpace(lastVersion))
+        //    {
+        //        return new VersionInfo(today.Year, today.Month, today.Day, 1);
+        //    }
+        //    var lastVersionInfo = GetVersionInfo(lastVersion);
+        //    lastVersionInfo.Build++;
+        //    return lastVersionInfo;
 
-            var today = SystemTime.Now;
-            int major = today.Year;
-            int minor = today.Month;
-            int patch = today.Day;
+        //    //lastVersion ??= Version ?? "";
 
-            var lastVersionInfo = GetVersionInfo(lastVersion);
-            if (lastVersionInfo.Major != 0 &&
-                lastVersionInfo.Major == major &&
-                lastVersionInfo.Minor == minor &&
-                lastVersionInfo.Patch == patch)
-            {
-                //当天版本，Build 号加 1
-                lastVersionInfo.Build++;
-                return lastVersionInfo;
-            }
-            else
-            {
-                //返回当天第一个版本
-                var versionInfo = new VersionInfo(major, minor, patch, 1);
-                return versionInfo;
-            }
-        }
+        //    //var today = SystemTime.Now;
+        //    //int major = today.Year;
+        //    //int minor = today.Month;
+        //    //int patch = today.Day;
+
+        //    //var lastVersionInfo = GetVersionInfo(lastVersion);
+        //    //if (lastVersionInfo.Major != 0 &&
+        //    //    lastVersionInfo.Major == major &&
+        //    //    lastVersionInfo.Minor == minor &&
+        //    //    lastVersionInfo.Patch == patch)
+        //    //{
+        //    //    //当天版本，Build 号加 1
+        //    //    lastVersionInfo.Build++;
+        //    //    return lastVersionInfo;
+        //    //}
+        //    //else
+        //    //{
+        //    //    //返回当天第一个版本
+        //    //    var versionInfo = new VersionInfo(major, minor, patch, 1);
+        //    //    return versionInfo;
+        //    //}
+        //}
 
         /// <summary>
         /// 更新版本号
+        /// 
         /// </summary>
-        public void UpdateVersion()
+        public void UpdateVersion(string newVersion)
         {
-            Version = GenerateNewVersion(Version).ToString();
+            //todo: validate
+            this.Version = newVersion;
         }
 
         public PromptItem Switch(bool show)

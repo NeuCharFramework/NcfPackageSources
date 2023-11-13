@@ -293,6 +293,11 @@
             Endpoint（必须）
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.ModelType">
+            <summary>
+            模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.OrganizationId">
             <summary>
             OrganizationId（可选）
@@ -336,11 +341,6 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.Show">
             <summary>
             是否展示
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.PromptGroups">
-            <summary>
-            数据库中的 PromptGrpups 实体
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.PromptItems">
@@ -493,11 +493,6 @@
             用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
             </summary>
         </member>
-        <member name="T:Senparc.Xncf.PromptRange.PromptGroup">
-            <summary>
-            PromptGroup
-            </summary>
-        </member>
         <member name="T:Senparc.Xncf.PromptRange.PromptItem">
             <summary>
             PromptItem
@@ -528,14 +523,14 @@
             频率惩罚
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ResultsPerPrompt">
-            <summary>
-            每个 Prompt 的结果数
-            </summary>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.StopSequences">
             <summary>
             停止序列（JSON 数组）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.NumsOfResults">
+            <summary>
+            每个 Prompt 的结果数
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.ChatSystemPrompt">
@@ -555,7 +550,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Version">
             <summary>
-            版本号，格式为 yyyy.MM.dd.Version
+            版本号，格式为 yyyy.MM.dd.Build
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.LastRunTime">
@@ -634,6 +629,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Endpoint">
             <summary>
             Endpoint（必须）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ModelType">
+            <summary>
+            模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ApiKey">

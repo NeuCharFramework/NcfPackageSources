@@ -89,9 +89,10 @@ namespace Senparc.Xncf.PromptRange.Models
 
         private PromptResult() { }
 
-        public PromptResult(int promptGroupId, int llmModelId, string resultString, double costTime, int robotScore, int humanScore, string robotTestExceptedResult, bool isRobotTestExactlyEquat, TestType testType, int promptCostToken, int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId)
+        public PromptResult(//int promptGroupId,
+            int llmModelId, string resultString, double costTime, int robotScore, int humanScore, string robotTestExceptedResult, bool isRobotTestExactlyEquat, TestType testType, int promptCostToken, int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId)
         {
-            PromptGroupId = promptGroupId;
+            //PromptGroupId = promptGroupId;
             LlmModelId = llmModelId;
             ResultString = resultString;
             CostTime = costTime;

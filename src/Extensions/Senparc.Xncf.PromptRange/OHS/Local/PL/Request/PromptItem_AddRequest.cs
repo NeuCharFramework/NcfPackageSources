@@ -4,8 +4,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
-        public int PromptGroupId { get; set; }
+        //public int PromptGroupId { get; set; }
 
+        #region Model Config
         /// <summary>
         /// TopP
         /// </summary>
@@ -28,11 +29,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
 
         public float PresencePenalty { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StopSequences { get; set; }
+        #endregion
 
         public int ModelId { get; set; }
 
 
-        public string Content { get;  set; }
+        public string Content { get; set; }
+
+        public string Version { get; set; }
+
     }
 }

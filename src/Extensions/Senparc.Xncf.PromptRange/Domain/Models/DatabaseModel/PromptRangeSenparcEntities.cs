@@ -15,7 +15,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// <summary>
         /// 数据库中的 PromptGrpups 实体
         /// </summary>
-        public DbSet<PromptGroup> PromptGroups { get; set; }
+        //public DbSet<PromptGroup> PromptGroups { get; set; }
 
         /// <summary>
         /// 数据库中的 PromptItems 实体

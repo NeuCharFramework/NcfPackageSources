@@ -44,6 +44,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<PromptResultDto>, PromptResultDto>(async (response, logger) =>
             {
+                //validate request dto
                 var promptItem = await _promptItemService.AddPromptItemAsync(request);
 
                 #region AI 调用
@@ -71,8 +72,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
 
                 //准备运行
-                var userId = "JeffreySu";//区分用户
-                var modelName = "text-davinci-003";//默认使用模型
+                var userId = "Test";//区分用户
+                var modelName = llmModel.Name ?? "text-davinci-003";//默认使用模型
                 var iWantToRun =
                      handler.IWantTo()
                             .ConfigModel(ConfigModel.TextCompletion, userId, modelName, aiSetting)
@@ -91,7 +92,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 var promptCostToken = 0;
                 var resultCostToken = 0;
 
-                var promptResult = new PromptResult(request.PromptGroupId, request.ModelId, result.Output, SystemTime.DiffTotalMS(dt1), 0, 0, null, false, TestType.Text, promptCostToken, resultCostToken, promptCostToken + resultCostToken, promptItem.Version, promptItem.Id);
+                var promptResult = new PromptResult(
+                    request.ModelId, result.Output, SystemTime.DiffTotalMS(dt1), 0, 0, null, false, TestType.Text, 
+                    promptCostToken, resultCostToken, promptCostToken + resultCostToken,
+                    promptItem.Version, promptItem.Id);
 
                 await _promptResultService.SaveObjectAsync(promptResult);
 
