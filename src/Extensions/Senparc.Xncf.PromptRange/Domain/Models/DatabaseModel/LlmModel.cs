@@ -4,13 +4,14 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Models
 {
     /// <summary>
     /// LlmModel 数据库实体
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(LlmModel))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(LlmModel))] //必须添加前缀，防止全系统中发生冲突
     [Serializable]
     public class LlmModel : EntityBase<int>
     {
@@ -30,7 +31,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
         /// </summary>
         [Required, MaxLength(20)]
-        public string ModelType { get; private set; }
+        public Constants.ModelTypeEnum ModelType { get; private set; }
 
         /// <summary>
         /// OrganizationId（可选）
@@ -84,13 +85,17 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         public bool Show { get; private set; }
 
-        private LlmModel() { }
+        private LlmModel()
+        {
+        }
 
-        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
+        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
+            string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName,
+            string otherModelName)
         {
             Name = name;
             Endpoint = endpoint;
-            ModelType = modelType;
+            ModelType = Enum.Parse<Constants.ModelTypeEnum>(modelType);
             OrganizationId = organizationId;
             ApiKey = apiKey;
             ApiVersion = apiVersion;

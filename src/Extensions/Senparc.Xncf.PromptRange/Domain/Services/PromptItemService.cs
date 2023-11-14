@@ -25,36 +25,31 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (string.IsNullOrWhiteSpace(request.Version))
             {
                 //TODO: 从数据库中获取最新的版本号
-                var usedVersionCount = base.GetCount(
-                    where: p => p.Version.StartsWith(today.ToString("yy.MM.dd")),
-                    ""
-                );
-                // .GetFullList(
-                //     p => p.Version.StartsWith(today.ToString("yy.MM.dd")),
-                //     p => p.Version,
-                //     Ncf.Core.Enums.OrderingType.Ascending
-                // )
-                // .Select(p => p.Version)
-                // .Count();
-                // 使用新版号
+                var usedVersionList = base.GetFullList(
+                    p => p.Version.StartsWith(today.ToString("yyyy.MM.dd")),
+                    p => p.Id,
+                    Ncf.Core.Enums.OrderingType.Ascending
+                ).ToList();
+                var cnt = usedVersionList.Count(item => !item.Version.Contains("-"));
 
-                updatedVersion = today.ToString("yyyy.MM.dd." + (usedVersionCount + 1).ToString());
+
+                updatedVersion = today.ToString($"yyyy.MM.dd.{cnt + 1}");
             }
-            else // 已有版号，在之前基础上修改
+            else // 已有版号，在已有上修改
             {
-                var lastVersion = base
-                    .GetFullList(
-                        p => p.Version.StartsWith(today.ToString("yy.MM.dd")),
-                        p => p.Version,
-                        Ncf.Core.Enums.OrderingType.Ascending
-                    );
-                updatedVersion = request.Version + "-1";
+                var usedVersionList = base.GetFullList(
+                    p => p.Version.StartsWith(request.Version),
+                    p => p.Id,
+                    Ncf.Core.Enums.OrderingType.Ascending
+                ).ToList();
+                var cnt = usedVersionList.Count(item => !item.Version.Substring(request.Version.Length).Contains('-'));
+                updatedVersion = request.Version + (cnt + 1);
             }
 
             PromptItem promptItem = new(name, request.Content, request.ModelId,
                 request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty, request.PresencePenalty,
                 stopSequences: "",
-                0, "", "", 0, request.Version ?? "", DateTime.Now);
+                request.NumsOfResults, "", "", 0, updatedVersion, DateTime.Now);
 
 
             //Version = this.GenerateNewVersion(Version).ToString();

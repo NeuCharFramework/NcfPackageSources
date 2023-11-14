@@ -36,11 +36,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         #endregion
 
         public int ModelId { get; set; }
-
-
+        
         public string Content { get; set; }
 
         public string Version { get; set; }
+
+        public int NumsOfResults { get; set; } = 0;
 
     }
 }
