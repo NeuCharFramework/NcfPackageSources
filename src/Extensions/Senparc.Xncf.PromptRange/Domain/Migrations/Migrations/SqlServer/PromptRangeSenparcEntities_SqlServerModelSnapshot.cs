@@ -59,10 +59,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("MaxToken")
                         .HasColumnType("int");
 
-                    b.Property<string>("ModelType")
-                        .IsRequired()
+                    b.Property<int>("ModelType")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -254,6 +253,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasColumnType("real");
 
                     b.Property<string>("Version")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

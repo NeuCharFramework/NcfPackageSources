@@ -414,7 +414,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.PromptItemVersion">
             <summary>
-            PromptItemVersion
+            PromptItemVersion 
             </summary>
         </member>
         <member name="T:Senparc.Xncf.PromptRange.Models.TestType">
