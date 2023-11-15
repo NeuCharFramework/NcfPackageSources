@@ -60,8 +60,8 @@
 		<Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
 
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
 
