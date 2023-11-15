@@ -43,9 +43,6 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
@@ -61,10 +58,5 @@
     <Folder Include="Domain\DatabaseModel\Dto\" />
     <Folder Include="Domain\DatabaseModel\Mapping\" />
     <Folder Include="OHS\Local\AppService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="App_Data\Database\SenparcConfig.config">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>
