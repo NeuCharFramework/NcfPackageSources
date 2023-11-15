@@ -42,9 +42,6 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
@@ -55,13 +52,5 @@
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="OHS\Local\AppService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="App_Data\Database\SenparcConfig.config">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>

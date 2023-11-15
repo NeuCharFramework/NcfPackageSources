@@ -42,9 +42,6 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Compile Remove="OHS\**" />
     <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
@@ -64,14 +61,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ACL\Repository\" />
-    <Folder Include="Domain\Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="App_Data\Database\SenparcConfig.config">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>
