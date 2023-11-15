@@ -197,11 +197,6 @@
             最后一次运行时间
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptGroupId">
-            <summary>
-            PromptGroup 的 Id
-            </summary>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlmModelId">
             <summary>
             LlmModel 的 Id

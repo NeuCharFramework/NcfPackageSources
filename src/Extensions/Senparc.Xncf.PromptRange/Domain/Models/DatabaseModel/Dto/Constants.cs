@@ -14,12 +14,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
                 "2023-06-01-preview", "2023-07-01-preview", "2023-08-01-preview"
             };
 
-        public enum ModelTypeEnum
-        {
-            OpenAI ,
-            AzureOpenAI,
-            HuggingFace
-        }
+        // public enum ModelTypeEnum
+        // {
+        //     OpenAI ,
+        //     AzureOpenAI,
+        //     HuggingFace
+        // }
     }
 
     

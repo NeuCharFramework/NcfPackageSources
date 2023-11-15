@@ -5,11 +5,6 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
     public class PromptResultDto : DtoBase
     {
         /// <summary>
-        /// PromptGroup 的 Id
-        /// </summary>
-        public int PromptGroupId { get; set; }
-
-        /// <summary>
         /// LlmModel 的 Id
         /// </summary>
         public int LlmModelId { get; set; }

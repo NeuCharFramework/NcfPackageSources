@@ -25,10 +25,6 @@ namespace Senparc.Xncf.PromptRange
         [Required]
         public int ModelId { get; private set; }
 
-        //public int PromptGroupId { get; private set; }
-
-        //public PromptGroup PromptGroup { get; private set; }
-
         #region Model Config
 
         /// <summary>
