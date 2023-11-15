@@ -46,10 +46,7 @@
   <ItemGroup>
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ACL\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	</ItemGroup>
 </Project>
