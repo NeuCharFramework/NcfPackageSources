@@ -64,7 +64,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(50)]
-        [Description("版本号||如：1.0、2.0-beta1")]
+        [Description("版本号||如：1.0.0、2.0.100-beta1")]
         public string Version { get; set; }
 
         [Required]

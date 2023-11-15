@@ -48,7 +48,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
-    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />
+    <!-- 为解决 VS 2019 v16.8 的一个bug，编译遇到错误： error : rzc discover exited with code -2147450750，则需要添加下方引用 -->
+    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>
 </Project>
