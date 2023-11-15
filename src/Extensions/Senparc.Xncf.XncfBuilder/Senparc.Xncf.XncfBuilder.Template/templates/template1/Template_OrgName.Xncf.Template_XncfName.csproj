@@ -26,7 +26,7 @@
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.4.2" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup Condition=" '$(Web)' == 'true' or '$(Sample)' == 'true'">

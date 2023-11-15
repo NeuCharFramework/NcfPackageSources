@@ -32,10 +32,10 @@
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <!--<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.4.2" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' and '$(Configuration)' == 'Debug' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' and '$(Configuration)' == 'Debug' ">
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>

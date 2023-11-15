@@ -307,7 +307,7 @@ namespace Senparc.Ncf.XncfBase
             return sb.ToString();
         }
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         /// <summary>
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
