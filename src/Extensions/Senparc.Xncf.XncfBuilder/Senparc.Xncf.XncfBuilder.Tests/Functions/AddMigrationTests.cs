@@ -4,6 +4,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,13 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
 
                     DbContextName = "MyAppSenparcEntities",
                     MigrationName = "Add_Counter",
-                    ProjectPath = @"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp"
+                    ProjectPath = new SelectionList(SelectionType.DropDownList,
+                    new List<SelectionItem>() {
+                        new SelectionItem() {
+                         Text=@"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp",
+                         Value=@"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp",
+                         DefaultSelected=true
+                        }})
                 });
 
                 Console.WriteLine(result.ToJson(true).Replace("\\r", "\r").Replace("\\n", "\n"));

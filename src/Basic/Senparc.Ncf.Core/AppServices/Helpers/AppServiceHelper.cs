@@ -95,7 +95,7 @@ namespace Senparc.Ncf.Core.AppServices
                         var tempId = response.RequestTempId;
                         var cache = appService.ServiceProvider.GetObjectCacheStrategyInstance();
                         //为了加快响应速度，不等待
-                        cache.SetAsync(tempId, logger.GetLogs(), TimeSpan.FromMinutes(SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes));
+                        _ = cache.SetAsync(tempId, logger.GetLogs(), TimeSpan.FromMinutes(SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes));
                     }
                 }
                 finally { }
