@@ -30,6 +30,7 @@ using Microsoft.Extensions.Hosting;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.MultiTenant;
 using Microsoft.Extensions.Options;
+using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -157,7 +158,7 @@ namespace Senparc.Ncf.XncfBase
                             }
 
                             //配置 ServiceBase
-                            if (t.IsSubclassOf(typeof(ServiceBase<>)) 
+                            if (t.IsSubclassOf(typeof(ServiceBase<>))
                                 //|| t.IsInstanceOfType(typeof(IServiceDataBase))
                                 )
                             {
@@ -300,7 +301,15 @@ namespace Senparc.Ncf.XncfBase
             //XNCF 模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
-                xncfRegister.AddXncfModule(services, configuration, env);
+                try
+                {
+                    xncfRegister.AddXncfModule(services, configuration, env);
+                }
+                catch (Exception ex)
+                {
+                    _ = new NcfExceptionBase($"{xncfRegister.Name} 模块 xncfRegister.AddXncfModule() 出错 ：{ex.Message}", ex);
+                    
+                }
             }
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
 

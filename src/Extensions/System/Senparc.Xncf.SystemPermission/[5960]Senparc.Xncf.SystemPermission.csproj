@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.5.0-beta11</Version>
+    <Version>0.5.0-beta11.1</Version>
     <AssemblyName>Senparc.Xncf.SystemPermission</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemPermission</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -42,12 +42,16 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Domain\Migrations\Oracle\**" />
     <Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Compile Remove="OHS\**" />
+    <Content Remove="Domain\Migrations\Oracle\**" />
     <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Content Remove="OHS\**" />
+    <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
     <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <EmbeddedResource Remove="OHS\**" />
+    <None Remove="Domain\Migrations\Oracle\**" />
     <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <None Remove="OHS\**" />
   </ItemGroup>
