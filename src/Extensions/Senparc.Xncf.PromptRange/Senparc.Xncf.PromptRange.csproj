@@ -72,7 +72,7 @@
 
 	<ItemGroup>
 
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.6.0.1024-beta1" />
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.6.1-beta7" />
 	</ItemGroup>
 
 	<ItemGroup>
