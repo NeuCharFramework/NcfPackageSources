@@ -6,6 +6,7 @@ using Senparc.Ncf.Log;
 using System.IO;
 using Senparc.Ncf.Core.Utility;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -93,7 +94,8 @@ namespace Senparc.Ncf.Core.Cache
                     break;
                 default:
                     code = TypeCode.Object;
-                    keyCode = MD5.GetMD5Code(String.Concat(this.SerializeObject(key)), "");//将对象序列化，然后拼接成字符串并转成MD5，确保唯一性。性能上可能会有一些损失，所以尽量不要太复杂的类型做Key
+                    string keyStr = System.Text.Json.JsonSerializer.Serialize(key);
+                    keyCode = MD5.GetMD5Code(keyStr, "");//将对象序列化，然后拼接成字符串并转成MD5，确保唯一性。性能上可能会有一些损失，所以尽量不要太复杂的类型做Key
                     break;
             }
 
@@ -111,15 +113,16 @@ namespace Senparc.Ncf.Core.Cache
             return finalKey;
         }
 
-        protected virtual ArraySegment<byte> SerializeObject(object value)
-        {
-            using (var ms = new MemoryStream())
-            {
-                new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(ms, value);
+        //protected virtual ArraySegment<byte> SerializeObject(object value)
+        //{
+        //    using (var ms = new MemoryStream())
+        //    {
+        //        //.NET 8.0 中已标记为过时且无法编译
+        //        new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(ms, value);
 
-                return new ArraySegment<byte>(ms.GetBuffer(), 0, (int)ms.Length);
-            }
-        }
+        //        return new ArraySegment<byte>(ms.GetBuffer(), 0, (int)ms.Length);
+        //    }
+        //}
 
         ///// <summary>
         ///// 获取指定Key下所有的子Key的Value

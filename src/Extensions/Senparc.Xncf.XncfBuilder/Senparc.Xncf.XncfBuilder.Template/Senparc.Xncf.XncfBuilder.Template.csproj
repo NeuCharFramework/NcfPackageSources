@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.4.7</PackageVersion>
+    <PackageVersion>0.5.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -33,6 +33,7 @@
 			v0.4.5 同步更新参数重命名：RootDictionaryPath -&gt; RootDirectoryPath
 			v0.4.6 更新项目文件
 			v0.4.7 更新基础库引用
+			v0.5.0 完善版本号，按照语义化版本规范（semver）进行命名
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

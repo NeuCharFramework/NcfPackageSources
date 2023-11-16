@@ -16,5 +16,10 @@
         /// ApiKey
         /// </summary>
         public string ApiKey { get; set; }
+
+        /// <summary>
+        /// OrganizationId
+        /// </summary>
+        public string OrganizationId { get; set; }
     }
 }

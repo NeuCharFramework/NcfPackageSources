@@ -1,4 +1,11 @@
-﻿using Senparc.Ncf.Core.AppServices;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Ncf.XncfBase.VersionManager;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -20,7 +27,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         private string GetMigrationDir(DatabaseMigrations_MigrationRequest request, string dbType)
         {
-            return Path.Combine(request.ProjectPath, "Domain", "Migrations", $"Migrations.{dbType}");
+            string projectPath = request.GetProjectPath(request);
+
+            return Path.Combine(projectPath, "Domain", "Migrations", $"Migrations.{dbType}");
         }
 
         public DatabaseMigrationsAppService(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -47,15 +56,29 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //commandTexts.Add($"dotnet add {request.DatabasePlantPath} reference {request.ProjectPath}");
 
                 //进入项目目录
-                commandTexts.Add(@$"cd {request.ProjectPath}");
+                var projectPath = request.GetProjectPath(request);
+                commandTexts.Add(@$"cd {projectPath}");
 
                 //执行迁移
                 foreach (var dbType in request.DatabaseTypes.SelectedValues)
                 {
                     string migrationDir = GetMigrationDir(request, dbType);
                     var outputVerbose = request.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
-                    var dbTypeSuffix = $"_{dbType}";
-                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {request.DbContextName}{dbTypeSuffix} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
+
+                    //数据库上下文实体名称
+                    var dbContextName = request.DbContextName;
+                    if (dbContextName == "[Default]")
+                    {
+                        //会自动拼接数据类型
+                        dbContextName = FunctionHelper.GetSenparcEntitiesFilePath(projectPath, dbType);
+                    }
+                    else
+                    {
+                        var dbTypeSuffix = $"_{dbType}";
+                        dbContextName += dbTypeSuffix;
+                    }
+
+                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
@@ -110,6 +133,75 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 if (strOutput.Contains("Build FAILED", StringComparison.InvariantCultureIgnoreCase))
                 {
                     response.Data += "重要提示：可能出现错误，请检查日志！";
+                }
+                else
+                {
+                    //更新版本号
+                    try
+                    {
+                        logger.Append("");
+                        logger.Append("==== 版本号更新 ====");
+
+                        var updateVesionType = request.UpdateVersion.SelectedValues.FirstOrDefault();
+                        if (updateVesionType != "0")
+                        {
+                            var registerFile = Path.Combine(projectPath, "Register.cs");
+                            if (File.Exists(registerFile))
+                            {
+                                logger.Append("Register.cs 文件存在，开始更新版本号");
+
+                                //获取 Register.cs 文件内容
+                                var fileContent = File.ReadAllText(registerFile);
+                                //获取版本号
+                                var result = VersionHelper.ParseFromCode(fileContent);
+                                var oldVersion = result.VersionInfo;
+                                logger.Append($"当前版本号：{oldVersion.ToString()}");
+
+                                var newVersion = new VersionInfo();
+                                switch (updateVesionType)
+                                {
+                                    case "1":
+                                        newVersion = oldVersion with { Major = oldVersion.Major + 1 };
+                                        break;
+                                    case "2":
+                                        newVersion = oldVersion with { Minor = oldVersion.Minor + 1 };
+                                        break;
+                                    case "3":
+                                        newVersion = oldVersion with { Patch = oldVersion.Patch + 1 };
+                                        break;
+                                    default:
+                                        throw new NcfExceptionBase("无法识别的版本更新类型");
+                                }
+
+
+                                //更新代码
+                                var newCode = VersionHelper.ReplaceVersionInCode(fileContent, result.RawVersionString, newVersion);
+                                //保存代码
+                                using (var fw = new FileStream(registerFile, FileMode.Create))
+                                {
+                                    using (var sw = new StreamWriter(fw))
+                                    {
+                                        await sw.WriteLineAsync(newCode);
+                                        await sw.FlushAsync();
+                                    }
+                                }
+                                logger.Append($"已替换为新版本号：{newVersion.ToString()}");
+                            }
+                            else
+                            {
+                                logger.Append("Register.cs 文件不存在，跳过");
+                            }
+                        }
+                        else
+                        {
+                            logger.Append("不要求自动更新版本号，跳过");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Append("更新版本出错：" + ex.Message);
+                        new NcfExceptionBase(ex.Message, ex);
+                    }
                 }
 
                 return null;

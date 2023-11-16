@@ -62,6 +62,11 @@
 
     <el-dialog :title="app.dialogFormTitle" :visible.sync="app.dialogFormVisible" center @@close="closeDialog">
         <el-form :model="newModelForm" :rules="rules" ref="newDialogModelForm">
+            <el-form-item label="模型类型" prop="modelType" label-width="120px">
+                <el-select v-model="app.newModelForm.modelType" placeholder="请选择模型类型">
+                    <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="模型名称" prop="modelName" label-width="120px">
                 <el-input  v-model="app.newModelForm.modelName" autocomplete="off" placeholder="请输入模型名称"></el-input>
             </el-form-item>
