@@ -4,10 +4,39 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
     public class PromptResultDto : DtoBase
     {
+        #region LlmModel
+
         /// <summary>
         /// LlmModel 的 Id
         /// </summary>
         public int LlmModelId { get; set; }
+
+        /// <summary>
+        /// LlmModel 类型的 LlmModel
+        /// </summary>
+        public LlmModel LlmModel { get; set; }
+
+        #endregion
+
+        #region Prompt Item
+
+        /// <summary>
+        /// PromptItem类型的PromptItem
+        /// </summary>
+        public string PromptItemId { get; set; }
+
+        /// <summary>
+        /// PromptItem
+        /// </summary>
+        public PromptItem PromptItem { get; set; }
+
+        /// <summary>
+        /// string类型的PromptItemVersion
+        /// </summary>
+        public string PromptItemVersion { get; set; }
+
+        #endregion
+
 
         /// <summary>
         /// 结果字符串
@@ -58,26 +87,5 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// 总共花费的 Token 数量
         /// </summary>
         public int TotalCostToken { get; set; }
-
-        /// <summary>
-        /// LlmModel 类型的 LlmModel
-        /// </summary>
-        public LlmModel LlmModel { get; set; }
-
-        /// <summary>
-        /// PromptGroup类型的PromptGroup
-        /// </summary>
-        //public PromptGroup PromptGroup { get; set; }
-
-        /// <summary>
-        /// PromptItem类型的PromptItem
-        /// </summary>
-        //public PromptItem PromptItem { get; set; }
-
-        /// <summary>
-        /// string类型的PromptItemVersion
-        /// </summary>
-        public string PromptItemVersion { get; set; }
-
     }
 }

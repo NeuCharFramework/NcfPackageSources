@@ -51,145 +51,33 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<PromptResultDto>> Add(PromptItem_AddRequest request)
+        public async Task<AppResponseBase<PromptItemDto>> Add(PromptItem_AddRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptResultDto>, PromptResultDto>(
+            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
                 async (response, logger) =>
                 {
-                    //validate request dto
+                    //todo validate request dto
+
+                    // save promptItem
                     var promptItem = await _promptItemService.AddPromptItemAsync(request);
 
-                    #region AI 调用
+                    // 是否立即生成结果，暂时不添加这个开关
 
-                    var llmModel = await _llmModelService.GetObjectAsync(z => z.Id == request.ModelId);
-                    if (llmModel == null)
+                    // 如果立即生成，就根据numsOfResults立即生成
+                    // var promptResultList = new List<PromptResultDto>();
+                    for (int i = 0; i < request.NumsOfResults; i++)
                     {
-                        throw new NcfExceptionBase($"未找到模型{request.ModelId}");
+                        // 分别生成结果
+                        var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
+                        // var promptResultDto = _promptResultService.Mapper.Map<PromptResultDto>(promptResult);
+                        // promptResultList.Add(promptResultDto);
                     }
 
-                    var userId = "Test";
-                    var modelName = LlmModelHelper.GetAzureModelName(llmModel.Name);
-                    var aiSettings = this.BuildSenparcAiSetting(llmModel);
-                    //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-                    var handler = new SemanticAiHandler(new AI.Kernel.Helpers.SemanticKernelHelper(aiSettings));
-
-                    //定义 AI 接口调用参数和 Token 限制等
-                    var promptParameter = new PromptConfigParameter()
-                    {
-                        MaxTokens = request.MaxToken > 0 ? request.MaxToken : 2000,
-                        Temperature = request.Temperature,
-                        TopP = request.TopP,
-                        FrequencyPenalty = request.FrequencyPenalty,
-                        PresencePenalty = request.PresencePenalty
-                    };
-
-                    var functionPrompt = @"请根据提示输出对应内容：\n{{input}}";
-
-                    // var kernelBuilder = helper.ConfigTextCompletion(userId, modelName, aiSettings);
-                    // kernelBuilder.WithAzureTextCompletionService(llmModel.Name,llmModel.Endpoint,llmModel.ApiKey);
-                    var iWantToRun = handler.IWantTo()
-                        .ConfigModel(ConfigModel.TextCompletion, userId, modelName, aiSettings)
-                        .BuildKernel()
-                        .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter)
-                        .iWantToRun;
-
-
-                    // //todo which function to use? completion or chat?
-                    // var func = "chat/completions";
-                    // // var func = "completions";
-                    //
-                    //
-                    // // construct the target url
-                    // // 枚举Constants.ModelTypeEnum, 生成对应的url
-                    // string aiUrl;
-                    // if (Enum.TryParse(llmModel.ModelType, out AiPlatform aiPlatform))
-                    // {
-                    //   switch (aiPlatform)
-                    //   {
-                    //     case AiPlatform.AzureOpenAI:
-                    //       //todo: validate the parameters
-                    //       aiUrl = $"{llmModel.Endpoint}/{modelName}/{func}?api-version={llmModel.ApiVersion}";
-                    //       break;
-                    //     case AiPlatform.HuggingFace:
-                    //       aiUrl = $"{llmModel.Endpoint}/{func}?api-version={llmModel.ApiVersion}";
-                    //       break;
-                    //     case AiPlatform.OpenAI:
-                    //       aiUrl = $"https://api.openai.com/v1/{func}";
-                    //       break;
-                    //     default: //暂时不支持其他的
-                    //       aiUrl = "";
-                    //       logger.Append("未知的模型类型");
-                    //       break;
-                    //   }
-                    // }
-                    // else
-                    // {
-                    //   aiUrl = "";
-                    //   logger.Append("未知的模型类型");
-                    // }
-
-                    var context = iWantToRun.CreateNewContext();
-                    context.context.Variables["input"] = request.Content;
-
-                    var aiRequest = iWantToRun.CreateRequest(context.context.Variables, true);
-                    var result = await iWantToRun.RunAsync(aiRequest);
-
-                    var dt1 = SystemTime.Now;
-
-                    var promptCostToken = 0;
-                    var resultCostToken = 0;
-
-                    var promptResult = new PromptResult(
-                        request.ModelId, result.Output, SystemTime.DiffTotalMS(dt1), 
-                        0, 0, null, false, TestType.Text,
-                        promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-                        promptItem.Version, promptItem.Id);
-
-                    await _promptResultService.SaveObjectAsync(promptResult);
-
-                    #endregion
-
-                    return _promptResultService.Mapper.Map<PromptResultDto>(promptResult);
+                    var dto = _promptItemService.Mapper.Map<PromptItemDto>(promptItem);
+                    return dto;
                 });
         }
 
-        private SenparcAiSetting BuildSenparcAiSetting(LlmModel llmModel)
-        {
-            var aiSettings = new SenparcAiSetting();
-
-            if (!Enum.TryParse(llmModel.ModelType, out AiPlatform aiPlatform))
-                throw new Exception("无法转换为AiPlatform");
-            aiSettings.AiPlatform = aiPlatform;
-            switch (aiPlatform)
-            {
-                case AiPlatform.AzureOpenAI:
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = llmModel.ApiKey,
-                        AzureOpenAIApiVersion = llmModel.ApiVersion,
-                        AzureEndpoint = llmModel.Endpoint
-                    };
-                    break;
-                case AiPlatform.HuggingFace:
-                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
-                    {
-                        Endpoint = llmModel.Endpoint
-                    };
-                    break;
-                case AiPlatform.OpenAI:
-                    aiSettings.OpenAIKeys = new OpenAIKeys()
-                    {
-                        ApiKey = llmModel.ApiKey,
-                        OrganizationId = llmModel.OrganizationId
-                    };
-                    break;
-                default:
-                    break;
-            }
-
-
-            return aiSettings;
-        }
 
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName()
@@ -230,20 +118,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> Scoring(PromptItem_ScoringRequest req)
-        {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
-            {
-                var result = await _promptResultService.GetObjectAsync(p => p.PromptItemId == req.PromptItemId);
-
-                result.Scoring(req.HumanScore);
-
-                await _promptResultService.SaveObjectAsync(result);
-
-                return "ok";
-            });
-        }
 
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetResponse>>> GetVersionInfoList()

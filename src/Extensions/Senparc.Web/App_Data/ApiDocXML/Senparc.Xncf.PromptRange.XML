@@ -4,6 +4,16 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
+            <summary>
+            传入promptItem，生成结果
+            暂时只能在PromptItemAppService中调用
+            </summary>
+            <param name="promptItem"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.ISKFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
@@ -50,21 +60,6 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.MaxToken">
             <summary>
             MaxToken（可选）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.TextCompletionModelName">
-            <summary>
-            TextCompletionModelName（可选）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.TextEmbeddingModelName">
-            <summary>
-            TextEmbeddingModelName（可选）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.OtherModelName">
-            <summary>
-            OtherModelName（可选）
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Name">
@@ -202,6 +197,26 @@
             LlmModel 的 Id
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlmModel">
+            <summary>
+            LlmModel 类型的 LlmModel
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItemId">
+            <summary>
+            PromptItem类型的PromptItem
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItem">
+            <summary>
+            PromptItem
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItemVersion">
+            <summary>
+            string类型的PromptItemVersion
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.ResultString">
             <summary>
             结果字符串
@@ -252,16 +267,6 @@
             总共花费的 Token 数量
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlmModel">
-            <summary>
-            LlmModel 类型的 LlmModel
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItemVersion">
-            <summary>
-            string类型的PromptItemVersion
-            </summary>
-        </member>
         <member name="T:Senparc.Xncf.PromptRange.Models.LlmModel">
             <summary>
             LlmModel 数据库实体
@@ -305,21 +310,6 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.MaxToken">
             <summary>
             MaxToken（可选）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.TextCompletionModelName">
-            <summary>
-            TextCompletionModelName（可选）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.TextEmbeddingModelName">
-            <summary>
-            TextEmbeddingModelName（可选）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.OtherModelName">
-            <summary>
-            OtherModelName（可选）
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.LlmModel.Show">
@@ -374,7 +364,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.RobotTestExceptedResult">
             <summary>
-            RobotTestExceptedResult
+            RobotTestExceptedResult 自动打分期望值
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.IsRobotTestExactlyEquat">

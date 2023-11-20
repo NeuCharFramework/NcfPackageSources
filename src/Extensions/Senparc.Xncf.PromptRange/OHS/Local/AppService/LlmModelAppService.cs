@@ -97,7 +97,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="ids"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> BatchDelete(List<int> ids)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>

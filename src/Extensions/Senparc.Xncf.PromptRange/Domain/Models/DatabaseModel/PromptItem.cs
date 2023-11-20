@@ -40,7 +40,7 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 最大 Token 数
         /// </summary>
-        public float MaxToken { get; private set; }
+        public int MaxToken { get; private set; }
 
         /// <summary>
         /// 频率惩罚
@@ -92,7 +92,7 @@ namespace Senparc.Xncf.PromptRange
 
         private PromptItem() { }
 
-        public PromptItem(string name, string content, int modelId, float topP, float temperature, float maxToken, float frequencyPenalty, float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
+        public PromptItem(string name, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
         {
             Name = name;
             Content = content;

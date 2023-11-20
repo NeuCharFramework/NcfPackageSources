@@ -37,11 +37,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
             else // 已有版号，在已有上修改
             {
-                var usedVersionList = base.GetFullList(
+                var usedVersionList = (await base.GetFullListAsync(
                     p => p.Version.StartsWith(request.Version),
                     p => p.Id,
                     Ncf.Core.Enums.OrderingType.Ascending
-                ).ToList();
+                )).ToList();
                 var cnt = usedVersionList.Count(item => !item.Version.Substring(request.Version.Length).Contains('-'));
                 updatedVersion = request.Version + (cnt + 1);
             }
