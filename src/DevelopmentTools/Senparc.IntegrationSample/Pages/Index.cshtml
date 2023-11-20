@@ -1,4 +1,5 @@
 ﻿@page
+@using Senparc.Ncf.Core.Models
 @model IndexModel
 @{
     ViewData["Title"] = "测试页";
@@ -9,5 +10,38 @@
     <p>
         注意：此项目是 NCF 基础包的集成测试项目，仅验证编译是否能通过，无参考意义，并非 NCF 模板项目！
         <a href="https://github.com/NeuCharFramework/NCF/">点击这里</a> 查看可直接安装使用的 NCF 模板项目！
+    </p>
+    <p>
+        <h3>XNCF 检查</h3>
+        <table>
+            <thead> <tr><th>名称</th><th>Uid</th><th>支持</th> </tr></thead>
+            <tbody>
+                @foreach (var item in Model.XncfRegisterList)
+                {
+                    <tr>
+                        <td>@item.Name (v@(item.Version))</td>
+                        <td>@item.Uid</td>
+                        <td>
+                            <p>数据库支持：@(item is IXncfDatabase)</p>
+                            <p>
+                                线程支持：
+                                @if (item.RegisteredThreadInfo.Count() == 0)
+                                {
+                                    <text>无</text>
+                                }
+                                else
+                                {
+                                    foreach (var thread in item.RegisteredThreadInfo)
+                                    {
+                                        <text>@thread.Key.Name / @thread.Value.ThreadState</text>
+                                        <br />
+                                    }
+                                }
+                            </p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </p>
 </div>

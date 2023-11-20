@@ -1,36 +1,31 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.CO2NET.Cache;
-using Senparc.CO2NET.RegisterServices;
-using Senparc.CO2NET.Trace;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.Models.DataBaseModel;
-using Senparc.Ncf.Service;
-using Senparc.Ncf.XncfBase.Threads;
-using Senparc.Ncf.XncfBase.Attributes;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Senparc.Ncf.Database;
-using Senparc.Ncf.XncfBase.Database;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Senparc.Ncf.Core.AppServices;
-using Senparc.Ncf.XncfBase.FunctionRenders;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Senparc.Ncf.Core.Config;
-using Senparc.Ncf.Core.MultiTenant;
 using Microsoft.Extensions.Options;
+using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.MultiTenant;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase.Attributes;
+using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Threads;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -308,7 +303,7 @@ namespace Senparc.Ncf.XncfBase
                 catch (Exception ex)
                 {
                     _ = new NcfExceptionBase($"{xncfRegister.Name} 模块 xncfRegister.AddXncfModule() 出错 ：{ex.Message}", ex);
-                    
+
                 }
             }
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
