@@ -21,22 +21,24 @@
                 @foreach (var item in Model.XncfRegisterList)
                 {
                     <tr>
-                        <td>@item.Name
-                            <br>（@item.Uid）</td>
+                        <td>
+                            @item.Name
+                            <br>（@item.Uid）
+                        </td>
                         <td>v@(item.Version)</td>
                         <td>
-                            <p>
-                                @if (item is IXncfDatabase db)
-                                {
-                                    var multipleDatabasePool = MultipleDatabasePool.Instance;
-                                    var dbType = multipleDatabasePool.GetXncfDbContextType(db.GetType());
-                                    <test>@dbType.Name</test>
-                                }
-                                else
-                                {
-                                    <test>不支持</test>
-                                }
-                            </p>
+                            @if (item is IXncfDatabase db)
+                            {
+                                @* var multipleDatabasePool = MultipleDatabasePool.Instance;
+                        var dbType = multipleDatabasePool.GetXncfDbContextType(db.GetType()); *@
+                                var dbType = db.TryGetXncfDatabaseDbContextType;
+                                var parentType = dbType.BaseType;
+                                <span title="当前使用数据库：@dbType.Name">@parentType.Name</span>
+                            }
+                            else
+                            {
+                                <test>不支持</test>
+                            }
                         </td>
                         <td>
                             <p>
@@ -57,10 +59,11 @@
                         <td>
                             @{
                                 var orderAttr = item.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute;
-                                if (orderAttr ==null)
+                                if (orderAttr == null)
                                 {
                                     <text>默认</text>
-                                }else
+                                }
+                                else
                                 {
                                     <text>@orderAttr.Order</text>
                                 }
