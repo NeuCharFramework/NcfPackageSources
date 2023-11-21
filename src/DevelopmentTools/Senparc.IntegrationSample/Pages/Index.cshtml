@@ -1,5 +1,6 @@
 ﻿@page
 @using Senparc.Ncf.Core.Models
+@using Senparc.Ncf.XncfBase
 @model IndexModel
 @{
     ViewData["Title"] = "测试页";
@@ -14,7 +15,7 @@
     <p>
         <h3>XNCF 检查</h3>
         <table>
-            <thead> <tr><th>名称（Uid）</th><th>版本</th><th>数据库支持</th><th>线程支持</th> </tr></thead>
+            <thead> <tr><th>名称（Uid）</th><th>版本</th><th>数据库支持</th><th>线程支持</th><th>注册优先级</th></tr></thead>
             <tbody>
                 @foreach (var item in Model.XncfRegisterList)
                 {
@@ -52,6 +53,18 @@
                                     }
                                 }
                             </p>
+                        </td>
+                        <td>
+                            @{
+                                var orderAttr = item.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute;
+                                if (orderAttr ==null)
+                                {
+                                    <text>默认</text>
+                                }else
+                                {
+                                    <text>@orderAttr.Order</text>
+                                }
+                            }
                         </td>
                     </tr>
                 }
