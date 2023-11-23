@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
@@ -23,6 +22,7 @@ using Senparc.CO2NET;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 using AutoMapper;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -33,9 +33,9 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Name => "Senparc.Xncf.PromptRange";
 
-        public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18"; //必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.5.2";//必须填写版本号
+        public override string Version => "0.5.2"; //必须填写版本号
 
         public override string MenuName => "提示词靶场";
 
@@ -43,7 +43,8 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Description => "你的提示词（Prompt）训练场";
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider,
+            InstallOrUpdate installOrUpdate)
         {
             //安装或升级版本时更新数据库
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -53,9 +54,11 @@ namespace Senparc.Xncf.PromptRange
             {
                 case InstallOrUpdate.Install:
                     //新安装
+
                     #region 初始化数据库数据
 
                     #endregion
+
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -70,7 +73,8 @@ namespace Senparc.Xncf.PromptRange
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
-            PromptRangeSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as PromptRangeSenparcEntities;
+            PromptRangeSenparcEntities mySenparcEntities =
+                serviceProvider.GetService(mySenparcEntitiesType) as PromptRangeSenparcEntities;
 
             //指定需要删除的数据实体
 
@@ -79,8 +83,10 @@ namespace Senparc.Xncf.PromptRange
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             #endregion
+
             await unsinstallFunc().ConfigureAwait(false);
         }
+
         #endregion
 
         private static SenparcAiSetting SenparcAiSetting { get; set; }
@@ -95,7 +101,8 @@ namespace Senparc.Xncf.PromptRange
             return base.UseXncfModule(app, registerService);
         }
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration,
+            IHostEnvironment env)
         {
             //services.AddScoped<Color>();
             //services.AddScoped<ColorDto>();
@@ -116,6 +123,7 @@ namespace Senparc.Xncf.PromptRange
                 z.CreateMap<PromptItemDto, PromptItem>();
                 z.CreateMap<PromptResult, PromptResultDto>();
                 z.CreateMap<PromptResultDto, PromptResult>();
+                z.CreateMap<PromptItem, PromptItem_AddResponse>();
 
                 //TODO:morek
             });

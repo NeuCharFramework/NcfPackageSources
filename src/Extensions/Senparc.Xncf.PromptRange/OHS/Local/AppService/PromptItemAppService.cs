@@ -28,6 +28,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
@@ -51,30 +52,33 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<PromptItemDto>> Add(PromptItem_AddRequest request)
+        public async Task<AppResponseBase<PromptItem_AddResponse>> Add(PromptItem_AddRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
                     //todo validate request dto
 
                     // save promptItem
                     var promptItem = await _promptItemService.AddPromptItemAsync(request);
+                    var respDto = new PromptItem_AddResponse(promptItem.Content, DateTime.Now, promptItem.Version,
+                        promptItem.ModelId, promptItem.MaxToken, promptItem.Temperature, promptItem.TopP,
+                        promptItem.FrequencyPenalty, promptItem.StopSequences);
+
 
                     // 是否立即生成结果，暂时不添加这个开关
-
-                    // 如果立即生成，就根据numsOfResults立即生成
-                    // var promptResultList = new List<PromptResultDto>();
-                    for (int i = 0; i < request.NumsOfResults; i++)
+                    if (true)
                     {
-                        // 分别生成结果
-                        var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        // var promptResultDto = _promptResultService.Mapper.Map<PromptResultDto>(promptResult);
-                        // promptResultList.Add(promptResultDto);
+                        // 如果立即生成，就根据numsOfResults立即生成
+                        for (int i = 0; i < request.NumsOfResults; i++)
+                        {
+                            // 分别生成结果
+                            var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
+                            respDto.PromptResultList.Add(promptResult);
+                        }
                     }
 
-                    var dto = _promptItemService.Mapper.Map<PromptItemDto>(promptItem);
-                    return dto;
+                    return respDto;
                 });
         }
 
@@ -87,11 +91,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
                 {
                     return (await _promptItemService.GetFullListAsync(p => true, p => p.Id,
-                        Ncf.Core.Enums.OrderingType.Ascending)).Select(p => new PromptItem_GetIdAndNameResponse
-                    {
-                        Id = p.Id,
-                        Name = p.Name
-                    }).ToList();
+                            Ncf.Core.Enums.OrderingType.Ascending))
+                        .Select(p => new PromptItem_GetIdAndNameResponse
+                        {
+                            Id = p.Id,
+                            Name = p.Name
+                        }).ToList();
                 });
         }
 

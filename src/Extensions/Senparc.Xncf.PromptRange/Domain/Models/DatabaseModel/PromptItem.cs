@@ -118,7 +118,7 @@ namespace Senparc.Xncf.PromptRange
             Temperature = promptItemDto.Temperature;
             TopP = promptItemDto.TopP;
             FrequencyPenalty = promptItemDto.FrequencyPenalty;
-            NumsOfResults = promptItemDto.ResultsPerPrompt;
+            NumsOfResults = promptItemDto.NumsOfResults;
             StopSequences = promptItemDto.StopSequences;
             ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
             TokenSelectionBiases = promptItemDto.TokenSelectionBiases;

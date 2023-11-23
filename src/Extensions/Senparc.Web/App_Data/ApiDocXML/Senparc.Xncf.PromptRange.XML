@@ -62,64 +62,9 @@
             MaxToken（可选）
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Name">
-            <summary>
-            PromptGroup 名称
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.MaxToken">
-            <summary>
-            MaxToken
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.Temperature">
-            <summary>
-            Temperature
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.TopP">
-            <summary>
-            TopP
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.FrequencyPenalty">
-            <summary>
-            FrequencyPenalty
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.ResultsPerPrompt">
-            <summary>
-            ResultsPerPrompt
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.StopSequences">
-            <summary>
-            StopSequences
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.ChatSystemPrompt">
-            <summary>
-            ChatSystemPrompt
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.TokenSelectionBiases">
-            <summary>
-            TokenSelectionBiases
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptGroupDto.EvaluationMetrics">
-            <summary>
-            EvaluationMetrics
-            </summary>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.PromptContent">
             <summary>
             Prompt内容
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.PromptGroupId">
-            <summary>
-            PromptGroupId
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.MaxToken">
@@ -142,14 +87,14 @@
             频率惩罚
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ResultsPerPrompt">
-            <summary>
-            每个 Prompt 的结果数
-            </summary>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.StopSequences">
             <summary>
             停止序列（JSON 数组）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.NumsOfResults">
+            <summary>
+            每个 Prompt 的结果数
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.StopSequencesArray">
@@ -179,7 +124,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvaluationMetrics">
             <summary>
-            EvaluationMetrics
+            评估标注
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Version">
@@ -640,6 +585,36 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Developer">
             <summary>
             用户名
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Version">
+            <summary>
+            版本号，格式为 yyyy.MM.dd.Version
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.MaxToken">
+            <summary>
+            最大 Token 数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Temperature">
+            <summary>
+            温度
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FrequencyPenalty">
+            <summary>
+            频率惩罚
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.StopSequences">
+            <summary>
+            停止序列（JSON 数组）
             </summary>
         </member>
         <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">

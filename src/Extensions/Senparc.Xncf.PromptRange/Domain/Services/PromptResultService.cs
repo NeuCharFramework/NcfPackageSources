@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel.AI;
+using Microsoft.SemanticKernel.AI.TextCompletion;
+using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextCompletion;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
@@ -21,17 +24,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptResultService : ServiceBase<PromptResult>
     {
-        public PromptResultService(IRepositoryBase<PromptResult> repo, IServiceProvider serviceProvider) : base(repo,
+        public PromptResultService(IRepositoryBase<PromptResult> repo, IServiceProvider serviceProvider,
+            LlmModelService llmModelService) : base(repo,
             serviceProvider)
         {
+            _llmModelService = llmModelService;
         }
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
-        private readonly RepositoryBase<PromptResult> _promptResultRepository;
-
         // private readonly PromptItemService _promptItemService;
         private readonly LlmModelService _llmModelService;
-        // private readonly PromptResultService _promptResultService;
 
 
         public async Task<List<PromptResult>> BatchGenerateResultAsync(PromptItem promptItem, int count)
@@ -79,7 +81,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 PresencePenalty = promptItem.PresencePenalty
             };
 
-            var functionPrompt = @"请根据提示输出对应内容：\n{{input}}";
+            // 需要在变量前添加$
+            var functionPrompt = @"请根据提示输出对应内容：\n{{$input}}";
 
             // var kernelBuilder = helper.ConfigTextCompletion(userId, modelName, aiSettings);
             // kernelBuilder.WithAzureTextCompletionService(llmModel.Name,llmModel.Endpoint,llmModel.ApiKey);
@@ -124,11 +127,25 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //   logger.Append("未知的模型类型");
             // }
 
-            var context = iWantToRun.CreateNewContext();
-            context.context.Variables["input"] = promptItem.Content;
+            // 试试先用sk的原生hf
+            var conn = new HuggingFaceTextCompletion(llmModel.Name, endpoint:llmModel.Endpoint);
+            var aiRequestSettings = new AIRequestSettings() {
+                ExtensionData = new Dictionary<string, object>
+                {
+                    { "Temperature", 0.7 },
+                    { "TopP", 0.5 },
+                    { "MaxTokens", 3000 }
+                }
+            };
+            var resp = await conn.CompleteAsync(promptItem.Content,aiRequestSettings);
+            
 
-            var aiRequest = iWantToRun.CreateRequest(context.context.Variables, true);
-            var result = await iWantToRun.RunAsync(aiRequest);
+            // var skContext = iWantToRun.CreateNewContext().context;
+            // // var context = iWantToRun.CreateNewContext();
+            // skContext.Variables["input"] = promptItem.Content;
+            //
+            // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
+            // var result = await iWantToRun.RunAsync(aiRequest);
 
             var dt1 = SystemTime.Now;
 
@@ -140,7 +157,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var resultCostToken = 0;
 
             var promptResult = new PromptResult(
-                promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
+                promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
                 0, 0, null, false, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.Version, promptItem.Id);

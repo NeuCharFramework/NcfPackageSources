@@ -59,9 +59,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("MaxToken")
                         .HasColumnType("int");
 
-                    b.Property<int>("ModelType")
+                    b.Property<string>("ModelType")
+                        .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -75,10 +76,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("OtherModelName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -88,14 +85,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TextCompletionModelName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("TextEmbeddingModelName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -174,8 +163,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LlmModelId");
-
                     b.ToTable("Senparc_PromptRange_PromptResult");
                 });
 
@@ -215,8 +202,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("MaxToken")
-                        .HasColumnType("real");
+                    b.Property<int>("MaxToken")
+                        .HasColumnType("int");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
@@ -259,17 +246,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptItem");
-                });
-
-            modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.PromptResult", b =>
-                {
-                    b.HasOne("Senparc.Xncf.PromptRange.Models.LlmModel", "LlmModel")
-                        .WithMany()
-                        .HasForeignKey("LlmModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LlmModel");
                 });
 #pragma warning restore 612, 618
         }

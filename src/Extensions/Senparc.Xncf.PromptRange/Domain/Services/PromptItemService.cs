@@ -25,11 +25,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (string.IsNullOrWhiteSpace(request.Version))
             {
                 //TODO: 从数据库中获取最新的版本号
-                var usedVersionList = base.GetFullList(
+                
+                var usedVersionList = (await base.GetFullListAsync(
                     p => p.Version.StartsWith(today.ToString("yyyy.MM.dd")),
-                    p => p.Id,
+                    p => p.Version,
                     Ncf.Core.Enums.OrderingType.Ascending
-                ).ToList();
+                )).ToList();
                 var cnt = usedVersionList.Count(item => !item.Version.Contains("-"));
 
 
