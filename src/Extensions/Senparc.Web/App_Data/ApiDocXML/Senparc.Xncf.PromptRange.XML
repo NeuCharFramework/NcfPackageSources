@@ -4,6 +4,11 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
+            <summary>
+            全局常量配置
+            </summary>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
             <summary>
             传入promptItem，生成结果
@@ -13,6 +18,16 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
             <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.WithHuggingFaceCompletionService(Senparc.Xncf.PromptRange.PromptItem,Senparc.Xncf.PromptRange.Models.LlmModel)">
+            <summary>
+            先用sk的原生Connector
+            调用hf模型,
+            **模型接口需要遵循SK的规范**
+            </summary>
+            <param name="promptItem"></param>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.ISKFunction[])">
             <summary>
@@ -275,11 +290,6 @@
         <member name="T:Senparc.Xncf.PromptRange.Models.PromptResult">
             <summary>
             PromptResult 数据库实体
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.PromptGroupId">
-            <summary>
-            PromptGroupId，并添加PromptGroup类作为属性
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.LlmModelId">

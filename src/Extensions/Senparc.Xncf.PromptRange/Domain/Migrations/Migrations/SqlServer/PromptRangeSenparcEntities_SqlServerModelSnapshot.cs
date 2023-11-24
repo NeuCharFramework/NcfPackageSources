@@ -127,9 +127,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("PromptCostToken")
                         .HasColumnType("int");
 
-                    b.Property<int>("PromptGroupId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PromptItemId")
                         .HasColumnType("int");
 

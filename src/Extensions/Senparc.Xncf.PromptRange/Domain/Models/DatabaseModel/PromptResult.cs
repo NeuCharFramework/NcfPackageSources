@@ -13,13 +13,6 @@ namespace Senparc.Xncf.PromptRange.Models
     public class PromptResult : EntityBase<int>
     {
         /// <summary>
-        /// PromptGroupId，并添加PromptGroup类作为属性
-        /// </summary>
-
-        public int PromptGroupId { get; private set; }
-        //public PromptGroup PromptGroup { get; private set; }
-
-        /// <summary>
         /// LlmModelId，并添加LlmModel类作为属性
         /// </summary>
         public int LlmModelId { get; private set; }

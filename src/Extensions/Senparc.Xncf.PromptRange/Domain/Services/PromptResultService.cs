@@ -3,11 +3,18 @@ using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.AI;
+using Microsoft.SemanticKernel.AI.ChatCompletion;
 using Microsoft.SemanticKernel.AI.TextCompletion;
 using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextCompletion;
+using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
+using Microsoft.SemanticKernel.Connectors.AI.OpenAI.ChatCompletion;
+using Newtonsoft.Json;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
@@ -17,6 +24,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -59,15 +67,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<PromptResult> GenerateResultAsync(PromptItem promptItem)
         {
             // 从数据库中获取模型信息
-            var llmModel = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
-            if (llmModel == null)
+            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            if (model == null)
             {
                 throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
             }
 
             var userId = "Test";
-            var modelName = LlmModelHelper.GetAzureModelName(llmModel.Name);
-            var aiSettings = this.BuildSenparcAiSetting(llmModel);
+
+            var aiSettings = this.BuildSenparcAiSetting(model);
             //创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(new AI.Kernel.Helpers.SemanticKernelHelper(aiSettings));
 
@@ -82,17 +90,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             };
 
             // 需要在变量前添加$
-            var functionPrompt = @"请根据提示输出对应内容：\n{{$input}}";
+            const string functionPrompt = "请根据提示输出对应内容：\n{{$input}}";
 
             // var kernelBuilder = helper.ConfigTextCompletion(userId, modelName, aiSettings);
             // kernelBuilder.WithAzureTextCompletionService(llmModel.Name,llmModel.Endpoint,llmModel.ApiKey);
-            var iWantToRun = handler.IWantTo()
-                .ConfigModel(ConfigModel.TextCompletion, userId, modelName, aiSettings)
-                .BuildKernel()
-                .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter, functionPrompt)
-                .iWantToRun;
-
-
+            // var iWantToRun = handler.IWantTo()
+            //     .ConfigModel(ConfigModel.TextCompletion, userId, model.GetModelId(), aiSettings)
+            //     .BuildKernel()
+            //     .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter, functionPrompt)
+            //     .iWantToRun;
             // //todo which function to use? completion or chat?
             // var func = "chat/completions";
             // // var func = "completions";
@@ -127,18 +133,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //   logger.Append("未知的模型类型");
             // }
 
-            // 试试先用sk的原生hf
-            var conn = new HuggingFaceTextCompletion(llmModel.Name, endpoint:llmModel.Endpoint);
-            var aiRequestSettings = new AIRequestSettings() {
-                ExtensionData = new Dictionary<string, object>
-                {
-                    { "Temperature", 0.7 },
-                    { "TopP", 0.5 },
-                    { "MaxTokens", 3000 }
-                }
+            var dt1 = SystemTime.Now;
+            var resp = model.ModelType switch
+            {
+                Constants.OpenAI => await WithOpenAIChatCompletionService(promptItem, model),
+                Constants.AzureOpenAI => await WithAzureOpenAIChatCompletionService(promptItem, model),
+                Constants.HuggingFace => await WithHuggingFaceCompletionService(promptItem, model),
+                _ => throw new NotImplementedException()
             };
-            var resp = await conn.CompleteAsync(promptItem.Content,aiRequestSettings);
-            
 
             // var skContext = iWantToRun.CreateNewContext().context;
             // // var context = iWantToRun.CreateNewContext();
@@ -147,7 +149,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
             // var result = await iWantToRun.RunAsync(aiRequest);
 
-            var dt1 = SystemTime.Now;
 
             // 简单计算
             // num_prompt_tokens = len(encoding.encode(string))
@@ -165,6 +166,81 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await base.SaveObjectAsync(promptResult);
 
             return promptResult;
+        }
+
+        private static async Task<string> WithOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
+        {
+            OpenAIChatCompletion chatGPT = new(
+                modelId: model.GetModelId(),
+                apiKey: model.ApiKey,
+                organization: model.OrganizationId
+            );
+            // add system prompt
+            var chatHistory = chatGPT.CreateNewChat(promptItem.ChatSystemPrompt);
+            // add prompt
+            chatHistory.AddUserMessage(promptItem.Content);
+            string reply = await chatGPT.GenerateMessageAsync(chatHistory, BuildAIRequestSettings(promptItem));
+            // chatHistory.AddAssistantMessage(reply);
+            // return chatHistory.Last().Content;
+            return reply;
+        }
+
+        private static async Task<string> WithAzureOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
+        {
+            AzureOpenAIChatCompletion chatGPT = new(
+                endpoint: model.Endpoint,
+                apiKey: model.ApiKey,
+                deploymentName: model.GetModelId()
+            );
+            // add system prompt
+            var chatHistory = chatGPT.CreateNewChat();
+            // chatGPT.CreateNewChat(promptItem.ChatSystemPrompt ?? "请根据提示输出对应内容：\n{{$input}}");
+
+            // add prompt
+            chatHistory.AddUserMessage(promptItem.Content);
+
+            // string reply = await chatGPT.GenerateMessageAsync(chatHistory, BuildAIRequestSettings(promptItem));
+
+            // 调用模型
+            var resultList = await chatGPT
+                .GetChatCompletionsAsync(chatHistory, BuildAIRequestSettings(promptItem)).ConfigureAwait(true);
+            var firstChatMessage = await resultList[0].GetChatMessageAsync().ConfigureAwait(true);
+            // chatHistory.AddAssistantMessage(reply);
+            // return chatHistory.Last().Content;
+            return firstChatMessage.Content;
+        }
+
+        /// <summary>
+        /// 先用sk的原生Connector
+        /// 调用hf模型,
+        /// **模型接口需要遵循SK的规范**
+        /// </summary>
+        /// <param name="promptItem"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static async Task<string> WithHuggingFaceCompletionService(PromptItem promptItem, LlmModel model)
+        {
+            var conn = new HuggingFaceTextCompletion(model.GetModelId(), endpoint: model.Endpoint);
+            // var aiRequestSettings = BuildAIRequestSettings(promptItem);
+            return await conn.CompleteAsync(promptItem.Content, BuildAIRequestSettings(promptItem));
+        }
+
+        private static OpenAIRequestSettings BuildAIRequestSettings(PromptItem promptItem)
+        {
+            var aiSettings = new OpenAIRequestSettings()
+            {
+                Temperature = promptItem.Temperature,
+                TopP = promptItem.TopP,
+                MaxTokens = promptItem.MaxToken,
+                FrequencyPenalty = promptItem.FrequencyPenalty,
+                PresencePenalty = promptItem.PresencePenalty,
+            };
+            if (!string.IsNullOrWhiteSpace(promptItem.StopSequences))
+            {
+                aiSettings.StopSequences = promptItem.StopSequences.Split(",");
+            }
+
+            return aiSettings;
         }
 
 

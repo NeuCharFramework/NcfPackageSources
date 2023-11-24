@@ -90,7 +90,8 @@ namespace Senparc.Xncf.PromptRange.Models
         {
         }
 
-        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey, string apiVersion, string note, int maxToken)
+        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
+            string apiVersion, string note, int maxToken)
         {
             Name = name;
             Endpoint = endpoint;
@@ -158,6 +159,15 @@ namespace Senparc.Xncf.PromptRange.Models
             this.Name = name;
             return Switch(show);
         }
-        
+
+        public string GetModelId()
+        {
+            if (string.IsNullOrWhiteSpace(this.Name))
+            {
+                return "text-davinci-003";
+            }
+
+            return this.Name.Contains("azure") ? this.Name.Substring("azure-".Length) : this.Name;
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -52,6 +53,7 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 停止序列（JSON 数组）
         /// </summary>
+        [CanBeNull]
         public string StopSequences { get; private set; }
         #endregion
 
@@ -64,7 +66,7 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 聊天系统 Prompt
         /// </summary>
-        public string ChatSystemPrompt { get; private set; }
+        public string ChatSystemPrompt { get; private set; } = "";
 
         /// <summary>
         /// Token 选择偏好

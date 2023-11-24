@@ -31,6 +31,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     await _promptResultService.Score(request.PromptResultId, request.HumanScore);
+                    
                     return "ok";
 
                     // var result = await _promptResultService.GetObjectAsync(p => p.Id == request.PromptResultId);

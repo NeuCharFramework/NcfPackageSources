@@ -57,10 +57,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-                    //todo validate request dto
+           
 
                     // save promptItem
                     var promptItem = await _promptItemService.AddPromptItemAsync(request);
+                    if (promptItem == null)
+                    {
+                        throw new NcfExceptionBase("添加失败");
+                    }
+
                     var respDto = new PromptItem_AddResponse(promptItem.Content, DateTime.Now, promptItem.Version,
                         promptItem.ModelId, promptItem.MaxToken, promptItem.Temperature, promptItem.TopP,
                         promptItem.FrequencyPenalty, promptItem.StopSequences);
@@ -115,7 +120,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         PromptName = prompt.Name,
                         Show = prompt.Show,
                         Version = prompt.Version,
-                        ModelName = model.Name,
+                        ModelName = model.GetModelId(),
                         ResultString = result.ResultString,
                         Score = Convert.ToInt32(result.RobotScore > 0 ? result.RobotScore : result.HumanScore),
                         Time = prompt.AddTime.ToString("yyyy-MM-dd")
@@ -146,7 +151,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             {
                                 Version = item.Version,
                                 Time = item.AddTime.ToString("yyyy-MM-dd"),
-                                ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.Name,
+                                ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(),
                                 PromptName = item.Name,
                             });
                         }

@@ -17,7 +17,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptItem> AddPromptItemAsync(PromptItem_AddRequest request)
         {
-            string name = request.Content.Length < 5 ? request.Content : request.Content.Substring(0, 5);
+            #region todo validate request dto
+
+            var name = request.Content.Length < 5 ? request.Content : request.Content.Substring(0, 5);
+
+            // 默认值为2000
+            request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
+            request.StopSequences = request.StopSequences == "" ? null : request.StopSequences;
+
+            #endregion
 
             // 更新版本号
             var today = SystemTime.Now;
@@ -25,7 +33,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (string.IsNullOrWhiteSpace(request.Version))
             {
                 //TODO: 从数据库中获取最新的版本号
-                
+
                 var usedVersionList = (await base.GetFullListAsync(
                     p => p.Version.StartsWith(today.ToString("yyyy.MM.dd")),
                     p => p.Version,
