@@ -19,6 +19,7 @@ using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.Kernel.Helpers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
@@ -76,62 +77,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var userId = "Test";
 
             var aiSettings = this.BuildSenparcAiSetting(model);
-            //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            var handler = new SemanticAiHandler(new AI.Kernel.Helpers.SemanticKernelHelper(aiSettings));
-
-            //定义 AI 接口调用参数和 Token 限制等
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
-                Temperature = promptItem.Temperature,
-                TopP = promptItem.TopP,
-                FrequencyPenalty = promptItem.FrequencyPenalty,
-                PresencePenalty = promptItem.PresencePenalty
-            };
+            // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
+            // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
+            //
+            // //定义 AI 接口调用参数和 Token 限制等
+            // var promptParameter = new PromptConfigParameter()
+            // {
+            //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+            //     Temperature = promptItem.Temperature,
+            //     TopP = promptItem.TopP,
+            //     FrequencyPenalty = promptItem.FrequencyPenalty,
+            //     PresencePenalty = promptItem.PresencePenalty
+            // };
 
             // 需要在变量前添加$
             const string functionPrompt = "请根据提示输出对应内容：\n{{$input}}";
-
-            // var kernelBuilder = helper.ConfigTextCompletion(userId, modelName, aiSettings);
-            // kernelBuilder.WithAzureTextCompletionService(llmModel.Name,llmModel.Endpoint,llmModel.ApiKey);
-            // var iWantToRun = handler.IWantTo()
-            //     .ConfigModel(ConfigModel.TextCompletion, userId, model.GetModelId(), aiSettings)
-            //     .BuildKernel()
-            //     .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter, functionPrompt)
-            //     .iWantToRun;
-            // //todo which function to use? completion or chat?
-            // var func = "chat/completions";
-            // // var func = "completions";
-            //
-            //
-            // // construct the target url
-            // // 枚举Constants.ModelTypeEnum, 生成对应的url
-            // string aiUrl;
-            // if (Enum.TryParse(llmModel.ModelType, out AiPlatform aiPlatform))
-            // {
-            //   switch (aiPlatform)
-            //   {
-            //     case AiPlatform.AzureOpenAI:
-            //       //todo: validate the parameters
-            //       aiUrl = $"{llmModel.Endpoint}/{modelName}/{func}?api-version={llmModel.ApiVersion}";
-            //       break;
-            //     case AiPlatform.HuggingFace:
-            //       aiUrl = $"{llmModel.Endpoint}/{func}?api-version={llmModel.ApiVersion}";
-            //       break;
-            //     case AiPlatform.OpenAI:
-            //       aiUrl = $"https://api.openai.com/v1/{func}";
-            //       break;
-            //     default: //暂时不支持其他的
-            //       aiUrl = "";
-            //       logger.Append("未知的模型类型");
-            //       break;
-            //   }
-            // }
-            // else
-            // {
-            //   aiUrl = "";
-            //   logger.Append("未知的模型类型");
-            // }
 
             var dt1 = SystemTime.Now;
             var resp = model.ModelType switch
@@ -149,7 +109,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
             // var result = await iWantToRun.RunAsync(aiRequest);
 
-
+            // todo 计算token消耗
             // 简单计算
             // num_prompt_tokens = len(encoding.encode(string))
             // gap_between_send_receive = 15 * len(kwargs["messages"])
@@ -187,7 +147,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         private static async Task<string> WithAzureOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
         {
-            AzureOpenAIChatCompletion chatGPT = new(
+            // 不在意apiVersion， why?
+             var chatGPT = new AzureOpenAIChatCompletion(
                 endpoint: model.Endpoint,
                 apiKey: model.ApiKey,
                 deploymentName: model.GetModelId()
@@ -198,8 +159,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // add prompt
             chatHistory.AddUserMessage(promptItem.Content);
-
-            // string reply = await chatGPT.GenerateMessageAsync(chatHistory, BuildAIRequestSettings(promptItem));
 
             // 调用模型
             var resultList = await chatGPT
@@ -297,6 +256,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             return aiSettings;
+        }
+
+        public async Task RobotScore(List<int> promptResultListToEval)
+        {
+            foreach (var id in promptResultListToEval)
+            {
+                // todo 根据id获取PromptResult
+                // 然后调用模型对其进行评分
+            }
         }
     }
 }

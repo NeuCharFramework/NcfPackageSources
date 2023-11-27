@@ -5,6 +5,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Extensions;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -19,7 +20,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             #region todo validate request dto
 
-            var name = request.Content.Length < 5 ? request.Content : request.Content.Substring(0, 5);
+            var name = request.Content.SubString(0, 5);
 
             // 默认值为2000
             request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;

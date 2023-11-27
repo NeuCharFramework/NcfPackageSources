@@ -10,7 +10,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
     /// <summary>
     /// 全局常量配置
     /// </summary>
-    public static partial class Constants
+    public static class Constants
     {
         // Azure OpenAI API版本列表
         public static List<string> ApiVersionList = new()
