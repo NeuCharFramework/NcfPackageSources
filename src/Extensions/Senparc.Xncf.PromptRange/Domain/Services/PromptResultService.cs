@@ -128,6 +128,72 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptResult;
         }
 
+        
+        public async Task<PromptResult> SenparcGenerateResultAsync(PromptItem promptItem)
+        {
+            // 从数据库中获取模型信息
+            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            if (model == null)
+            {
+                throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
+            }
+
+            var userId = "Test";
+
+            var aiSettings = this.BuildSenparcAiSetting(model);
+            // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
+            // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
+            //
+            // //定义 AI 接口调用参数和 Token 限制等
+            // var promptParameter = new PromptConfigParameter()
+            // {
+            //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+            //     Temperature = promptItem.Temperature,
+            //     TopP = promptItem.TopP,
+            //     FrequencyPenalty = promptItem.FrequencyPenalty,
+            //     PresencePenalty = promptItem.PresencePenalty
+            // };
+
+            // 需要在变量前添加$
+            const string functionPrompt = "请根据提示输出对应内容：\n{{$input}}";
+
+            var dt1 = SystemTime.Now;
+            var resp = model.ModelType switch
+            {
+                Constants.OpenAI => await WithOpenAIChatCompletionService(promptItem, model),
+                Constants.AzureOpenAI => await WithAzureOpenAIChatCompletionService(promptItem, model),
+                Constants.HuggingFace => await WithHuggingFaceCompletionService(promptItem, model),
+                _ => throw new NotImplementedException()
+            };
+
+            // var skContext = iWantToRun.CreateNewContext().context;
+            // // var context = iWantToRun.CreateNewContext();
+            // skContext.Variables["input"] = promptItem.Content;
+            //
+            // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
+            // var result = await iWantToRun.RunAsync(aiRequest);
+
+            // todo 计算token消耗
+            // 简单计算
+            // num_prompt_tokens = len(encoding.encode(string))
+            // gap_between_send_receive = 15 * len(kwargs["messages"])
+            // num_prompt_tokens += gap_between_send_receive
+            var promptCostToken = 0;
+            var resultCostToken = 0;
+
+            var promptResult = new PromptResult(
+                promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
+                0, 0, null, false, TestType.Text,
+                promptCostToken, resultCostToken, promptCostToken + resultCostToken,
+                promptItem.Version, promptItem.Id);
+
+            await base.SaveObjectAsync(promptResult);
+
+            return promptResult;
+        }
+
+        
+        
         private static async Task<string> WithOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
         {
             OpenAIChatCompletion chatGPT = new(

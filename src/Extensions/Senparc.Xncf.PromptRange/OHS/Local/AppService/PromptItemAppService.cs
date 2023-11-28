@@ -57,8 +57,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-           
-
                     // save promptItem
                     var promptItem = await _promptItemService.AddPromptItemAsync(request);
                     if (promptItem == null)

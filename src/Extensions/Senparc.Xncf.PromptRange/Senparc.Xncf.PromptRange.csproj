@@ -1,99 +1,100 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<Version>0.2.1</Version>
-		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
-		<LangVersion>9.0</LangVersion>
-		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<DocumentationFile>../Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.PromptRange.XML</DocumentationFile>
-		<AssemblyName>Senparc.Xncf.PromptRange</AssemblyName>
-		<RootNamespace>Senparc.Xncf.PromptRange</RootNamespace>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Version>0.2.1</Version>
+        <!--<TargetFramework>net5.0</TargetFramework>-->
+        <!--<RazorLangVersion>2.0</RazorLangVersion>-->
+        <LangVersion>9.0</LangVersion>
+        <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+        <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+        <DocumentationFile>../Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.PromptRange.XML</DocumentationFile>
+        <AssemblyName>Senparc.Xncf.PromptRange</AssemblyName>
+        <RootNamespace>Senparc.Xncf.PromptRange</RootNamespace>
 
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<Description>你的提示词（Prompt）训练场</Description>
-		<Copyright>Senparc</Copyright>
-		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.PromptRange</PackageTags>
-		<Authors>Senparc</Authors>
-		<Owners>Senparc</Owners>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<Title>提示词靶场</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+        <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+        <Description>你的提示词（Prompt）训练场</Description>
+        <Copyright>Senparc</Copyright>
+        <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.PromptRange</PackageTags>
+        <Authors>Senparc</Authors>
+        <Owners>Senparc</Owners>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <Title>提示词靶场</Title>
+        <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
-		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
-			v0.1 创世
-			v0.2.0 完成数据库和基本测试功能
-			v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
-			v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
-		</PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
-		<DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
-		<BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">objForNcf\</BaseIntermediateOutputPath>
-		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-	</PropertyGroup>
+        <PackageIcon>icon.jpg</PackageIcon>
+        <PackageReleaseNotes>
+            v0.1 创世
+            v0.2.0 完成数据库和基本测试功能
+            v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
+            v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
+        </PackageReleaseNotes>
+        <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+        <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
+        <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
+        <BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">objForNcf\</BaseIntermediateOutputPath>
+        <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <RestoreSources>
+            $(RestoreSources);D:\Senparc\Senparc.AI\BuildOutPut;
+        </RestoreSources>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\..\BuildOutPut</OutputPath>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
-		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-		<EmbeddedResource Include="wwwroot\**\*" />
-		<Compile Remove="objForNcf\**" />
-		<Compile Remove="obj\**" />
-		<Content Remove="objForNcf\**" />
-		<Content Remove="obj\**" />
-		<EmbeddedResource Remove="objForNcf\**" />
-		<EmbeddedResource Remove="obj\**" />
-		<None Remove="objForNcf\**" />
-		<None Remove="obj\**" />
+    <ItemGroup>
+        <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+        <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+        <EmbeddedResource Include="wwwroot\**\*" />
+        <Compile Remove="objForNcf\**" />
+        <Compile Remove="obj\**" />
+        <Content Remove="objForNcf\**" />
+        <Content Remove="obj\**" />
+        <EmbeddedResource Remove="objForNcf\**" />
+        <EmbeddedResource Remove="obj\**" />
+        <None Remove="objForNcf\**" />
+        <None Remove="obj\**" />
 
-		<Content Remove="wwwroot\css\Admin\PromptRange\index.css" />
-		<Content Remove="wwwroot\css\Admin\PromptRange\model.css" />
-		<Content Remove="wwwroot\css\Admin\PromptRange\prompt.css" />
-		<Content Remove="wwwroot\js\Admin\PromptRange\index.js" />
-		<Content Remove="wwwroot\js\Admin\PromptRange\model.js" />
-		<Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
+        <Content Remove="wwwroot\css\Admin\PromptRange\index.css" />
+        <Content Remove="wwwroot\css\Admin\PromptRange\model.css" />
+        <Content Remove="wwwroot\css\Admin\PromptRange\prompt.css" />
+        <Content Remove="wwwroot\js\Admin\PromptRange\index.js" />
+        <Content Remove="wwwroot\js\Admin\PromptRange\model.js" />
+        <Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
 
-		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+        <PackageReference Include="Senparc.AI.Kernel" Version="0.6.1-beta8" />
 
-		<!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
-		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-		<!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
-	</ItemGroup>
+        <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
+        <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
+        <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
+    </ItemGroup>
 
-	<ItemGroup>
+    <ItemGroup>
+        <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
+        <Folder Include="Domain\PromptPlugins\" />
+        <Folder Include="wwwroot\image\Admin\PromptRange\" />
+    </ItemGroup>
 
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.6.1-beta7" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Domain\Models\DatabaseModel\Mapping\" />
-		<Folder Include="Domain\PromptPlugins\" />
-		<Folder Include="wwwroot\image\Admin\PromptRange\" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">
-		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.12.0-beta11" />
-		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.13.1.2-beta11" />
-		<PackageReference Include="Senparc.Xncf.SystemCore" Version="0.4.0-beta11" />
-		<PackageReference Include="Senparc.Xncf.SystemManager" Version="0.4.0-beta11" />
-		<PackageReference Include="Senparc.Xncf.Tenant" Version="0.4.0-beta11" />
-	</ItemGroup>
-	<ItemGroup Condition=" '$(Configuration)' != 'NcfDebugForPromptRange' ">
-		<ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-		<ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-		<ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
-		<ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-		<ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
-		<ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">
+        <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.12.0-beta11" />
+        <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.13.1.2-beta11" />
+        <PackageReference Include="Senparc.Xncf.SystemCore" Version="0.4.0-beta11" />
+        <PackageReference Include="Senparc.Xncf.SystemManager" Version="0.4.0-beta11" />
+        <PackageReference Include="Senparc.Xncf.Tenant" Version="0.4.0-beta11" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' != 'NcfDebugForPromptRange' ">
+        <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+        <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+        <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+        <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+        <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+        <ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+    </ItemGroup>
 </Project>
