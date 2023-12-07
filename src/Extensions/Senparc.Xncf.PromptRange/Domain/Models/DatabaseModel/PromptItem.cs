@@ -12,7 +12,7 @@ namespace Senparc.Xncf.PromptRange
     /// <summary>
     /// PromptItem
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(PromptItem))]/*必须添加前缀，防止全系统中发生冲突*/
+    [Table(Register.DATABASE_PREFIX + nameof(PromptItem))] /*必须添加前缀，防止全系统中发生冲突*/
     [Serializable]
     public class PromptItem : EntityBase<int>
     {
@@ -23,8 +23,7 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public string Content { get; private set; }
 
-        [Required]
-        public int ModelId { get; private set; }
+        [Required] public int ModelId { get; private set; }
 
         #region Model Config
 
@@ -55,6 +54,7 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         [CanBeNull]
         public string StopSequences { get; private set; }
+
         #endregion
 
         /// <summary>
@@ -89,12 +89,15 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public DateTime LastRunTime { get; private set; }
 
-        [Required]
-        public bool Show { get; private set; }
+        [Required] public bool Show { get; private set; }
 
-        private PromptItem() { }
+        private PromptItem()
+        {
+        }
 
-        public PromptItem(string name, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore, string version, DateTime lastRunTime)
+        public PromptItem(string name, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
+            float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore,
+            string version, DateTime lastRunTime)
         {
             Name = name;
             Content = content;
@@ -111,6 +114,11 @@ namespace Senparc.Xncf.PromptRange
             EvaluationScore = evaluationScore;
             Version = version;
             LastRunTime = lastRunTime;
+        }
+
+        public PromptItem(string name, string content, int numsOfResults)
+            : this(name, content, 1, 0, 0, 0, 0, 0, "", numsOfResults, "", "", 0, "", DateTime.Now)
+        {
         }
 
 
@@ -198,15 +206,15 @@ namespace Senparc.Xncf.PromptRange
         //    //}
         //}
 
-        /// <summary>
-        /// 更新版本号
-        /// 
-        /// </summary>
-        public void UpdateVersion(string newVersion)
-        {
-            //todo: validate
-            this.Version = newVersion;
-        }
+        // /// <summary>
+        // /// 更新版本号
+        // /// 
+        // /// </summary>
+        // public void UpdateVersion(string newVersion)
+        // {
+        //     //todo: validate
+        //     this.Version = newVersion;
+        // }
 
         public PromptItem Switch(bool show)
         {

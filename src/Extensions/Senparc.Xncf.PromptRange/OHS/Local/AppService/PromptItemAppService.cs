@@ -64,24 +64,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         throw new NcfExceptionBase("添加失败");
                     }
 
-                    var respDto = new PromptItem_AddResponse(promptItem.Content, DateTime.Now, promptItem.Version,
+                    var promptItemResponseDto = new PromptItem_AddResponse(promptItem.Content, DateTime.Now, promptItem.Version,
                         promptItem.ModelId, promptItem.MaxToken, promptItem.Temperature, promptItem.TopP,
                         promptItem.FrequencyPenalty, promptItem.StopSequences);
-
 
                     // 是否立即生成结果，暂时不添加这个开关
                     if (true)
                     {
                         // 如果立即生成，就根据numsOfResults立即生成
-                        for (int i = 0; i < request.NumsOfResults; i++)
+                        for (var i = 0; i < request.NumsOfResults; i++)
                         {
                             // 分别生成结果
                             var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                            respDto.PromptResultList.Add(promptResult);
+                            promptItemResponseDto.PromptResultList.Add(promptResult);
                         }
                     }
 
-                    return respDto;
+                    return promptItemResponseDto;
+                    // return respDto;
                 });
         }
 
@@ -142,19 +142,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         var modelList = await _llmModelService.GetFullListAsync(p => modelIdList.Contains(p.Id),
                             p => p.Id, Ncf.Core.Enums.OrderingType.Descending);
 
-                        List<PromptItem_GetResponse> list = new List<PromptItem_GetResponse>();
-                        foreach (var item in result)
-                        {
-                            list.Add(new PromptItem_GetResponse()
+                        return result.Select(item => new PromptItem_GetResponse()
                             {
-                                Version = item.Version,
-                                Time = item.AddTime.ToString("yyyy-MM-dd"),
-                                ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(),
-                                PromptName = item.Name,
-                            });
-                        }
-
-                        return list;
+                                Version = item.Version, Time = item.AddTime.ToString("yyyy-MM-dd"), ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(), PromptName = item.Name,
+                            })
+                            .ToList();
                     });
         }
 

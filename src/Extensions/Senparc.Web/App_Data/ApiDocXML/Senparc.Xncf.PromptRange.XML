@@ -19,16 +19,6 @@
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.WithHuggingFaceCompletionService(Senparc.Xncf.PromptRange.PromptItem,Senparc.Xncf.PromptRange.Models.LlmModel)">
-            <summary>
-            先用sk的原生Connector
-            调用hf模型,
-            **模型接口需要遵循SK的规范**
-            </summary>
-            <param name="promptItem"></param>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.ISKFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
@@ -40,6 +30,16 @@
             <para>Value：Function Name List</para>
             </param>
             <param name="functionPiple">functionPiple</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.SkChatCompletionHelperService.WithHuggingFaceCompletionService(Senparc.Xncf.PromptRange.PromptItem,Senparc.Xncf.PromptRange.Models.LlmModel)">
+            <summary>
+            先用sk的原生Connector
+            调用hf模型,
+            **模型接口需要遵循SK的规范**
+            </summary>
+            <param name="promptItem"></param>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlmModelDto.Name">
@@ -485,12 +485,6 @@
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.LastRunTime">
             <summary>
             最后一次运行时间
-            </summary>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.PromptItem.UpdateVersion(System.String)">
-            <summary>
-            更新版本号
-            
             </summary>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">

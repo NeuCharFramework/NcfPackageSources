@@ -123,7 +123,6 @@ namespace Senparc.Xncf.PromptRange
                 z.CreateMap<PromptItemDto, PromptItem>();
                 z.CreateMap<PromptResult, PromptResultDto>();
                 z.CreateMap<PromptResultDto, PromptResult>();
-                z.CreateMap<PromptItem, PromptItem_AddResponse>();
 
                 //TODO:morek
             });

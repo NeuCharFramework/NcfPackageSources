@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.AI;
 using Microsoft.SemanticKernel.AI.ChatCompletion;
@@ -22,6 +23,7 @@ using Senparc.AI.Kernel.Handlers;
 using Senparc.AI.Kernel.Helpers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.Exceptions;
@@ -96,9 +98,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var dt1 = SystemTime.Now;
             var resp = model.ModelType switch
             {
-                Constants.OpenAI => await WithOpenAIChatCompletionService(promptItem, model),
-                Constants.AzureOpenAI => await WithAzureOpenAIChatCompletionService(promptItem, model),
-                Constants.HuggingFace => await WithHuggingFaceCompletionService(promptItem, model),
+                Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
+                Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+                Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
@@ -128,7 +130,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptResult;
         }
 
-        
+
         public async Task<PromptResult> SenparcGenerateResultAsync(PromptItem promptItem)
         {
             // 从数据库中获取模型信息
@@ -138,40 +140,55 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
             }
 
-            var userId = "Test";
-
-            var aiSettings = this.BuildSenparcAiSetting(model);
+            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
             // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
             // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
             //
-            // //定义 AI 接口调用参数和 Token 限制等
-            // var promptParameter = new PromptConfigParameter()
-            // {
-            //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
-            //     Temperature = promptItem.Temperature,
-            //     TopP = promptItem.TopP,
-            //     FrequencyPenalty = promptItem.FrequencyPenalty,
-            //     PresencePenalty = promptItem.PresencePenalty
-            // };
-
-            // 需要在变量前添加$
-            const string functionPrompt = "请根据提示输出对应内容：\n{{$input}}";
-
-            var dt1 = SystemTime.Now;
-            var resp = model.ModelType switch
+            //定义 AI 接口调用参数和 Token 限制等
+            var promptParameter = new PromptConfigParameter()
             {
-                Constants.OpenAI => await WithOpenAIChatCompletionService(promptItem, model),
-                Constants.AzureOpenAI => await WithAzureOpenAIChatCompletionService(promptItem, model),
-                Constants.HuggingFace => await WithHuggingFaceCompletionService(promptItem, model),
-                _ => throw new NotImplementedException()
+                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+                Temperature = promptItem.Temperature,
+                TopP = promptItem.TopP,
+                FrequencyPenalty = promptItem.FrequencyPenalty,
+                PresencePenalty = promptItem.PresencePenalty,
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
             };
 
-            // var skContext = iWantToRun.CreateNewContext().context;
-            // // var context = iWantToRun.CreateNewContext();
-            // skContext.Variables["input"] = promptItem.Content;
+            // 需要在变量前添加$
+            const string completionPrompt = @"请根据提示输出对应内容：
+{{$input}}";
+
+            var skHelper = new SemanticKernelHelper(aiSettings);
+            var handler = new SemanticAiHandler(skHelper);
+            var iWantToRun =
+                handler.IWantTo()
+                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
+                    .BuildKernel()
+                    .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter, completionPrompt)
+                    .iWantToRun;
+            var skContext = iWantToRun.CreateNewContext().context;
+            skContext.Variables["input"] = promptItem.Content;
+
+            var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
+            var dt1 = SystemTime.Now;
+
+            var result = await iWantToRun.RunAsync(aiRequest);
+
+
+            // var kernelBuilder = skHelper.ConfigTextCompletion("Test", model.GetModelId(), aiSettings, null)
+            //     .WithLoggerFactory(LoggerFactory.Create(builder => // create a new ILogger
+            //     {
+            //         builder.AddConsole();
+            //     }));
             //
-            // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
-            // var result = await iWantToRun.RunAsync(aiRequest);
+            // var kernel = kernelBuilder.Build();
+            //
+            //
+            //
+            // var (iWantToRun, chatFunction) = new SemanticAiHandler(skHelper)
+            //     .ChatConfig(promptParameter, "Test", model.GetModelId());
+
 
             // todo 计算token消耗
             // 简单计算
@@ -182,7 +199,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var resultCostToken = 0;
 
             var promptResult = new PromptResult(
-                promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
+                promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
                 0, 0, null, false, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.Version, promptItem.Id);
@@ -192,84 +209,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptResult;
         }
 
-        
-        
-        private static async Task<string> WithOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
-        {
-            OpenAIChatCompletion chatGPT = new(
-                modelId: model.GetModelId(),
-                apiKey: model.ApiKey,
-                organization: model.OrganizationId
-            );
-            // add system prompt
-            var chatHistory = chatGPT.CreateNewChat(promptItem.ChatSystemPrompt);
-            // add prompt
-            chatHistory.AddUserMessage(promptItem.Content);
-            string reply = await chatGPT.GenerateMessageAsync(chatHistory, BuildAIRequestSettings(promptItem));
-            // chatHistory.AddAssistantMessage(reply);
-            // return chatHistory.Last().Content;
-            return reply;
-        }
 
-        private static async Task<string> WithAzureOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
-        {
-            // 不在意apiVersion， why?
-             var chatGPT = new AzureOpenAIChatCompletion(
-                endpoint: model.Endpoint,
-                apiKey: model.ApiKey,
-                deploymentName: model.GetModelId()
-            );
-            // add system prompt
-            var chatHistory = chatGPT.CreateNewChat();
-            // chatGPT.CreateNewChat(promptItem.ChatSystemPrompt ?? "请根据提示输出对应内容：\n{{$input}}");
-
-            // add prompt
-            chatHistory.AddUserMessage(promptItem.Content);
-
-            // 调用模型
-            var resultList = await chatGPT
-                .GetChatCompletionsAsync(chatHistory, BuildAIRequestSettings(promptItem)).ConfigureAwait(true);
-            var firstChatMessage = await resultList[0].GetChatMessageAsync().ConfigureAwait(true);
-            // chatHistory.AddAssistantMessage(reply);
-            // return chatHistory.Last().Content;
-            return firstChatMessage.Content;
-        }
-
-        /// <summary>
-        /// 先用sk的原生Connector
-        /// 调用hf模型,
-        /// **模型接口需要遵循SK的规范**
-        /// </summary>
-        /// <param name="promptItem"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private static async Task<string> WithHuggingFaceCompletionService(PromptItem promptItem, LlmModel model)
-        {
-            var conn = new HuggingFaceTextCompletion(model.GetModelId(), endpoint: model.Endpoint);
-            // var aiRequestSettings = BuildAIRequestSettings(promptItem);
-            return await conn.CompleteAsync(promptItem.Content, BuildAIRequestSettings(promptItem));
-        }
-
-        private static OpenAIRequestSettings BuildAIRequestSettings(PromptItem promptItem)
-        {
-            var aiSettings = new OpenAIRequestSettings()
-            {
-                Temperature = promptItem.Temperature,
-                TopP = promptItem.TopP,
-                MaxTokens = promptItem.MaxToken,
-                FrequencyPenalty = promptItem.FrequencyPenalty,
-                PresencePenalty = promptItem.PresencePenalty,
-            };
-            if (!string.IsNullOrWhiteSpace(promptItem.StopSequences))
-            {
-                aiSettings.StopSequences = promptItem.StopSequences.Split(",");
-            }
-
-            return aiSettings;
-        }
-
-
-        public async Task<PromptResult> Score(int id, int score)
+        public async Task<PromptResult> ManualScore(int id, int score)
         {
             // 根据id搜索数据库
             // var promptResult = _promptResultRepository.GetObjectById(id);

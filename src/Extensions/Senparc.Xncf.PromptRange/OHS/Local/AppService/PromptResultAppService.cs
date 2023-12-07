@@ -18,13 +18,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     {
         // private readonly RepositoryBase<PromptResult> _promptResultRepository;
         private readonly PromptResultService _promptResultService;
+        private readonly PromptItemService _promptItemService;
 
         public PromptResultAppService(
             IServiceProvider serviceProvider,
-            PromptResultService promptResultService
-        ) : base(serviceProvider)
+            PromptResultService promptResultService,
+            PromptItemService promptItemService) : base(serviceProvider)
         {
             _promptResultService = promptResultService;
+            _promptItemService = promptItemService;
         }
 
 
@@ -34,7 +36,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
-                    await _promptResultService.Score(request.PromptResultId, request.HumanScore);
+                    await _promptResultService.ManualScore(request.PromptResultId, request.HumanScore);
 
                     return "ok";
 
@@ -47,7 +49,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     // return "ok";
                 });
         }
-        
+
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> RobotScore(List<int> promptResultListToEval)
         {
@@ -80,8 +82,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         p => p.Id,
                         OrderingType.Ascending
                     )).ToList();
-                    
+
                     return new PromptResult_ListResponse(promptItemId, result);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<PromptResult_ListResponse>> RegenerateWithPromptItem(int promptItemId)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
+                async (response, logger) =>
+                {
+                    var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
+                    var result = await _promptResultService.SenparcGenerateResultAsync(promptItem);
+                    
+                    //todo 原来的需要删除吗
+                    return new PromptResult_ListResponse(promptItemId, new() { result });
                 });
         }
     }

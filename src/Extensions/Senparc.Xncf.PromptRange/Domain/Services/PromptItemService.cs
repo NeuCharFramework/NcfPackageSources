@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.Extensions;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -18,7 +19,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptItem> AddPromptItemAsync(PromptItem_AddRequest request)
         {
-            #region todo validate request dto
+            #region validate request dto
 
             var name = request.Content.SubString(0, 5);
 
@@ -69,5 +70,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             return promptItem;
         }
+        
+        // public async Task<PromptItem> GetByIdAsync(int id)
+        // {
+        //     return await base.GetObjectAsync(p => p.Id == id);
+        // }
     }
 }
