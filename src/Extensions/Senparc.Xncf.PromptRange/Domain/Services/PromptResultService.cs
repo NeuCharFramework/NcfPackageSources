@@ -62,6 +62,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <summary>
         /// 传入promptItem，生成结果
         /// 暂时只能在PromptItemAppService中调用
+        /// 采用了SemanticKernel来实现
         /// </summary>
         /// <param name="promptItem"></param>
         /// <returns></returns>
@@ -174,22 +175,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var dt1 = SystemTime.Now;
 
             var result = await iWantToRun.RunAsync(aiRequest);
-
-
-            // var kernelBuilder = skHelper.ConfigTextCompletion("Test", model.GetModelId(), aiSettings, null)
-            //     .WithLoggerFactory(LoggerFactory.Create(builder => // create a new ILogger
-            //     {
-            //         builder.AddConsole();
-            //     }));
-            //
-            // var kernel = kernelBuilder.Build();
-            //
-            //
-            //
-            // var (iWantToRun, chatFunction) = new SemanticAiHandler(skHelper)
-            //     .ChatConfig(promptParameter, "Test", model.GetModelId());
-
-
+            
             // todo 计算token消耗
             // 简单计算
             // num_prompt_tokens = len(encoding.encode(string))
@@ -210,7 +196,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptResult> ManualScore(int id, int score)
+        public async Task<PromptResult> ManualScoreAsync(int id, int score)
         {
             // 根据id搜索数据库
             // var promptResult = _promptResultRepository.GetObjectById(id);
@@ -267,11 +253,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task RobotScore(List<int> promptResultListToEval)
         {
+            
             foreach (var id in promptResultListToEval)
             {
                 // todo 根据id获取PromptResult
                 // 然后调用模型对其进行评分
             }
+        }
+        
+        public async Task RobotScore(int promptItemId)
+        {
+            
         }
     }
 }

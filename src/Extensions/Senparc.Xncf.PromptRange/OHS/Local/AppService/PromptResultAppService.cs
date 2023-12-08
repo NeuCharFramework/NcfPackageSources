@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
-                    await _promptResultService.ManualScore(request.PromptResultId, request.HumanScore);
+                    await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
 
                     return "ok";
 
@@ -50,13 +50,38 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        
+        // //TODO　功能待激活　　　　[ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> RobotScore(List<int> promptResultListToEval)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
+                    
                     await _promptResultService.RobotScore(promptResultListToEval);
+
+                    return "ok";
+
+                    // var result = await _promptResultService.GetObjectAsync(p => p.Id == request.PromptResultId);
+                    //
+                    // result.Scoring(request.HumanScore);
+                    //
+                    // await _promptResultService.SaveObjectAsync(result);
+                    //
+                    // return "ok";
+                });
+        }    
+        /// <summary>
+        /// 接受一个promptItemId，然后找到所有的promptResult，然后进行评分
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <returns></returns>
+        public async Task<StringAppResponse> RobotScore(int promptItemId)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(
+                async (response, logger) =>
+                {
+                    await _promptResultService.RobotScore(promptItemId);
 
                     return "ok";
 
