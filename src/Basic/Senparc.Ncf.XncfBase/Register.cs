@@ -81,15 +81,25 @@ namespace Senparc.Ncf.XncfBase
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             //using (cache.BeginCacheLock("Senparc.Ncf.XncfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
             {
-
                 try
                 {
                     //遍历所有程序集
                     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    SetLog(sb, " === Multiple databases detected ===");
+                    SetLog(sb, "| Register\t\t\t| Full Name\t\t| Database Type");
+                    SetLog(sb, "|---------------------|-----------------------|------------------------");
+
                     foreach (var a in assemblies)
                     {
+                        //Console.WriteLine("FullName:" + a.FullName);
+                        if (a.FullName.StartsWith("AutoMapper."))
+                        {
+                            continue;//忽略 AutoMapper
+                        }
+
                         scanTypesCount++;
                         var aTypes = a.GetTypes();
+
                         //遍历程序集内的所有类型
                         foreach (var t in aTypes)
                         {
@@ -97,6 +107,7 @@ namespace Senparc.Ncf.XncfBase
                             {
                                 continue;//忽略抽象类
                             }
+
                             //Console.WriteLine(t.GetType().Name);
                             //获取 XncfRegister
                             if (t.GetInterfaces().Contains(typeof(IXncfRegister)))
@@ -161,6 +172,9 @@ namespace Senparc.Ncf.XncfBase
                             }
                         }
                     }
+
+                    SetLog(sb, "-----------------------------------------------------------------------------------");
+                    SetLog(sb, "");
                 }
                 catch (Exception ex)
                 {
