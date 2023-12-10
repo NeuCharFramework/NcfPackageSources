@@ -99,7 +99,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             if (isUseWeb && frameworkVersion == "netstandard2.1")
             {
                 //需要使用网页，强制修正为支持 Host 的目标框架
-                frameworkVersion = "net6.0";
+                frameworkVersion = "net8.0";
             }
 
             var targetFramework = $" --TargetFramework {frameworkVersion}";
