@@ -37,7 +37,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                             var xncfIsValiable = await xncfRegisterManager.CheckXncfValiable(this);
                             if (!xncfIsValiable)
                             {
-                                throw new NcfModuleException($"{this.MenuName} 模块当前不可用，跳过数据库自动备份轮询");
+                                throw new NcfModuleException($"{this.MenuName} 模块当前不可用或未启用，跳过数据库自动备份轮询");
                             }
 
                             //初始化数据库备份方法

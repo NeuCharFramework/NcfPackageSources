@@ -6,7 +6,7 @@ using Senparc.CO2NET.AspNet;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
-
+using Senparc.Xncf.AreasBase;
 using System;
 
 namespace Senparc.IntegrationSample
