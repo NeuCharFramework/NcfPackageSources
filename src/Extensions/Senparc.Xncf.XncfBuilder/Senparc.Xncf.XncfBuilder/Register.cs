@@ -13,6 +13,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.AI.Kernel;
+using Senparc.Xncf.PromptRange.Domain.Services;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -65,6 +66,7 @@ namespace Senparc.Xncf.XncfBuilder
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
+            services.AddScoped<PromptService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

@@ -1,35 +1,31 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.CO2NET.Cache;
-using Senparc.CO2NET.RegisterServices;
-using Senparc.CO2NET.Trace;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.Models.DataBaseModel;
-using Senparc.Ncf.Service;
-using Senparc.Ncf.XncfBase.Threads;
-using Senparc.Ncf.XncfBase.Attributes;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Senparc.Ncf.Database;
-using Senparc.Ncf.XncfBase.Database;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Senparc.Ncf.Core.AppServices;
-using Senparc.Ncf.XncfBase.FunctionRenders;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Senparc.Ncf.Core.Config;
-using Senparc.Ncf.Core.MultiTenant;
 using Microsoft.Extensions.Options;
+using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.MultiTenant;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase.Attributes;
+using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Threads;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -85,15 +81,25 @@ namespace Senparc.Ncf.XncfBase
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             //using (cache.BeginCacheLock("Senparc.Ncf.XncfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
             {
-
                 try
                 {
                     //遍历所有程序集
                     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    SetLog(sb, " === Multiple databases detected ===");
+                    SetLog(sb, "| Register\t\t\t| Full Name\t\t| Database Type");
+                    SetLog(sb, "|---------------------|-----------------------|------------------------");
+
                     foreach (var a in assemblies)
                     {
+                        //Console.WriteLine("FullName:" + a.FullName);
+                        if (a.FullName.StartsWith("AutoMapper."))
+                        {
+                            continue;//忽略 AutoMapper
+                        }
+
                         scanTypesCount++;
                         var aTypes = a.GetTypes();
+
                         //遍历程序集内的所有类型
                         foreach (var t in aTypes)
                         {
@@ -101,6 +107,7 @@ namespace Senparc.Ncf.XncfBase
                             {
                                 continue;//忽略抽象类
                             }
+
                             //Console.WriteLine(t.GetType().Name);
                             //获取 XncfRegister
                             if (t.GetInterfaces().Contains(typeof(IXncfRegister)))
@@ -157,7 +164,7 @@ namespace Senparc.Ncf.XncfBase
                             }
 
                             //配置 ServiceBase
-                            if (t.IsSubclassOf(typeof(ServiceBase<>)) 
+                            if (t.IsSubclassOf(typeof(ServiceBase<>))
                                 //|| t.IsInstanceOfType(typeof(IServiceDataBase))
                                 )
                             {
@@ -165,6 +172,9 @@ namespace Senparc.Ncf.XncfBase
                             }
                         }
                     }
+
+                    SetLog(sb, "-----------------------------------------------------------------------------------");
+                    SetLog(sb, "");
                 }
                 catch (Exception ex)
                 {
@@ -300,7 +310,15 @@ namespace Senparc.Ncf.XncfBase
             //XNCF 模块进行 Service 注册
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
-                xncfRegister.AddXncfModule(services, configuration, env);
+                try
+                {
+                    xncfRegister.AddXncfModule(services, configuration, env);
+                }
+                catch (Exception ex)
+                {
+                    _ = new NcfExceptionBase($"{xncfRegister.Name} 模块 xncfRegister.AddXncfModule() 出错 ：{ex.Message}", ex);
+
+                }
             }
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
 

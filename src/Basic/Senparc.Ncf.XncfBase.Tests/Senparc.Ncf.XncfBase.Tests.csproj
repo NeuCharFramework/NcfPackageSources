@@ -28,6 +28,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
+		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Core.Tests\Senparc.Ncf.Core.Tests.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 	</ItemGroup>
