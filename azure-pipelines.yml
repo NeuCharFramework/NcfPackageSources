@@ -13,7 +13,7 @@ variables:
   solution: '**/NcfPackageSources.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  MSBuildSDKsPath: 'C:\\hostedtoolcache\\windows\\dotnet\\sdk\\6.0.407\\Sdks'
+#  MSBuildSDKsPath: 'C:\\hostedtoolcache\\windows\\dotnet\\sdk\\6.0.407\\Sdks'
 
 steps:
 
