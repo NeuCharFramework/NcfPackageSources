@@ -18,6 +18,11 @@ namespace Senparc.Xncf.DatabaseToolkit
     {
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
+            // TODO: 专门做数据库，负责定时项目的注册
+
+            //TOOD: 按照不同租户，需要区分
+            DateTime lastAlertTime = DateTime.MinValue;
+
             xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
                 name: "定时备份",
                 intervalTime: TimeSpan.FromSeconds(30),
@@ -37,7 +42,16 @@ namespace Senparc.Xncf.DatabaseToolkit
                             var xncfIsValiable = await xncfRegisterManager.CheckXncfValiable(this);
                             if (!xncfIsValiable)
                             {
-                                throw new NcfModuleException($"{this.MenuName} 模块当前不可用或未启用，跳过数据库自动备份轮询");
+                                //同一时间内只提示一次
+                                if (SystemTime.NowDiff(lastAlertTime) > TimeSpan.FromMinutes(10))
+                                {
+                                    lastAlertTime = SystemTime.Now.DateTime;
+                                    throw new NcfModuleException($"{this.MenuName} 模块当前不可用或未启用，跳过数据库自动备份轮询");
+                                }
+                                else
+                                {
+                                    return;
+                                }
                             }
 
                             //初始化数据库备份方法
