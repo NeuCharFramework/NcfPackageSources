@@ -50,7 +50,7 @@ namespace Senparc.Xncf.PromptRange
         public float PresencePenalty { get; private set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组）
+        /// 停止序列（JSON 数组） //todo 真的可以为null吗？
         /// </summary>
         [CanBeNull]
         public string StopSequences { get; private set; }

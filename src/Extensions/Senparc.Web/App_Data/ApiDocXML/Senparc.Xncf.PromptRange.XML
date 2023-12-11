@@ -13,6 +13,7 @@
             <summary>
             传入promptItem，生成结果
             暂时只能在PromptItemAppService中调用
+            采用了SemanticKernel来实现
             </summary>
             <param name="promptItem"></param>
             <returns></returns>
@@ -287,6 +288,11 @@
             数据库中的 PromptResult 实体
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.LlmModels">
+            <summary>
+            数据库中的 LlmModel 实体
+            </summary>
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Models.PromptResult">
             <summary>
             PromptResult 数据库实体
@@ -309,12 +315,12 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScore">
             <summary>
-            机器人打分，0-100分
+            机器人打分，0-10分
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.HumanScore">
             <summary>
-            人类打分，0-100分
+            人类打分，0-10分
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.RobotTestExceptedResult">
@@ -356,6 +362,20 @@
             <summary>
             PromptItemVersion 
             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.ManualScoring(System.Int32)">
+            <summary>
+            更新手动评分
+            </summary>
+            <param name="score"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScoring(System.Int32)">
+            <summary>
+            更新自动机器评分
+            </summary>
+            <param name="score"></param>
+            <returns></returns>
         </member>
         <member name="T:Senparc.Xncf.PromptRange.Models.TestType">
             <summary>
@@ -454,7 +474,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.StopSequences">
             <summary>
-            停止序列（JSON 数组）
+            停止序列（JSON 数组） //todo 真的可以为null吗？
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.NumsOfResults">
@@ -530,6 +550,15 @@
             <param name="ids"></param>
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.RobotScore(System.Int32,System.Collections.Generic.List{System.String},System.Boolean)">
+            <summary>
+            接受一个promptItemId，然后找到所有的promptResult，然后进行评分
+            </summary>
+            <param name="promptResultId"></param>
+            <param name="expectedResultList"></param>
+            <param name="isRefresh"></param>
+            <returns></returns>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Name">
             <summary>

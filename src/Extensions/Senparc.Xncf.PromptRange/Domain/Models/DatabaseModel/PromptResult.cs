@@ -30,12 +30,12 @@ namespace Senparc.Xncf.PromptRange.Models
         public double CostTime { get; private set; }
 
         /// <summary>
-        /// 机器人打分，0-100分
+        /// 机器人打分，0-10分
         /// </summary>
         public long RobotScore { get; private set; }
 
         /// <summary>
-        /// 人类打分，0-100分
+        /// 人类打分，0-10分
         /// </summary>
         public int HumanScore { get; private set; }
 
@@ -98,7 +98,7 @@ namespace Senparc.Xncf.PromptRange.Models
             ResultCostToken = dto.ResultCostToken;
             TotalCostToken = dto.TotalCostToken;
             PromptItemVersion = dto.PromptItemVersion;
-            // PromptItemId = dto.PromptItemId;
+            PromptItemId = dto.PromptItemId;
         }
         
         
@@ -143,9 +143,26 @@ namespace Senparc.Xncf.PromptRange.Models
         //    PromptItemVersion = promptResultDto.PromptItemVersion;
         //}
 
-        public PromptResult Scoring(int score)
+        /// <summary>
+        /// 更新手动评分
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        public PromptResult ManualScoring(int score)
         {
             HumanScore = score;
+
+            return this;
+        }
+        
+        /// <summary>
+        /// 更新自动机器评分
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        public PromptResult RobotScoring(int score)
+        {
+            RobotScore = score;
 
             return this;
         }
