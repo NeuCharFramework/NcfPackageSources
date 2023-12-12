@@ -5,8 +5,12 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Microsoft.SemanticKernel.Prompt;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -70,10 +74,48 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             return promptItem;
         }
-        
-        // public async Task<PromptItem> GetByIdAsync(int id)
-        // {
-        //     return await base.GetObjectAsync(p => p.Id == id);
-        // }
+
+
+        /// <summary>
+        /// 输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
+        /// 即从该节点到root节点的最短路径
+        /// </summary>
+        /// <param name="promptItemId">提示词 Item 的 Id</param>
+        /// <returns >版本树</returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<TreeNode<PromptItem>> GenerateVersionHistory(int promptItemId)
+        {
+            // 找到对应的promptItem
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
+            if (promptItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            return await this.GenerateVersionHistory(promptItem.Version).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
+        /// 即从该节点到root节点的最短路径
+        /// </summary>
+        /// <param name="curVersion">当前版本号</param>
+        /// <returns>版本树</returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<TreeNode<PromptItem>> GenerateVersionHistory(string curVersion)
+        {
+            // 找到对应的promptItem
+            var promptItem = await this.GetObjectAsync(p => p.Version.StartsWith(curVersion));
+            if (promptItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            // 生成树
+            var root = new TreeNode<PromptItem>(data: promptItem, name: promptItem.Version);
+            var childNode = await this.GenerateVersionHistory(root.Name).ConfigureAwait(false);
+
+            return root;
+        }
     }
 }

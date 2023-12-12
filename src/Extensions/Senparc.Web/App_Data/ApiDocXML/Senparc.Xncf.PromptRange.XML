@@ -9,6 +9,24 @@
             全局常量配置
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.Int32)">
+            <summary>
+            输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
+            即从该节点到root节点的最短路径
+            </summary>
+            <param name="promptItemId">提示词 Item 的 Id</param>
+            <returns >版本树</returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.String)">
+            <summary>
+            输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
+            即从该节点到root节点的最短路径
+            </summary>
+            <param name="curVersion">当前版本号</param>
+            <returns>版本树</returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
             <summary>
             传入promptItem，生成结果
@@ -507,6 +525,15 @@
             最后一次运行时间
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.GetParentVersion">
+            <summary>
+            获取当前版本的父版本
+            例如：2021.08.01.1-1 的父版本为 2021.08.01.1
+                 2021.08.01.1-2 的父版本为 2021.08.01.1
+                 2021.08.01.1-1-1 的父版本为 2021.08.01.1-1
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>
             将 AppService 暴露为 WebApi
@@ -550,6 +577,19 @@
             <param name="ids"></param>
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName">
+            <summary>
+            列出所有的promptItem的id和name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.FindItemHistory(System.Int32)">
+            <summary>
+            根据ID，找到对应的promptItem的所有父级的信息
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.RobotScore(System.Int32,System.Collections.Generic.List{System.String},System.Boolean)">
             <summary>

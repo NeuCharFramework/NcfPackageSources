@@ -216,6 +216,26 @@ namespace Senparc.Xncf.PromptRange
         //     this.Version = newVersion;
         // }
 
+        /// <summary>
+        /// 获取当前版本的父版本
+        /// 例如：2021.08.01.1-1 的父版本为 2021.08.01.1
+        ///      2021.08.01.1-2 的父版本为 2021.08.01.1
+        ///      2021.08.01.1-1-1 的父版本为 2021.08.01.1-1
+        /// </summary>
+        /// <returns></returns>
+        [CanBeNull]
+        public string GetParentVersion()
+        {
+            if (this.Version.Contains('-'))
+            {
+                // 去掉最后一个“-”及其后面的内容
+                var index = this.Version.LastIndexOf('-');
+                return this.Version.Substring(0, index);
+            }
+
+            return null;
+        }
+
         public PromptItem Switch(bool show)
         {
             this.Show = show;
