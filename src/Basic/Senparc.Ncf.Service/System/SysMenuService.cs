@@ -43,7 +43,6 @@ namespace Senparc.Ncf.Service
         /// TODO...重建菜单角色缓存
         /// </summary>
         /// <param name="sysMenuDto"></param>
-        /// <param name="buttons"></param>
         /// <returns></returns>
         public virtual async Task<SysMenu> CreateOrUpdateAsync(SysMenuDto sysMenuDto)
         {

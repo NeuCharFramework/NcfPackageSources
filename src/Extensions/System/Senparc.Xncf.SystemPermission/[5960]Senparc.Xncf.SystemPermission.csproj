@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.4-beta11</Version>
+    <Version>0.5.1.1-beta1</Version>
     <AssemblyName>Senparc.Xncf.SystemPermission</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemPermission</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -38,40 +38,32 @@
   <ItemGroup>
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.4.2" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Remove="Domain\Migrations\Oracle\**" />
     <Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Compile Remove="OHS\**" />
+    <Content Remove="Domain\Migrations\Oracle\**" />
     <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <Content Remove="OHS\**" />
+    <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
     <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <EmbeddedResource Remove="OHS\**" />
+    <None Remove="Domain\Migrations\Oracle\**" />
     <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <None Remove="OHS\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />
+    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />-->
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.32" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ACL\Repository\" />
-    <Folder Include="Domain\Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="App_Data\Database\SenparcConfig.config">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>

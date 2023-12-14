@@ -10,6 +10,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
+using Senparc.CO2NET.Trace;
 
 namespace Senparc.Xncf.XncfModuleManager
 {
@@ -33,11 +34,22 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            Console.WriteLine("1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
-            //安装或升级数据库
-            await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
+            try
+            {
+                Console.WriteLine($"1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
+                //安装或升级数据库
+                await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            Console.WriteLine("1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
+                Console.WriteLine($"1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog("Xncf.XncfModuleManager.InstallOrUpdateAsync 发生异常", $"{ex.Message}");
+                SenparcTrace.BaseExceptionLog(ex);
+
+                throw;
+            }
+          
 
             //await InstallModulesAndMenusAsync(serviceProvider);
 

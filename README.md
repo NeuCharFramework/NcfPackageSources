@@ -9,7 +9,7 @@
 
 
 ## 说明
-本项目为 [NCF（NeuCharFramework）](https://github.com/NeuCharFramework/NCF) 模板官方包的源码。
+本项目为 [NCF（NeuCharFramework）](https://github.com/NeuCharFramework/NCF) 模板官方包的核心基础库源码。
 
 
 |    文件夹     |    说明         |

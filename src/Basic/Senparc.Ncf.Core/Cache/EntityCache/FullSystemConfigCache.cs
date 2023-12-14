@@ -30,9 +30,14 @@ namespace Senparc.Ncf.Core.Cache
             {
                 systemConfig = (_dataContext.BaseDataContext as SenparcEntitiesBase).Set<SystemConfig>().FirstOrDefault();
             }
-            catch
+            catch (Exception ex)
             {
-                new NcfUninstallException("FullSystemConfigCache 访问数据库异常，推测系统未安装或未正确配置数据库");
+                var msg = @$"FullSystemConfigCache 访问数据库异常，推测系统未安装或未正确配置数据库。
+提示信息：
+{ex.Message}
+{ex.StackTrace}
+";
+                new NcfUninstallException(msg);
             }
 
             FullSystemConfig fullSystemConfig;

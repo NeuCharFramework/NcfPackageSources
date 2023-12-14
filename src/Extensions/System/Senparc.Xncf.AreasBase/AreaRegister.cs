@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Exceptions;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -12,7 +13,7 @@ using Senparc.Ncf.XncfBase;
 using System;
 using System.Linq;
 
-namespace Senparc.Ncf.Core.Areas
+namespace Senparc.Xncf.AreasBase
 {
     /// <summary>
     /// 对所有扩展 Area 进行注册
@@ -83,11 +84,11 @@ namespace Senparc.Ncf.Core.Areas
             var builder = services.AddRazorPages(addRazorPagesConfig)
             //注册所有 Ncf 的 Area 模块（必须）
             .AddNcfAreas(env, eachRegsiterAction);
-
+            Console.WriteLine("临时：StartWebEngine");
             return services.StartEngine(configuration, env);
         }
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
 
         /// <summary>
         /// 启动带 Web 功能的 NCF 引擎（如不需要使用 Web，如 RazorPage，可以直接使用 <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>）
