@@ -8,22 +8,16 @@ namespace Senparc.Xncf.PromptRange.Models
     /// <summary>
     /// PromptResult 数据库实体
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(PromptResult))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //必须添加前缀，防止全系统中发生冲突
     [Serializable]
     public class PromptResult : EntityBase<int>
     {
         /// <summary>
-        /// PromptGroupId，并添加PromptGroup类作为属性
-        /// </summary>
-
-        public int PromptGroupId { get; private set; }
-        //public PromptGroup PromptGroup { get; private set; }
-
-        /// <summary>
         /// LlmModelId，并添加LlmModel类作为属性
         /// </summary>
         public int LlmModelId { get; private set; }
-        public LlmModel LlmModel { get; private set; }
+
+        // public LlmModel LlmModel { get; private set; }
 
         /// <summary>
         /// 结果字符串
@@ -36,17 +30,17 @@ namespace Senparc.Xncf.PromptRange.Models
         public double CostTime { get; private set; }
 
         /// <summary>
-        /// 机器人打分，0-100分
+        /// 机器人打分，0-10分
         /// </summary>
         public long RobotScore { get; private set; }
 
         /// <summary>
-        /// 人类打分，0-100分
+        /// 人类打分，0-10分
         /// </summary>
         public int HumanScore { get; private set; }
 
         /// <summary>
-        /// RobotTestExceptedResult
+        /// RobotTestExceptedResult 自动打分期望值
         /// </summary>
         public string RobotTestExceptedResult { get; private set; }
 
@@ -79,19 +73,41 @@ namespace Senparc.Xncf.PromptRange.Models
         /// PromptItem，并添加PromptItem类作为属性
         /// </summary>
         //public PromptItem PromptItem { get; private set; }
-
         public int PromptItemId { get; private set; }
 
         /// <summary>
-        /// PromptItemVersion
+        /// PromptItemVersion 
         /// </summary>
         public string PromptItemVersion { get; private set; }
 
-        private PromptResult() { }
-
-        public PromptResult(int promptGroupId, int llmModelId, string resultString, double costTime, int robotScore, int humanScore, string robotTestExceptedResult, bool isRobotTestExactlyEquat, TestType testType, int promptCostToken, int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId)
+        private PromptResult()
         {
-            PromptGroupId = promptGroupId;
+        }
+
+        public PromptResult(PromptResultDto dto)
+        {
+            LlmModelId = dto.LlmModelId;
+            ResultString = dto.ResultString;
+            CostTime = dto.CostTime;
+            RobotScore = dto.RobotScore;
+            HumanScore = dto.HumanScore;
+            RobotTestExceptedResult = dto.RobotTestExceptedResult;
+            IsRobotTestExactlyEquat = dto.IsRobotTestExactlyEquat;
+            TestType = dto.TestType;
+            PromptCostToken = dto.PromptCostToken;
+            ResultCostToken = dto.ResultCostToken;
+            TotalCostToken = dto.TotalCostToken;
+            PromptItemVersion = dto.PromptItemVersion;
+            PromptItemId = dto.PromptItemId;
+        }
+        
+        
+        
+        public PromptResult(
+            int llmModelId, string resultString, double costTime, int robotScore, int humanScore,
+            string robotTestExceptedResult, bool isRobotTestExactlyEquat, TestType testType, int promptCostToken,
+            int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId)
+        {
             LlmModelId = llmModelId;
             ResultString = resultString;
             CostTime = costTime;
@@ -127,9 +143,26 @@ namespace Senparc.Xncf.PromptRange.Models
         //    PromptItemVersion = promptResultDto.PromptItemVersion;
         //}
 
-        public PromptResult Scoring(int score)
+        /// <summary>
+        /// 更新手动评分
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        public PromptResult ManualScoring(int score)
         {
             HumanScore = score;
+
+            return this;
+        }
+        
+        /// <summary>
+        /// 更新自动机器评分
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        public PromptResult RobotScoring(int score)
+        {
+            RobotScore = score;
 
             return this;
         }
@@ -144,10 +177,12 @@ namespace Senparc.Xncf.PromptRange.Models
         /// 文字
         /// </summary>
         Text,
+
         /// <summary>
         /// 图形
         /// </summary>
         Graph,
+
         /// <summary>
         /// 声音
         /// </summary>
