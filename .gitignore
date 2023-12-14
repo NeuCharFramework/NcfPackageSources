@@ -70,3 +70,4 @@ obj/
 /src/Extensions/Senparc.Xncf.PromptRange.Tests/Domain/PromptPlugins/XncfBuilderPlugin/
 /src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Tests/Domain/PromptPlugins/XncfBuilderPlugin
 /src/Extensions/Senparc.Xncf.PromptRange/objForNcf
+/src/DevelopmentTools/Senparc.Web.DatabasePlant/App_Data/Database/SenparcConfig.config

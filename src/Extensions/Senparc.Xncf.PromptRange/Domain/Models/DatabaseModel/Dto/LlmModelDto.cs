@@ -39,20 +39,20 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public int MaxToken { get; private set; }
 
-        /// <summary>
-        /// TextCompletionModelName（可选）
-        /// </summary>
-        public string TextCompletionModelName { get; private set; }
-
-        /// <summary>
-        /// TextEmbeddingModelName（可选）
-        /// </summary>
-        public string TextEmbeddingModelName { get; private set; }
-
-        /// <summary>
-        /// OtherModelName（可选）
-        /// </summary>
-        public string OtherModelName { get; private set; }
+        // /// <summary>
+        // /// TextCompletionModelName（可选）
+        // /// </summary>
+        // public string TextCompletionModelName { get; private set; }
+        //
+        // /// <summary>
+        // /// TextEmbeddingModelName（可选）
+        // /// </summary>
+        // public string TextEmbeddingModelName { get; private set; }
+        //
+        // /// <summary>
+        // /// OtherModelName（可选）
+        // /// </summary>
+        // public string OtherModelName { get; private set; }
 
         private LlmModelDto() { }
     }

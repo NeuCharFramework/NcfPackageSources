@@ -4,13 +4,15 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Senparc.AI;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Models
 {
     /// <summary>
     /// LlmModel 数据库实体
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(LlmModel))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(LlmModel))] //必须添加前缀，防止全系统中发生冲突
     [Serializable]
     public class LlmModel : EntityBase<int>
     {
@@ -25,6 +27,12 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         [Required, MaxLength(250)]
         public string Endpoint { get; private set; }
+
+        /// <summary>
+        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        /// </summary>
+        [Required, MaxLength(20)]
+        public string ModelType { get; private set; }
 
         /// <summary>
         /// OrganizationId（可选）
@@ -55,44 +63,76 @@ namespace Senparc.Xncf.PromptRange.Models
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
-        /// <summary>
-        /// TextCompletionModelName（可选）
-        /// </summary>
-        [MaxLength(100)]
-        public string TextCompletionModelName { get; private set; }
-
-        /// <summary>
-        /// TextEmbeddingModelName（可选）
-        /// </summary>
-        [MaxLength(100)]
-        public string TextEmbeddingModelName { get; private set; }
-
-        /// <summary>
-        /// OtherModelName（可选）
-        /// </summary>
-        [MaxLength(100)]
-        public string OtherModelName { get; private set; }
+        // /// <summary>
+        // /// TextCompletionModelName（可选）
+        // /// </summary>
+        // [MaxLength(100)]
+        // public string TextCompletionModelName { get; private set; }
+        //
+        // /// <summary>
+        // /// TextEmbeddingModelName（可选）
+        // /// </summary>
+        // [MaxLength(100)]
+        // public string TextEmbeddingModelName { get; private set; }
+        //
+        // /// <summary>
+        // /// OtherModelName（可选）
+        // /// </summary>
+        // [MaxLength(100)]
+        // public string OtherModelName { get; private set; }
 
         /// <summary>
         /// 是否展示
         /// </summary>
         public bool Show { get; private set; }
 
-        private LlmModel() { }
+        private LlmModel()
+        {
+        }
 
-        public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
+        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
+            string apiVersion, string note, int maxToken)
         {
             Name = name;
             Endpoint = endpoint;
+            ModelType = modelType;
             OrganizationId = organizationId;
             ApiKey = apiKey;
             ApiVersion = apiVersion;
             Note = note;
             MaxToken = maxToken;
-            TextCompletionModelName = textCompletionModelName;
-            TextEmbeddingModelName = textEmbeddingModelName;
-            OtherModelName = otherModelName;
         }
+
+        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
+            string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName,
+            string otherModelName)
+        {
+            Name = name;
+            Endpoint = endpoint;
+            ModelType = modelType;
+            OrganizationId = organizationId;
+            ApiKey = apiKey;
+            ApiVersion = apiVersion;
+            Note = note;
+            MaxToken = maxToken;
+            // TextCompletionModelName = textCompletionModelName;
+            // TextEmbeddingModelName = textEmbeddingModelName;
+            // OtherModelName = otherModelName;
+        }
+
+        //public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
+        //{
+        //    Name = name;
+        //    Endpoint = endpoint;
+        //    OrganizationId = organizationId;
+        //    ApiKey = apiKey;
+        //    ApiVersion = apiVersion;
+        //    Note = note;
+        //    MaxToken = maxToken;
+        //    TextCompletionModelName = textCompletionModelName;
+        //    TextEmbeddingModelName = textEmbeddingModelName;
+        //    OtherModelName = otherModelName;
+        //}
 
         public LlmModel(LlmModelDto llmModelDto)
         {
@@ -103,9 +143,9 @@ namespace Senparc.Xncf.PromptRange.Models
             ApiVersion = llmModelDto.ApiVersion;
             Note = llmModelDto.Note;
             MaxToken = llmModelDto.MaxToken;
-            TextCompletionModelName = llmModelDto.TextCompletionModelName;
-            TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
-            OtherModelName = llmModelDto.OtherModelName;
+            // TextCompletionModelName = llmModelDto.TextCompletionModelName;
+            // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
+            // OtherModelName = llmModelDto.OtherModelName;
         }
 
         public LlmModel Switch(bool show)
@@ -118,6 +158,16 @@ namespace Senparc.Xncf.PromptRange.Models
         {
             this.Name = name;
             return Switch(show);
+        }
+
+        public string GetModelId()
+        {
+            if (string.IsNullOrWhiteSpace(this.Name))
+            {
+                return "text-davinci-003";
+            }
+
+            return this.Name.Contains("azure") ? this.Name.Substring("azure-".Length) : this.Name;
         }
     }
 }
