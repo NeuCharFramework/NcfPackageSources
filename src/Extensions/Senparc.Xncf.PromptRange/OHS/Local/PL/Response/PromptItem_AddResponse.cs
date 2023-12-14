@@ -4,21 +4,17 @@ using Senparc.Xncf.PromptRange.Models;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
-    public class PromptItem_AddResponse
+    public class PromptItem_AddResponse : BaseResponse
     {
-        public PromptItem_AddResponse()
-        {
-        }
-
         public string PromptContent { get; set; }
-        public DateTime LastRunTime { get; set; }
+
 
         /// <summary>
         /// 版本号，格式为 yyyy.MM.dd.Version
         /// </summary>
         public string Version { get; set; }
 
-        #region llm config
+        #region model config
 
         public int ModelId { get; set; }
 
@@ -49,13 +45,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         #endregion
 
-        public List<PromptResult> PromptResultList { get; set; } = new List<PromptResult>(0);
+        /// <summary>
+        /// Note
+        /// </summary>
+        public string Note { get; set; }
 
-        public PromptItem_AddResponse(string promptContent, DateTime lastRunTime, string version, int modelId,
+        public List<PromptResult> PromptResultList { get; set; }
+
+        public PromptItem_AddResponse(string promptContent, string version, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, string stopSequences)
         {
             PromptContent = promptContent;
-            LastRunTime = lastRunTime;
+            LastRunTime = DateTime.Now;
             Version = version;
             ModelId = modelId;
             MaxToken = maxToken;

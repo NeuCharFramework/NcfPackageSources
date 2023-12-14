@@ -16,8 +16,6 @@ namespace Senparc.Xncf.PromptRange
     [Serializable]
     public class PromptItem : EntityBase<int>
     {
-        public string Name { get; private set; }
-
         /// <summary>
         /// Prompt内容
         /// </summary>
@@ -78,18 +76,64 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public int EvaluationScore { get; private set; }
 
+        #region Full Version
+
         /// <summary>
-        /// 版本号，格式为 yyyy.MM.dd.Build
+        /// <para>版本号，格式为 Name-Tactic-Aiming</para> 
+        /// <example>2023.12.14.1-T1.1-A123</example>
+        /// <para>Name: <inheritdoc cref="Name"/></para>
+        /// <para>Tactic: <inheritdoc cref="Tactic"/></para>
+        /// <para>Aiming: <inheritdoc cref="Aiming"/></para>
+        ///         为   Tx              这里的x为分支号，str,允许1.1.1。。。
+        ///      Aiming   为   Ax              这里的x为打靶次数，int
         /// </summary>
         [Required]
-        public string Version { get; private set; }
+        public string FullVersion
+        {
+            get => $"{Name}-T{Tactic}-A{Aiming}";
+            private set { }
+        }
+
+        /// <summary>
+        /// <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
+        /// <example>示例一
+        ///     <code>2023.12.14.1</code>
+        /// </example>
+        /// <example>示例二
+        ///     <code>2023.12.14.123</code>
+        /// </example>
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// <para>格式为 x.x.x... ,这里的x为分支号</para>
+        /// <para>在完整的版本号中，应该用-T连接Name</para>
+        /// 
+        /// </summary>
+        public string Tactic { get; private set; }
+
+        /// <summary>
+        /// <para>为打靶次数，int</para>
+        /// </summary>
+        public int Aiming { get; private set; }
+
+        // public string Version { get; private set; }
+        
+        [CanBeNull] public string ParentTac { get; private set; }
+
+        #endregion
+
+        /// <summary>
+        /// Note（可选）
+        /// </summary>
+        public string Note { get; private set; }
 
         /// <summary>
         /// 最后一次运行时间
         /// </summary>
-        public DateTime LastRunTime { get; private set; }
+        public DateTime LastRunTime { get; private set; } = DateTime.Now;
 
-        [Required] public bool Show { get; private set; }
+        public bool IsShare { get; private set; } = false;
 
         private PromptItem()
         {
@@ -112,7 +156,7 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = chatSystemPrompt;
             TokenSelectionBiases = tokenSelectionBiases;
             EvaluationScore = evaluationScore;
-            Version = version;
+            // Version = version;
             LastRunTime = lastRunTime;
         }
 
@@ -133,112 +177,68 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
             TokenSelectionBiases = promptItemDto.TokenSelectionBiases;
             EvaluationScore = promptItemDto.EvaluationScore;
-            Version = promptItemDto.Version;
+            // Version = promptItemDto.Version;
             LastRunTime = promptItemDto.LastRunTime;
         }
 
-        ///// <summary>
-        ///// 获取版本信息
-        ///// </summary>
-        ///// <param name="version">如果留空则默认获取当前示例的 Version</param>
-        ///// <returns></returns>
-        //public VersionInfo GetVersionInfo(string version = null)
-        //{
-        //    // TODO: 正则快还是split快
-        //    string regexPattern = @"(\d+)\.(\d+)\.(\d+)\.(\d+)";
-        //    Match match = Regex.Match(version, regexPattern);
-        //    if (match.Success)
-        //    {
-        //        int ConverToInt(string str) => int.Parse(str);
-
-        //        int major = ConverToInt(match.Groups[1].Value);
-        //        int minor = ConverToInt(match.Groups[2].Value);
-        //        int patch = ConverToInt(match.Groups[3].Value);
-        //        int build = ConverToInt(match.Groups[4].Value);
-
-        //        return new VersionInfo(major, minor, patch, build);
-        //    }
-        //    else
-        //    {
-        //        return new VersionInfo(0, 0, 0, 0);
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 生成新的版本号
-        ///// </summary>
-        ///// <param name="lastVersion">上一个版本，如果为 null，则使用当前实例的 Version</param>
-        ///// <returns></returns>
-        //public VersionInfo GenerateNewVersion(string lastVersion = null)
-        //{
-        //    var today = SystemTime.Now;
-
-        //    if (string.IsNullOrWhiteSpace(lastVersion))
-        //    {
-        //        return new VersionInfo(today.Year, today.Month, today.Day, 1);
-        //    }
-        //    var lastVersionInfo = GetVersionInfo(lastVersion);
-        //    lastVersionInfo.Build++;
-        //    return lastVersionInfo;
-
-        //    //lastVersion ??= Version ?? "";
-
-        //    //var today = SystemTime.Now;
-        //    //int major = today.Year;
-        //    //int minor = today.Month;
-        //    //int patch = today.Day;
-
-        //    //var lastVersionInfo = GetVersionInfo(lastVersion);
-        //    //if (lastVersionInfo.Major != 0 &&
-        //    //    lastVersionInfo.Major == major &&
-        //    //    lastVersionInfo.Minor == minor &&
-        //    //    lastVersionInfo.Patch == patch)
-        //    //{
-        //    //    //当天版本，Build 号加 1
-        //    //    lastVersionInfo.Build++;
-        //    //    return lastVersionInfo;
-        //    //}
-        //    //else
-        //    //{
-        //    //    //返回当天第一个版本
-        //    //    var versionInfo = new VersionInfo(major, minor, patch, 1);
-        //    //    return versionInfo;
-        //    //}
-        //}
-
-        // /// <summary>
-        // /// 更新版本号
-        // /// 
-        // /// </summary>
-        // public void UpdateVersion(string newVersion)
-        // {
-        //     //todo: validate
-        //     this.Version = newVersion;
-        // }
-
         /// <summary>
-        /// 获取当前版本的父版本
-        /// 例如：2021.08.01.1-1 的父版本为 2021.08.01.1
-        ///      2021.08.01.1-2 的父版本为 2021.08.01.1
-        ///      2021.08.01.1-1-1 的父版本为 2021.08.01.1-1
+        /// 新增时用的构造函数
         /// </summary>
-        /// <returns></returns>
-        [CanBeNull]
-        public string GetParentVersion()
+        /// <param name="content"></param>
+        /// <param name="modelId"></param>
+        /// <param name="topP"></param>
+        /// <param name="temperature"></param>
+        /// <param name="maxToken"></param>
+        /// <param name="frequencyPenalty"></param>
+        /// <param name="presencePenalty"></param>
+        /// <param name="stopSequences"></param>
+        /// <param name="numsOfResults"></param>
+        /// <param name="name"></param>
+        /// <param name="tactic"></param>
+        /// <param name="aiming"></param>
+        /// <param name="parentTac"></param>
+        public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
+            string stopSequences, int numsOfResults, string name, string tactic, int aiming,string parentTac)
         {
-            if (this.Version.Contains('-'))
-            {
-                // 去掉最后一个“-”及其后面的内容
-                var index = this.Version.LastIndexOf('-');
-                return this.Version.Substring(0, index);
-            }
-
-            return null;
+            Content = content;
+            ModelId = modelId;
+            TopP = topP;
+            Temperature = temperature;
+            MaxToken = maxToken;
+            FrequencyPenalty = frequencyPenalty;
+            PresencePenalty = presencePenalty;
+            StopSequences = stopSequences;
+            NumsOfResults = numsOfResults;
+            Name = name;
+            Tactic = tactic;
+            Aiming = aiming;
+            ParentTac = parentTac;
         }
+
+        // [Obsolete]
+        // /// <summary>
+        // /// 获取当前版本的父版本
+        // /// 例如：2021.08.01.1-1 的父版本为 2021.08.01.1
+        // ///      2021.08.01.1-2 的父版本为 2021.08.01.1
+        // ///      2021.08.01.1-1-1 的父版本为 2021.08.01.1-1
+        // /// </summary>
+        // /// <returns></returns>
+        // [CanBeNull]
+        // public string GetParentVersion()
+        // {
+        //     if (this.Version.Contains('-'))
+        //     {
+        //         // 去掉最后一个“-”及其后面的内容
+        //         var index = this.Version.LastIndexOf('-');
+        //         return this.Version.Substring(0, index);
+        //     }
+        //
+        //     return null;
+        // }
 
         public PromptItem Switch(bool show)
         {
-            this.Show = show;
+            this.IsShare = show;
 
             return this;
         }

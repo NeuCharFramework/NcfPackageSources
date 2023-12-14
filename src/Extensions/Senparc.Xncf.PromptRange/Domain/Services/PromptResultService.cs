@@ -116,7 +116,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
         0, 0, null, false, TestType.Text,
         promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-        promptItem.Version, promptItem.Id);
+        promptItem.FullVersion, promptItem.Id);
 
       await base.SaveObjectAsync(promptResult);
 
@@ -180,7 +180,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
         0, 0, null, false, TestType.Text,
         promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-        promptItem.Version, promptItem.Id);
+        promptItem.FullVersion, promptItem.Id);
 
       await base.SaveObjectAsync(promptResult);
 

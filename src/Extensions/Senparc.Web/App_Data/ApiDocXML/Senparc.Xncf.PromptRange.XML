@@ -9,6 +9,14 @@
             全局常量配置
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.AddPromptItemAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
+            <summary>
+            新增， 打靶时
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.Int32)">
             <summary>
             输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
@@ -515,9 +523,43 @@
             评估参数
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Version">
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.FullVersion">
             <summary>
-            版本号，格式为 yyyy.MM.dd.Build
+            <para>版本号，格式为 Name-Tactic-Aiming</para> 
+            <example>2023.12.14.1-T1.1-A123</example>
+            <para>Name: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.Name"/></para>
+            <para>Tactic: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.Tactic"/></para>
+            <para>Aiming: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.Aiming"/></para>
+                    为   Tx              这里的x为分支号，str,允许1.1.1。。。
+                 Aiming   为   Ax              这里的x为打靶次数，int
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Name">
+            <summary>
+            <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
+            <example>示例一
+                <code>2023.12.14.1</code>
+            </example>
+            <example>示例二
+                <code>2023.12.14.123</code>
+            </example>
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Tactic">
+            <summary>
+            <para>格式为 x.x.x... ,这里的x为分支号</para>
+            <para>在完整的版本号中，应该用-T连接Name</para>
+            
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Aiming">
+            <summary>
+            <para>为打靶次数，int</para>
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Note">
+            <summary>
+            Note（可选）
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.LastRunTime">
@@ -525,14 +567,23 @@
             最后一次运行时间
             </summary>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.PromptItem.GetParentVersion">
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(System.String,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.Int32,System.String,System.String,System.Int32,System.String)">
             <summary>
-            获取当前版本的父版本
-            例如：2021.08.01.1-1 的父版本为 2021.08.01.1
-                 2021.08.01.1-2 的父版本为 2021.08.01.1
-                 2021.08.01.1-1-1 的父版本为 2021.08.01.1-1
+            新增时用的构造函数
             </summary>
-            <returns></returns>
+            <param name="content"></param>
+            <param name="modelId"></param>
+            <param name="topP"></param>
+            <param name="temperature"></param>
+            <param name="maxToken"></param>
+            <param name="frequencyPenalty"></param>
+            <param name="presencePenalty"></param>
+            <param name="stopSequences"></param>
+            <param name="numsOfResults"></param>
+            <param name="name"></param>
+            <param name="tactic"></param>
+            <param name="aiming"></param>
+            <param name="parentTac"></param>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>
@@ -688,6 +739,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.StopSequences">
             <summary>
             停止序列（JSON 数组）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Note">
+            <summary>
+            Note
             </summary>
         </member>
         <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">

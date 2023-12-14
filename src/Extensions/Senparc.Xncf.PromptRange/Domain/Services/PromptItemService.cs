@@ -1,15 +1,12 @@
-﻿using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.Repository;
+﻿using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Microsoft.SemanticKernel.Prompt;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Ncf.Core.Extensions;
-using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
+using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -21,11 +18,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
         }
 
+        /// <summary>
+        /// 新增， 打靶时
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
         public async Task<PromptItem> AddPromptItemAsync(PromptItem_AddRequest request)
         {
             #region validate request dto
 
-            var name = request.Content.SubString(0, 5);
+            // IsNewTactic IsNewSubTactic不能同时为True
+            if (request.IsNewTactic && request.IsNewSubTactic)
+            {
+                throw new NcfExceptionBase("IsNewTactic IsNewSubTactic不能同时为True");
+            }
+            // var name = request.Content.SubString(0, 5);
 
             // 默认值为2000
             request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
@@ -33,46 +41,101 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
+
             // 更新版本号
             var today = SystemTime.Now;
-            var updatedVersion = "";
-            if (string.IsNullOrWhiteSpace(request.Version))
+            var todayStr = today.ToString("yyyy.MM.dd");
+
+            #region 根据参数构造PromptItem
+
+            PromptItem toSavePromptItem = null;
+            if (request.Id == null)
             {
-                //TODO: 从数据库中获取最新的版本号
+                // 如果没有id，就新建一个全新的Item
 
-                var usedVersionList = (await base.GetFullListAsync(
-                    p => p.Version.StartsWith(today.ToString("yyyy.MM.dd")),
-                    p => p.Version,
-                    Ncf.Core.Enums.OrderingType.Ascending
-                )).ToList();
-                var cnt = usedVersionList.Count(item => !item.Version.Contains("-"));
+                List<PromptItem> todayPromptList = await base.GetFullListAsync(p => p.Name.StartsWith(todayStr));
+                // var name = $"{todayStr}.{todayPromptList.Count + 1}";
+                // var tactic = "1";
+                // var aiming = 1;
 
 
-                updatedVersion = today.ToString($"yyyy.MM.dd.{cnt + 1}");
+                toSavePromptItem = new PromptItem(
+                    name: $"{todayStr}.{todayPromptList.Count + 1}",
+                    content: request.Content,
+                    modelId: request.ModelId,
+                    topP: request.TopP,
+                    temperature: request.Temperature,
+                    maxToken: request.MaxToken,
+                    frequencyPenalty: request.FrequencyPenalty,
+                    presencePenalty: request.PresencePenalty,
+                    stopSequences: request.StopSequences,
+                    numsOfResults: request.NumsOfResults,
+                    tactic: "1",
+                    aiming: 1,
+                    parentTac: ""
+                );
             }
-            else // 已有版号，在已有上修改
+            else
             {
-                var usedVersionList = (await base.GetFullListAsync(
-                    p => p.Version.StartsWith(request.Version),
-                    p => p.Id,
-                    Ncf.Core.Enums.OrderingType.Ascending
-                )).ToList();
-                var cnt = usedVersionList.Count(item => !item.Version.Substring(request.Version.Length).Contains('-'));
-                updatedVersion = request.Version + (cnt + 1);
+                // 如果有id，就先找到对应的promptItem
+                var oldPrompt = await base.GetObjectAsync(p => p.Id == request.Id);
+                string name = oldPrompt.Name;
+                string oldTactic = oldPrompt.Tactic;
+                int oldAiming = oldPrompt.Aiming;
+
+                if (request.IsNewTactic || request.IsNewSubTactic)
+                {
+                    var parentTac = request.IsNewTactic ? oldPrompt.ParentTac : oldPrompt.Tactic;
+                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
+                    toSavePromptItem = new PromptItem(
+                        name: name,
+                        content: request.Content,
+                        modelId: request.ModelId,
+                        topP: request.TopP,
+                        temperature: request.Temperature,
+                        maxToken: request.MaxToken,
+                        frequencyPenalty: request.FrequencyPenalty,
+                        presencePenalty: request.PresencePenalty,
+                        stopSequences: request.StopSequences,
+                        numsOfResults: request.NumsOfResults,
+                        tactic: $"{fullList.Count + 1}",
+                        aiming: 1,
+                        parentTac: parentTac
+                    );
+                }
+                else
+                {
+                    if (request.IsNewAiming) // 不改变分支
+                    {
+                        List<PromptItem> fullList = await base.GetFullListAsync(p =>
+                            p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A'))
+                            ));
+                        toSavePromptItem = new PromptItem(
+                            name: name,
+                            content: request.Content,
+                            modelId: request.ModelId,
+                            topP: request.TopP,
+                            temperature: request.Temperature,
+                            maxToken: request.MaxToken,
+                            frequencyPenalty: request.FrequencyPenalty,
+                            presencePenalty: request.PresencePenalty,
+                            stopSequences: request.StopSequences,
+                            numsOfResults: request.NumsOfResults,
+                            tactic: oldTactic,
+                            aiming: fullList.Count + 1,
+                            parentTac: oldPrompt.ParentTac
+                        );
+                    }
+                    // todo 是否允许重新生成？
+                    // return toSavePromptItem;
+                }
             }
 
-            PromptItem promptItem = new(name, request.Content, request.ModelId,
-                request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty, request.PresencePenalty,
-                stopSequences: "",
-                request.NumsOfResults, "", "", 0, updatedVersion, DateTime.Now);
+            #endregion
 
+            await base.SaveObjectAsync(toSavePromptItem);
 
-            //Version = this.GenerateNewVersion(Version).ToString();
-            //promptItem.UpdateVersion();
-
-            await base.SaveObjectAsync(promptItem);
-
-            return promptItem;
+            return toSavePromptItem;
         }
 
 
@@ -92,7 +155,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 throw new NcfExceptionBase("找不到对应的promptItem");
             }
 
-            return await this.GenerateVersionHistory(promptItem.Version).ConfigureAwait(false);
+            return await this.GenerateVersionHistory(promptItem.FullVersion).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -104,18 +167,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <exception cref="NcfExceptionBase"></exception>
         public async Task<TreeNode<PromptItem>> GenerateVersionHistory(string curVersion)
         {
-            // 找到对应的promptItem
-            var promptItem = await this.GetObjectAsync(p => p.Version.StartsWith(curVersion));
+            #region 找到对应的promptItem
+
+            var promptItem = await this.GetObjectAsync(p => p.FullVersion == curVersion);
             if (promptItem == null)
             {
                 throw new NcfExceptionBase("找不到对应的promptItem");
             }
 
-            // 生成树
-            var root = new TreeNode<PromptItem>(data: promptItem, name: promptItem.Version);
-            var childNode = await this.GenerateVersionHistory(root.Name).ConfigureAwait(false);
+            #endregion
 
-            return root;
+            List<PromptItem> fullList = await this.GetFullListAsync(p => p.Name == promptItem.Name);
+            // 根据 FullVersion, 将list转为Dictionary
+            var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
+
+            // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
+            var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            // 从root版本, 生成TreeNode，然后循环构建版本树
+            PromptItem rootItem = itemMapByVersion[$"{promptItem.Name}-T1-A1"];
+
+            var rootNode = new TreeNode<PromptItem>(rootItem.FullVersion, promptItem);
+            foreach (var childItem in itemGroupByParentTac[rootItem.Tactic])
+            {
+                var childNode = new TreeNode<PromptItem>(childItem.FullVersion, childItem);
+                rootNode.Children.Add(childNode);
+            }
+
+
+            return rootNode;
         }
     }
 }

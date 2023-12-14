@@ -1,10 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
-
         #region Model Config
 
         /// <summary>
@@ -37,12 +37,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         #endregion
 
-        public int ModelId { get; set; }
+        [Required] public int ModelId { get; set; }
 
-        public string Content { get; set; }
+        [Required] public string Content { get; set; }
 
-        public string Version { get; set; }
+        // public string Version { get; set; }
 
-        public int NumsOfResults { get; set; } = 0;
+        [Required] public int NumsOfResults { get; set; } = 0;
+
+        [Required] public bool IsNewTactic { get; set; } = false;
+        [Required] public bool IsNewSubTactic { get; set; } = false;
+
+        [Required] public bool IsNewAiming { get; set; } = false;
+
+        public int? Id { get; set; }
     }
 }

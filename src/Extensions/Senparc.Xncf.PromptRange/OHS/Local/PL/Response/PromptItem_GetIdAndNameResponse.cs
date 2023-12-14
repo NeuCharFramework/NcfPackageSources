@@ -7,5 +7,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public int Id { get; set; }
 
         public string Name { get; set; }
+        
+        public string FullVersion { get; set; }
     }
 }

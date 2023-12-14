@@ -17,18 +17,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     public class PromptItemAppService : AppServiceBase
     {
-        private readonly RepositoryBase<PromptItem> _promptItemRepository;
+        // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly LlmModelService _llmModelService;
         private readonly PromptResultService _promptResultService;
 
         public PromptItemAppService(IServiceProvider serviceProvider,
-            RepositoryBase<PromptItem> promptItemRepository,
+            // RepositoryBase<PromptItem> promptItemRepository,
             PromptItemService promptItemService,
             LlmModelService llmModelService,
             PromptResultService promptResultService) : base(serviceProvider)
         {
-            _promptItemRepository = promptItemRepository;
+            // _promptItemRepository = promptItemRepository;
             _promptItemService = promptItemService;
             _llmModelService = llmModelService;
             _promptResultService = promptResultService;
@@ -40,16 +40,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-                    // save promptItem
+                    #region save promptItem
+
                     var promptItem = await _promptItemService.AddPromptItemAsync(request);
                     if (promptItem == null)
                     {
-                        throw new NcfExceptionBase("添加失败");
+                        throw new NcfExceptionBase("新增失败");
                     }
 
-                    var promptItemResponseDto = new PromptItem_AddResponse(promptItem.Content, DateTime.Now, promptItem.Version,
-                        promptItem.ModelId, promptItem.MaxToken, promptItem.Temperature, promptItem.TopP,
-                        promptItem.FrequencyPenalty, promptItem.StopSequences);
+                    #endregion
+
+
+                    var promptItemResponseDto = new PromptItem_AddResponse(
+                        promptContent: promptItem.Content,
+                        version: promptItem.FullVersion,
+                        promptItem.ModelId,
+                        promptItem.MaxToken,
+                        promptItem.Temperature,
+                        promptItem.TopP,
+                        promptItem.FrequencyPenalty,
+                        promptItem.StopSequences
+                    );
 
                     // 是否立即生成结果，暂时不添加这个开关
                     if (true)
@@ -63,10 +74,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             promptItemResponseDto.PromptResultList.Add(promptResult);
                         }
                     }
-
                     return promptItemResponseDto;
-                    // return respDto;
-                });
+                }
+            );
         }
 
 
@@ -89,7 +99,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return promptItems.Select(p => new PromptItem_GetIdAndNameResponse
                     {
                         Id = p.Id,
-                        Name = p.Name
+                        Name = p.Name,
+                        FullVersion = p.FullVersion
                     }).ToList();
                 });
         }
@@ -123,8 +134,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return new PromptItem_GetResponse()
                     {
                         PromptName = prompt.Name,
-                        Show = prompt.Show,
-                        Version = prompt.Version,
+                        Show = prompt.IsShare,
+                        Version = prompt.FullVersion,
                         ModelName = model.GetModelId(),
                         ResultString = result.ResultString,
                         Score = Convert.ToInt32(result.RobotScore > 0 ? result.RobotScore : result.HumanScore),
@@ -134,31 +145,31 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
 
-        [ApiBind]
-        public async Task<AppResponseBase<List<PromptItem_GetResponse>>> GetVersionInfoList()
-        {
-            return await this
-                .GetResponseAsync<AppResponseBase<List<PromptItem_GetResponse>>, List<PromptItem_GetResponse>>(
-                    async (response, logger) =>
-                    {
-                        var promptItemList = await _promptItemService.GetFullListAsync(p => true, p => p.Id,
-                            Ncf.Core.Enums.OrderingType.Ascending);
-
-                        List<int> modelIdList = promptItemList.Select(p => p.ModelId).Distinct().ToList();
-
-                        var modelList = await _llmModelService.GetFullListAsync(p => modelIdList.Contains(p.Id),
-                            p => p.Id, Ncf.Core.Enums.OrderingType.Ascending);
-
-                        return promptItemList.Select(item => new PromptItem_GetResponse()
-                            {
-                                Version = item.Version,
-                                Time = item.AddTime.ToString("yyyy-MM-dd"),
-                                ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(),
-                                PromptName = item.Name,
-                            })
-                            .ToList();
-                    });
-        }
+        // [ApiBind]
+        // public async Task<AppResponseBase<List<PromptItem_GetResponse>>> GetVersionInfoList()
+        // {
+        //     return await this
+        //         .GetResponseAsync<AppResponseBase<List<PromptItem_GetResponse>>, List<PromptItem_GetResponse>>(
+        //             async (response, logger) =>
+        //             {
+        //                 var promptItemList = await _promptItemService.GetFullListAsync(p => true, p => p.Id,
+        //                     Ncf.Core.Enums.OrderingType.Ascending);
+        //
+        //                 List<int> modelIdList = promptItemList.Select(p => p.ModelId).Distinct().ToList();
+        //
+        //                 var modelList = await _llmModelService.GetFullListAsync(p => modelIdList.Contains(p.Id),
+        //                     p => p.Id, Ncf.Core.Enums.OrderingType.Ascending);
+        //
+        //                 return promptItemList.Select(item => new PromptItem_GetResponse()
+        //                     {
+        //                         Version = item.FullVersion,
+        //                         Time = item.AddTime.ToString("yyyy-MM-dd"),
+        //                         ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(),
+        //                         PromptName = item.Name,
+        //                     })
+        //                     .ToList();
+        //             });
+        // }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest req)
