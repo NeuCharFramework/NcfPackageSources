@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.PromptRange.Models;
 
@@ -11,9 +12,10 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 {
     [DbContext(typeof(PromptRangeSenparcEntities_SqlServer))]
-    partial class PromptRangeSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20231113062505_addsome")]
+    partial class addsome
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +78,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("OtherModelName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -85,6 +91,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TextCompletionModelName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("TextEmbeddingModelName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -127,6 +141,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("PromptCostToken")
                         .HasColumnType("int");
 
+                    b.Property<int>("PromptGroupId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PromptItemId")
                         .HasColumnType("int");
 
@@ -160,6 +177,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LlmModelId");
+
                     b.ToTable("Senparc_PromptRange_PromptResult");
                 });
 
@@ -178,9 +197,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("Aiming")
-                        .HasColumnType("int");
-
                     b.Property<string>("ChatSystemPrompt")
                         .HasColumnType("nvarchar(max)");
 
@@ -196,21 +212,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<float>("FrequencyPenalty")
                         .HasColumnType("real");
 
-                    b.Property<string>("FullVersion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsShare")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("LastRunTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MaxToken")
-                        .HasColumnType("int");
+                    b.Property<float>("MaxToken")
+                        .HasColumnType("real");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
@@ -218,14 +227,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("NumsOfResults")
                         .HasColumnType("int");
-
-                    b.Property<string>("ParentTac")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("PresencePenalty")
                         .HasColumnType("real");
@@ -234,10 +237,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<string>("StopSequences")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Show")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Tactic")
+                    b.Property<string>("StopSequences")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("Temperature")
@@ -252,9 +255,23 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<float>("TopP")
                         .HasColumnType("real");
 
+                    b.Property<string>("Version")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptItem");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.PromptResult", b =>
+                {
+                    b.HasOne("Senparc.Xncf.PromptRange.Models.LlmModel", "LlmModel")
+                        .WithMany()
+                        .HasForeignKey("LlmModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LlmModel");
                 });
 #pragma warning restore 612, 618
         }

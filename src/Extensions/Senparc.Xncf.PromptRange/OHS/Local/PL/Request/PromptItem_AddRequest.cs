@@ -1,25 +1,26 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
-        public int PromptGroupId { get; set; }
+        #region Model Config
 
         /// <summary>
         /// TopP
         /// </summary>
-        public float TopP { get; set; }
+        public float TopP { get; set; } = 0.5f;
 
         /// <summary>
         /// 温度
         /// </summary>
-        public float Temperature { get; set; }
+        public float Temperature { get; set; } = 0.5f;
 
         /// <summary>
         /// 最大 Token 数
         /// </summary>
-        public int MaxToken { get; set; }
+        public int MaxToken { get; set; } = 2000;
 
         /// <summary>
         /// 频率惩罚
@@ -29,10 +30,26 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         public float PresencePenalty { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StopSequences { get; set; }
 
-        public int ModelId { get; set; }
+        #endregion
 
+        [Required] public int ModelId { get; set; }
 
-        public string Content { get;  set; }
+        [Required] public string Content { get; set; }
+
+        // public string Version { get; set; }
+
+        [Required] public int NumsOfResults { get; set; } = 0;
+
+        [Required] public bool IsNewTactic { get; set; } = false;
+        [Required] public bool IsNewSubTactic { get; set; } = false;
+
+        [Required] public bool IsNewAiming { get; set; } = false;
+
+        public int? Id { get; set; }
     }
 }

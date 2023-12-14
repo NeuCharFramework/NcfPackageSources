@@ -1,182 +1,175 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Senparc.AI;
-using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.Xncf.PromptRange.Models;
-using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     public class PromptItemAppService : AppServiceBase
     {
-        private readonly RepositoryBase<PromptItem> _promptItemRepository;
+        // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly LlmModelService _llmModelService;
         private readonly PromptResultService _promptResultService;
 
         public PromptItemAppService(IServiceProvider serviceProvider,
-            RepositoryBase<PromptItem> promptItemRepository,
+            // RepositoryBase<PromptItem> promptItemRepository,
             PromptItemService promptItemService,
             LlmModelService llmModelService,
             PromptResultService promptResultService) : base(serviceProvider)
         {
-            _promptItemRepository = promptItemRepository;
+            // _promptItemRepository = promptItemRepository;
             _promptItemService = promptItemService;
-            this._llmModelService = llmModelService;
-            this._promptResultService = promptResultService;
+            _llmModelService = llmModelService;
+            _promptResultService = promptResultService;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<PromptResultDto>> Add(PromptItem_AddRequest request)
+        public async Task<AppResponseBase<PromptItem_AddResponse>> Add(PromptItem_AddRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptResultDto>, PromptResultDto>(async (response, logger) =>
-            {
-                var promptItem = await _promptItemService.AddPromptItemAsync(request);
-
-                #region AI 调用
-
-                var llmModel = await _llmModelService.GetObjectAsync(z => z.Id == request.ModelId);
-
-                var helper = new AI.Kernel.Helpers.SemanticKernelHelper();
-
-                //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-                var handler = new SemanticAiHandler(helper);
-
-                //定义 AI 接口调用参数和 Token 限制等
-                var promptParameter = new PromptConfigParameter()
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
+                async (response, logger) =>
                 {
-                    MaxTokens = request.MaxToken > 0 ? request.MaxToken : 2000,
-                    Temperature = request.Temperature,
-                    TopP = request.TopP,
-                    FrequencyPenalty = request.FrequencyPenalty,
-                    PresencePenalty = request.PresencePenalty
-                };
+                    #region save promptItem
 
-                var functionPrompt = @"请根据提示输出对应内容：
-{{$input}}";
+                    var promptItem = await _promptItemService.AddPromptItemAsync(request);
+                    if (promptItem == null)
+                    {
+                        throw new NcfExceptionBase("新增失败");
+                    }
 
-                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
+                    #endregion
 
-                //准备运行
-                var userId = "JeffreySu";//区分用户
-                var modelName = "text-davinci-003";//默认使用模型
-                var iWantToRun =
-                     handler.IWantTo()
-                            .ConfigModel(ConfigModel.TextCompletion, userId, modelName, aiSetting)
-                            .BuildKernel()
-                            .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter, functionPrompt).iWantToRun;
 
-                var dt1 = SystemTime.Now;
+                    var promptItemResponseDto = new PromptItem_AddResponse(
+                        promptContent: promptItem.Content,
+                        version: promptItem.FullVersion,
+                        promptItem.ModelId,
+                        promptItem.MaxToken,
+                        promptItem.Temperature,
+                        promptItem.TopP,
+                        promptItem.FrequencyPenalty,
+                        promptItem.StopSequences
+                    );
 
-                //TODO:单独输入内容
-                var context = iWantToRun.CreateNewContext();
-                context.context.Variables["input"] = request.Content;
-
-                var aiRequest = iWantToRun.CreateRequest(context.context.Variables, true);
-                var result = await iWantToRun.RunAsync(aiRequest);
-
-                var promptCostToken = 0;
-                var resultCostToken = 0;
-
-                var promptResult = new PromptResult(request.PromptGroupId, request.ModelId, result.Output, SystemTime.DiffTotalMS(dt1), 0, 0, null, false, TestType.Text, promptCostToken, resultCostToken, promptCostToken + resultCostToken, promptItem.Version, promptItem.Id);
-
-                await _promptResultService.SaveObjectAsync(promptResult);
-
-                #endregion
-
-                return _promptResultService.Mapper.Map<PromptResultDto>(promptResult);
-            });
+                    // 是否立即生成结果，暂时不添加这个开关
+                    if (true)
+                    {
+                        // 如果立即生成，就根据numsOfResults立即生成
+                        for (var i = 0; i < request.NumsOfResults; i++)
+                        {
+                            // 分别生成结果
+                            // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
+                            var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItem);
+                            promptItemResponseDto.PromptResultList.Add(promptResult);
+                        }
+                    }
+                    return promptItemResponseDto;
+                }
+            );
         }
 
+
+        /// <summary>
+        /// 列出所有的promptItem的id和name
+        /// </summary>
+        /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName()
         {
-            return await this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>, List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
-            {
-                return (await _promptItemService.GetFullListAsync(p => true, p => p.Id, Ncf.Core.Enums.OrderingType.Ascending)).Select(p => new PromptItem_GetIdAndNameResponse
+            return await
+                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
+                    List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
                 {
-                    Id = p.Id,
-                    Name = p.Name
-                }).ToList();
-            });
-        }
-
-        [ApiBind]
-        public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
-        {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(async (response, logger) =>
-            {
-                var prompt = await _promptItemService.GetObjectAsync(p => p.Id == id);
-                var model = await _llmModelService.GetObjectAsync(p => p.Id == prompt.ModelId);
-                var result = await _promptResultService.GetObjectAsync(p => p.PromptItemId == prompt.Id);
-
-                return new PromptItem_GetResponse()
-                {
-                    PromptName = prompt.Name,
-                    Show = prompt.Show,
-                    Version = prompt.Version,
-                    ModelName = model.Name,
-                    ResultString = result.ResultString,
-                    Score = Convert.ToInt32(result.RobotScore > 0 ? result.RobotScore : result.HumanScore),
-                    Time = prompt.AddTime.ToString("yyyy-MM-dd")
-                };
-            });
-        }
-
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> Scoring(PromptItem_ScoringRequest req)
-        {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
-            {
-                var result = await _promptResultService.GetObjectAsync(p => p.PromptItemId == req.PromptItemId);
-
-                result.Scoring(req.HumanScore);
-
-                await _promptResultService.SaveObjectAsync(result);
-
-                return "ok";
-            });
-        }
-
-        [ApiBind]
-        public async Task<AppResponseBase<List<PromptItem_GetResponse>>> GetVersionInfoList()
-        {
-            return await this.GetResponseAsync<AppResponseBase<List<PromptItem_GetResponse>>, List<PromptItem_GetResponse>>(async (response, logger) =>
-            {
-                var result = await _promptItemService.GetFullListAsync(p => true, p => p.Id, Ncf.Core.Enums.OrderingType.Descending);
-
-                List<int> modelIdList = result.Select(p => p.ModelId).Distinct().ToList();
-
-                var modelList = await _llmModelService.GetFullListAsync(p => modelIdList.Contains(p.Id), p => p.Id, Ncf.Core.Enums.OrderingType.Descending);
-
-                List<PromptItem_GetResponse> list = new List<PromptItem_GetResponse>();
-                foreach (var item in result)
-                {
-                    list.Add(new PromptItem_GetResponse()
+                    var promptItems = await _promptItemService
+                        .GetFullListAsync(
+                            p => true,
+                            p => p.Id,
+                            Ncf.Core.Enums.OrderingType.Ascending);
+                    return promptItems.Select(p => new PromptItem_GetIdAndNameResponse
                     {
-                        Version = item.Version,
-                        Time = item.AddTime.ToString("yyyy-MM-dd"),
-                        ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.Name,
-                        PromptName = item.Name,
-                    });
-                }
-
-                return list;
-            });
+                        Id = p.Id,
+                        Name = p.Name,
+                        FullVersion = p.FullVersion
+                    }).ToList();
+                });
         }
+
+        /// <summary>
+        /// 根据ID，找到对应的promptItem的所有父级的信息
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <returns></returns>
+        public async Task<AppResponseBase<VersionHistory_GetResponse>> FindItemHistory(int promptItemId)
+        {
+            // 根据promptItemId找到promptItem， 然后获取version
+            return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
+                async (resp, logger) =>
+                {
+                    var root = await _promptItemService.GenerateVersionHistory(promptItemId);
+                    return new VersionHistory_GetResponse(root);
+                });
+        }
+
+        [ApiBind]
+        public async Task<AppResponseBase<PromptItem_GetResponse>> Get([FromQuery] int id)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
+                async (response, logger) =>
+                {
+                    var prompt = await _promptItemService.GetObjectAsync(p => p.Id == id);
+                    var model = await _llmModelService.GetObjectAsync(p => p.Id == prompt.ModelId);
+                    var result = await _promptResultService.GetObjectAsync(p => p.PromptItemId == prompt.Id);
+
+                    return new PromptItem_GetResponse()
+                    {
+                        PromptName = prompt.Name,
+                        Show = prompt.IsShare,
+                        Version = prompt.FullVersion,
+                        ModelName = model.GetModelId(),
+                        ResultString = result.ResultString,
+                        Score = Convert.ToInt32(result.RobotScore > 0 ? result.RobotScore : result.HumanScore),
+                        Time = prompt.AddTime.ToString("yyyy-MM-dd")
+                    };
+                });
+        }
+
+
+        // [ApiBind]
+        // public async Task<AppResponseBase<List<PromptItem_GetResponse>>> GetVersionInfoList()
+        // {
+        //     return await this
+        //         .GetResponseAsync<AppResponseBase<List<PromptItem_GetResponse>>, List<PromptItem_GetResponse>>(
+        //             async (response, logger) =>
+        //             {
+        //                 var promptItemList = await _promptItemService.GetFullListAsync(p => true, p => p.Id,
+        //                     Ncf.Core.Enums.OrderingType.Ascending);
+        //
+        //                 List<int> modelIdList = promptItemList.Select(p => p.ModelId).Distinct().ToList();
+        //
+        //                 var modelList = await _llmModelService.GetFullListAsync(p => modelIdList.Contains(p.Id),
+        //                     p => p.Id, Ncf.Core.Enums.OrderingType.Ascending);
+        //
+        //                 return promptItemList.Select(item => new PromptItem_GetResponse()
+        //                     {
+        //                         Version = item.FullVersion,
+        //                         Time = item.AddTime.ToString("yyyy-MM-dd"),
+        //                         ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(),
+        //                         PromptName = item.Name,
+        //                     })
+        //                     .ToList();
+        //             });
+        // }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest req)
@@ -184,7 +177,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var result = await _promptItemService.GetObjectAsync(p => p.Id == req.Id) ??
-                    throw new Exception("未找到prompt");
+                             throw new Exception("未找到prompt");
 
                 result.ModifyName(req.Name);
 
@@ -200,13 +193,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var result = await _promptItemService.GetObjectAsync(p => p.Id == id) ??
-                    throw new Exception("未找到prompt");
+                             throw new Exception("未找到prompt");
 
                 await _promptItemService.DeleteObjectAsync(result);
 
                 return "ok";
             });
         }
-
     }
 }

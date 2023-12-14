@@ -13,6 +13,11 @@
         public string Endpoint { get; set; }
 
         /// <summary>
+        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        /// </summary>
+        public string ModelType { get;  set; }
+
+        /// <summary>
         /// ApiKey
         /// </summary>
         public string ApiKey { get; set; }
@@ -21,5 +26,7 @@
         /// OrganizationId
         /// </summary>
         public string OrganizationId { get; set; }
+
+        public string ApiVersion { get; set; }
     }
 }

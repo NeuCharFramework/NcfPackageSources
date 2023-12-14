@@ -2,34 +2,201 @@
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptItemService : ServiceBase<PromptItem>
     {
-        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo,
+            serviceProvider)
         {
         }
 
+        /// <summary>
+        /// 新增， 打靶时
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
         public async Task<PromptItem> AddPromptItemAsync(PromptItem_AddRequest request)
         {
-            string name = request.Content.Length < 5 ? request.Content : request.Content.Substring(0, 5);
+            #region validate request dto
 
-            PromptItem promptItem = new PromptItem(
-               request.PresencePenalty, name,
-               request.Content, request.ModelId, request.PromptGroupId, request.MaxToken,
-               request.Temperature, request.TopP,
-               request.FrequencyPenalty, 0, "",
-               "", "", 0, "", DateTime.Now);
+            // IsNewTactic IsNewSubTactic不能同时为True
+            if (request.IsNewTactic && request.IsNewSubTactic)
+            {
+                throw new NcfExceptionBase("IsNewTactic IsNewSubTactic不能同时为True");
+            }
+            // var name = request.Content.SubString(0, 5);
 
-            promptItem.UpdateVersion();
+            // 默认值为2000
+            request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
+            request.StopSequences = request.StopSequences == "" ? null : request.StopSequences;
 
-            await base.SaveObjectAsync(promptItem);
+            #endregion
 
-            return promptItem;
+
+            // 更新版本号
+            var today = SystemTime.Now;
+            var todayStr = today.ToString("yyyy.MM.dd");
+
+            #region 根据参数构造PromptItem
+
+            PromptItem toSavePromptItem = null;
+            if (request.Id == null)
+            {
+                // 如果没有id，就新建一个全新的Item
+
+                List<PromptItem> todayPromptList = await base.GetFullListAsync(p => p.Name.StartsWith(todayStr));
+                // var name = $"{todayStr}.{todayPromptList.Count + 1}";
+                // var tactic = "1";
+                // var aiming = 1;
+
+
+                toSavePromptItem = new PromptItem(
+                    name: $"{todayStr}.{todayPromptList.Count + 1}",
+                    content: request.Content,
+                    modelId: request.ModelId,
+                    topP: request.TopP,
+                    temperature: request.Temperature,
+                    maxToken: request.MaxToken,
+                    frequencyPenalty: request.FrequencyPenalty,
+                    presencePenalty: request.PresencePenalty,
+                    stopSequences: request.StopSequences,
+                    numsOfResults: request.NumsOfResults,
+                    tactic: "1",
+                    aiming: 1,
+                    parentTac: ""
+                );
+            }
+            else
+            {
+                // 如果有id，就先找到对应的promptItem
+                var oldPrompt = await base.GetObjectAsync(p => p.Id == request.Id);
+                string name = oldPrompt.Name;
+                string oldTactic = oldPrompt.Tactic;
+                int oldAiming = oldPrompt.Aiming;
+
+                if (request.IsNewTactic || request.IsNewSubTactic)
+                {
+                    var parentTac = request.IsNewTactic ? oldPrompt.ParentTac : oldPrompt.Tactic;
+                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
+                    toSavePromptItem = new PromptItem(
+                        name: name,
+                        content: request.Content,
+                        modelId: request.ModelId,
+                        topP: request.TopP,
+                        temperature: request.Temperature,
+                        maxToken: request.MaxToken,
+                        frequencyPenalty: request.FrequencyPenalty,
+                        presencePenalty: request.PresencePenalty,
+                        stopSequences: request.StopSequences,
+                        numsOfResults: request.NumsOfResults,
+                        tactic: $"{fullList.Count + 1}",
+                        aiming: 1,
+                        parentTac: parentTac
+                    );
+                }
+                else
+                {
+                    if (request.IsNewAiming) // 不改变分支
+                    {
+                        List<PromptItem> fullList = await base.GetFullListAsync(p =>
+                            p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A'))
+                            ));
+                        toSavePromptItem = new PromptItem(
+                            name: name,
+                            content: request.Content,
+                            modelId: request.ModelId,
+                            topP: request.TopP,
+                            temperature: request.Temperature,
+                            maxToken: request.MaxToken,
+                            frequencyPenalty: request.FrequencyPenalty,
+                            presencePenalty: request.PresencePenalty,
+                            stopSequences: request.StopSequences,
+                            numsOfResults: request.NumsOfResults,
+                            tactic: oldTactic,
+                            aiming: fullList.Count + 1,
+                            parentTac: oldPrompt.ParentTac
+                        );
+                    }
+                    // todo 是否允许重新生成？
+                    // return toSavePromptItem;
+                }
+            }
+
+            #endregion
+
+            await base.SaveObjectAsync(toSavePromptItem);
+
+            return toSavePromptItem;
         }
 
 
+        /// <summary>
+        /// 输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
+        /// 即从该节点到root节点的最短路径
+        /// </summary>
+        /// <param name="promptItemId">提示词 Item 的 Id</param>
+        /// <returns >版本树</returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<TreeNode<PromptItem>> GenerateVersionHistory(int promptItemId)
+        {
+            // 找到对应的promptItem
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
+            if (promptItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            return await this.GenerateVersionHistory(promptItem.FullVersion).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
+        /// 即从该节点到root节点的最短路径
+        /// </summary>
+        /// <param name="curVersion">当前版本号</param>
+        /// <returns>版本树</returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<TreeNode<PromptItem>> GenerateVersionHistory(string curVersion)
+        {
+            #region 找到对应的promptItem
+
+            var promptItem = await this.GetObjectAsync(p => p.FullVersion == curVersion);
+            if (promptItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            #endregion
+
+            List<PromptItem> fullList = await this.GetFullListAsync(p => p.Name == promptItem.Name);
+            // 根据 FullVersion, 将list转为Dictionary
+            var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
+
+            // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
+            var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            // 从root版本, 生成TreeNode，然后循环构建版本树
+            PromptItem rootItem = itemMapByVersion[$"{promptItem.Name}-T1-A1"];
+
+            var rootNode = new TreeNode<PromptItem>(rootItem.FullVersion, promptItem);
+            foreach (var childItem in itemGroupByParentTac[rootItem.Tactic])
+            {
+                var childNode = new TreeNode<PromptItem>(childItem.FullVersion, childItem);
+                rootNode.Children.Add(childNode);
+            }
+
+
+            return rootNode;
+        }
     }
 }
