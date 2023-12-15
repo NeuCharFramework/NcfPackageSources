@@ -276,7 +276,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var index = fullList.IndexOf(curItem);
             if (index != -1)
             {
-                for (var i = 0; i < index; i++)
+                for (var i = 0; i <= index; i++)
                 {
                     versionHistoryList.Add(fullList[i].FullVersion);
                     scoreHistoryList.Add(fullList[i].EvaluationScore);
