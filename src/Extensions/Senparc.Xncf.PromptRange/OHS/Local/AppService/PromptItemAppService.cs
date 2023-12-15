@@ -198,6 +198,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                              throw new Exception("未找到prompt");
 
                 await _promptItemService.DeleteObjectAsync(result);
+                await _promptResultService.BatchDeleteWithItemId(id);
 
                 return "ok";
             });
