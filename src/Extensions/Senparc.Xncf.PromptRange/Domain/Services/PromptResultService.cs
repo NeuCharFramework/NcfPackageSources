@@ -15,6 +15,7 @@ using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
@@ -202,8 +203,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // 根据id搜索数据库
-            // var promptResult = _promptResultRepository.GetObjectById(id);
-            var promptResult = await base.GetObjectAsync(z => z.Id == id);
+            var promptResult = await base.GetObjectAsync(result => result.Id == id);
             if (promptResult == null)
             {
                 throw new NcfExceptionBase($"未找到{id}对应的结果");
@@ -258,7 +258,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId);
 
             // if user dont want force refreshing, and this promptResult is scored 
-            if (!isRefresh && promptResult.RobotScore != 0)
+            if (!isRefresh && promptResult.RobotScore < 0)
             {
                 throw new NcfExceptionBase("该结果已经评分过了, 请选择强制刷新");
             }
@@ -329,12 +329,26 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             // If there is a match, the number will be match.Value
             if (match.Success)
             {
-                
+                await this.SaveObjectAsync(promptResult.RobotScoring(Convert.ToInt32(match.Value)));
                 return match.Value;
             }
 
             SenparcTrace.SendCustomLog("自动打分结果匹配失败", $"原文为{result.Output}，分数匹配失败");
             return "0";
+        }
+
+        public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)
+        {
+            try
+            {
+                await this.DeleteAllAsync(res => res.PromptItemId == promptItemId);
+            }
+            catch (Exception e)
+            {
+                throw new NcfExceptionBase($"删除{promptItemId}对应的结果失败, msg: {e.Message}");
+            }
+
+            return true;
         }
     }
 }
