@@ -689,6 +689,8 @@ var app = new Vue({
                     //console.log('testHandel res data:', res.data.data)
                     // 重新获取输出列表
                     this.getOutputList(item.promptId)
+                    // 重新获取图表
+                    this.getScoringTrendData()
                 } else {
                     alert('error!');
                 }
@@ -702,6 +704,8 @@ var app = new Vue({
                     //console.log('testHandel res data:', res.data.data)
                     // 重新获取输出列表
                     this.getOutputList(item.promptId)
+                    // 重新获取图表
+                    this.getScoringTrendData()
                 } else {
                     alert('error!');
                 }
@@ -743,7 +747,6 @@ var app = new Vue({
 
         // 打靶     
         async targetShootHandel() {
-            console.log(this.promptid,)
             if (this.promptid) {
                 this.tacticalFormVisible = true
                 return
@@ -1022,8 +1025,11 @@ var app = new Vue({
                     }
                 })
                 if (id) {
-                    // 设置 prompt选中
-                    this.promptid = id
+                    this.$nextTick(() => {
+                        // 设置 prompt选中
+                        this.promptid = id
+                    })
+                        
                 }
             } else {
                 alert('error');
@@ -1039,6 +1045,8 @@ var app = new Vue({
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
+                    // 重新获取图表
+                    this.getScoringTrendData()
                     if (this.promptDetail.id == id) {
                         // 将打靶按钮禁用
                         this.targetShootDisabled = true
