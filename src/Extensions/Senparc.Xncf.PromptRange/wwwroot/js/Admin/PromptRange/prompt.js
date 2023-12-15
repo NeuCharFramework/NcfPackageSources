@@ -63,8 +63,8 @@ var app = new Vue({
                     value: 0,
                     isSlider: true,
                     isStr: false,
-                    sliderMin: 0,
-                    sliderMax: 1,
+                    sliderMin: -2,
+                    sliderMax: 2,
                     sliderStep: 0.1
                 },
                 {
@@ -639,14 +639,12 @@ var app = new Vue({
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${id}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
-                let {promptResults = []} = res.data.data || {}
-                let _totalScore = 0
-                let _totalLen = 0
+                let {promptResults = [],promptItem={}} = res.data.data || {}
+                // 平均分 _totalScore/promptResults 保留整数
+                this.outputAverage = promptItem.evaluationScore; // 保留整数
                 // 输出列表
                 this.outputList = promptResults.map(item => {
                     if (item) {
-                        _totalScore += item.robotScore > -1 ? item.robotScore : 0
-                        _totalScore += item.humanScore > -1 ? item.humanScore : 0
                         item.promptId = this.promptDetail.id
                         item.version = this.promptDetail.fullVersion
                         item.scoreType = '1' // 1 ai、2手动 
@@ -666,14 +664,10 @@ var app = new Vue({
                             label: '预期结果3',
                             value: ''
                         }]
-                        if (item.isScore) {
-                            _totalLen += 1
-                        }
                     }
                     return item
                 })
-                // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverage = Math.round(_totalScore / _totalLen); // 保留整数
+                
 
             } else {
                 alert('error');
@@ -892,8 +886,8 @@ var app = new Vue({
                     value: 0,
                     isSlider: true,
                     isStr: false,
-                    sliderMin: 0,
-                    sliderMax: 1,
+                    sliderMin: -2,
+                    sliderMax: 2,
                     sliderStep: 0.1
                 },
                 {
@@ -1027,7 +1021,7 @@ var app = new Vue({
                 if (id) {
                     this.$nextTick(() => {
                         // 设置 prompt选中
-                        this.promptid = id
+                        this.promptid = Number(id)
                     })
                         
                 }
