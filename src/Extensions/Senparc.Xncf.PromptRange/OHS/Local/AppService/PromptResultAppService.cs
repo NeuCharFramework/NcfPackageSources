@@ -94,8 +94,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         p => p.Id,
                         OrderingType.Ascending
                     )).ToList();
+                    var item = await _promptItemService.GetObjectAsync(item => item.Id == promptItemId);
 
-                    return new PromptResult_ListResponse(promptItemId, result);
+                    return new PromptResult_ListResponse(promptItemId, item, result);
                 });
         }
 
@@ -118,7 +119,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     #endregion
 
 
-                    var resp = new PromptResult_ListResponse(promptItemId, new List<PromptResult>());
+                    var resp = new PromptResult_ListResponse(promptItemId, promptItem, new List<PromptResult>());
                     for (int i = 0; i < promptItem.NumsOfResults; i++)
                     {
                         var result = await _promptResultService.SenparcGenerateResultAsync(promptItem);

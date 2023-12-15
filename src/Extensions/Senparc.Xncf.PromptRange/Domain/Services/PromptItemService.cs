@@ -85,9 +85,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 string oldTactic = oldPrompt.Tactic;
                 int oldAiming = oldPrompt.Aiming;
 
-                if (request.IsNewTactic || request.IsNewSubTactic)
+                if (request.IsNewTactic)
                 {
-                    var parentTac = request.IsNewTactic ? oldPrompt.ParentTac : oldPrompt.Tactic;
+                    var parentTac = oldPrompt.ParentTac;
                     List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
                     toSavePromptItem = new PromptItem(
                         name: name,
@@ -101,6 +101,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         stopSequences: request.StopSequences,
                         numsOfResults: request.NumsOfResults,
                         tactic: $"{fullList.Count + 1}",
+                        aiming: 1,
+                        parentTac: parentTac
+                    );
+                }
+                else if (request.IsNewSubTactic)
+                {
+                    var parentTac = oldPrompt.Tactic;
+                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
+                    toSavePromptItem = new PromptItem(
+                        name: name,
+                        content: request.Content,
+                        modelId: request.ModelId,
+                        topP: request.TopP,
+                        temperature: request.Temperature,
+                        maxToken: request.MaxToken,
+                        frequencyPenalty: request.FrequencyPenalty,
+                        presencePenalty: request.PresencePenalty,
+                        stopSequences: request.StopSequences,
+                        numsOfResults: request.NumsOfResults,
+                        tactic: $"{parentTac}.{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac
                     );
