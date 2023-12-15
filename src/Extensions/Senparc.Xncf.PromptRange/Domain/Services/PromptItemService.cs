@@ -285,10 +285,5 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             return new PromptItem_HistoryScoreResponse(versionHistoryList, scoreHistoryList);
         }
-
-        public async void UpdateEvalScore(int promptItemId)
-        {
-            
-        }
     }
 }

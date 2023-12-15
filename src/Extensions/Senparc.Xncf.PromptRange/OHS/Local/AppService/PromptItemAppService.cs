@@ -25,7 +25,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptResultService _promptResultService;
 
         public PromptItemAppService(IServiceProvider serviceProvider,
-            // RepositoryBase<PromptItem> promptItemRepository,
             PromptItemService promptItemService,
             LlmModelService llmModelService,
             PromptResultService promptResultService
@@ -208,6 +207,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                              throw new Exception("未找到prompt");
 
                 await _promptItemService.DeleteObjectAsync(result);
+                
                 await _promptResultService.BatchDeleteWithItemId(id);
 
                 return "ok";
@@ -225,5 +225,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
                 async (response, logger) => { return await _promptItemService.getHistoryScore(promptItemId); });
         }
+        
+        
+       
     }
 }

@@ -37,7 +37,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
-                    await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
+                    PromptResult result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
+
+                    await _promptResultService.UpdateEvalScore(result.PromptItemId);
 
                     return "ok";
 
@@ -64,9 +66,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
-                    var robotScore = await _promptResultService.RobotScore(promptResultId, expectedResultList, isRefresh);
+                    var promptResult = await _promptResultService.RobotScore(promptResultId, expectedResultList, isRefresh);
 
-                    return robotScore;
+                    await _promptResultService.UpdateEvalScore(promptResult.PromptItemId);
+
+                    return "ok";
 
                     // var result = await _promptResultService.GetObjectAsync(p => p.Id == request.PromptResultId);
                     //

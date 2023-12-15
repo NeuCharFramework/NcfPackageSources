@@ -16,6 +16,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
@@ -27,18 +28,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
             LlmModelService llmModelService,
-            PromptItemService promptItemService,
-            PromptResultService promptResultService) : base(repo,
+            PromptItemService promptItemService) : base(repo,
             serviceProvider)
         {
             _llmModelService = llmModelService;
             _promptItemService = promptItemService;
-            _promptResultService = promptResultService;
         }
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
-        private readonly PromptResultService _promptResultService;
         private readonly LlmModelService _llmModelService;
 
 
@@ -214,43 +212,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             promptResult.ManualScoring(score);
 
-            this.UpdateEvalScore(promptResult.PromptItemId);
-
             await base.SaveObjectAsync(promptResult);
 
             return promptResult;
-        }
-
-        private async void UpdateEvalScore(int promptItemId)
-        {
-            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptItem");
-            }
-
-            List<PromptResult> promptResults = await _promptResultService.GetFullListAsync(p => p.PromptItemId == promptItemId);
-
-
-            int sum = 0;
-            int cnt = 0;
-            foreach (var promptResult in promptResults)
-            {
-                sum += promptResult.HumanScore < 0 ? (promptResult.RobotScore < 0 ? 0 : promptResult.RobotScore) : promptResult.HumanScore;
-                if (promptResult.HumanScore < 0 && promptResult.RobotScore < 0)
-                {
-                    continue;
-                }
-
-                cnt++;
-            }
-
-            if (cnt != 0)
-            {
-                promptItem.UpdateEvalScore((int)sum / cnt);
-
-                await _promptItemService.SaveObjectAsync(promptItem);
-            }
         }
 
 
@@ -290,7 +254,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return aiSettings;
         }
 
-        public async Task<string> RobotScore(int promptResultId, List<string> expectedResultList, bool isRefresh)
+        public async Task<PromptResult> RobotScore(int promptResultId, List<string> expectedResultList, bool isRefresh)
         {
             // get promptResult by id
             var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId);
@@ -307,7 +271,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 promptResult.RobotScoring(10);
                 await base.SaveObjectAsync(promptResult);
-                return "10";
+                return promptResult;
             }
 
             // get promptItem by promptResult
@@ -369,13 +333,12 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             {
                 await this.SaveObjectAsync(promptResult.RobotScoring(Convert.ToInt32(match.Value)));
 
-                _promptItemService.UpdateEvalScore(promptResult.PromptItemId);
-
-                return match.Value;
+                return promptResult;
             }
 
-            SenparcTrace.SendCustomLog("自动打分结果匹配失败", $"原文为{result.Output}，分数匹配失败");
-            return "0";
+            // SenparcTrace.SendCustomLog("自动打分结果匹配失败", $"原文为{result.Output}，分数匹配失败");
+
+            throw new NcfExceptionBase($"自动打分结果匹配失败, 原文为{result.Output}，分数匹配失败");
         }
 
         public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)
@@ -387,6 +350,42 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             catch (Exception e)
             {
                 throw new NcfExceptionBase($"删除{promptItemId}对应的结果失败, msg: {e.Message}");
+            }
+
+            return true;
+        }
+
+
+        public async Task<Boolean> UpdateEvalScore(int promptItemId)
+        {
+            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
+            if (promptItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            List<PromptResult> promptResults = await this.GetFullListAsync(p => p.PromptItemId == promptItemId,
+                p => p.Id, OrderingType.Ascending);
+
+
+            int sum = 0;
+            int cnt = 0;
+            foreach (var promptResult in promptResults)
+            {
+                sum += promptResult.HumanScore < 0 ? (promptResult.RobotScore < 0 ? 0 : promptResult.RobotScore) : promptResult.HumanScore;
+                if (promptResult.HumanScore < 0 && promptResult.RobotScore < 0)
+                {
+                    continue;
+                }
+
+                cnt++;
+            }
+
+            if (cnt != 0)
+            {
+                promptItem.UpdateEvalScore((int)sum / cnt);
+
+                await _promptItemService.SaveObjectAsync(promptItem);
             }
 
             return true;
