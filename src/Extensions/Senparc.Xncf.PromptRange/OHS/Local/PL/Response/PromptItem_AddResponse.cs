@@ -53,7 +53,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public List<PromptResult> PromptResultList { get; set; } = new();
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
-            int maxToken, float temperature, float topP, float frequencyPenalty, string stopSequences)
+            int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences)
         {
             Id = $"{promptItemId}";
             PromptContent = promptContent;

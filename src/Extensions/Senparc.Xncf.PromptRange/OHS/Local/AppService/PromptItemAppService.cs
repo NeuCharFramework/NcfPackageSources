@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -21,17 +23,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptItemService _promptItemService;
         private readonly LlmModelService _llmModelService;
         private readonly PromptResultService _promptResultService;
+        private float _presencePenalty;
 
         public PromptItemAppService(IServiceProvider serviceProvider,
             // RepositoryBase<PromptItem> promptItemRepository,
             PromptItemService promptItemService,
             LlmModelService llmModelService,
-            PromptResultService promptResultService) : base(serviceProvider)
+            PromptResultService promptResultService, float presencePenalty
+        ) : base(serviceProvider)
         {
             // _promptItemRepository = promptItemRepository;
             _promptItemService = promptItemService;
             _llmModelService = llmModelService;
             _promptResultService = promptResultService;
+            _presencePenalty = presencePenalty;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -55,12 +60,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         promptItemId: promptItem.Id,
                         promptContent: promptItem.Content,
                         fullVersion: promptItem.FullVersion,
-                        promptItem.ModelId,
-                        promptItem.MaxToken,
-                        promptItem.Temperature,
-                        promptItem.TopP,
-                        promptItem.FrequencyPenalty,
-                        promptItem.StopSequences
+                        modelId: promptItem.ModelId,
+                        maxToken: promptItem.MaxToken,
+                        temperature: promptItem.Temperature,
+                        topP: promptItem.TopP,
+                        frequencyPenalty: promptItem.FrequencyPenalty,
+                        presencePenalty: promptItem.PresencePenalty,
+                        stopSequences: promptItem.StopSequences
                     );
 
                     // 是否立即生成结果，暂时不添加这个开关
@@ -118,31 +124,37 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
                 async (resp, logger) =>
                 {
-                    var root = await _promptItemService.GenerateVersionHistory(promptItemId);
+                    var root = await _promptItemService.GenerateVersionHistoryTree(promptItemId);
                     return new VersionHistory_GetResponse(root);
                 });
         }
 
         [ApiBind]
-        public async Task<AppResponseBase<PromptItem_GetResponse>> Get([FromQuery] int id)
+        public async Task<AppResponseBase<PromptItem_AddResponse>> Get([FromQuery] int id)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-                    var prompt = await _promptItemService.GetObjectAsync(p => p.Id == id);
-                    var model = await _llmModelService.GetObjectAsync(p => p.Id == prompt.ModelId);
-                    var result = await _promptResultService.GetObjectAsync(p => p.PromptItemId == prompt.Id);
+                    var promptItem = await _promptItemService.GetObjectAsync(item => item.Id == id);
+                    var model = await _llmModelService.GetObjectAsync(llmModel => llmModel.Id == promptItem.ModelId);
+                    List<PromptResult> result = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
-                    return new PromptItem_GetResponse()
-                    {
-                        PromptName = prompt.Name,
-                        Show = prompt.IsShare,
-                        Version = prompt.FullVersion,
-                        ModelName = model.GetModelId(),
-                        ResultString = result.ResultString,
-                        Score = Convert.ToInt32(result.RobotScore > 0 ? result.RobotScore : result.HumanScore),
-                        Time = prompt.AddTime.ToString("yyyy-MM-dd")
-                    };
+                    var resp = new PromptItem_AddResponse(
+                        promptItemId: promptItem.Id,
+                        promptContent: promptItem.Content,
+                        fullVersion: promptItem.FullVersion,
+                        modelId: promptItem.ModelId,
+                        maxToken: promptItem.MaxToken,
+                        temperature: promptItem.Temperature,
+                        topP: promptItem.TopP,
+                        frequencyPenalty: promptItem.FrequencyPenalty,
+                        presencePenalty: promptItem.PresencePenalty,
+                        stopSequences: promptItem.StopSequences
+                    );
+                    resp.PromptResultList.AddRange(result);
+
+
+                    return resp;
                 });
         }
 
@@ -202,6 +214,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 return "ok";
             });
+        }
+
+        /// <summary>
+        /// 分数趋势图
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
+                async (response, logger) => { return await _promptItemService.getHistoryScore(promptItemId); });
         }
     }
 }

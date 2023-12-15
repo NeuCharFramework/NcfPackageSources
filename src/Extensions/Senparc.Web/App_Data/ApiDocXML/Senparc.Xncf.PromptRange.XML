@@ -17,7 +17,7 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistoryTree(System.Int32)">
             <summary>
             输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
             即从该节点到root节点的最短路径
@@ -26,7 +26,7 @@
             <returns >版本树</returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistoryTree(System.String)">
             <summary>
             输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
             即从该节点到root节点的最短路径
@@ -638,6 +638,13 @@
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.FindItemHistory(System.Int32)">
             <summary>
             根据ID，找到对应的promptItem的所有父级的信息
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetHistoryScore(System.Int32)">
+            <summary>
+            分数趋势图
             </summary>
             <param name="promptItemId"></param>
             <returns></returns>

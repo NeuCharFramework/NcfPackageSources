@@ -210,6 +210,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             promptResult.ManualScoring(score);
+            
+            _promptItemService.UpdateEvalScore(promptResult.PromptItemId);
+            
             await base.SaveObjectAsync(promptResult);
 
             return promptResult;
@@ -258,7 +261,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId);
 
             // if user dont want force refreshing, and this promptResult is scored 
-            if (!isRefresh && promptResult.RobotScore < 0)
+            if (!isRefresh && promptResult.RobotScore >= 0)
             {
                 throw new NcfExceptionBase("该结果已经评分过了, 请选择强制刷新");
             }
@@ -330,6 +333,9 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             if (match.Success)
             {
                 await this.SaveObjectAsync(promptResult.RobotScoring(Convert.ToInt32(match.Value)));
+                
+                _promptItemService.UpdateEvalScore(promptResult.PromptItemId);
+                
                 return match.Value;
             }
 
