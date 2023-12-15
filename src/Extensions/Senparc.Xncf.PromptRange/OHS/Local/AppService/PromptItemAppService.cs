@@ -52,8 +52,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
                     var promptItemResponseDto = new PromptItem_AddResponse(
+                        promptItemId: promptItem.Id,
                         promptContent: promptItem.Content,
-                        version: promptItem.FullVersion,
+                        fullVersion: promptItem.FullVersion,
                         promptItem.ModelId,
                         promptItem.MaxToken,
                         promptItem.Temperature,
@@ -74,6 +75,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             promptItemResponseDto.PromptResultList.Add(promptResult);
                         }
                     }
+
                     return promptItemResponseDto;
                 }
             );

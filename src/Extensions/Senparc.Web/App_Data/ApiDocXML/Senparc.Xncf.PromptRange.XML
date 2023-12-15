@@ -651,6 +651,11 @@
             <param name="isRefresh"></param>
             <returns></returns>
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.StatisticAppService">
+            <summary>
+            用于传送统计数据的接口服务
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Name">
             <summary>
             名称
@@ -711,9 +716,9 @@
             用户名
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Version">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FullVersion">
             <summary>
-            版本号，格式为 yyyy.MM.dd.Version
+            完整版本号
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.MaxToken">

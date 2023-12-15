@@ -10,9 +10,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
 
         /// <summary>
-        /// 版本号，格式为 yyyy.MM.dd.Version
+        /// 完整版本号
         /// </summary>
-        public string Version { get; set; }
+        public string FullVersion { get; set; }
 
         #region model config
 
@@ -50,20 +50,25 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public string Note { get; set; }
 
-        public List<PromptResult> PromptResultList { get; set; }
+        public List<PromptResult> PromptResultList { get; set; } = new();
 
-        public PromptItem_AddResponse(string promptContent, string version, int modelId,
+        public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, string stopSequences)
         {
+            Id = $"{promptItemId}";
             PromptContent = promptContent;
             LastRunTime = DateTime.Now;
-            Version = version;
+            FullVersion = fullVersion;
             ModelId = modelId;
             MaxToken = maxToken;
             Temperature = temperature;
             TopP = topP;
             FrequencyPenalty = frequencyPenalty;
             StopSequences = stopSequences;
+        }
+
+        public PromptItem_AddResponse()
+        {
         }
     }
 }
