@@ -206,7 +206,7 @@ var app = new Vue({
         // 获取模型列表
         this.getModelOptData()
         // 获取分数趋势图
-        this.getScoringTrendData()
+        // this.getScoringTrendData()
         // 图表自适应
         let self = this;
         const viewElem = document.body;
@@ -345,12 +345,21 @@ var app = new Vue({
             this.chartInstance = chartInstance
         },
         // 输出 获取评分趋势 图表数据
-        getScoringTrendData() {
-            // to do 接口对接 async await
+        async getScoringTrendData() {
             this.chartData = {
-                xData: ['1-4', '1-4-2', '1-4-3', '1-4-4', '1-4-5', '1-4-6', '1-4-7', '1-4-8', '1-4-9', '1-4-10', '1-4-11', '1-4-12'],
-                vData: [1, 8, 6, 7, 0, 0, 3, 7, 4, 9, 1, 8]
+                xData: [],
+                vData: []
             }
+            if (this.promptid) {
+                let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetHistoryScore?promptItemId=${this.promptid}`)
+                if (res.data.success) {
+                    this.chartData = {
+                        xData: res.data.data.xList || [],
+                        vData: res.data.data.yList || []
+                    }
+                }
+            }
+
             // 初始化图表 接口调用成功
             this.chartInitialization()
             let _setOption = {
@@ -370,19 +379,19 @@ var app = new Vue({
             if (itemKey === 'promptid') {
                 this.getPromptetail(val, true)
             } else {
-                let _isEdit = false
-                //判断是否有修改 任意一项修改过 解除打靶按钮禁用
-                this.parameterViewList.forEach(el => {
-                    if (el.formField === itemKey && this.promptDetail[itemKey] === val) {
-                        _isEdit = true
-                    }
-                })
-                if (itemKey === 'content') {
-
-                }
-                if (itemKey === 'remarks') {
-
-                }
+                let _isEdit = true
+                // //判断是否有修改 任意一项修改过 解除打靶按钮禁用
+                // this.parameterViewList.forEach(el => {
+                //     if (el.formField === itemKey && this.promptDetail[itemKey] === val) {
+                //        
+                //     }
+                // })
+                // if (itemKey === 'content') {
+                //     _isEdit = true
+                // }
+                // if (itemKey === 'remarks') {
+                //     _isEdit = true
+                // }
                 if (_isEdit) this.targetShootDisabled = false
             }
 
@@ -734,10 +743,12 @@ var app = new Vue({
 
         // 打靶     
         async targetShootHandel() {
+            console.log(this.promptid,)
             if (this.promptid) {
-                this.tacticalFormSubmitLoading = true
+                this.tacticalFormVisible = true
                 return
             }
+
             this.targetShootLoading = true
             let _postData = {
                 //promptid: this.promptid,// 选择靶场
@@ -1028,23 +1039,24 @@ var app = new Vue({
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
-                    if (this.promptDetail.id === id) {
+                    if (this.promptDetail.id == id) {
                         // 将打靶按钮禁用
                         this.targetShootDisabled = true
                     } else {
                         this.targetShootDisabled = false
                     }
+
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
-                    //this.modelid =
-                    //    this.parameterViewList = _parameterViewList.map(item => {
-                    //        if (item) {
-                    //            item.formField ===
-                    //        }
-                    //        return item
-                    //    })
-                    //this.content// prompt 输入内容
-                    //this.remarks  // prompt 输入的备注
+                    this.modelid = this.promptDetail.modelId
+                    this.parameterViewList = _parameterViewList.map(item => {
+                        if (item) {
+                            item.value = this.promptDetail[item.formField] || item.value
+                        }
+                        return item
+                    })
+                    this.content = this.promptDetail.promptContent || '' // prompt 输入内容
+                    this.remarks = this.promptDetail.note || ''  // prompt 输入的备注
                 }
 
 
