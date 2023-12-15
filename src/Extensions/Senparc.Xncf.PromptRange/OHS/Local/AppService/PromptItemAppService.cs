@@ -133,7 +133,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     var promptItem = await _promptItemService.GetObjectAsync(item => item.Id == id);
-                    var model = await _llmModelService.GetObjectAsync(llmModel => llmModel.Id == promptItem.ModelId);
+                    // var model = await _llmModelService.GetObjectAsync(llmModel => llmModel.Id == promptItem.ModelId);
                     List<PromptResult> result = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
                     var resp = new PromptItem_AddResponse(

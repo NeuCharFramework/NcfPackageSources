@@ -127,7 +127,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
                     return resp;
-                });
+                }
+            );
         }
     }
 }
