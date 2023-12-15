@@ -23,20 +23,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptItemService _promptItemService;
         private readonly LlmModelService _llmModelService;
         private readonly PromptResultService _promptResultService;
-        private float _presencePenalty;
 
         public PromptItemAppService(IServiceProvider serviceProvider,
             // RepositoryBase<PromptItem> promptItemRepository,
             PromptItemService promptItemService,
             LlmModelService llmModelService,
-            PromptResultService promptResultService, float presencePenalty
+            PromptResultService promptResultService
         ) : base(serviceProvider)
         {
             // _promptItemRepository = promptItemRepository;
             _promptItemService = promptItemService;
             _llmModelService = llmModelService;
             _promptResultService = promptResultService;
-            _presencePenalty = presencePenalty;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]

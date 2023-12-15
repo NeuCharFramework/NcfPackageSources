@@ -16,15 +16,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptItemService : ServiceBase<PromptItem>
     {
-        private readonly PromptResultService _promptResultService;
-
-        public PromptItemService(
-            PromptResultService promptResultService,
-            IRepositoryBase<PromptItem> repo,
-            IServiceProvider serviceProvider) : base(repo,
-            serviceProvider)
+        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
-            _promptResultService = promptResultService;
         }
 
         /// <summary>
@@ -295,34 +288,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async void UpdateEvalScore(int promptItemId)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptItem");
-            }
-
-            List<PromptResult> promptResults = await _promptResultService.GetFullListAsync(p => p.PromptItemId == promptItemId);
-
-
-            int sum = 0;
-            int cnt = 0;
-            foreach (var promptResult in promptResults)
-            {
-                sum += promptResult.HumanScore < 0 ? (promptResult.RobotScore < 0 ? 0 : promptResult.RobotScore) : promptResult.HumanScore;
-                if (promptResult.HumanScore < 0 && promptResult.RobotScore < 0)
-                {
-                    continue;
-                }
-
-                cnt++;
-            }
-
-            if (cnt != 0)
-            {
-                promptItem.UpdateEvalScore((int)sum / cnt);
-
-                await this.SaveObjectAsync(promptItem);
-            }
+            
         }
     }
 }
