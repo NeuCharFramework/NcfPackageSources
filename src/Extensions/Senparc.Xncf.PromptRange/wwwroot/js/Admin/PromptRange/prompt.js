@@ -97,8 +97,8 @@ var app = new Vue({
             outputAverage: '',// 输出列表的平均分
             outputActive: '', // 输出列表选中查看|评分
             outputList: [],  // 输出列表
-            chartData:[], // 图表数据
-            chartInstance:null, // 图表实例
+            chartData: [], // 图表数据
+            chartInstance: null, // 图表实例
             // 输出 ---end
             // 版本记录 ---start
             versionDrawer: false,// 抽屉
@@ -107,7 +107,7 @@ var app = new Vue({
                 children: 'children',
                 label: 'label'
             },
-            versionTreeData:[],
+            versionTreeData: [],
             // 版本记录 ---end
             // 替换
             replaceFormVisible: false,
@@ -119,8 +119,8 @@ var app = new Vue({
             // 战术选择
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
-            tacticalForm:{
-                tactics:''
+            tacticalForm: {
+                tactics: ''
             },
             // 模型
             modelFormVisible: false,
@@ -152,37 +152,37 @@ var app = new Vue({
             }],
             rules: {
                 tactics: [
-                    { required: true, message: '请选择战术', trigger: 'change' }
+                    {required: true, message: '请选择战术', trigger: 'change'}
                 ],
                 prefix: [
-                    { required: true, message: '请输入前缀', trigger: 'blur' }
+                    {required: true, message: '请输入前缀', trigger: 'blur'}
                 ],
                 suffix: [
-                    { required: true, message: '请输入后缀', trigger: 'blur' }
+                    {required: true, message: '请输入后缀', trigger: 'blur'}
                 ],
                 variableName: [
-                    { required: true, message: '请输入变量名', trigger: 'blur' }
+                    {required: true, message: '请输入变量名', trigger: 'blur'}
                 ],
                 variableValue: [
-                    { required: true, message: '请输入变量值', trigger: 'blur' }
+                    {required: true, message: '请输入变量值', trigger: 'blur'}
                 ],
                 modelType: [
-                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                    {required: true, message: '请选择模型类型', trigger: 'change'}
                 ],
                 name: [
-                    { required: true, message: '请输入模型名称', trigger: 'blur' }
+                    {required: true, message: '请输入模型名称', trigger: 'blur'}
                 ],
                 apiVersion: [
-                    { required: true, message: '请输入API Version', trigger: 'blur' }
+                    {required: true, message: '请输入API Version', trigger: 'blur'}
                 ],
                 apiKey: [
-                    { required: true, message: '请输入API key', trigger: 'blur' }
+                    {required: true, message: '请输入API key', trigger: 'blur'}
                 ],
                 endpoint: [
-                    { required: true, message: '请输入End Point', trigger: 'blur' }
+                    {required: true, message: '请输入End Point', trigger: 'blur'}
                 ],
                 organizationId: [
-                    { required: true, message: '请输入Organization Id', trigger: 'blur' }
+                    {required: true, message: '请输入Organization Id', trigger: 'blur'}
                 ]
             },
             versionData: [],
@@ -221,7 +221,7 @@ var app = new Vue({
     },
     methods: {
         // 输出 分数趋势图初始化
-        chartInitialization(){
+        chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
             let chartOption = {
                 tooltip: {
@@ -332,7 +332,10 @@ var app = new Vue({
                     },
                     areaStyle: {
                         normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: "#0083ff" }, { offset: 1, color: "#fff" }], false)
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: "#0083ff"
+                            }, {offset: 1, color: "#fff"}], false)
                         }
                     }
                 }]
@@ -362,7 +365,7 @@ var app = new Vue({
         },
 
         // 靶道选择变化
-        promptChangeHandel(val,itemKey) {
+        promptChangeHandel(val, itemKey) {
             console.log('靶道选择变化', val, this.promptDetail)
             if (itemKey === 'promptid') {
                 this.getPromptetail(val, true)
@@ -370,7 +373,7 @@ var app = new Vue({
                 let _isEdit = false
                 //判断是否有修改 任意一项修改过 解除打靶按钮禁用
                 this.parameterViewList.forEach(el => {
-                    if (el.formField === itemKey && this.promptDetail[itemKey] === val ) {
+                    if (el.formField === itemKey && this.promptDetail[itemKey] === val) {
                         _isEdit = true
                     }
                 })
@@ -382,14 +385,14 @@ var app = new Vue({
                 }
                 if (_isEdit) this.targetShootDisabled = false
             }
-            
+
         },
 
         // 战术选择 关闭弹出
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
             this.tacticalForm = {
-                tactics:''
+                tactics: ''
             }
             this.$refs.tacticalForm.resetFields();
         },
@@ -434,7 +437,7 @@ var app = new Vue({
                     if (res.data.success) {
                         // 关闭dialog
                         this.tacticalFormVisible = false
-                        let { promptResultList = [], fullVersion = '', id } = res.data.data || {}
+                        let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                         // 重新获取prompt列表
                         this.getPromptOptData(id)
 
@@ -449,7 +452,7 @@ var app = new Vue({
                             if (item) {
                                 _totalScore += item.robotScore > -1 ? item.robotScore : 0
                                 _totalScore += item.humanScore > -1 ? item.humanScore : 0
-                                
+
                                 item.promptId = id
                                 item.version = fullVersion
                                 item.scoreType = '1' // 1 ai、2手动 
@@ -468,7 +471,7 @@ var app = new Vue({
                                     id: 3,
                                     label: '预期结果3',
                                     value: ''
-                                    }]
+                                }]
                                 if (item.isScore) {
                                     _totalLen += 1
                                 }
@@ -482,7 +485,7 @@ var app = new Vue({
                     } else {
                         this.targetShootDisabled = false
                     }
-                    
+
                 } else {
                     return false;
                 }
@@ -536,7 +539,7 @@ var app = new Vue({
                     label: '二级 3-2',
                     isPublic: false
                 }]
-                }]
+            }]
             // to do 接口对接 async await
         },
         // 版本记录 查看
@@ -585,7 +588,6 @@ var app = new Vue({
         },
 
 
-
         // 替换 dialog 关闭
         replaceFormCloseDialog() {
             this.replaceForm = {
@@ -599,17 +601,17 @@ var app = new Vue({
         addVariableBtn() {
             this.replaceForm.variableList.push({
                 name: '',
-                value:''
+                value: ''
             })
         },
         // 替换 dialog 删除变量行btn
         deleteVariableBtn(index) {
-            this.replaceForm.variableList.splice(index,1)
+            this.replaceForm.variableList.splice(index, 1)
         },
         // 替换 dialog 提交
         replaceFormSubmit() {
             // 
-            let { prefix = '', suffix = '', variableList = [] } = this.replaceForm
+            let {prefix = '', suffix = '', variableList = []} = this.replaceForm
             variableList.forEach(item => {
                 // 替换 this.content 匹配文本
                 let replaceStr = `${prefix}${item.name}${suffix}`
@@ -623,13 +625,12 @@ var app = new Vue({
         },
 
 
-
         // 获取输出列表
         async getOutputList(id) {
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${id}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
-                let { promptResults = [] } = res.data.data || {}
+                let {promptResults = []} = res.data.data || {}
                 let _totalScore = 0
                 let _totalLen = 0
                 // 输出列表
@@ -655,7 +656,7 @@ var app = new Vue({
                             id: 3,
                             label: '预期结果3',
                             value: ''
-                            }]
+                        }]
                         if (item.isScore) {
                             _totalLen += 1
                         }
@@ -670,10 +671,10 @@ var app = new Vue({
             }
         },
         // 输出 保存评分
-        async saveManualScore(item,index) {
+        async saveManualScore(item, index) {
             //console.log('manualScorVal', this.promptSelectVal, this.manualScorVal)
             if (item.scoreType === '1') {
-                let _list =  item.alResultList.map(item => item.value)
+                let _list = item.alResultList.map(item => item.value)
                 let res = await service.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.RobotScore?isRefresh=true&promptResultId=${item.id}`, _list)
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
@@ -696,9 +697,9 @@ var app = new Vue({
                     alert('error!');
                 }
             }
-            
+
             //console.log('saveManualScore res ', res.data)
-            
+
         },
         // 输出 选中切换
         outputSelectSwitch(index) {
@@ -729,7 +730,7 @@ var app = new Vue({
         manualBtnScoring(index) {
             this.outputList[index].scoreType = '2'
         },
-  
+
 
         // 打靶     
         async targetShootHandel() {
@@ -738,42 +739,42 @@ var app = new Vue({
                 return
             }
             this.targetShootLoading = true
-                    let _postData = {
-        //promptid: this.promptid,// 选择靶场
-        modelid: this.modelid,// 选择模型
-        content: this.content,// prompt 输入内容
-        remarks: this.remarks // prompt 输入的备注
-    }
-                    if(this.promptid) {
-        _postData.id = this.promptid
-                        if (this.tacticalForm.tactics === '创建新战术') {
-    _postData.isNewTactic = true // prompt 新建分支
-}
-if (this.tacticalForm.tactics === '新增子战术') {
-    _postData.isNewSubTactic = true // prompt 新建子分支
-}
-if (this.tacticalForm.tactics === '重新瞄准') {
-    _postData.isNewAiming = true // prompt 内容变化
-}
-                    }
+            let _postData = {
+                //promptid: this.promptid,// 选择靶场
+                modelid: this.modelid,// 选择模型
+                content: this.content,// prompt 输入内容
+                remarks: this.remarks // prompt 输入的备注
+            }
+            if (this.promptid) {
+                _postData.id = this.promptid
+                if (this.tacticalForm.tactics === '创建新战术') {
+                    _postData.isNewTactic = true // prompt 新建分支
+                }
+                if (this.tacticalForm.tactics === '新增子战术') {
+                    _postData.isNewSubTactic = true // prompt 新建子分支
+                }
+                if (this.tacticalForm.tactics === '重新瞄准') {
+                    _postData.isNewAiming = true // prompt 内容变化
+                }
+            }
 // id: null, // 
-this.parameterViewList.forEach(item => {
-    // todo 单独处理
-    if (item.formField === 'stopSequences') {
-        _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
-    } else if (item.formField === 'maxToken') {
-        _postData[item.formField] = item.value ? Number(item.value) : 0
-    } else {
-        _postData[item.formField] = item.value
-    }
-})
+            this.parameterViewList.forEach(item => {
+                // todo 单独处理
+                if (item.formField === 'stopSequences') {
+                    _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
+                } else if (item.formField === 'maxToken') {
+                    _postData[item.formField] = item.value ? Number(item.value) : 0
+                } else {
+                    _postData[item.formField] = item.value
+                }
+            })
 // console.log('testHandel _postData:', _postData)
 
-let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+            let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
             // console.log('testHandel res ', res.data)
             this.targetShootLoading = false
             if (res.data.success) {
-                let { promptResultList = [], fullVersion = '', id } = res.data.data || {}
+                let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                 // 重新获取prompt列表
                 this.getPromptOptData(id)
                 this.targetShootDisabled = true
@@ -806,7 +807,7 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
                             id: 3,
                             label: '预期结果3',
                             value: ''
-                            }]
+                        }]
                         if (item.isScore) {
                             _totalLen += 1
                         }
@@ -907,7 +908,7 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
         },
         // 配置 参数设置输入回调
         parameterInputHandle(val, item) {
-            let { sliderMax, sliderMin, sliderStep, isStr, isSlider, formField } = item
+            let {sliderMax, sliderMin, sliderStep, isStr, isSlider, formField} = item
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
             let _findItem = this.parameterViewList[_findIdnex]
@@ -923,13 +924,13 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
                 //console.log('parameterInputHandle _val:', _val)
                 //且小于sliderMax大于sliderMin保留位数与sliderStep一样
                 if (_val < sliderMin) {
-                    this.$set(this.parameterViewList, _findIdnex, { ..._findItem, value: item.sliderMin })
+                    this.$set(this.parameterViewList, _findIdnex, {..._findItem, value: item.sliderMin})
                 } else if (sliderMax === 'Infinity') {
-                    this.$set(this.parameterViewList, _findIdnex, { ..._findItem, value: _val })
+                    this.$set(this.parameterViewList, _findIdnex, {..._findItem, value: _val})
                 } else if (_val > sliderMax) {
-                    this.$set(this.parameterViewList, _findIdnex, { ..._findItem, value: item.sliderMax })
+                    this.$set(this.parameterViewList, _findIdnex, {..._findItem, value: item.sliderMax})
                 } else {
-                    this.$set(this.parameterViewList, _findIdnex, { ..._findItem, value: _val })
+                    this.$set(this.parameterViewList, _findIdnex, {..._findItem, value: _val})
                 }
             }
 
@@ -940,7 +941,6 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
             this.content = ''// prompt 输入内容
             //this.remarks = '' // prompt 输入的备注
         },
-
 
 
         // 配置 获取模型 下拉列表数据
@@ -996,7 +996,6 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
         },
 
 
-
         // 配置 获取prompt 下拉列表数据
         async getPromptOptData(id) {
             let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
@@ -1029,14 +1028,14 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
-                    if (this.promptDetail.id === val) {
+                    if (this.promptDetail.id === id) {
                         // 将打靶按钮禁用
                         this.targetShootDisabled = true
                     } else {
                         this.targetShootDisabled = false
                     }
                     // 参数覆盖
-                    let _parameterViewList = JSON.parse(JSON.stringify(this.this.parameterViewList))
+                    let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
                     //this.modelid =
                     //    this.parameterViewList = _parameterViewList.map(item => {
                     //        if (item) {
@@ -1047,8 +1046,8 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
                     //this.content// prompt 输入内容
                     //this.remarks  // prompt 输入的备注
                 }
-                
-                
+
+
             } else {
                 alert('error');
             }
@@ -1074,7 +1073,7 @@ let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService
                 data: {
                     id: item.id,
                     name: item.name
-                } 
+                }
             });
             if (res.data.success) {
                 //重新获取 prompt列表
