@@ -33,7 +33,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// <summary>
         /// 
         /// </summary>
-        public string StopSequences { get; set; }
+        public string StopSequences { get; set; } 
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         // public string Version { get; set; }
 
-        [Required] public int NumsOfResults { get; set; } = 0;
+        [Required] public int NumsOfResults { get; set; }
 
         [Required] public bool IsNewTactic { get; set; } = false;
         [Required] public bool IsNewSubTactic { get; set; } = false;

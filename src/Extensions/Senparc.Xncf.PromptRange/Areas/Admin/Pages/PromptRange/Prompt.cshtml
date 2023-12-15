@@ -6,6 +6,7 @@
 }
 @section Style{
     <link href="~/css/Admin/PromptRange/prompt.css" rel="stylesheet" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 }
 @section breadcrumbs{
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
@@ -22,11 +23,11 @@
                 <div class="titleRow">
                     <div class="titleRow_leftBox">
                         <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                        <div class="titleContent">选择靶场</div>
+                        <div class="titleContent">选择靶道</div>
                     </div>
-                    <el-button type="primary" size="mini" icon="el-icon-plus">新增靶场</el-button>
+                    @* <el-button type="primary" size="mini" icon="el-icon-plus">新增靶场</el-button> *@
                 </div>
-                <el-select v-model="promptid" placeholder="请选择靶场" class="selectRow">
+                <el-select v-model="promptid" placeholder="请选择靶道" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                     <el-option v-for="item in promptOpt"
                                v-key="item.id"
                                :label="item.label"
@@ -44,7 +45,7 @@
                     </div>
                     <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
                 </div>
-                <el-select v-model="modelid" placeholder="请选择模型" class="selectRow">
+                <el-select v-model="modelid" placeholder="请选择模型" class="selectRow" @@change="promptChangeHandel($event,'modelid')">
                     <el-option v-for="item in modelOpt"
                                v-key="item.id"
                                :label="item.label"
@@ -52,7 +53,10 @@
                                :disabled="item.disabled">
                     </el-option>
                 </el-select>
-            </div>
+            </div> 
+        </div>
+        @*输入*@
+        <div class="boxCard inputPromptArea">
             @*参数设置*@
             <div class="configurineAreaItem paramBox">
                 <div class="titleRow">
@@ -70,7 +74,8 @@
                                 <i class="el-icon-warning-outline"></i>
                             </div>
                         </div>
-                        <el-input v-model="item.value" placeholder="" class="inputBox"></el-input>
+                        @* v-bind: *@
+                        <el-input v-model="item.value" placeholder="" class="inputBox" v-bind:style="{'flex':item.isStr?'1':''}" @@input="parameterInputHandle($event,item)" @@change="promptChangeHandel($event,item.formField)"></el-input>
                         <div v-if="item.isSlider" class="sliderBox">
                             <span>{{item.sliderMin}}</span>
                             <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider"></el-slider>
@@ -79,9 +84,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        @*输入*@
-        <div class="boxCard inputPromptArea">
             <div class="titleRow">
                 <div class="titleRow_leftBox">
                     <img src="~/image/Admin/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
@@ -96,16 +98,16 @@
                 <el-input v-model="content" type="textarea"
                           :rows="10"
                           placeholder="请输入内容"
-                          class="promptInput">
+                          class="promptInput" @@change="promptChangeHandel($event,'content')">
                 </el-input>
                 <div class="remarkRow">
                     <el-input v-model="remarks" type="textarea"
                               :rows="2"
                               maxlength="200"
                               show-word-limit
-                              placeholder="请输入备注" class="remarkInputBox">
+                              placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
                     </el-input>
-                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="testHandel">打靶</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button>
                 </div>
             </div>
         </div>
@@ -127,19 +129,19 @@
             <div class="outputArea_contentBox">
                 <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                     <div class="infoRow">
-                        <span>#{{item.time}}</span>
+                        <span>#{{item.addTime}}</span>
                         <span>#{{item.costTime}}</span>
                         <span>版本: {{item.version}}</span>
                     </div>
                     <div class="contentRow">
-                        {{item.answer}}
+                        {{item.resultString}}
                     </div>
                     <div class="operateRow">
                         <div v-if="!item.isScore" class="operateRow_item" @@click="app.showRatingView(index)">
                             <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span>评分</span>
 </div>
-                        <div v-if="item.isScore" class="operateRow_item">重置</div>
+                        @* <div v-if="item.isScore" class="operateRow_item">重置</div> *@
                         <div v-if="item.isScore">分数：{{item.scoreVal}}</div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
@@ -153,19 +155,19 @@
                                 <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
                             </div>
                             <div class="aiOperation">
-                                <el-button type="primary" size="mini">开始打分</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">开始打分</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
                             </div>
                         </div>
                         <div v-if="item.scoreType === '2'" class="manualScoreArea">
                             <div class="sliderTextRow">
                                 <span>0</span>
-                                <span>100</span>
+                                <span>10</span>
                             </div>
-                            <el-slider v-model="item.scoreVal" :min="0" :max="100" :step="1"></el-slider>
+                            <el-slider v-model="item.scoreVal" :min="0" :max="10" :step="1"></el-slider>
                             @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
                             <div class="manualOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(index)">保存</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
                             </div>
                         </div>
                     </div>
@@ -191,6 +193,22 @@
             
         </div>
    </div>
+    @*战术选择 dialog*@
+    <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
+        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left">
+            <el-form-item label="战术" prop="tactics">
+                <el-radio-group v-model="tacticalForm.tactics">
+                    <el-radio label="创建新战术"></el-radio>
+                    <el-radio label="新增子战术"></el-radio>
+                    <el-radio label="重新瞄准"></el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
+            <el-button type="primary" size="mini" v-loading="tacticalFormSubmitLoading" @@click="tacticalFormSubmitBtn">确 定</el-button>
+        </div>
+    </el-dialog>
     @*版本记录-抽屉 drawer*@
     <div class="versionBtn" @@click="seeVersionRecord">版本记录</div>
     <el-drawer :visible.sync="versionDrawer" direction="rtl" title="我是标题" :with-header="false" @@close="versionDrawerClose">
@@ -256,7 +274,7 @@
                 <i class="el-icon-delete deleteIcon" style="cursor:pointer;"></i>
             </div>
             <div class="addVariableRow">
-                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增靶场</el-button>
+                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
             </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -266,20 +284,26 @@
     </el-dialog>
     @*新增模型 dialog*@
     <el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
-        <el-form ref="modelForm" :model="modelForm" :rules="rules" label-width="80px" label-position="left">
-            <el-form-item label="模型类型" prop="modelType" label-width="120px">
+        <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
+            <el-form-item label="模型类型" prop="modelType" label-width="130px">
                 <el-select v-model="modelForm.modelType" placeholder="请选择模型类型">
-                    <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value"></el-option>
+                    <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" prop="modelName" label-width="120px">
-                <el-input v-model="modelForm.modelName" autocomplete="off" placeholder="请输入模型名称"></el-input>
+            <el-form-item label="模型名称" prop="name" label-width="130px">
+                <el-input v-model="modelForm.name" autocomplete="off" placeholder="请输入模型名称"></el-input>
             </el-form-item>
-            <el-form-item label="模型终端" prop="modelAPI" label-width="120px">
-                <el-input v-model="modelForm.modelAPI" autocomplete="off" placeholder="请输入模型终端（Endpoint)"></el-input>
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'" label="API Version" prop="apiVersion" label-width="130px">
+                <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
             </el-form-item>
-            <el-form-item label="API key" prop="modelAPIkey" label-width="120px">
-                <el-input v-model="modelForm.modelAPIkey" autocomplete="off" placeholder="请输入API key"></el-input>
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'" label="API key" prop="apiKey" label-width="130px">
+                <el-input v-model="modelForm.apiKey" autocomplete="off" placeholder="请输入API key"></el-input>
+            </el-form-item>
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
+                <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
+            </el-form-item>
+            <el-form-item v-if="modelForm.modelType==='OpenAI'" label="Organization Id" prop="organizationId" label-width="130px">
+                <el-input v-model="modelForm.organizationId" autocomplete="off" placeholder="请输入Organization Id"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

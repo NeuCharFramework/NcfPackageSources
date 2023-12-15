@@ -145,35 +145,36 @@
     gap: 15px;
 }
     /*左侧模块 配置 行 区域*/
-    .promptPage_leftArea > .configurineArea > .configurineAreaItem {
+    .promptPage_leftArea  .configurineAreaItem {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         gap: 10px;
     }
         /*左侧模块 配置 下拉选择 区域*/
-        .promptPage_leftArea > .configurineArea > .configurineAreaItem >.selectRow {
+        .promptPage_leftArea  .configurineAreaItem >.selectRow {
             width: 100%;
         }
+
     /*左侧模块 配置 参数 内容 区域*/
-    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox {
+    .promptPage_leftArea   .paramBox > .paramBox_contentBox {
         display: flex;
         flex-direction:row;
         flex-wrap: wrap;
         gap: 10px 4%;
     }
-        .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item {
+        .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item {
             width: 48%; 
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
             gap: 8px;
         }
-            .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow {
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow {
                 flex-shrink:0;
                 width: 130px;
             }
-                .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow > .lableBtn {
+                .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow > .lableBtn {
                     display: inline-block;
                     padding: 5px;
                     border-radius: 5px;
@@ -185,7 +186,7 @@
                     font-weight: 400;
                     line-height: normal;
                 }
-            .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox {
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox {
                 flex-shrink: 0;
                 width: 45px;
                 /*padding: 0 5px;
@@ -195,12 +196,12 @@
                 border: 1px solid #DCDFE6;
                 background: #FFF;*/
             }
-                .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox .el-input__inner {
+                .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox .el-input__inner {
                     padding: 0 5px;
                     height: 30px;
                     line-height: 30px;
                 }
-            .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox {
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox {
                 flex: 1;
                 display: flex;
                 flex-wrap: nowrap;
@@ -212,23 +213,23 @@
                 font-weight: 400;
                 line-height: normal;
             }
-                .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider {
+                .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider {
                     flex: auto;
                     min-width: 60px;
                 }
-                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button-wrapper{
+                    .promptPage_leftArea  .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button-wrapper{
                         top:50%;
                         transform:translate(-50%,-50%);
                     }
-                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button {
+                    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button {
                         width: 2px !important;
                         border-radius: 4px !important;
                     }
-                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__bar {
+                    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__bar {
                         height: 18px;
                         background: linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%);
                     }
-                    .promptPage_leftArea > .configurineArea > .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__runway {
+                    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__runway {
                         height: 18px;
                         margin:0;
                     }

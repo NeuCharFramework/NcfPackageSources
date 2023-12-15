@@ -17,7 +17,7 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistoryTree(System.Int32)">
             <summary>
             输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
             即从该节点到root节点的最短路径
@@ -26,7 +26,7 @@
             <returns >版本树</returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistory(System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistoryTree(System.String)">
             <summary>
             输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
             即从该节点到root节点的最短路径
@@ -642,6 +642,13 @@
             <param name="promptItemId"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetHistoryScore(System.Int32)">
+            <summary>
+            分数趋势图
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.RobotScore(System.Int32,System.Collections.Generic.List{System.String},System.Boolean)">
             <summary>
             接受一个promptItemId，然后找到所有的promptResult，然后进行评分
@@ -650,6 +657,11 @@
             <param name="expectedResultList"></param>
             <param name="isRefresh"></param>
             <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.StatisticAppService">
+            <summary>
+            用于传送统计数据的接口服务
+            </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Name">
             <summary>
@@ -711,9 +723,9 @@
             用户名
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Version">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FullVersion">
             <summary>
-            版本号，格式为 yyyy.MM.dd.Version
+            完整版本号
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.MaxToken">

@@ -32,7 +32,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// <summary>
         /// 机器人打分，0-10分
         /// </summary>
-        public long RobotScore { get; private set; }
+        public int RobotScore { get; private set; }
 
         /// <summary>
         /// 人类打分，0-10分

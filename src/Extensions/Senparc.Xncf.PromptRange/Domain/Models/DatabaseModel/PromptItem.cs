@@ -118,7 +118,7 @@ namespace Senparc.Xncf.PromptRange
         public int Aiming { get; private set; }
 
         // public string Version { get; private set; }
-        
+
         [CanBeNull] public string ParentTac { get; private set; }
 
         #endregion
@@ -198,7 +198,7 @@ namespace Senparc.Xncf.PromptRange
         /// <param name="aiming"></param>
         /// <param name="parentTac"></param>
         public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-            string stopSequences, int numsOfResults, string name, string tactic, int aiming,string parentTac)
+            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac)
         {
             Content = content;
             ModelId = modelId;
@@ -247,6 +247,12 @@ namespace Senparc.Xncf.PromptRange
         {
             this.Name = name;
 
+            return this;
+        }
+
+        public PromptItem UpdateEvalScore(int score)
+        {
+            this.EvaluationScore = score;
             return this;
         }
 
