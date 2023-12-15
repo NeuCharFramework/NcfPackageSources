@@ -22,6 +22,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
         public const string OpenAI = "OpenAI";
         public const string AzureOpenAI = "AzureOpenAI";
         public const string HuggingFace = "HuggingFace";
+        public const string NeaucharOpenAI = "NeaucharOpenAI";
 
 
         // public enum ModelTypeEnum

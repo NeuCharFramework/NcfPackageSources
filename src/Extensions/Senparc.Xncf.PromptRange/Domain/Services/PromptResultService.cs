@@ -186,6 +186,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(promptResult);
 
+            // 更新绑定的 item 的分数
+            await this.UpdateEvalScore(promptResult.PromptItemId);
+
             return promptResult;
         }
 
@@ -213,6 +216,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             promptResult.ManualScoring(score);
 
             await base.SaveObjectAsync(promptResult);
+
+            // 更新绑定的 item 的分数
+            await this.UpdateEvalScore(promptResult.PromptItemId);
 
             return promptResult;
         }
@@ -331,6 +337,9 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             // If there is a match, the number will be match.Value
             if (match.Success)
             {
+                // 保存期望结果
+                promptItem.UpdateExpectedResultsJson(expectedResultList.ToJson() ?? "");
+
                 await this.SaveObjectAsync(promptResult.RobotScoring(Convert.ToInt32(match.Value)));
 
                 return promptResult;
