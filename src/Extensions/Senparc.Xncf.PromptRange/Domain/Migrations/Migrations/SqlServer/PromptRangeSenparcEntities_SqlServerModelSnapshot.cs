@@ -143,8 +143,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("ResultString")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("RobotScore")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RobotScore")
+                        .HasColumnType("int");
 
                     b.Property<string>("RobotTestExceptedResult")
                         .HasColumnType("nvarchar(max)");
