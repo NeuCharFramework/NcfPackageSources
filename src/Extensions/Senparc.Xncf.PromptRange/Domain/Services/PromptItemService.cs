@@ -56,11 +56,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 // 如果没有id，就新建一个全新的Item
 
                 List<PromptItem> todayPromptList = await base.GetFullListAsync(p => p.Name.StartsWith(todayStr));
-                // var name = $"{todayStr}.{todayPromptList.Count + 1}";
-                // var tactic = "1";
-                // var aiming = 1;
-
-
                 toSavePromptItem = new PromptItem(
                     name: $"{todayStr}.{todayPromptList.Count + 1}",
                     content: request.Content,
@@ -108,7 +103,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 else if (request.IsNewSubTactic)
                 {
                     var parentTac = oldPrompt.Tactic;
-                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
+                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}."));
                     toSavePromptItem = new PromptItem(
                         name: name,
                         content: request.Content,
@@ -279,7 +274,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
-            List<PromptItem> fullList = await this.GetFullListAsync(p => p.Name == curItem.Name, p => p.FullVersion, OrderingType.Ascending);
+            List<PromptItem> fullList = await this.GetFullListAsync(
+                p => p.Name == curItem.Name, 
+                p => p.Id, 
+                OrderingType.Ascending);
             // // 根据 FullVersion, 将list转为Dictionary
             // var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
             // // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>

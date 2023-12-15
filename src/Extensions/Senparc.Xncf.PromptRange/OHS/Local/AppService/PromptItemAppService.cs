@@ -223,7 +223,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
-                async (response, logger) => { return await _promptItemService.getHistoryScore(promptItemId); });
+                async (response, logger) =>
+                {
+                    return await _promptItemService.getHistoryScore(promptItemId);
+                    
+                });
         }
     }
 }
