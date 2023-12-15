@@ -79,6 +79,7 @@
     <ItemGroup>
         <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
         <Folder Include="Domain\PromptPlugins\" />
+        <Folder Include="Domain\Migrations\" />
         <Folder Include="wwwroot\image\Admin\PromptRange\" />
     </ItemGroup>
 
