@@ -148,8 +148,9 @@
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
                         <div class="tabsArea">
-                            <div class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}" @@click="app.alBtnScoring(index)">AI评分</div>
-                            <div class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}" @@click="app.manualBtnScoring(index)">手动评分</div>
+                            @* @@click="app.alBtnScoring(index)" *@
+                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">AI评分</div>
+                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">手动评分</div>
                         </div>
                         <div v-if="item.scoreType === '1'" class="alScoreArea">
                             <div v-for="(elItem,elindex) in item.alResultList" v-key="elindex" class="valFormItem">
