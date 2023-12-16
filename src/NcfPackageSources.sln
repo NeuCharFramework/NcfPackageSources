@@ -80,8 +80,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.ImageUtility", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unpublished", "Unpublished", "{3328552C-7377-45DB-8EE8-B4D9D0184266}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.ImageUtility", "Base\Unpublished\Senparc.Ncf.ImageUtility\Senparc.Ncf.ImageUtility.csproj", "{0BF37A1B-7D06-442D-8E36-68AF2546FA3C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SystemXncfs", "_SystemXncfs", "{97BBCB28-782F-43D5-A604-0376298AF256}"
 	ProjectSection(SolutionItems) = preProject
 		Extensions\System\readme.md = Extensions\System\readme.md
