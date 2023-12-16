@@ -39,7 +39,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     PromptResult result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
 
-                    await _promptResultService.UpdateEvalScore(result.PromptItemId);
+                    
 
                     return "ok";
 
@@ -68,17 +68,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     var promptResult = await _promptResultService.RobotScore(promptResultId, expectedResultList, isRefresh);
 
-                    await _promptResultService.UpdateEvalScore(promptResult.PromptItemId);
+                    // await _promptResultService.UpdateEvalScore(promptResult.PromptItemId);
 
                     return "ok";
-
-                    // var result = await _promptResultService.GetObjectAsync(p => p.Id == request.PromptResultId);
-                    //
-                    // result.ManualScoring(request.HumanScore);
-                    //
-                    // await _promptResultService.SaveObjectAsync(result);
-                    //
-                    // return "ok";
                 });
         }
 

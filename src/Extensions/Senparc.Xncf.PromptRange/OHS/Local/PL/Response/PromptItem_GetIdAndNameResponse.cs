@@ -9,5 +9,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public string Name { get; set; }
         
         public string FullVersion { get; set; }
+
+        public int EvalScore { get; set; }
     }
 }

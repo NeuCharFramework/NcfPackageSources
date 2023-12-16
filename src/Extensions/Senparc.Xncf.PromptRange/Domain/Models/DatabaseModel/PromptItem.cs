@@ -135,13 +135,11 @@ namespace Senparc.Xncf.PromptRange
 
         public bool IsShare { get; private set; } = false;
 
-        private PromptItem()
-        {
-        }
+        public string ExpectedResultsJson { get; private set; }
 
         public PromptItem(string name, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
             float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore,
-            string version, DateTime lastRunTime)
+            string fullVersion, DateTime lastRunTime, string note)
         {
             Name = name;
             Content = content;
@@ -156,18 +154,20 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = chatSystemPrompt;
             TokenSelectionBiases = tokenSelectionBiases;
             EvaluationScore = evaluationScore;
-            // Version = version;
+            FullVersion = fullVersion;
             LastRunTime = lastRunTime;
+            Note = note;
         }
 
-        public PromptItem(string name, string content, int numsOfResults)
-            : this(name, content, 1, 0, 0, 0, 0, 0, "", numsOfResults, "", "", 0, "", DateTime.Now)
+        public PromptItem(string name, string content, int numsOfResults, string note)
+            : this(name, content, 1, 0, 0, 0, 0, 0, "", numsOfResults, "", "", 0, "", DateTime.Now, note)
         {
         }
 
 
-        public PromptItem(PromptItemDto promptItemDto)
+        public PromptItem(PromptItemDto promptItemDto, string note)
         {
+            Note = note;
             MaxToken = promptItemDto.MaxToken;
             Temperature = promptItemDto.Temperature;
             TopP = promptItemDto.TopP;
@@ -177,7 +177,7 @@ namespace Senparc.Xncf.PromptRange
             ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
             TokenSelectionBiases = promptItemDto.TokenSelectionBiases;
             EvaluationScore = promptItemDto.EvaluationScore;
-            // Version = promptItemDto.Version;
+            FullVersion = promptItemDto.FullVersion;
             LastRunTime = promptItemDto.LastRunTime;
         }
 
@@ -197,8 +197,10 @@ namespace Senparc.Xncf.PromptRange
         /// <param name="tactic"></param>
         /// <param name="aiming"></param>
         /// <param name="parentTac"></param>
+        /// <param name="note"></param>
+        /// <param name="expectedResultsJson"></param>
         public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac)
+            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac, string note, string expectedResultsJson)
         {
             Content = content;
             ModelId = modelId;
@@ -213,28 +215,9 @@ namespace Senparc.Xncf.PromptRange
             Tactic = tactic;
             Aiming = aiming;
             ParentTac = parentTac;
+            Note = note;
+            ExpectedResultsJson = expectedResultsJson;
         }
-
-        // [Obsolete]
-        // /// <summary>
-        // /// 获取当前版本的父版本
-        // /// 例如：2021.08.01.1-1 的父版本为 2021.08.01.1
-        // ///      2021.08.01.1-2 的父版本为 2021.08.01.1
-        // ///      2021.08.01.1-1-1 的父版本为 2021.08.01.1-1
-        // /// </summary>
-        // /// <returns></returns>
-        // [CanBeNull]
-        // public string GetParentVersion()
-        // {
-        //     if (this.Version.Contains('-'))
-        //     {
-        //         // 去掉最后一个“-”及其后面的内容
-        //         var index = this.Version.LastIndexOf('-');
-        //         return this.Version.Substring(0, index);
-        //     }
-        //
-        //     return null;
-        // }
 
         public PromptItem Switch(bool show)
         {
@@ -250,21 +233,18 @@ namespace Senparc.Xncf.PromptRange
             return this;
         }
 
-        public PromptItem UpdateEvalScore(int score)
+        public PromptItem UpdateExpectedResultsJson(string expectedResultsJson)
         {
-            this.EvaluationScore = score;
+            this.ExpectedResultsJson = expectedResultsJson;
+
             return this;
         }
 
-        //public PromptItem SetDefaultName()
-        //{
-        //    if (string.IsNullOrWhiteSpace(Content))
-        //    {
-        //        Name = string.Empty;
-        //        return this;
-        //    }
+        public PromptItem UpdateEvalScore(int score)
+        {
+            this.EvaluationScore = score;
 
-        //    int maxLength = 
-        //}
+            return this;
+        }
     }
 }
