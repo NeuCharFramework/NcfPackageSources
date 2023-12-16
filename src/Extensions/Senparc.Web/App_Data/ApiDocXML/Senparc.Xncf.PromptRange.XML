@@ -567,7 +567,7 @@
             最后一次运行时间
             </summary>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(System.String,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.Int32,System.String,System.String,System.Int32,System.String,System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(System.String,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.String)">
             <summary>
             新增时用的构造函数
             </summary>
@@ -585,6 +585,7 @@
             <param name="aiming"></param>
             <param name="parentTac"></param>
             <param name="note"></param>
+            <param name="expectedResultsJson"></param>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>

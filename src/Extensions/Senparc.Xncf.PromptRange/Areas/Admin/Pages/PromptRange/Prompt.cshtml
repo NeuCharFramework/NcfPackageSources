@@ -129,20 +129,22 @@
             <div class="outputArea_contentBox">
                 <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                     <div class="infoRow">
+                        <span>版本: {{item.version}}</span>
                         <span>#{{item.addTime}}</span>
                         <span>#{{item.costTime}}</span>
-                        <span>版本: {{item.version}}</span>
                     </div>
                     <div class="contentRow">
                         {{item.resultString}}
                     </div>
                     <div class="operateRow">
-                        <div v-if="!item.isScore" class="operateRow_item" @@click="app.showRatingView(index)">
+                        <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                             <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span>评分</span>
-</div>
-                        @* <div v-if="item.isScore" class="operateRow_item">重置</div> *@
-                        <div v-if="item.isScore">分数：{{item.scoreVal}}</div>
+                            <span>AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
+                        </div>
+                        <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
+                            <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span>手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
+                        </div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
                         <div class="tabsArea">
@@ -293,13 +295,13 @@
             <el-form-item label="模型名称" prop="name" label-width="130px">
                 <el-input v-model="modelForm.name" autocomplete="off" placeholder="请输入模型名称"></el-input>
             </el-form-item>
-            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'" label="API Version" prop="apiVersion" label-width="130px">
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharOpenAI'" label="API Version" prop="apiVersion" label-width="130px">
                 <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
             </el-form-item>
-            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'" label="API key" prop="apiKey" label-width="130px">
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharOpenAI'" label="API key" prop="apiKey" label-width="130px">
                 <el-input v-model="modelForm.apiKey" autocomplete="off" placeholder="请输入API key"></el-input>
             </el-form-item>
-            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharOpenAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
                 <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='OpenAI'" label="Organization Id" prop="organizationId" label-width="130px">
