@@ -71,7 +71,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     presencePenalty: request.PresencePenalty,
                     stopSequences: request.StopSequences,
                     numsOfResults: request.NumsOfResults,
-                    note: request.Note
+                    note: request.Note,
+                    expectedResultsJson: request.ExpectedResultsJson
                 );
             }
             else
@@ -102,7 +103,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         presencePenalty: request.PresencePenalty,
                         stopSequences: request.StopSequences,
                         numsOfResults: request.NumsOfResults,
-                        note: request.Note
+                        note: request.Note,
+                        expectedResultsJson: request.ExpectedResultsJson
                     );
                 }
                 else if (request.IsNewSubTactic)
@@ -125,7 +127,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         presencePenalty: request.PresencePenalty,
                         stopSequences: request.StopSequences,
                         numsOfResults: request.NumsOfResults,
-                        note: request.Note
+                        note: request.Note,
+                        expectedResultsJson: request.ExpectedResultsJson
                     );
                 }
                 else
@@ -150,7 +153,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             presencePenalty: request.PresencePenalty,
                             stopSequences: request.StopSequences,
                             numsOfResults: request.NumsOfResults,
-                            note: request.Note
+                            note: request.Note,
+                            expectedResultsJson: request.ExpectedResultsJson
                         );
                     }
                     // todo 是否允许重新生成？
@@ -321,9 +325,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 throw new Exception("未找到prompt");
             }
-            
+
             promptItem.UpdateExpectedResultsJson(expectedResults);
-            
+
             await this.SaveObjectAsync(promptItem);
         }
     }

@@ -198,8 +198,9 @@ namespace Senparc.Xncf.PromptRange
         /// <param name="aiming"></param>
         /// <param name="parentTac"></param>
         /// <param name="note"></param>
+        /// <param name="expectedResultsJson"></param>
         public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac, string note)
+            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac, string note, string expectedResultsJson)
         {
             Content = content;
             ModelId = modelId;
@@ -215,6 +216,7 @@ namespace Senparc.Xncf.PromptRange
             Aiming = aiming;
             ParentTac = parentTac;
             Note = note;
+            ExpectedResultsJson = expectedResultsJson;
         }
 
         public PromptItem Switch(bool show)
