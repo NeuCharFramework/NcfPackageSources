@@ -35,11 +35,11 @@
         <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <RestoreSources>
             $(RestoreSources);D:\Senparc\Senparc.AI\BuildOutPut;
         </RestoreSources>
-    </PropertyGroup>
+    </PropertyGroup>-->
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <OutputPath>..\..\BuildOutPut</OutputPath>
     </PropertyGroup>
