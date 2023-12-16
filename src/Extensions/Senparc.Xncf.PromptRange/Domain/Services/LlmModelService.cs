@@ -20,32 +20,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return base.GetObjectAsync(n => n.Id == Id);
         }
 
-        public LlmModel Add(LlmModel_AddRequest request)
+        public async Task<LlmModel> Add(LlmModel_AddRequest request)
         {
             #region validate
+
             // 如果是Azure OpenAI
-            if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString()) 
+            if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharOpenAI.ToString())
             {
                 // 强制要求ApiVersion和Endpoint不为空
                 if (string.IsNullOrWhiteSpace(request.ApiVersion) || string.IsNullOrWhiteSpace(request.Endpoint))
                 {
-                    throw new NcfExceptionBase("使用AzuerOpenAI时，ApiVersion和Endpoint不能为空");
+                    throw new NcfExceptionBase("使用AzureOpenAI时，ApiVersion和Endpoint不能为空");
+                }
+
+                // ApiVersion不为空且不在ApiVersionList中
+                if (!string.IsNullOrWhiteSpace(request.ApiVersion) && !Constants.ApiVersionList.Contains(request.ApiVersion))
+                {
+                    throw new NcfExceptionBase("ApiVersion不存在");
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(request.ApiVersion) && !Constants.ApiVersionList.Contains(request.ApiVersion))
-            {
-                // ApiVersion不为空且不在ApiVersionList中
-                throw new NcfExceptionBase("ApiVersion不存在");
-            }
             #endregion
 
             LlmModel model = new LlmModel(
                 request.Name, request.Endpoint, request.ModelType,
-                request.OrganizationId, request.ApiKey, request.ApiVersion, 
-                "", 0, "", "", "");
+                request.OrganizationId, request.ApiKey, request.ApiVersion,
+                "", 0);
 
             model.Switch(true);
+
+            await this.SaveObjectAsync(model);
             return model;
         }
     }

@@ -103,22 +103,22 @@ namespace Senparc.Xncf.PromptRange.Models
             MaxToken = maxToken;
         }
 
-        public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
-            string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName,
-            string otherModelName)
-        {
-            Name = name;
-            Endpoint = endpoint;
-            ModelType = modelType;
-            OrganizationId = organizationId;
-            ApiKey = apiKey;
-            ApiVersion = apiVersion;
-            Note = note;
-            MaxToken = maxToken;
-            // TextCompletionModelName = textCompletionModelName;
-            // TextEmbeddingModelName = textEmbeddingModelName;
-            // OtherModelName = otherModelName;
-        }
+        // public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
+        //     string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName,
+        //     string otherModelName)
+        // {
+        //     Name = name;
+        //     Endpoint = endpoint;
+        //     ModelType = modelType;
+        //     OrganizationId = organizationId;
+        //     ApiKey = apiKey;
+        //     ApiVersion = apiVersion;
+        //     Note = note;
+        //     MaxToken = maxToken;
+        //     TextCompletionModelName = textCompletionModelName;
+        //     TextEmbeddingModelName = textEmbeddingModelName;
+        //     OtherModelName = otherModelName;
+        // }
 
         //public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
         //{

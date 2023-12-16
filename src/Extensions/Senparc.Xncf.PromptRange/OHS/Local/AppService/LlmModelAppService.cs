@@ -39,8 +39,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             StringAppResponse resp = await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var model = _llmModelService.Add(request);
-
-                await _llmModelService.SaveObjectAsync(model);
+                
                 return "ok";
             });
             return resp;

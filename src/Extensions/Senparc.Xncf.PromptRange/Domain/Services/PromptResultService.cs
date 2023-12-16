@@ -96,6 +96,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
                 Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
+                Constants.NeuCharOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
@@ -233,6 +234,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             aiSettings.AiPlatform = aiPlatform;
             switch (aiPlatform)
             {
+                case AiPlatform.NeuCharOpenAI:
+                    aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
+                    {
+                        ApiKey = llmModel.ApiKey,
+                        NeuCharOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharEndpoint = llmModel.Endpoint
+                    };
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = llmModel.ApiKey,
+                        AzureOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = llmModel.Endpoint
+                    };
+                    break;
                 case AiPlatform.AzureOpenAI:
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
