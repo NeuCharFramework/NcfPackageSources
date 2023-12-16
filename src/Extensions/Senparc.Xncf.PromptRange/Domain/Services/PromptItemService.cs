@@ -2,19 +2,21 @@
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptItemService : ServiceBase<PromptItem>
     {
-        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo,
-            serviceProvider)
+        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
@@ -54,11 +56,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 // 如果没有id，就新建一个全新的Item
 
                 List<PromptItem> todayPromptList = await base.GetFullListAsync(p => p.Name.StartsWith(todayStr));
-                // var name = $"{todayStr}.{todayPromptList.Count + 1}";
-                // var tactic = "1";
-                // var aiming = 1;
-
-
                 toSavePromptItem = new PromptItem(
                     name: $"{todayStr}.{todayPromptList.Count + 1}",
                     content: request.Content,
@@ -83,9 +80,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 string oldTactic = oldPrompt.Tactic;
                 int oldAiming = oldPrompt.Aiming;
 
-                if (request.IsNewTactic || request.IsNewSubTactic)
+                if (request.IsNewTactic)
                 {
-                    var parentTac = request.IsNewTactic ? oldPrompt.ParentTac : oldPrompt.Tactic;
+                    var parentTac = oldPrompt.ParentTac;
                     List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
                     toSavePromptItem = new PromptItem(
                         name: name,
@@ -99,6 +96,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         stopSequences: request.StopSequences,
                         numsOfResults: request.NumsOfResults,
                         tactic: $"{fullList.Count + 1}",
+                        aiming: 1,
+                        parentTac: parentTac
+                    );
+                }
+                else if (request.IsNewSubTactic)
+                {
+                    var parentTac = oldPrompt.Tactic;
+                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}."));
+                    toSavePromptItem = new PromptItem(
+                        name: name,
+                        content: request.Content,
+                        modelId: request.ModelId,
+                        topP: request.TopP,
+                        temperature: request.Temperature,
+                        maxToken: request.MaxToken,
+                        frequencyPenalty: request.FrequencyPenalty,
+                        presencePenalty: request.PresencePenalty,
+                        stopSequences: request.StopSequences,
+                        numsOfResults: request.NumsOfResults,
+                        tactic: $"{parentTac}.{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac
                     );
@@ -146,7 +163,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="promptItemId">提示词 Item 的 Id</param>
         /// <returns >版本树</returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<TreeNode<PromptItem>> GenerateVersionHistory(int promptItemId)
+        public async Task<TreeNode<PromptItem>> GenerateVersionHistoryTree(int promptItemId)
         {
             // 找到对应的promptItem
             var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
@@ -155,7 +172,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 throw new NcfExceptionBase("找不到对应的promptItem");
             }
 
-            return await this.GenerateVersionHistory(promptItem.FullVersion).ConfigureAwait(false);
+            return await this.GenerateVersionHistoryTree(promptItem.FullVersion).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -165,7 +182,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="curVersion">当前版本号</param>
         /// <returns>版本树</returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<TreeNode<PromptItem>> GenerateVersionHistory(string curVersion)
+        public async Task<TreeNode<PromptItem>> GenerateVersionHistoryTree(string curVersion)
         {
             #region 找到对应的promptItem
 
@@ -197,6 +214,94 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             return rootNode;
+        }
+
+        public async Task<PromptItem_HistoryScoreResponse> GenerateVersionHistoryList(string curVersion)
+        {
+            List<string> versionHistoryList = new List<string>();
+            List<int> scoreHistoryList = new List<int>();
+
+            #region 找到对应的promptItem
+
+            var curItem = await this.GetObjectAsync(p => p.FullVersion == curVersion);
+            if (curItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            #endregion
+
+            List<PromptItem> fullList = await this.GetFullListAsync(p => p.Name == curItem.Name, p => p.FullVersion, OrderingType.Ascending);
+            // // 根据 FullVersion, 将list转为Dictionary
+            // var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
+            // // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
+            // var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
+            //     .ToDictionary(p => p.Key, p => p.ToList());
+            //
+            // // PromptItem rootItem = itemMapByVersion[$"{curItem.Name}-T1-A1"];
+            // while (string.IsNullOrWhiteSpace(curItem.ParentTac))
+            // {
+            //     versionHistoryList.Add(curItem.FullVersion);
+            //     
+            //     curItem = itemMapByVersion[curItem.ParentTac];
+            // }
+            var index = fullList.IndexOf(curItem);
+            if (index != -1)
+            {
+                for (var i = 0; i < index; i++)
+                {
+                    versionHistoryList.Add(fullList[i].FullVersion);
+                    scoreHistoryList.Add(fullList[i].EvaluationScore);
+                }
+            }
+
+            return new PromptItem_HistoryScoreResponse(versionHistoryList, scoreHistoryList);
+        }
+
+
+        public async Task<PromptItem_HistoryScoreResponse> getHistoryScore(int promptItemId)
+        {
+            List<string> versionHistoryList = new List<string>();
+            List<int> scoreHistoryList = new List<int>();
+
+            #region 找到对应的promptItem
+
+            var curItem = await this.GetObjectAsync(p => p.Id == promptItemId);
+            if (curItem == null)
+            {
+                throw new NcfExceptionBase("找不到对应的promptItem");
+            }
+
+            #endregion
+
+            List<PromptItem> fullList = await this.GetFullListAsync(
+                p => p.Name == curItem.Name, 
+                p => p.Id, 
+                OrderingType.Ascending);
+            // // 根据 FullVersion, 将list转为Dictionary
+            // var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
+            // // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
+            // var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
+            //     .ToDictionary(p => p.Key, p => p.ToList());
+            //
+            // // PromptItem rootItem = itemMapByVersion[$"{curItem.Name}-T1-A1"];
+            // while (string.IsNullOrWhiteSpace(curItem.ParentTac))
+            // {
+            //     versionHistoryList.Add(curItem.FullVersion);
+            //     
+            //     curItem = itemMapByVersion[curItem.ParentTac];
+            // }
+            var index = fullList.IndexOf(curItem);
+            if (index != -1)
+            {
+                for (var i = 0; i <= index; i++)
+                {
+                    versionHistoryList.Add(fullList[i].FullVersion);
+                    scoreHistoryList.Add(fullList[i].EvaluationScore);
+                }
+            }
+
+            return new PromptItem_HistoryScoreResponse(versionHistoryList, scoreHistoryList);
         }
     }
 }
