@@ -99,7 +99,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
                     List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
                 {
-                    var promptItems = await _promptItemService
+                    List<PromptItem> promptItems = await _promptItemService
                         .GetFullListAsync(
                             p => true,
                             p => p.Id,
@@ -108,7 +108,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         Id = p.Id,
                         Name = p.Name,
-                        FullVersion = p.FullVersion
+                        FullVersion = p.FullVersion,
+                        EvalScore = p.EvaluationScore
                     }).ToList();
                 });
         }
