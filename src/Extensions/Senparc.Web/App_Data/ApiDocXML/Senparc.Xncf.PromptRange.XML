@@ -181,7 +181,7 @@
             评估标注
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Version">
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.FullVersion">
             <summary>
             版本号，格式为 yyyy.MM.dd.Version
             </summary>
@@ -579,7 +579,7 @@
             最后一次运行时间
             </summary>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(System.String,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.Int32,System.String,System.String,System.Int32,System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(System.String,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.String)">
             <summary>
             新增时用的构造函数
             </summary>
@@ -596,6 +596,8 @@
             <param name="tactic"></param>
             <param name="aiming"></param>
             <param name="parentTac"></param>
+            <param name="note"></param>
+            <param name="expectedResultsJson"></param>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>
@@ -656,7 +658,7 @@
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetHistoryScore(System.Int32)">
             <summary>
-            分数趋势图
+            分数趋势图（依据时间）
             </summary>
             <param name="promptItemId"></param>
             <returns></returns>
@@ -770,6 +772,7 @@
             Note
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson" -->
         <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">
             <summary>
             数据库前缀

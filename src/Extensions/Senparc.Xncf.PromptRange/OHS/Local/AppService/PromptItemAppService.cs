@@ -63,7 +63,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         topP: promptItem.TopP,
                         frequencyPenalty: promptItem.FrequencyPenalty,
                         presencePenalty: promptItem.PresencePenalty,
-                        stopSequences: promptItem.StopSequences
+                        stopSequences: promptItem.StopSequences,
+                        note: promptItem.Note,
+                        // lastRunTime: promptItem.LastRunTime
+                        expectedResultsJson: promptItem.ExpectedResultsJson
                     );
 
                     // 是否立即生成结果，暂时不添加这个开关
@@ -96,7 +99,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
                     List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
                 {
-                    var promptItems = await _promptItemService
+                    List<PromptItem> promptItems = await _promptItemService
                         .GetFullListAsync(
                             p => true,
                             p => p.Id,
@@ -105,7 +108,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         Id = p.Id,
                         Name = p.Name,
-                        FullVersion = p.FullVersion
+                        FullVersion = p.FullVersion,
+                        EvalScore = p.EvaluationScore
                     }).ToList();
                 });
         }
@@ -146,7 +150,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         topP: promptItem.TopP,
                         frequencyPenalty: promptItem.FrequencyPenalty,
                         presencePenalty: promptItem.PresencePenalty,
-                        stopSequences: promptItem.StopSequences
+                        stopSequences: promptItem.StopSequences,
+                        note: promptItem.Note,
+                        expectedResultsJson: promptItem.ExpectedResultsJson
                     );
                     resp.PromptResultList.AddRange(result);
 
@@ -215,7 +221,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 分数趋势图
+        /// 分数趋势图（依据时间）
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <returns></returns>
@@ -223,11 +229,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
-                async (response, logger) =>
-                {
-                    return await _promptItemService.getHistoryScore(promptItemId);
-                    
-                });
+                async (response, logger) => { return await _promptItemService.getHistoryScore(promptItemId); });
+        }
+
+        public async Task<StringAppResponse> UpdateExpectedResults(string promptItemId, string expectedResults)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                await _promptItemService.UpdateExpectedResults(promptItemId, expectedResults);
+                return "ok";
+            });
         }
     }
 }

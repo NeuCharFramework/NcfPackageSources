@@ -50,10 +50,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public string Note { get; set; }
 
+        public DateTime LastRunTime { get; private set; } = DateTime.Now;
+
+        public bool IsShare { get; private set; } = false;
+
+        /// <summary>
+        /// 期望结果 - Json List<string>
+        /// </summary>
+        public string ExpectedResultsJson { get; private set; }
+
         public List<PromptResult> PromptResultList { get; set; } = new();
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
-            int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences)
+            int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
+            string expectedResultsJson)
         {
             Id = $"{promptItemId}";
             PromptContent = promptContent;
@@ -65,10 +75,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             TopP = topP;
             FrequencyPenalty = frequencyPenalty;
             StopSequences = stopSequences;
-        }
-
-        public PromptItem_AddResponse()
-        {
+            Note = note;
+            ExpectedResultsJson = expectedResultsJson;
         }
     }
 }
