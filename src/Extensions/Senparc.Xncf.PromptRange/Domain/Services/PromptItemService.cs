@@ -43,7 +43,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
-
             // 更新版本号
             var today = SystemTime.Now;
             var todayStr = today.ToString("yyyy.MM.dd");
@@ -55,9 +54,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 // 如果没有id，就新建一个全新的Item
 
-                List<PromptItem> todayPromptList = await base.GetFullListAsync(p => p.Name.StartsWith(todayStr));
+                List<PromptItem> todayPromptList = await base.GetFullListAsync(
+                    p => p.Name.StartsWith($"{todayStr}.") && p.FullVersion.EndsWith("T1-A1")
+                );
                 toSavePromptItem = new PromptItem(
                     name: $"{todayStr}.{todayPromptList.Count + 1}",
+                    tactic: "1",
+                    aiming: 1,
+                    parentTac: "",
                     content: request.Content,
                     modelId: request.ModelId,
                     topP: request.TopP,
@@ -67,9 +71,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     presencePenalty: request.PresencePenalty,
                     stopSequences: request.StopSequences,
                     numsOfResults: request.NumsOfResults,
-                    tactic: "1",
-                    aiming: 1,
-                    parentTac: ""
+                    note: request.Note,
+                    expectedResultsJson: request.ExpectedResultsJson
                 );
             }
             else
@@ -83,9 +86,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 if (request.IsNewTactic)
                 {
                     var parentTac = oldPrompt.ParentTac;
-                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}"));
+                    List<PromptItem> fullList = await base.GetFullListAsync(p =>
+                        p.FullVersion.StartsWith($"{name}-T{parentTac}") && p.FullVersion.EndsWith("A1")
+                    );
                     toSavePromptItem = new PromptItem(
                         name: name,
+                        tactic: $"{fullList.Count + 1}",
+                        aiming: 1,
+                        parentTac: parentTac,
                         content: request.Content,
                         modelId: request.ModelId,
                         topP: request.TopP,
@@ -95,17 +103,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         presencePenalty: request.PresencePenalty,
                         stopSequences: request.StopSequences,
                         numsOfResults: request.NumsOfResults,
-                        tactic: $"{fullList.Count + 1}",
-                        aiming: 1,
-                        parentTac: parentTac
+                        note: request.Note,
+                        expectedResultsJson: request.ExpectedResultsJson
                     );
                 }
                 else if (request.IsNewSubTactic)
                 {
                     var parentTac = oldPrompt.Tactic;
-                    List<PromptItem> fullList = await base.GetFullListAsync(p => p.FullVersion.StartsWith($"{name}-T{parentTac}."));
+                    List<PromptItem> fullList = await base.GetFullListAsync(p =>
+                        p.FullVersion.StartsWith($"{name}-T{parentTac}.") && p.FullVersion.EndsWith("A1")
+                    );
                     toSavePromptItem = new PromptItem(
                         name: name,
+                        tactic: $"{parentTac}.{fullList.Count + 1}",
+                        aiming: 1,
+                        parentTac: parentTac,
                         content: request.Content,
                         modelId: request.ModelId,
                         topP: request.TopP,
@@ -115,9 +127,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         presencePenalty: request.PresencePenalty,
                         stopSequences: request.StopSequences,
                         numsOfResults: request.NumsOfResults,
-                        tactic: $"{parentTac}.{fullList.Count + 1}",
-                        aiming: 1,
-                        parentTac: parentTac
+                        note: request.Note,
+                        expectedResultsJson: request.ExpectedResultsJson
                     );
                 }
                 else
@@ -125,10 +136,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     if (request.IsNewAiming) // 不改变分支
                     {
                         List<PromptItem> fullList = await base.GetFullListAsync(p =>
-                            p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A'))
-                            ));
+                            // p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A')))
+                            p.FullVersion.StartsWith($"{oldPrompt.Name}-T{oldPrompt.Tactic}-A")
+                        );
                         toSavePromptItem = new PromptItem(
                             name: name,
+                            tactic: oldTactic,
+                            aiming: fullList.Count + 1,
+                            parentTac: oldPrompt.ParentTac,
                             content: request.Content,
                             modelId: request.ModelId,
                             topP: request.TopP,
@@ -138,9 +153,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             presencePenalty: request.PresencePenalty,
                             stopSequences: request.StopSequences,
                             numsOfResults: request.NumsOfResults,
-                            tactic: oldTactic,
-                            aiming: fullList.Count + 1,
-                            parentTac: oldPrompt.ParentTac
+                            note: request.Note,
+                            expectedResultsJson: request.ExpectedResultsJson
                         );
                     }
                     // todo 是否允许重新生成？
@@ -275,8 +289,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #endregion
 
             List<PromptItem> fullList = await this.GetFullListAsync(
-                p => p.Name == curItem.Name, 
-                p => p.Id, 
+                p => p.Name == curItem.Name,
+                p => p.Id,
                 OrderingType.Ascending);
             // // 根据 FullVersion, 将list转为Dictionary
             // var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
@@ -302,6 +316,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             return new PromptItem_HistoryScoreResponse(versionHistoryList, scoreHistoryList);
+        }
+
+        public async Task UpdateExpectedResults(string promptItemId, string expectedResults)
+        {
+            var promptItem = await this.GetObjectAsync(p => p.Id == int.Parse(promptItemId));
+            if (promptItem == null)
+            {
+                throw new Exception("未找到prompt");
+            }
+
+            promptItem.UpdateExpectedResultsJson(expectedResults);
+
+            await this.SaveObjectAsync(promptItem);
         }
     }
 }

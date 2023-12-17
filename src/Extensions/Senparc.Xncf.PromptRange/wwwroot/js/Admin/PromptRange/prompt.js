@@ -120,7 +120,7 @@ var app = new Vue({
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
-                tactics: ''
+                tactics: '重新瞄准'
             },
             // 模型
             modelFormVisible: false,
@@ -144,7 +144,7 @@ var app = new Vue({
             }, {
                 value: 'NeuCharOpenAI',
                 label: 'NeuCharOpenAI',
-                disabled: true
+                disabled: false
             }, {
                 value: 'HugginFace',
                 label: 'HugginFace',
@@ -160,9 +160,6 @@ var app = new Vue({
                 suffix: [
                     {required: true, message: '请输入后缀', trigger: 'blur'}
                 ],
-                variableName: [
-                    {required: true, message: '请输入变量名', trigger: 'blur'}
-                ],
                 variableValue: [
                     {required: true, message: '请输入变量值', trigger: 'blur'}
                 ],
@@ -177,6 +174,9 @@ var app = new Vue({
                 ],
                 apiKey: [
                     {required: true, message: '请输入API key', trigger: 'blur'}
+                ],
+                variableName: [
+                    {required: true, message: '请输入变量名', trigger: 'blur'}
                 ],
                 endpoint: [
                     {required: true, message: '请输入End Point', trigger: 'blur'}
@@ -220,6 +220,23 @@ var app = new Vue({
         resizeObserver.observe(viewElem);
     },
     methods: {
+        formatDate(d) {
+            var date = new Date(d);
+            var YY = date.getFullYear() + '-';
+            var MM =
+                (date.getMonth() + 1 < 10
+                    ? '0' + (date.getMonth() + 1)
+                    : date.getMonth() + 1) + '-';
+            var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+            var hh =
+                (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+            var mm =
+                (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
+                ':';
+            var ss =
+                date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+            return YY + MM + DD + ' ' + hh + mm + ss;
+        },
         // 输出 分数趋势图初始化
         chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
@@ -414,7 +431,7 @@ var app = new Vue({
                         //promptid: this.promptid,// 选择靶场
                         modelid: this.modelid,// 选择模型
                         content: this.content,// prompt 输入内容
-                        remarks: this.remarks // prompt 输入的备注
+                        note: this.remarks // prompt 输入的备注
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -454,20 +471,18 @@ var app = new Vue({
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
                         this.promptDetail = copyResultData
-                        let _totalScore = 0
-                        let _totalLen = 0
+                        // 平均分 
+                        this.outputAverage = 0 // 保留整数
                         // 输出列表
                         this.outputList = promptResultList.map(item => {
                             if (item) {
-                                _totalScore += item.robotScore > -1 ? item.robotScore : 0
-                                _totalScore += item.humanScore > -1 ? item.humanScore : 0
-
                                 item.promptId = id
                                 item.version = fullVersion
                                 item.scoreType = '1' // 1 ai、2手动 
-                                item.isScore = item.robotScore > -1 || item.humanScore > -1 ? true : false // 是否已经评分
                                 item.isScoreView = false // 是否显示评分视图
-                                item.scoreVal = item.robotScore > -1 ? item.robotScore : 0 || item.humanScore > -1 ? item.humanScore : 0
+                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                                item.scoreVal = 0 // 手动评分
+                                // ai评分预期结果
                                 item.alResultList = [{
                                     id: 1,
                                     label: '预期结果1',
@@ -481,14 +496,10 @@ var app = new Vue({
                                     label: '预期结果3',
                                     value: ''
                                 }]
-                                if (item.isScore) {
-                                    _totalLen += 1
-                                }
                             }
                             return item
                         })
-                        // 平均分 _totalScore/promptResultList 保留整数
-                        this.outputAverage = Math.round(_totalScore / _totalLen); // 保留整数
+                       
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
                     } else {
@@ -635,8 +646,8 @@ var app = new Vue({
 
 
         // 获取输出列表
-        async getOutputList(id) {
-            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${id}`)
+        async getOutputList(promptId) {
+            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${promptId}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
                 let {promptResults = [],promptItem={}} = res.data.data || {}
@@ -647,11 +658,23 @@ var app = new Vue({
                     if (item) {
                         item.promptId = this.promptDetail.id
                         item.version = this.promptDetail.fullVersion
-                        item.scoreType = '1' // 1 ai、2手动 
-                        item.isScore = item.robotScore > -1 || item.humanScore > -1 ? true : false // 是否已经评分
+                        item.scoreType = '1' // 1 ai、2手动
                         item.isScoreView = false // 是否显示评分视图
-                        item.scoreVal = item.robotScore > -1 ? item.robotScore : 0 || item.humanScore > -1 ? item.humanScore : 0
-                        item.alResultList = [{
+                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                        // 手动评分
+                        item.scoreVal = item.humanScore > -1 ? item.humanScore : 0 
+                        // ai评分预期结果
+                        if (promptItem.expectedResultsJson) {
+                            let _expectedResultsJson = JSON.parse(promptItem.expectedResultsJson)
+                            item.alResultList = _expectedResultsJson.map((item, index) => {
+                                return {
+                                    id: index + 1,
+                                    label: `预期结果${index + 1}`,
+                                    value: item
+                                }
+                            })
+                        } else {
+                            item.alResultList = [{
                             id: 1,
                             label: '预期结果1',
                             value: ''
@@ -664,6 +687,8 @@ var app = new Vue({
                             label: '预期结果3',
                             value: ''
                         }]
+                        }
+                        
                     }
                     return item
                 })
@@ -716,8 +741,9 @@ var app = new Vue({
             this.outputActive = index
         },
         // 输出 显示评分视图
-        showRatingView(index) {
+        showRatingView(index, scoreType) {
             //event.stopPropagation()
+            this.outputList[index].scoreType = scoreType
             this.outputList[index].isScoreView = true
         },
         // 输出 切换ai评分
@@ -751,7 +777,7 @@ var app = new Vue({
                 //promptid: this.promptid,// 选择靶场
                 modelid: this.modelid,// 选择模型
                 content: this.content,// prompt 输入内容
-                remarks: this.remarks // prompt 输入的备注
+                note: this.remarks // prompt 输入的备注
             }
             if (this.promptid) {
                 _postData.id = this.promptid
@@ -790,19 +816,20 @@ var app = new Vue({
                 let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                 delete copyResultData.promptResultList
                 this.promptDetail = copyResultData
-                let _totalScore = 0
-                let _totalLen = 0
+                // 平均分 _totalScore/promptResultList 保留整数
+                this.outputAverage = 0 // 保留整数
                 // 输出列表
                 this.outputList = promptResultList.map(item => {
                     if (item) {
-                        _totalScore += item.robotScore > -1 ? item.robotScore : 0
-                        _totalScore += item.humanScore > -1 ? item.humanScore : 0
                         item.promptId = id
                         item.version = fullVersion
                         item.scoreType = '1' // 1 ai、2手动 
-                        item.isScore = item.robotScore > -1 || item.humanScore > -1 ? true : false // 是否已经评分
                         item.isScoreView = false // 是否显示评分视图
-                        item.scoreVal = item.robotScore > -1 ? item.robotScore : 0 || item.humanScore > -1 ? item.humanScore : 0
+                        //时间 格式化  addTime
+                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                        // 手动评分
+                        item.scoreVal = 0
+                        // ai评分预期结果
                         item.alResultList = [{
                             id: 1,
                             label: '预期结果1',
@@ -816,14 +843,10 @@ var app = new Vue({
                             label: '预期结果3',
                             value: ''
                         }]
-                        if (item.isScore) {
-                            _totalLen += 1
-                        }
                     }
                     return item
                 })
-                // 平均分 _totalScore/promptResultList 保留整数
-                this.outputAverage = Math.round(_totalScore / _totalLen); // 保留整数
+                
                 // 获取分数趋势图表数据
                 this.getScoringTrendData()
             } else {
@@ -1013,7 +1036,7 @@ var app = new Vue({
                 this.promptOpt = _optList.map(item => {
                     return {
                         ...item,
-                        label: item.name,
+                        label: `${item.fullVersion} | ${item.evalScore}`,
                         value: item.id,
                         disabled: false
                     }

@@ -81,7 +81,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 版本号，格式为 yyyy.MM.dd.Version
         /// </summary>
-        public virtual string Version { get;  set; }
+        public virtual string FullVersion { get;  set; }
 
         /// <summary>
         /// 最后一次运行时间

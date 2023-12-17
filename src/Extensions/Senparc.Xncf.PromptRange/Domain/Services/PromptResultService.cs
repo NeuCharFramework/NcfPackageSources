@@ -96,6 +96,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
                 Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
+                Constants.NeuCharOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
@@ -186,6 +187,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(promptResult);
 
+            // 更新绑定的 item 的分数
+            await this.UpdateEvalScore(promptResult.PromptItemId);
+
             return promptResult;
         }
 
@@ -214,6 +218,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(promptResult);
 
+            // 更新绑定的 item 的分数
+            await this.UpdateEvalScore(promptResult.PromptItemId);
+
             return promptResult;
         }
 
@@ -227,6 +234,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             aiSettings.AiPlatform = aiPlatform;
             switch (aiPlatform)
             {
+                case AiPlatform.NeuCharOpenAI:
+                    aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
+                    {
+                        ApiKey = llmModel.ApiKey,
+                        NeuCharOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharEndpoint = llmModel.Endpoint
+                    };
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = llmModel.ApiKey,
+                        AzureOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = llmModel.Endpoint
+                    };
+                    break;
                 case AiPlatform.AzureOpenAI:
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
@@ -331,6 +352,9 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             // If there is a match, the number will be match.Value
             if (match.Success)
             {
+                // 保存期望结果
+                promptItem.UpdateExpectedResultsJson(expectedResultList.ToJson() ?? "");
+
                 await this.SaveObjectAsync(promptResult.RobotScoring(Convert.ToInt32(match.Value)));
 
                 return promptResult;
