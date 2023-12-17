@@ -24,10 +24,10 @@ steps:
 #     packageType: 'sdk'
 
 - task: UseDotNet@2
-   displayName: 'Use .NET SDK 6'
-   inputs:
-     version: '6.0.x'
-     packageType: 'sdk'
+  displayName: 'Use .NET SDK 6'
+  inputs:
+    version: '6.0.x'
+    packageType: 'sdk'
     
 - task: UseDotNet@2
   displayName: 'Use .NET SDK 8'
