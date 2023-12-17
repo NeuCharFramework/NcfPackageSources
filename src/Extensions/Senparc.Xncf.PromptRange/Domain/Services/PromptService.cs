@@ -45,7 +45,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </param>
         /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(string input, SenparcAiContext context = null, Dictionary<string, List<string>> plugins = null, params ISKFunction[] functionPiple)
+        public async Task<string> GetPromptResultAsync(string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
@@ -53,7 +53,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             var iWantToRun = IWantToRun ?? ReBuildKernel();
 
-            List<ISKFunction> allFunctionPiple = new List<ISKFunction>();
+            List<KernelFunction> allFunctionPiple = new List<KernelFunction>();
 
             if (plugins?.Count > 0)
             {
@@ -76,13 +76,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (context != null)
             {
-                context.ContextVariables["input"] = input;
+                context.KernelArguments["input"] = input;
             }
 
             //构建请求对象
             var request = context == null
                 ? iWantToRun.CreateRequest(input, true, allFunctionPiple.ToArray())
-                : iWantToRun.CreateRequest(context.ContextVariables, true, allFunctionPiple.ToArray());
+                : iWantToRun.CreateRequest(context.KernelArguments, true, allFunctionPiple.ToArray());
             //请求
             var result = await iWantToRun.RunAsync(request);
             return result.Output;

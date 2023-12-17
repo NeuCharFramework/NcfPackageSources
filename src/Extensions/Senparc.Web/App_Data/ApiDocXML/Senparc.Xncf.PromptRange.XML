@@ -58,7 +58,7 @@
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiContext,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.ISKFunction[])">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiArguments,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.KernelFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
             </summary>

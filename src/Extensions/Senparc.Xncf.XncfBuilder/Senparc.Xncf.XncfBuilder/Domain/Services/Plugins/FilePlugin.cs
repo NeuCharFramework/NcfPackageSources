@@ -18,7 +18,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             this._iWantToRun = iWantToRun;
         }
 
-        [SKFunction, SKName("CreateFile"), Description("创建实体类")]
+        [KernelFunction("CreateFile"), Description("创建实体类")]
         public async Task<string> CreateFile(
              [Description("文件路径")]
             string fileBasePath,
@@ -52,7 +52,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
 
 
-        [SKFunction, SKName("UpdateSenparcEntities"), Description("读取数据库上下文")]
+        [KernelFunction("UpdateSenparcEntities"), Description("读取数据库上下文")]
         public async Task<string> UpdateSenparcEntities(
             [Description("项目路径")]
             string projectPath,
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     //运行
                     var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
 
-                    request.TempAiContext = new AI.Kernel.Entities.SenparcAiContext();
+                    request.TempAiArguments = new AI.Kernel.Entities.SenparcAiArguments();
                     request.SetTempContext("Code", fileContent);
                     request.SetTempContext("EntityName", entityName);
 

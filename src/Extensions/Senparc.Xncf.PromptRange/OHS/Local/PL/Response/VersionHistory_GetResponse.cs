@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
-using Microsoft.SemanticKernel.Prompt;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
