@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.3.3-beta1</Version>
+    <Version>0.3.6-beta2</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>9.0</LangVersion>
@@ -35,11 +35,11 @@
         <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <RestoreSources>
             $(RestoreSources);D:\Senparc\Senparc.AI\BuildOutPut;
         </RestoreSources>
-    </PropertyGroup>
+    </PropertyGroup>-->
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <OutputPath>..\..\BuildOutPut</OutputPath>
     </PropertyGroup>
@@ -79,6 +79,7 @@
     <ItemGroup>
         <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
         <Folder Include="Domain\PromptPlugins\" />
+        <Folder Include="Domain\Migrations\" />
         <Folder Include="wwwroot\image\Admin\PromptRange\" />
     </ItemGroup>
 
