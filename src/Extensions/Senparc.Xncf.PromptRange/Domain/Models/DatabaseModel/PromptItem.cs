@@ -17,6 +17,11 @@ namespace Senparc.Xncf.PromptRange
     public class PromptItem : EntityBase<int>
     {
         /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { get; private set; }
+
+        /// <summary>
         /// Prompt内容
         /// </summary>
         public string Content { get; private set; }
@@ -74,24 +79,34 @@ namespace Senparc.Xncf.PromptRange
         [Obsolete("已废弃")]
         public string TokenSelectionBiases { get; private set; }
 
+        #region 打分
+
         /// <summary>
         /// 评估参数, 平均分
         /// </summary>
         [MaxLength(3)]
-        public int EvalAvgScore { get; private set; }
+        public int EvalAvgScore { get; private set; } = -1;
 
         /// <summary>
         /// 评估参数
         /// </summary>
         [MaxLength(3)]
-        public int EvalMaxScore { get; private set; }
+        public int EvalMaxScore { get; private set; } = -1;
+
+        /// <summary>
+        /// 期望结果Json
+        /// </summary>
+        public string ExpectedResultsJson { get; private set; }
+
+        #endregion
+
 
         #region Full Version
 
         /// <summary>
         /// <para>版本号，格式为 Name-Tactic-Aiming</para> 
         /// <example>2023.12.14.1-T1.1-A123</example>
-        /// <para>Name: <inheritdoc cref="Name"/></para>
+        /// <para>Name: <inheritdoc cref="RangeName"/></para>
         /// <para>Tactic: <inheritdoc cref="Tactic"/></para>
         /// <para>Aiming: <inheritdoc cref="Aiming"/></para>
         ///         为   Tx              这里的x为分支号，str,允许1.1.1。。。
@@ -100,11 +115,12 @@ namespace Senparc.Xncf.PromptRange
         [Required]
         public string FullVersion
         {
-            get => $"{Name}-T{Tactic}-A{Aiming}";
+            get { return $"{RangeName}-T{Tactic}-A{Aiming}"; }
             private set { }
         }
 
         /// <summary>
+        /// 靶场名
         /// <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
         /// <example>示例一
         ///     <code>2023.12.14.1</code>
@@ -114,9 +130,10 @@ namespace Senparc.Xncf.PromptRange
         /// </example>
         /// </summary>
         [MaxLength(20)]
-        public string Name { get; private set; }
+        public string RangeName { get; private set; }
 
         /// <summary>
+        /// 靶道名
         /// <para>格式为 x.x.x... ,这里的x为分支号</para>
         /// <para>在完整的版本号中，应该用-T连接Name</para>
         /// 
@@ -153,16 +170,18 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public bool IsShare { get; private set; } = false;
 
-        /// <summary>
-        /// 期望结果Json
-        /// </summary>
-        public string ExpectedResultsJson { get; private set; }
+        public bool IsDraft { get; private set; }
 
-        public PromptItem(string name, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
-            float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evalAvgScore,
-            string fullVersion, DateTime lastRunTime, string note)
+
+       
+
+        #region ctor 构造函数
+
+        public PromptItem(string rangeName, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
+            float presencePenalty, string stopSequences, int numsOfResults, int evalAvgScore,
+            string fullVersion, DateTime lastRunTime, string note, bool isDraft)
         {
-            Name = name;
+            RangeName = rangeName;
             Content = content;
             ModelId = modelId;
             TopP = topP;
@@ -172,57 +191,16 @@ namespace Senparc.Xncf.PromptRange
             PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             NumsOfResults = numsOfResults;
-            ChatSystemPrompt = chatSystemPrompt;
-            TokenSelectionBiases = tokenSelectionBiases;
             EvalAvgScore = evalAvgScore;
             FullVersion = fullVersion;
             LastRunTime = lastRunTime;
             Note = note;
+            IsDraft = isDraft;
         }
 
-        public PromptItem(string name, string content, int numsOfResults, string note)
-            : this(name, content, 1, 0, 0, 0, 0, 0, "", numsOfResults, "", "", 0, "", DateTime.Now, note)
-        {
-        }
-
-
-        public PromptItem(PromptItemDto promptItemDto, string note)
-        {
-            Note = note;
-            MaxToken = promptItemDto.MaxToken;
-            Temperature = promptItemDto.Temperature;
-            TopP = promptItemDto.TopP;
-            FrequencyPenalty = promptItemDto.FrequencyPenalty;
-            NumsOfResults = promptItemDto.NumsOfResults;
-            StopSequences = promptItemDto.StopSequences;
-            ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
-            TokenSelectionBiases = promptItemDto.TokenSelectionBiases;
-            EvalAvgScore = promptItemDto.EvaluationScore;
-            FullVersion = promptItemDto.FullVersion;
-            LastRunTime = promptItemDto.LastRunTime;
-        }
-
-        /// <summary>
-        /// 新增时用的构造函数
-        /// </summary>
-        /// <param name="content"></param>
-        /// <param name="modelId"></param>
-        /// <param name="topP"></param>
-        /// <param name="temperature"></param>
-        /// <param name="maxToken"></param>
-        /// <param name="frequencyPenalty"></param>
-        /// <param name="presencePenalty"></param>
-        /// <param name="stopSequences"></param>
-        /// <param name="numsOfResults"></param>
-        /// <param name="name"></param>
-        /// <param name="tactic"></param>
-        /// <param name="aiming"></param>
-        /// <param name="parentTac"></param>
-        /// <param name="note"></param>
-        /// <param name="expectedResultsJson"></param>
         public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac, string note,
-            string expectedResultsJson)
+            string stopSequences, int numsOfResults, string rangeName, string tactic, int aiming, string parentTac, string note,
+            string expectedResultsJson, bool isDraft)
         {
             Content = content;
             ModelId = modelId;
@@ -233,13 +211,16 @@ namespace Senparc.Xncf.PromptRange
             PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             NumsOfResults = numsOfResults;
-            Name = name;
+            RangeName = rangeName;
             Tactic = tactic;
             Aiming = aiming;
             ParentTac = parentTac;
             Note = note;
             ExpectedResultsJson = expectedResultsJson;
+            IsDraft = isDraft;
         }
+
+        #endregion
 
         public PromptItem Switch(bool show)
         {
@@ -248,9 +229,9 @@ namespace Senparc.Xncf.PromptRange
             return this;
         }
 
-        public PromptItem ModifyName(string name)
+        public PromptItem ModifyNickName(string nickName)
         {
-            this.Name = name;
+            this.NickName = nickName;
 
             return this;
         }
@@ -262,9 +243,16 @@ namespace Senparc.Xncf.PromptRange
             return this;
         }
 
-        public PromptItem UpdateEvalScore(int score)
+        public PromptItem UpdateEvalAvgScore(int score)
         {
             this.EvalAvgScore = score;
+
+            return this;
+        }
+
+        public PromptItem UpdateEvalMaxScore(int score)
+        {
+            this.EvalMaxScore = score;
 
             return this;
         }

@@ -7,20 +7,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
     public class VersionHistory_GetResponse
     {
-        public List<TreeNode<PromptItem>> VersionHistory { get; set; }
+        public TreeNode<PromptItem> RootNode { get; set; }
 
         public DateTime QueryTime { get; set; }
 
-        public VersionHistory_GetResponse(List<TreeNode<PromptItem>> versionHistory)
+        public VersionHistory_GetResponse(TreeNode<PromptItem> rootNode)
         {
-            VersionHistory = versionHistory;
-            QueryTime = DateTime.Now;
-        }
-
-        public VersionHistory_GetResponse(TreeNode<PromptItem> versionHistory)
-        {
-            VersionHistory = new List<TreeNode<PromptItem>> { versionHistory };
-
+            RootNode = rootNode;
             QueryTime = DateTime.Now;
         }
     }
@@ -39,10 +32,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         {
         }
 
-        public TreeNode(T data)
-        {
-            Data = data;
-        }
+        // public TreeNode(T data)
+        // {
+        //     Data = data;
+        // }
 
         public TreeNode(string name, T data)
         {

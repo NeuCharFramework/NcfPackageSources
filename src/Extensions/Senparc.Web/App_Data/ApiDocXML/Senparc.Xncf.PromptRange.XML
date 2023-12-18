@@ -17,7 +17,7 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistoryTree(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionTree(System.Int32)">
             <summary>
             输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
             即从该节点到root节点的最短路径
@@ -26,7 +26,7 @@
             <returns >版本树</returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionHistoryTree(System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionTree(System.String)">
             <summary>
             输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
             即从该节点到root节点的最短路径
