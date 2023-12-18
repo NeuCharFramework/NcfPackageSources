@@ -84,11 +84,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-        <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-        <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
-        <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-        <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
-        <ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+        <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.12.0-beta11" />
+        <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.13.1.2-beta11" />
+        <PackageReference Include="Senparc.Xncf.SystemCore" Version="0.4.0-beta11" />
+        <PackageReference Include="Senparc.Xncf.SystemManager" Version="0.4.0-beta11" />
+        <PackageReference Include="Senparc.Xncf.Tenant" Version="0.4.0-beta11" />
     </ItemGroup>
 </Project>
