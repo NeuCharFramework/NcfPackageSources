@@ -58,23 +58,33 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 每个 Prompt 的结果数
         /// </summary>
-        public int NumsOfResults { get; private set; } = 0;
+        [Obsolete("已废弃")]
+        public int NumsOfResults { get; private set; }
 
 
         /// <summary>
         /// 聊天系统 Prompt
         /// </summary>
+        [Obsolete("已废弃")]
         public string ChatSystemPrompt { get; private set; } = "";
 
         /// <summary>
         /// Token 选择偏好
         /// </summary>
+        [Obsolete("已废弃")]
         public string TokenSelectionBiases { get; private set; }
+
+        /// <summary>
+        /// 评估参数, 平均分
+        /// </summary>
+        [MaxLength(3)]
+        public int EvalAvgScore { get; private set; }
 
         /// <summary>
         /// 评估参数
         /// </summary>
-        public int EvaluationScore { get; private set; }
+        [MaxLength(3)]
+        public int EvalMaxScore { get; private set; }
 
         #region Full Version
 
@@ -103,6 +113,7 @@ namespace Senparc.Xncf.PromptRange
         ///     <code>2023.12.14.123</code>
         /// </example>
         /// </summary>
+        [MaxLength(20)]
         public string Name { get; private set; }
 
         /// <summary>
@@ -115,17 +126,21 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// <para>为打靶次数，int</para>
         /// </summary>
+        [MaxLength(5)]
         public int Aiming { get; private set; }
 
-        // public string Version { get; private set; }
-
-        [CanBeNull] public string ParentTac { get; private set; }
+        /// <summary>
+        /// 父Tactic, 可以是空串
+        /// </summary>
+        [Required]
+        public string ParentTac { get; private set; }
 
         #endregion
 
         /// <summary>
         /// Note（可选）
         /// </summary>
+        [MaxLength(20)]
         public string Note { get; private set; }
 
         /// <summary>
@@ -133,12 +148,18 @@ namespace Senparc.Xncf.PromptRange
         /// </summary>
         public DateTime LastRunTime { get; private set; } = DateTime.Now;
 
+        /// <summary>
+        /// 是否公开
+        /// </summary>
         public bool IsShare { get; private set; } = false;
 
+        /// <summary>
+        /// 期望结果Json
+        /// </summary>
         public string ExpectedResultsJson { get; private set; }
 
         public PromptItem(string name, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
-            float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evaluationScore,
+            float presencePenalty, string stopSequences, int numsOfResults, string chatSystemPrompt, string tokenSelectionBiases, int evalAvgScore,
             string fullVersion, DateTime lastRunTime, string note)
         {
             Name = name;
@@ -153,7 +174,7 @@ namespace Senparc.Xncf.PromptRange
             NumsOfResults = numsOfResults;
             ChatSystemPrompt = chatSystemPrompt;
             TokenSelectionBiases = tokenSelectionBiases;
-            EvaluationScore = evaluationScore;
+            EvalAvgScore = evalAvgScore;
             FullVersion = fullVersion;
             LastRunTime = lastRunTime;
             Note = note;
@@ -176,7 +197,7 @@ namespace Senparc.Xncf.PromptRange
             StopSequences = promptItemDto.StopSequences;
             ChatSystemPrompt = promptItemDto.ChatSystemPrompt;
             TokenSelectionBiases = promptItemDto.TokenSelectionBiases;
-            EvaluationScore = promptItemDto.EvaluationScore;
+            EvalAvgScore = promptItemDto.EvaluationScore;
             FullVersion = promptItemDto.FullVersion;
             LastRunTime = promptItemDto.LastRunTime;
         }
@@ -200,7 +221,8 @@ namespace Senparc.Xncf.PromptRange
         /// <param name="note"></param>
         /// <param name="expectedResultsJson"></param>
         public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac, string note, string expectedResultsJson)
+            string stopSequences, int numsOfResults, string name, string tactic, int aiming, string parentTac, string note,
+            string expectedResultsJson)
         {
             Content = content;
             ModelId = modelId;
@@ -242,7 +264,7 @@ namespace Senparc.Xncf.PromptRange
 
         public PromptItem UpdateEvalScore(int score)
         {
-            this.EvaluationScore = score;
+            this.EvalAvgScore = score;
 
             return this;
         }
