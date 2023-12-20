@@ -78,7 +78,6 @@ namespace Senparc.Ncf.Core.Utility
 
             var fileName = FileName.IsNullOrEmpty() ? entityName : FileName;
             var origionalPath = getFilePath(fileName);
-            Console.WriteLine("origionalPath:" + origionalPath);
 
             //TODO: 添加对环境变量的识别
             if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
