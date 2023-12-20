@@ -83,8 +83,20 @@ namespace Senparc.Ncf.Core.Utility
         public List<TEntity> GetXmlList<TEntity>() where TEntity : class, new()
         {
             string entityName = typeof(TEntity).Name;
+            string filePath = GetXmlFullApplicationPath(entityName);
 
-            XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));
+            //TODO: 添加对环境变量的识别
+            if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                var tryEntityName = entityName + ".Development";
+                var tryPath = GetXmlFullApplicationPath(tryEntityName);
+                if (File.Exists(tryPath))
+                {
+                    filePath = tryPath;
+                }
+            }
+
+            XElement xml = this.GetXElement(filePath);
             List<TEntity> results = new List<TEntity>();
 
             foreach (var x in xml.Elements(entityName))

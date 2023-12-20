@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-    <Version>0.13.1.4-beta1</Version>
+    <Version>0.14.0-beta1</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,7 +24,8 @@
 		v0.9.4.4 完善出错日志输出
 		v0.11.5.2 完善系统启动自检信息输出
 		v0.11.6 添加 SenparcCoreSetting.PasswordSaltToken 参数
-</PackageReleaseNotes>
+		v0.14.0 支持根据运行环境，自动启用 SenparcConfig.Development.config
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
