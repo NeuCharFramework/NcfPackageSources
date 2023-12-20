@@ -4,16 +4,16 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
-        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2023">
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2023">
             <inheritdoc />
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2023.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2023.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2023.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2023.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2023.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2023.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
@@ -29,22 +29,12 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionTree(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateTacticTreeAsync(System.String)">
             <summary>
-            输入一个 id，构建所对应的 PromptItem 的版本树，包含自己，父版本，递归直到root
-            即从该节点到root节点的最短路径
+            输入靶场名，构建该靶场内所有的版本树
             </summary>
-            <param name="promptItemId">提示词 Item 的 Id</param>
+            <param name="rangeName">靶场名</param>
             <returns >版本树</returns>
-            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateVersionTree(System.String)">
-            <summary>
-            输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
-            即从该节点到root节点的最短路径
-            </summary>
-            <param name="curVersion">当前版本号</param>
-            <returns>版本树</returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
@@ -485,6 +475,11 @@
             PromptItem
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Content">
             <summary>
             Prompt内容
@@ -530,24 +525,35 @@
             Token 选择偏好
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.EvaluationScore">
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.EvalAvgScore">
+            <summary>
+            评估参数, 平均分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.EvalMaxScore">
             <summary>
             评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ExpectedResultsJson">
+            <summary>
+            期望结果Json
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.FullVersion">
             <summary>
             <para>版本号，格式为 Name-Tactic-Aiming</para> 
             <example>2023.12.14.1-T1.1-A123</example>
-            <para>Name: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.Name"/></para>
+            <para>Name: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.RangeName"/></para>
             <para>Tactic: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.Tactic"/></para>
             <para>Aiming: <inheritdoc cref="P:Senparc.Xncf.PromptRange.PromptItem.Aiming"/></para>
                     为   Tx              这里的x为分支号，str,允许1.1.1。。。
                  Aiming   为   Ax              这里的x为打靶次数，int
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Name">
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.RangeName">
             <summary>
+            靶场名
             <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
             <example>示例一
                 <code>2023.12.14.1</code>
@@ -559,6 +565,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Tactic">
             <summary>
+            靶道名
             <para>格式为 x.x.x... ,这里的x为分支号</para>
             <para>在完整的版本号中，应该用-T连接Name</para>
             
@@ -567,6 +574,11 @@
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Aiming">
             <summary>
             <para>为打靶次数，int</para>
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ParentTac">
+            <summary>
+            父Tactic, 可以是空串
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Note">
@@ -579,25 +591,10 @@
             最后一次运行时间
             </summary>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(System.String,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.Int32,System.String,System.String,System.Int32,System.String,System.String,System.String)">
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.IsShare">
             <summary>
-            新增时用的构造函数
+            是否公开
             </summary>
-            <param name="content"></param>
-            <param name="modelId"></param>
-            <param name="topP"></param>
-            <param name="temperature"></param>
-            <param name="maxToken"></param>
-            <param name="frequencyPenalty"></param>
-            <param name="presencePenalty"></param>
-            <param name="stopSequences"></param>
-            <param name="numsOfResults"></param>
-            <param name="name"></param>
-            <param name="tactic"></param>
-            <param name="aiming"></param>
-            <param name="parentTac"></param>
-            <param name="note"></param>
-            <param name="expectedResultsJson"></param>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
             <summary>
@@ -649,11 +646,10 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.FindItemHistory(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetTacticTree(System.String)">
             <summary>
-            根据ID，找到对应的promptItem的所有父级的信息
+            获取版本树
             </summary>
-            <param name="promptItemId"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetHistoryScore(System.Int32)">

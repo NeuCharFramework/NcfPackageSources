@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 {
     /// <inheritdoc />
-    public partial class Init2023 : Migration
+    public partial class init2023 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,6 +44,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NickName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModelId = table.Column<int>(type: "int", nullable: false),
                     TopP = table.Column<float>(type: "real", nullable: false),
@@ -55,15 +56,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     NumsOfResults = table.Column<int>(type: "int", nullable: false),
                     ChatSystemPrompt = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TokenSelectionBiases = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EvaluationScore = table.Column<int>(type: "int", nullable: false),
+                    EvalAvgScore = table.Column<int>(type: "int", maxLength: 3, nullable: false),
+                    EvalMaxScore = table.Column<int>(type: "int", maxLength: 3, nullable: false),
+                    ExpectedResultsJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullVersion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RangeName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Tactic = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Aiming = table.Column<int>(type: "int", nullable: false),
-                    ParentTac = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Aiming = table.Column<int>(type: "int", maxLength: 5, nullable: false),
+                    ParentTac = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     LastRunTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsShare = table.Column<bool>(type: "bit", nullable: false),
+                    IsDraft = table.Column<bool>(type: "bit", nullable: false),
                     Flag = table.Column<bool>(type: "bit", nullable: false),
                     AddTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
