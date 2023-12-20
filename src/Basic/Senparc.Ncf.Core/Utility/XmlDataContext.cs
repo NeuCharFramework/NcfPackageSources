@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Utilities;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
@@ -64,15 +65,36 @@ namespace Senparc.Ncf.Core.Utility
             return ServerUtility.ContentRootMapPath(path);//path.Replace("~/", HttpRuntime.AppDomainAppPath);// _context.Server.MapPath(path);
         }
 
+
+
         /// <summary>
         /// 获取完整路径
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="entityName"></param>
         /// <returns></returns>
         private string GetXmlFullApplicationPath(string entityName)
         {
+            Func<string, string> getFilePath = (string fileName) => DatabaseDictionary + fileName + ".config";//xml文件规则为 “{实例名称}.config”
+
             var fileName = FileName.IsNullOrEmpty() ? entityName : FileName;
-            return DatabaseDictionary + fileName + ".config";//xml文件规则为 “{实例名称}.config”
+            var origionalPath = getFilePath(fileName);
+            Console.WriteLine("origionalPath:" + origionalPath);
+
+            //TODO: 添加对环境变量的识别
+            if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                var tryEntityName = entityName + ".Development";
+                var tryPath = getFilePath(tryEntityName);
+
+                if (File.Exists(this.GetMapPath(tryPath)))
+                {
+                    origionalPath = tryPath;
+                }
+
+                //TODO:暂时不支持其他环境变量
+            }
+
+            return origionalPath;
         }
 
         /// <summary>
@@ -83,8 +105,9 @@ namespace Senparc.Ncf.Core.Utility
         public List<TEntity> GetXmlList<TEntity>() where TEntity : class, new()
         {
             string entityName = typeof(TEntity).Name;
+            string filePath = GetXmlFullApplicationPath(entityName);
 
-            XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));
+            XElement xml = this.GetXElement(filePath);
             List<TEntity> results = new List<TEntity>();
 
             foreach (var x in xml.Elements(entityName))
@@ -114,6 +137,14 @@ namespace Senparc.Ncf.Core.Utility
                     case "DateTime":
                         prop.SetValue(result, DateTime.Parse(value), null);
                         break;
+#if NET8_0_OR_GREATER
+                    case "TimeOnly":
+                        prop.SetValue(result, TimeOnly.Parse(value), null);
+                        break;
+                    case "DateOnly":
+                        prop.SetValue(result, DateOnly.Parse(value), null);
+                        break;
+#endif
                     case "Int32":
                         prop.SetValue(result, int.Parse(value), null);
                         break;
@@ -204,9 +235,9 @@ namespace Senparc.Ncf.Core.Utility
         /// 保存记录，需要有ID
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
+        /// <param name="entities">需要保存的完整对象列表</param>
         /// <returns></returns>
-        public bool Save<TEntity>(IEnumerable<TEntity> entitys) where TEntity : class
+        public bool Save<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
             try
             {
@@ -220,7 +251,7 @@ namespace Senparc.Ncf.Core.Utility
                     throw new Exception("Id属性不存在！");
                 }
 
-                foreach (var entity in entitys)
+                foreach (var entity in entities)
                 {
                     int id = (int)idProp.GetValue(entity, null);
 
@@ -410,8 +441,7 @@ namespace Senparc.Ncf.Core.Utility
         /// <summary>
         /// 仅保留指定项目
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
+        /// <param name="retainItemCount">保留不删除的项目数量</param>
         public void RetainItems<TEntity>(int retainItemCount) where TEntity : class, new()
         {
             string entityName = typeof(TEntity).Name;
