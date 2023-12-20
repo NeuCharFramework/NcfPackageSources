@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.AppServices;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {
@@ -7,9 +7,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public int Id { get; set; }
 
         public string Name { get; set; }
-        
+
         public string FullVersion { get; set; }
 
-        public int EvalScore { get; set; }
+        public int EvalAvgScore { get; set; }
+        
+        public int EvalMaxScore { get; set; }
     }
 }

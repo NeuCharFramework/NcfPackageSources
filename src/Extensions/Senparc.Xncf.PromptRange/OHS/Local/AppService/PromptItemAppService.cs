@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
@@ -107,28 +107,30 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return promptItems.Select(p => new PromptItem_GetIdAndNameResponse
                     {
                         Id = p.Id,
-                        Name = p.Name,
+                        Name = p.RangeName,
                         FullVersion = p.FullVersion,
-                        EvalScore = p.EvaluationScore
+                        EvalAvgScore = p.EvalAvgScore,
+                        EvalMaxScore = p.EvalMaxScore
                     }).ToList();
                 });
         }
 
-        /// <summary>
-        /// 根据ID，找到对应的promptItem的所有父级的信息
-        /// </summary>
-        /// <param name="promptItemId"></param>
-        /// <returns></returns>
-        public async Task<AppResponseBase<VersionHistory_GetResponse>> FindItemHistory(int promptItemId)
-        {
-            // 根据promptItemId找到promptItem， 然后获取version
-            return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
-                async (resp, logger) =>
-                {
-                    var root = await _promptItemService.GenerateVersionHistoryTree(promptItemId);
-                    return new VersionHistory_GetResponse(root);
-                });
-        }
+        // /// <summary>
+        // /// 根据ID，找到对应的promptItem的所有父级的信息
+        // /// </summary>
+        // /// <param name="promptItemId"></param>
+        // /// <returns></returns>
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // public async Task<AppResponseBase<VersionHistory_GetResponse>> FindItemHistory(int promptItemId)
+        // {
+        //     // 根据promptItemId找到promptItem， 然后获取version
+        //     return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
+        //         async (resp, logger) =>
+        //         {
+        //             var root = await _promptItemService.GenerateVersionTree(promptItemId);
+        //             return new VersionHistory_GetResponse(root);
+        //         });
+        // }
 
         [ApiBind]
         public async Task<AppResponseBase<PromptItem_AddResponse>> Get([FromQuery] int id)
@@ -137,8 +139,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     var promptItem = await _promptItemService.GetObjectAsync(item => item.Id == id);
+
                     // var model = await _llmModelService.GetObjectAsync(llmModel => llmModel.Id == promptItem.ModelId);
-                    List<PromptResult> result = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
+
+                    List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
                     var resp = new PromptItem_AddResponse(
                         promptItemId: promptItem.Id,
@@ -154,39 +158,26 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         note: promptItem.Note,
                         expectedResultsJson: promptItem.ExpectedResultsJson
                     );
-                    resp.PromptResultList.AddRange(result);
-
+                    resp.PromptResultList.AddRange(resultList);
 
                     return resp;
                 });
         }
 
-
-        // [ApiBind]
-        // public async Task<AppResponseBase<List<PromptItem_GetResponse>>> GetVersionInfoList()
-        // {
-        //     return await this
-        //         .GetResponseAsync<AppResponseBase<List<PromptItem_GetResponse>>, List<PromptItem_GetResponse>>(
-        //             async (response, logger) =>
-        //             {
-        //                 var promptItemList = await _promptItemService.GetFullListAsync(p => true, p => p.Id,
-        //                     Ncf.Core.Enums.OrderingType.Ascending);
-        //
-        //                 List<int> modelIdList = promptItemList.Select(p => p.ModelId).Distinct().ToList();
-        //
-        //                 var modelList = await _llmModelService.GetFullListAsync(p => modelIdList.Contains(p.Id),
-        //                     p => p.Id, Ncf.Core.Enums.OrderingType.Ascending);
-        //
-        //                 return promptItemList.Select(item => new PromptItem_GetResponse()
-        //                     {
-        //                         Version = item.FullVersion,
-        //                         Time = item.AddTime.ToString("yyyy-MM-dd"),
-        //                         ModelName = modelList.FirstOrDefault(p => p.Id == item.ModelId)?.GetModelId(),
-        //                         PromptName = item.Name,
-        //                     })
-        //                     .ToList();
-        //             });
-        // }
+        /// <summary>
+        /// 获取版本树
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<VersionHistory_GetResponse>> GetTacticTree(string rangeName)
+        {
+            return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
+                async (resp, logger) =>
+                {
+                    var tacticTree = await _promptItemService.GenerateTacticTreeAsync(rangeName);
+                    return new VersionHistory_GetResponse(tacticTree);
+                });
+        }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest req)
@@ -196,7 +187,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 var result = await _promptItemService.GetObjectAsync(p => p.Id == req.Id) ??
                              throw new Exception("未找到prompt");
 
-                result.ModifyName(req.Name);
+                result.ModifyNickName(req.NickName);
 
                 await _promptItemService.SaveObjectAsync(result);
 
@@ -229,7 +220,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
-                async (response, logger) => { return await _promptItemService.getHistoryScore(promptItemId); });
+                async (response, logger) => { return await _promptItemService.GetHistoryScore(promptItemId); });
         }
 
         public async Task<StringAppResponse> UpdateExpectedResults(string promptItemId, string expectedResults)

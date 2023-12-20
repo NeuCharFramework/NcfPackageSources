@@ -405,7 +405,7 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
 
             if (cnt != 0)
             {
-                promptItem.UpdateEvalScore((int)sum / cnt);
+                promptItem.UpdateEvalAvgScore((int)sum / cnt);
 
                 await _promptItemService.SaveObjectAsync(promptItem);
             }

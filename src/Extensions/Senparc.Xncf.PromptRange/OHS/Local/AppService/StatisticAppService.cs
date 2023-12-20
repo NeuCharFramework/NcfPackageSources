@@ -45,7 +45,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             var response = await this.GetResponseAsync<AppResponseBase<Statistics_TodayTacticResponse>, Statistics_TodayTacticResponse>(
                 async (resp, logger) =>
                 {
-                    int cnt = await _promptItemService.GetCountAsync(p => p.Name.StartsWith(today));
+                    int cnt = await _promptItemService.GetCountAsync(p => p.RangeName.StartsWith(today));
 
                     return new Statistics_TodayTacticResponse(cnt);
                 });

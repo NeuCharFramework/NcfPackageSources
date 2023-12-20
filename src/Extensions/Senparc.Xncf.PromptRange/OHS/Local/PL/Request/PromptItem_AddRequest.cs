@@ -5,6 +5,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
+        [Required] public bool IsDraft { get; set; }
+
         #region Model Config
 
         /// <summary>
@@ -20,6 +22,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// <summary>
         /// 最大 Token 数
         /// </summary>
+        [Required]
         public int MaxToken { get; set; } = 2000;
 
         /// <summary>
