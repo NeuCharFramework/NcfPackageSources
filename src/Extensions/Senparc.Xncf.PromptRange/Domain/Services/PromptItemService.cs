@@ -158,7 +158,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             stopSequences: request.StopSequences,
                             numsOfResults: request.NumsOfResults,
                             note: request.Note,
-                            expectedResultsJson: request.ExpectedResultsJson, 
+                            expectedResultsJson: request.ExpectedResultsJson,
                             isDraft: request.IsDraft
                         );
                     }
@@ -279,7 +279,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 p => p.RangeName == curItem.RangeName,
                 p => p.Id,
                 OrderingType.Ascending);
-            
+
             var index = fullList.IndexOf(curItem);
             if (index != -1)
             {
@@ -293,9 +293,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return new PromptItem_HistoryScoreResponse(versionHistoryList, scoreHistoryList);
         }
 
-        public async Task UpdateExpectedResults(string promptItemId, string expectedResults)
+        public async Task UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == int.Parse(promptItemId));
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
             if (promptItem == null)
             {
                 throw new Exception("未找到prompt");

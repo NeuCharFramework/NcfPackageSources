@@ -50,12 +50,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public string Note { get; set; }
 
-        public DateTime LastRunTime { get; private set; } = DateTime.Now;
+        public new DateTime LastRunTime { get; private set; } = DateTime.Now;
 
         public bool IsShare { get; private set; } = false;
 
         /// <summary>
-        /// 期望结果 - Json List<string>
+        /// 期望结果 - Json 类型为List &lt; string &gt;
         /// </summary>
         public string ExpectedResultsJson { get; private set; }
 
@@ -67,7 +67,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         {
             Id = $"{promptItemId}";
             PromptContent = promptContent;
-            LastRunTime = DateTime.Now;
             FullVersion = fullVersion;
             ModelId = modelId;
             MaxToken = maxToken;

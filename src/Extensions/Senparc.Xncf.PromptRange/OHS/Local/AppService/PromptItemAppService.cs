@@ -213,21 +213,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
         /// <summary>
         /// 分数趋势图（依据时间）
+        /// TODO 改为显示靶场下所有有平均分的promptItem的趋势图
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <returns></returns>
-        [ApiBind]
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
-                async (response, logger) => { return await _promptItemService.GetHistoryScore(promptItemId); });
+                async (response, logger) =>
+                {
+                    return await _promptItemService.GetHistoryScore(promptItemId);
+                });
         }
 
-        public async Task<StringAppResponse> UpdateExpectedResults(string promptItemId, string expectedResults)
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                await _promptItemService.UpdateExpectedResults(promptItemId, expectedResults);
+                await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
+                
                 return "ok";
             });
         }

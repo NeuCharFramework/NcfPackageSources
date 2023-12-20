@@ -39,7 +39,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     PromptResult result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
 
-                    
+                    // 更新绑定的 item 的分数
+                    await _promptResultService.UpdateEvalScoreAsync(result.PromptItemId);
 
                     return "ok";
 
@@ -66,9 +67,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
+                    #region Validate
+
+                    if (expectedResultList == null || expectedResultList.Count == 0)
+                    {
+                        throw new NcfExceptionBase("期望结果为空时不能自动打分");
+                    }
+
+                    #endregion
+
                     var promptResult = await _promptResultService.RobotScore(promptResultId, expectedResultList, isRefresh);
 
-                    // await _promptResultService.UpdateEvalScore(promptResult.PromptItemId);
+                    await _promptResultService.UpdateEvalScoreAsync(promptResult.PromptItemId);
 
                     return "ok";
                 });
@@ -92,32 +102,38 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// 生成结果
+        /// </summary>
+        /// <param name="promptItemId">靶道ID</param>
+        /// <param name="numsOfResults">连发次数</param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptResult_ListResponse>> RegenerateWithItemId(int promptItemId)
+        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
                     var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
 
-                    #region 删除之前的结果
-
-                    var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);
-                    if (!delSucFrag)
-                    {
-                        throw new NcfExceptionBase("删除失败");
-                    }
-
-                    #endregion
+                    // #region 删除之前的结果
+                    //
+                    // var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);
+                    // if (!delSucFrag)
+                    // {
+                    //     throw new NcfExceptionBase("删除失败");
+                    // }
+                    //
+                    // #endregion
 
 
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new List<PromptResult>());
-                    for (int i = 0; i < promptItem.NumsOfResults; i++)
+                    for (int i = 0; i < numsOfResults; i++)
                     {
                         var result = await _promptResultService.SenparcGenerateResultAsync(promptItem);
                         resp.PromptResults.Add(result);
                     }
-
 
                     return resp;
                 }

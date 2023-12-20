@@ -668,6 +668,15 @@
             <param name="isRefresh"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.GenerateWithItemId(System.Int32,System.Int32)">
+            <summary>
+            生成结果
+            </summary>
+            <param name="promptItemId">靶道ID</param>
+            <param name="numsOfResults">连发次数</param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.StatisticAppService">
             <summary>
             用于传送统计数据的接口服务
