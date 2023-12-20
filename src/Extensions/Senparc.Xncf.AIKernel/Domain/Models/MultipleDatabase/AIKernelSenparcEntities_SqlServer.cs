@@ -6,7 +6,6 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
-using Senparc.Xncf.AIKernel.Models.DatabaseModel;
 
 namespace Senparc.Xncf.AIKernel.Models
 {

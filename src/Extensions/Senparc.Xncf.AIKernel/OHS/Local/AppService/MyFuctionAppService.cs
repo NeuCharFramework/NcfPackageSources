@@ -3,7 +3,6 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
-using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
 using System;
 using System.IO;
@@ -15,10 +14,8 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
     public class MyFuctionAppService: AppServiceBase
     {
-        private ColorService _colorService;
-        public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
+        public MyFuctionAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _colorService = colorService;
         }
 
         [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]

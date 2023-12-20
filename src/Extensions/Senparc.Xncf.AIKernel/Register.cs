@@ -13,7 +13,7 @@ using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
-using Senparc.Xncf.AIKernel.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -45,8 +45,10 @@ namespace Senparc.Xncf.AIKernel
                 case InstallOrUpdate.Install:
                     //新安装
             #region 初始化数据库数据
-                    var colorService = serviceProvider.GetService<ColorAppService>();
-                    var colorResult = await colorService.GetOrInitColorAsync();
+                    //var colorService = serviceProvider.GetService<ColorAppService>();
+                    //var colorResult = await colorService.GetOrInitColorAsync();
+
+                    //TODO: 自动拉取 NeuChar 免费用量进行配置和载入 Seed 数据
             #endregion
                     break;
                 case InstallOrUpdate.Update:
@@ -77,7 +79,7 @@ namespace Senparc.Xncf.AIKernel
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            services.AddScoped<ColorAppService>();
+            //services.AddScoped<ColorAppService>();
             return base.AddXncfModule(services, configuration, env);
         }
     }
