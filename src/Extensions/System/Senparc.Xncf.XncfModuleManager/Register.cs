@@ -24,7 +24,7 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID;// "00000000-0000-0000-0000-000000000004";
 
-        public override string Version => "0.1.1";//必须填写版本号
+        public override string Version => "0.1.2";//必须填写版本号
 
         public override string MenuName => "XNCF 模块管理核心";
 
