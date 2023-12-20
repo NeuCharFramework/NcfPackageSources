@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Utilities;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
@@ -64,15 +65,34 @@ namespace Senparc.Ncf.Core.Utility
             return ServerUtility.ContentRootMapPath(path);//path.Replace("~/", HttpRuntime.AppDomainAppPath);// _context.Server.MapPath(path);
         }
 
+
+
         /// <summary>
         /// 获取完整路径
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="entityName"></param>
         /// <returns></returns>
         private string GetXmlFullApplicationPath(string entityName)
         {
+            Func<string, string> getFilePath = (string fileName) => DatabaseDictionary + fileName + ".config";//xml文件规则为 “{实例名称}.config”
+
             var fileName = FileName.IsNullOrEmpty() ? entityName : FileName;
-            return DatabaseDictionary + fileName + ".config";//xml文件规则为 “{实例名称}.config”
+            var origionalPath = getFilePath(fileName);
+
+            //TODO: 添加对环境变量的识别
+            if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                var tryEntityName = entityName + ".Development";
+                var tryPath = getFilePath(tryEntityName);
+                if (File.Exists(tryPath))
+                {
+                    origionalPath = tryPath;
+                }
+
+                //TODO:暂时不支持其他环境变量
+            }
+
+            return origionalPath;
         }
 
         /// <summary>
@@ -84,17 +104,6 @@ namespace Senparc.Ncf.Core.Utility
         {
             string entityName = typeof(TEntity).Name;
             string filePath = GetXmlFullApplicationPath(entityName);
-
-            //TODO: 添加对环境变量的识别
-            if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                var tryEntityName = entityName + ".Development";
-                var tryPath = GetXmlFullApplicationPath(tryEntityName);
-                if (File.Exists(tryPath))
-                {
-                    filePath = tryPath;
-                }
-            }
 
             XElement xml = this.GetXElement(filePath);
             List<TEntity> results = new List<TEntity>();
@@ -125,6 +134,12 @@ namespace Senparc.Ncf.Core.Utility
                 {
                     case "DateTime":
                         prop.SetValue(result, DateTime.Parse(value), null);
+                        break;
+                    case "TimeOnly":
+                        prop.SetValue(result, TimeOnly.Parse(value), null);
+                        break;
+                    case "DateOnly":
+                        prop.SetValue(result, DateOnly.Parse(value), null);
                         break;
                     case "Int32":
                         prop.SetValue(result, int.Parse(value), null);
