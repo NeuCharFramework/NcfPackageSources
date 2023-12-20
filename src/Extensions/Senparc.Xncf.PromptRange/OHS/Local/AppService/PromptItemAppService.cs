@@ -227,6 +227,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// 设置 AI 自动打分评分标准接口
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <param name="expectedResults"></param>
+        /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
