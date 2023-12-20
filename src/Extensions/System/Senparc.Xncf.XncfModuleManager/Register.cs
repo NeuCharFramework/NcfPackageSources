@@ -24,23 +24,23 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID;// "00000000-0000-0000-0000-000000000004";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1.1";//必须填写版本号
 
-        public override string MenuName => "XNCF 模块管理";
+        public override string MenuName => "XNCF 模块管理核心";
 
         public override string Icon => "fa fa-user-secret";//fa fa-cog
 
-        public override string Description => "XNCF 模块管理";
+        public override string Description => "XNCF 模块管理核心";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             try
             {
-                Console.WriteLine($"1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
+                Console.WriteLine($"执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
                 //安装或升级数据库
                 await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-                Console.WriteLine($"1211=== 执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
+                Console.WriteLine($"执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
             }
             catch (Exception ex)
             {
