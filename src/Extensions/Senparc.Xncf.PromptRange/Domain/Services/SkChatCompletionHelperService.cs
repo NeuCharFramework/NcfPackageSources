@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel.AI;
 using Microsoft.SemanticKernel.AI.ChatCompletion;
-using Microsoft.SemanticKernel.AI.TextCompletion;
-using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextCompletion;
+using Microsoft.SemanticKernel.AI.TextGeneration;
+using Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextGeneration;
 using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
 using Microsoft.SemanticKernel.Connectors.AI.OpenAI.ChatCompletion;
 using Senparc.Xncf.PromptRange.Models;
@@ -10,19 +13,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public static class SkChatCompletionHelperService
     {
-        
+
         public static async Task<string> WithOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
         {
-            OpenAIChatCompletion chatGPT = new(
+            OpenAIChatCompletionService chatGPT = new(
                 modelId: model.GetModelId(),
                 apiKey: model.ApiKey,
                 organization: model.OrganizationId
             );
             // add system prompt
-            ChatHistory chatHistory = chatGPT.CreateNewChat(promptItem.ChatSystemPrompt);
+            ChatHistory chatHistory = new ChatHistory(promptItem.ChatSystemPrompt);
             // add prompt
             chatHistory.AddUserMessage(promptItem.Content);
-            string reply = await chatGPT.GenerateMessageAsync(chatHistory, BuildAIRequestSettings(promptItem));
+            string reply = await chatGPT.GetChatMessageContentAsync(chatHistory, BuildAIRequestSettings(promptItem));
             // chatHistory.AddAssistantMessage(reply);
             // return chatHistory.Last().Content;
             return reply;
@@ -31,22 +34,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public static async Task<string> WithAzureOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
         {
             // 不在意apiVersion， why?
-            var chatGPT = new AzureOpenAIChatCompletion(
+            var chatGPT = new AzureOpenAIChatCompletionService(
+                modelId: model.GetModelId(),
                 endpoint: model.Endpoint,
                 apiKey: model.ApiKey,
                 deploymentName: model.GetModelId()
             );
             // add system prompt
-            var chatHistory = chatGPT.CreateNewChat();
+            var chatHistory = new ChatHistory(); //chatGPT.CreateNewChat(); TODO:没有找到替代方法
             // chatGPT.CreateNewChat(promptItem.ChatSystemPrompt ?? "请根据提示输出对应内容：\n{{$input}}");
 
             // add prompt
             chatHistory.AddUserMessage(promptItem.Content);
 
             // 调用模型
-            var resultList = await chatGPT
-                .GetChatCompletionsAsync(chatHistory, BuildAIRequestSettings(promptItem)).ConfigureAwait(true);
-            var firstChatMessage = await resultList[0].GetChatMessageAsync().ConfigureAwait(true);
+            var resultList = await chatGPT.GetChatMessageContentsAsync(chatHistory, BuildAIRequestSettings(promptItem)).ConfigureAwait(true);
+            var firstChatMessage = resultList[0];
             // chatHistory.AddAssistantMessage(reply);
             // return chatHistory.Last().Content;
             return firstChatMessage.Content;
@@ -62,14 +65,23 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <returns></returns>
         public static async Task<string> WithHuggingFaceCompletionService(PromptItem promptItem, LlmModel model)
         {
-            var conn = new HuggingFaceTextCompletion(model.GetModelId(), endpoint: model.Endpoint);
+#pragma warning disable SKEXP0020
+            var conn = new HuggingFaceTextGenerationService(model.GetModelId(), endpoint: model.Endpoint);
             // var aiRequestSettings = BuildAIRequestSettings(promptItem);
-            return await conn.CompleteAsync(promptItem.Content, BuildAIRequestSettings(promptItem));
+
+            var result= await conn.GetTextContentsAsync(promptItem.Content, BuildAIRequestSettings(promptItem));
+
+            var sb = new StringBuilder();
+            foreach (var item in result)
+            {
+                sb.Append(item);
+            }
+            return sb.ToString();
         }
 
-        public static OpenAIRequestSettings BuildAIRequestSettings(PromptItem promptItem)
+        public static PromptExecutionSettings BuildAIRequestSettings(PromptItem promptItem)
         {
-            var aiSettings = new OpenAIRequestSettings()
+            var aiSettings = new OpenAIPromptExecutionSettings
             {
                 Temperature = promptItem.Temperature,
                 TopP = promptItem.TopP,

@@ -1,7 +1,4 @@
-﻿using Senparc.Ncf.Repository;
-using Senparc.Ncf.Service;
-using Senparc.Xncf.PromptRange.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -14,11 +11,12 @@ using Senparc.AI.Kernel.Helpers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
-using Senparc.CO2NET.Trace;
-using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Repository;
+using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Models;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -69,26 +67,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
             }
-//
-//       var userId = "Test";
-//
-//       var aiSettings = this.BuildSenparcAiSetting(model);
-//       // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-//       // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
-//       //
-//       // //定义 AI 接口调用参数和 Token 限制等
-//       // var promptParameter = new PromptConfigParameter()
-//       // {
-//       //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
-//       //     Temperature = promptItem.Temperature,
-//       //     TopP = promptItem.TopP,
-//       //     FrequencyPenalty = promptItem.FrequencyPenalty,
-//       //     PresencePenalty = promptItem.PresencePenalty
-//       // };
-//
-//       // 需要在变量前添加$
-//       const string functionPrompt = @"请根据提示输出对应内容：
-// {{$input}}";
+            //
+            //       var userId = "Test";
+            //
+            //       var aiSettings = this.BuildSenparcAiSetting(model);
+            //       // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
+            //       // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
+            //       //
+            //       // //定义 AI 接口调用参数和 Token 限制等
+            //       // var promptParameter = new PromptConfigParameter()
+            //       // {
+            //       //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+            //       //     Temperature = promptItem.Temperature,
+            //       //     TopP = promptItem.TopP,
+            //       //     FrequencyPenalty = promptItem.FrequencyPenalty,
+            //       //     PresencePenalty = promptItem.PresencePenalty
+            //       // };
+            //
+            //       // 需要在变量前添加$
+            //       const string functionPrompt = @"请根据提示输出对应内容：
+            // {{$input}}";
 
             var dt1 = SystemTime.Now;
             var resp = model.ModelType switch
@@ -161,12 +159,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 handler.IWantTo()
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
-                    .RegisterSemanticFunction("TestPrompt", "PromptRange", promptParameter, completionPrompt)
+                    .CreateFunctionFromPrompt("TestPrompt", "PromptRange", promptParameter, completionPrompt)
                     .iWantToRun;
-            var skContext = iWantToRun.CreateNewContext().context;
-            skContext.Variables["input"] = promptItem.Content;
+            var aiArguments = iWantToRun.CreateNewArguments().arguments;
+            aiArguments["input"] = promptItem.Content;
 
-            var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
+            var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
             var dt1 = SystemTime.Now;
 
             var result = await iWantToRun.RunAsync(aiRequest);
@@ -334,13 +332,13 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
                 handler.IWantTo()
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
-                    .RegisterSemanticFunction("Test", "Score", promptParameter, scorePrompt)
+                    .CreateFunctionFromPrompt("Test", "Score", promptParameter, scorePrompt)
                     .iWantToRun;
-            var skContext = iWantToRun.CreateNewContext().context;
-            skContext.Variables["actualResult"] = promptResult.ResultString;
-            skContext.Variables["expectedResult"] = expectedResultList.ToJson();
+            var aiArguments = iWantToRun.CreateNewArguments().arguments;
+            aiArguments["actualResult"] = promptResult.ResultString;
+            aiArguments["expectedResult"] = expectedResultList.ToJson();
 
-            var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
+            var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
             var dt1 = SystemTime.Now;
 
             var result = await iWantToRun.RunAsync(aiRequest);

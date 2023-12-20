@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Repository;
+using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;

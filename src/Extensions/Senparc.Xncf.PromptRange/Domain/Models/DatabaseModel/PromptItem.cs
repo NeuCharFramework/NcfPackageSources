@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;

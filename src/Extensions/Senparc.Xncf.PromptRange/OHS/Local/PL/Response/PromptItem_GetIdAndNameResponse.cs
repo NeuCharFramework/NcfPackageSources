@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.AppServices;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {
