@@ -29,7 +29,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             string projectPath = request.GetProjectPath(request);
 
-            return Path.Combine(projectPath, "Domain", "Migrations", $"Migrations.{dbType}");
+            var migrationPath = Path.Combine(projectPath, "Domain", "Migrations", $"Migrations.{dbType}");
+            Console.WriteLine("migrationPath: " + migrationPath);
+            return migrationPath;
         }
 
         public DatabaseMigrationsAppService(IServiceProvider serviceProvider) : base(serviceProvider)
