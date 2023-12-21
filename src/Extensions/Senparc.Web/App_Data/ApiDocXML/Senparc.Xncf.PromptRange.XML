@@ -48,6 +48,14 @@
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.UpdateEvalScoreAsync(System.Int32)">
+            <summary>
+            更新promptItem的平均分和最高分
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync(System.String,Senparc.AI.Kernel.Entities.SenparcAiArguments,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},Microsoft.SemanticKernel.KernelFunction[])">
             <summary>
             根据 Plugin 的 Prompt 获取结果
@@ -655,8 +663,17 @@
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetHistoryScore(System.Int32)">
             <summary>
             分数趋势图（依据时间）
+            TODO 改为显示靶场下所有有平均分的promptItem的趋势图
             </summary>
             <param name="promptItemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">
+            <summary>
+            设置 AI 自动打分评分标准接口
+            </summary>
+            <param name="promptItemId"></param>
+            <param name="expectedResults"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.RobotScore(System.Int32,System.Collections.Generic.List{System.String},System.Boolean)">
@@ -732,6 +749,11 @@
             
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.NumsOfResults">
+            <summary>
+            连发次数
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Name">
             <summary>
             模型名称
@@ -777,7 +799,11 @@
             Note
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson" -->
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson">
+            <summary>
+            期望结果 - Json 类型为List &lt; string &gt;
+            </summary>
+        </member>
         <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">
             <summary>
             数据库前缀
