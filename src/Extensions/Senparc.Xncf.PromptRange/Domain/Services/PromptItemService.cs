@@ -260,37 +260,47 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
+        public async Task<PromptItem> Get(int id)
+        {
+            var item = await this.GetObjectAsync(p => p.Id == id);
+            if (item == null)
+            {
+                throw new NcfExceptionBase($"找不到{id}对应的promptItem");
+            }
+
+            return item;
+        }
+
+
+        /// <summary>
+        /// 分数趋势图（依据时间）
+        /// TODO 改为显示靶场下所有有平均分的promptItem的趋势图
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <returns></returns>
         public async Task<PromptItem_HistoryScoreResponse> GetHistoryScore(int promptItemId)
         {
             List<string> versionHistoryList = new List<string>();
-            List<int> scoreHistoryList = new List<int>();
+            List<int> avgScoreHistoryList = new List<int>();
+            List<int> maxScoreHistoryList = new List<int>();
 
-            #region 找到对应的promptItem
+            var curItem = await this.Get(promptItemId);
 
-            var curItem = await this.GetObjectAsync(p => p.Id == promptItemId);
-            if (curItem == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptItem");
-            }
-
-            #endregion
-
+            // 获取同一个靶道下的所有打过分的item
             List<PromptItem> fullList = await this.GetFullListAsync(
-                p => p.RangeName == curItem.RangeName,
+                p => p.RangeName == curItem.RangeName && p.EvalAvgScore >= 0 && p.EvalMaxScore >= 0,
                 p => p.Id,
                 OrderingType.Ascending);
 
-            var index = fullList.IndexOf(curItem);
-            if (index != -1)
+            // 构造返回值
+            foreach (var promptItem in fullList)
             {
-                for (var i = 0; i <= index; i++)
-                {
-                    versionHistoryList.Add(fullList[i].FullVersion);
-                    scoreHistoryList.Add(fullList[i].EvalAvgScore);
-                }
+                versionHistoryList.Add(promptItem.FullVersion);
+                avgScoreHistoryList.Add(promptItem.EvalAvgScore);
+                maxScoreHistoryList.Add(promptItem.EvalMaxScore);
             }
 
-            return new PromptItem_HistoryScoreResponse(versionHistoryList, scoreHistoryList);
+            return new PromptItem_HistoryScoreResponse(versionHistoryList, avgScoreHistoryList, maxScoreHistoryList);
         }
 
         public async Task UpdateExpectedResultsAsync(int promptItemId, string expectedResults)

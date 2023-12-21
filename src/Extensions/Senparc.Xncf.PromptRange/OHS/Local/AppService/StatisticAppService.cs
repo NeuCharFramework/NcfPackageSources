@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
+using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
@@ -50,6 +51,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return new Statistics_TodayTacticResponse(cnt);
                 });
             return response;
+        }
+        
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
+                async (response, logger) =>
+                {
+                    logger.SaveLogs($"传入ID为{promptItemId}");
+                    return await _promptItemService.GetHistoryScore(promptItemId);
+                });
         }
     }
 }

@@ -37,6 +37,14 @@
             <returns >版本树</returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetHistoryScore(System.Int32)">
+            <summary>
+            分数趋势图（依据时间）
+            TODO 改为显示靶场下所有有平均分的promptItem的趋势图
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
             <summary>
             传入promptItem，生成结果
@@ -658,14 +666,6 @@
             <summary>
             获取版本树
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetHistoryScore(System.Int32)">
-            <summary>
-            分数趋势图（依据时间）
-            TODO 改为显示靶场下所有有平均分的promptItem的趋势图
-            </summary>
-            <param name="promptItemId"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">

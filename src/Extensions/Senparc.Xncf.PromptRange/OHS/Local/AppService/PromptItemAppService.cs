@@ -140,9 +140,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-                    var promptItem = await _promptItemService.GetObjectAsync(item => item.Id == id);
-
-                    // var model = await _llmModelService.GetObjectAsync(llmModel => llmModel.Id == promptItem.ModelId);
+                    var promptItem = await _promptItemService.Get(id);
 
                     List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
@@ -158,7 +156,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         presencePenalty: promptItem.PresencePenalty,
                         stopSequences: promptItem.StopSequences,
                         note: promptItem.Note,
-                        expectedResultsJson: promptItem.ExpectedResultsJson
+                        expectedResultsJson: promptItem.ExpectedResultsJson,
+                        evalAvgScore: promptItem.EvalAvgScore,
+                        evalMaxScore: promptItem.EvalMaxScore
                     );
                     resp.PromptResultList.AddRange(resultList);
 
@@ -211,19 +211,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 return "ok";
             });
-        }
-
-        /// <summary>
-        /// 分数趋势图（依据时间）
-        /// TODO 改为显示靶场下所有有平均分的promptItem的趋势图
-        /// </summary>
-        /// <param name="promptItemId"></param>
-        /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
-        {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
-                async (response, logger) => { return await _promptItemService.GetHistoryScore(promptItemId); });
         }
 
         /// <summary>

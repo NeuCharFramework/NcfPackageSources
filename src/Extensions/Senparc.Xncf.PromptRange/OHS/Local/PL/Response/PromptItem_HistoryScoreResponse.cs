@@ -7,15 +7,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public List<string> XList { get; set; }
 
         public List<int> YList { get; set; }
+        
+        public List<int> ZList { get; set; }
 
-        public PromptItem_HistoryScoreResponse()
+        public PromptItem_HistoryScoreResponse(List<int> zList)
         {
+            ZList = zList;
         }
 
-        public PromptItem_HistoryScoreResponse(List<string> xList, List<int> yList)
+        public PromptItem_HistoryScoreResponse(List<string> xList, List<int> yList, List<int> zList)
         {
             XList = xList;
             YList = yList;
+            ZList = zList;
         }
     }
 }

@@ -38,6 +38,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
+        public float PresencePenalty { get; private set; }
+
         /// <summary>
         /// 停止序列（JSON 数组）
         /// </summary>
@@ -61,9 +63,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public List<PromptResult> PromptResultList { get; set; } = new();
 
+        /// <summary>
+        /// 评估参数, 平均分
+        /// </summary>
+        public int EvalAvgScore { get; private set; }
+
+        /// <summary>
+        /// 评估参数
+        /// </summary>
+        public int EvalMaxScore { get; private set; }
+
+
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson)
+            string expectedResultsJson, int evalAvgScore = -1, int evalMaxScore = -1)
         {
             Id = $"{promptItemId}";
             PromptContent = promptContent;
@@ -73,9 +86,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             Temperature = temperature;
             TopP = topP;
             FrequencyPenalty = frequencyPenalty;
+            PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             Note = note;
             ExpectedResultsJson = expectedResultsJson;
+            EvalAvgScore = evalAvgScore;
+            EvalMaxScore = evalMaxScore;
         }
     }
 }
