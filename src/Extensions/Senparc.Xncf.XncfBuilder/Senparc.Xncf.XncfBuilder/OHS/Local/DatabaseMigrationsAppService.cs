@@ -30,7 +30,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             string projectPath = request.GetProjectPath(request);
 
             var migrationPath = Path.Combine(projectPath, "Domain", "Migrations", $"Migrations.{dbType}");
-            Console.WriteLine("migrationPath: " + migrationPath);
+            Console.WriteLine("1220== migrationPath: " + migrationPath);
             return migrationPath;
         }
 
@@ -80,7 +80,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         dbContextName += dbTypeSuffix;
                     }
 
-                    commandTexts.Add($"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{request.DatabasePlantPath}\" -o \"{migrationDir}\"{outputVerbose}");
+                    var migrationsCmd = $"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{request.DatabasePlantPath.Replace("\\","\\\\")}\" -o \"{migrationDir.Replace("\\", "\\\\")}\"{outputVerbose}";
+
+                    await Console.Out.WriteLineAsync(migrationsCmd);
+
+                    commandTexts.Add(migrationsCmd);
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
@@ -96,6 +100,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.CreateNoWindow = true;
+
                 string strOutput = null;
                 try
                 {
