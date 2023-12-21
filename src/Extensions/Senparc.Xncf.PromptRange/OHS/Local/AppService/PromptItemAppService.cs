@@ -69,17 +69,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         expectedResultsJson: promptItem.ExpectedResultsJson
                     );
 
-                    // 是否立即生成结果，暂时不添加这个开关
-                    if (true)
+                    // 是否立即生成结果
+                    if (request.IsDraft)
                     {
-                        // 如果立即生成，就根据numsOfResults立即生成
-                        for (var i = 0; i < request.NumsOfResults; i++)
-                        {
-                            // 分别生成结果
-                            // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                            var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItem);
-                            promptItemResponseDto.PromptResultList.Add(promptResult);
-                        }
+                        return promptItemResponseDto;
+                    }
+
+                    // 如果立即生成，就根据numsOfResults立即生成
+                    for (var i = 0; i < request.NumsOfResults; i++)
+                    {
+                        // 分别生成结果
+                        // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
+                        var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItem);
+                        promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
                     return promptItemResponseDto;
@@ -221,10 +223,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
-                async (response, logger) =>
-                {
-                    return await _promptItemService.GetHistoryScore(promptItemId);
-                });
+                async (response, logger) => { return await _promptItemService.GetHistoryScore(promptItemId); });
         }
 
         /// <summary>
@@ -239,7 +238,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
-                
+
                 return "ok";
             });
         }

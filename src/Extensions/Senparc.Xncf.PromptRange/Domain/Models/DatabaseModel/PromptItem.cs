@@ -19,6 +19,7 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 昵称
         /// </summary>
+        [MaxLength(50)]
         public string NickName { get; private set; }
 
         /// <summary>
@@ -173,8 +174,6 @@ namespace Senparc.Xncf.PromptRange
         public bool IsDraft { get; private set; }
 
 
-       
-
         #region ctor 构造函数
 
         public PromptItem(string rangeName, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
@@ -218,9 +217,13 @@ namespace Senparc.Xncf.PromptRange
             Note = note;
             ExpectedResultsJson = expectedResultsJson;
             IsDraft = isDraft;
+            EvalAvgScore = -1;
+            EvalMaxScore = -1;
         }
 
         #endregion
+
+        #region Builder
 
         public PromptItem Switch(bool show)
         {
@@ -256,5 +259,7 @@ namespace Senparc.Xncf.PromptRange
 
             return this;
         }
+
+        #endregion
     }
 }

@@ -46,7 +46,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         // public string Version { get; set; }
 
-        [Required] public int NumsOfResults { get; set; }
+
+        /// <summary>
+        /// 连发次数
+        /// </summary>
+        [Required]
+        public int NumsOfResults { get; set; }
 
         [Required] public bool IsNewTactic { get; set; } = false;
         [Required] public bool IsNewSubTactic { get; set; } = false;
