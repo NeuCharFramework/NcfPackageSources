@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -173,33 +174,46 @@ namespace Senparc.Xncf.PromptRange
 
         public bool IsDraft { get; private set; }
 
+        #region Prompt请求参数
+
+        [MaxLength(10)] public string Prefix { get; private set; }
+        [MaxLength(10)] public string Suffix { get; private set; }
+
+        public string VariableDictJson { get; private set; }
+
+        #endregion
+
 
         #region ctor 构造函数
 
-        public PromptItem(string rangeName, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
-            float presencePenalty, string stopSequences, int numsOfResults, int evalAvgScore,
-            string fullVersion, DateTime lastRunTime, string note, bool isDraft)
-        {
-            RangeName = rangeName;
-            Content = content;
-            ModelId = modelId;
-            TopP = topP;
-            Temperature = temperature;
-            MaxToken = maxToken;
-            FrequencyPenalty = frequencyPenalty;
-            PresencePenalty = presencePenalty;
-            StopSequences = stopSequences;
-            NumsOfResults = numsOfResults;
-            EvalAvgScore = evalAvgScore;
-            FullVersion = fullVersion;
-            LastRunTime = lastRunTime;
-            Note = note;
-            IsDraft = isDraft;
-        }
+        // public PromptItem(string rangeName, string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty,
+        //     float presencePenalty, string stopSequences, int numsOfResults, int evalAvgScore,
+        //     string fullVersion, DateTime lastRunTime, string note, bool isDraft)
+        // {
+        //     RangeName = rangeName;
+        //     Content = content;
+        //     ModelId = modelId;
+        //     TopP = topP;
+        //     Temperature = temperature;
+        //     MaxToken = maxToken;
+        //     FrequencyPenalty = frequencyPenalty;
+        //     PresencePenalty = presencePenalty;
+        //     StopSequences = stopSequences;
+        //     NumsOfResults = numsOfResults;
+        //     EvalAvgScore = evalAvgScore;
+        //     FullVersion = fullVersion;
+        //     LastRunTime = lastRunTime;
+        //     Note = note;
+        //     IsDraft = isDraft;
+        // }
 
-        public PromptItem(string content, int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-            string stopSequences, int numsOfResults, string rangeName, string tactic, int aiming, string parentTac, string note,
-            string expectedResultsJson, bool isDraft)
+        public PromptItem(string content,
+            int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
+            int numsOfResults,
+            string rangeName, string tactic, int aiming, string parentTac,
+            string note,
+            string expectedResultsJson, bool isDraft,
+            string prefix, string suffix, string variableDictJson)
         {
             Content = content;
             ModelId = modelId;
@@ -217,8 +231,21 @@ namespace Senparc.Xncf.PromptRange
             Note = note;
             ExpectedResultsJson = expectedResultsJson;
             IsDraft = isDraft;
+            Prefix = prefix;
+            Suffix = suffix;
+            VariableDictJson = variableDictJson;
             EvalAvgScore = -1;
             EvalMaxScore = -1;
+            prefix = Prefix;
+            suffix = Suffix;
+            variableDictJson = VariableDictJson;
+        }
+
+        public PromptItem(string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :
+            this(request.Content, request.ModelId, request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty,
+                request.PresencePenalty, request.StopSequences, request.NumsOfResults, rangeName, tactic, aiming, parentTac, request.Note,
+                request.ExpectedResultsJson, request.IsDraft, request.Prefix, request.Suffix, request.VariableDictJson)
+        {
         }
 
         #endregion

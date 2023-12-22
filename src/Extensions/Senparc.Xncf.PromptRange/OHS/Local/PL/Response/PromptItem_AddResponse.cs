@@ -73,12 +73,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public int EvalMaxScore { get; private set; }
 
+        public string Prefix { get; set; }
+        public string Suffix { get; set; }
+        public string VariableDictJson { get; set; }
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson, int evalAvgScore = -1, int evalMaxScore = -1)
+            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore = -1, int evalMaxScore = -1)
         {
-            Id = $"{promptItemId}";
+            Id = promptItemId;
             PromptContent = promptContent;
             FullVersion = fullVersion;
             ModelId = modelId;
@@ -90,6 +93,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             StopSequences = stopSequences;
             Note = note;
             ExpectedResultsJson = expectedResultsJson;
+            Prefix = prefix;
+            Suffix = suffix;
+            VariableDictJson = variableDictJson;
             EvalAvgScore = evalAvgScore;
             EvalMaxScore = evalMaxScore;
         }

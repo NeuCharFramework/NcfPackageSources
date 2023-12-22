@@ -4,7 +4,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
     public class BaseResponse
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         
         // public DateTime CreateTime { get; set; }
         

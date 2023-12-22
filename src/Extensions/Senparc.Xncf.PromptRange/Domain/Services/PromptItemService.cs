@@ -74,7 +74,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     numsOfResults: request.NumsOfResults,
                     note: request.Note,
                     expectedResultsJson: request.ExpectedResultsJson,
-                    isDraft: request.IsDraft
+                    isDraft: request.IsDraft,
+                    prefix: request.Prefix,
+                    suffix: request.Suffix,
+                    variableDictJson: request.VariableDictJson
                 );
             }
             else
@@ -107,7 +110,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         numsOfResults: request.NumsOfResults,
                         note: request.Note,
                         expectedResultsJson: request.ExpectedResultsJson,
-                        isDraft: request.IsDraft
+                        isDraft: request.IsDraft,
+                        prefix: request.Prefix,
+                        suffix: request.Suffix,
+                        variableDictJson: request.VariableDictJson
                     );
                 }
                 else if (request.IsNewSubTactic)
@@ -132,7 +138,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         numsOfResults: request.NumsOfResults,
                         note: request.Note,
                         expectedResultsJson: request.ExpectedResultsJson,
-                        isDraft: request.IsDraft
+                        isDraft: request.IsDraft,
+                        prefix: request.Prefix,
+                        suffix: request.Suffix,
+                        variableDictJson: request.VariableDictJson
                     );
                 }
                 else
@@ -159,7 +168,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             numsOfResults: request.NumsOfResults,
                             note: request.Note,
                             expectedResultsJson: request.ExpectedResultsJson,
-                            isDraft: request.IsDraft
+                            isDraft: request.IsDraft,
+                            prefix: request.Prefix,
+                            suffix: request.Suffix,
+                            variableDictJson: request.VariableDictJson
                         );
                     }
                     // todo 是否允许重新生成？
@@ -300,7 +312,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 maxScoreHistoryList.Add(promptItem.EvalMaxScore);
             }
 
-            return new PromptItem_HistoryScoreResponse(versionHistoryList, avgScoreHistoryList, maxScoreHistoryList);
+            return new PromptItem_HistoryScoreResponse(
+                versionHistoryList,
+                avgScoreHistoryList,
+                maxScoreHistoryList
+            );
         }
 
         public async Task UpdateExpectedResultsAsync(int promptItemId, string expectedResults)

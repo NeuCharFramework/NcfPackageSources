@@ -164,6 +164,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             aiArguments["input"] = promptItem.Content;
 
+            #region 用户自定义参数
+
+            foreach (var (k, v) in promptItem.VariableDictJson.GetObject<Dictionary<string, string>>())
+            {
+                aiArguments[k] = v;
+            }
+
+            #endregion
+
             var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
             var dt1 = SystemTime.Now;
 

@@ -63,5 +63,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public string Note { get; set; }
 
         public string ExpectedResultsJson { get; set; }
+        
+        public string Prefix { get;  set; }
+        public string Suffix { get;  set; }
+        public string VariableDictJson{ get;  set; }
     }
 }
