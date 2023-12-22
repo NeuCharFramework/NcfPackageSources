@@ -141,7 +141,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
                 Temperature = promptItem.Temperature,
                 TopP = promptItem.TopP,
                 FrequencyPenalty = promptItem.FrequencyPenalty,

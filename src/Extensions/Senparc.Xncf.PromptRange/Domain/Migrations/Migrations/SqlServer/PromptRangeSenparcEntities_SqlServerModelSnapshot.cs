@@ -228,7 +228,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.Property<string>("NickName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Note")
                         .HasMaxLength(20)
@@ -240,6 +241,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("ParentTac")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prefix")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<float>("PresencePenalty")
                         .HasColumnType("real");
@@ -255,6 +260,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("StopSequences")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Suffix")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("Tactic")
                         .HasColumnType("nvarchar(max)");
 
@@ -269,6 +278,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<float>("TopP")
                         .HasColumnType("real");
+
+                    b.Property<string>("VariableDictJson")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
