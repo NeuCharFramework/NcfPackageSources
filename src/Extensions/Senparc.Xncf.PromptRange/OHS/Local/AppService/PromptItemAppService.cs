@@ -66,7 +66,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         stopSequences: promptItem.StopSequences,
                         note: promptItem.Note,
                         // lastRunTime: promptItem.LastRunTime
-                        expectedResultsJson: promptItem.ExpectedResultsJson
+                        expectedResultsJson: promptItem.ExpectedResultsJson,
+                        evalAvgScore: promptItem.EvalAvgScore,
+                        evalMaxScore: promptItem.EvalMaxScore,
+                        prefix: promptItem.Prefix,
+                        suffix: promptItem.Suffix,
+                        variableDictJson: promptItem.VariableDictJson
                     );
 
                     // 是否立即生成结果
@@ -158,7 +163,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         note: promptItem.Note,
                         expectedResultsJson: promptItem.ExpectedResultsJson,
                         evalAvgScore: promptItem.EvalAvgScore,
-                        evalMaxScore: promptItem.EvalMaxScore
+                        evalMaxScore: promptItem.EvalMaxScore,
+                        prefix: promptItem.Prefix,
+                        suffix: promptItem.Suffix,
+                        variableDictJson: promptItem.VariableDictJson
                     );
                     resp.PromptResultList.AddRange(resultList);
 
