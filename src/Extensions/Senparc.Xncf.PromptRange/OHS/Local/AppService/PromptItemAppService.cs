@@ -100,6 +100,30 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
+
+        [ApiBind]
+        public async Task<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>> GetRangeNameList()
+        {
+            return await
+                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>,
+                    List<PromptItem_GetRangeNameListResponse>>(
+                    async (response, logger) =>
+                {
+                    List<PromptItem> promptItems = await _promptItemService
+                        .GetFullListAsync(
+                            p => true,
+                            p => p.Id,
+                            Ncf.Core.Enums.OrderingType.Ascending);
+
+                    return promptItems.DistinctBy(p => p.RangeName)
+                        .Select(p => new PromptItem_GetRangeNameListResponse()
+                        {
+                            Id = p.Id,
+                            RangeName = p.RangeName
+                        }).ToList();
+                });
+        }
+
         // /// <summary>
         // /// 根据ID，找到对应的promptItem的所有父级的信息
         // /// </summary>
@@ -145,7 +169,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (resp, logger) =>
                 {
                     var tacticTree = await _promptItemService.GenerateTacticTreeAsync(rangeName);
-                    
+
                     return new TacticTree_GetResponse(tacticTree);
                 });
         }
