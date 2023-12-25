@@ -32,7 +32,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> HumanScore(PromptResultScoringRequest request)
+        public async Task<StringAppResponse> HumanScore(PromptResult_HumanScoreRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>

@@ -4,13 +4,13 @@ using System.Text.Json.Nodes;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
-    public class VersionHistory_GetResponse
+    public class TacticTree_GetResponse
     {
         public TreeNode<PromptItem> RootNode { get; set; }
 
         public DateTime QueryTime { get; set; }
 
-        public VersionHistory_GetResponse(TreeNode<PromptItem> rootNode)
+        public TacticTree_GetResponse(TreeNode<PromptItem> rootNode)
         {
             RootNode = rootNode;
             QueryTime = DateTime.Now;

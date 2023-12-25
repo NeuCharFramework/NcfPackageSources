@@ -83,7 +83,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     var seh = new SenparcExpressionHelper<LlmModel>();
-                    seh.ValueCompare.AndAlso(!string.IsNullOrWhiteSpace(key), _ => _.GetModelId().Contains(key));
+                    seh.ValueCompare.AndAlso(!string.IsNullOrWhiteSpace(key), model => model.GetModelId().Contains(key));
                     var where = seh.BuildWhereExpression();
 
                     var llmModelList = await _llmModelService.GetObjectListAsync(pageIndex, pageSize, where, m => m.Id,

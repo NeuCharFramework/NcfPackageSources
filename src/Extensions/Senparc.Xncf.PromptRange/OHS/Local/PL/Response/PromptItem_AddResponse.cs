@@ -99,5 +99,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             EvalAvgScore = evalAvgScore;
             EvalMaxScore = evalMaxScore;
         }
+
+        public PromptItem_AddResponse(PromptItem item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
+            item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
+            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
+        {
+        }
     }
 }

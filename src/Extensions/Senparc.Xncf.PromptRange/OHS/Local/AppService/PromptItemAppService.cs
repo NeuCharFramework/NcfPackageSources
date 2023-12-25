@@ -21,18 +21,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     {
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
-        private readonly LlmModelService _llmModelService;
         private readonly PromptResultService _promptResultService;
 
         public PromptItemAppService(IServiceProvider serviceProvider,
             PromptItemService promptItemService,
-            LlmModelService llmModelService,
             PromptResultService promptResultService
         ) : base(serviceProvider)
         {
             // _promptItemRepository = promptItemRepository;
             _promptItemService = promptItemService;
-            _llmModelService = llmModelService;
             _promptResultService = promptResultService;
         }
 
@@ -53,26 +50,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     #endregion
 
 
-                    var promptItemResponseDto = new PromptItem_AddResponse(
-                        promptItemId: promptItem.Id,
-                        promptContent: promptItem.Content,
-                        fullVersion: promptItem.FullVersion,
-                        modelId: promptItem.ModelId,
-                        maxToken: promptItem.MaxToken,
-                        temperature: promptItem.Temperature,
-                        topP: promptItem.TopP,
-                        frequencyPenalty: promptItem.FrequencyPenalty,
-                        presencePenalty: promptItem.PresencePenalty,
-                        stopSequences: promptItem.StopSequences,
-                        note: promptItem.Note,
-                        // lastRunTime: promptItem.LastRunTime
-                        expectedResultsJson: promptItem.ExpectedResultsJson,
-                        evalAvgScore: promptItem.EvalAvgScore,
-                        evalMaxScore: promptItem.EvalMaxScore,
-                        prefix: promptItem.Prefix,
-                        suffix: promptItem.Suffix,
-                        variableDictJson: promptItem.VariableDictJson
-                    );
+                    var promptItemResponseDto = new PromptItem_AddResponse(promptItem);
 
                     // 是否立即生成结果
                     if (request.IsDraft)
@@ -128,46 +106,28 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // /// <param name="promptItemId"></param>
         // /// <returns></returns>
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        // public async Task<AppResponseBase<VersionHistory_GetResponse>> FindItemHistory(int promptItemId)
+        // public async Task<AppResponseBase<TacticTree_GetResponse>> FindItemHistory(int promptItemId)
         // {
         //     // 根据promptItemId找到promptItem， 然后获取version
-        //     return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
+        //     return await this.GetResponseAsync<AppResponseBase<TacticTree_GetResponse>, TacticTree_GetResponse>(
         //         async (resp, logger) =>
         //         {
         //             var root = await _promptItemService.GenerateVersionTree(promptItemId);
-        //             return new VersionHistory_GetResponse(root);
+        //             return new TacticTree_GetResponse(root);
         //         });
         // }
 
         [ApiBind]
-        public async Task<AppResponseBase<PromptItem_AddResponse>> Get([FromQuery] int id)
+        public async Task<AppResponseBase<PromptItem_GetResponse>> Get([FromQuery] int id)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
                     var promptItem = await _promptItemService.Get(id);
 
                     List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
-                    var resp = new PromptItem_AddResponse(
-                        promptItemId: promptItem.Id,
-                        promptContent: promptItem.Content,
-                        fullVersion: promptItem.FullVersion,
-                        modelId: promptItem.ModelId,
-                        maxToken: promptItem.MaxToken,
-                        temperature: promptItem.Temperature,
-                        topP: promptItem.TopP,
-                        frequencyPenalty: promptItem.FrequencyPenalty,
-                        presencePenalty: promptItem.PresencePenalty,
-                        stopSequences: promptItem.StopSequences,
-                        note: promptItem.Note,
-                        expectedResultsJson: promptItem.ExpectedResultsJson,
-                        evalAvgScore: promptItem.EvalAvgScore,
-                        evalMaxScore: promptItem.EvalMaxScore,
-                        prefix: promptItem.Prefix,
-                        suffix: promptItem.Suffix,
-                        variableDictJson: promptItem.VariableDictJson
-                    );
+                    var resp = new PromptItem_GetResponse(promptItem);
                     resp.PromptResultList.AddRange(resultList);
 
                     return resp;
@@ -179,13 +139,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<VersionHistory_GetResponse>> GetTacticTree(string rangeName)
+        public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
         {
-            return await this.GetResponseAsync<AppResponseBase<VersionHistory_GetResponse>, VersionHistory_GetResponse>(
+            return await this.GetResponseAsync<AppResponseBase<TacticTree_GetResponse>, TacticTree_GetResponse>(
                 async (resp, logger) =>
                 {
                     var tacticTree = await _promptItemService.GenerateTacticTreeAsync(rangeName);
-                    return new VersionHistory_GetResponse(tacticTree);
+                    
+                    return new TacticTree_GetResponse(tacticTree);
                 });
         }
 
