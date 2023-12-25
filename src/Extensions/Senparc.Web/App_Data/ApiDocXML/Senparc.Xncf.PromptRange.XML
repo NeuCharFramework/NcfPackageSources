@@ -28,6 +28,18 @@
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_custom_param.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
@@ -804,6 +816,76 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.EvalMaxScore">
             <summary>
             评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.MaxToken">
+            <summary>
+            最大 Token 数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Temperature">
+            <summary>
+            温度
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.FrequencyPenalty">
+            <summary>
+            频率惩罚
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.StopSequences">
+            <summary>
+            停止序列（JSON 数组）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.FullVersion">
+            <summary>
+            完整版本号
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Note">
+            <summary>
+            Note
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.IsShare">
+            <summary>
+            是否分享
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.ExpectedResultsJson">
+            <summary>
+            期望结果 - Json 类型为List &lt; string &gt;
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.EvalAvgScore">
+            <summary>
+            评估参数, 平均分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.EvalMaxScore">
+            <summary>
+            评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Prefix">
+            <summary>
+            前缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Suffix">
+            <summary>
+            后缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.VariableDictJson">
+            <summary>
+            参数字典（JSON）
             </summary>
         </member>
         <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">
