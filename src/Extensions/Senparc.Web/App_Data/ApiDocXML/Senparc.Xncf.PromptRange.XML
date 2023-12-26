@@ -25,9 +25,6 @@
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_custom_param.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_custom_param.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param">
             <inheritdoc />
         </member>
@@ -35,9 +32,6 @@
             <inheritdoc />
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Add_prompt_param.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">

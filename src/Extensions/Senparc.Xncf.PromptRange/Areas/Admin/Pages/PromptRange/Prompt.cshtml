@@ -29,7 +29,7 @@
                             </div>
                             <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addNewField">新增靶场</el-button>
                         </div>
-                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="">
+                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="getPromptOptData">
                             <el-option v-for="item in promptFieldOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -44,7 +44,7 @@
                             <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
                             <div class="titleContent">选择靶道</div>
                         </div>
-                        <el-select v-model="promptid" placeholder="请选择靶道" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
+                        <el-select v-model="promptid" :disabled="!promptField" placeholder="请选择靶道" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                             <el-option v-for="item in promptOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -137,7 +137,7 @@
                             <div class="operationBox">
                                 @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">仅保存</el-button> *@
                                 @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button> *@
-                                <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn"  size="small">
+                                <el-dropdown @@command="changeBtn" v-loading="targetShootLoading" split-button type="primary" @@click="clickSendBtn"  size="small">
                                     {{sendBtnText}}
                                     <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :command="btn.text">{{btn.text}}</el-dropdown-item>

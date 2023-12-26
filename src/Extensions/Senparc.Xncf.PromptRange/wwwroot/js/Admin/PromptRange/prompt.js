@@ -217,7 +217,7 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶场列表
-        this.getPromptOptData()
+        this.getFieldList()
         // 获取模型列表
         this.getModelOptData()
         // 获取分数趋势图
@@ -250,6 +250,9 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
         clickSendBtn(){
           const command=this.sendBtnText
             console.log('点击了'+command)
+            
+            this.targetShootHandel(command==='保存草稿')
+           
             
         },
         beforeunloadHandler(e) {
@@ -439,7 +442,8 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 vData: []
             }
             if (this.promptid) {
-                let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetHistoryScore?promptItemId=${this.promptid}`)
+                
+                let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}`)
                 if (res.data.success) {
                     this.chartData = {
                         xData: res.data.data.xList || [],
@@ -802,7 +806,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
 
 
         // 打靶     
-        async targetShootHandel() {
+        async targetShootHandel(isDraft=false) {
             if (this.promptid) {
                 this.tacticalFormVisible = true
                 return
@@ -813,7 +817,9 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 //promptid: this.promptid,// 选择靶场
                 modelid: this.modelid,// 选择模型
                 content: this.content,// prompt 输入内容
-                note: this.remarks // prompt 输入的备注
+                note: this.remarks, // prompt 输入的备注,
+                numsOfResults : 1,
+                isDraft:isDraft
             }
             if (this.promptid) {
                 _postData.id = this.promptid
@@ -1095,8 +1101,28 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
 
 
         // 配置 获取prompt 下拉列表数据
+        async getFieldList(){
+            await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
+                .then(res=>{
+                    if(res.data.success){
+                        this.promptFieldOpt=res.data.data.map(item=>{
+                            return {
+                                ...item,
+                                label:item.rangeName,
+                                value:item.rangeName,
+                                disabled:false
+                            }
+                        })
+                    }
+                })
+        },
         async getPromptOptData(id) {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
+            let res = await service
+                .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName',{
+                    params: {
+                        rangeName: this.promptField
+                    }
+                })
             if (res.data.success) {
                 //console.log('getModelOptData:', res)
                 let _optList = res.data.data || []
@@ -1110,13 +1136,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                         disabled: false
                     }
                 })
-                if (id) {
-                    this.$nextTick(() => {
-                        // 设置 prompt选中
-                        this.promptid = Number(id)
-                    })
-                        
-                }
+        
             } else {
                 alert('error');
             }
