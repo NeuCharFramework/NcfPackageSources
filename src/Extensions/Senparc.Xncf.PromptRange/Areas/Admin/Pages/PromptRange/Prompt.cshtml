@@ -74,7 +74,9 @@
                         <div class="lableRow">
                             <div class="lableBtn">
                                 <span>{{ item.label }}</span>
-                                <i class="el-icon-warning-outline"></i>
+                                <el-tooltip class="item" effect="dark" :content="item.tips" placement="top">
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
                             </div>
                         </div>
                         @* v-bind: *@

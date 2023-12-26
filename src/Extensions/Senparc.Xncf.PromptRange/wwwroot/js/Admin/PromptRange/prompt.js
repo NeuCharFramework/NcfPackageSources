@@ -15,7 +15,7 @@ var app = new Vue({
             // 参数设置 视图配置列表
             parameterViewList: [
                 {
-                    tips: '',
+                    tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -26,7 +26,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性',
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
@@ -37,7 +37,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '生成文本的最大长度',
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -48,7 +48,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚频繁出现的词',
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -59,7 +59,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚已出现的词',
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -70,7 +70,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
