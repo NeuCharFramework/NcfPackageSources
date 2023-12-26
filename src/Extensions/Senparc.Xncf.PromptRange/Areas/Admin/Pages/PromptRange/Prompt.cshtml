@@ -4,18 +4,18 @@
     ViewData["Title"] = "PromptRange Prompt";
     Layout = "_Layout_Vue";
 }
-@section Style{
+@section Style {
     <link href="~/css/Admin/PromptRange/prompt.css" rel="stylesheet" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 }
-@section breadcrumbs{
+@section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
     <el-breadcrumb-item>Prompt</el-breadcrumb-item>
 }
 <div class="promptPage">
-   @*左侧 输入测试 *@
-    <div class="promptPage_leftArea">
+    @*左侧 输入测试 *@
+    <div class="promptPage_leftArea" class="{'promptPage_leftAreaHide':promptLeftShow}">
         @*配置*@
         <div class="boxCard configurineArea">
             @*选择靶场*@
@@ -53,20 +53,23 @@
                                :disabled="item.disabled">
                     </el-option>
                 </el-select>
-            </div> 
+            </div>
         </div>
         @*输入*@
         <div class="boxCard inputPromptArea">
-            @*参数设置*@
+            @*模型参数设置*@
             <div class="configurineAreaItem paramBox">
                 <div class="titleRow">
                     <div class="titleRow_leftBox">
                         <i class="requirIcon">*</i>
-                        <div class="titleContent">参数设置</div>
+                        <div class="titleContent">模型参数</div>
                     </div>
-                    <el-button size="mini" @@click="resetConfigurineParam">重置</el-button>
+                    <div class="titleRow_rightBox">
+                        <el-button size="mini" @@click="resetConfigurineParam">重置</el-button>
+                        <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewShow=!parameterViewShow"></i>
+                    </div>
                 </div>
-                <div class="paramBox_contentBox">
+                <div class="paramBox_contentBox" :class="{'paramBox_contentBoxCollapse':parameterViewShow}">
                     <div v-for="item in parameterViewList" v-key="item.formField" class="paramBox_contentBox_item">
                         <div class="lableRow">
                             <div class="lableBtn">
@@ -84,35 +87,79 @@
                     </div>
                 </div>
             </div>
-            <div class="titleRow">
-                <div class="titleRow_leftBox">
-                    <img src="~/image/Admin/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
-                    <div class="titleContent">输入Prompt</div>
+            <div class="promptContetnPmroparaBox">
+                @* 输入Prompt内容 *@
+                <div class="configurineAreaItem leftItemBox">
+                    <div class="titleRow">
+                        <div class="titleRow_leftBox">
+                            <img src="~/image/Admin/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
+                            <div class="titleContent">输入Prompt</div>
+                        </div>
+                        <div class="titleRow_rightBox">
+                            <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
+                            <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
+                        </div>
+                    </div>
+                    <div class="promptContentBox">
+                        <el-input v-model="content" type="textarea"
+                                  :rows="10"
+                                  placeholder="请输入内容"
+                                  class="promptInput" @@change="promptChangeHandel($event,'content')">
+                        </el-input>
+                        <div class="remarkRow">
+                            <el-input v-model="remarks" type="textarea"
+                                      :rows="4"
+                                      maxlength="200"
+                                      show-word-limit
+                                      placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
+                            </el-input>
+                            <div class="operationBox">
+                                <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">仅保存</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="titleRow_rightBox">
-                    <el-button type="primary" size="mini" @@click="replaceFormVisible = true">替换</el-button>
-                    <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
-                </div>
-            </div>
-            <div class="inputPromptArea_contentBox">
-                <el-input v-model="content" type="textarea"
-                          :rows="10"
-                          placeholder="请输入内容"
-                          class="promptInput" @@change="promptChangeHandel($event,'content')">
-                </el-input>
-                <div class="remarkRow">
-                    <el-input v-model="remarks" type="textarea"
-                              :rows="2"
-                              maxlength="200"
-                              show-word-limit
-                              placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
-                    </el-input>
-                    <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button>
+                @* Prompt请求参数 *@
+                <div class="configurineAreaItem rightItemBox" :class="{'rightItemHide':promptParamVisible}">
+                    <div class="titleRow" style="height:28px;">
+                        <div class="titleRow_leftBox">
+                            <div class="titleContent">Prompt请求参数</div>
+                        </div>
+                    </div>
+                    <div class="promptPmroparaBox">
+                        <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
+                            <div class="formItem">
+                                <el-form-item label="前缀" prop="prefix">
+                                    <el-input v-model="promptParamForm.prefix" autocomplete="off" placeholder="请输入前缀"></el-input>
+                                </el-form-item>
+                                <el-form-item label="后缀" prop="suffix">
+                                    <el-input v-model="promptParamForm.suffix" autocomplete="off" placeholder="请输入后缀"></el-input>
+                                </el-form-item>
+                            </div>
+                            <div v-for="(item,index) in promptParamForm.variableList" v-key="index" class="formItem">
+                                <el-form-item label="变量名" :prop="'variableList.' + index + '.name'" :rules="rules.variableName">
+                                    <el-input v-model="item.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                                </el-form-item>
+                                <el-form-item label="变量值" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue">
+                                    <el-input v-model="item.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                                </el-form-item>
+                                <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(index)"></i>
+                            </div>
+                            <div class="addVariableRow">
+                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
+                            </div>
+                        </el-form>
+                        <div class="footerBtnRow">
+                            <el-button size="mini" @@click="promptParamFormClose">取 消</el-button>
+                            <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-   </div>
-   @*右侧 评分|分析*@
+    </div>
+    @*右侧 评分|分析*@
     <div class="promptPage_rightArea">
         @*输出*@
         <div class="boxCard outputArea">
@@ -193,38 +240,22 @@
                     暂无数据
                 </div>
             </div>
-            
+
         </div>
-   </div>
-    @*战术选择 dialog*@
-    <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
-        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left">
-            <el-form-item label="战术" prop="tactics">
-                <el-radio-group v-model="tacticalForm.tactics">
-                    <el-radio label="创建新战术"></el-radio>
-                    <el-radio label="新增子战术"></el-radio>
-                    <el-radio label="重新瞄准"></el-radio>
-                </el-radio-group>
-            </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
-            <el-button type="primary" size="mini" v-loading="tacticalFormSubmitLoading" @@click="tacticalFormSubmitBtn">确 定</el-button>
-        </div>
-    </el-dialog>
+    </div>
     @*版本记录-抽屉 drawer*@
     <div class="versionBtn" @@click="seeVersionRecord">版本记录</div>
     <el-drawer :visible.sync="versionDrawer" direction="rtl" title="我是标题" :with-header="false" @@close="versionDrawerClose">
         <div class="versionDrawerArea">
-           <div class="versionDrawerArea_titleRow">
-               <span>版本记录</span>
-                <img src="~/image/Admin/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false"/>
-           </div>
+            <div class="versionDrawerArea_titleRow">
+                <span>版本记录</span>
+                <img src="~/image/Admin/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false" />
+            </div>
 
             <el-input v-model="versionSearchVal" size="mini" placeholder="请输入名称" class="versionDrawerArea_inputRow">
                 <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
             </el-input>
-            
+
             <div class="versionDrawerArea_contentRow">
                 <el-tree ref="versionTree"
                          default-expand-all
@@ -256,33 +287,20 @@
             </div>
         </div>
     </el-drawer>
-    @*替换-对话框 dialog*@
-    <el-dialog title="替换" :visible.sync="replaceFormVisible" center @@close="replaceFormCloseDialog">
-        <el-form ref="replaceForm" :model="replaceForm" :rules="rules" label-width="70px" label-position="left">
-            <div class="formItem">
-                <el-form-item label="前缀" prop="prefix">
-                    <el-input v-model="replaceForm.prefix" autocomplete="off" placeholder="请输入前缀"></el-input>
-                </el-form-item>
-                <el-form-item label="后缀" prop="suffix">
-                    <el-input v-model="replaceForm.suffix" autocomplete="off" placeholder="请输入后缀"></el-input>
-                </el-form-item>
-            </div>
-            <div v-for="(item,index) in replaceForm.variableList" v-key="index" class="formItem">
-                <el-form-item label="变量名" :prop="'replaceForm.' + index + '.name'" :rules="rules.variableName">
-                    <el-input v-model="item.name" autocomplete="off" placeholder="请输入变量名"></el-input>
-                </el-form-item>
-                <el-form-item label="变量值" :prop="'replaceForm.' + index + '.value'" :rules="rules.variableValue">
-                    <el-input v-model="item.value" autocomplete="off" placeholder="请输入变量值"></el-input>
-                </el-form-item>
-                <i class="el-icon-delete deleteIcon" style="cursor:pointer;"></i>
-            </div>
-            <div class="addVariableRow">
-                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
-            </div>
+    @*战术选择 dialog*@
+    <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
+        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left">
+            <el-form-item label="战术" prop="tactics">
+                <el-radio-group v-model="tacticalForm.tactics">
+                    <el-radio label="创建新战术"></el-radio>
+                    <el-radio label="新增子战术"></el-radio>
+                    <el-radio label="重新瞄准"></el-radio>
+                </el-radio-group>
+            </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="replaceFormVisible = false">取 消</el-button>
-            <el-button type="primary" size="mini" @@click="replaceFormSubmit">确 定</el-button>
+            <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
+            <el-button type="primary" size="mini" v-loading="tacticalFormSubmitLoading" @@click="tacticalFormSubmitBtn">确 定</el-button>
         </div>
     </el-dialog>
     @*新增模型 dialog*@
@@ -316,7 +334,7 @@
     </el-dialog>
 </div>
 
-@section scripts{
+@section scripts {
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/PromptRange/prompt.js"></script>
 }

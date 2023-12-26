@@ -10,6 +10,8 @@ var app = new Vue({
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
+            numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
+            numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
             // 参数设置 视图配置列表
             parameterViewList: [
                 {
@@ -69,17 +71,6 @@ var app = new Vue({
                 },
                 {
                     tips: '',
-                    formField: 'numsOfResults',
-                    label: 'NumsOfResults',
-                    value: 1,
-                    isSlider: false,
-                    isStr: false,
-                    sliderMin: 0,
-                    sliderMax: 'Infinity',
-                    sliderStep: 1
-                },
-                {
-                    tips: '',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -90,9 +81,20 @@ var app = new Vue({
                     sliderStep: 1
                 }
             ],
-            targetShootLoading: false,
-            targetShootDisabled: false,
+            promptLeftShow: false, // prompt左侧区域整体 显隐
+            parameterViewShow: false, // 模型参数设置 显隐 false是默认显示 trun是隐藏
+            targetShootLoading: false, // 打靶按钮loading
+            targetShootDisabled: false, // 打靶按钮禁用
             // 配置 输入 ---end
+            // prompt请求参数 ---start
+            promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
+            promptParamFormLoading: false,
+            promptParamForm: {
+                prefix: '',
+                suffix: '',
+                variableList: []
+            },
+            // prompt请求参数 ---end
             // 输出 ---start
             outputAverage: '',// 输出列表的平均分
             outputActive: '', // 输出列表选中查看|评分
@@ -109,13 +111,6 @@ var app = new Vue({
             },
             versionTreeData: [],
             // 版本记录 ---end
-            // 替换
-            replaceFormVisible: false,
-            replaceForm: {
-                prefix: '',
-                suffix: '',
-                variableList: []
-            },
             // 战术选择
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
@@ -200,6 +195,11 @@ var app = new Vue({
             this.$refs.versionTree.filter(val);
         }
     },
+    created() {
+        // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
+        // 添加 beforeunload 事件监听器
+        window.addEventListener('beforeunload', this.beforeunloadHandler);
+    },
     mounted() {
         // 获取靶场列表
         this.getPromptOptData()
@@ -208,7 +208,7 @@ var app = new Vue({
         // 获取分数趋势图
         // this.getScoringTrendData()
         // 图表自适应
-        let self = this;
+        const self = this;
         const viewElem = document.body;
         const resizeObserver = new ResizeObserver(() => {
             // 加个if约束，当Echarts存在时再执行resize()，否则图表不存在时运行到这会报错。
@@ -218,8 +218,52 @@ var app = new Vue({
 
         });
         resizeObserver.observe(viewElem);
+
+    },
+    beforeDestroy() {
+        // 销毁之前移除事件监听器
+window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        beforeunloadHandler(e) {
+            console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
+            // 如果数据没有变动，则不需要提示用户保存
+            //if (this.isDataChanged()) {
+            //    // 显示自定义对话框
+            //    let confirmationMessage = '您的数据已经修改，是否保存？';
+            //    // 阻止默认行为
+            //    e.preventDefault();
+            //    // 兼容旧版本浏览器
+            //    e.returnValue = confirmationMessage;
+            //    return confirmationMessage;
+            //}
+            setTimeout(function () {
+                // 弹出自定义模态框
+                var modal = document.createElement("div");
+                modal.innerHTML = "您确定要离开本页面吗？";
+                var btn = document.createElement("button");
+                btn.textContent = "留在页面";
+                btn.onclick = function () {
+                    // 取消默认的 beforeunload 行为
+                    e.preventDefault();
+                    // 关闭自定义模态框
+                    modal.remove();
+                };
+                modal.appendChild(btn);
+                document.body.appendChild(modal);
+            }, 0);
+        },
+        // 保存数据的函数
+         saveData() {
+    // TODO: 将数据保存到服务器或本地存储中
+},
+
+// 判断是否有数据变动的函数
+ isDataChanged() {
+     // TODO: 判断数据是否有变动，如果有变动，返回 true；否则返回 false
+     return true;
+    },
+
         formatDate(d) {
             var date = new Date(d);
             var YY = date.getFullYear() + '-';
@@ -608,41 +652,6 @@ var app = new Vue({
         },
 
 
-        // 替换 dialog 关闭
-        replaceFormCloseDialog() {
-            this.replaceForm = {
-                prefix: '',
-                suffix: '',
-                variableList: []
-            }
-            this.$refs.replaceForm.resetFields();
-        },
-        // 替换 dialog 添加变量行btn
-        addVariableBtn() {
-            this.replaceForm.variableList.push({
-                name: '',
-                value: ''
-            })
-        },
-        // 替换 dialog 删除变量行btn
-        deleteVariableBtn(index) {
-            this.replaceForm.variableList.splice(index, 1)
-        },
-        // 替换 dialog 提交
-        replaceFormSubmit() {
-            // 
-            let {prefix = '', suffix = '', variableList = []} = this.replaceForm
-            variableList.forEach(item => {
-                // 替换 this.content 匹配文本
-                let replaceStr = `${prefix}${item.name}${suffix}`
-                // 使用正则表达式创建匹配模式，其中 g 表示全局匹配
-                var regex = new RegExp(replaceStr, "g");
-                // 使用 replace() 方法进行替换
-                this.content = this.content.replace(regex, item.value);
-            })
-            this.replaceFormVisible = false
-
-        },
 
 
         // 获取输出列表
@@ -915,17 +924,6 @@ var app = new Vue({
                 },
                 {
                     tips: '',
-                    formField: 'numsOfResults',
-                    label: 'NumsOfResults',
-                    value: 1,
-                    isSlider: false,
-                    isStr: false,
-                    sliderMin: 0,
-                    sliderMax: 'Infinity',
-                    sliderStep: 1
-                },
-                {
-                    tips: '',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -973,6 +971,48 @@ var app = new Vue({
             //this.remarks = '' // prompt 输入的备注
         },
 
+        //  prompt请求参数 关闭
+        promptParamFormClose() {
+            this.promptParamForm = {
+                prefix: '',
+                suffix: '',
+                variableList: []
+            }
+            this.$refs.promptParamForm.resetFields();
+            this.promptParamVisible = true;
+        },
+        // prompt请求参数 添加变量行btn
+        addVariableBtn() {
+            this.promptParamForm.variableList.push({
+                name: '',
+                value: ''
+            })
+        },
+        // prompt请求参数 删除变量行btn
+        deleteVariableBtn(index) {
+            this.promptParamForm.variableList.splice(index, 1)
+        },
+        // prompt请求参数 提交
+        promptParamFormSubmit() {
+            this.$refs.promptParamForm.validate(async (valid) => {
+                if (valid) {
+                        console.log('promptParamSubmit:', this.promptParamForm)
+                    //this.promptParamFormLoading = true
+                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
+                    //if (res.data.success) {
+                    //    this.promptParamFormLoading = false
+                    //    let { prefix = '', suffix = '', variableList = [] } = this.promptParamForm
+
+                    //    this.promptParamFormClose()
+                    //} else {
+                    //    this.promptParamFormLoading = false
+                    //}
+                } else {
+                    return false;
+                }
+            });
+            
+        },
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {

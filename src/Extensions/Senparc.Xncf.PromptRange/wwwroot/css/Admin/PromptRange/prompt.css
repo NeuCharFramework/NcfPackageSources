@@ -1,13 +1,12 @@
 ﻿.promptPage {
     /*padding: 15px;*/
 
-    display:flex;
-    flex-direction:row;
-    flex-wrap:nowrap;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     /*align-items:flex-start;*/
-    justify-content:flex-start;
-    gap:15px;
-
+    justify-content: flex-start;
+    gap: 15px;
     position: relative;
     box-sizing: border-box;
     /*min-width: 1240px;
@@ -18,14 +17,14 @@
 }
     /*空数据*/
     .promptPage .emptyDataArea {
-        width:100%;
-        height:100%;
-        text-align:center;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#666;
-        font-size:14px;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-size: 14px;
     }
     /*tabs*/
     .promptPage .tabsArea {
@@ -37,7 +36,7 @@
         box-sizing: border-box;
     }
 
-        .promptPage  .tabsArea > .tabsAreaItem {
+        .promptPage .tabsArea > .tabsAreaItem {
             padding: 5px 0px;
             position: relative;
             color: #333;
@@ -49,11 +48,11 @@
             cursor: pointer;
         }
 
-        .promptPage  .tabsArea > .activeTabsItem {
+        .promptPage .tabsArea > .activeTabsItem {
             color: #0083FF;
         }
 
-            .promptPage  .tabsArea > .activeTabsItem::before {
+            .promptPage .tabsArea > .activeTabsItem::before {
                 content: '';
                 display: inline-block;
                 position: absolute;
@@ -70,11 +69,9 @@
     /*卡片*/
     .promptPage .boxCard {
         padding: 15px;
-
         overflow: hidden;
         position: relative;
         box-sizing: border-box;
-
         border-radius: 8px;
         background-color: #FFF;
     }
@@ -107,6 +104,7 @@
                 width: 14px;
                 height: 14px;
             }
+
             .promptPage .titleRow > .titleRow_leftBox > .requirIcon {
                 color: #F5232D;
                 font-size: 14px;
@@ -114,6 +112,7 @@
                 font-weight: 400;
                 line-height: normal;
             }
+
             .promptPage .titleRow > .titleRow_leftBox > .titleContent {
                 box-sizing: border-box;
                 color: #333;
@@ -124,19 +123,40 @@
             }
 
         .promptPage .titleRow > .titleRow_rightBox {
-            display:flex;
-            flex-wrap:nowrap;
-            gap:10px;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 10px;
         }
-/*左侧模块*/
-.promptPage > .promptPage_leftArea {
-    min-width: 632px;
-    flex: 1;
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: column;
-    gap: 15px;
-}
+
+            .promptPage .titleRow > .titleRow_rightBox > .icon {
+                transition: transform 0.3s ease-in-out;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .promptPage .titleRow > .titleRow_rightBox > .rotate {
+                transform: rotate(180deg);
+            }
+
+
+
+    /*左侧模块*/
+    .promptPage > .promptPage_leftArea {
+        flex: 2;
+        min-width: 809.5px; /*632px*/
+        max-height: 9999999px;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        gap: 15px;
+        transition: max-height 0.3s ease-in-out;
+        overflow: hidden;
+    }
+
+    .promptPage > .promptPage_leftAreaHide {
+        max-height: 0px !important;
+    }
 /*左侧模块 配置区域\输入prompt区域*/
 .promptPage_leftArea > .configurineArea, .promptPage_leftArea > .inputPromptArea {
     display: flex;
@@ -144,121 +164,165 @@
     flex-wrap: nowrap;
     gap: 15px;
 }
-    /*左侧模块 配置 行 区域*/
-    .promptPage_leftArea  .configurineAreaItem {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        gap: 10px;
+/*左侧模块 配置 行 区域*/
+.promptPage_leftArea .configurineAreaItem {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+    /*左侧模块 配置 下拉选择 区域*/
+    .promptPage_leftArea .configurineAreaItem > .selectRow {
+        width: 100%;
     }
-        /*左侧模块 配置 下拉选择 区域*/
-        .promptPage_leftArea  .configurineAreaItem >.selectRow {
-            width: 100%;
+
+/*左侧模块 配置 参数 内容 区域*/
+.promptPage_leftArea .paramBox > .paramBox_contentBox {
+    max-height: 300px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px 4%;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+/*模型参数 展开折叠 设置*/
+.promptPage_leftArea .paramBox > .paramBox_contentBoxCollapse {
+    max-height: 0 !important;
+}
+
+.promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item {
+    width: 48%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+}
+
+    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow {
+        flex-shrink: 0;
+        width: 130px;
+    }
+
+        .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow > .lableBtn {
+            display: inline-block;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #DCDFE6;
+            background: #FFF;
+            color: #333;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
         }
 
-    /*左侧模块 配置 参数 内容 区域*/
-    .promptPage_leftArea   .paramBox > .paramBox_contentBox {
-        display: flex;
-        flex-direction:row;
-        flex-wrap: wrap;
-        gap: 10px 4%;
-    }
-        .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item {
-            width: 48%; 
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            gap: 8px;
-        }
-            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow {
-                flex-shrink:0;
-                width: 130px;
-            }
-                .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow > .lableBtn {
-                    display: inline-block;
-                    padding: 5px;
-                    border-radius: 5px;
-                    border: 1px solid #DCDFE6;
-                    background: #FFF;
-                    color: #333;
-                    font-size: 12px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                }
-            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox {
-                flex-shrink: 0;
-                width: 45px;
-                /*padding: 0 5px;
+    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox {
+        flex-shrink: 0;
+        width: 45px;
+        /*padding: 0 5px;
                 height: 30px;
                 outline: none;
                 border-radius: 5px;
                 border: 1px solid #DCDFE6;
                 background: #FFF;*/
+    }
+
+        .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox .el-input__inner {
+            padding: 0 5px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox {
+        flex: 1;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 10px;
+        color: #333;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+        .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider {
+            flex: auto;
+            min-width: 60px;
+        }
+
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button-wrapper {
+                top: 50%;
+                transform: translate(-50%,-50%);
             }
-                .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .inputBox .el-input__inner {
-                    padding: 0 5px;
-                    height: 30px;
-                    line-height: 30px;
-                }
-            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox {
-                flex: 1;
-                display: flex;
-                flex-wrap: nowrap;
-                align-items: center;
-                gap: 10px;
-                color: #333;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: normal;
+
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button {
+                width: 2px !important;
+                border-radius: 4px !important;
             }
-                .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider {
-                    flex: auto;
-                    min-width: 60px;
-                }
-                    .promptPage_leftArea  .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button-wrapper{
-                        top:50%;
-                        transform:translate(-50%,-50%);
-                    }
-                    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__button {
-                        width: 2px !important;
-                        border-radius: 4px !important;
-                    }
-                    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__bar {
-                        height: 18px;
-                        background: linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%);
-                    }
-                    .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__runway {
-                        height: 18px;
-                        margin:0;
-                    }
-    /*输入prompt输入框盒子*/
-    .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox {
+
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__bar {
+                height: 18px;
+                background: linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%);
+            }
+
+            .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .sliderBox > .slider .el-slider__runway {
+                height: 18px;
+                margin: 0;
+            }
+/*输入prompt盒子*/
+.promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox > .leftItemBox {
+        flex: 1;
+    }
+
+    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox > .rightItemBox {
+        max-width: 430px;
+        overflow: hidden;
+        transition: max-width 0.3s ease-in-out;
+    }
+
+    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox > .rightItemHide {
+        max-width: 0px !important;
+    }
+    /*输入prompt输入框盒子 内容*/
+    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         gap: 10px;
     }
-        .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .promptInput .el-textarea__inner {
+
+        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
             color: #333;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
         }
-.promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    gap: 10px;
-}
-            .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow > .remarkInputBox {
+
+        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
                 position: relative;
-                
             }
-                .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
+
+                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
                     padding: 5px 15px 5px 55px;
                     color: #333;
                     font-size: 14px;
@@ -266,20 +330,72 @@
                     font-weight: 400;
                     line-height: normal;
                 }
-                .promptPage_leftArea > .inputPromptArea > .inputPromptArea_contentBox > .remarkRow > .remarkInputBox::before {
-                    content:'备注:';
+
+                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
+                    content: '备注:';
                     position: absolute;
-                    left:15px;
-                    top:5px;
+                    left: 15px;
+                    top: 5px;
                     color: #333;
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 400;
                 }
+
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox button {
+                    margin: 0px;
+                }
+
+    /*输入Prompt请求参数盒子 promptPmroparaBox */
+    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 10px;
+        border-radius: 4px;
+        border: 1px solid #DCDFE6;
+    }
+
+        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .formItem {
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .formItem .deleteIcon {
+                position: absolute;
+                right: 0;
+                top: 34%;
+                transform: translateY(-50%);
+                cursor: pointer;
+            }
+
+        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .footerBtnRow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 /*右侧模块*/
 .promptPage > .promptPage_rightArea {
-    min-width: 628px;
     flex: 1;
+    min-width: 409.5px; /*622px*/
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -287,17 +403,19 @@
 }
 /*右侧模块 输出区域*/
 .promptPage_rightArea > .outputArea {
-    flex:1;
+    flex: 1;
     /*min-height:169px;*/
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 15px;
 }
+
     .promptPage_rightArea > .outputArea > .titleRow {
-        justify-content:flex-start;
-        gap:30px;
+        justify-content: flex-start;
+        gap: 30px;
     }
+
         .promptPage_rightArea > .outputArea > .titleRow > .titleRow_scoreBox {
             display: flex;
             flex-wrap: nowrap;
@@ -308,25 +426,29 @@
             font-style: normal;
             font-weight: 400;
         }
-.promptPage_rightArea > .outputArea > .outputArea_contentBox {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    gap: 10px;
-    box-sizing: border-box;
-    overflow: hidden;
-    overflow-y: auto;
-}
+
+    .promptPage_rightArea > .outputArea > .outputArea_contentBox {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 10px;
+        box-sizing: border-box;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
-            padding:10px 15px;
+            padding: 10px 15px;
             border-radius: 5px;
             border: 1px solid #DCDFE6;
-            word-break:break-all;
+            word-break: break-all;
         }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxActiveItem {
-            border-color:#3EC5AF;
+            border-color: #3EC5AF;
         }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .infoRow {
             display: flex;
             flex-wrap: nowrap;
@@ -337,6 +459,7 @@
             font-weight: 400;
             line-height: normal;
         }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow {
             margin-top: 5px;
             color: #333;
@@ -345,6 +468,7 @@
             font-weight: 400;
             line-height: normal;
         }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
             display: flex;
@@ -356,8 +480,8 @@
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
-           
         }
+
             .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item {
                 display: flex;
                 flex-wrap: nowrap;
@@ -365,11 +489,13 @@
                 gap: 3px;
                 cursor: pointer;
             }
-                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item >.imgIcon {
+
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item > .imgIcon {
                     flex-shrink: 0;
                     width: 9px;
                     height: 11px;
                 }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow {
             margin-top: 6px;
             padding: 15px;
@@ -377,6 +503,7 @@
             border: 1px solid #DCDFE6;
             background-color: #FFF;
         }
+
             .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .scoreBtnArea {
                 margin-top: 5px;
                 padding-left: 20px;
@@ -452,32 +579,33 @@
                 margin-top: 15px;
                 padding-left: 10px;
             }
-        /*右侧模块 分析区域*/
-        .promptPage_rightArea > .analysisArea {
-            width:100%;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            gap: 3px;
-            box-sizing:border-box;
-        }
-            .promptPage_rightArea > .analysisArea > .echartsBox {
-                width: 100%;
-                min-width:598px;
-                height: 200px;
-                box-sizing: border-box;
-            }
+/*右侧模块 分析区域*/
+.promptPage_rightArea > .analysisArea {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 3px;
+    box-sizing: border-box;
+}
+
+    .promptPage_rightArea > .analysisArea > .echartsBox {
+        width: 100%;
+        min-width: 598px;
+        height: 200px;
+        box-sizing: border-box;
+    }
 
 /*版本记录 btn*/
 .promptPage > .versionBtn {
     position: fixed;
     right: 0;
     top: 90px;
-    padding-right:5px;
+    padding-right: 5px;
     width: 60px;
     height: 22px;
-    line-height:22px;
-    text-align:right;
+    line-height: 22px;
+    text-align: right;
     border-radius: 14px 0px 0px 14px;
     opacity: 0.9;
     background: linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%);
@@ -486,43 +614,50 @@
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    cursor:pointer;
+    cursor: pointer;
 }
-.promptPage > .versionBtn:hover{
-    transform:scale(1.1);
-}
+
+    .promptPage > .versionBtn:hover {
+        transform: scale(1.1);
+    }
 /*版本记录 抽屉*/
 .promptPage .versionDrawerArea {
-    padding:10px;
-    position:relative;
-    height:100%;
-    box-sizing:border-box;
+    padding: 10px;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
 }
+
 .versionDrawerArea > .versionDrawerArea_titleRow {
-    margin:5px 0px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:nowrap;
+    margin: 5px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
 }
+
     .versionDrawerArea > .versionDrawerArea_titleRow > .leftBox {
         color: #333;
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
     }
+
     .versionDrawerArea > .versionDrawerArea_titleRow > .imgIcon {
-        flex-shrink:0;
+        flex-shrink: 0;
         width: 12px;
         height: 12px;
-        cursor:pointer;
+        cursor: pointer;
     }
+
 .versionDrawerArea > .versionDrawerArea_inputRow {
     margin-top: 15px;
 }
+
 .versionDrawerArea > .versionDrawerArea_contentRow {
     margin-top: 15px;
 }
+
     .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node {
         flex: 1;
         display: flex;
@@ -530,6 +665,7 @@
         align-items: center;
         justify-content: space-between;
     }
+
         .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node .treeLabelBox {
             color: #666;
             font-size: 14px;
@@ -537,49 +673,36 @@
             font-weight: 400;
             word-break: break-all;
         }
+
         .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node .treeMoreIcon {
             flex-shrink: 0;
             width: 12px;
             height: 2px;
         }
 /*tree 更多提示操作区域*/
-.versionTreeMorePopover{
-    padding:0 !important;
+.versionTreeMorePopover {
+    padding: 0 !important;
 }
+
     .versionTreeMorePopover > .operateArea {
         border-radius: 4px;
         background: #FFF;
     }
 
-    .versionTreeMorePopover > .operateArea > .operateItem {
-        width: 100%;
-        height: 32px;
-        color: #333;
-        text-align: center;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: center;
-        justify-content: center;
-    }
-
-        .versionTreeMorePopover > .operateArea > .operateItem:hover {
-            background-color: #F3F4F6;
+        .versionTreeMorePopover > .operateArea > .operateItem {
+            width: 100%;
+            height: 32px;
+            color: #333;
+            text-align: center;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
         }
-/*替换-对话框*/
-.promptPage .formItem {
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:20px;
-    position: relative;
-    box-sizing: border-box;
-}
-.promptPage .addVariableRow {
-    padding-right:20px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
+
+            .versionTreeMorePopover > .operateArea > .operateItem:hover {
+                background-color: #F3F4F6;
+            }
