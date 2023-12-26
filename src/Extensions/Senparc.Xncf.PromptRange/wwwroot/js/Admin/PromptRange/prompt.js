@@ -1074,9 +1074,11 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 //console.log('getModelOptData:', res)
                 let _optList = res.data.data || []
                 this.promptOpt = _optList.map(item => {
+                    const avg=scoreFormatter(item.evalAvgScore)
+                    const max=scoreFormatter(item.evalMaxScore)
                     return {
                         ...item,
-                        label: `${item.fullVersion} | ${item.evalScore}`,
+                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max}`,
                         value: item.id,
                         disabled: false
                     }
@@ -1160,3 +1162,8 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
         },
     }
 });
+
+
+function scoreFormatter(score){
+    return score===-1?'--':score
+}
