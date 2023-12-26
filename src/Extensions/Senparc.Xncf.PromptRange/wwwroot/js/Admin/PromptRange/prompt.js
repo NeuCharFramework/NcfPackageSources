@@ -251,6 +251,9 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
           const command=this.sendBtnText
             console.log('点击了'+command)
             
+            this.targetShootHandel(command==='保存草稿')
+           
+            
         },
         beforeunloadHandler(e) {
             console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
@@ -439,7 +442,8 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 vData: []
             }
             if (this.promptid) {
-                let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetHistoryScore?promptItemId=${this.promptid}`)
+                
+                let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}`)
                 if (res.data.success) {
                     this.chartData = {
                         xData: res.data.data.xList || [],
@@ -802,7 +806,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
 
 
         // 打靶     
-        async targetShootHandel() {
+        async targetShootHandel(isDraft=false) {
             if (this.promptid) {
                 this.tacticalFormVisible = true
                 return
@@ -813,7 +817,9 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 //promptid: this.promptid,// 选择靶场
                 modelid: this.modelid,// 选择模型
                 content: this.content,// prompt 输入内容
-                note: this.remarks // prompt 输入的备注
+                note: this.remarks, // prompt 输入的备注,
+                numsOfResults : 1,
+                isDraft:isDraft
             }
             if (this.promptid) {
                 _postData.id = this.promptid
@@ -1103,7 +1109,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                             return {
                                 ...item,
                                 label:item.rangeName,
-                                value:item.id,
+                                value:item.rangeName,
                                 disabled:false
                             }
                         })
@@ -1130,13 +1136,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                         disabled: false
                     }
                 })
-                if (id) {
-                    this.$nextTick(() => {
-                        // 设置 prompt选中
-                        this.promptid = Number(id)
-                    })
-                        
-                }
+        
             } else {
                 alert('error');
             }

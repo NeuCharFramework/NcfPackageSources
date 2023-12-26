@@ -137,7 +137,7 @@
                             <div class="operationBox">
                                 @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">仅保存</el-button> *@
                                 @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button> *@
-                                <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn"  size="small">
+                                <el-dropdown @@command="changeBtn" v-loading="targetShootLoading" split-button type="primary" @@click="clickSendBtn"  size="small">
                                     {{sendBtnText}}
                                     <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :command="btn.text">{{btn.text}}</el-dropdown-item>
