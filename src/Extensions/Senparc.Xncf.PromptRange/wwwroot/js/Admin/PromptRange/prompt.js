@@ -218,8 +218,6 @@ var app = new Vue({
     mounted() {
         // 获取靶场列表
         this.getFieldList()
-        // 获取靶场列表
-        this.getPromptOptData()
         // 获取模型列表
         this.getModelOptData()
         // 获取分数趋势图
@@ -1113,7 +1111,12 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 })
         },
         async getPromptOptData(id) {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
+            let res = await service
+                .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName',{
+                    params: {
+                        rangeName: this.promptField
+                    }
+                })
             if (res.data.success) {
                 //console.log('getModelOptData:', res)
                 let _optList = res.data.data || []

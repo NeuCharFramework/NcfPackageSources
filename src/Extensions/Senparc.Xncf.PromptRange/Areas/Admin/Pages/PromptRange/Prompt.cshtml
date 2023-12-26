@@ -29,7 +29,7 @@
                             </div>
                             <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addNewField">新增靶场</el-button>
                         </div>
-                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="">
+                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="getPromptOptData">
                             <el-option v-for="item in promptFieldOpt"
                                        v-key="item.id"
                                        :label="item.label"
