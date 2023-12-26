@@ -139,5 +139,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 }
             );
         }
+
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<StringAppResponse> ReCalculateItemScore(int promptItemId)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(
+                async (response, logger) =>
+                {
+                    await _promptResultService.UpdateEvalScoreAsync(promptItemId);
+                    return "ok";
+                });
+        }
     }
 }

@@ -79,14 +79,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([CanBeNull] string rangeName)
+        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName( [NotNull] string rangeName)
         {
             return await
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
                     List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
                 {
                     List<PromptItem> promptItems = await _promptItemService
-                        .GetFullListAsync(p => string.IsNullOrWhiteSpace(rangeName) || p.RangeName == rangeName,
+                        .GetFullListAsync(p => p.RangeName == rangeName,
                             p => p.Id,
                             Ncf.Core.Enums.OrderingType.Ascending);
                     return promptItems.Select(p => new PromptItem_GetIdAndNameResponse

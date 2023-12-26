@@ -343,7 +343,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 获取同一个靶道下的所有打过分的item
             List<PromptItemDto> promptItems = (await this.GetFullListAsync(
-                    p => p.RangeName == promptItem.RangeName && p.EvalAvgScore >= 0 && p.EvalMaxScore >= 0,
+                    p => p.RangeName == promptItem.RangeName && (isAvg ? p.EvalAvgScore >= 0 : p.EvalMaxScore >= 0),
                     p => p.Id,
                     OrderingType.Ascending)
                 ).Select(p => this.Mapper.Map<PromptItemDto>(p)).ToList();
