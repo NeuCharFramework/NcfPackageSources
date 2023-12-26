@@ -217,6 +217,8 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶场列表
+        this.getFieldList()
+        // 获取靶场列表
         this.getPromptOptData()
         // 获取模型列表
         this.getModelOptData()
@@ -1095,6 +1097,21 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
 
 
         // 配置 获取prompt 下拉列表数据
+        async getFieldList(){
+            await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
+                .then(res=>{
+                    if(res.data.success){
+                        this.promptFieldOpt=res.data.data.map(item=>{
+                            return {
+                                ...item,
+                                label:item.rangeName,
+                                value:item.id,
+                                disabled:false
+                            }
+                        })
+                    }
+                })
+        },
         async getPromptOptData(id) {
             let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
             if (res.data.success) {
