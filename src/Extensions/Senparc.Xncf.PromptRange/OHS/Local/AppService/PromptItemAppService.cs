@@ -99,28 +99,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     }).ToList();
                 });
         }
-
-
+        
+        
         [ApiBind]
-        public async Task<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>> GetRangeNameList()
+        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetRangeNameList()
         {
             return await
-                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>,
-                    List<PromptItem_GetRangeNameListResponse>>(
-                    async (response, logger) =>
+                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
+                    List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
                 {
                     List<PromptItem> promptItems = await _promptItemService
                         .GetFullListAsync(
                             p => true,
                             p => p.Id,
                             Ncf.Core.Enums.OrderingType.Ascending);
-
+                    
                     return promptItems.DistinctBy(p => p.RangeName)
-                        .Select(p => new PromptItem_GetRangeNameListResponse()
-                        {
-                            Id = p.Id,
-                            RangeName = p.RangeName
-                        }).ToList();
+                        .Select(p => new PromptItem_GetIdAndNameResponse
+                    {
+                        Id = p.Id,
+                        Name = p.RangeName,
+                    }).ToList();
                 });
         }
 
@@ -169,7 +168,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (resp, logger) =>
                 {
                     var tacticTree = await _promptItemService.GenerateTacticTreeAsync(rangeName);
-
+                    
                     return new TacticTree_GetResponse(tacticTree);
                 });
         }

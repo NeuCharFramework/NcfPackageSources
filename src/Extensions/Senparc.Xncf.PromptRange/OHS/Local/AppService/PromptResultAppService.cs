@@ -76,7 +76,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                     #endregion
 
-                    var promptResult = await _promptResultService.RobotScore(promptResultId, expectedResultList, isRefresh);
+                    var promptResult = await _promptResultService.RobotScoringAsync(promptResultId, expectedResultList, isRefresh);
 
                     await _promptResultService.UpdateEvalScoreAsync(promptResult.PromptItemId);
 
