@@ -97,6 +97,19 @@ var app = new Vue({
                 variableList: []
             },
             // prompt请求参数 ---end
+            // sendBtns: 打靶、连发、保存草稿
+            sendBtns:[
+                {
+                    text:'打靶'
+                },
+                {
+                    text:'连发'
+                },
+                {
+                    text:'保存草稿'
+                }
+            ],
+            sendBtnText:'打靶',
             // 输出 ---start
             outputAverage: '',// 输出列表的平均分
             outputActive: '', // 输出列表选中查看|评分
@@ -230,6 +243,14 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
         addNewField(){
           //reload page
           window.location.reload();
+        },
+        changeBtn(command){
+            this.sendBtnText = command
+        },
+        clickSendBtn(){
+          const command=this.sendBtnText
+            console.log('点击了'+command)
+            
         },
         beforeunloadHandler(e) {
             console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')

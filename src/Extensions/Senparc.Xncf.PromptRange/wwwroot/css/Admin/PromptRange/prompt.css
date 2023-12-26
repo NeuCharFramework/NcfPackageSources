@@ -35,6 +35,11 @@
 .w-100{
     width: 100%;
 }
+
+.el-dropdown .el-button-group {
+    display: flex!important;
+}
+
 .promptPage {
     /*padding: 15px;*/
     display: flex;
@@ -377,16 +382,7 @@
                     font-style: normal;
                     font-weight: 400;
                 }
-
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox button {
-                    margin: 0px;
-                }
+                
 
     /*输入Prompt请求参数盒子 promptPmroparaBox */
     .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox {
