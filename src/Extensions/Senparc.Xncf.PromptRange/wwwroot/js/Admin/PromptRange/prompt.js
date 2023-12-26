@@ -4,6 +4,8 @@ var app = new Vue({
         return {
             devHost: 'http://pr-felixj.frp.senparc.com',
             // 配置 输入 ---start
+            promptField: '', // 靶场列表
+            promptFieldOpt: [], // 靶场列表
             promptOpt: [], // prompt列表
             modelOpt: [], // 模型列表
             promptid: '',// 选择靶场
@@ -225,6 +227,10 @@ var app = new Vue({
 window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        addNewField(){
+          //reload page
+          window.location.reload();
+        },
         beforeunloadHandler(e) {
             console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
             // 如果数据没有变动，则不需要提示用户保存

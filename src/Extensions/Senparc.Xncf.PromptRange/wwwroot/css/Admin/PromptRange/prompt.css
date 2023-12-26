@@ -1,6 +1,42 @@
-﻿.promptPage {
-    /*padding: 15px;*/
+﻿.imgIcon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+}
 
+.d-flex{
+    display: flex;
+}
+
+.align-center{
+    align-items: center;
+}
+
+.titleContent {
+    box-sizing: border-box;
+    color: #333;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /*22px*/
+}
+
+.selectRow {
+    width: 100%;
+}
+.justify-content-between{
+    justify-content: space-between;
+}
+
+.align-flex-end{
+    align-items: flex-end;
+}
+
+.w-100{
+    width: 100%;
+}
+.promptPage {
+    /*padding: 15px;*/
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
