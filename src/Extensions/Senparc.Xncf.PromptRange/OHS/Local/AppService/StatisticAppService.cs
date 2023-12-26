@@ -54,13 +54,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
         
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScore([FromQuery] int promptItemId)
+        public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScoreAsync(int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
                 async (response, logger) =>
                 {
                     logger.SaveLogs($"传入ID为{promptItemId}");
-                    return await _promptItemService.GetHistoryScore(promptItemId);
+                    
+                    return await _promptItemService.GetHistoryScoreAsync(promptItemId);
+                });
+        }
+        
+        
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg)
+        {
+            return await this.GetResponseAsync<AppResponseBase<Statistic_TodayTacticResponse>, Statistic_TodayTacticResponse>(
+                async (response, logger) =>
+                {
+                    logger.SaveLogs($"传入ID为{promptItemId}");
+                    
+                    return await _promptItemService.GetLineChartDataAsync(promptItemId,isAvg);
                 });
         }
     }

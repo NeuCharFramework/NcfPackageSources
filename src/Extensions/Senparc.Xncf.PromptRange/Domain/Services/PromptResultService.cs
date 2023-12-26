@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
@@ -166,7 +167,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #region 用户自定义参数
 
-            foreach (var (k, v) in promptItem.VariableDictJson.GetObject<Dictionary<string, string>>())
+            foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
             {
                 aiArguments[k] = v;
             }
@@ -194,8 +195,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(promptResult);
 
-            // 更新绑定的 item 的分数
-            await this.UpdateEvalScoreAsync(promptResult.PromptItemId);
+            // 有期望结果， 进行自动打分
+            if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            {
+                this.RobotScoringAsync(promptResult.Id, promptItem.ExpectedResultsJson, false);
+            }
 
             return promptResult;
         }
@@ -212,7 +216,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             #endregion
-
 
             // 根据id搜索数据库
             var promptResult = await base.GetObjectAsync(result => result.Id == id);
@@ -279,7 +282,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return aiSettings;
         }
 
-        public async Task<PromptResult> RobotScore(int promptResultId, List<string> expectedResultList, bool isRefresh)
+
+        public async Task<PromptResult> RobotScoringAsync(int promptResultId, string expectedResultsJson, bool isRefresh)
+        {
+            List<string> list = JsonConvert.DeserializeObject<List<string>>(expectedResultsJson);
+            return await this.RobotScoringAsync(promptResultId, list, isRefresh);
+        }
+
+
+        public async Task<PromptResult> RobotScoringAsync(int promptResultId, List<string> expectedResultList, bool isRefresh)
         {
             // get promptResult by id
             var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId);
@@ -378,7 +389,7 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
 
             // SenparcTrace.SendCustomLog("自动打分结果匹配失败", $"原文为{result.Output}，分数匹配失败");
 
-            throw new NcfExceptionBase($"自动打分结果匹配失败, 原文为{result.Output}，分数匹配失败");
+            throw new NcfExceptionBase($"自动打分结果匹配失败, 原文为{result.Output}，分数匹配失败，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
         }
 
         public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)
