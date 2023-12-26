@@ -11,6 +11,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -290,7 +291,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <returns></returns>
-        public async Task<PromptItem_HistoryScoreResponse> GetHistoryScore(int promptItemId)
+        public async Task<PromptItem_HistoryScoreResponse> GetHistoryScoreAsync(int promptItemId)
         {
             List<string> versionHistoryList = new List<string>();
             List<int> avgScoreHistoryList = new List<int>();
@@ -330,6 +331,43 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             promptItem.UpdateExpectedResultsJson(expectedResults);
 
             await this.SaveObjectAsync(promptItem);
+        }
+
+        public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
+        {
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
+            if (promptItem == null)
+            {
+                throw new Exception("未找到prompt");
+            }
+
+            // 获取同一个靶道下的所有打过分的item
+            List<PromptItemDto> promptItems = (await this.GetFullListAsync(
+                    p => p.RangeName == promptItem.RangeName && p.EvalAvgScore >= 0 && p.EvalMaxScore >= 0,
+                    p => p.Id,
+                    OrderingType.Ascending)
+                ).Select(p => this.Mapper.Map<PromptItemDto>(p)).ToList();
+            var itemGroupByT = promptItems.GroupBy(p => p.Tactic.Substring(0, 1))
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            var resp = new Statistic_TodayTacticResponse(promptItem.RangeName, DateTime.Now);
+
+            // [t1, 版号, 平均分]
+            // [t2, 版号, 平均分]
+            foreach (var (tac, itemList) in itemGroupByT)
+            {
+                List<Statistic_TodayTacticResponse.Point> points = new List<Statistic_TodayTacticResponse.Point>();
+                for (var i = 0; i < itemList.Count; i++)
+                {
+                    var zScore = isAvg ? itemList[i].EvalAvgScore : itemList[i].EvalMaxScore;
+                    var point = new Statistic_TodayTacticResponse.Point(Convert.ToInt32(tac), i + 1, zScore, itemList[i]);
+                    points.Add(point);
+                }
+
+                resp.DataPoints.Add(points);
+            }
+
+            return resp;
         }
     }
 }
