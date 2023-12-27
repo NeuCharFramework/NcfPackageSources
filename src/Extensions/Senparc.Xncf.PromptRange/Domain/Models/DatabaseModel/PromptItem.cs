@@ -288,5 +288,12 @@ namespace Senparc.Xncf.PromptRange
         }
 
         #endregion
+
+        public PromptItem ModifyNote(string note)
+        {
+            this.Note = note;
+
+            return this;
+        }
     }
 }

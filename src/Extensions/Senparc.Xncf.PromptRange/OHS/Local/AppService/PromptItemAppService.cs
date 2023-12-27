@@ -182,6 +182,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                              throw new Exception("未找到prompt");
 
                 result.ModifyNickName(req.NickName);
+                result.ModifyNote(req.Note);
 
                 await _promptItemService.SaveObjectAsync(result);
 
