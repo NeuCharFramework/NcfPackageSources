@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
@@ -118,7 +119,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
             EvalMaxScore = evalMaxScore;
         }
 
-        public PromptItem_GetResponse(PromptItem item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
+        public PromptItem_GetResponse(PromptItemDto item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
             item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
             item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
         {

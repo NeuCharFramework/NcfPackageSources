@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -141,12 +142,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         [ApiBind]
-        public async Task<AppResponseBase<PromptItem_GetResponse>> Get([FromQuery] int id)
+        public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
-                    var promptItem = await _promptItemService.Get(id);
+                    PromptItemDto promptItem = await _promptItemService.Get(id);
 
                     List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
@@ -174,15 +175,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest req)
+        public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                var result = await _promptItemService.GetObjectAsync(p => p.Id == req.Id) ??
+                var result = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
                              throw new Exception("未找到prompt");
 
-                result.ModifyNickName(req.NickName);
-                result.ModifyNote(req.Note);
+                result.ModifyNickName(request.NickName);
+                result.ModifyNote(request.Note);
 
                 await _promptItemService.SaveObjectAsync(result);
 
@@ -191,7 +192,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
-        public async Task<StringAppResponse> Del([FromQuery] int id)
+        public async Task<StringAppResponse> Del(int id)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {

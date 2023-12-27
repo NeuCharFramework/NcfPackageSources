@@ -65,21 +65,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     tactic: "1",
                     aiming: 1,
                     parentTac: "",
-                    content: request.Content,
-                    modelId: request.ModelId,
-                    topP: request.TopP,
-                    temperature: request.Temperature,
-                    maxToken: request.MaxToken,
-                    frequencyPenalty: request.FrequencyPenalty,
-                    presencePenalty: request.PresencePenalty,
-                    stopSequences: request.StopSequences,
-                    numsOfResults: request.NumsOfResults,
-                    note: request.Note,
-                    expectedResultsJson: request.ExpectedResultsJson,
-                    isDraft: request.IsDraft,
-                    prefix: request.Prefix,
-                    suffix: request.Suffix,
-                    variableDictJson: request.VariableDictJson
+                    request: request
                 );
             }
             else
@@ -109,7 +95,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         frequencyPenalty: request.FrequencyPenalty,
                         presencePenalty: request.PresencePenalty,
                         stopSequences: request.StopSequences,
-                        numsOfResults: request.NumsOfResults,
+                        // numsOfResults: request.NumsOfResults,
                         note: request.Note,
                         expectedResultsJson: request.ExpectedResultsJson,
                         isDraft: request.IsDraft,
@@ -129,21 +115,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         tactic: $"{parentTac}.{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac,
-                        content: request.Content,
-                        modelId: request.ModelId,
-                        topP: request.TopP,
-                        temperature: request.Temperature,
-                        maxToken: request.MaxToken,
-                        frequencyPenalty: request.FrequencyPenalty,
-                        presencePenalty: request.PresencePenalty,
-                        stopSequences: request.StopSequences,
-                        numsOfResults: request.NumsOfResults,
-                        note: request.Note,
-                        expectedResultsJson: request.ExpectedResultsJson,
-                        isDraft: request.IsDraft,
-                        prefix: request.Prefix,
-                        suffix: request.Suffix,
-                        variableDictJson: request.VariableDictJson
+                        request: request
                     );
                 }
                 else
@@ -159,21 +131,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             tactic: oldTactic,
                             aiming: fullList.Count + 1,
                             parentTac: oldPrompt.ParentTac,
-                            content: request.Content,
-                            modelId: request.ModelId,
-                            topP: request.TopP,
-                            temperature: request.Temperature,
-                            maxToken: request.MaxToken,
-                            frequencyPenalty: request.FrequencyPenalty,
-                            presencePenalty: request.PresencePenalty,
-                            stopSequences: request.StopSequences,
-                            numsOfResults: request.NumsOfResults,
-                            note: request.Note,
-                            expectedResultsJson: request.ExpectedResultsJson,
-                            isDraft: request.IsDraft,
-                            prefix: request.Prefix,
-                            suffix: request.Suffix,
-                            variableDictJson: request.VariableDictJson
+                            request: request
                         );
                     }
                     // todo 是否允许重新生成？
@@ -218,7 +176,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                 // 递归构建树
                 this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
-                
+
                 rootNodeList.Add(rootNode);
             }
 
@@ -288,15 +246,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
-        public async Task<PromptItem> Get(int id)
+        public async Task<PromptItemDto> Get(int id)
         {
-            var item = await this.GetObjectAsync(p => p.Id == id);
-            if (item == null)
-            {
-                throw new NcfExceptionBase($"找不到{id}对应的promptItem");
-            }
+            var item = await this.GetObjectAsync(p => p.Id == id) ??
+                       throw new NcfExceptionBase($"找不到{id}对应的promptItem");
 
-            return item;
+            return this.Mapper.Map<PromptItemDto>(item);
         }
 
 

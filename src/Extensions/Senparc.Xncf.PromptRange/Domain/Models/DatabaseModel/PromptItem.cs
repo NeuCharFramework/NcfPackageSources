@@ -35,27 +35,32 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// TopP
         /// </summary>
+        [Required]
         public float TopP { get; private set; }
 
         /// <summary>
         /// 温度
         /// </summary>
+        [Required]
         public float Temperature { get; private set; }
 
         /// <summary>
         /// 最大 Token 数
         /// </summary>
+        [Required]
         public int MaxToken { get; private set; }
 
         /// <summary>
         /// 频率惩罚
         /// </summary>
+        [Required]
         public float FrequencyPenalty { get; private set; }
 
+        [Required] 
         public float PresencePenalty { get; private set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组） //todo 真的可以为null吗？
+        /// 停止序列（JSON 数组）
         /// </summary>
         [CanBeNull]
         public string StopSequences { get; private set; }
@@ -65,7 +70,7 @@ namespace Senparc.Xncf.PromptRange
         /// <summary>
         /// 每个 Prompt 的结果数
         /// </summary>
-        [Obsolete("已废弃")]
+        [Obsolete("已废弃", true)]
         public int NumsOfResults { get; private set; }
 
 
@@ -209,7 +214,7 @@ namespace Senparc.Xncf.PromptRange
 
         public PromptItem(string content,
             int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
-            int numsOfResults,
+            // int numsOfResults,
             string rangeName, string tactic, int aiming, string parentTac,
             string note,
             string expectedResultsJson, bool isDraft,
@@ -223,7 +228,7 @@ namespace Senparc.Xncf.PromptRange
             FrequencyPenalty = frequencyPenalty;
             PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
-            NumsOfResults = numsOfResults;
+            // NumsOfResults = numsOfResults;
             RangeName = rangeName;
             Tactic = tactic;
             Aiming = aiming;
@@ -243,15 +248,13 @@ namespace Senparc.Xncf.PromptRange
 
         public PromptItem(string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :
             this(request.Content, request.ModelId, request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty,
-                request.PresencePenalty, request.StopSequences, request.NumsOfResults, rangeName, tactic, aiming, parentTac, request.Note,
+                request.PresencePenalty, request.StopSequences, rangeName, tactic, aiming, parentTac, request.Note,
                 request.ExpectedResultsJson, request.IsDraft, request.Prefix, request.Suffix, request.VariableDictJson)
         {
         }
 
         #endregion
-
-        #region Builder
-
+        
         public PromptItem Switch(bool show)
         {
             this.IsShare = show;
@@ -286,8 +289,6 @@ namespace Senparc.Xncf.PromptRange
 
             return this;
         }
-
-        #endregion
 
         public PromptItem ModifyNote(string note)
         {

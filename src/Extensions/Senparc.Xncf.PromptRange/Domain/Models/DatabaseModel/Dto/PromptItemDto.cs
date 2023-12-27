@@ -9,6 +9,8 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
     public class PromptItemDto : DtoBase
     {
+        public int Id { get; set; }
+        
         /// <summary>
         /// 昵称
         /// </summary>

@@ -547,7 +547,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.StopSequences">
             <summary>
-            停止序列（JSON 数组） //todo 真的可以为null吗？
+            停止序列（JSON 数组）
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.NumsOfResults">
