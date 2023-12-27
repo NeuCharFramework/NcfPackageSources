@@ -167,9 +167,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #region 用户自定义参数
 
-            foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
+            if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson))
             {
-                aiArguments[k] = v;
+                // 如果有参数，前后缀不能为空
+                if (string.IsNullOrWhiteSpace(promptItem.Prefix) || string.IsNullOrWhiteSpace(promptItem.Suffix))
+                {
+                    throw new NcfExceptionBase("前后缀不能为空");
+                }
+
+                // 读取参数并填充
+                foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
+                {
+                    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
+                    aiArguments[k] = v;
+                }
             }
 
             #endregion

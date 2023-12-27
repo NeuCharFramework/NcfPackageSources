@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -194,7 +195,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="rangeName">靶场名</param>
         /// <returns >版本树</returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<TreeNode<PromptItem>> GenerateTacticTreeAsync(string rangeName)
+        public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(string rangeName)
         {
             // 获取同一个靶道下的所有
             List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == rangeName);
@@ -206,13 +207,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
                 .ToDictionary(p => p.Key, p => p.ToList());
 
-            PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
-            TreeNode<PromptItem> rootNode = new TreeNode<PromptItem>(rootItem.FullVersion, rootItem);
+            // 先处理第一级
+            var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
-            // 递归构建树
-            this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
+            List<PromptItem> topTierItemList = itemGroupByParentTac[""];
+            foreach (var rootItem in topTierItemList)
+            {
+                // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
+                var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, new PromptItem_GetIdAndNameResponse(rootItem));
 
-            return rootNode;
+                // 递归构建树
+                this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
+                
+                rootNodeList.Add(rootNode);
+            }
+
+            return rootNodeList;
         }
 
         // /// <summary>
@@ -237,7 +247,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //     return await this.GenerateVersionTree(promptItem);
         // }
 
-        public async Task<TreeNode<PromptItem>> GenerateTacticTreeAsync([NotNull] PromptItem promptItem)
+        public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync([NotNull] PromptItem promptItem)
         {
             return await this.GenerateTacticTreeAsync(promptItem.RangeName);
             // // 获取同一个靶道下的所有
@@ -259,15 +269,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // return rootNode;
         }
 
-        private void BuildVersionTreeHelper(TreeNode<PromptItem> rootNode,
+        private void BuildVersionTreeHelper(TreeNode<PromptItem_GetIdAndNameResponse> rootNode,
             Dictionary<string, PromptItem> itemMapByVersion,
             Dictionary<string, List<PromptItem>> itemGroupByParentTac)
         {
             var root = itemMapByVersion[rootNode.Name];
+            if (!itemGroupByParentTac.ContainsKey(root.Tactic))
+            {
+                return;
+            }
+
             var promptItems = itemGroupByParentTac[root.Tactic];
             foreach (var childItem in promptItems)
             {
-                var childNode = new TreeNode<PromptItem>(childItem.FullVersion, childItem);
+                var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, new PromptItem_GetIdAndNameResponse(childItem));
                 this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
                 rootNode.Children.Add(childNode);
             }

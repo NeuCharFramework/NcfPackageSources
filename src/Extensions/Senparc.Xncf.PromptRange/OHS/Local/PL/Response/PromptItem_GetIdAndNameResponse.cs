@@ -11,7 +11,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public string FullVersion { get; set; }
 
         public int EvalAvgScore { get; set; }
-        
+
         public int EvalMaxScore { get; set; }
+
+        public PromptItem_GetIdAndNameResponse()
+        {
+        }
+
+        public PromptItem_GetIdAndNameResponse(PromptItem promptItem)
+        {
+            Id = promptItem.Id;
+            Name = promptItem.RangeName;
+            FullVersion = promptItem.FullVersion;
+            EvalAvgScore = promptItem.EvalAvgScore;
+            EvalMaxScore = promptItem.EvalMaxScore;
+        }
     }
 }

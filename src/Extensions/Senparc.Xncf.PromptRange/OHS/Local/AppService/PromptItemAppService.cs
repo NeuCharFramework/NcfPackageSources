@@ -79,7 +79,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName( [NotNull] string rangeName)
+        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([NotNull] string rangeName)
         {
             return await
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
@@ -162,7 +162,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
+        public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree([NotNull] string rangeName)
         {
             return await this.GetResponseAsync<AppResponseBase<TacticTree_GetResponse>, TacticTree_GetResponse>(
                 async (resp, logger) =>
