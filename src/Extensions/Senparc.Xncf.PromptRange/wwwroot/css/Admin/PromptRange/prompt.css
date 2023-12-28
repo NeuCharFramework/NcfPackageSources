@@ -358,10 +358,30 @@
             align-items: flex-end;
             gap: 10px;
         }
-
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
-                position: relative;
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox{
+                display:flex;
+                flex-direction:column;
+                flex-wrap:nowrap;
+                /*align-items:flex-end;*/
+                gap:5px;
             }
+                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
+                    white-space: nowrap;
+                    padding: 7px 10px;
+                    background: #FFF;
+                    border: 1px solid #DCDFE6;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    cursor: pointer;
+                }
+                    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
+                        display:inline-block;
+                        width: 20px;
+                        text-align:left;
+                    }
+.promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
+    position: relative;
+}
 
                 .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
                     padding: 5px 15px 5px 55px;
@@ -405,15 +425,17 @@
             box-sizing: border-box;
         }
 
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .formItem .deleteIcon {
-                position: absolute;
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .deleteIcon {
+                /*position: absolute;
                 right: 0;
                 top: 34%;
-                transform: translateY(-50%);
+                transform: translateY(-50%);*/
+                color:red;
                 cursor: pointer;
             }
 
         .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
+            margin-top:10px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -708,8 +730,8 @@
 
         .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node .treeMoreIcon {
             flex-shrink: 0;
-            width: 12px;
-            height: 2px;
+            width: 15px;
+            height: 10px;
         }
 /*tree 更多提示操作区域*/
 .versionTreeMorePopover {

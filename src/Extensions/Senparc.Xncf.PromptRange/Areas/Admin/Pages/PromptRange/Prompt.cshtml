@@ -27,7 +27,7 @@
                                 <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                                 <div class="titleContent">选择靶场</div>
                             </div>
-                            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addNewField">新增靶场</el-button>
+                            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="fieldFormVisible = true">新增靶场</el-button>
                         </div>
                         <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="getPromptOptData">
                             <el-option v-for="item in promptFieldOpt"
@@ -137,6 +137,17 @@
                             <div class="operationBox">
                                 @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">仅保存</el-button> *@
                                 @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button> *@
+                                @* 选择连发次数 *@
+                                <el-dropdown @@command="changeNumsBtn" type="primary" size="small">
+                                    <div class="numsOfResultsBox">
+                                        连发次数：<span class="numVal">{{numsOfResults}}</span>
+                                        <i class="el-icon-arrow-down"></i>
+                                     </div>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item v-for="btn of numsOfResultsOpt" :key="btn" :command="btn">{{btn}}</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                                @* 打靶按钮 *@
                                 <el-dropdown @@command="changeBtn" v-loading="targetShootLoading" split-button type="primary" @@click="clickSendBtn"  size="small">
                                     {{sendBtnText}}
                                     <el-dropdown-menu slot="dropdown">
@@ -164,15 +175,40 @@
                                     <el-input v-model="promptParamForm.suffix" autocomplete="off" placeholder="请输入后缀"></el-input>
                                 </el-form-item>
                             </div>
-                            <div v-for="(item,index) in promptParamForm.variableList" v-key="index" class="formItem">
-                                <el-form-item label="变量名" :prop="'variableList.' + index + '.name'" :rules="rules.variableName">
+                            @* 变量名 变量值 *@
+                            <el-table :data="promptParamForm.variableList" border
+                                      max-height="250"
+                                      style="width: 100%">
+                                <el-table-column label="变量名" >
+                                    <template slot-scope="scope">
+                                        <el-form-item :prop="'variableList.' + scope.$index + '.name'" :rules="rules.variableName" label-width="0px">
+                                            <el-input v-model="scope.row.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                                        </el-form-item>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="变量值" >
+                                    <template slot-scope="scope">
+                                        <el-form-item :prop="'variableList.' + scope.$index + '.value'" :rules="rules.variableValue" label-width="0px">
+                                            <el-input v-model="scope.row.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                                        </el-form-item>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="50">
+                                    <template slot-scope="scope">
+                                        <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(scope.$index)"></i>
+                                    </template>
+                                    
+                                </el-table-column>
+                            </el-table>
+                            @* <div v-for="(item,index) in promptParamForm.variableList" v-key="index" class="formItem">
+                                <el-form-item label="" :prop="'variableList.' + index + '.name'" :rules="rules.variableName" label-width="0px">
                                     <el-input v-model="item.name" autocomplete="off" placeholder="请输入变量名"></el-input>
                                 </el-form-item>
-                                <el-form-item label="变量值" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue">
+                                <el-form-item label="" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue" label-width="0px">
                                     <el-input v-model="item.value" autocomplete="off" placeholder="请输入变量值"></el-input>
                                 </el-form-item>
                                 <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(index)"></i>
-                            </div>
+                            </div> *@
                             <div class="addVariableRow">
                                 <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
                             </div>
@@ -271,8 +307,8 @@
         </div>
     </div>
     @*版本记录-抽屉 drawer*@
-    <div class="versionBtn" @@click="seeVersionRecord">版本记录</div>
-    <el-drawer :visible.sync="versionDrawer" direction="rtl" title="我是标题" :with-header="false" @@close="versionDrawerClose">
+    <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">版本记录</div>
+    <el-drawer :visible.sync="versionDrawer" direction="rtl" title="版本记录" :with-header="false" @@close="versionDrawerClose">
         <div class="versionDrawerArea">
             <div class="versionDrawerArea_titleRow">
                 <span>版本记录</span>
@@ -357,6 +393,18 @@
         <div slot="footer" class="dialog-footer">
             <el-button @@click="modelFormVisible = false">取 消</el-button>
             <el-button type="primary" v-loading="modelFormSubmitLoading" @@click="modelFormSubmitBtn">确 定</el-button>
+        </div>
+    </el-dialog>
+    @*新增靶场 dialog*@
+    <el-dialog title="新增靶场" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
+        <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
+            <el-form-item label="靶场名称" prop="fieldName" label-width="130px">
+                <el-input v-model="fieldForm.fieldName" autocomplete="off" placeholder="请输入靶场名称"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="fieldFormVisible = false">取 消</el-button>
+            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">确 定</el-button>
         </div>
     </el-dialog>
 </div>
