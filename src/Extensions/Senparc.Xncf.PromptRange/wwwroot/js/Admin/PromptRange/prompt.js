@@ -589,7 +589,12 @@ var app = new Vue({
                         content: this.content,// prompt 输入内容
                         note: this.remarks, // prompt 输入的备注
                         numsOfResults:1,
-                        isDraft: this.sendBtnText==='保存草稿'
+                        isDraft: this.sendBtnText==='保存草稿',
+                        suffix: this.promptParamForm.suffix,
+                        prefix: this.promptParamForm.prefix
+                    }
+                    if (this.promptParamForm.variableList.length>0){
+                        _postData.variableList = this.convertData(this.promptParamForm.variableList)
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -880,6 +885,14 @@ var app = new Vue({
         },
 
 
+        convertData(data){
+          // data is like [{name:'',value:''}], convert to {name:value}
+            let res = {}
+            data.forEach(item=>{
+                res[item.name] = item.value
+            })
+            return res
+        },
         /*
         * 打靶 事件
         * isDraft 是否保存草稿
@@ -912,8 +925,15 @@ var app = new Vue({
                 note: this.remarks, // prompt 输入的备注,
                 numsOfResults: 1,
                 //numsOfResults: isDraft?this.numsOfResults:1,
-                isDraft:isDraft
+                isDraft:isDraft,
+                suffix: this.promptParamForm.suffix,
+                prefix: this.promptParamForm.prefix,
+                
             }
+            if (this.promptParamForm.variableList.length>0){
+                _postData.variableList = this.convertData(this.promptParamForm.variableList)
+            }
+            
             if (this.promptid) {
                 _postData.id = this.promptid
                 if (this.tacticalForm.tactics === '创建新战术') {
