@@ -492,7 +492,7 @@ var app = new Vue({
                         content: this.content,// prompt 输入内容
                         note: this.remarks, // prompt 输入的备注
                         numsOfResults:1,
-                        isDraft: false
+                        isDraft: this.sendBtnText==='保存草稿'
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -560,6 +560,9 @@ var app = new Vue({
                             }
                             return item
                         })
+                        if(this.sendBtnText==='保存草稿'){
+                            this.$message.success('保存草稿成功')
+                        }
                        
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
@@ -1196,7 +1199,7 @@ var app = new Vue({
                     const max=scoreFormatter(item.evalMaxScore)
                     return {
                         ...item,
-                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max}`,
+                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft?'(草稿)':''}`,
                         value: item.id,
                         disabled: false
                     }
