@@ -787,6 +787,20 @@ var app = new Vue({
         * isDraft 是否保存草稿
         */      
         async targetShootHandel(isDraft=false) {
+            if(!this.modelid) {
+                this.$message({
+                    message: '请选择模型！',
+                    type: 'warning'
+                })
+                return
+            }
+            if(!this.content) {
+                this.$message({
+                    message: '请输入内容！',
+                    type: 'warning'
+                })
+                return
+            }
             if (this.promptid) {
                 this.tacticalFormVisible = true
                 return
@@ -878,6 +892,13 @@ var app = new Vue({
          * 连发 事件
          */
         async dealRapicFireHandel(howmany) {
+            if (!this.promptid) {
+                this.$message({
+                    message: '请选择一个靶道！',
+                    type: 'warning'
+                })
+                return
+            }
             this.targetShootLoading=true
             let promises = [];
             for (let i = 0; i < howmany; i++) {
