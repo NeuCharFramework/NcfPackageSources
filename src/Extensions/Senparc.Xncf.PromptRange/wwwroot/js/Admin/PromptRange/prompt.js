@@ -728,7 +728,7 @@ var app = new Vue({
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
-                    alert('error!');
+                    this.$message.error(res.data.errorMessage);
                 }
             }
             if (item.scoreType === '2') {
