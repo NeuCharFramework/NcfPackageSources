@@ -29,7 +29,10 @@ namespace Senparc.Xncf.AIKernel.Models
                     {
                         _rootDirectoryPath = webPath;//优先使用Web统一配置
                     }
-                    _rootDirectoryPath = projectPath;
+                    else
+                    {
+                        _rootDirectoryPath = projectPath;
+                    }
                 }
                 return _rootDirectoryPath;
             }

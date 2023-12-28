@@ -80,7 +80,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         dbContextName += dbTypeSuffix;
                     }
 
-                    var migrationsCmd = $"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{request.DatabasePlantPath.Replace("\\","\\\\")}\" -o \"{migrationDir.Replace("\\", "\\\\")}\"{outputVerbose}";
+                    //把 request.DatabasePlantPath 中独立存在的 \ 替换为 \\
+                    var databasePlantPath = request.DatabasePlantPath.Replace("\\", "\\\\");
+                    var migrationDirFinal = migrationDir.Replace("\\", "\\\\");
+
+                    var migrationsCmd = $"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{databasePlantPath}\" -o \"{migrationDirFinal}\"{outputVerbose}";
 
                     await Console.Out.WriteLineAsync(migrationsCmd);
 
