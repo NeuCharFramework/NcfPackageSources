@@ -14,7 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
+	  <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 	</ItemGroup>
 
 </Project>
