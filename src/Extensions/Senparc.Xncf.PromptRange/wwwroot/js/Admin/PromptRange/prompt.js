@@ -261,7 +261,13 @@ var app = new Vue({
         clickSendBtn(){
           const command=this.sendBtnText
             console.log('点击了'+command)
-            this.targetShootHandel(command==='保存草稿')
+            if(command==='打靶'){
+                this.targetShootHandel()
+            }else if(command==='保存草稿') {
+                this.targetShootHandel(true)
+            }else if (command==='连发'){
+                this.dealRapicFireHandel(this.numsOfResults)
+            }
         },
         // beforeunload 事件处理函数
         beforeunloadHandler(e) {
@@ -492,7 +498,9 @@ var app = new Vue({
                         //promptid: this.promptid,// 选择靶场
                         modelid: this.modelid,// 选择模型
                         content: this.content,// prompt 输入内容
-                        note: this.remarks // prompt 输入的备注
+                        note: this.remarks, // prompt 输入的备注
+                        numsOfResults:1,
+                        isDraft: false
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -563,6 +571,10 @@ var app = new Vue({
                        
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
+                        if (this.numsOfResults>1){
+                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                            this.dealRapicFireHandel(this.numsOfResults-1)
+                        }
                     }
 
                 } else {
@@ -813,7 +825,7 @@ var app = new Vue({
                     _postData[item.formField] = item.value
                 }
             })
-// console.log('testHandel _postData:', _postData)
+            console.log('testHandel _postData:', _postData)
 
             let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
             // console.log('testHandel res ', res.data)
@@ -861,6 +873,53 @@ var app = new Vue({
                 this.getScoringTrendData()
             }
         },
+        
+        /*
+         * 连发 事件
+         */
+        async dealRapicFireHandel(howmany) {
+            this.targetShootLoading=true
+            let promises = [];
+            for (let i = 0; i < howmany; i++) {
+                promises.push(this.rapidFireHandel());
+            }
+            await Promise.all(promises);
+            this.targetShootLoading=false
+        },
+        async rapidFireHandel() {
+            const promptItemId = this.promptid
+            const numsOfResults= 1
+            return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
+                {params: {promptItemId, numsOfResults}}).then(res => {
+                console.log('testHandel res ', res.data)
+                //输出列表
+                 res.data.data.promptResults.map(item=>{
+                    item.promptId = promptItemId
+                    item.scoreType = '1' // 1 ai、2手动 
+                    item.isScoreView = false // 是否显示评分视图
+                    //时间 格式化  addTime
+                    item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                    // 手动评分
+                    item.scoreVal = 0
+                    // ai评分预期结果
+                    item.alResultList = [{
+                        id: 1,
+                        label: '预期结果1',
+                        value: ''
+                    }, {
+                        id: 2,
+                        label: '预期结果2',
+                        value: ''
+                    }, {
+                        id: 3,
+                        label: '预期结果3',
+                        value: ''
+                    }]
+                     this.outputList.push(item)
+                })
+            })
+        },
+        
         // 配置 重置参数
         resetConfigurineParam() {
             //console.log('配置参数 重置:', this.parameterViewList)

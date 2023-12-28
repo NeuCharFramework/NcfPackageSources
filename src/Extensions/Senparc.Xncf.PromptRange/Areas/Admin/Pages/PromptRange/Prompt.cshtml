@@ -44,7 +44,7 @@
                             <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
                             <div class="titleContent">选择靶道</div>
                         </div>
-                        <el-select v-model="promptid" :disabled="!promptField" placeholder="请选择靶道" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
+                        <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                             <el-option v-for="item in promptOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -137,8 +137,6 @@
                                       placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
                             </el-input>
                             <div class="operationBox">
-                                @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">仅保存</el-button> *@
-                                @* <el-button type="primary" size="mini" icon="el-icon-plus" :disabled="targetShootDisabled" v-loading="targetShootLoading" @@click="targetShootHandel">打靶</el-button> *@
                                 @* 选择连发次数 *@
                                 <el-dropdown @@command="changeNumsBtn" type="primary" size="small">
                                     <div class="numsOfResultsBox">
