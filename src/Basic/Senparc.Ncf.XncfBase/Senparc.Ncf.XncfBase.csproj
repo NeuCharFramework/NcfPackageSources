@@ -59,7 +59,6 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />-->
     <PackageReference Include="Senparc.CO2NET" Version="2.3.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>

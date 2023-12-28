@@ -32,6 +32,23 @@ namespace Senparc.Ncf.Database.Oracle
             _useOracleSQLCompatibility = useOracleSQLCompatibility;
         }
 
+#if !NETSTANDARD
+        private static OracleSQLCompatibility _oracleSQLCompatibility = OracleSQLCompatibility.DatabaseVersion19;
+
+
+        /// <summary>
+        /// 设置 OracleSQLCompatibility 的参数，默认为 19
+        /// <para>注意：此设置应该在执行 <code>.AddDatabase&lt;OracleDatabaseConfiguration&gt;();</code> 之前执行</para>
+        /// </summary>
+        /// <param name="oracleSQLCompatibility"></param>
+        public static void SetUseOracleSQLCompatibility(OracleSQLCompatibility oracleSQLCompatibility)
+        {
+            _oracleSQLCompatibility = oracleSQLCompatibility;
+        }
+
+
+#endif
+
         public OracleDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Oracle;
@@ -42,10 +59,14 @@ namespace Senparc.Ncf.Database.Oracle
 
             //This method accepts either a value of "11" or "12" (default). By default, generated SQL is compatible with database version 12 and higher. Customers using Oracle Database version 11.2 should set UseOracleSQLCompatibility("11").
             //https://docs.oracle.com/en/database/oracle/oracle-data-access-components/19.3/odpnt/EFCoreAPI.html#GUID-66247629-2670-44AA-AC55-849C367852AF
+#if NETSTANDARD
             if (!_useOracleSQLCompatibility.IsNullOrEmpty())
             {
                 typedBuilder.UseOracleSQLCompatibility(_useOracleSQLCompatibility);
             }
+#else
+            typedBuilder.UseOracleSQLCompatibility(_oracleSQLCompatibility);
+#endif
         };
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
