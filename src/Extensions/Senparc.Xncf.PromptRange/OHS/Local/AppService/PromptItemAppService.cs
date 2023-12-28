@@ -43,11 +43,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     #region save promptItem
 
-                    var promptItem = await _promptItemService.AddPromptItemAsync(request);
-                    if (promptItem == null)
-                    {
-                        throw new NcfExceptionBase("新增失败");
-                    }
+                    var promptItem = await _promptItemService.AddPromptItemAsync(request)
+                                     ?? throw new NcfExceptionBase("新增失败");
 
                     #endregion
 
@@ -91,7 +88,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             p => p.Id,
                             Ncf.Core.Enums.OrderingType.Ascending);
                     return promptItems.Select(p => new PromptItem_GetIdAndNameResponse(p)
-                    
                     ).ToList();
                 });
         }

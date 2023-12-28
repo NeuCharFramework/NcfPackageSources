@@ -255,7 +255,7 @@ namespace Senparc.Xncf.PromptRange
 
         #endregion
         
-        public PromptItem Switch(bool show)
+        public PromptItem ShareSwitch(bool show)
         {
             this.IsShare = show;
 
@@ -293,6 +293,13 @@ namespace Senparc.Xncf.PromptRange
         public PromptItem ModifyNote(string note)
         {
             this.Note = note;
+
+            return this;
+        }
+
+        public PromptItem DraftSwitch(bool isDraft)
+        {
+            this.IsDraft = isDraft;
 
             return this;
         }

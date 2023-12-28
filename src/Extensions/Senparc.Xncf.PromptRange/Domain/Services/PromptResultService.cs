@@ -129,11 +129,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<PromptResult> SenparcGenerateResultAsync(PromptItem promptItem)
         {
             // 从数据库中获取模型信息
-            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
-            if (model == null)
-            {
-                throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
-            }
+            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
+                        ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
+
 
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
             // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
@@ -209,7 +207,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 有期望结果， 进行自动打分
             if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
-                this.RobotScoringAsync(promptResult.Id, promptItem.ExpectedResultsJson, false);
+                await this.RobotScoringAsync(promptResult.Id, promptItem.ExpectedResultsJson, false);
             }
 
             return promptResult;
@@ -296,7 +294,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, string expectedResultsJson, bool isRefresh)
         {
-            List<string> list = JsonConvert.DeserializeObject<List<string>>(expectedResultsJson);
+            List<string> list = //JsonConvert.DeserializeObject<>(expectedResultsJson);
+                expectedResultsJson.GetObject<List<string>>();
             return await this.RobotScoringAsync(promptResultId, list, isRefresh);
         }
 
@@ -304,18 +303,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, List<string> expectedResultList, bool isRefresh)
         {
             // get promptResult by id
-            var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId);
-            if (promptResult == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptResult");
-            }
+            var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId)
+                               ?? throw new NcfExceptionBase("找不到对应的promptResult");
+
 
             // get promptItem by promptResult.PromptItemId
-            var promptItem = await _promptItemService.GetObjectAsync(z => z.Id == promptResult.PromptItemId);
-            if (promptItem == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptItem");
-            }
+            var promptItem = await _promptItemService.GetObjectAsync(z => z.Id == promptResult.PromptItemId)
+                             ?? throw new NcfExceptionBase("找不到对应的promptItem");
 
             // 保存期望结果列表
             await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
