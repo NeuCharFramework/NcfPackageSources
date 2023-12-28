@@ -1,3 +1,4 @@
+using Senparc.AI;
 using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
@@ -13,6 +14,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// Endpoint（必须）
         /// </summary>
         public string Endpoint { get; private set; }
+
+        /// <summary>
+        /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
+        /// </summary>
+        public AiPlatform AiPlatform { get; internal set; }
+
 
         /// <summary>
         /// OrganizationId（可选）

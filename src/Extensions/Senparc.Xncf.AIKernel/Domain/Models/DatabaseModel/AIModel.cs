@@ -28,10 +28,10 @@ namespace Senparc.Xncf.AIKernel.Models
         public string Endpoint { get; private set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
         /// </summary>
-        [Required, MaxLength(20)]
-        public string ModelType { get; private set; }
+        [Required]
+        public AiPlatform AiPlatform { get; private set; }
 
         /// <summary>
         /// OrganizationId（可选）
@@ -89,12 +89,12 @@ namespace Senparc.Xncf.AIKernel.Models
         {
         }
 
-        public AIModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
+        public AIModel(string name, string endpoint, AiPlatform aiPlatform, string organizationId, string apiKey,
             string apiVersion, string note, int maxToken)
         {
             Name = name;
             Endpoint = endpoint;
-            ModelType = modelType;
+            AiPlatform = aiPlatform;
             OrganizationId = organizationId;
             ApiKey = apiKey;
             ApiVersion = apiVersion;
@@ -137,11 +137,14 @@ namespace Senparc.Xncf.AIKernel.Models
         {
             Name = llmModelDto.Name;
             Endpoint = llmModelDto.Endpoint;
+            AiPlatform = llmModelDto.AiPlatform;
             OrganizationId = llmModelDto.OrganizationId;
             ApiKey = llmModelDto.ApiKey;
             ApiVersion = llmModelDto.ApiVersion;
             Note = llmModelDto.Note;
             MaxToken = llmModelDto.MaxToken;
+
+
             // TextCompletionModelName = llmModelDto.TextCompletionModelName;
             // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
             // OtherModelName = llmModelDto.OtherModelName;
