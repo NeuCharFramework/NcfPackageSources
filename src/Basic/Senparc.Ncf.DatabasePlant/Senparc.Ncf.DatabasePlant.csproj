@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-		<Version>0.13.4.2-beta1</Version>
+		<Version>0.13.5-beta1</Version>
 		<AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
 		<RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -23,6 +23,7 @@
 		<PackageReleaseNotes>
 			v0.1 创世
 			v0.11.3 添加 Oracle 库引用：Senparc.Ncf.Database.Oracle
+			v0.13.5 完成 .NET 8.0 当前所有数据库 EF Core 的集成
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -72,6 +73,6 @@
 		<ProjectReference Include="..\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
 		<ProjectReference Include="..\Senparc.Ncf.Database.PostgreSQL\Senparc.Ncf.Database.PostgreSQL.csproj" />
-		<!--<ProjectReference Include="..\Senparc.Ncf.Database.Oracle\Senparc.Ncf.Database.Oracle.csproj" />-->
+		<ProjectReference Include="..\Senparc.Ncf.Database.Oracle\Senparc.Ncf.Database.Oracle.csproj" />
 	</ItemGroup>
 </Project>
