@@ -685,6 +685,7 @@ var app = new Vue({
             if (res.data.success) {
                 //console.log('获取版本记录数据', res.data.data.rootNodeList)
                 let _listData = res?.data?.data?.rootNodeList || []
+                console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))
                 this.versionTreeData = this.treeArrayFormat(_listData)
             }
         },
@@ -703,10 +704,10 @@ var app = new Vue({
                         children: []
                     }
                 trees.push(newData);
-                fn = this.treeArrayFormat(data[i][child], child);
-                if (data[i][child]) {
-                    trees[i].childs = fn;
+                if (data[i].children && data[i].children.length>0) {
+                    trees[i].children = this.treeArrayFormat(data[i].children, child);
                 }
+                
             }
             return trees
          },
