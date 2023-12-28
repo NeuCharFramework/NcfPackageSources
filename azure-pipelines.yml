@@ -649,6 +649,27 @@ steps:
   condition: succeededOrFailed()
 
 - task: NuGetCommand@2
+  displayName: Senparc.Xncf.AIKernel
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.AIKernel.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Xncf.AIKernel- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.AIKernel.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+  
+- task: NuGetCommand@2
   displayName: Senparc.Xncf.Dapr
   inputs:
     command: push
