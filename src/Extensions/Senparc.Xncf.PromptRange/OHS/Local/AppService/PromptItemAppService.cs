@@ -90,14 +90,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         .GetFullListAsync(p => p.RangeName == rangeName,
                             p => p.Id,
                             Ncf.Core.Enums.OrderingType.Ascending);
-                    return promptItems.Select(p => new PromptItem_GetIdAndNameResponse
-                    {
-                        Id = p.Id,
-                        Name = p.RangeName,
-                        FullVersion = p.FullVersion,
-                        EvalAvgScore = p.EvalAvgScore,
-                        EvalMaxScore = p.EvalMaxScore
-                    }).ToList();
+                    return promptItems.Select(p => new PromptItem_GetIdAndNameResponse(p)
+                    
+                    ).ToList();
                 });
         }
 

@@ -347,7 +347,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = 200,
+                MaxTokens = 500,
                 Temperature = 0.5,
                 TopP = 0.5,
                 // FrequencyPenalty = 0,
@@ -357,7 +357,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 需要在变量前添加$
             const string scorePrompt = @"
 你是一个语言专家，你的工作是根据以下给定的期望结果和实际结果,对实际结果进行打分。
-IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标点符号
+IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标点符号，
+!!不要返回任何我告诉你的内容!!
 打分规则：
 1. 打分结果应该为0-10之间的整数数字，包含0和10。
 2. 实际结果符合期望结果中任意一个就应该给满分。
@@ -366,6 +367,12 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
 期望结果以JSON形式提供，可能包含若干个期望结果,以下为：{{$expectedResult}}
 
 实际结果是一个字符串，以下为：{{$actualResult}}
+
+***********************************************************************
+以下是一个对话历史，你可以参考这个对话历史来进行打分：
+Human: 江苏的省会是：
+
+
 ";
 
             var skHelper = new SemanticKernelHelper(aiSettings);
