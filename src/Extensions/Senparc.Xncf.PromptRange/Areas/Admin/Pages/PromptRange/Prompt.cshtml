@@ -251,7 +251,7 @@
                     <div class="contentRow">
                         {{item.resultString}}
                     </div>
-                    <div class="operateRow">
+                    <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                             <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span>AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
