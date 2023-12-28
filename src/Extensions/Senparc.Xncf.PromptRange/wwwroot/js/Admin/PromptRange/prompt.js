@@ -3,6 +3,7 @@ var app = new Vue({
     data() {
         return {
             devHost: 'http://pr-felixj.frp.senparc.com',
+            pageChange: false, // 页面是否有变化
             // 配置 输入 ---start
             promptField: '', // 靶场列表
             promptFieldOpt: [], // 靶场列表
@@ -85,8 +86,7 @@ var app = new Vue({
             ],
             promptLeftShow: false, // prompt左侧区域整体 显隐
             parameterViewShow: false, // 模型参数设置 显隐 false是默认显示 trun是隐藏
-            targetShootLoading: false, // 打靶按钮loading
-            targetShootDisabled: false, // 打靶按钮禁用
+            targetShootLoading: false, // 打靶loading
             // 配置 输入 ---end
             // prompt请求参数 ---start
             promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
@@ -132,6 +132,12 @@ var app = new Vue({
             tacticalForm: {
                 tactics: '重新瞄准'
             },
+            // 靶场
+            fieldFormVisible: false,
+            fieldFormSubmitLoading: false,
+            fieldForm: {
+                fieldName:''
+            },
             // 模型
             modelFormVisible: false,
             modelFormSubmitLoading: false,
@@ -159,8 +165,12 @@ var app = new Vue({
                 value: 'HugginFace',
                 label: 'HugginFace',
                 disabled: false
-            }],
+                }],
+            // 表单校验规则
             rules: {
+                fieldName: [
+                    { required: true, message: '请输入靶场名称', trigger: 'blur' }
+                ],
                 tactics: [
                     {required: true, message: '请选择战术', trigger: 'change'}
                 ],
@@ -216,7 +226,7 @@ var app = new Vue({
         window.addEventListener('beforeunload', this.beforeunloadHandler);
     },
     mounted() {
-        // 获取靶场列表
+        // 获取靶道列表
         this.getFieldList()
         // 获取模型列表
         this.getModelOptData()
@@ -230,70 +240,59 @@ var app = new Vue({
             if (self.chartInstance) {
                 self.chartInstance.resize();
             }
-
         });
         resizeObserver.observe(viewElem);
 
     },
     beforeDestroy() {
         // 销毁之前移除事件监听器
-window.removeEventListener('beforeunload', this.beforeunloadHandler);
+        window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
-        addNewField(){
-          //reload page
-          window.location.reload();
+        // 连发次数 数量变化
+        changeNumsBtn(command=1) {
+            this.numsOfResults = command
         },
+        // 打靶按钮 类型切换
         changeBtn(command){
             this.sendBtnText = command
         },
+        // 打靶按钮 点击 触发对应类型事件
         clickSendBtn(){
           const command=this.sendBtnText
             console.log('点击了'+command)
-            
             this.targetShootHandel(command==='保存草稿')
-           
-            
         },
+        // beforeunload 事件处理函数
         beforeunloadHandler(e) {
             console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
-            // 如果数据没有变动，则不需要提示用户保存
-            //if (this.isDataChanged()) {
-            //    // 显示自定义对话框
-            //    let confirmationMessage = '您的数据已经修改，是否保存？';
-            //    // 阻止默认行为
-            //    e.preventDefault();
-            //    // 兼容旧版本浏览器
-            //    e.returnValue = confirmationMessage;
-            //    return confirmationMessage;
-            //}
-            setTimeout(function () {
-                // 弹出自定义模态框
-                var modal = document.createElement("div");
-                modal.innerHTML = "您确定要离开本页面吗？";
-                var btn = document.createElement("button");
-                btn.textContent = "留在页面";
-                btn.onclick = function () {
-                    // 取消默认的 beforeunload 行为
-                    e.preventDefault();
-                    // 关闭自定义模态框
-                    modal.remove();
-                };
-                modal.appendChild(btn);
-                document.body.appendChild(modal);
-            }, 0);
+             // 如果数据没有变动，则不需要提示用户保存
+            if (this.pageChange) {
+                // 显示自定义对话框
+                let confirmationMessage = '您的数据已经修改，是否保存？';
+                // 阻止默认行为
+                e.preventDefault();
+                // 兼容旧版本浏览器
+                e.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+            //setTimeout(function () {
+            //    // 弹出自定义模态框
+            //    var modal = document.createElement("div");
+            //    modal.innerHTML = "您确定要离开本页面吗？";
+            //    var btn = document.createElement("button");
+            //    btn.textContent = "留在页面";
+            //    btn.onclick = function () {
+            //        // 取消默认的 beforeunload 行为
+            //        e.preventDefault();
+            //        // 关闭自定义模态框
+            //        modal.remove();
+            //    };
+            //    modal.appendChild(btn);
+            //    document.body.appendChild(modal);
+            //}, 0);
         },
-        // 保存数据的函数
-         saveData() {
-    // TODO: 将数据保存到服务器或本地存储中
-},
-
-// 判断是否有数据变动的函数
- isDataChanged() {
-     // TODO: 判断数据是否有变动，如果有变动，返回 true；否则返回 false
-     return true;
-    },
-
+        // 格式化时间
         formatDate(d) {
             var date = new Date(d);
             var YY = date.getFullYear() + '-';
@@ -471,20 +470,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
             if (itemKey === 'promptid') {
                 this.getPromptetail(val, true)
             } else {
-                let _isEdit = true
-                // //判断是否有修改 任意一项修改过 解除打靶按钮禁用
-                // this.parameterViewList.forEach(el => {
-                //     if (el.formField === itemKey && this.promptDetail[itemKey] === val) {
-                //        
-                //     }
-                // })
-                // if (itemKey === 'content') {
-                //     _isEdit = true
-                // }
-                // if (itemKey === 'remarks') {
-                //     _isEdit = true
-                // }
-                if (_isEdit) this.targetShootDisabled = false
+                this.pageChange = true
             }
 
         },
@@ -577,8 +563,6 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                        
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
-                    } else {
-                        this.targetShootDisabled = false
                     }
 
                 } else {
@@ -588,55 +572,36 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
         },
 
         // 版本记录 获取版本记录 树形数据
-        getVersionRecordData() {
-            // 模拟数据
-            this.versionTreeData = [{
-                id: 1,
-                label: '一级 1',
-                isPublic: false,
-                children: [{
-                    id: 4,
-                    label: '二级 1-1',
-                    isPublic: false,
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1',
-                        isPublic: false
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2',
-                        isPublic: false
-                    }]
-                }]
-            }, {
-                id: 2,
-                label: '一级 2',
-                isPublic: false,
-                children: [{
-                    id: 5,
-                    label: '二级 2-1',
-                    isPublic: false
-                }, {
-                    id: 6,
-                    label: '二级 2-2',
-                    isPublic: false
-                }]
-            }, {
-                id: 3,
-                label: '一级 3',
-                isPublic: false,
-                children: [{
-                    id: 7,
-                    label: '二级 3-1',
-                    isPublic: false
-                }, {
-                    id: 8,
-                    label: '二级 3-2',
-                    isPublic: false
-                }]
-            }]
-            // to do 接口对接 async await
+        async getVersionRecordData() {
+            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${this.promptField}`)
+            if (res.data.success) {
+                //console.log('获取版本记录数据', res.data.data.rootNodeList)
+                let _listData = res?.data?.data?.rootNodeList || []
+                this.versionTreeData = this.treeArrayFormat(_listData)
+            }
         },
+        //树形数据格式化  参数data:要格式化的数据,child为要格式化数据的子数组值名
+        treeArrayFormat(data, child) { 
+            let trees = new Array();
+            let fn = null;
+            let newData = null;
+            for(let i in data) {
+                    newData = {
+                        id: data[i].data.id,
+                        label: data[i].name ? data[i].name : "未命名",
+                        isPublic: false,
+                        data: data[i].data,
+                        attributes: data[i].attributes,
+                        children: []
+                    }
+                trees.push(newData);
+                fn = this.treeArrayFormat(data[i][child], child);
+                if (data[i][child]) {
+                    trees[i].childs = fn;
+                }
+            }
+            return trees
+         },
         // 版本记录 查看
         seeVersionRecord() {
             this.versionDrawer = true
@@ -805,7 +770,10 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
         },
 
 
-        // 打靶     
+        /*
+        * 打靶 事件
+        * isDraft 是否保存草稿
+        */      
         async targetShootHandel(isDraft=false) {
             if (this.promptid) {
                 this.tacticalFormVisible = true
@@ -818,7 +786,8 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 modelid: this.modelid,// 选择模型
                 content: this.content,// prompt 输入内容
                 note: this.remarks, // prompt 输入的备注,
-                numsOfResults : 1,
+                numsOfResults: 1,
+                //numsOfResults: isDraft?this.numsOfResults:1,
                 isDraft:isDraft
             }
             if (this.promptid) {
@@ -853,7 +822,6 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                 // 重新获取prompt列表
                 this.getPromptOptData(id)
-                this.targetShootDisabled = true
                 // 拷贝数据
                 let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                 delete copyResultData.promptResultList
@@ -891,8 +859,6 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                 
                 // 获取分数趋势图表数据
                 this.getScoringTrendData()
-            } else {
-                this.targetShootDisabled = false
             }
         },
         // 配置 重置参数
@@ -1100,7 +1066,33 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
         },
 
 
-        // 配置 获取prompt 下拉列表数据
+        // 关闭新增靶场 dialog
+        fieldFormCloseDialog() {
+            this.fieldForm = {
+                fieldName: ''
+            }
+            this.$refs.fieldForm.resetFields();
+        },
+        // dialog 新增靶场 提交按钮
+        fieldFormSubmitBtn() {
+            this.$refs.fieldForm.validate(async (valid) => {
+                if (valid) {
+                    this.fieldFormVisible = false
+                    //this.fieldFormSubmitLoading = true
+                    //// todo 对接接口
+                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.fieldForm)
+                    //this.fieldFormSubmitLoading = false
+                    //if (res.data.success) {
+                    //    // todo 重新获取靶场列表
+                    //    // 关闭dialog
+                    //    this.fieldFormVisible = false
+                    //}
+                } else {
+                    return false;
+                }
+            });
+        },
+        // 配置 获取靶场 下拉列表数据
         async getFieldList(){
             await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
                 .then(res=>{
@@ -1116,6 +1108,7 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                     }
                 })
         },
+        // 获取靶道 下拉列表数据
         async getPromptOptData(id) {
             let res = await service
                 .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName',{
@@ -1153,12 +1146,6 @@ window.removeEventListener('beforeunload', this.beforeunloadHandler);
                     this.getOutputList(this.promptDetail.id)
                     // 重新获取图表
                     this.getScoringTrendData()
-                    if (this.promptDetail.id == id) {
-                        // 将打靶按钮禁用
-                        this.targetShootDisabled = true
-                    } else {
-                        this.targetShootDisabled = false
-                    }
 
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
