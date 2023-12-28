@@ -138,6 +138,17 @@ var app = new Vue({
             fieldForm: {
                 fieldName:''
             },
+            // ai 评分标准
+            aiScoreFormVisible: false,
+            aiScoreFormSubmitLoading: false,
+            aiScoreForm: {
+                resultList:[{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }]
+            },
+
             // 模型
             modelFormVisible: false,
             modelFormSubmitLoading: false,
@@ -203,6 +214,9 @@ var app = new Vue({
                 ],
                 organizationId: [
                     {required: true, message: '请输入Organization Id', trigger: 'blur'}
+                ],
+                aiResultVal:[
+                    { required: true, message: '请输入期望结果', trigger: 'blur' }
                 ]
             },
             versionData: [],
@@ -321,120 +335,97 @@ var app = new Vue({
             let scoreChart = document.getElementById('promptPage_scoreChart');
             let chartOption = {
                 tooltip: {
-                    trigger: "axis",
-                    formatter: '{b}: {c}分 ',
+                    show: true,
+                    formatter: function (params) {
+                        console.log('params', params)
+                        return '测试显示tooltip'
+                    }
                 },
-                grid: {
-                    top: '35',
-                    right: '35',
-                    bottom: '0',
-                    left: '15',
-                    containLabel: true
+                xAxis3D: {
+                    type: "category",
+                    data: this.chartData.xData||[],
+                    name: ""
                 },
-                xAxis: {
-                    name: "版本", // 
-                    nameGap: 5,  // 表现为上下位置
-                    nameTextStyle: {
-                        verticalAlign: "bottom",//标题位置
-                        padding: [0, 0, 40, 0],//控制X轴标题位置
-                        color: "#999",
-                        fontSize: 12,
-                    },
-                    type: 'category',
-                    boundaryGap: false,
-                    data: [],
-                    axisTick: {
-                        show: true,
-                        alignWithLabel: true,
-                        lineStyle: {
-                            color: '#999',
-                        }
-
-                    },
-                    axisLabel: {
-                        //interval: 0,
-                        textStyle: {
-                            fontSize: 12,
-                            // fontWeight: '400',
-                            color: '#999'
-                        }
-                    },
+                yAxis3D: {
+                    type: "category",
+                    data: this.chartData.yData || [],
+                    name: ""
+                },
+                zAxis3D: {
+                    type: "value",
+                    name: "",
+                    //max: 10,
+                },
+                //  grid3D
+                grid3D: {
+                    show: true,
+                    boxWidth: 200,
+                    boxHeight: 100,
+                    boxDepth: 100,
+                    environment: '#333333',
                     axisLine: {
                         lineStyle: {
-                            color: '#999',
-                        }
+                            color: '#ffffff',
+                            opacity: 1,
+                            //width: 1
+                        },
+                    },
+                    axisLabel: {
+                        //textStyle: {
+                        //    color: "#000",
+                        //    fontSize: 12
+                        //}
+                    },
+                    axisPointer: {
+                        show: false,
                     },
                     splitLine: {
                         show: false,
-                        lineStyle: {
-                            color: '#EBEEF5'
-                        }
-                    }
-                },
-                yAxis: {
-                    name: '平均分',// 平均分
-                    nameGap: 15,  // 表现为上下位置
-                    nameTextStyle: {
-                        verticalAlign: 'left',//标题位置
-                        padding: [0, 0, 0, -40],//控制y轴标题位置
-                        color: "#999",
-                        fontSize: 12
                     },
-                    type: 'value',
-                    //axisPointer: {
-                    //    show: true,
+                    viewControl: {
+                        distance: 300,
+                        alpha: 10,
+                        beta: 30,
+                        animation: true,
+                    },
+                },
+                series: [
+                    {
+                        //参照平面
+                        type: 'bar3D',
+                        name: 'ground',
+                        itemStyle: {
+                            opacity: 0.1,
+                        },
+                        silent: true,
+                        barSize: [200, 100],
+                        data: [[5, 5, 0.1]],
+                    },
+                    //{
+                    //    type: 'line3D',
+                    //    name: '1',
+                    //    lineStyle: {
+                    //        width: 4,
+                    //    },
+                    //    data: data1,
                     //},
-                    axisTick: {
-                        show: false,
-                        alignWithLabel: true,
-                    },
-                    axisLabel: {
-                        /*formatter: '{value}',*/
-                        textStyle: {
-                            fontSize: 12,
-                            // fontWeight: '400',
-                            color: '#999'
-                        }
-                    },
-                    axisLine: {
-                        show: false,
-                        lineStyle: {
-                            color: '#EBEEF5',
-                        }
-                    },
-                    splitLine: {
-                        lineStyle: {
-                            color: '#EBEEF5'
-                        }
-                    }
-                },
-                series: [{
-                    name: '分数趋势图',
-                    type: 'line',
-                    data: [],
-                    itemStyle: {
-                        //emphasis: {
-                        //    color: "rgb(7,162,148)",
-                        //    borderColor: "rgba(7,162,148,0.6)",
-                        //    borderWidth: 20
-                        //},
-                        normal: {
-                            color: "#0083ff",
-                            //borderColor: "rgb(6,65,95)",
-                            //lineStyle: {
-                            //    color: "rgb(101,184,196)"
-                            //}
-                        }
-                    },
-                    areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0,
-                                color: "#0083ff"
-                            }, {offset: 1, color: "#fff"}], false)
-                        }
-                    }
-                }]
+                    //{
+                    //    type: 'line3D',
+                    //    name: '2',
+                    //    lineStyle: {
+                    //        width: 4,
+                    //    },
+                    //    data: data2,
+                    //},
+                    //{
+                    //    type: 'line3D',
+                    //    name: '3',
+                    //    lineStyle: {
+                    //        width: 4,
+                    //    },
+                    //    data: data3,
+                    //},
+                ]
             };
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
@@ -444,7 +435,8 @@ var app = new Vue({
         async getScoringTrendData() {
             this.chartData = {
                 xData: [],
-                vData: []
+                yData: [],
+                zData: []
             }
             if (this.promptid) {
                 
@@ -1198,7 +1190,7 @@ var app = new Vue({
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
-                console.log('getPromptetail:', res.data)
+                //console.log('getPromptetail:', res.data)
                 this.promptDetail = res.data.data
                 if (overwrite) {
                     // 重新获取输出列表
@@ -1252,6 +1244,69 @@ var app = new Vue({
             } else {
                 alert("error")
             }
+        },
+
+        // ai评分设置 dialog 新增结果行btn
+        aiScoreFormAddRow() {
+            let _len = this.aiScoreForm.resultList.length
+            this.aiScoreForm.resultList.push({
+                id: _len + 1,
+                label: `预期结果${_len + 1}`,
+                value: ''
+            })
+        },
+        // ai评分设置 打开 dialog 
+        aiScoreFormOpenDialog() {
+            if (this.promptDetail && this.promptDetail.expectedResultsJson) {
+                let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
+                this.aiScoreForm = {
+                    resultList:_expectedResultsJson.map((item, index) => {
+                        return {
+                            id: index + 1,
+                            label: `预期结果${index + 1}`,
+                            value: item
+                        }
+                    })
+                }
+            }
+            this.aiScoreFormVisible = !this.aiScoreFormVisible
+        },
+        // 关闭ai评分设置 dialog
+        aiScoreFormCloseDialog() {
+            this.aiScoreForm = {
+                resultList:[{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }]
+            }
+            this.$refs.aiScoreForm.resetFields();
+        },
+        // dialog ai评分设置 提交按钮
+        aiScoreFormSubmitBtn() {
+            this.$refs.aiScoreForm.validate(async (valid) => {
+                if (valid) {
+                    this.aiScoreFormSubmitLoading = true
+                    let _list = this.aiScoreForm.resultList.map(item => item.value)
+                    const res = await service.request({
+                        method: 'post',
+                        url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UpdateExpectedResults`,
+                        params: {
+                            promptItemId: Number(this.promptid),
+                            expectedResults: JSON.stringify(_list)
+                        }
+                    });
+                    this.aiScoreFormSubmitLoading = false
+                    if (res.data.success) {
+                        // 重新获取详情
+                        this.getPromptetail(this.promptid,false)
+                        // 关闭dialog
+                        this.aiScoreFormVisible = false
+                    }
+                } else {
+                    return false;
+                }
+            });
         },
     }
 });
