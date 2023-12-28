@@ -56,15 +56,15 @@
                 </div>
             </div>
             @*选择模型*@
-            <div class="configurineAreaItem modelBox">
-                <div class="titleRow">
+            <div class="configurineAreaItem modelBox" style="width: 50%;">
+                <div class="titleRow" style="padding: 5px">
                     <div class="titleRow_leftBox">
                         <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon" />
                         <div class="titleContent">选择模型</div>
                     </div>
                     <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
                 </div>
-                <el-select v-model="modelid" placeholder="请选择模型" class="selectRow" @@change="promptChangeHandel($event,'modelid')">
+                <el-select v-model="modelid" placeholder="请选择模型" style="padding: 5px" class="selectRow" @@change="promptChangeHandel($event,'modelid')">
                     <el-option v-for="item in modelOpt"
                                v-key="item.id"
                                :label="item.label"
