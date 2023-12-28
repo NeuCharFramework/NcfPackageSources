@@ -72,7 +72,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<Statistic_TodayTacticResponse>, Statistic_TodayTacticResponse>(
                 async (response, logger) =>
                 {
-                    logger.SaveLogs($"传入ID为{promptItemId}");
+                    logger.SaveLogs($"查询三维折现图，传入ID为{promptItemId}");
                     
                     return await _promptItemService.GetLineChartDataAsync(promptItemId,isAvg);
                 });
