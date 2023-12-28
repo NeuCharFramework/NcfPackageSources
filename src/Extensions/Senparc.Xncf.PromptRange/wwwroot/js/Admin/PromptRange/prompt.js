@@ -565,10 +565,8 @@ var app = new Vue({
                         await this.getFieldList().then(() => {
                             console.log(res.data)
                             this.promptField = res.data.data.fullVersion.split('-')[0]
-                            if (!this.promptid) {
-                                this.getPromptOptData(res.data.data.fullVersion.split('-')[0])
-                                this.promptid=res.data.data.id
-                            }
+                            this.getPromptOptData(res.data.data.fullVersion.split('-')[0])
+                            this.promptid=res.data.data.id
                             this.$message.success('提交成功')
                         })
                         // 获取分数趋势图表数据
