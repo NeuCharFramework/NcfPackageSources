@@ -560,10 +560,17 @@ var app = new Vue({
                             }
                             return item
                         })
-                        if(this.sendBtnText==='保存草稿'){
-                            this.$message.success('保存草稿成功')
-                        }
-                       
+                        console.log('选择正确的靶场')
+                        //提交数据后，选择正确的靶场和靶道
+                        await this.getFieldList().then(() => {
+                            console.log(res.data)
+                            this.promptField = res.data.data.fullVersion.split('-')[0]
+                            if (!this.promptid) {
+                                this.getPromptOptData(res.data.data.fullVersion.split('-')[0])
+                                this.promptid=res.data.data.id
+                            }
+                            this.$message.success('提交成功')
+                        })
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
                         if (this.numsOfResults>1){
@@ -796,7 +803,7 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid) {
+            if (this.promptid||isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
