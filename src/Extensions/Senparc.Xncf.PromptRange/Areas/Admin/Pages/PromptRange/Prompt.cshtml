@@ -301,6 +301,8 @@
                 <div class="titleRow_leftBox">
                     <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
                     <div class="titleContent">分数趋势图</div>
+                    <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">平均分</el-radio>
+                    <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
                 </div>
             </div>
             <div id="promptPage_scoreChart" class="echartsBox">
@@ -430,6 +432,8 @@
 </div>
 
 @section scripts {
-    <script src="~/lib/echarts/dist/echarts.js"></script>
+    @* <script src="~/lib/echarts/dist/echarts.js"></script> *@
+    <script src="~/js/Admin/echarts/echarts.min.js"></script>
+    <script src="~/js/Admin/echarts/echarts-gl.min.js"></script>
     <script src="~/js/Admin/PromptRange/prompt.js"></script>
 }

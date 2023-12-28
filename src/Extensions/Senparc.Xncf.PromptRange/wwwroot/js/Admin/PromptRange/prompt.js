@@ -4,6 +4,7 @@ var app = new Vue({
         return {
             devHost: 'http://pr-felixj.frp.senparc.com',
             pageChange: false, // 页面是否有变化
+            isAvg: true, // 是否平均分 默认false 不平均
             // 配置 输入 ---start
             promptField: '', // 靶场列表
             promptFieldOpt: [], // 靶场列表
@@ -336,20 +337,29 @@ var app = new Vue({
             let chartOption = {
                 tooltip: {
                     show: true,
-                    formatter: function (params) {
-                        console.log('params', params)
-                        return '测试显示tooltip'
-                    }
+                    //formatter: function (params) {
+                    //    console.log('params', params)
+                    //    return '测试显示tooltip'
+                    //}
                 },
                 xAxis3D: {
                     type: "category",
-                    data: this.chartData.xData||[],
-                    name: ""
+                    name: "",
+                    axisLabel: {
+                        show: true,
+                        interval: 0  //使x轴都显示
+                    },
+                    data: this.chartData?.xData || [],
                 },
                 yAxis3D: {
                     type: "category",
-                    data: this.chartData.yData || [],
-                    name: ""
+                    name: "",
+                    axisLabel: {
+                        show: true,
+                        interval: 0  //使x轴都显示
+                    },
+                    data: this.chartData?.yData || [],
+
                 },
                 zAxis3D: {
                     type: "value",
@@ -359,74 +369,139 @@ var app = new Vue({
                 //  grid3D
                 grid3D: {
                     show: true,
-                    boxWidth: 200,
-                    boxHeight: 100,
-                    boxDepth: 100,
-                    environment: '#333333',
+                    boxHeight: 150, // 3维图表的高度 z轴
+                    boxWidth: 400, // 3维图表的宽度 x轴
+                    boxDepth: 150, // 3维图表的深度 y轴
+                    // 整个chart背景，可为自定义颜色或图片
+                    environment: '#fff',
+                    //坐标轴轴线(线)控制
                     axisLine: {
-                        lineStyle: {
-                            color: '#ffffff',
+                        show: true,//该参数需设为true
+                        // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        lineStyle: {//坐标轴样式
+                            color: 'red',
+                            opacity: 1,//(单个刻度不会受影响)
+                            width: 2//线条宽度
+                        }
+                    },
+                    // 坐标轴 label
+                    axisLabel: {
+                        show: true,//是否显示刻度  (刻度上的数字，或者类目)
+                        interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        //formatter: function (v) {
+                        //    // return;
+                        //},
+                        textStyle: {
+                             color:'#000',//刻度标签样式
+                            //color: function (value, index) {
+                            //    return value >= 6 ? 'green' : 'red';//根据范围显示颜色，主页为值有效
+                            //},
+                            //  borderWidth:"",//文字的描边宽度。
+                            //  borderColor:'',//文字的描边颜色。
+                            fontSize: 12,//刻度标签字体大小
+                            fontWeight: '400',//粗细
+                        }
+                    },
+                    //刻度
+                    axisTick: {
+                        show: false,//是否显示出
+                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        length: 5,//坐标轴刻度的长度
+                        lineStyle: {//举个例子，样式太丑将就
+                            color: '#000',//颜色
                             opacity: 1,
-                            //width: 1
+                            width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        }
+                    },
+                    //平面上的分隔线。
+                    splitLine: {
+                        show: true,//立体网格线  
+                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        splitArea: {
+                            show: true,
+                            // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                            areaStyle: {
+                                color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
+                            }
                         },
                     },
-                    axisLabel: {
-                        //textStyle: {
-                        //    color: "#000",
-                        //    fontSize: 12
-                        //}
-                    },
+                    // 坐标轴指示线。
                     axisPointer: {
-                        show: false,
+                        show: false,//鼠标在chart上的显示线
+                        // lineStyle:{
+                        //     color:'#000',//颜色
+                        //     opacity:1,
+                        //     width:5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        // }
                     },
-                    splitLine: {
-                        show: false,
-                    },
+                    //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
                     viewControl: {
-                        distance: 300,
-                        alpha: 10,
-                        beta: 30,
+                        // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
+                // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
+                // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
+                // autoRotateSpeed:12,//物体自传的速度
+                // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
+                 distance:300,//默认视角距离主体的距离(常用)
+                 alpha:1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
+                 beta:30,//视角绕 y 轴，即左右旋转的角度。
+                // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
                         animation: true,
                     },
+                    //光照相关的设置
+                    //light: {
+                    //    main: {
+                    //        color: '#fff',//光照颜色会与所设置颜色发生混合
+                    //        intensity: 1.2,//主光源的强度(光的强度)
+                    //        shadow: false,//主光源是否投射阴影。默认关闭。
+                    //        // alpha:0//主光源绕 x 轴，即上下旋转的角度。配合 beta 控制光源的方向(跟beta结合可确定太阳位置)
+                    //        // beta:10//主光源绕 y 轴，即左右旋转的角度。
+                    //    },
+                    //    ambient: {//全局的环境光设置。
+                    //        intensity: 0.3,
+                    //        color: '#fff'//影响柱条颜色
+                    //    },
+                    //    // ambientCubemap: {//会使用纹理作为光源的环境光
+                    //    //  texture: 'pisa.hdr',
+                    //    // // 解析 hdr 时使用的曝光值
+                    //    // exposure: 1.0
+                    //    // }
+                    //},
+            // postEffect:{//后处理特效的相关配置，后处理特效可以为画面添加高光，景深，环境光遮蔽（SSAO），调色等效果。可以让整个画面更富有质感。
+            //     show:true,
+            //     bloom:{
+            //         enable:true//高光特效,适合地球仪
+            //     }
+            // }
                 },
-                series: [
-                    {
-                        //参照平面
-                        type: 'bar3D',
-                        name: 'ground',
-                        itemStyle: {
-                            opacity: 0.1,
-                        },
-                        silent: true,
-                        barSize: [200, 100],
-                        data: [[5, 5, 0.1]],
-                    },
-                    //{
-                    //    type: 'line3D',
-                    //    name: '1',
-                    //    lineStyle: {
-                    //        width: 4,
-                    //    },
-                    //    data: data1,
-                    //},
-                    //{
-                    //    type: 'line3D',
-                    //    name: '2',
-                    //    lineStyle: {
-                    //        width: 4,
-                    //    },
-                    //    data: data2,
-                    //},
-                    //{
-                    //    type: 'line3D',
-                    //    name: '3',
-                    //    lineStyle: {
-                    //        width: 4,
-                    //    },
-                    //    data: data3,
-                    //},
-                ]
+                series: []
             };
+            let _series = []
+            this.chartData?.seriesData?.forEach(item => {
+                if (item) {
+                    series.push({
+                        type: 'line3D', // line3D scatter3D
+                        name: item[0][1],
+                        //itemStyle: {
+                        //    color: 'rgb(165,  0, 38)'
+                        //},
+                        //label: {  //当type为scatter3D时有label出现
+                        //    show: false,
+                        //    position: 'bottom',
+                        //    distance: 0,
+                        //    textStyle: {
+                        //        color: '#ffffff',
+                        //        fontSize: 12,
+                        //        borderWidth: 0,
+                        //        borderColor: '#c6c6c6',
+                        //        backgroundColor: 'transparent'
+                        //    }
+                        //},
+                        data: item    //每个区的数据一一对应
+                    })
+                }
+            })
+            chartOption.series = _series
+            console.log('chartOption', chartOption)
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
@@ -436,30 +511,51 @@ var app = new Vue({
             this.chartData = {
                 xData: [],
                 yData: [],
-                zData: []
+                seriesData: []
             }
             if (this.promptid) {
-                
-                let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}`)
+                //console.log('获取评分趋势 图表数据', this.isAvg)
+               /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
+                let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
+                    let _dataPoints = res?.data?.dataPoints || []
+                    let _xData = [], _yData = [], _seriesData =[]
+                    _dataPoints.forEach(item => {
+                        if (item && item.length > 0) {
+                            let _zData = []
+                            item.forEach(el => {
+                                if (el) {
+                                    if (_xData.indexOf(el.y)===-1) {
+                                    _xData.push(el.y)
+                                    }
+                                    if (_yData.indexOf(el.x) === -1) {
+                                    _yData.push(el.x)
+                                    }
+                                    _zData.push([el.y, el.x, el.z])
+                                }
+                            })
+                            _seriesData.push(_zData)
+                        }
+                    })
                     this.chartData = {
-                        xData: res.data.data.xList || [],
-                        vData: res.data.data.yList || []
+                        xData: _xData,
+                        yData: _yData,
+                        seriesData: _seriesData
                     }
                 }
             }
 
             // 初始化图表 接口调用成功
             this.chartInitialization()
-            let _setOption = {
-                xAxis: {
-                    data: this.chartData.xData || []
-                },
-                series: [{
-                    data: this.chartData.vData || []
-                }]
-            }
-            this.chartInstance.setOption(_setOption);
+            //let _setOption = {
+            //    xAxis: {
+            //        data: this.chartData.xData || []
+            //    },
+            //    series: [{
+            //        data: this.chartData.vData || []
+            //    }]
+            //}
+            //this.chartInstance.setOption(_setOption);
         },
 
         // 靶道选择变化
