@@ -588,7 +588,7 @@ var app = new Vue({
                         content: this.content,// prompt 输入内容
                         note: this.remarks, // prompt 输入的备注
                         numsOfResults:1,
-                        isDraft: false
+                        isDraft: this.sendBtnText==='保存草稿'
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -656,7 +656,15 @@ var app = new Vue({
                             }
                             return item
                         })
-                       
+                        console.log('选择正确的靶场')
+                        //提交数据后，选择正确的靶场和靶道
+                        await this.getFieldList().then(() => {
+                            console.log(res.data)
+                            this.promptField = res.data.data.fullVersion.split('-')[0]
+                            this.getPromptOptData(res.data.data.fullVersion.split('-')[0])
+                            this.promptid=res.data.data.id
+                            this.$message.success('提交成功')
+                        })
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
                         if (this.numsOfResults>1){
@@ -816,7 +824,7 @@ var app = new Vue({
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
-                    alert('error!');
+                    this.$message.error(res.data.errorMessage);
                 }
             }
             if (item.scoreType === '2') {
@@ -875,7 +883,21 @@ var app = new Vue({
         * isDraft 是否保存草稿
         */      
         async targetShootHandel(isDraft=false) {
-            if (this.promptid) {
+            if(!this.modelid) {
+                this.$message({
+                    message: '请选择模型！',
+                    type: 'warning'
+                })
+                return
+            }
+            if(!this.content) {
+                this.$message({
+                    message: '请输入内容！',
+                    type: 'warning'
+                })
+                return
+            }
+            if (this.promptid||isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -966,6 +988,13 @@ var app = new Vue({
          * 连发 事件
          */
         async dealRapicFireHandel(howmany) {
+            if (!this.promptid) {
+                this.$message({
+                    message: '请选择一个靶道！',
+                    type: 'warning'
+                })
+                return
+            }
             this.targetShootLoading=true
             let promises = [];
             for (let i = 0; i < howmany; i++) {
@@ -1271,7 +1300,7 @@ var app = new Vue({
                     const max=scoreFormatter(item.evalMaxScore)
                     return {
                         ...item,
-                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max}`,
+                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft?'(草稿)':''}`,
                         value: item.id,
                         disabled: false
                     }
