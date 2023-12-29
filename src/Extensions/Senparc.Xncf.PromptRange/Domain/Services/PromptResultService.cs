@@ -96,7 +96,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
                 Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
-                Constants.NeuCharOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+                Constants.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
