@@ -29,7 +29,7 @@
                             </div>
                             <el-button type="primary" size="mini" icon="el-icon-plus" @@click="fieldFormVisible = true">新增靶场</el-button>
                         </div>
-                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="getPromptOptData">
+                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                             <el-option v-for="item in promptFieldOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -152,8 +152,8 @@
                                         <el-dropdown-item v-for="btn of numsOfResultsOpt" :key="btn" :command="btn">{{btn}}</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
-                                @* 打靶按钮 *@
-                                <el-dropdown @@command="changeBtn" v-loading="targetShootLoading" split-button type="primary" @@click="clickSendBtn"  size="small">
+                                @* 打靶按钮  v-loading="targetShootLoading" *@
+                                <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn"  size="small">
                                     {{sendBtnText}}
                                     <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&!promptid" :command="btn.text">{{btn.text}}</el-dropdown-item>
@@ -341,13 +341,12 @@
                             <div class="operateArea">
                                 <div class="operateItem">
                                     <span style="margin-right:5px;">是否公开</span>
-                                    <el-switch v-model="data.isPublic"
-                                               :width="34" @@change="versionRecordIsPublic(data)">
+                                    <el-switch v-model="data.isPublic" disabled="true" :width="34" @@change="versionRecordIsPublic(data)">
                                     </el-switch>
                                 </div>
                                 <div class="operateItem" @@click="versionRecordEdit(data)">编辑</div>
                                 <div class="operateItem" @@click="versionRecordGenerateCode(data)">生成代码</div>
-                                <div class="operateItem" @@click="versionRecordViewNotes(data)">查看备注</div>
+                                @* <div class="operateItem" @@click="versionRecordViewNotes(data)">查看备注</div> *@
                                 <div class="operateItem" @@click="versionRecordDelete(data)">删除</div>
                             </div>
                             <img slot="reference" src="~/image/Admin/PromptRange/prompt_moreDot.svg" class="treeMoreIcon" />
@@ -370,7 +369,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
-            <el-button type="primary" size="mini" v-loading="tacticalFormSubmitLoading" @@click="tacticalFormSubmitBtn">确 定</el-button>
+            @* v-loading="tacticalFormSubmitLoading" *@
+            <el-button type="primary" size="mini"  @@click="tacticalFormSubmitBtn">确 定</el-button>
         </div>
     </el-dialog>
     @*新增模型 dialog*@
@@ -399,7 +399,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @@click="modelFormVisible = false">取 消</el-button>
-            <el-button type="primary" v-loading="modelFormSubmitLoading" @@click="modelFormSubmitBtn">确 定</el-button>
+            @* v-loading="modelFormSubmitLoading" *@
+            <el-button type="primary" @@click="modelFormSubmitBtn">确 定</el-button>
         </div>
     </el-dialog>
     @*新增靶场 dialog*@
@@ -417,18 +418,31 @@
     @*ai评分标准 dialog*@
     <el-dialog title="ai评分标准" :visible.sync="aiScoreFormVisible" center @@close="aiScoreFormCloseDialog">
         <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
+            
             <div v-for="(item,index) in aiScoreForm.resultList" v-key="index">
                 <el-form-item :label="item.label" :prop="'resultList.' + index + '.value'" :rules="rules.aiResultVal" label-width="100px">
                     <el-input v-model="item.value" autocomplete="off" placeholder="请输入期望结果"></el-input>
                 </el-form-item>
             </div>
+            
             <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
+            <div class="warnRow">注意：设置预期结果后，将会根据预期结果自动进行ai评分。</div>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @@click="aiScoreFormVisible = false">取 消</el-button>
-            <el-button type="primary" v-loading="aiScoreFormSubmitLoading" @@click="aiScoreFormSubmitBtn">保 存</el-button>
+            @* v-loading="aiScoreFormSubmitLoading" *@
+            <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button>
         </div>
     </el-dialog>
+</div>
+
+<div v-if="isPageLoading" class="promptLoaderBox">
+    <div class="loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
 </div>
 
 @section scripts {
