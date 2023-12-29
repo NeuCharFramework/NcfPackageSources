@@ -242,7 +242,7 @@
                     },
                     editFormDialogVisible: false,
                     editForm:{
-                        "name": "",
+                       "name": "",
                        "endpoint": "",
                        "aiPlatform": '4',
                        "organizationId": "",
@@ -256,12 +256,15 @@
                   
                 }
             },
-            mounted () {
-                this.init();
+            async mounted () {
+                //wait for page rendered then init
+                setTimeout(async ()=>{
+                    await this.init();
+                },3000)
             },
             methods:{
-                init(){
-                    this.getDataList();
+                async init(){
+                    await this.getDataList();
                 },
                 handleSizeChange(val) {
                     this.page.size=val;
@@ -307,7 +310,7 @@
                     this.addForm={
                        "name": "",
                        "endpoint": "",
-                       "aiPlatform": 4,
+                       "aiPlatform": '4',
                        "organizationId": "",
                        "apiKey": "",
                        "apiVersion": "",
@@ -320,7 +323,7 @@
                     this.editForm={
                         "name": "",
                        "endpoint": "",
-                       "aiPlatform": 4,
+                       "aiPlatform": '4',
                        "organizationId": "",
                        "apiKey": "",
                        "apiVersion": "",
