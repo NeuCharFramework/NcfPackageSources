@@ -91,7 +91,12 @@
                 <el-input v-model="addForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="平台">
-                <el-input v-model="addForm.aiPlatform"></el-input>
+                             <el-select v-model="addForm.aiPlatform" placeholder="请选择">
+                                    <el-option label="NeuCharAI" value="4"></el-option>
+                                    <el-option label="OpenAI" value="8"></el-option>
+                                    <el-option label="AzureOpenAI" value="16"></el-option>
+                                <el-option label="HuggingFace" value="32"></el-option>
+                                </el-select>
             </el-form-item>
             <el-form-item label="组织">
                 <el-input v-model="addForm.organizationId"></el-input>
@@ -151,7 +156,18 @@
                 <el-input v-model="editForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="平台">
-                <el-input v-model="editForm.aiPlatform"></el-input>
+                   @* NeuCharAI = 4, *@
+                   @*  OpenAI = 8, *@
+                   @*  AzureOpenAI = 16, *@
+                   @*  HuggingFace = 32 *@
+                   @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
+                   @* use el-select *@
+                <el-select v-model="editForm.aiPlatform" placeholder="请选择">
+                    <el-option label="NeuCharAI" value="4"></el-option>
+                    <el-option label="OpenAI" value="8"></el-option>
+                    <el-option label="AzureOpenAI" value="16"></el-option>
+                <el-option label="HuggingFace" value="32"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="组织">
                 <el-input v-model="editForm.organizationId"></el-input>
@@ -207,31 +223,27 @@
                     tableData: [],
                     addFormDialogVisible: false,
                     addForm:{
-                        Name: '',
-                        Endpoint: '',
-                        AiPlatform: '',
-                        OrganizationId: '',
-                        ApiKey: '',
-                        ApiVersion: '',
-                        Note: '',
-                        MaxToken: '',
-                        Show: false,
-                        AdminRemark: '',
-                        Remark: ''
+                       "name": "",
+                       "endpoint": "",
+                       "aiPlatform": 4,
+                       "organizationId": "",
+                       "apiKey": "",
+                       "apiVersion": "",
+                       "note": "",
+                       "maxToken": 0,
+                       "show": true
                     },
                     editFormDialogVisible: false,
                     editForm:{
-                        Name: '',
-                        Endpoint: '',
-                        AiPlatform: '',
-                        OrganizationId: '',
-                        ApiKey: '',
-                        ApiVersion: '',
-                        Note: '',
-                        MaxToken: '',
-                        Show: false,
-                        AdminRemark: '',
-                        Remark: ''
+                        "name": "",
+                       "endpoint": "",
+                       "aiPlatform": 4,
+                       "organizationId": "",
+                       "apiKey": "",
+                       "apiVersion": "",
+                       "note": "",
+                       "maxToken": 0,
+                       "show": true
                     },
                   
                 }
@@ -246,10 +258,10 @@
                 async getDataList(){
                     //todo get data from api
                     // /api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync'
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{data:{
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{
                           "page": this.page.page,
                           "size": this.page.size,
-                    }})
+                    })
                     .then(res=>{
                         this.tableData=res.data.data;
                     })
@@ -258,10 +270,11 @@
                     this.addFormDialogVisible = true;
                 },
                 async addModelSubmit(){
-                    //todo 添加模型接口
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',{
-                        data:{...this.addForm}
-                    }).then(res=>{
+                    this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+                    this.addForm.maxToken = parseInt(this.addForm.maxToken)
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',
+                        {...this.addForm}
+                    ).then(res=>{
                             this.$message({
                                      type: res.data.success?'success':'error',
                                      message: res.data.success?'添加成功!':'添加失败'
@@ -272,9 +285,10 @@
                    
                 },
                 async editModelSubmit(){
-                    //todo 编辑模型接口
+                    this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+                    this.editForm.maxToken = parseInt(this.addForm.maxToken)
                     await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync',{
-                        data:{...this.editForm}
+                      ...this.editForm
                     }).then(res=>{
                             this.$message({
                                      type: res.data.success?'success':'error',
