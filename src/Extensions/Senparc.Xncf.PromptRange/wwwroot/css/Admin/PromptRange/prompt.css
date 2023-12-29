@@ -625,6 +625,8 @@ position: fixed;
         box-sizing: border-box;
         overflow: hidden;
         overflow-y: auto;
+        min-height:416px !important;
+        max-height: 46Vh;
     }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
@@ -780,7 +782,7 @@ position: fixed;
 
     .promptPage_rightArea > .analysisArea > .echartsBox {
         width: 100%;
-        min-width: 598px;
+        min-width: 379.5px; /*598px*/
         height: 200px;
         box-sizing: border-box;
     }

@@ -7,7 +7,6 @@ using Senparc.AI.Kernel.Entities;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
-using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
 using System.Collections.Generic;
