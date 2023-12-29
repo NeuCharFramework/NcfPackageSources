@@ -290,26 +290,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             );
         }
 
-        public async Task UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
+        public async Task<PromptItemDto> UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new Exception("未找到prompt");
-            }
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new Exception("未找到prompt");
+
 
             promptItem.UpdateExpectedResultsJson(expectedResults);
 
             await this.SaveObjectAsync(promptItem);
+
+            return this.Mapper.Map<PromptItemDto>(promptItem);
         }
 
         public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new Exception("未找到prompt");
-            }
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new Exception("未找到prompt");
+
 
             // 获取同一个靶道下的所有打过分的item
             List<PromptItemDto> promptItems = (await this.GetFullListAsync(
@@ -350,7 +348,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptItemDto> DraftSwitch(int id, bool status)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == id) ?? 
+            var promptItem = await this.GetObjectAsync(p => p.Id == id) ??
                              throw new NcfExceptionBase($"找不到{id}对应的靶道");
 
             promptItem.DraftSwitch(status);
