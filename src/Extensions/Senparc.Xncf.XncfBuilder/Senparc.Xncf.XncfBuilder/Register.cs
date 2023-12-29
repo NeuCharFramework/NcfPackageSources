@@ -13,7 +13,6 @@ using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.AI.Kernel;
-using Senparc.Xncf.PromptRange.Domain.Services;
 
 namespace Senparc.Xncf.XncfBuilder
 {
