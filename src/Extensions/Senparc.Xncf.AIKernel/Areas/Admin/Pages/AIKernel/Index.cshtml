@@ -65,8 +65,15 @@
                     </template>
                 </el-table-column>
             </el-table>
-            @*todo 翻页 *@
-
+            <el-pagination
+                @@current-change="handleCurrentChange"
+                @@size-change="handleSizeChange"
+                :current-page="page.page"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="page.size"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
         </el-main>
     </el-container>
 
@@ -212,7 +219,7 @@
 @section scripts{
 
     <script>
-        new Vue({
+        var app=new Vue({
             el: "#app",
             data(){
                 return {
@@ -225,7 +232,7 @@
                     addForm:{
                        "name": "",
                        "endpoint": "",
-                       "aiPlatform": 4,
+                       "aiPlatform": '4',
                        "organizationId": "",
                        "apiKey": "",
                        "apiVersion": "",
@@ -237,7 +244,7 @@
                     editForm:{
                         "name": "",
                        "endpoint": "",
-                       "aiPlatform": 4,
+                       "aiPlatform": '4',
                        "organizationId": "",
                        "apiKey": "",
                        "apiVersion": "",
@@ -245,6 +252,7 @@
                        "maxToken": 0,
                        "show": true
                     },
+                    total:0
                   
                 }
             },
@@ -255,6 +263,14 @@
                 init(){
                     this.getDataList();
                 },
+                handleSizeChange(val) {
+                    this.page.size=val;
+                    this.getDataList();
+                },
+                handleCurrentChange(val) {
+                    this.page.page=val;
+                    this.getDataList();
+                },
                 async getDataList(){
                     //todo get data from api
                     // /api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync'
@@ -263,7 +279,9 @@
                           "size": this.page.size,
                     })
                     .then(res=>{
-                        this.tableData=res.data.data;
+                        console.log(res)
+                        this.tableData=res.data.data.data;
+                        this.total=res.data.data.total;
                     })
                 },    
                 addModel(){
@@ -280,9 +298,36 @@
                                      message: res.data.success?'添加成功!':'添加失败'
                             });
                             this.getDataList()
+                            this.clearAddForm()
                             this.addFormDialogVisible = false;
                     })
                    
+                },
+                clearAddForm(){
+                    this.addForm={
+                       "name": "",
+                       "endpoint": "",
+                       "aiPlatform": 4,
+                       "organizationId": "",
+                       "apiKey": "",
+                       "apiVersion": "",
+                       "note": "",
+                       "maxToken": 0,
+                       "show": true
+                    }
+                },
+                clearEditForm(){
+                    this.editForm={
+                        "name": "",
+                       "endpoint": "",
+                       "aiPlatform": 4,
+                       "organizationId": "",
+                       "apiKey": "",
+                       "apiVersion": "",
+                       "note": "",
+                       "maxToken": 0,
+                       "show": true
+                    }
                 },
                 async editModelSubmit(){
                     this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
@@ -294,6 +339,7 @@
                                      type: res.data.success?'success':'error',
                                      message: res.data.success?'添加成功!':'添加失败'
                             });
+                            this.clearEditForm()
                             this.getDataList()
                             this.editFormDialogVisible = false;
                     })
