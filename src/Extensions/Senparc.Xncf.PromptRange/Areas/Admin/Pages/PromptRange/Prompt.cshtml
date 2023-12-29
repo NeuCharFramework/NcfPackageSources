@@ -29,7 +29,7 @@
                             </div>
                             <el-button type="primary" size="mini" icon="el-icon-plus" @@click="fieldFormVisible = true">新增靶场</el-button>
                         </div>
-                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
+                        <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField',promptField)">
                             <el-option v-for="item in promptFieldOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -44,7 +44,7 @@
                             <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
                             <div class="titleContent">选择靶道</div>
                         </div>
-                        <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
+                        <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid',promptid)">
                             <el-option v-for="item in promptOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -65,7 +65,7 @@
                     <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
                 </div>
                 <div style="padding-right: 5px">
-                    <el-select v-model="modelid" placeholder="请选择模型" class="selectRow" @@change="promptChangeHandel($event,'modelid')">
+                    <el-select v-model="modelid" placeholder="请选择模型" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
                         <el-option v-for="item in modelOpt"
                                    v-key="item.id"
                                    :label="item.label"
@@ -135,12 +135,14 @@
                     <div class="promptContentBox">
                         <el-input v-model="content" type="textarea"
                                   :rows="10"
+                                  resize="none"
                                   placeholder="请输入内容"
                                   class="promptInput" @@change="promptChangeHandel($event,'content')">
                         </el-input>
                         <div class="remarkRow">
                             <el-input v-model="remarks" type="textarea"
                                       :rows="4"
+                                      resize="none"
                                       maxlength="200"
                                       show-word-limit
                                       placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
@@ -388,13 +390,13 @@
             <el-form-item label="模型名称" prop="name" label-width="130px">
                 <el-input v-model="modelForm.name" autocomplete="off" placeholder="请输入模型名称"></el-input>
             </el-form-item>
-            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharOpenAI'" label="API Version" prop="apiVersion" label-width="130px">
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'" label="API Version" prop="apiVersion" label-width="130px">
                 <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
             </el-form-item>
-            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharOpenAI'" label="API key" prop="apiKey" label-width="130px">
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharAI'" label="API key" prop="apiKey" label-width="130px">
                 <el-input v-model="modelForm.apiKey" autocomplete="off" placeholder="请输入API key"></el-input>
             </el-form-item>
-            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharOpenAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
+            <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
                 <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='OpenAI'" label="Organization Id" prop="organizationId" label-width="130px">
