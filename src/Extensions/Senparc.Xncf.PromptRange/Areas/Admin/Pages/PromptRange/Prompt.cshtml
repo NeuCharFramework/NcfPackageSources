@@ -71,6 +71,10 @@
                                    :label="item.label"
                                    :value="item.value"
                                    :disabled="item.disabled">
+                            <div class="d-flex justify-content-between align-center">
+                                <span>{{ item.label }}</span>
+                                <el-button type="danger" size="mini" @@click="deleteModel(item)">删除</el-button>
+                            </div>
                         </el-option>
                     </el-select>
                 </div>

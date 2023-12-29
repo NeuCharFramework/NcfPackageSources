@@ -251,7 +251,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             aiSettings.AiPlatform = aiPlatform;
             switch (aiPlatform)
             {
-                case AiPlatform.NeuCharOpenAI:
+                case AiPlatform.NeuCharAI:
                     aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
                     {
                         ApiKey = llmModel.ApiKey,

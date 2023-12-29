@@ -16,7 +16,7 @@ namespace Senparc.Ncf.Database.Oracle
 {
     /// <summary>
     /// Oracle V11 数据库配置（包括 V11.2 等版本）
-    /// <para>注意：如果使用 Oracle 12 或以上版本，请直接使用 OracleDatabaseConfiguration
+    /// <para>注意：如果使用 Oracle 12 或以上版本，请直接使用 OracleDatabaseConfiguration</para>
     /// </summary>
     public class OracleDatabaseConfigurationForV11 : OracleDatabaseConfiguration
     {

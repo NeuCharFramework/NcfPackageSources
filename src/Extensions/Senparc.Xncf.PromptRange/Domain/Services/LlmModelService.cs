@@ -27,7 +27,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #region validate
 
             // 如果是Azure OpenAI
-            if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharOpenAI.ToString())
+            if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharAI.ToString())
             {
                 // 强制要求ApiVersion和Endpoint不为空
                 if (string.IsNullOrWhiteSpace(request.ApiVersion) || string.IsNullOrWhiteSpace(request.Endpoint))

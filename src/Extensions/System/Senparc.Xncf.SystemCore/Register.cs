@@ -40,7 +40,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID;// "00000000-0000-0000-0001-000000000001";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1.1";//必须填写版本号
 
         public override string MenuName => "系统核心模块";
 

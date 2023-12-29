@@ -8,13 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="新文件夹\**" />
-	  <Content Remove="新文件夹\**" />
-	  <EmbeddedResource Remove="新文件夹\**" />
-	  <None Remove="新文件夹\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Senparc.CO2NET.AspNet" Version="1.3.0" />
 	</ItemGroup>
 
@@ -23,6 +16,7 @@
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.Dapr\Senparc.Xncf.Dapr.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />

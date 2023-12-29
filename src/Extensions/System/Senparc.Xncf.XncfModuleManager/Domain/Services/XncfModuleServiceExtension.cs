@@ -25,6 +25,17 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
     public class XncfModuleServiceExtension : XncfModuleService
     {
         private readonly Lazy<SysMenuService> _sysMenuService;
+
+        /// <summary>
+        /// 获取模块起始触发 URL
+        /// </summary>
+        /// <param name="register"></param>
+        /// <returns></returns>
+        private string GetStartUrl(IXncfRegister register)
+        {
+            return $"/Admin/XncfModule/Start/?uid={register.Uid}";
+        }
+
         public XncfModuleServiceExtension(IRepositoryBase<XncfModule> repo, Lazy<SysMenuService> sysMenuService, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _sysMenuService = sysMenuService;
@@ -92,7 +103,9 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         public async Task InstallMenuAsync(IXncfRegister register, InstallOrUpdate installOrUpdate)
         {
             var topMenu = await _sysMenuService.Value.GetObjectAsync(z => z.MenuName == "扩展模块").ConfigureAwait(false);
-            var currentMenu = await _sysMenuService.Value.GetObjectAsync(z => z.ParentId == topMenu.Id && z.MenuName == register.MenuName).ConfigureAwait(false);
+            var startUrl = GetStartUrl(register);
+            var currentMenu = await _sysMenuService.Value.GetObjectAsync(z => z.ParentId == topMenu.Id && z.Url == startUrl).ConfigureAwait(false);
+
             SysMenuDto menuDto;
 
             if (installOrUpdate == InstallOrUpdate.Update && currentMenu != null)
@@ -118,7 +131,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                     default:
                         break;
                 }
-                menuDto = new SysMenuDto(true, null, register.MenuName, topMenu.Id, $"/Admin/XncfModule/Start/?uid={register.Uid}", icon, order, true, null);
+                menuDto = new SysMenuDto(true, null, register.MenuName, topMenu.Id, startUrl, icon, order, true, null);
             }
 
             var sysMemu = await _sysMenuService.Value.CreateOrUpdateAsync(menuDto).ConfigureAwait(false);
@@ -144,6 +157,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 var updateMenuDto = new UpdateMenuId_XncfModuleDto(register.Uid, sysMemu.Id);
                 await base.UpdateMenuIdAsync(updateMenuDto).ConfigureAwait(false);
             }
+
         }
 
 
