@@ -99,21 +99,21 @@ var app = new Vue({
             },
             // prompt请求参数 ---end
             // sendBtns: 打靶、连发、保存草稿
-            sendBtns:[
+            sendBtns: [
                 {
-                    text:'打靶'
+                    text: '打靶'
                 },
                 {
-                    text:'连发'
+                    text: '连发'
                 },
                 {
-                    text:'保存草稿'
+                    text: '保存草稿'
                 }
             ],
-            sendBtnText:'打靶',
+            sendBtnText: '打靶',
             // 输出 ---start
-            outputAverageDeci: '',// 输出列表的平均分
-            outputMaxDeci:'', // 输出列表的最高分
+            outputAverageDeci: -1,// 输出列表的平均分
+            outputMaxDeci: -1, // 输出列表的最高分
             outputActive: '', // 输出列表选中查看|评分
             outputList: [],  // 输出列表
             chartData: [], // 图表数据
@@ -138,13 +138,13 @@ var app = new Vue({
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
             fieldForm: {
-                fieldName:''
+                fieldName: ''
             },
             // ai 评分标准
             aiScoreFormVisible: false,
             aiScoreFormSubmitLoading: false,
             aiScoreForm: {
-                resultList:[{
+                resultList: [{
                     id: 1,
                     label: '预期结果1',
                     value: ''
@@ -178,11 +178,11 @@ var app = new Vue({
                 value: 'HugginFace',
                 label: 'HugginFace',
                 disabled: false
-                }],
+            }],
             // 表单校验规则
             rules: {
                 fieldName: [
-                    { required: true, message: '请输入靶场名称', trigger: 'blur' }
+                    {required: true, message: '请输入靶场名称', trigger: 'blur'}
                 ],
                 tactics: [
                     {required: true, message: '请选择战术', trigger: 'change'}
@@ -217,8 +217,8 @@ var app = new Vue({
                 organizationId: [
                     {required: true, message: '请输入Organization Id', trigger: 'blur'}
                 ],
-                aiResultVal:[
-                    { required: true, message: '请输入期望结果', trigger: 'blur' }
+                aiResultVal: [
+                    {required: true, message: '请输入期望结果', trigger: 'blur'}
                 ]
             },
             versionData: [],
@@ -271,33 +271,54 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // 新增靶场
+        addPromptField() {
+            // 刷新页面
+            window.location.reload()
+            // 如果靶场变化 靶道
+            // if (this.pageChange && this.modelid) {
+            //     // 提示 有数据变化 是否保存为草稿
+            //     this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
+            //         confirmButtonText: '保存',
+            //         cancelButtonText: '不保存',
+            //         type: 'warning'
+            //     }).then(() => {
+            //         // 保存草稿
+            //         this.targetShootHandel(true).then(() => {
+            //             this.resetPageData()
+            //         })
+            //     }).catch(() => {
+            //     });
+            //     return
+            // }
+        },
         // 连发次数 数量变化
-        changeNumsBtn(command=1) {
+        changeNumsBtn(command = 1) {
             this.numsOfResults = command
         },
         // 打靶按钮 类型切换
-        changeBtn(command){
+        changeBtn(command) {
             this.sendBtnText = command
         },
         // 打靶按钮 点击 触发对应类型事件
-        clickSendBtn(){
-          const command=this.sendBtnText
-            console.log('点击了'+command)
-            if(command==='打靶'){
+        clickSendBtn() {
+            const command = this.sendBtnText
+            console.log('点击了' + command)
+            if (command === '打靶') {
                 this.targetShootHandel()
-            }else if(command==='保存草稿') {
+            } else if (command === '保存草稿') {
                 this.targetShootHandel(true)
-            }else if (command==='连发'){
+            } else if (command === '连发') {
                 this.dealRapicFireHandel(this.numsOfResults)
             }
         },
         // beforeunload 事件处理函数
         beforeunloadHandler(e) {
             console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
-             // 如果数据没有变动，则不需要提示用户保存
+            // 如果数据没有变动，则不需要提示用户保存
             if (this.pageChange) {
                 // 显示自定义对话框
-                let confirmationMessage = '您的数据已经修改，是否保存？';
+                let confirmationMessage = '您的数据已经修改，是否保存为草稿？';
                 // 阻止默认行为
                 e.preventDefault();
                 // 兼容旧版本浏览器
@@ -346,7 +367,7 @@ var app = new Vue({
                     show: true,
                     confine: true, //是否将 tooltip 框限制在图表的区域内。
                     //appendToBody: true
-                    formatter: (params)=> {
+                    formatter: (params) => {
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
                         //
@@ -355,7 +376,7 @@ var app = new Vue({
     <p>版本：${_data?.fullVersion || ''}</p>
 <p>平均分：${_data?.evalAvgScore || ''}</p>
 <p>最高分：${_data?.evalMaxScore || ''}</p>
-<p>时间：${this.formatDate(_data?.addTime)  || ''}</p>
+<p>时间：${this.formatDate(_data?.addTime) || ''}</p>
 </div>`
                         return _html
                     }
@@ -410,7 +431,7 @@ var app = new Vue({
                         //    // return;
                         //},
                         textStyle: {
-                            color:'#32b8be',//刻度标签样式
+                            color: '#32b8be',//刻度标签样式
                             //color: function (value, index) {
                             //    return value >= 6 ? 'green' : 'red';//根据范围显示颜色，主页为值有效
                             //},
@@ -454,19 +475,19 @@ var app = new Vue({
                     },
                     //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
                     viewControl: {
-                       // minBeta: -10, //最小旋转角度
+                        // minBeta: -10, //最小旋转角度
                         // maxBeta: 10, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
-                // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
-                // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
-                // autoRotateSpeed:12,//物体自传的速度
-                // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
-                 distance:350,//默认视角距离主体的距离(常用)
-                 alpha:1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
-                 beta:-30,//视角绕 y 轴，即左右旋转的角度。
-                // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
+                        // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
+                        // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
+                        // autoRotateSpeed:12,//物体自传的速度
+                        // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
+                        distance: 350,//默认视角距离主体的距离(常用)
+                        alpha: 1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
+                        beta: -30,//视角绕 y 轴，即左右旋转的角度。
+                        // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
                         animation: true,
                     },
                     //光照相关的设置
@@ -488,12 +509,12 @@ var app = new Vue({
                     //    // exposure: 1.0
                     //    // }
                     //},
-            // postEffect:{//后处理特效的相关配置，后处理特效可以为画面添加高光，景深，环境光遮蔽（SSAO），调色等效果。可以让整个画面更富有质感。
-            //     show:true,
-            //     bloom:{
-            //         enable:true//高光特效,适合地球仪
-            //     }
-            // }
+                    // postEffect:{//后处理特效的相关配置，后处理特效可以为画面添加高光，景深，环境光遮蔽（SSAO），调色等效果。可以让整个画面更富有质感。
+                    //     show:true,
+                    //     bloom:{
+                    //         enable:true//高光特效,适合地球仪
+                    //     }
+                    // }
                 },
                 series: []
             };
@@ -537,17 +558,17 @@ var app = new Vue({
             }
             if (this.promptid) {
                 //console.log('获取评分趋势 图表数据', this.isAvg)
-               /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
+                /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
                 let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
                     let _dataPoints = res?.data?.data?.dataPoints || []
-                    let _xData = [], _yData = [], _seriesData =[]
+                    let _xData = [], _yData = [], _seriesData = []
                     _dataPoints.forEach(item => {
                         if (item && item.length > 0) {
                             let _zData = []
                             item.forEach(el => {
                                 if (el) {
-                                    if (_xData.indexOf(el.y)===-1) {
+                                    if (_xData.indexOf(el.y) === -1) {
                                         _xData.push(`${el.y}`)
                                     }
                                     if (_yData.indexOf(el.x) === -1) {
@@ -587,7 +608,7 @@ var app = new Vue({
                 // 如果靶场变化 靶道
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿
-                    this.$confirm('您的数据已经修改，是否保存？', '提示', {
+                    this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
                         confirmButtonText: '保存',
                         cancelButtonText: '不保存',
                         type: 'warning'
@@ -603,17 +624,17 @@ var app = new Vue({
                 }
                 // 重置页面数据
                 this.resetPageData()
-                
+
             } else if (itemKey === 'promptid') {
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿
-                    this.$confirm('您的数据已经修改，是否保存？', '提示', {
+                    this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
                         confirmButtonText: '保存',
                         cancelButtonText: '不保存',
                         type: 'warning'
                     }).then(() => {
                         // 保存草稿
-                         this.targetShootHandel(true).then(() => {
+                        this.targetShootHandel(true).then(() => {
                             this.getPromptetail(val, true)
                         })
                         // 重置 页面变化记录
@@ -634,38 +655,38 @@ var app = new Vue({
                     // 重置 页面变化记录
                     this.pageChange = false
                 }
-                
+
             } else {
                 // 其他
                 //if (itemKey === 'modelid'){}
                 // 页面变化记录
                 this.pageChange = true
             }
-            
+
         },
         // 重置页面数据
         async resetPageData() {
-        // 重置 页面变化记录
-                this.pageChange = false
-                // 靶场
-                this.promptid = '' // 靶道
-                this.modelid = '' // 模型
-                // 参数设置 视图配置列表
-                this.resetConfigurineParam()
-                // 输入Prompt 重置
-                this.resetInputPrompt()
-                this.outputList = []
-                this.outputAverageDeci = 0
-            this.outputMaxDeci = 0
-                this.promptDetail = {}
-                this.promptParamForm = {
+            // 重置 页面变化记录
+            this.pageChange = false
+            // 靶场
+            this.promptid = '' // 靶道
+            this.modelid = '' // 模型
+            // 参数设置 视图配置列表
+            this.resetConfigurineParam()
+            // 输入Prompt 重置
+            this.resetInputPrompt()
+            this.outputList = []
+            this.outputAverageDeci = -1
+            this.outputMaxDeci = -1
+            this.promptDetail = {}
+            this.promptParamForm = {
                 prefix: '',
                 suffix: '',
                 variableList: []
             }
             // 获取靶道列表
             await this.getPromptOptData()
-                // 获取分数趋势图表数据
+            // 获取分数趋势图表数据
             await this.getScoringTrendData()
         },
 
@@ -687,8 +708,8 @@ var app = new Vue({
                         modelid: this.modelid,// 选择模型
                         content: this.content,// prompt 输入内容
                         note: this.remarks, // prompt 输入的备注
-                        numsOfResults:1,
-                        isDraft: this.sendBtnText==='保存草稿',
+                        numsOfResults: 1,
+                        isDraft: this.sendBtnText === '保存草稿',
                         suffix: this.promptParamForm.suffix,
                         prefix: this.promptParamForm.prefix
                     }
@@ -699,9 +720,9 @@ var app = new Vue({
                         if (_list.length > 0) {
                             _postData.expectedResultsJson = JSON.stringify(_list)
                         }
-                        
+
                     }
-                    if (this.promptParamForm.variableList.length>0){
+                    if (this.promptParamForm.variableList.length > 0) {
                         _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
                     }
                     if (this.promptid) {
@@ -735,16 +756,22 @@ var app = new Vue({
                         this.pageChange = false
                         // 关闭dialog
                         this.tacticalFormVisible = false
-                        let { promptResultList = [], fullVersion = '', id, evalAvgScore, evalMaxScore } = res.data.data || {}
+                        let {
+                            promptResultList = [],
+                            fullVersion = '',
+                            id,
+                            evalAvgScore = -1,
+                            evalMaxScore = -1
+                        } = res.data.data || {}
 
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
                         this.promptDetail = copyResultData
                         // 平均分 
-                        this.outputAverageDeci = evalAvgScore > 0 ? evalAvgScore : 0;
+                        this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
                         // 最高分
-                        this.outputMaxDeci = evalMaxScore > 0 ? evalMaxScore : 0;
+                        this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
                         // 输出列表
                         this.outputList = promptResultList.map(item => {
                             if (item) {
@@ -775,9 +802,9 @@ var app = new Vue({
                         this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
-                        if (this.sendBtnText !== '保存草稿'&& this.numsOfResults>1){
+                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                             //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                            this.dealRapicFireHandel(this.numsOfResults-1)
+                            this.dealRapicFireHandel(this.numsOfResults - 1)
                         }
                     }
 
@@ -798,27 +825,27 @@ var app = new Vue({
             }
         },
         //树形数据格式化  参数data:要格式化的数据,child为要格式化数据的子数组值名
-        treeArrayFormat(data, child) { 
+        treeArrayFormat(data, child) {
             let trees = new Array();
             let fn = null;
             let newData = null;
-            for(let i in data) {
-                    newData = {
-                        id: data[i].data.id,
-                        label: data[i].name ? data[i].name : "未命名",
-                        isPublic: false,
-                        data: data[i].data,
-                        attributes: data[i].attributes,
-                        children: []
-                    }
+            for (let i in data) {
+                newData = {
+                    id: data[i].data.id,
+                    label: data[i].name ? data[i].name : "未命名",
+                    isPublic: false,
+                    data: data[i].data,
+                    attributes: data[i].attributes,
+                    children: []
+                }
                 trees.push(newData);
-                if (data[i].children && data[i].children.length>0) {
+                if (data[i].children && data[i].children.length > 0) {
                     trees[i].children = this.treeArrayFormat(data[i].children, child);
                 }
-                
+
             }
             return trees
-         },
+        },
         // 版本记录 查看
         seeVersionRecord() {
             this.versionDrawer = true
@@ -890,17 +917,15 @@ var app = new Vue({
         },
 
 
-
-
         // 获取输出列表
         async getOutputList(promptId) {
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${promptId}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
-                let {promptResults = [],promptItem={}} = res.data.data || {}
+                let {promptResults = [], promptItem = {}} = res.data.data || {}
                 // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverageDeci = promptItem.evalAvgScore > 0 ? promptItem.evalAvgScore : 0; // 保留整数
-                this.outputMaxDeci = promptItem.evalMaxScore > 0 ? promptItem.evalMaxScore : 0; // 保留整数
+                this.outputAverageDeci = promptItem.evalAvgScore > -1 ? promptItem.evalAvgScore : -1; // 保留整数
+                this.outputMaxDeci = promptItem.evalMaxScore > -1 ? promptItem.evalMaxScore : -1; // 保留整数
                 // 输出列表
                 this.outputList = promptResults.map(item => {
                     if (item) {
@@ -910,7 +935,7 @@ var app = new Vue({
                         item.isScoreView = false // 是否显示评分视图
                         item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
                         // 手动评分
-                        item.scoreVal = item.humanScore > -1 ? item.humanScore : 0 
+                        item.scoreVal = item.humanScore > -1 ? item.humanScore : 0
                         // ai评分预期结果
                         if (promptItem.expectedResultsJson) {
                             let _expectedResultsJson = JSON.parse(promptItem.expectedResultsJson)
@@ -923,24 +948,24 @@ var app = new Vue({
                             })
                         } else {
                             item.alResultList = [{
-                            id: 1,
-                            label: '预期结果1',
-                            value: ''
-                        }, {
-                            id: 2,
-                            label: '预期结果2',
-                            value: ''
-                        }, {
-                            id: 3,
-                            label: '预期结果3',
-                            value: ''
-                        }]
+                                id: 1,
+                                label: '预期结果1',
+                                value: ''
+                            }, {
+                                id: 2,
+                                label: '预期结果2',
+                                value: ''
+                            }, {
+                                id: 3,
+                                label: '预期结果3',
+                                value: ''
+                            }]
                         }
-                        
+
                     }
                     return item
                 })
-                
+
 
             } else {
                 alert('error');
@@ -997,10 +1022,24 @@ var app = new Vue({
                 let _list = this.outputList[index].alResultList.map(item => item.value)
                 _list = _list.filter(item => item)
                 if (_list.length === 0) {
-                    this.$message({
-                        message: '请设置预期结果！',
-                        type: 'warning'
-                    })
+
+                    if (this.promptDetail && this.promptDetail.expectedResultsJson) {
+                        let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
+                        this.outputList[index].alResultList = _expectedResultsJson.map((item, index) => {
+                            return {
+                                id: index + 1,
+                                label: `预期结果${index + 1}`,
+                                value: item
+                            }
+                        })
+                        this.saveManualScore(this.outputList[index])
+                    } else {
+                        this.$message({
+                            message: '请设置预期结果！',
+                            type: 'warning'
+                        })
+                    }
+
                 } else {
                     // todo 接口对接 重新评分
                     this.saveManualScore(this.outputList[index])
@@ -1030,10 +1069,10 @@ var app = new Vue({
         },
 
 
-        convertData(data){
-          // data is like [{name:'',value:''}], convert to {name:value}
+        convertData(data) {
+            // data is like [{name:'',value:''}], convert to {name:value}
             let res = {}
-            data.forEach(item=>{
+            data.forEach(item => {
                 res[item.name] = item.value
             })
             return JSON.stringify(res)
@@ -1041,23 +1080,23 @@ var app = new Vue({
         /*
         * 打靶 事件
         * isDraft 是否保存草稿
-        */      
-        async targetShootHandel(isDraft=false) {
-            if(!this.modelid) {
+        */
+        async targetShootHandel(isDraft = false) {
+            if (!this.modelid) {
                 this.$message({
                     message: '请选择模型！',
                     type: 'warning'
                 })
                 return
             }
-            if (!isDraft&&!this.content) {
+            if (!isDraft && !this.content) {
                 this.$message({
                     message: '请输入内容！',
                     type: 'warning'
                 })
                 return
             }
-            if (this.promptid&&!isDraft) {
+            if (this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -1070,10 +1109,10 @@ var app = new Vue({
                 note: this.remarks, // prompt 输入的备注,
                 numsOfResults: 1,
                 //numsOfResults: isDraft?this.numsOfResults:1,
-                isDraft:isDraft,
+                isDraft: isDraft,
                 suffix: this.promptParamForm.suffix,
                 prefix: this.promptParamForm.prefix,
-                
+
             }
             // ai评分标准
             if (this.aiScoreForm.resultList.length > 0) {
@@ -1084,10 +1123,10 @@ var app = new Vue({
                 }
             }
             // 请求参数
-            if (this.promptParamForm.variableList.length>0){
+            if (this.promptParamForm.variableList.length > 0) {
                 _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
             }
-            
+
             if (this.promptid) {
                 _postData.id = this.promptid
                 if (this.tacticalForm.tactics === '创建新战术') {
@@ -1113,76 +1152,81 @@ var app = new Vue({
             })
             console.log('testHandel _postData:', _postData)
 
-            return  await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
+            return await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
                 this.targetShootLoading = false
                 if (res.data.success) {
                     this.pageChange = false
                     if (isDraft) {
                         // 提示保存成功
-this.$message({
+                        this.$message({
                             message: '保存成功！',
                             type: 'success'
                         })
-                    } else {
-                        let { promptResultList = [], fullVersion = '', id, evalAvgScore, evalMaxScore } = res.data.data || {}
-                        // 拷贝数据
-                        let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                        delete copyResultData.promptResultList
-                        this.promptDetail = copyResultData
-                        // 平均分 
-                        this.outputAverageDeci = evalAvgScore > 0 ? evalAvgScore : 0;
-                        // 最高分
-                        this.outputMaxDeci = evalMaxScore > 0 ? evalMaxScore : 0;
-                        // 输出列表
-                        this.outputList = promptResultList.map(item => {
-                            if (item) {
-                                item.promptId = id
-                                item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                //时间 格式化  addTime
-                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-                                // 手动评分
-                                item.scoreVal = 0
-                                // ai评分预期结果
-                                item.alResultList = [{
-                                    id: 1,
-                                    label: '预期结果1',
-                                    value: ''
-                                }, {
-                                    id: 2,
-                                    label: '预期结果2',
-                                    value: ''
-                                }, {
-                                    id: 3,
-                                    label: '预期结果3',
-                                    value: ''
-                                }]
-                            }
-                            return item
-                        })
-                        //提交数据后，选择正确的靶场和靶道
-                        this.getFieldList().then(() => {
-                            this.getPromptOptData(id)
-                        })
-
-                        
-                        // 获取分数趋势图表数据
-                        this.getScoringTrendData()
-                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                            this.dealRapicFireHandel(this.numsOfResults - 1)
-                        }
                     }
-                    
+                    let {
+                        promptResultList = [],
+                        fullVersion = '',
+                        id,
+                        evalAvgScore = -1,
+                        evalMaxScore = -1
+                    } = res.data.data || {}
+                    // 拷贝数据
+                    let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                    delete copyResultData.promptResultList
+                    this.promptDetail = copyResultData
+                    // 平均分 
+                    this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
+                    // 最高分
+                    this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
+                    // 输出列表
+                    this.outputList = promptResultList.map(item => {
+                        if (item) {
+                            item.promptId = id
+                            item.version = fullVersion
+                            item.scoreType = '1' // 1 ai、2手动 
+                            item.isScoreView = false // 是否显示评分视图
+                            //时间 格式化  addTime
+                            item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                            // 手动评分
+                            item.scoreVal = 0
+                            // ai评分预期结果
+                            item.alResultList = [{
+                                id: 1,
+                                label: '预期结果1',
+                                value: ''
+                            }, {
+                                id: 2,
+                                label: '预期结果2',
+                                value: ''
+                            }, {
+                                id: 3,
+                                label: '预期结果3',
+                                value: ''
+                            }]
+                        }
+                        return item
+                    })
+                    //提交数据后，选择正确的靶场和靶道
+                    this.getFieldList().then(() => {
+                        this.getPromptOptData(id)
+                    })
+
+
+                    // 获取分数趋势图表数据
+                    this.getScoringTrendData()
+                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                        //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                        this.dealRapicFireHandel(this.numsOfResults - 1)
+                    }
+
                 }
             }).catch(err => {
                 this.targetShootLoading = false
             })
             // console.log('testHandel res ', res.data)
-            
+
         },
-        
+
         /*
          * 连发 事件
          */
@@ -1194,7 +1238,14 @@ this.$message({
                 })
                 return
             }
-            this.targetShootLoading=true
+            if (!this.modelid) {
+                this.$message({
+                    message: '请选择一个模型！',
+                    type: 'warning'
+                })
+                return
+            }
+            this.targetShootLoading = true
             let promises = [];
             for (let i = 0; i < howmany; i++) {
                 promises.push(this.rapidFireHandel());
@@ -1202,18 +1253,18 @@ this.$message({
             await Promise.all(promises);
             // 从新获取靶场列表
             this.getPromptOptData()
-            this.targetShootLoading=false
+            this.targetShootLoading = false
         },
         async rapidFireHandel() {
             const promptItemId = this.promptid
-            const numsOfResults= 1
+            const numsOfResults = 1
             return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
-                    //console.log('testHandel res ', res.data)
-                    this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > 0 ? res.data.data.promptItem.evalAvgScore : 0; // 保留整数
-                    this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > 0 ? promptItem.evalMaxScore : 0; // 保留整数
-                //输出列表
-                 res.data.data.promptResults.map(item=>{
+                //console.log('testHandel res ', res.data)
+                this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
+                this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
+                //输出列表 
+                res.data.data.promptResults.map(item => {
                     item.promptId = promptItemId
                     item.scoreType = '1' // 1 ai、2手动 
                     item.isScoreView = false // 是否显示评分视图
@@ -1235,11 +1286,11 @@ this.$message({
                         label: '预期结果3',
                         value: ''
                     }]
-                     this.outputList.push(item)
+                    this.outputList.push(item)
                 })
             })
         },
-        
+
         // 配置 重置参数
         resetConfigurineParam() {
             // todo 判断是否 记录 页面变化记录
@@ -1247,7 +1298,6 @@ this.$message({
             //console.log('配置参数 重置:', this.parameterViewList)
             // 参数设置 视图配置列表
             this.parameterViewList = [
-
                 {
                     tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
                     formField: 'topP',
@@ -1353,15 +1403,15 @@ this.$message({
             this.content = ''// prompt 输入内容
             //this.remarks = '' // prompt 输入的备注
         },
-        deleteModel(item){
-          //删除模型 confirm
+        deleteModel(item) {
+            //删除模型 confirm
             this.$confirm(`此操作将永久删除模型【${item.name}】, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await service.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete',{data:[item.id]})
-                    .then(res=>{
+                await service.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', {data: [item.id]})
+                    .then(res => {
                         //reload model list
                         // 重置模型列表
                         this.modelid = ''
@@ -1371,7 +1421,7 @@ this.$message({
                             message: res.data.success ? '删除成功' : '删除失败'
                         });
                     })
-                
+
             })
         },
 
@@ -1400,7 +1450,7 @@ this.$message({
         promptParamFormSubmit() {
             this.$refs.promptParamForm.validate(async (valid) => {
                 if (valid) {
-                        console.log('promptParamSubmit:', this.promptParamForm)
+                    console.log('promptParamSubmit:', this.promptParamForm)
                     //this.promptParamFormLoading = true
                     //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
                     //if (res.data.success) {
@@ -1415,7 +1465,7 @@ this.$message({
                     return false;
                 }
             });
-            
+
         },
 
         // 配置 获取模型 下拉列表数据
@@ -1454,7 +1504,7 @@ this.$message({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm,{customAlert:true})
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm, {customAlert: true})
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
@@ -1498,16 +1548,16 @@ this.$message({
             });
         },
         // 配置 获取靶场 下拉列表数据
-        async getFieldList(){
+        async getFieldList() {
             await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
-                .then(res=>{
-                    if(res.data.success){
-                        this.promptFieldOpt=res.data.data.map(item=>{
+                .then(res => {
+                    if (res.data.success) {
+                        this.promptFieldOpt = res.data.data.map(item => {
                             return {
                                 ...item,
-                                label:item.rangeName,
-                                value:item.rangeName,
-                                disabled:false
+                                label: item.rangeName,
+                                value: item.rangeName,
+                                disabled: false
                             }
                         })
                     }
@@ -1516,7 +1566,7 @@ this.$message({
         // 获取靶道 下拉列表数据
         async getPromptOptData(id) {
             let res = await service
-                .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName',{
+                .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName', {
                     params: {
                         rangeName: this.promptField
                     }
@@ -1525,11 +1575,11 @@ this.$message({
                 //console.log('getModelOptData:', res)
                 let _optList = res.data.data || []
                 this.promptOpt = _optList.map(item => {
-                    const avg=scoreFormatter(item.evalAvgScore)
-                    const max=scoreFormatter(item.evalMaxScore)
+                    const avg = scoreFormatter(item.evalAvgScore)
+                    const max = scoreFormatter(item.evalMaxScore)
                     return {
                         ...item,
-                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft?'(草稿)':''}`,
+                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
                         value: item.id,
                         disabled: false
                     }
@@ -1537,7 +1587,7 @@ this.$message({
                 if (id) {
                     this.promptid = id
                 }
-        
+
             } else {
                 alert('error');
             }
@@ -1557,16 +1607,16 @@ this.$message({
 
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
-                    
+
                     this.parameterViewList = _parameterViewList.map(item => {
                         if (item) {
                             item.value = this.promptDetail[item.formField] || item.value
                         }
                         return item
                     })
-                    
+
                     // 判断模型列表是否有选中的模型
-                        let _findIndex = this.modelOpt.findIndex(item => item.value === this.promptDetail.modelId)
+                    let _findIndex = this.modelOpt.findIndex(item => item.value === this.promptDetail.modelId)
                     if (_findIndex > -1) {
                         // 模型覆盖
                         this.modelid = this.promptDetail.modelId
@@ -1574,9 +1624,9 @@ this.$message({
                         this.modelid = ''
                     }
                     // prompt 输入内容
-                    this.content = this.promptDetail.promptContent || '' 
+                    this.content = this.promptDetail.promptContent || ''
                     // prompt 输入的备注
-                    this.remarks = this.promptDetail.note || ''  
+                    this.remarks = this.promptDetail.note || ''
                     // prompt请求参数
                     let _promptParamForm = JSON.parse(JSON.stringify(this.promptParamForm))
                     _promptParamForm.prefix = this.promptDetail.prefix || ''
@@ -1620,8 +1670,8 @@ this.$message({
                     // 输入Prompt 重置
                     this.resetInputPrompt()
                     this.outputList = []
-                    this.outputAverageDeci = 0
-                    this.outputMaxDeci = 0
+                    this.outputAverageDeci = -1
+                    this.outputMaxDeci = -1
                     // 获取分数趋势图表数据
                     this.getScoringTrendData()
                     this.promptDetail = {}
@@ -1678,7 +1728,7 @@ this.$message({
             if (this.promptDetail && this.promptDetail.expectedResultsJson) {
                 let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
                 this.aiScoreForm = {
-                    resultList:_expectedResultsJson.map((item, index) => {
+                    resultList: _expectedResultsJson.map((item, index) => {
                         return {
                             id: index + 1,
                             label: `预期结果${index + 1}`,
@@ -1692,7 +1742,7 @@ this.$message({
         // 关闭ai评分设置 dialog
         aiScoreFormCloseDialog() {
             this.aiScoreForm = {
-                resultList:[{
+                resultList: [{
                     id: 1,
                     label: '预期结果1',
                     value: ''
@@ -1717,7 +1767,7 @@ this.$message({
                     this.aiScoreFormSubmitLoading = false
                     if (res.data.success) {
                         // 重新获取详情
-                        this.getPromptetail(this.promptid,false)
+                        this.getPromptetail(this.promptid, false)
                         // 关闭dialog
                         this.aiScoreFormVisible = false
                     }
@@ -1730,6 +1780,6 @@ this.$message({
 });
 
 
-function scoreFormatter(score){
-    return score===-1?'--':score
+function scoreFormatter(score) {
+    return score === -1 ? '--' : score
 }
