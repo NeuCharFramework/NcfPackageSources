@@ -1162,7 +1162,10 @@ this.$message({
                             return item
                         })
                         //提交数据后，选择正确的靶场和靶道
-                        this.getPromptOptData(id)
+                        this.getFieldList().then(() => {
+                            this.getPromptOptData(id)
+                        })
+                        
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
                         if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
