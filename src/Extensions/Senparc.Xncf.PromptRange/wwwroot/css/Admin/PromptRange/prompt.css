@@ -32,6 +32,10 @@
     align-items: flex-end;
 }
 
+.align-center{
+    align-items: center;
+}
+
 .w-100{
     width: 100%;
 }
