@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
@@ -79,7 +80,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore = -1, int evalMaxScore = -1)
+            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore)
         {
             Id = promptItemId;
             PromptContent = promptContent;
@@ -101,6 +102,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         }
 
         public PromptItem_AddResponse(PromptItem item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
+            item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
+            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
+        {
+        }
+        
+        public PromptItem_AddResponse(PromptItemDto item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
             item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
             item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
         {

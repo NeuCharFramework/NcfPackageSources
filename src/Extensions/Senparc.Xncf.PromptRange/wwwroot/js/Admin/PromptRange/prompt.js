@@ -224,6 +224,12 @@ var app = new Vue({
             promptDetail: {}
         };
     },
+    computed: {
+        isPageLoading() {
+            let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading
+            return result
+        }
+    },
     watch: {
         //'isExtend': {
         //    handler: function (val, oldVal) {
@@ -501,7 +507,7 @@ var app = new Vue({
                 }
             })
             chartOption.series = _series
-            console.log('chartOption', chartOption)
+            //console.log('chartOption', chartOption)
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
@@ -561,13 +567,81 @@ var app = new Vue({
 
         // 靶道选择变化
         promptChangeHandel(val, itemKey) {
-            console.log('靶道选择变化', val, this.promptDetail)
-            if (itemKey === 'promptid') {
+            
+            if (itemKey === 'promptField') {
+                // 如果靶场变化 靶道
+                if (this.pageChange) {
+                    if (this.modelid) {
+                        // 提示 有数据变化 是否保存为草稿
+                        this.$confirm('您的数据已经修改，是否保存？', '提示', {
+                            confirmButtonText: '保存',
+                            cancelButtonText: '不保存',
+                            type: 'warning'
+                        }).then(() => {
+                            // 保存草稿
+                            this.targetShootHandel(true)
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        }).catch(() => {
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        });
+                        return 
+                    }
+                }
+
+                // 靶场
+                this.promptid = '' // 靶道
+                this.modelid = '' // 模型
+                // 参数设置 视图配置列表
+                this.resetConfigurineParam()
+                // 输入Prompt 重置
+                this.resetInputPrompt()
+                this.outputList = []
+                this.outputAverage = 0
+                // 获取分数趋势图表数据
+                this.getScoringTrendData()
+                this.promptDetail = {}
+                this.promptParamForm = {
+                    prefix: '',
+                    suffix: '',
+                    variableList: []
+                }
+                this.getPromptOptData()
+                // 重置 页面变化记录
+                this.pageChange = false
+            } else if (itemKey === 'promptid') {
+
+                if (this.pageChange) {
+                    if (this.modelid) {
+                        // 提示 有数据变化 是否保存为草稿
+                        this.$confirm('您的数据已经修改，是否保存？', '提示', {
+                            confirmButtonText: '保存',
+                            cancelButtonText: '不保存',
+                            type: 'warning'
+                        }).then(() => {
+                            // 保存草稿
+                            this.targetShootHandel(true)
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        }).catch(() => {
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        });
+                        return
+                    }
+                }
+                // 靶道
                 this.getPromptetail(val, true)
+                // 重置 页面变化记录
+                this.pageChange = false
             } else {
+                // 其他
+                //if (itemKey === 'modelid'){}
+                // 页面变化记录
                 this.pageChange = true
             }
-
+            
         },
 
         // 战术选择 关闭弹出
@@ -593,8 +667,13 @@ var app = new Vue({
                         suffix: this.promptParamForm.suffix,
                         prefix: this.promptParamForm.prefix
                     }
+                    // ai评分标准
+                    if (this.aiScoreForm.resultList.length > 0) {
+                        let _list = this.aiScoreForm.resultList.map(item => item.value)
+                        _postData.expectedResultsJson = JSON.stringify(_list)
+                    }
                     if (this.promptParamForm.variableList.length>0){
-                        _postData.variableList = this.convertData(this.promptParamForm.variableList)
+                        _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -628,7 +707,7 @@ var app = new Vue({
                         this.tacticalFormVisible = false
                         let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                         // 重新获取prompt列表
-                        this.getPromptOptData(id)
+                        //this.getPromptOptData(id)
 
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
@@ -663,14 +742,7 @@ var app = new Vue({
                             return item
                         })
                         console.log('选择正确的靶场')
-                        //提交数据后，选择正确的靶场和靶道
-                        await this.getFieldList().then(() => {
-                            console.log(res.data)
-                            this.promptField = res.data.data.fullVersion.split('-')[0]
-                            this.getPromptOptData(res.data.data.fullVersion.split('-')[0])
-                            this.promptid=res.data.data.id
-                            this.$message.success('提交成功')
-                        })
+                        this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
                         if (this.numsOfResults>1){
@@ -691,7 +763,7 @@ var app = new Vue({
             if (res.data.success) {
                 //console.log('获取版本记录数据', res.data.data.rootNodeList)
                 let _listData = res?.data?.data?.rootNodeList || []
-                console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))
+                /*console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))*/
                 this.versionTreeData = this.treeArrayFormat(_listData)
             }
         },
@@ -736,29 +808,53 @@ var app = new Vue({
         versionRecordIsPublic(itemData) {
             // console.log('版本记录 是否公开:', itemData)
             // to do 接口对接 async await
+            // 提示敬请期待
+            this.$message.warning('敬请期待')
         },
         // 版本记录 编辑
         versionRecordEdit(itemData) {
             //console.log('版本记录 编辑:', itemData)
             // to do 接口对接 async await
+            // 设置霸道选中
+            this.promptid = itemData.id
+            // 获取靶道详情
+            this.getPromptetail(itemData.id, true)
             // 获取输出列表和平均分
             //this.getOutputList()
             // 获取分数趋势图表数据
-            //this.getScoringTrendData()
+            this.getScoringTrendData()
+            // 关闭抽屉
+            this.versionDrawer = false
         },
         // 版本记录 生成代码
         versionRecordGenerateCode(itemData) {
             //console.log('版本记录 生成代码:', itemData)
-            // to do 接口对接 async await
-        },
-        // 版本记录 查看备注
-        versionRecordViewNotes(itemData) {
-            //console.log('版本记录 查看备注:', itemData)
+            // 提示敬请期待
+            this.$message.warning('敬请期待')
             // to do 接口对接 async await
         },
         // 版本记录 删除
         versionRecordDelete(itemData) {
-            //console.log('版本记录 删除:', itemData)
+            console.log('版本记录 删除:', itemData)
+            // to do 接口对接 async await
+            this.$confirm('此操作将永久删除该靶道版本, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                // 对接接口 删除
+                this.btnDeleteHandle(itemData.id)
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        // 版本记录 查看备注
+        versionRecordViewNotes(itemData) {
+            //console.log('版本记录 查看备注:', itemData)
             // to do 接口对接 async await
         },
 
@@ -772,7 +868,7 @@ var app = new Vue({
             if (res.data.success) {
                 let {promptResults = [],promptItem={}} = res.data.data || {}
                 // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverage = promptItem.evaluationScore; // 保留整数
+                this.outputAverage = promptItem.evalAvgScore > 0 ? promptItem.evalAvgScore : 0; // 保留整数
                 // 输出列表
                 this.outputList = promptResults.map(item => {
                     if (item) {
@@ -891,7 +987,7 @@ var app = new Vue({
             data.forEach(item=>{
                 res[item.name] = item.value
             })
-            return res
+            return JSON.stringify(res)
         },
         /*
         * 打靶 事件
@@ -930,8 +1026,14 @@ var app = new Vue({
                 prefix: this.promptParamForm.prefix,
                 
             }
+            // ai评分标准
+            if (this.aiScoreForm.resultList.length > 0) {
+                let _list = this.aiScoreForm.resultList.map(item => item.value)
+                _postData.expectedResultsJson = JSON.stringify(_list)
+            }
+            // 请求参数
             if (this.promptParamForm.variableList.length>0){
-                _postData.variableList = this.convertData(this.promptParamForm.variableList)
+                _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
             }
             
             if (this.promptid) {
@@ -965,7 +1067,7 @@ var app = new Vue({
             if (res.data.success) {
                 let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                 // 重新获取prompt列表
-                this.getPromptOptData(id)
+                //this.getPromptOptData(id)
                 // 拷贝数据
                 let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                 delete copyResultData.promptResultList
@@ -1000,7 +1102,8 @@ var app = new Vue({
                     }
                     return item
                 })
-                
+                //提交数据后，选择正确的靶场和靶道
+                this.getPromptOptData(id)
                 // 获取分数趋势图表数据
                 this.getScoringTrendData()
             }
@@ -1030,7 +1133,8 @@ var app = new Vue({
             const numsOfResults= 1
             return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
-                console.log('testHandel res ', res.data)
+                    console.log('testHandel res ', res.data)
+                    this.outputAverage = res.data.data.promptItem.evalAvgScore > 0 ? res.data.data.promptItem.evalAvgScore : 0; // 保留整数
                 //输出列表
                  res.data.data.promptResults.map(item=>{
                     item.promptId = promptItemId
@@ -1061,6 +1165,8 @@ var app = new Vue({
         
         // 配置 重置参数
         resetConfigurineParam() {
+            // todo 判断是否 记录 页面变化记录
+            this.pageChange = true
             //console.log('配置参数 重置:', this.parameterViewList)
             // 参数设置 视图配置列表
             this.parameterViewList = [
@@ -1135,6 +1241,8 @@ var app = new Vue({
         },
         // 配置 参数设置输入回调
         parameterInputHandle(val, item) {
+            // 页面变化记录
+            this.pageChange = true
             let {sliderMax, sliderMin, sliderStep, isStr, isSlider, formField} = item
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
@@ -1347,6 +1455,9 @@ var app = new Vue({
                         disabled: false
                     }
                 })
+                if (id) {
+                    this.promptid = id
+                }
         
             } else {
                 alert('error');
@@ -1367,15 +1478,38 @@ var app = new Vue({
 
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
-                    this.modelid = this.promptDetail.modelId
+                    
                     this.parameterViewList = _parameterViewList.map(item => {
                         if (item) {
                             item.value = this.promptDetail[item.formField] || item.value
                         }
                         return item
                     })
-                    this.content = this.promptDetail.promptContent || '' // prompt 输入内容
-                    this.remarks = this.promptDetail.note || ''  // prompt 输入的备注
+                    // 模型覆盖
+                    this.modelid = this.promptDetail.modelId
+                    // prompt 输入内容
+                    this.content = this.promptDetail.promptContent || '' 
+                    // prompt 输入的备注
+                    this.remarks = this.promptDetail.note || ''  
+                    // prompt请求参数
+                    let _promptParamForm = JSON.parse(JSON.stringify(this.promptParamForm))
+                    _promptParamForm.prefix = this.promptDetail.prefix || ''
+                    _promptParamForm.suffix = this.promptDetail.suffix || ''
+                    _promptParamForm.variableList = []
+                    if (this.promptDetail.variableDictJson) {
+                        let _variableDictJson = JSON.parse(this.promptDetail.variableDictJson)
+                        // _variableDictJson不是空对象 就循环赋值
+                        if (Object.keys(_variableDictJson).length > 0) {
+                            _promptParamForm.variableList = Object.keys(_variableDictJson).map(item => {
+                                return {
+                                    name: item,
+                                    value: _variableDictJson[item]
+                                }
+                            })
+                        }
+
+                    }
+                    this.promptParamForm = _promptParamForm
                 }
 
 
@@ -1391,9 +1525,39 @@ var app = new Vue({
                 //data: {id:item.id} // 将 ID 列表作为请求体数据发送
             });
             if (res.data.success) {
-                //重新获取 prompt列表
+                // 重新获取 靶道列表 如果删除的是当前选中的靶道，就重重置靶道选中值并重置模型、参数、输入内容、备注、输出列表、平均分、图表、ai评分预期结果
+                if (id === this.promptid) {
+                    this.promptid = '' // 靶道
+                    this.modelid = '' // 模型
+                    // 参数设置 视图配置列表
+                    this.resetConfigurineParam()
+                    // 输入Prompt 重置
+                    this.resetInputPrompt()
+                    this.outputList = []
+                    this.outputAverage = 0
+                    // 获取分数趋势图表数据
+                    this.getScoringTrendData()
+                    this.promptDetail = {}
+                    this.promptParamForm = {
+                        prefix: '',
+                        suffix: '',
+                        variableList: []
+                    }
+
+                }
+                // 重新获取prompt列表
+                await this.getPromptOptData(this.promptid)
+                // 重新获取版本记录
+                await this.getVersionRecordData()
+
+                // 删除成功
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
             } else {
-                alert("error")
+                let _msg = res?.data?.errorMessage || 'error'
+                alert(_msg)
             }
         },
         // 修改 prompt 

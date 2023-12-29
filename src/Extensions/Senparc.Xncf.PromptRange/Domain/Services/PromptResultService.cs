@@ -18,6 +18,7 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -95,7 +96,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
                 Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
-                Constants.NeuCharOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+                Constants.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
@@ -126,7 +127,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptResult> SenparcGenerateResultAsync(PromptItem promptItem)
+        public async Task<PromptResult> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             // 从数据库中获取模型信息
             var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)

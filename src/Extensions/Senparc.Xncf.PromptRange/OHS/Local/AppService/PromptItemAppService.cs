@@ -43,13 +43,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     #region save promptItem
 
-                    var promptItem = await _promptItemService.AddPromptItemAsync(request)
+                    var promptItemDto = await _promptItemService.AddPromptItemAsync(request)
                                      ?? throw new NcfExceptionBase("新增失败");
 
                     #endregion
 
 
-                    var promptItemResponseDto = new PromptItem_AddResponse(promptItem);
+                    var promptItemResponseDto = new PromptItem_AddResponse(promptItemDto);
 
                     // 是否立即生成结果
                     if (request.IsDraft)
@@ -62,9 +62,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItem);
+                        var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
+                    
+                    await _promptResultService.UpdateEvalScoreAsync(promptItemDto.Id);
 
                     return promptItemResponseDto;
                 }
@@ -191,6 +193,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                              throw new Exception("未找到prompt");
 
                 await _promptItemService.DeleteObjectAsync(result);
+                
+                // todo 关联删除所有子战术
 
                 await _promptResultService.BatchDeleteWithItemId(id);
 

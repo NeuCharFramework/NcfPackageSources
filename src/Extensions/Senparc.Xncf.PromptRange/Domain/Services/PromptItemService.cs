@@ -29,7 +29,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<PromptItem> AddPromptItemAsync(PromptItem_AddRequest request)
+        public async Task<PromptItemDto> AddPromptItemAsync(PromptItem_AddRequest request)
         {
             #region validate request dto
 
@@ -87,21 +87,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         tactic: $"{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac,
-                        content: request.Content,
-                        modelId: request.ModelId,
-                        topP: request.TopP,
-                        temperature: request.Temperature,
-                        maxToken: request.MaxToken,
-                        frequencyPenalty: request.FrequencyPenalty,
-                        presencePenalty: request.PresencePenalty,
-                        stopSequences: request.StopSequences,
-                        // numsOfResults: request.NumsOfResults,
-                        note: request.Note,
-                        expectedResultsJson: request.ExpectedResultsJson,
-                        isDraft: request.IsDraft,
-                        prefix: request.Prefix,
-                        suffix: request.Suffix,
-                        variableDictJson: request.VariableDictJson
+                        request: request
                     );
                 }
                 else if (request.IsNewSubTactic)
@@ -143,7 +129,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(toSavePromptItem);
 
-            return toSavePromptItem;
+            return this.Mapper.Map<PromptItemDto>(toSavePromptItem);
         }
 
 
@@ -290,26 +276,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             );
         }
 
-        public async Task UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
+        public async Task<PromptItemDto> UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new Exception("未找到prompt");
-            }
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new Exception("未找到prompt");
+
 
             promptItem.UpdateExpectedResultsJson(expectedResults);
 
             await this.SaveObjectAsync(promptItem);
+
+            return this.Mapper.Map<PromptItemDto>(promptItem);
         }
 
         public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
         {
-            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new Exception("未找到prompt");
-            }
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new Exception("未找到prompt");
+
 
             // 获取同一个靶道下的所有打过分的item
             List<PromptItemDto> promptItems = (await this.GetFullListAsync(
@@ -338,6 +322,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             return resp;
+        }
+
+        public async Task<PromptItemDto> GetAsync(int id)
+        {
+            var item = await this.GetObjectAsync(p => p.Id == id) ??
+                       throw new NcfExceptionBase($"找不到{id}对应的promptItem");
+
+            return this.Mapper.Map<PromptItemDto>(item);
+        }
+
+        public async Task<PromptItemDto> DraftSwitch(int id, bool status)
+        {
+            var promptItem = await this.GetObjectAsync(p => p.Id == id) ??
+                             throw new NcfExceptionBase($"找不到{id}对应的靶道");
+
+            promptItem.DraftSwitch(status);
+
+            await this.SaveObjectAsync(promptItem);
+
+            return this.Mapper.Map<PromptItemDto>(promptItem);
         }
     }
 }
