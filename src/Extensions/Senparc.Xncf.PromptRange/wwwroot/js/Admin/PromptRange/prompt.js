@@ -37,7 +37,7 @@ var app = new Vue({
                     isSlider: true,
                     isStr: false,
                     sliderMin: 0,
-                    sliderMax: 1,
+                    sliderMax: 2,
                     sliderStep: 0.1
                 },
                 {
@@ -379,7 +379,7 @@ var app = new Vue({
                         show: true,//该参数需设为true
                         // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
                         lineStyle: {//坐标轴样式
-                            color: 'red',
+                            color: '#000',
                             opacity: 1,//(单个刻度不会受影响)
                             width: 2//线条宽度
                         }
@@ -478,7 +478,7 @@ var app = new Vue({
             let _series = []
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
-                    series.push({
+                    _series.push({
                         type: 'line3D', // line3D scatter3D
                         name: item[0][1],
                         //itemStyle: {
@@ -518,7 +518,7 @@ var app = new Vue({
                /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
                 let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
-                    let _dataPoints = res?.data?.dataPoints || []
+                    let _dataPoints = res?.data?.data?.dataPoints || []
                     let _xData = [], _yData = [], _seriesData =[]
                     _dataPoints.forEach(item => {
                         if (item && item.length > 0) {
@@ -537,6 +537,7 @@ var app = new Vue({
                             _seriesData.push(_zData)
                         }
                     })
+                    console.log('_xData',_xData,_yData, _seriesData)
                     this.chartData = {
                         xData: _xData,
                         yData: _yData,
@@ -588,7 +589,12 @@ var app = new Vue({
                         content: this.content,// prompt 输入内容
                         note: this.remarks, // prompt 输入的备注
                         numsOfResults:1,
-                        isDraft: this.sendBtnText==='保存草稿'
+                        isDraft: this.sendBtnText==='保存草稿',
+                        suffix: this.promptParamForm.suffix,
+                        prefix: this.promptParamForm.prefix
+                    }
+                    if (this.promptParamForm.variableList.length>0){
+                        _postData.variableList = this.convertData(this.promptParamForm.variableList)
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -879,6 +885,14 @@ var app = new Vue({
         },
 
 
+        convertData(data){
+          // data is like [{name:'',value:''}], convert to {name:value}
+            let res = {}
+            data.forEach(item=>{
+                res[item.name] = item.value
+            })
+            return res
+        },
         /*
         * 打靶 事件
         * isDraft 是否保存草稿
@@ -911,8 +925,15 @@ var app = new Vue({
                 note: this.remarks, // prompt 输入的备注,
                 numsOfResults: 1,
                 //numsOfResults: isDraft?this.numsOfResults:1,
-                isDraft:isDraft
+                isDraft:isDraft,
+                suffix: this.promptParamForm.suffix,
+                prefix: this.promptParamForm.prefix,
+                
             }
+            if (this.promptParamForm.variableList.length>0){
+                _postData.variableList = this.convertData(this.promptParamForm.variableList)
+            }
+            
             if (this.promptid) {
                 _postData.id = this.promptid
                 if (this.tacticalForm.tactics === '创建新战术') {
@@ -1043,8 +1064,9 @@ var app = new Vue({
             //console.log('配置参数 重置:', this.parameterViewList)
             // 参数设置 视图配置列表
             this.parameterViewList = [
+
                 {
-                    tips: '',
+                    tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -1055,18 +1077,18 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性',
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
                     isSlider: true,
                     isStr: false,
                     sliderMin: 0,
-                    sliderMax: 1,
+                    sliderMax: 2,
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '生成文本的最大长度',
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -1077,7 +1099,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚频繁出现的词',
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -1088,7 +1110,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚已出现的词',
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -1099,7 +1121,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
