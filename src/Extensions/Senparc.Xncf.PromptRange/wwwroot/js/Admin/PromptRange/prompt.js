@@ -745,7 +745,7 @@ var app = new Vue({
                         this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
-                        if (this.numsOfResults>1){
+                        if (this.sendBtnText !== '保存草稿'&& this.numsOfResults>1){
                             //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                             this.dealRapicFireHandel(this.numsOfResults-1)
                         }
@@ -835,22 +835,23 @@ var app = new Vue({
         },
         // 版本记录 删除
         versionRecordDelete(itemData) {
-            console.log('版本记录 删除:', itemData)
+            //console.log('版本记录 删除:', itemData)
+            this.$message.warning('敬请期待')
             // to do 接口对接 async await
-            this.$confirm('此操作将永久删除该靶道版本, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                // 对接接口 删除
-                this.btnDeleteHandle(itemData.id)
+            //this.$confirm('此操作将永久删除该靶道版本, 是否继续?', '提示', {
+            //    confirmButtonText: '确定',
+            //    cancelButtonText: '取消',
+            //    type: 'warning'
+            //}).then(() => {
+            //    // 对接接口 删除
+            //    this.btnDeleteHandle(itemData.id)
 
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
+            //}).catch(() => {
+            //    this.$message({
+            //        type: 'info',
+            //        message: '已取消删除'
+            //    });
+            //});
         },
         // 版本记录 查看备注
         versionRecordViewNotes(itemData) {
@@ -1001,7 +1002,7 @@ var app = new Vue({
                 })
                 return
             }
-            if(!this.content) {
+            if (!isDraft&&!this.content) {
                 this.$message({
                     message: '请输入内容！',
                     type: 'warning'
@@ -1106,6 +1107,10 @@ var app = new Vue({
                 this.getPromptOptData(id)
                 // 获取分数趋势图表数据
                 this.getScoringTrendData()
+                if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                    //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                    this.dealRapicFireHandel(this.numsOfResults - 1)
+                }
             }
         },
         
@@ -1286,6 +1291,8 @@ var app = new Vue({
                 await service.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete',{data:[item.id]})
                     .then(res=>{
                         //reload model list
+                        // 重置模型列表
+                        this.modelid = ''
                         this.getModelOptData()
                         this.$message({
                             type: res.data.success ? 'success' : 'error',
@@ -1485,8 +1492,15 @@ var app = new Vue({
                         }
                         return item
                     })
-                    // 模型覆盖
-                    this.modelid = this.promptDetail.modelId
+                    
+                    // 判断模型列表是否有选中的模型
+                        let _findIndex = this.modelOpt.findIndex(item => item.value === this.promptDetail.modelId)
+                    if (_findIndex > -1) {
+                        // 模型覆盖
+                        this.modelid = this.promptDetail.modelId
+                    } else {
+                        this.modelid = ''
+                    }
                     // prompt 输入内容
                     this.content = this.promptDetail.promptContent || '' 
                     // prompt 输入的备注

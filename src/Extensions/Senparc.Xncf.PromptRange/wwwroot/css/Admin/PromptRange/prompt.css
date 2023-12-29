@@ -815,6 +815,10 @@ position: fixed;
     position: relative;
     height: 100%;
     box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+flex-direction: column;
+flex-wrap: nowrap;
 }
 
 .versionDrawerArea > .versionDrawerArea_titleRow {
@@ -845,6 +849,10 @@ position: fixed;
 
 .versionDrawerArea > .versionDrawerArea_contentRow {
     margin-top: 15px;
+    min-height:300px;
+    height: 72%;
+    overflow:hidden;
+    overflow-y:auto;
 }
 
     .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node {
