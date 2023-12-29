@@ -247,7 +247,11 @@
                 </div>
                 <div class="titleRow_scoreBox">
                     <span>平均分:</span>
-                    <span>{{outputAverage || '--'}}</span>
+                    <span>{{outputAverageDeci || '--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>最高分:</span>
+                    <span>{{outputMaxDeci || '--'}}</span>
                 </div>
             </div>
             <div class="outputArea_contentBox">
@@ -397,7 +401,7 @@
                 <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharAI'" label="API key" prop="apiKey" label-width="130px">
-                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" placeholder="请输入API key"></el-input>
+                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" placeholder="请输入API key"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
                 <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>

@@ -112,7 +112,8 @@ var app = new Vue({
             ],
             sendBtnText:'打靶',
             // 输出 ---start
-            outputAverage: '',// 输出列表的平均分
+            outputAverageDeci: '',// 输出列表的平均分
+            outputMaxDeci:'', // 输出列表的最高分
             outputActive: '', // 输出列表选中查看|评分
             outputList: [],  // 输出列表
             chartData: [], // 图表数据
@@ -654,8 +655,8 @@ var app = new Vue({
                 // 输入Prompt 重置
                 this.resetInputPrompt()
                 this.outputList = []
-                this.outputAverage = 0
-                
+                this.outputAverageDeci = 0
+            this.outputMaxDeci = 0
                 this.promptDetail = {}
                 this.promptParamForm = {
                 prefix: '',
@@ -743,7 +744,8 @@ var app = new Vue({
                         delete copyResultData.promptResultList
                         this.promptDetail = copyResultData
                         // 平均分 
-                        this.outputAverage = 0 // 保留整数
+                        this.outputAverageDeci = 0 // 保留整数
+                        this.outputMaxDeci = 0 // 保留整数
                         // 输出列表
                         this.outputList = promptResultList.map(item => {
                             if (item) {
@@ -898,7 +900,8 @@ var app = new Vue({
             if (res.data.success) {
                 let {promptResults = [],promptItem={}} = res.data.data || {}
                 // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverage = promptItem.evalAvgScore > 0 ? promptItem.evalAvgScore : 0; // 保留整数
+                this.outputAverageDeci = promptItem.evalAvgScore > 0 ? promptItem.evalAvgScore : 0; // 保留整数
+                this.outputMaxDeci = promptItem.evalMaxScore > 0 ? promptItem.evalMaxScore : 0; // 保留整数
                 // 输出列表
                 this.outputList = promptResults.map(item => {
                     if (item) {
@@ -1128,7 +1131,8 @@ this.$message({
                         delete copyResultData.promptResultList
                         this.promptDetail = copyResultData
                         // 平均分 _totalScore/promptResultList 保留整数
-                        this.outputAverage = 0 // 保留整数
+                        this.outputAverageDeci = 0 // 保留整数
+                        this.outputMaxDeci = 0 // 保留整数
                         // 输出列表
                         this.outputList = promptResultList.map(item => {
                             if (item) {
@@ -1199,8 +1203,9 @@ this.$message({
             const numsOfResults= 1
             return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
-                    console.log('testHandel res ', res.data)
-                    this.outputAverage = res.data.data.promptItem.evalAvgScore > 0 ? res.data.data.promptItem.evalAvgScore : 0; // 保留整数
+                    //console.log('testHandel res ', res.data)
+                    this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > 0 ? res.data.data.promptItem.evalAvgScore : 0; // 保留整数
+                    this.outputMaxDeci = promptItem.evalMaxScore > 0 ? promptItem.evalMaxScore : 0; // 保留整数
                 //输出列表
                  res.data.data.promptResults.map(item=>{
                     item.promptId = promptItemId
@@ -1609,7 +1614,8 @@ this.$message({
                     // 输入Prompt 重置
                     this.resetInputPrompt()
                     this.outputList = []
-                    this.outputAverage = 0
+                    this.outputAverageDeci = 0
+                    this.outputMaxDeci = 0
                     // 获取分数趋势图表数据
                     this.getScoringTrendData()
                     this.promptDetail = {}
