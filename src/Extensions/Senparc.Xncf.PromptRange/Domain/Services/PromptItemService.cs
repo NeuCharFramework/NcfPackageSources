@@ -87,21 +87,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         tactic: $"{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac,
-                        content: request.Content,
-                        modelId: request.ModelId,
-                        topP: request.TopP,
-                        temperature: request.Temperature,
-                        maxToken: request.MaxToken,
-                        frequencyPenalty: request.FrequencyPenalty,
-                        presencePenalty: request.PresencePenalty,
-                        stopSequences: request.StopSequences,
-                        // numsOfResults: request.NumsOfResults,
-                        note: request.Note,
-                        expectedResultsJson: request.ExpectedResultsJson,
-                        isDraft: request.IsDraft,
-                        prefix: request.Prefix,
-                        suffix: request.Suffix,
-                        variableDictJson: request.VariableDictJson
+                        request: request
                     );
                 }
                 else if (request.IsNewSubTactic)

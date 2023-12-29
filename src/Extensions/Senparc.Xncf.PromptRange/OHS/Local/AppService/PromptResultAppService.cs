@@ -135,6 +135,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         resp.PromptResults.Add(result);
                     }
 
+                    await _promptResultService.UpdateEvalScoreAsync(promptItemId);
+
                     return resp;
                 }
             );
