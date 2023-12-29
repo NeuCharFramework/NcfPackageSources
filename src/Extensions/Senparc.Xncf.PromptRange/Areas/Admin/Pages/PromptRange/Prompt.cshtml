@@ -27,7 +27,8 @@
                                 <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                                 <div class="titleContent">选择靶场</div>
                             </div>
-                            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="fieldFormVisible = true">新增靶场</el-button>
+                            @* @@click="fieldFormVisible = true" *@
+                            <el-button type="primary" size="mini" icon="el-icon-plus" >新增靶场</el-button>
                         </div>
                         <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField',promptField)">
                             <el-option v-for="item in promptFieldOpt"
