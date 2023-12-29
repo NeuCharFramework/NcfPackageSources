@@ -679,6 +679,7 @@ var app = new Vue({
                     // ai评分标准
                     if (this.aiScoreForm.resultList.length > 0) {
                         let _list = this.aiScoreForm.resultList.map(item => item.value)
+                        _list = _list.filter(item => item)
                         if (_list.length > 0) {
                             _postData.expectedResultsJson = JSON.stringify(_list)
                         }
@@ -1043,6 +1044,7 @@ var app = new Vue({
             // ai评分标准
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
+                _list = _list.filter(item => item)
                 if (_list.length > 0) {
                     _postData.expectedResultsJson = JSON.stringify(_list)
                 }
