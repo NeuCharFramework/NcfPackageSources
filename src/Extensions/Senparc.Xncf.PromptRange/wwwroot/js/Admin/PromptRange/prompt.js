@@ -1211,7 +1211,7 @@ this.$message({
                 {params: {promptItemId, numsOfResults}}).then(res => {
                     //console.log('testHandel res ', res.data)
                     this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > 0 ? res.data.data.promptItem.evalAvgScore : 0; // 保留整数
-                    this.outputMaxDeci = promptItem.evalMaxScore > 0 ? promptItem.evalMaxScore : 0; // 保留整数
+                    this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > 0 ? promptItem.evalMaxScore : 0; // 保留整数
                 //输出列表
                  res.data.data.promptResults.map(item=>{
                     item.promptId = promptItemId
