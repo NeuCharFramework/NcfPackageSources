@@ -25,19 +25,148 @@
             </el-menu>
         </el-aside>*@
         <el-main>
-            <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
-            <h4>@Model.XncfRegister.Description</h4>
-            <br />
-            <i>当前模块为自动生成模块</i>
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>模型列表</h1>
+                <el-button type="primary" icon="el-icon-plus" size="mini" @click="addModel">添加模型</el-button>
+            </div>
+           
+            <el-table :data="tableData">
+                @* ,[Name] *@
+                @* ,[Endpoint] *@
+                @* ,[AiPlatform] *@
+                @* ,[OrganizationId] *@
+                @* ,[ApiKey] *@
+                @* ,[ApiVersion] *@
+                @* ,[Note] *@
+                @* ,[MaxToken] *@
+                @* ,[Show] *@
+                @* ,[Flag] *@
+                @* ,[AddTime] *@
+                @* ,[LastUpdateTime] *@
+                @* ,[TenantId] *@
+                @* ,[AdminRemark] *@
+                @* ,[Remark] *@
+                <el-table-column prop="name" label="名称" width="auto"></el-table-column>
+                <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
+                <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
+                <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
+                <el-table-column prop="note" label="备注" width="auto"></el-table-column>
+                <el-table-column prop="show" label="显示" width="auto"></el-table-column>
+                <el-table-column prop="addTime" label="添加时间" width="auto">
+                    {{dateformatter(scope.row.addTime)}}
+                </el-table-column>
+                @* 操作 *@
+                <el-table-column label="操作" width="auto">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="editModel(scope.row)">编辑</el-button>
+                        <el-button type="danger" size="mini" @click="deleteModel(scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
         </el-main>
     </el-container>
+    
+    @* dialog for 添加模型 *@
+    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="30%">
+        @* ,[Name] *@
+        @* ,[Endpoint] *@
+        @* ,[AiPlatform] *@
+        @* ,[OrganizationId] *@
+    
+        @* ,[Note] *@
+        @* ,[MaxToken] *@
+        @* ,[Show] *@
+        @* ,[AdminRemark] *@
+        @* ,[Remark] *@
+        @* show form of above item *@
+        <el-form :model="addForm" label-width="80px">
+            <el-form-item label="名称">
+                <el-input v-model="addForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="Endpoint">
+                <el-input v-model="addForm.endpoint"></el-input>
+            </el-form-item>
+            <el-form-item label="平台">
+                <el-input v-model="addForm.aiPlatform"></el-input>
+            </el-form-item>
+        <el-form-item label="组织">
+            <el-input v-model="addForm.organizationId"></el-input>
+        </el-form-item>
+        @* ,[ApiKey] *@
+        <el-form-item label="ApiKey">
+            <el-input v-model="addForm.apiKey"></el-input>
+        </el-form-item>
+        
+        @* ,[ApiVersion] *@
+        <el-form-item label="ApiVersion">
+            <el-input v-model="addForm.apiVersion"></el-input>
+        </el-form-item>
+        
+        
+            <el-form-item label="备注">
+                <el-input v-model="addForm.note"></el-input>
+            </el-form-item>
+        <el-form-item label="显示">
+            @* use switch *@
+            <el-switch v-model="addForm.show"></el-switch>
+        </el-form-item>
+                @* ,[MaxToken] *@
+                @* ,[AdminRemark] *@
+        @* ,[Remark] *@
+        <el-form-item label="MaxToken">
+            <el-input v-model="addForm.maxToken"></el-input>
+        </el-form-item>
+        <el-form-item label="AdminRemark">
+            <el-input v-model="addForm.adminRemark"></el-input>
+        </el-form-item>
+        <el-form-item label="Remark">
+            <el-input v-model="addForm.remark"></el-input>
+        </el-form-item>
+        </el-form>
+    </el-dialog>
+    
 </div>
 
 
 @section scripts{
     <script>
         new Vue({
-            el: "#app"
+            el: "#app",
+            data(){
+                return {
+                    tableData: [],
+                    addFormDialogVisible: false,
+                    addForm:{
+                    }
+                  
+                }
+            },
+            method:{
+                addModel(){
+                    this.addFormDialogVisible = true;
+                },
+                dateformatter(date){
+                    return new Date(date).toLocaleString()
+                },
+                deleteModel(row){
+                    this.$confirm(`此操作将永久删除【${row.name}】模型, 是否继续?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        //todo 添加删除接口
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });          
+                    });
+                },
+            },
         });
     </script>
 }
