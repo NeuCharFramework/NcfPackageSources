@@ -29,7 +29,7 @@
                 <h1>模型列表</h1>
                 <el-button type="primary" icon="el-icon-plus" size="mini" @@click="addModel">添加模型</el-button>
             </div>
-           
+
             <el-table :data="tableData">
                 @* ,[Name] *@
                 @* ,[Endpoint] *@
@@ -54,7 +54,7 @@
                 <el-table-column prop="show" label="显示" width="auto"></el-table-column>
                 <el-table-column prop="addTime" label="添加时间" width="auto">
                     <template slot-scope="scope">
-                    {{ dateformatter(scope.row.addTime) }}
+                        {{ dateformatter(scope.row.addTime) }}
                     </template>
                 </el-table-column>
                 @* 操作 *@
@@ -65,23 +65,25 @@
                     </template>
                 </el-table-column>
             </el-table>
+            @*todo 翻页 *@
+
         </el-main>
     </el-container>
-    
+
     @* dialog for 添加模型 *@
-    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="70%">
+    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%">
         @* ,[Name] *@
         @* ,[Endpoint] *@
         @* ,[AiPlatform] *@
         @* ,[OrganizationId] *@
-    
+
         @* ,[Note] *@
         @* ,[MaxToken] *@
         @* ,[Show] *@
         @* ,[AdminRemark] *@
         @* ,[Remark] *@
         @* show form of above item *@
-        <el-form :model="addForm" label-width="80px">
+        <el-form :model="addForm" label-width="120px">
             <el-form-item label="名称">
                 <el-input v-model="addForm.name"></el-input>
             </el-form-item>
@@ -98,7 +100,7 @@
             <el-form-item label="ApiKey">
                 <el-input v-model="addForm.apiKey" type="password"></el-input>
             </el-form-item>
-        
+
             @* ,[ApiVersion] *@
             <el-form-item label="ApiVersion">
                 <el-input v-model="addForm.apiVersion"></el-input>
@@ -129,19 +131,19 @@
         </span>
     </el-dialog>
     @* dialog for 编辑模型 *@
-    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="70%">
+    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%">
         @* ,[Name] *@
         @* ,[Endpoint] *@
         @* ,[AiPlatform] *@
         @* ,[OrganizationId] *@
-    
+
         @* ,[Note] *@
         @* ,[MaxToken] *@
         @* ,[Show] *@
         @* ,[AdminRemark] *@
         @* ,[Remark] *@
         @* show form of above item *@
-        <el-form :model="editForm" label-width="80px">
+        <el-form :model="editForm" label-width="120px">
             <el-form-item label="名称">
                 <el-input v-model="editForm.name"></el-input>
             </el-form-item>
@@ -158,7 +160,7 @@
             <el-form-item label="ApiKey">
                 <el-input v-model="editForm.apiKey" type="password"></el-input>
             </el-form-item>
-        
+
             @* ,[ApiVersion] *@
             <el-form-item label="ApiVersion">
                 <el-input v-model="editForm.apiVersion"></el-input>
@@ -185,18 +187,23 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="editFormDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
+            <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
         </span>
     </el-dialog>
 </div>
 
 
 @section scripts{
+
     <script>
         new Vue({
             el: "#app",
             data(){
                 return {
+                    page:{
+                        page:1,
+                        size:10
+                    },
                     tableData: [],
                     addFormDialogVisible: false,
                     addForm:{
@@ -208,7 +215,7 @@
                         ApiVersion: '',
                         Note: '',
                         MaxToken: '',
-                        Show: '',
+                        Show: false,
                         AdminRemark: '',
                         Remark: ''
                     },
@@ -222,7 +229,7 @@
                         ApiVersion: '',
                         Note: '',
                         MaxToken: '',
-                        Show: '',
+                        Show: false,
                         AdminRemark: '',
                         Remark: ''
                     },
@@ -239,7 +246,10 @@
                 async getDataList(){
                     //todo get data from api
                     // /api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync'
-                    await this.service.get('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync')
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{data:{
+                          "page": this.page.page,
+                          "size": this.page.size,
+                    }})
                     .then(res=>{
                         this.tableData=res.data.data;
                     })
@@ -247,21 +257,32 @@
                 addModel(){
                     this.addFormDialogVisible = true;
                 },
-                addModelSubmit(){
+                async addModelSubmit(){
                     //todo 添加模型接口
-                    this.$message({
-                        type: 'success',
-                        message: '添加成功!'
-                    });
-                    this.addFormDialogVisible = false;
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',{
+                        data:{...this.addForm}
+                    }).then(res=>{
+                            this.$message({
+                                     type: res.data.success?'success':'error',
+                                     message: res.data.success?'添加成功!':'添加失败'
+                            });
+                            this.getDataList()
+                            this.addFormDialogVisible = false;
+                    })
+                   
                 },
-                editModelSubmit(){
+                async editModelSubmit(){
                     //todo 编辑模型接口
-                    this.$message({
-                        type: 'success',
-                        message: '编辑成功!'
-                    });
-                    this.editFormDialogVisible = false;
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync',{
+                        data:{...this.editForm}
+                    }).then(res=>{
+                            this.$message({
+                                     type: res.data.success?'success':'error',
+                                     message: res.data.success?'添加成功!':'添加失败'
+                            });
+                            this.getDataList()
+                            this.editFormDialogVisible = false;
+                    })
                 },
                 dateformatter(date){
                     return new Date(date).toLocaleString()
@@ -275,12 +296,18 @@
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
-                    }).then(() => {
-                        //todo 添加删除接口
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
+                    }).then(async () => {
+                        await service.delete('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.DeleteAsync',{
+                        params:{
+                            id:row.id
+                        }    
+                       }).then(res=>{
+                            this.$message({
+                                 type: res.data.success?'success':'error',
+                                 message: res.data.success?'删除成功!':'删除失败'
+                            });
+                       })
+                  
                     }).catch(() => {
                         this.$message({
                             type: 'info',
