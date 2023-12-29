@@ -89,42 +89,103 @@
             <el-form-item label="平台">
                 <el-input v-model="addForm.aiPlatform"></el-input>
             </el-form-item>
-        <el-form-item label="组织">
-            <el-input v-model="addForm.organizationId"></el-input>
-        </el-form-item>
-        @* ,[ApiKey] *@
-        <el-form-item label="ApiKey">
-            <el-input v-model="addForm.apiKey"></el-input>
-        </el-form-item>
+            <el-form-item label="组织">
+                <el-input v-model="addForm.organizationId"></el-input>
+            </el-form-item>
+            @* ,[ApiKey] *@
+            <el-form-item label="ApiKey">
+                <el-input v-model="addForm.apiKey" type="password"></el-input>
+            </el-form-item>
         
-        @* ,[ApiVersion] *@
-        <el-form-item label="ApiVersion">
-            <el-input v-model="addForm.apiVersion"></el-input>
-        </el-form-item>
-        
-        
+            @* ,[ApiVersion] *@
+            <el-form-item label="ApiVersion">
+                <el-input v-model="addForm.apiVersion"></el-input>
+            </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
-        <el-form-item label="显示">
-            @* use switch *@
-            <el-switch v-model="addForm.show"></el-switch>
-        </el-form-item>
-                @* ,[MaxToken] *@
-                @* ,[AdminRemark] *@
-        @* ,[Remark] *@
-        <el-form-item label="MaxToken">
-            <el-input v-model="addForm.maxToken"></el-input>
-        </el-form-item>
-        <el-form-item label="AdminRemark">
-            <el-input v-model="addForm.adminRemark"></el-input>
-        </el-form-item>
-        <el-form-item label="Remark">
-            <el-input v-model="addForm.remark"></el-input>
-        </el-form-item>
+            <el-form-item label="显示">
+                @* use switch *@
+                <el-switch v-model="addForm.show"></el-switch>
+            </el-form-item>
+            @* ,[MaxToken] *@
+            @* ,[AdminRemark] *@
+            @* ,[Remark] *@
+            <el-form-item label="MaxToken">
+                <el-input v-model="addForm.maxToken"></el-input>
+            </el-form-item>
+            <el-form-item label="AdminRemark">
+                <el-input v-model="addForm.adminRemark"></el-input>
+            </el-form-item>
+            <el-form-item label="Remark">
+                <el-input v-model="addForm.remark"></el-input>
+            </el-form-item>
         </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="addFormDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addModelSubmit">确 定</el-button>
+        </span>
     </el-dialog>
+    @* dialog for 编辑模型 *@
+    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="30%">
+        @* ,[Name] *@
+        @* ,[Endpoint] *@
+        @* ,[AiPlatform] *@
+        @* ,[OrganizationId] *@
     
+        @* ,[Note] *@
+        @* ,[MaxToken] *@
+        @* ,[Show] *@
+        @* ,[AdminRemark] *@
+        @* ,[Remark] *@
+        @* show form of above item *@
+        <el-form :model="editForm" label-width="80px">
+            <el-form-item label="名称">
+                <el-input v-model="editForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="Endpoint">
+                <el-input v-model="editForm.endpoint"></el-input>
+            </el-form-item>
+            <el-form-item label="平台">
+                <el-input v-model="editForm.aiPlatform"></el-input>
+            </el-form-item>
+            <el-form-item label="组织">
+                <el-input v-model="editForm.organizationId"></el-input>
+            </el-form-item>
+            @* ,[ApiKey] *@
+            <el-form-item label="ApiKey">
+                <el-input v-model="editForm.apiKey" type="password"></el-input>
+            </el-form-item>
+        
+            @* ,[ApiVersion] *@
+            <el-form-item label="ApiVersion">
+                <el-input v-model="editForm.apiVersion"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input v-model="editForm.note"></el-input>
+            </el-form-item>
+            <el-form-item label="显示">
+                @* use switch *@
+                <el-switch v-model="editForm.show"></el-switch>
+            </el-form-item>
+            @* ,[MaxToken] *@
+            @* ,[AdminRemark] *@
+            @* ,[Remark] *@
+            <el-form-item label="MaxToken">
+                <el-input v-model="editForm.maxToken"></el-input>
+            </el-form-item>
+            <el-form-item label="AdminRemark">
+                <el-input v-model="editForm.adminRemark"></el-input>
+            </el-form-item>
+            <el-form-item label="Remark">
+                <el-input v-model="editForm.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="editFormDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editModelSubmit">确 定</el-button>
+        </span>
+    </el-dialog>
 </div>
 
 
@@ -137,16 +198,70 @@
                     tableData: [],
                     addFormDialogVisible: false,
                     addForm:{
-                    }
+                        Name: '',
+                        Endpoint: '',
+                        AiPlatform: '',
+                        OrganizationId: '',
+                        ApiKey: '',
+                        ApiVersion: '',
+                        Note: '',
+                        MaxToken: '',
+                        Show: '',
+                        AdminRemark: '',
+                        Remark: ''
+                    },
+                    editFormDialogVisible: false,
+                    editForm:{
+                        Name: '',
+                        Endpoint: '',
+                        AiPlatform: '',
+                        OrganizationId: '',
+                        ApiKey: '',
+                        ApiVersion: '',
+                        Note: '',
+                        MaxToken: '',
+                        Show: '',
+                        AdminRemark: '',
+                        Remark: ''
+                    },
                   
                 }
             },
+            mounted () {
+                this.init();
+            },
             method:{
+                init(){
+                    this.getDataList();
+                },
+                getDataList(){
+                    //todo get data from api
+                },    
                 addModel(){
                     this.addFormDialogVisible = true;
                 },
+                addModelSubmit(){
+                    //todo 添加模型接口
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功!'
+                    });
+                    this.addFormDialogVisible = false;
+                },
+                editModelSubmit(){
+                    //todo 编辑模型接口
+                    this.$message({
+                        type: 'success',
+                        message: '编辑成功!'
+                    });
+                    this.editFormDialogVisible = false;
+                },
                 dateformatter(date){
                     return new Date(date).toLocaleString()
+                },
+                editModel(row){
+                    this.editFormDialogVisible = true;
+                    this.editForm = row;
                 },
                 deleteModel(row){
                     this.$confirm(`此操作将永久删除【${row.name}】模型, 是否继续?`, '提示', {
