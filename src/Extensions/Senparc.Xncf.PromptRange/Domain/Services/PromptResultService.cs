@@ -212,6 +212,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             return promptResult;
+            // return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
 
@@ -228,11 +229,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #endregion
 
             // 根据id搜索数据库
-            var promptResult = await base.GetObjectAsync(result => result.Id == id);
-            if (promptResult == null)
-            {
-                throw new NcfExceptionBase($"未找到{id}对应的结果");
-            }
+            var promptResult = await base.GetObjectAsync(result => result.Id == id) ??
+                               throw new NcfExceptionBase($"未找到{id}对应的结果");
 
             promptResult.ManualScoring(score);
 
@@ -247,7 +245,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var aiSettings = new SenparcAiSetting();
 
             if (!Enum.TryParse(llmModel.ModelType, out AiPlatform aiPlatform))
+            {
                 throw new Exception("无法转换为AiPlatform");
+            }
+
             aiSettings.AiPlatform = aiPlatform;
             switch (aiPlatform)
             {
@@ -427,21 +428,23 @@ Human: 江苏的省会是：
         /// <exception cref="NcfExceptionBase"></exception>
         public async Task<Boolean> UpdateEvalScoreAsync(int promptItemId)
         {
-            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptItem");
-            }
+            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new NcfExceptionBase("找不到对应的promptItem");
 
             List<PromptResult> promptResults = await this.GetFullListAsync(
                 p => p.PromptItemId == promptItemId　&& (p.HumanScore >= 0 || p.RobotScore >= 0),
                 p => p.Id, OrderingType.Ascending);
 
+            if (promptResults.Count == 0)
+            {
+                // 没有结果
+                return false;
+            }
+
             double avg = promptResults.Average(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
             promptItem.UpdateEvalAvgScore((int)avg);
 
             int max = promptResults.Max(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
-
             promptItem.UpdateEvalMaxScore(max);
 
             await _promptItemService.SaveObjectAsync(promptItem);
