@@ -41,7 +41,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '生成文本的最大长度',
+                    tips: '请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！',
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -1088,7 +1088,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '生成文本的最大长度',
+                    tips: '请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！',
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
