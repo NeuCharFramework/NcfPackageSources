@@ -212,6 +212,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             return promptResult;
+            // return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
 

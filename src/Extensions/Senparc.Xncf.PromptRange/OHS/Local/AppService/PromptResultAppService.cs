@@ -116,7 +116,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
-                    var promptItem = await _promptItemService.DraftSwitch(promptItemId, true);
+                    var promptItem = await _promptItemService.DraftSwitch(promptItemId, false);
                     // #region 删除之前的结果
                     //
                     // var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);

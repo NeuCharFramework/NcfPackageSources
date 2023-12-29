@@ -41,13 +41,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-                    #region save promptItem
-
                     var promptItemDto = await _promptItemService.AddPromptItemAsync(request)
                                         ?? throw new NcfExceptionBase("新增失败");
-
-                    #endregion
-
 
                     var promptItemResponseDto = new PromptItem_AddResponse(promptItemDto);
 
