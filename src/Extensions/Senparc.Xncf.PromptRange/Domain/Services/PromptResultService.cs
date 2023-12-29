@@ -437,6 +437,7 @@ Human: 江苏的省会是：
 
             if (promptResults.Count == 0)
             {
+                // 没有结果
                 return false;
             }
 
