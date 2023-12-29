@@ -44,7 +44,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     #region save promptItem
 
                     var promptItemDto = await _promptItemService.AddPromptItemAsync(request)
-                                     ?? throw new NcfExceptionBase("新增失败");
+                                        ?? throw new NcfExceptionBase("新增失败");
 
                     #endregion
 
@@ -65,7 +65,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
-                    
+
                     await _promptResultService.UpdateEvalScoreAsync(promptItemDto.Id);
 
                     return promptItemResponseDto;
@@ -193,7 +193,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                              throw new Exception("未找到prompt");
 
                 await _promptItemService.DeleteObjectAsync(result);
-                
+
                 // todo 关联删除所有子战术
 
                 await _promptResultService.BatchDeleteWithItemId(id);
@@ -209,14 +209,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="expectedResults"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> UpdateExpectedResults(int promptItemId, string expectedResults)
+        public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
-            {
-                await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
+            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+                async (response, logger) =>
+                {
+                    return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
 
-                return "ok";
-            });
+                });
         }
     }
 }
