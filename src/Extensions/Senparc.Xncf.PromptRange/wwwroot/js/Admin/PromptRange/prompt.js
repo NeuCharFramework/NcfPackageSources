@@ -735,17 +735,16 @@ var app = new Vue({
                         this.pageChange = false
                         // 关闭dialog
                         this.tacticalFormVisible = false
-                        let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
-                        // 重新获取prompt列表
-                        //this.getPromptOptData(id)
+                        let { promptResultList = [], fullVersion = '', id, evalAvgScore, evalMaxScore } = res.data.data || {}
 
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
                         this.promptDetail = copyResultData
                         // 平均分 
-                        this.outputAverageDeci = 0 // 保留整数
-                        this.outputMaxDeci = 0 // 保留整数
+                        this.outputAverageDeci = evalAvgScore > 0 ? evalAvgScore : 0;
+                        // 最高分
+                        this.outputMaxDeci = evalMaxScore > 0 ? evalMaxScore : 0;
                         // 输出列表
                         this.outputList = promptResultList.map(item => {
                             if (item) {
@@ -772,7 +771,7 @@ var app = new Vue({
                             }
                             return item
                         })
-                        console.log('选择正确的靶场')
+                        //console.log('选择正确的靶场')
                         this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
@@ -955,6 +954,8 @@ var app = new Vue({
                 let res = await service.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.RobotScore?isRefresh=true&promptResultId=${item.id}`, _list)
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
+                    // 从新获取靶场列表
+                    this.getPromptOptData()
                     // 重新获取输出列表
                     this.getOutputList(item.promptId)
                     // 重新获取图表
@@ -970,6 +971,8 @@ var app = new Vue({
                 })
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
+                    // 从新获取靶场列表
+                    this.getPromptOptData()
                     // 重新获取输出列表
                     this.getOutputList(item.promptId)
                     // 重新获取图表
@@ -978,8 +981,6 @@ var app = new Vue({
                     alert('error!');
                 }
             }
-
-            //console.log('saveManualScore res ', res.data)
 
         },
         // 输出 选中切换
@@ -1123,16 +1124,15 @@ this.$message({
                             type: 'success'
                         })
                     } else {
-                        let { promptResultList = [], fullVersion = '', id } = res.data.data || {}
-                        // 重新获取prompt列表
-                        //this.getPromptOptData(id)
+                        let { promptResultList = [], fullVersion = '', id, evalAvgScore, evalMaxScore } = res.data.data || {}
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
                         this.promptDetail = copyResultData
-                        // 平均分 _totalScore/promptResultList 保留整数
-                        this.outputAverageDeci = 0 // 保留整数
-                        this.outputMaxDeci = 0 // 保留整数
+                        // 平均分 
+                        this.outputAverageDeci = evalAvgScore > 0 ? evalAvgScore : 0;
+                        // 最高分
+                        this.outputMaxDeci = evalMaxScore > 0 ? evalMaxScore : 0;
                         // 输出列表
                         this.outputList = promptResultList.map(item => {
                             if (item) {
@@ -1165,6 +1165,7 @@ this.$message({
                         this.getFieldList().then(() => {
                             this.getPromptOptData(id)
                         })
+
                         
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
@@ -1199,6 +1200,8 @@ this.$message({
                 promises.push(this.rapidFireHandel());
             }
             await Promise.all(promises);
+            // 从新获取靶场列表
+            this.getPromptOptData()
             this.targetShootLoading=false
         },
         async rapidFireHandel() {
