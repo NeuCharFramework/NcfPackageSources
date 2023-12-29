@@ -146,7 +146,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 TopP = promptItem.TopP,
                 FrequencyPenalty = promptItem.FrequencyPenalty,
                 PresencePenalty = promptItem.PresencePenalty,
-                StopSequences = new List<string>() //(promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
             };
 
             // 需要在变量前添加$
@@ -175,11 +175,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
 
                 // 读取参数并填充
-                //foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
-                //{
-                //    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
-                //    aiArguments[k] = v;
-                //}
+                foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
+                {
+                    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
+                    aiArguments[k] = v;
+                }
             }
 
             #endregion
@@ -228,11 +228,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #endregion
 
             // 根据id搜索数据库
-            var promptResult = await base.GetObjectAsync(result => result.Id == id);
-            if (promptResult == null)
-            {
-                throw new NcfExceptionBase($"未找到{id}对应的结果");
-            }
+            var promptResult = await base.GetObjectAsync(result => result.Id == id) ??
+                               throw new NcfExceptionBase($"未找到{id}对应的结果");
 
             promptResult.ManualScoring(score);
 
@@ -247,7 +244,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var aiSettings = new SenparcAiSetting();
 
             if (!Enum.TryParse(llmModel.ModelType, out AiPlatform aiPlatform))
+            {
                 throw new Exception("无法转换为AiPlatform");
+            }
+
             aiSettings.AiPlatform = aiPlatform;
             switch (aiPlatform)
             {
@@ -295,8 +295,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, string expectedResultsJson, bool isRefresh)
         {
-            List<string> list = new List<string>();  //JsonConvert.DeserializeObject<>(expectedResultsJson);
-                //expectedResultsJson.GetObject<List<string>>();
+            List<string> list = //JsonConvert.DeserializeObject<>(expectedResultsJson);
+                expectedResultsJson.GetObject<List<string>>();
             return await this.RobotScoringAsync(promptResultId, list, isRefresh);
         }
 
@@ -427,21 +427,22 @@ Human: 江苏的省会是：
         /// <exception cref="NcfExceptionBase"></exception>
         public async Task<Boolean> UpdateEvalScoreAsync(int promptItemId)
         {
-            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
-            if (promptItem == null)
-            {
-                throw new NcfExceptionBase("找不到对应的promptItem");
-            }
+            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new NcfExceptionBase("找不到对应的promptItem");
 
             List<PromptResult> promptResults = await this.GetFullListAsync(
                 p => p.PromptItemId == promptItemId　&& (p.HumanScore >= 0 || p.RobotScore >= 0),
                 p => p.Id, OrderingType.Ascending);
 
+            if (promptResults.Count == 0)
+            {
+                return false;
+            }
+
             double avg = promptResults.Average(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
             promptItem.UpdateEvalAvgScore((int)avg);
 
             int max = promptResults.Max(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
-
             promptItem.UpdateEvalMaxScore(max);
 
             await _promptItemService.SaveObjectAsync(promptItem);
