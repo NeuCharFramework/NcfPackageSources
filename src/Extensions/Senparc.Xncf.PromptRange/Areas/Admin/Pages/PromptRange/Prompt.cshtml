@@ -395,7 +395,7 @@
                 <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharAI'" label="API key" prop="apiKey" label-width="130px">
-                <el-input v-model="modelForm.apiKey" autocomplete="off" placeholder="请输入API key"></el-input>
+                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" placeholder="请输入API key"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
                 <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
