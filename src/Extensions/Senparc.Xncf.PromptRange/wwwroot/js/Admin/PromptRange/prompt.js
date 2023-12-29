@@ -1168,6 +1168,25 @@ var app = new Vue({
             this.content = ''// prompt 输入内容
             //this.remarks = '' // prompt 输入的备注
         },
+        deleteModel(item){
+          //删除模型 confirm
+            this.$confirm(`此操作将永久删除模型【${item.name}】, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await service.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete',{data:[item.id]})
+                    .then(res=>{
+                        //reload model list
+                        this.getModelOptData()
+                        this.$message({
+                            type: res.data.success ? 'success' : 'error',
+                            message: res.data.success ? '删除成功' : '删除失败'
+                        });
+                    })
+                
+            })
+        },
 
         //  prompt请求参数 关闭
         promptParamFormClose() {
@@ -1248,7 +1267,7 @@ var app = new Vue({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm,{customAlert:true})
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
