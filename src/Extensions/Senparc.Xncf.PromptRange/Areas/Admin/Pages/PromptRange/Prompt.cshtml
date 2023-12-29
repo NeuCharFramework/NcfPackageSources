@@ -219,8 +219,8 @@
                             </div>
                         </el-form>
                         <div class="footerBtnRow">
-                            <el-button size="mini" @@click="promptParamFormClose">取 消</el-button>
-                            <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button>
+                            @* <el-button size="mini" @@click="promptParamFormClose">取 消</el-button> *@
+                            @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button> *@
                         </div>
                     </div>
                 </div>
@@ -251,7 +251,7 @@
                     <div class="contentRow">
                         {{item.resultString}}
                     </div>
-                    <div class="operateRow">
+                    <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                             <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span>AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
