@@ -146,7 +146,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 TopP = promptItem.TopP,
                 FrequencyPenalty = promptItem.FrequencyPenalty,
                 PresencePenalty = promptItem.PresencePenalty,
-                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+                StopSequences = new List<string>() //(promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
             };
 
             // 需要在变量前添加$
@@ -175,11 +175,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
 
                 // 读取参数并填充
-                foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
-                {
-                    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
-                    aiArguments[k] = v;
-                }
+                //foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
+                //{
+                //    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
+                //    aiArguments[k] = v;
+                //}
             }
 
             #endregion
@@ -295,8 +295,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, string expectedResultsJson, bool isRefresh)
         {
-            List<string> list = //JsonConvert.DeserializeObject<>(expectedResultsJson);
-                expectedResultsJson.GetObject<List<string>>();
+            List<string> list = new List<string>();  //JsonConvert.DeserializeObject<>(expectedResultsJson);
+                //expectedResultsJson.GetObject<List<string>>();
             return await this.RobotScoringAsync(promptResultId, list, isRefresh);
         }
 
