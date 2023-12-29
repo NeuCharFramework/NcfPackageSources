@@ -96,7 +96,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         p => p.Id,
                         OrderingType.Ascending
                     )).ToList();
-                    var item = await _promptItemService.GetObjectAsync(item => item.Id == promptItemId);
+
+                    var item = await _promptItemService.GetAsync(promptItemId);
 
                     return new PromptResult_ListResponse(promptItemId, item, result);
                 });
@@ -115,9 +116,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
-                    var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
-                    promptItem.DraftSwitch(true);
-                    await _promptItemService.SaveObjectAsync(promptItem);
+                    var promptItem = await _promptItemService.DraftSwitch(promptItemId, true);
                     // #region 删除之前的结果
                     //
                     // var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);

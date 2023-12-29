@@ -29,7 +29,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<PromptItem> AddPromptItemAsync(PromptItem_AddRequest request)
+        public async Task<PromptItemDto> AddPromptItemAsync(PromptItem_AddRequest request)
         {
             #region validate request dto
 
@@ -143,7 +143,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(toSavePromptItem);
 
-            return toSavePromptItem;
+            return this.Mapper.Map<PromptItemDto>(toSavePromptItem);
         }
 
 
@@ -338,6 +338,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             return resp;
+        }
+
+        public async Task<PromptItemDto> GetAsync(int id)
+        {
+            var item = await this.GetObjectAsync(p => p.Id == id) ??
+                       throw new NcfExceptionBase($"找不到{id}对应的promptItem");
+
+            return this.Mapper.Map<PromptItemDto>(item);
+        }
+
+        public async Task<PromptItemDto> DraftSwitch(int id, bool status)
+        {
+            var promptItem = await this.GetObjectAsync(p => p.Id == id) ?? 
+                             throw new NcfExceptionBase($"找不到{id}对应的靶道");
+
+            promptItem.DraftSwitch(status);
+
+            await this.SaveObjectAsync(promptItem);
+
+            return this.Mapper.Map<PromptItemDto>(promptItem);
         }
     }
 }

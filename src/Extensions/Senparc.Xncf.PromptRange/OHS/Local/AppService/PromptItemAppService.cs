@@ -191,6 +191,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                              throw new Exception("未找到prompt");
 
                 await _promptItemService.DeleteObjectAsync(result);
+                
+                // todo 关联删除所有子战术
 
                 await _promptResultService.BatchDeleteWithItemId(id);
 
