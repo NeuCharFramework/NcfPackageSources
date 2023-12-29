@@ -343,10 +343,21 @@ var app = new Vue({
             let chartOption = {
                 tooltip: {
                     show: true,
-                    //formatter: function (params) {
-                    //    console.log('params', params)
-                    //    return '测试显示tooltip'
-                    //}
+                    confine: true, //是否将 tooltip 框限制在图表的区域内。
+                    //appendToBody: true
+                    formatter: (params)=> {
+                        //console.log('params', params)
+                        let _data = params?.data[3] || {}
+                        //
+                        let _html = `<div style="text-align: left;font-size:10px;">
+    <p>靶场：${_data?.rangeName || ''}</p>
+    <p>版本：${_data?.fullVersion || ''}</p>
+<p>平均分：${_data?.evalAvgScore || ''}</p>
+<p>最高分：${_data?.evalMaxScore || ''}</p>
+<p>时间：${this.formatDate(_data?.addTime)  || ''}</p>
+</div>`
+                        return _html
+                    }
                 },
                 xAxis3D: {
                     type: "category",
@@ -385,7 +396,7 @@ var app = new Vue({
                         show: true,//该参数需设为true
                         // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
                         lineStyle: {//坐标轴样式
-                            color: '#000',
+                            color: '#32b8be',
                             opacity: 1,//(单个刻度不会受影响)
                             width: 2//线条宽度
                         }
@@ -398,7 +409,7 @@ var app = new Vue({
                         //    // return;
                         //},
                         textStyle: {
-                             color:'#000',//刻度标签样式
+                            color:'#32b8be',//刻度标签样式
                             //color: function (value, index) {
                             //    return value >= 6 ? 'green' : 'red';//根据范围显示颜色，主页为值有效
                             //},
@@ -442,14 +453,18 @@ var app = new Vue({
                     },
                     //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
                     viewControl: {
+                       // minBeta: -10, //最小旋转角度
+                        // maxBeta: 10, //最大旋转角度
+                        minAlpha: 0, //最小旋转角度
+                        maxAlpha: 90, //最大旋转角度
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
                 // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
                 // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
                 // autoRotateSpeed:12,//物体自传的速度
                 // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
-                 distance:300,//默认视角距离主体的距离(常用)
+                 distance:350,//默认视角距离主体的距离(常用)
                  alpha:1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
-                 beta:30,//视角绕 y 轴，即左右旋转的角度。
+                 beta:-30,//视角绕 y 轴，即左右旋转的角度。
                 // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
                         animation: true,
                     },
@@ -532,18 +547,18 @@ var app = new Vue({
                             item.forEach(el => {
                                 if (el) {
                                     if (_xData.indexOf(el.y)===-1) {
-                                    _xData.push(el.y)
+                                        _xData.push(`${el.y}`)
                                     }
                                     if (_yData.indexOf(el.x) === -1) {
-                                    _yData.push(el.x)
+                                        _yData.push(`${el.x}`)
                                     }
-                                    _zData.push([el.y, el.x, el.z])
+                                    _zData.push([`${el.y}`, `${el.x}`, el.z, el.data])
                                 }
                             })
                             _seriesData.push(_zData)
                         }
                     })
-                    console.log('_xData',_xData,_yData, _seriesData)
+                    //console.log('_xData',_xData,_yData, _seriesData)
                     this.chartData = {
                         xData: _xData,
                         yData: _yData,
@@ -657,7 +672,7 @@ var app = new Vue({
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
             this.tacticalForm = {
-                tactics: ''
+                tactics: '重新瞄准'
             }
             this.$refs.tacticalForm.resetFields();
         },
@@ -973,6 +988,21 @@ var app = new Vue({
         },
         // 输出 显示评分视图
         showRatingView(index, scoreType) {
+            // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
+            if (scoreType === '1') {
+                let _list = this.outputList[index].alResultList.map(item => item.value)
+                _list = _list.filter(item => item)
+                if (_list.length === 0) {
+                    this.$message({
+                        message: '请设置预期结果！',
+                        type: 'warning'
+                    })
+                } else {
+                    // todo 接口对接 重新评分
+                    this.saveManualScore(this.outputList[index])
+                }
+                return
+            }
             //event.stopPropagation()
             this.outputList[index].scoreType = scoreType
             this.outputList[index].isScoreView = true
@@ -1023,7 +1053,7 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid||isDraft) {
+            if (this.promptid&&!isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -1083,51 +1113,60 @@ var app = new Vue({
                 this.targetShootLoading = false
                 if (res.data.success) {
                     this.pageChange = false
-                    let { promptResultList = [], fullVersion = '', id } = res.data.data || {}
-                    // 重新获取prompt列表
-                    //this.getPromptOptData(id)
-                    // 拷贝数据
-                    let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                    delete copyResultData.promptResultList
-                    this.promptDetail = copyResultData
-                    // 平均分 _totalScore/promptResultList 保留整数
-                    this.outputAverage = 0 // 保留整数
-                    // 输出列表
-                    this.outputList = promptResultList.map(item => {
-                        if (item) {
-                            item.promptId = id
-                            item.version = fullVersion
-                            item.scoreType = '1' // 1 ai、2手动 
-                            item.isScoreView = false // 是否显示评分视图
-                            //时间 格式化  addTime
-                            item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-                            // 手动评分
-                            item.scoreVal = 0
-                            // ai评分预期结果
-                            item.alResultList = [{
-                                id: 1,
-                                label: '预期结果1',
-                                value: ''
-                            }, {
-                                id: 2,
-                                label: '预期结果2',
-                                value: ''
-                            }, {
-                                id: 3,
-                                label: '预期结果3',
-                                value: ''
-                            }]
+                    if (isDraft) {
+                        // 提示保存成功
+this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        })
+                    } else {
+                        let { promptResultList = [], fullVersion = '', id } = res.data.data || {}
+                        // 重新获取prompt列表
+                        //this.getPromptOptData(id)
+                        // 拷贝数据
+                        let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                        delete copyResultData.promptResultList
+                        this.promptDetail = copyResultData
+                        // 平均分 _totalScore/promptResultList 保留整数
+                        this.outputAverage = 0 // 保留整数
+                        // 输出列表
+                        this.outputList = promptResultList.map(item => {
+                            if (item) {
+                                item.promptId = id
+                                item.version = fullVersion
+                                item.scoreType = '1' // 1 ai、2手动 
+                                item.isScoreView = false // 是否显示评分视图
+                                //时间 格式化  addTime
+                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                                // 手动评分
+                                item.scoreVal = 0
+                                // ai评分预期结果
+                                item.alResultList = [{
+                                    id: 1,
+                                    label: '预期结果1',
+                                    value: ''
+                                }, {
+                                    id: 2,
+                                    label: '预期结果2',
+                                    value: ''
+                                }, {
+                                    id: 3,
+                                    label: '预期结果3',
+                                    value: ''
+                                }]
+                            }
+                            return item
+                        })
+                        //提交数据后，选择正确的靶场和靶道
+                        this.getPromptOptData(id)
+                        // 获取分数趋势图表数据
+                        this.getScoringTrendData()
+                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                            this.dealRapicFireHandel(this.numsOfResults - 1)
                         }
-                        return item
-                    })
-                    //提交数据后，选择正确的靶场和靶道
-                    this.getPromptOptData(id)
-                    // 获取分数趋势图表数据
-                    this.getScoringTrendData()
-                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                        //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                        this.dealRapicFireHandel(this.numsOfResults - 1)
                     }
+                    
                 }
             }).catch(err => {
                 this.targetShootLoading = false
