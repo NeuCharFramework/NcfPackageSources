@@ -9,17 +9,25 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
     public class PromptItemDto : DtoBase
     {
+        public int Id { get; set; }
+        
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { get;  set; }
+
         /// <summary>
         /// Prompt内容
         /// </summary>
-        public string PromptContent { get;  set; }
-
-        #region llm config
-
+        public string Content { get;  set; }
+        
+        #region Model Config
+        
+        public int ModelId { get;  set; }
         /// <summary>
-        /// 最大 Token 数
+        /// TopP
         /// </summary>
-        public int MaxToken { get;  set; }
+        public float TopP { get;  set; }
 
         /// <summary>
         /// 温度
@@ -27,68 +35,98 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public float Temperature { get;  set; }
 
         /// <summary>
-        /// TopP
+        /// 最大 Token 数
         /// </summary>
-        public float TopP { get;  set; }
+        public int MaxToken { get;  set; }
 
         /// <summary>
         /// 频率惩罚
         /// </summary>
         public float FrequencyPenalty { get;  set; }
+
+        public float PresencePenalty { get;  set; }
+
         /// <summary>
-        /// 停止序列（JSON 数组）
+        /// 停止序列（JSON 数组） 
         /// </summary>
+        [CanBeNull]
         public string StopSequences { get;  set; }
+
         #endregion
-       
+
+        #region 打分
 
         /// <summary>
-        /// 每个 Prompt 的结果数
+        /// 评估参数, 平均分
         /// </summary>
-        public int NumsOfResults { get;  set; }
-        
-        /// <summary>
-        /// 从 StopSequences 自动获取数组，如果为空，则返回空对象
-        /// </summary>
-        public string[] StopSequencesArray => (StopSequences ?? "[]").GetObject<string[]>();
-
-        /// <summary>
-        /// 聊天系统 Prompt
-        /// </summary>
-        public string ChatSystemPrompt { get;  set; }
-
-        /// <summary>
-        /// Token 选择偏好
-        /// </summary>
-        public string TokenSelectionBiases { get;  set; }
-
-        /// <summary>
-        /// 从 TokenSelectionBiases 自动获取数组，如果为空，则返回空对象
-        /// </summary>
-        public float[] TokenSelectionBiasesArray => (TokenSelectionBiases ?? "[]").GetObject<float[]>();
+        public int EvalAvgScore { get;  set; } = -1;
 
         /// <summary>
         /// 评估参数
         /// </summary>
-        public int EvaluationScore { get;  set; }
+        public int EvalMaxScore { get;  set; } = -1;
+
+        /// <summary>
+        /// 期望结果Json
+        /// </summary>
+        public string ExpectedResultsJson { get;  set; }
+
+        #endregion
+
+
+        #region Full Version
+
+
+        public string FullVersion
+        {
+            get { return $"{RangeName}-T{Tactic}-A{Aiming}"; }
+             set { }
+        }
         
-        /// <summary>
-        /// 评估标注
-        /// </summary>
-        public string EvaluationMetrics { get;  set; }
-
+        public string RangeName { get;  set; }
+        
+        public string Tactic { get;  set; }
 
         /// <summary>
-        /// 版本号，格式为 yyyy.MM.dd.Version
+        /// <para>为打靶次数，int</para>
         /// </summary>
-        public virtual string FullVersion { get;  set; }
+        public int Aiming { get;  set; }
+
+        /// <summary>
+        /// 父Tactic, 可以是空串
+        /// </summary>
+        public string ParentTac { get;  set; }
+
+        #endregion
+
+        /// <summary>
+        /// Note（可选）
+        /// </summary>
+        public string Note { get;  set; }
 
         /// <summary>
         /// 最后一次运行时间
         /// </summary>
-        public DateTime LastRunTime { get;  set; }
+        public DateTime LastRunTime { get;  set; } = DateTime.Now;
 
-        public PromptItemDto() { }
+        /// <summary>
+        /// 是否公开
+        /// </summary>
+        public bool IsShare { get;  set; } = false;
 
+        public bool IsDraft { get;  set; }
+
+        #region Prompt请求参数
+
+        public string Prefix { get;  set; }
+        public string Suffix { get;  set; }
+
+        public string VariableDictJson { get;  set; }
+
+        #endregion
+
+        public PromptItemDto()
+        {
+        }
     }
 }

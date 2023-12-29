@@ -3,17 +3,23 @@ var app = new Vue({
     data() {
         return {
             devHost: 'http://pr-felixj.frp.senparc.com',
+            pageChange: false, // 页面是否有变化
+            isAvg: true, // 是否平均分 默认false 不平均
             // 配置 输入 ---start
+            promptField: '', // 靶场列表
+            promptFieldOpt: [], // 靶场列表
             promptOpt: [], // prompt列表
             modelOpt: [], // 模型列表
             promptid: '',// 选择靶场
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
+            numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
+            numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
             // 参数设置 视图配置列表
             parameterViewList: [
                 {
-                    tips: '',
+                    tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -24,18 +30,18 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性',
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
                     isSlider: true,
                     isStr: false,
                     sliderMin: 0,
-                    sliderMax: 1,
+                    sliderMax: 2,
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！',
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -46,7 +52,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚频繁出现的词',
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -57,7 +63,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚已出现的词',
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -68,18 +74,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
-                    formField: 'numsOfResults',
-                    label: 'NumsOfResults',
-                    value: 1,
-                    isSlider: false,
-                    isStr: false,
-                    sliderMin: 0,
-                    sliderMax: 'Infinity',
-                    sliderStep: 1
-                },
-                {
-                    tips: '',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -90,9 +85,32 @@ var app = new Vue({
                     sliderStep: 1
                 }
             ],
-            targetShootLoading: false,
-            targetShootDisabled: false,
+            promptLeftShow: false, // prompt左侧区域整体 显隐
+            parameterViewShow: false, // 模型参数设置 显隐 false是默认显示 trun是隐藏
+            targetShootLoading: false, // 打靶loading
             // 配置 输入 ---end
+            // prompt请求参数 ---start
+            promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
+            promptParamFormLoading: false,
+            promptParamForm: {
+                prefix: '',
+                suffix: '',
+                variableList: []
+            },
+            // prompt请求参数 ---end
+            // sendBtns: 打靶、连发、保存草稿
+            sendBtns:[
+                {
+                    text:'打靶'
+                },
+                {
+                    text:'连发'
+                },
+                {
+                    text:'保存草稿'
+                }
+            ],
+            sendBtnText:'打靶',
             // 输出 ---start
             outputAverage: '',// 输出列表的平均分
             outputActive: '', // 输出列表选中查看|评分
@@ -109,19 +127,29 @@ var app = new Vue({
             },
             versionTreeData: [],
             // 版本记录 ---end
-            // 替换
-            replaceFormVisible: false,
-            replaceForm: {
-                prefix: '',
-                suffix: '',
-                variableList: []
-            },
             // 战术选择
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
                 tactics: '重新瞄准'
             },
+            // 靶场
+            fieldFormVisible: false,
+            fieldFormSubmitLoading: false,
+            fieldForm: {
+                fieldName:''
+            },
+            // ai 评分标准
+            aiScoreFormVisible: false,
+            aiScoreFormSubmitLoading: false,
+            aiScoreForm: {
+                resultList:[{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }]
+            },
+
             // 模型
             modelFormVisible: false,
             modelFormSubmitLoading: false,
@@ -149,8 +177,12 @@ var app = new Vue({
                 value: 'HugginFace',
                 label: 'HugginFace',
                 disabled: false
-            }],
+                }],
+            // 表单校验规则
             rules: {
+                fieldName: [
+                    { required: true, message: '请输入靶场名称', trigger: 'blur' }
+                ],
                 tactics: [
                     {required: true, message: '请选择战术', trigger: 'change'}
                 ],
@@ -183,11 +215,20 @@ var app = new Vue({
                 ],
                 organizationId: [
                     {required: true, message: '请输入Organization Id', trigger: 'blur'}
+                ],
+                aiResultVal:[
+                    { required: true, message: '请输入期望结果', trigger: 'blur' }
                 ]
             },
             versionData: [],
             promptDetail: {}
         };
+    },
+    computed: {
+        isPageLoading() {
+            let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading
+            return result
+        }
     },
     watch: {
         //'isExtend': {
@@ -200,26 +241,85 @@ var app = new Vue({
             this.$refs.versionTree.filter(val);
         }
     },
+    created() {
+        // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
+        // 添加 beforeunload 事件监听器
+        window.addEventListener('beforeunload', this.beforeunloadHandler);
+    },
     mounted() {
-        // 获取靶场列表
-        this.getPromptOptData()
+        // 获取靶道列表
+        this.getFieldList()
         // 获取模型列表
         this.getModelOptData()
         // 获取分数趋势图
         // this.getScoringTrendData()
         // 图表自适应
-        let self = this;
+        const self = this;
         const viewElem = document.body;
         const resizeObserver = new ResizeObserver(() => {
             // 加个if约束，当Echarts存在时再执行resize()，否则图表不存在时运行到这会报错。
             if (self.chartInstance) {
                 self.chartInstance.resize();
             }
-
         });
         resizeObserver.observe(viewElem);
+
+    },
+    beforeDestroy() {
+        // 销毁之前移除事件监听器
+        window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // 连发次数 数量变化
+        changeNumsBtn(command=1) {
+            this.numsOfResults = command
+        },
+        // 打靶按钮 类型切换
+        changeBtn(command){
+            this.sendBtnText = command
+        },
+        // 打靶按钮 点击 触发对应类型事件
+        clickSendBtn(){
+          const command=this.sendBtnText
+            console.log('点击了'+command)
+            if(command==='打靶'){
+                this.targetShootHandel()
+            }else if(command==='保存草稿') {
+                this.targetShootHandel(true)
+            }else if (command==='连发'){
+                this.dealRapicFireHandel(this.numsOfResults)
+            }
+        },
+        // beforeunload 事件处理函数
+        beforeunloadHandler(e) {
+            console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
+             // 如果数据没有变动，则不需要提示用户保存
+            if (this.pageChange) {
+                // 显示自定义对话框
+                let confirmationMessage = '您的数据已经修改，是否保存？';
+                // 阻止默认行为
+                e.preventDefault();
+                // 兼容旧版本浏览器
+                e.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+            //setTimeout(function () {
+            //    // 弹出自定义模态框
+            //    var modal = document.createElement("div");
+            //    modal.innerHTML = "您确定要离开本页面吗？";
+            //    var btn = document.createElement("button");
+            //    btn.textContent = "留在页面";
+            //    btn.onclick = function () {
+            //        // 取消默认的 beforeunload 行为
+            //        e.preventDefault();
+            //        // 关闭自定义模态框
+            //        modal.remove();
+            //    };
+            //    modal.appendChild(btn);
+            //    document.body.appendChild(modal);
+            //}, 0);
+        },
+        // 格式化时间
         formatDate(d) {
             var date = new Date(d);
             var YY = date.getFullYear() + '-';
@@ -242,121 +342,172 @@ var app = new Vue({
             let scoreChart = document.getElementById('promptPage_scoreChart');
             let chartOption = {
                 tooltip: {
-                    trigger: "axis",
-                    formatter: '{b}: {c}分 ',
+                    show: true,
+                    //formatter: function (params) {
+                    //    console.log('params', params)
+                    //    return '测试显示tooltip'
+                    //}
                 },
-                grid: {
-                    top: '35',
-                    right: '35',
-                    bottom: '0',
-                    left: '15',
-                    containLabel: true
-                },
-                xAxis: {
-                    name: "版本", // 
-                    nameGap: 5,  // 表现为上下位置
-                    nameTextStyle: {
-                        verticalAlign: "bottom",//标题位置
-                        padding: [0, 0, 40, 0],//控制X轴标题位置
-                        color: "#999",
-                        fontSize: 12,
-                    },
-                    type: 'category',
-                    boundaryGap: false,
-                    data: [],
-                    axisTick: {
+                xAxis3D: {
+                    type: "category",
+                    name: "",
+                    axisLabel: {
                         show: true,
-                        alignWithLabel: true,
-                        lineStyle: {
-                            color: '#999',
-                        }
+                        interval: 0  //使x轴都显示
+                    },
+                    data: this.chartData?.xData || [],
+                },
+                yAxis3D: {
+                    type: "category",
+                    name: "",
+                    axisLabel: {
+                        show: true,
+                        interval: 0  //使x轴都显示
+                    },
+                    data: this.chartData?.yData || [],
 
-                    },
-                    axisLabel: {
-                        //interval: 0,
-                        textStyle: {
-                            fontSize: 12,
-                            // fontWeight: '400',
-                            color: '#999'
-                        }
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: '#999',
-                        }
-                    },
-                    splitLine: {
-                        show: false,
-                        lineStyle: {
-                            color: '#EBEEF5'
-                        }
-                    }
                 },
-                yAxis: {
-                    name: '平均分',// 平均分
-                    nameGap: 15,  // 表现为上下位置
-                    nameTextStyle: {
-                        verticalAlign: 'left',//标题位置
-                        padding: [0, 0, 0, -40],//控制y轴标题位置
-                        color: "#999",
-                        fontSize: 12
-                    },
-                    type: 'value',
-                    //axisPointer: {
-                    //    show: true,
-                    //},
-                    axisTick: {
-                        show: false,
-                        alignWithLabel: true,
-                    },
-                    axisLabel: {
-                        /*formatter: '{value}',*/
-                        textStyle: {
-                            fontSize: 12,
-                            // fontWeight: '400',
-                            color: '#999'
-                        }
-                    },
-                    axisLine: {
-                        show: false,
-                        lineStyle: {
-                            color: '#EBEEF5',
-                        }
-                    },
-                    splitLine: {
-                        lineStyle: {
-                            color: '#EBEEF5'
-                        }
-                    }
+                zAxis3D: {
+                    type: "value",
+                    name: "",
+                    //max: 10,
                 },
-                series: [{
-                    name: '分数趋势图',
-                    type: 'line',
-                    data: [],
-                    itemStyle: {
-                        //emphasis: {
-                        //    color: "rgb(7,162,148)",
-                        //    borderColor: "rgba(7,162,148,0.6)",
-                        //    borderWidth: 20
+                //  grid3D
+                grid3D: {
+                    show: true,
+                    boxHeight: 150, // 3维图表的高度 z轴
+                    boxWidth: 400, // 3维图表的宽度 x轴
+                    boxDepth: 150, // 3维图表的深度 y轴
+                    // 整个chart背景，可为自定义颜色或图片
+                    environment: '#fff',
+                    //坐标轴轴线(线)控制
+                    axisLine: {
+                        show: true,//该参数需设为true
+                        // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        lineStyle: {//坐标轴样式
+                            color: '#000',
+                            opacity: 1,//(单个刻度不会受影响)
+                            width: 2//线条宽度
+                        }
+                    },
+                    // 坐标轴 label
+                    axisLabel: {
+                        show: true,//是否显示刻度  (刻度上的数字，或者类目)
+                        interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        //formatter: function (v) {
+                        //    // return;
                         //},
-                        normal: {
-                            color: "#0083ff",
-                            //borderColor: "rgb(6,65,95)",
-                            //lineStyle: {
-                            //    color: "rgb(101,184,196)"
-                            //}
+                        textStyle: {
+                             color:'#000',//刻度标签样式
+                            //color: function (value, index) {
+                            //    return value >= 6 ? 'green' : 'red';//根据范围显示颜色，主页为值有效
+                            //},
+                            //  borderWidth:"",//文字的描边宽度。
+                            //  borderColor:'',//文字的描边颜色。
+                            fontSize: 12,//刻度标签字体大小
+                            fontWeight: '400',//粗细
                         }
                     },
-                    areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0,
-                                color: "#0083ff"
-                            }, {offset: 1, color: "#fff"}], false)
+                    //刻度
+                    axisTick: {
+                        show: false,//是否显示出
+                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        length: 5,//坐标轴刻度的长度
+                        lineStyle: {//举个例子，样式太丑将就
+                            color: '#000',//颜色
+                            opacity: 1,
+                            width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
                         }
-                    }
-                }]
+                    },
+                    //平面上的分隔线。
+                    splitLine: {
+                        show: true,//立体网格线  
+                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        splitArea: {
+                            show: true,
+                            // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                            areaStyle: {
+                                color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
+                            }
+                        },
+                    },
+                    // 坐标轴指示线。
+                    axisPointer: {
+                        show: false,//鼠标在chart上的显示线
+                        // lineStyle:{
+                        //     color:'#000',//颜色
+                        //     opacity:1,
+                        //     width:5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        // }
+                    },
+                    //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
+                    viewControl: {
+                        // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
+                // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
+                // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
+                // autoRotateSpeed:12,//物体自传的速度
+                // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
+                 distance:300,//默认视角距离主体的距离(常用)
+                 alpha:1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
+                 beta:30,//视角绕 y 轴，即左右旋转的角度。
+                // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
+                        animation: true,
+                    },
+                    //光照相关的设置
+                    //light: {
+                    //    main: {
+                    //        color: '#fff',//光照颜色会与所设置颜色发生混合
+                    //        intensity: 1.2,//主光源的强度(光的强度)
+                    //        shadow: false,//主光源是否投射阴影。默认关闭。
+                    //        // alpha:0//主光源绕 x 轴，即上下旋转的角度。配合 beta 控制光源的方向(跟beta结合可确定太阳位置)
+                    //        // beta:10//主光源绕 y 轴，即左右旋转的角度。
+                    //    },
+                    //    ambient: {//全局的环境光设置。
+                    //        intensity: 0.3,
+                    //        color: '#fff'//影响柱条颜色
+                    //    },
+                    //    // ambientCubemap: {//会使用纹理作为光源的环境光
+                    //    //  texture: 'pisa.hdr',
+                    //    // // 解析 hdr 时使用的曝光值
+                    //    // exposure: 1.0
+                    //    // }
+                    //},
+            // postEffect:{//后处理特效的相关配置，后处理特效可以为画面添加高光，景深，环境光遮蔽（SSAO），调色等效果。可以让整个画面更富有质感。
+            //     show:true,
+            //     bloom:{
+            //         enable:true//高光特效,适合地球仪
+            //     }
+            // }
+                },
+                series: []
             };
+            let _series = []
+            this.chartData?.seriesData?.forEach(item => {
+                if (item) {
+                    _series.push({
+                        type: 'line3D', // line3D scatter3D
+                        name: item[0][1],
+                        //itemStyle: {
+                        //    color: 'rgb(165,  0, 38)'
+                        //},
+                        //label: {  //当type为scatter3D时有label出现
+                        //    show: false,
+                        //    position: 'bottom',
+                        //    distance: 0,
+                        //    textStyle: {
+                        //        color: '#ffffff',
+                        //        fontSize: 12,
+                        //        borderWidth: 0,
+                        //        borderColor: '#c6c6c6',
+                        //        backgroundColor: 'transparent'
+                        //    }
+                        //},
+                        data: item    //每个区的数据一一对应
+                    })
+                }
+            })
+            chartOption.series = _series
+            //console.log('chartOption', chartOption)
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
@@ -365,53 +516,132 @@ var app = new Vue({
         async getScoringTrendData() {
             this.chartData = {
                 xData: [],
-                vData: []
+                yData: [],
+                seriesData: []
             }
             if (this.promptid) {
-                let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetHistoryScore?promptItemId=${this.promptid}`)
+                //console.log('获取评分趋势 图表数据', this.isAvg)
+               /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
+                let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
+                    let _dataPoints = res?.data?.data?.dataPoints || []
+                    let _xData = [], _yData = [], _seriesData =[]
+                    _dataPoints.forEach(item => {
+                        if (item && item.length > 0) {
+                            let _zData = []
+                            item.forEach(el => {
+                                if (el) {
+                                    if (_xData.indexOf(el.y)===-1) {
+                                    _xData.push(el.y)
+                                    }
+                                    if (_yData.indexOf(el.x) === -1) {
+                                    _yData.push(el.x)
+                                    }
+                                    _zData.push([el.y, el.x, el.z])
+                                }
+                            })
+                            _seriesData.push(_zData)
+                        }
+                    })
+                    console.log('_xData',_xData,_yData, _seriesData)
                     this.chartData = {
-                        xData: res.data.data.xList || [],
-                        vData: res.data.data.yList || []
+                        xData: _xData,
+                        yData: _yData,
+                        seriesData: _seriesData
                     }
                 }
             }
 
             // 初始化图表 接口调用成功
             this.chartInitialization()
-            let _setOption = {
-                xAxis: {
-                    data: this.chartData.xData || []
-                },
-                series: [{
-                    data: this.chartData.vData || []
-                }]
-            }
-            this.chartInstance.setOption(_setOption);
+            //let _setOption = {
+            //    xAxis: {
+            //        data: this.chartData.xData || []
+            //    },
+            //    series: [{
+            //        data: this.chartData.vData || []
+            //    }]
+            //}
+            //this.chartInstance.setOption(_setOption);
         },
 
         // 靶道选择变化
         promptChangeHandel(val, itemKey) {
-            console.log('靶道选择变化', val, this.promptDetail)
-            if (itemKey === 'promptid') {
-                this.getPromptetail(val, true)
-            } else {
-                let _isEdit = true
-                // //判断是否有修改 任意一项修改过 解除打靶按钮禁用
-                // this.parameterViewList.forEach(el => {
-                //     if (el.formField === itemKey && this.promptDetail[itemKey] === val) {
-                //        
-                //     }
-                // })
-                // if (itemKey === 'content') {
-                //     _isEdit = true
-                // }
-                // if (itemKey === 'remarks') {
-                //     _isEdit = true
-                // }
-                if (_isEdit) this.targetShootDisabled = false
-            }
+            
+            if (itemKey === 'promptField') {
+                // 如果靶场变化 靶道
+                if (this.pageChange) {
+                    if (this.modelid) {
+                        // 提示 有数据变化 是否保存为草稿
+                        this.$confirm('您的数据已经修改，是否保存？', '提示', {
+                            confirmButtonText: '保存',
+                            cancelButtonText: '不保存',
+                            type: 'warning'
+                        }).then(() => {
+                            // 保存草稿
+                            this.targetShootHandel(true)
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        }).catch(() => {
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        });
+                        return 
+                    }
+                }
 
+                // 靶场
+                this.promptid = '' // 靶道
+                this.modelid = '' // 模型
+                // 参数设置 视图配置列表
+                this.resetConfigurineParam()
+                // 输入Prompt 重置
+                this.resetInputPrompt()
+                this.outputList = []
+                this.outputAverage = 0
+                // 获取分数趋势图表数据
+                this.getScoringTrendData()
+                this.promptDetail = {}
+                this.promptParamForm = {
+                    prefix: '',
+                    suffix: '',
+                    variableList: []
+                }
+                this.getPromptOptData()
+                // 重置 页面变化记录
+                this.pageChange = false
+            } else if (itemKey === 'promptid') {
+
+                if (this.pageChange) {
+                    if (this.modelid) {
+                        // 提示 有数据变化 是否保存为草稿
+                        this.$confirm('您的数据已经修改，是否保存？', '提示', {
+                            confirmButtonText: '保存',
+                            cancelButtonText: '不保存',
+                            type: 'warning'
+                        }).then(() => {
+                            // 保存草稿
+                            this.targetShootHandel(true)
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        }).catch(() => {
+                            // 重新获取靶道列表
+                            //this.getFieldList()
+                        });
+                        return
+                    }
+                }
+                // 靶道
+                this.getPromptetail(val, true)
+                // 重置 页面变化记录
+                this.pageChange = false
+            } else {
+                // 其他
+                //if (itemKey === 'modelid'){}
+                // 页面变化记录
+                this.pageChange = true
+            }
+            
         },
 
         // 战术选择 关闭弹出
@@ -431,7 +661,19 @@ var app = new Vue({
                         //promptid: this.promptid,// 选择靶场
                         modelid: this.modelid,// 选择模型
                         content: this.content,// prompt 输入内容
-                        note: this.remarks // prompt 输入的备注
+                        note: this.remarks, // prompt 输入的备注
+                        numsOfResults:1,
+                        isDraft: this.sendBtnText==='保存草稿',
+                        suffix: this.promptParamForm.suffix,
+                        prefix: this.promptParamForm.prefix
+                    }
+                    // ai评分标准
+                    if (this.aiScoreForm.resultList.length > 0) {
+                        let _list = this.aiScoreForm.resultList.map(item => item.value)
+                        _postData.expectedResultsJson = JSON.stringify(_list)
+                    }
+                    if (this.promptParamForm.variableList.length>0){
+                        _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
                     }
                     if (this.promptid) {
                         _postData.id = this.promptid
@@ -465,7 +707,7 @@ var app = new Vue({
                         this.tacticalFormVisible = false
                         let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                         // 重新获取prompt列表
-                        this.getPromptOptData(id)
+                        //this.getPromptOptData(id)
 
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
@@ -499,11 +741,14 @@ var app = new Vue({
                             }
                             return item
                         })
-                       
+                        console.log('选择正确的靶场')
+                        this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
-                    } else {
-                        this.targetShootDisabled = false
+                        if (this.sendBtnText !== '保存草稿'&& this.numsOfResults>1){
+                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                            this.dealRapicFireHandel(this.numsOfResults-1)
+                        }
                     }
 
                 } else {
@@ -513,55 +758,37 @@ var app = new Vue({
         },
 
         // 版本记录 获取版本记录 树形数据
-        getVersionRecordData() {
-            // 模拟数据
-            this.versionTreeData = [{
-                id: 1,
-                label: '一级 1',
-                isPublic: false,
-                children: [{
-                    id: 4,
-                    label: '二级 1-1',
-                    isPublic: false,
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1',
-                        isPublic: false
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2',
-                        isPublic: false
-                    }]
-                }]
-            }, {
-                id: 2,
-                label: '一级 2',
-                isPublic: false,
-                children: [{
-                    id: 5,
-                    label: '二级 2-1',
-                    isPublic: false
-                }, {
-                    id: 6,
-                    label: '二级 2-2',
-                    isPublic: false
-                }]
-            }, {
-                id: 3,
-                label: '一级 3',
-                isPublic: false,
-                children: [{
-                    id: 7,
-                    label: '二级 3-1',
-                    isPublic: false
-                }, {
-                    id: 8,
-                    label: '二级 3-2',
-                    isPublic: false
-                }]
-            }]
-            // to do 接口对接 async await
+        async getVersionRecordData() {
+            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${this.promptField}`)
+            if (res.data.success) {
+                //console.log('获取版本记录数据', res.data.data.rootNodeList)
+                let _listData = res?.data?.data?.rootNodeList || []
+                /*console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))*/
+                this.versionTreeData = this.treeArrayFormat(_listData)
+            }
         },
+        //树形数据格式化  参数data:要格式化的数据,child为要格式化数据的子数组值名
+        treeArrayFormat(data, child) { 
+            let trees = new Array();
+            let fn = null;
+            let newData = null;
+            for(let i in data) {
+                    newData = {
+                        id: data[i].data.id,
+                        label: data[i].name ? data[i].name : "未命名",
+                        isPublic: false,
+                        data: data[i].data,
+                        attributes: data[i].attributes,
+                        children: []
+                    }
+                trees.push(newData);
+                if (data[i].children && data[i].children.length>0) {
+                    trees[i].children = this.treeArrayFormat(data[i].children, child);
+                }
+                
+            }
+            return trees
+         },
         // 版本记录 查看
         seeVersionRecord() {
             this.versionDrawer = true
@@ -581,68 +808,58 @@ var app = new Vue({
         versionRecordIsPublic(itemData) {
             // console.log('版本记录 是否公开:', itemData)
             // to do 接口对接 async await
+            // 提示敬请期待
+            this.$message.warning('敬请期待')
         },
         // 版本记录 编辑
         versionRecordEdit(itemData) {
             //console.log('版本记录 编辑:', itemData)
             // to do 接口对接 async await
+            // 设置霸道选中
+            this.promptid = itemData.id
+            // 获取靶道详情
+            this.getPromptetail(itemData.id, true)
             // 获取输出列表和平均分
             //this.getOutputList()
             // 获取分数趋势图表数据
-            //this.getScoringTrendData()
+            this.getScoringTrendData()
+            // 关闭抽屉
+            this.versionDrawer = false
         },
         // 版本记录 生成代码
         versionRecordGenerateCode(itemData) {
             //console.log('版本记录 生成代码:', itemData)
+            // 提示敬请期待
+            this.$message.warning('敬请期待')
             // to do 接口对接 async await
+        },
+        // 版本记录 删除
+        versionRecordDelete(itemData) {
+            //console.log('版本记录 删除:', itemData)
+            this.$message.warning('敬请期待')
+            // to do 接口对接 async await
+            //this.$confirm('此操作将永久删除该靶道版本, 是否继续?', '提示', {
+            //    confirmButtonText: '确定',
+            //    cancelButtonText: '取消',
+            //    type: 'warning'
+            //}).then(() => {
+            //    // 对接接口 删除
+            //    this.btnDeleteHandle(itemData.id)
+
+            //}).catch(() => {
+            //    this.$message({
+            //        type: 'info',
+            //        message: '已取消删除'
+            //    });
+            //});
         },
         // 版本记录 查看备注
         versionRecordViewNotes(itemData) {
             //console.log('版本记录 查看备注:', itemData)
             // to do 接口对接 async await
         },
-        // 版本记录 删除
-        versionRecordDelete(itemData) {
-            //console.log('版本记录 删除:', itemData)
-            // to do 接口对接 async await
-        },
 
 
-        // 替换 dialog 关闭
-        replaceFormCloseDialog() {
-            this.replaceForm = {
-                prefix: '',
-                suffix: '',
-                variableList: []
-            }
-            this.$refs.replaceForm.resetFields();
-        },
-        // 替换 dialog 添加变量行btn
-        addVariableBtn() {
-            this.replaceForm.variableList.push({
-                name: '',
-                value: ''
-            })
-        },
-        // 替换 dialog 删除变量行btn
-        deleteVariableBtn(index) {
-            this.replaceForm.variableList.splice(index, 1)
-        },
-        // 替换 dialog 提交
-        replaceFormSubmit() {
-            // 
-            let {prefix = '', suffix = '', variableList = []} = this.replaceForm
-            variableList.forEach(item => {
-                // 替换 this.content 匹配文本
-                let replaceStr = `${prefix}${item.name}${suffix}`
-                // 使用正则表达式创建匹配模式，其中 g 表示全局匹配
-                var regex = new RegExp(replaceStr, "g");
-                // 使用 replace() 方法进行替换
-                this.content = this.content.replace(regex, item.value);
-            })
-            this.replaceFormVisible = false
-
-        },
 
 
         // 获取输出列表
@@ -652,7 +869,7 @@ var app = new Vue({
             if (res.data.success) {
                 let {promptResults = [],promptItem={}} = res.data.data || {}
                 // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverage = promptItem.evaluationScore; // 保留整数
+                this.outputAverage = promptItem.evalAvgScore > 0 ? promptItem.evalAvgScore : 0; // 保留整数
                 // 输出列表
                 this.outputList = promptResults.map(item => {
                     if (item) {
@@ -711,7 +928,7 @@ var app = new Vue({
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
-                    alert('error!');
+                    this.$message.error(res.data.errorMessage);
                 }
             }
             if (item.scoreType === '2') {
@@ -765,9 +982,34 @@ var app = new Vue({
         },
 
 
-        // 打靶     
-        async targetShootHandel() {
-            if (this.promptid) {
+        convertData(data){
+          // data is like [{name:'',value:''}], convert to {name:value}
+            let res = {}
+            data.forEach(item=>{
+                res[item.name] = item.value
+            })
+            return JSON.stringify(res)
+        },
+        /*
+        * 打靶 事件
+        * isDraft 是否保存草稿
+        */      
+        async targetShootHandel(isDraft=false) {
+            if(!this.modelid) {
+                this.$message({
+                    message: '请选择模型！',
+                    type: 'warning'
+                })
+                return
+            }
+            if (!isDraft&&!this.content) {
+                this.$message({
+                    message: '请输入内容！',
+                    type: 'warning'
+                })
+                return
+            }
+            if (this.promptid||isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -777,8 +1019,24 @@ var app = new Vue({
                 //promptid: this.promptid,// 选择靶场
                 modelid: this.modelid,// 选择模型
                 content: this.content,// prompt 输入内容
-                note: this.remarks // prompt 输入的备注
+                note: this.remarks, // prompt 输入的备注,
+                numsOfResults: 1,
+                //numsOfResults: isDraft?this.numsOfResults:1,
+                isDraft:isDraft,
+                suffix: this.promptParamForm.suffix,
+                prefix: this.promptParamForm.prefix,
+                
             }
+            // ai评分标准
+            if (this.aiScoreForm.resultList.length > 0) {
+                let _list = this.aiScoreForm.resultList.map(item => item.value)
+                _postData.expectedResultsJson = JSON.stringify(_list)
+            }
+            // 请求参数
+            if (this.promptParamForm.variableList.length>0){
+                _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
+            }
+            
             if (this.promptid) {
                 _postData.id = this.promptid
                 if (this.tacticalForm.tactics === '创建新战术') {
@@ -802,7 +1060,7 @@ var app = new Vue({
                     _postData[item.formField] = item.value
                 }
             })
-// console.log('testHandel _postData:', _postData)
+            console.log('testHandel _postData:', _postData)
 
             let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
             // console.log('testHandel res ', res.data)
@@ -810,8 +1068,7 @@ var app = new Vue({
             if (res.data.success) {
                 let {promptResultList = [], fullVersion = '', id} = res.data.data || {}
                 // 重新获取prompt列表
-                this.getPromptOptData(id)
-                this.targetShootDisabled = true
+                //this.getPromptOptData(id)
                 // 拷贝数据
                 let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                 delete copyResultData.promptResultList
@@ -846,20 +1103,81 @@ var app = new Vue({
                     }
                     return item
                 })
-                
+                //提交数据后，选择正确的靶场和靶道
+                this.getPromptOptData(id)
                 // 获取分数趋势图表数据
                 this.getScoringTrendData()
-            } else {
-                this.targetShootDisabled = false
+                if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                    //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                    this.dealRapicFireHandel(this.numsOfResults - 1)
+                }
             }
         },
+        
+        /*
+         * 连发 事件
+         */
+        async dealRapicFireHandel(howmany) {
+            if (!this.promptid) {
+                this.$message({
+                    message: '请选择一个靶道！',
+                    type: 'warning'
+                })
+                return
+            }
+            this.targetShootLoading=true
+            let promises = [];
+            for (let i = 0; i < howmany; i++) {
+                promises.push(this.rapidFireHandel());
+            }
+            await Promise.all(promises);
+            this.targetShootLoading=false
+        },
+        async rapidFireHandel() {
+            const promptItemId = this.promptid
+            const numsOfResults= 1
+            return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
+                {params: {promptItemId, numsOfResults}}).then(res => {
+                    console.log('testHandel res ', res.data)
+                    this.outputAverage = res.data.data.promptItem.evalAvgScore > 0 ? res.data.data.promptItem.evalAvgScore : 0; // 保留整数
+                //输出列表
+                 res.data.data.promptResults.map(item=>{
+                    item.promptId = promptItemId
+                    item.scoreType = '1' // 1 ai、2手动 
+                    item.isScoreView = false // 是否显示评分视图
+                    //时间 格式化  addTime
+                    item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                    // 手动评分
+                    item.scoreVal = 0
+                    // ai评分预期结果
+                    item.alResultList = [{
+                        id: 1,
+                        label: '预期结果1',
+                        value: ''
+                    }, {
+                        id: 2,
+                        label: '预期结果2',
+                        value: ''
+                    }, {
+                        id: 3,
+                        label: '预期结果3',
+                        value: ''
+                    }]
+                     this.outputList.push(item)
+                })
+            })
+        },
+        
         // 配置 重置参数
         resetConfigurineParam() {
+            // todo 判断是否 记录 页面变化记录
+            this.pageChange = true
             //console.log('配置参数 重置:', this.parameterViewList)
             // 参数设置 视图配置列表
             this.parameterViewList = [
+
                 {
-                    tips: '',
+                    tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -870,18 +1188,18 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性',
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
                     isSlider: true,
                     isStr: false,
                     sliderMin: 0,
-                    sliderMax: 1,
+                    sliderMax: 2,
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！',
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -892,7 +1210,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚频繁出现的词',
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -903,7 +1221,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
+                    tips: '惩罚已出现的词',
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -914,18 +1232,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '',
-                    formField: 'numsOfResults',
-                    label: 'NumsOfResults',
-                    value: 1,
-                    isSlider: false,
-                    isStr: false,
-                    sliderMin: 0,
-                    sliderMax: 'Infinity',
-                    sliderStep: 1
-                },
-                {
-                    tips: '',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -939,6 +1246,8 @@ var app = new Vue({
         },
         // 配置 参数设置输入回调
         parameterInputHandle(val, item) {
+            // 页面变化记录
+            this.pageChange = true
             let {sliderMax, sliderMin, sliderStep, isStr, isSlider, formField} = item
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
@@ -972,7 +1281,70 @@ var app = new Vue({
             this.content = ''// prompt 输入内容
             //this.remarks = '' // prompt 输入的备注
         },
+        deleteModel(item){
+          //删除模型 confirm
+            this.$confirm(`此操作将永久删除模型【${item.name}】, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await service.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete',{data:[item.id]})
+                    .then(res=>{
+                        //reload model list
+                        // 重置模型列表
+                        this.modelid = ''
+                        this.getModelOptData()
+                        this.$message({
+                            type: res.data.success ? 'success' : 'error',
+                            message: res.data.success ? '删除成功' : '删除失败'
+                        });
+                    })
+                
+            })
+        },
 
+        //  prompt请求参数 关闭
+        promptParamFormClose() {
+            this.promptParamForm = {
+                prefix: '',
+                suffix: '',
+                variableList: []
+            }
+            this.$refs.promptParamForm.resetFields();
+            this.promptParamVisible = true;
+        },
+        // prompt请求参数 添加变量行btn
+        addVariableBtn() {
+            this.promptParamForm.variableList.push({
+                name: '',
+                value: ''
+            })
+        },
+        // prompt请求参数 删除变量行btn
+        deleteVariableBtn(index) {
+            this.promptParamForm.variableList.splice(index, 1)
+        },
+        // prompt请求参数 提交
+        promptParamFormSubmit() {
+            this.$refs.promptParamForm.validate(async (valid) => {
+                if (valid) {
+                        console.log('promptParamSubmit:', this.promptParamForm)
+                    //this.promptParamFormLoading = true
+                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
+                    //if (res.data.success) {
+                    //    this.promptParamFormLoading = false
+                    //    let { prefix = '', suffix = '', variableList = [] } = this.promptParamForm
+
+                    //    this.promptParamFormClose()
+                    //} else {
+                    //    this.promptParamFormLoading = false
+                    //}
+                } else {
+                    return false;
+                }
+            });
+            
+        },
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
@@ -1010,7 +1382,7 @@ var app = new Vue({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm,{customAlert:true})
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
@@ -1027,27 +1399,73 @@ var app = new Vue({
         },
 
 
-        // 配置 获取prompt 下拉列表数据
+        // 关闭新增靶场 dialog
+        fieldFormCloseDialog() {
+            this.fieldForm = {
+                fieldName: ''
+            }
+            this.$refs.fieldForm.resetFields();
+        },
+        // dialog 新增靶场 提交按钮
+        fieldFormSubmitBtn() {
+            this.$refs.fieldForm.validate(async (valid) => {
+                if (valid) {
+                    this.fieldFormVisible = false
+                    //this.fieldFormSubmitLoading = true
+                    //// todo 对接接口
+                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.fieldForm)
+                    //this.fieldFormSubmitLoading = false
+                    //if (res.data.success) {
+                    //    // todo 重新获取靶场列表
+                    //    // 关闭dialog
+                    //    this.fieldFormVisible = false
+                    //}
+                } else {
+                    return false;
+                }
+            });
+        },
+        // 配置 获取靶场 下拉列表数据
+        async getFieldList(){
+            await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
+                .then(res=>{
+                    if(res.data.success){
+                        this.promptFieldOpt=res.data.data.map(item=>{
+                            return {
+                                ...item,
+                                label:item.rangeName,
+                                value:item.rangeName,
+                                disabled:false
+                            }
+                        })
+                    }
+                })
+        },
+        // 获取靶道 下拉列表数据
         async getPromptOptData(id) {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName')
+            let res = await service
+                .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName',{
+                    params: {
+                        rangeName: this.promptField
+                    }
+                })
             if (res.data.success) {
                 //console.log('getModelOptData:', res)
                 let _optList = res.data.data || []
                 this.promptOpt = _optList.map(item => {
+                    const avg=scoreFormatter(item.evalAvgScore)
+                    const max=scoreFormatter(item.evalMaxScore)
                     return {
                         ...item,
-                        label: `${item.fullVersion} | ${item.evalScore}`,
+                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft?'(草稿)':''}`,
                         value: item.id,
                         disabled: false
                     }
                 })
                 if (id) {
-                    this.$nextTick(() => {
-                        // 设置 prompt选中
-                        this.promptid = Number(id)
-                    })
-                        
+                    this.promptid = id
                 }
+        
             } else {
                 alert('error');
             }
@@ -1057,31 +1475,55 @@ var app = new Vue({
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
-                console.log('getPromptetail:', res.data)
+                //console.log('getPromptetail:', res.data)
                 this.promptDetail = res.data.data
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
                     // 重新获取图表
                     this.getScoringTrendData()
-                    if (this.promptDetail.id == id) {
-                        // 将打靶按钮禁用
-                        this.targetShootDisabled = true
-                    } else {
-                        this.targetShootDisabled = false
-                    }
 
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
-                    this.modelid = this.promptDetail.modelId
+                    
                     this.parameterViewList = _parameterViewList.map(item => {
                         if (item) {
                             item.value = this.promptDetail[item.formField] || item.value
                         }
                         return item
                     })
-                    this.content = this.promptDetail.promptContent || '' // prompt 输入内容
-                    this.remarks = this.promptDetail.note || ''  // prompt 输入的备注
+                    
+                    // 判断模型列表是否有选中的模型
+                        let _findIndex = this.modelOpt.findIndex(item => item.value === this.promptDetail.modelId)
+                    if (_findIndex > -1) {
+                        // 模型覆盖
+                        this.modelid = this.promptDetail.modelId
+                    } else {
+                        this.modelid = ''
+                    }
+                    // prompt 输入内容
+                    this.content = this.promptDetail.promptContent || '' 
+                    // prompt 输入的备注
+                    this.remarks = this.promptDetail.note || ''  
+                    // prompt请求参数
+                    let _promptParamForm = JSON.parse(JSON.stringify(this.promptParamForm))
+                    _promptParamForm.prefix = this.promptDetail.prefix || ''
+                    _promptParamForm.suffix = this.promptDetail.suffix || ''
+                    _promptParamForm.variableList = []
+                    if (this.promptDetail.variableDictJson) {
+                        let _variableDictJson = JSON.parse(this.promptDetail.variableDictJson)
+                        // _variableDictJson不是空对象 就循环赋值
+                        if (Object.keys(_variableDictJson).length > 0) {
+                            _promptParamForm.variableList = Object.keys(_variableDictJson).map(item => {
+                                return {
+                                    name: item,
+                                    value: _variableDictJson[item]
+                                }
+                            })
+                        }
+
+                    }
+                    this.promptParamForm = _promptParamForm
                 }
 
 
@@ -1097,9 +1539,39 @@ var app = new Vue({
                 //data: {id:item.id} // 将 ID 列表作为请求体数据发送
             });
             if (res.data.success) {
-                //重新获取 prompt列表
+                // 重新获取 靶道列表 如果删除的是当前选中的靶道，就重重置靶道选中值并重置模型、参数、输入内容、备注、输出列表、平均分、图表、ai评分预期结果
+                if (id === this.promptid) {
+                    this.promptid = '' // 靶道
+                    this.modelid = '' // 模型
+                    // 参数设置 视图配置列表
+                    this.resetConfigurineParam()
+                    // 输入Prompt 重置
+                    this.resetInputPrompt()
+                    this.outputList = []
+                    this.outputAverage = 0
+                    // 获取分数趋势图表数据
+                    this.getScoringTrendData()
+                    this.promptDetail = {}
+                    this.promptParamForm = {
+                        prefix: '',
+                        suffix: '',
+                        variableList: []
+                    }
+
+                }
+                // 重新获取prompt列表
+                await this.getPromptOptData(this.promptid)
+                // 重新获取版本记录
+                await this.getVersionRecordData()
+
+                // 删除成功
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
             } else {
-                alert("error")
+                let _msg = res?.data?.errorMessage || 'error'
+                alert(_msg)
             }
         },
         // 修改 prompt 
@@ -1118,5 +1590,73 @@ var app = new Vue({
                 alert("error")
             }
         },
+
+        // ai评分设置 dialog 新增结果行btn
+        aiScoreFormAddRow() {
+            let _len = this.aiScoreForm.resultList.length
+            this.aiScoreForm.resultList.push({
+                id: _len + 1,
+                label: `预期结果${_len + 1}`,
+                value: ''
+            })
+        },
+        // ai评分设置 打开 dialog 
+        aiScoreFormOpenDialog() {
+            if (this.promptDetail && this.promptDetail.expectedResultsJson) {
+                let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
+                this.aiScoreForm = {
+                    resultList:_expectedResultsJson.map((item, index) => {
+                        return {
+                            id: index + 1,
+                            label: `预期结果${index + 1}`,
+                            value: item
+                        }
+                    })
+                }
+            }
+            this.aiScoreFormVisible = !this.aiScoreFormVisible
+        },
+        // 关闭ai评分设置 dialog
+        aiScoreFormCloseDialog() {
+            this.aiScoreForm = {
+                resultList:[{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }]
+            }
+            this.$refs.aiScoreForm.resetFields();
+        },
+        // dialog ai评分设置 提交按钮
+        aiScoreFormSubmitBtn() {
+            this.$refs.aiScoreForm.validate(async (valid) => {
+                if (valid) {
+                    this.aiScoreFormSubmitLoading = true
+                    let _list = this.aiScoreForm.resultList.map(item => item.value)
+                    const res = await service.request({
+                        method: 'post',
+                        url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UpdateExpectedResults`,
+                        params: {
+                            promptItemId: Number(this.promptid),
+                            expectedResults: JSON.stringify(_list)
+                        }
+                    });
+                    this.aiScoreFormSubmitLoading = false
+                    if (res.data.success) {
+                        // 重新获取详情
+                        this.getPromptetail(this.promptid,false)
+                        // 关闭dialog
+                        this.aiScoreFormVisible = false
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
     }
 });
+
+
+function scoreFormatter(score){
+    return score===-1?'--':score
+}

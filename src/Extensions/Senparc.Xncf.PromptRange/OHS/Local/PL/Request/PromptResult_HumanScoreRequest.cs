@@ -1,6 +1,6 @@
 ﻿namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
-    public class PromptResultScoringRequest
+    public class PromptResult_HumanScoreRequest
     {
         // public int PromptItemId { get; set; }
 

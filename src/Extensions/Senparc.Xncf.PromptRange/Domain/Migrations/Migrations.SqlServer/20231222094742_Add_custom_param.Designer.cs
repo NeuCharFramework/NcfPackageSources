@@ -12,17 +12,18 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 {
     [DbContext(typeof(PromptRangeSenparcEntities_SqlServer))]
-    [Migration("20231215170603_20231216_promptItem_add")]
-    partial class _20231216_promptItem_add
+    [Migration("20231222094742_Add_custom_param")]
+    partial class Add_custom_param
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.LlmModel", b =>
                 {
@@ -30,7 +31,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
@@ -99,7 +100,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
@@ -171,7 +172,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
@@ -181,6 +182,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("Aiming")
+                        .HasMaxLength(5)
                         .HasColumnType("int");
 
                     b.Property<string>("ChatSystemPrompt")
@@ -189,7 +191,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EvaluationScore")
+                    b.Property<int>("EvalAvgScore")
+                        .HasMaxLength(3)
+                        .HasColumnType("int");
+
+                    b.Property<int>("EvalMaxScore")
+                        .HasMaxLength(3)
                         .HasColumnType("int");
 
                     b.Property<string>("ExpectedResultsJson")
@@ -204,6 +211,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("FullVersion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsShare")
                         .HasColumnType("bit");
@@ -220,20 +230,31 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("NickName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("NumsOfResults")
                         .HasColumnType("int");
 
                     b.Property<string>("ParentTac")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prefix")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<float>("PresencePenalty")
                         .HasColumnType("real");
+
+                    b.Property<string>("RangeName")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -241,6 +262,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<string>("StopSequences")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Suffix")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Tactic")
                         .HasColumnType("nvarchar(max)");
@@ -256,6 +281,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<float>("TopP")
                         .HasColumnType("real");
+
+                    b.Property<string>("VariableDictJson")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -5,6 +5,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
+        [Required] public bool IsDraft { get; set; }
+
         #region Model Config
 
         /// <summary>
@@ -20,6 +22,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// <summary>
         /// 最大 Token 数
         /// </summary>
+        [Required]
         public int MaxToken { get; set; } = 2000;
 
         /// <summary>
@@ -43,7 +46,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         // public string Version { get; set; }
 
-        [Required] public int NumsOfResults { get; set; }
+
+        /// <summary>
+        /// 连发次数
+        /// </summary>
+        [Required]
+        public int NumsOfResults { get; set; }
 
         [Required] public bool IsNewTactic { get; set; } = false;
         [Required] public bool IsNewSubTactic { get; set; } = false;
@@ -55,5 +63,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public string Note { get; set; }
 
         public string ExpectedResultsJson { get; set; }
+        
+        public string Prefix { get;  set; }
+        public string Suffix { get;  set; }
+        public string VariableDictJson{ get;  set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
@@ -17,6 +18,7 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -94,7 +96,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
                 Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
-                Constants.NeuCharOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+                Constants.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
@@ -125,14 +127,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptResult> SenparcGenerateResultAsync(PromptItem promptItem)
+        public async Task<PromptResult> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             // 从数据库中获取模型信息
-            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
-            if (model == null)
-            {
-                throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
-            }
+            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
+                        ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
+
 
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
             // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
@@ -141,7 +141,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
                 Temperature = promptItem.Temperature,
                 TopP = promptItem.TopP,
                 FrequencyPenalty = promptItem.FrequencyPenalty,
@@ -164,6 +164,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             aiArguments["input"] = promptItem.Content;
 
+            #region 用户自定义参数
+
+            if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson))
+            {
+                // 如果有参数，前后缀不能为空
+                if (string.IsNullOrWhiteSpace(promptItem.Prefix) || string.IsNullOrWhiteSpace(promptItem.Suffix))
+                {
+                    throw new NcfExceptionBase("前后缀不能为空");
+                }
+
+                // 读取参数并填充
+                foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
+                {
+                    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
+                    aiArguments[k] = v;
+                }
+            }
+
+            #endregion
+
             var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
             var dt1 = SystemTime.Now;
 
@@ -185,8 +205,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(promptResult);
 
-            // 更新绑定的 item 的分数
-            await this.UpdateEvalScore(promptResult.PromptItemId);
+            // 有期望结果， 进行自动打分
+            if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            {
+                await this.RobotScoringAsync(promptResult.Id, promptItem.ExpectedResultsJson, false);
+            }
 
             return promptResult;
         }
@@ -204,7 +227,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
-
             // 根据id搜索数据库
             var promptResult = await base.GetObjectAsync(result => result.Id == id);
             if (promptResult == null)
@@ -215,9 +237,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             promptResult.ManualScoring(score);
 
             await base.SaveObjectAsync(promptResult);
-
-            // 更新绑定的 item 的分数
-            await this.UpdateEvalScore(promptResult.PromptItemId);
 
             return promptResult;
         }
@@ -273,10 +292,29 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return aiSettings;
         }
 
-        public async Task<PromptResult> RobotScore(int promptResultId, List<string> expectedResultList, bool isRefresh)
+
+        public async Task<PromptResult> RobotScoringAsync(int promptResultId, string expectedResultsJson, bool isRefresh)
+        {
+            List<string> list = //JsonConvert.DeserializeObject<>(expectedResultsJson);
+                expectedResultsJson.GetObject<List<string>>();
+            return await this.RobotScoringAsync(promptResultId, list, isRefresh);
+        }
+
+
+        public async Task<PromptResult> RobotScoringAsync(int promptResultId, List<string> expectedResultList, bool isRefresh)
         {
             // get promptResult by id
-            var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId);
+            var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId)
+                               ?? throw new NcfExceptionBase("找不到对应的promptResult");
+
+
+            // get promptItem by promptResult.PromptItemId
+            var promptItem = await _promptItemService.GetObjectAsync(z => z.Id == promptResult.PromptItemId)
+                             ?? throw new NcfExceptionBase("找不到对应的promptItem");
+
+            // 保存期望结果列表
+            await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
+
 
             // if user dont want force refreshing, and this promptResult is scored 
             if (!isRefresh && promptResult.RobotScore >= 0)
@@ -285,6 +323,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             // check if matching expected results
+            // if matched,score 10 by default save promptResult and return
             var isMatch = expectedResultList.Any(r => r == promptResult.ResultString);
             if (isMatch)
             {
@@ -293,8 +332,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 return promptResult;
             }
 
-            // get promptItem by promptResult
-            var promptItem = await _promptItemService.GetObjectAsync(z => z.Id == promptResult.PromptItemId);
 
             // get model by promptItem
             var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
@@ -305,7 +342,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = 200,
+                MaxTokens = 500,
                 Temperature = 0.5,
                 TopP = 0.5,
                 // FrequencyPenalty = 0,
@@ -315,7 +352,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 需要在变量前添加$
             const string scorePrompt = @"
 你是一个语言专家，你的工作是根据以下给定的期望结果和实际结果,对实际结果进行打分。
-IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标点符号
+IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标点符号，
+!!不要返回任何我告诉你的内容!!
 打分规则：
 1. 打分结果应该为0-10之间的整数数字，包含0和10。
 2. 实际结果符合期望结果中任意一个就应该给满分。
@@ -324,6 +362,12 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
 期望结果以JSON形式提供，可能包含若干个期望结果,以下为：{{$expectedResult}}
 
 实际结果是一个字符串，以下为：{{$actualResult}}
+
+***********************************************************************
+以下是一个对话历史，你可以参考这个对话历史来进行打分：
+Human: 江苏的省会是：
+
+
 ";
 
             var skHelper = new SemanticKernelHelper(aiSettings);
@@ -350,17 +394,15 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             // If there is a match, the number will be match.Value
             if (match.Success)
             {
-                // 保存期望结果
-                promptItem.UpdateExpectedResultsJson(expectedResultList.ToJson() ?? "");
-
-                await this.SaveObjectAsync(promptResult.RobotScoring(Convert.ToInt32(match.Value)));
+                promptResult.RobotScoring(Convert.ToInt32(match.Value));
+                await this.SaveObjectAsync(promptResult);
 
                 return promptResult;
             }
 
             // SenparcTrace.SendCustomLog("自动打分结果匹配失败", $"原文为{result.Output}，分数匹配失败");
 
-            throw new NcfExceptionBase($"自动打分结果匹配失败, 原文为{result.Output}，分数匹配失败");
+            throw new NcfExceptionBase($"自动打分结果匹配失败, 原文为{result.Output}，分数匹配失败，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
         }
 
         public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)
@@ -377,8 +419,13 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
             return true;
         }
 
-
-        public async Task<Boolean> UpdateEvalScore(int promptItemId)
+        /// <summary>
+        /// 更新promptItem的平均分和最高分
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<Boolean> UpdateEvalScoreAsync(int promptItemId)
         {
             var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
             if (promptItem == null)
@@ -386,31 +433,34 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
                 throw new NcfExceptionBase("找不到对应的promptItem");
             }
 
-            List<PromptResult> promptResults = await this.GetFullListAsync(p => p.PromptItemId == promptItemId,
+            List<PromptResult> promptResults = await this.GetFullListAsync(
+                p => p.PromptItemId == promptItemId　&& (p.HumanScore >= 0 || p.RobotScore >= 0),
                 p => p.Id, OrderingType.Ascending);
 
+            double avg = promptResults.Average(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
+            promptItem.UpdateEvalAvgScore((int)avg);
 
-            int sum = 0;
-            int cnt = 0;
-            foreach (var promptResult in promptResults)
-            {
-                sum += promptResult.HumanScore < 0 ? (promptResult.RobotScore < 0 ? 0 : promptResult.RobotScore) : promptResult.HumanScore;
-                if (promptResult.HumanScore < 0 && promptResult.RobotScore < 0)
-                {
-                    continue;
-                }
+            int max = promptResults.Max(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
 
-                cnt++;
-            }
+            promptItem.UpdateEvalMaxScore(max);
 
-            if (cnt != 0)
-            {
-                promptItem.UpdateEvalScore((int)sum / cnt);
-
-                await _promptItemService.SaveObjectAsync(promptItem);
-            }
+            await _promptItemService.SaveObjectAsync(promptItem);
 
             return true;
+
+            // int sum = 0;
+            // int cnt = 0;
+            // foreach (var promptResult in promptResults)
+            // {
+            //     sum += promptResult.HumanScore < 0 ? (promptResult.RobotScore < 0 ? 0 : promptResult.RobotScore) : promptResult.HumanScore;
+            //     cnt++;
+            // }
+            // if (cnt != 0)
+            // {
+            //     promptItem.UpdateEvalAvgScore((int)sum / cnt);
+            //
+            //     await _promptItemService.SaveObjectAsync(promptItem);
+            // }
         }
     }
 }

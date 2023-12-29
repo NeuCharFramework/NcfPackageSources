@@ -12,8 +12,8 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 {
     [DbContext(typeof(PromptRangeSenparcEntities_SqlServer))]
-    [Migration("20231215155619_Init2023")]
-    partial class Init2023
+    [Migration("20231220032152_init2023")]
+    partial class init2023
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,6 +182,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("Aiming")
+                        .HasMaxLength(5)
                         .HasColumnType("int");
 
                     b.Property<string>("ChatSystemPrompt")
@@ -190,8 +191,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EvaluationScore")
+                    b.Property<int>("EvalAvgScore")
+                        .HasMaxLength(3)
                         .HasColumnType("int");
+
+                    b.Property<int>("EvalMaxScore")
+                        .HasMaxLength(3)
+                        .HasColumnType("int");
+
+                    b.Property<string>("ExpectedResultsJson")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
@@ -202,6 +211,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("FullVersion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsShare")
                         .HasColumnType("bit");
@@ -218,20 +230,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("NumsOfResults")
                         .HasColumnType("int");
 
                     b.Property<string>("ParentTac")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("PresencePenalty")
                         .HasColumnType("real");
+
+                    b.Property<string>("RangeName")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)

@@ -36,12 +36,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Add(LlmModel_AddRequest request)
         {
-            StringAppResponse resp = await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
-            {
-                var model = _llmModelService.Add(request);
-                
-                return "ok";
-            });
+            StringAppResponse resp = await this.GetResponseAsync<StringAppResponse, string>(
+                async (response, logger) =>
+                {
+                    var model = await _llmModelService.AddAsync(request);
+
+                    return "ok";
+                });
             return resp;
         }
 
@@ -54,18 +55,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Put)]
         public async Task<StringAppResponse> Modify(LlmModel_ModifyRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
-            {
-                var model = await _llmModelService.GetLlmModelById(request.Id);
-                if (model == null)
+            return await this.GetResponseAsync<StringAppResponse, string>(
+                async (response, logger) =>
                 {
-                    throw new NcfExceptionBase("未找到该模型");
-                }
+                    await _llmModelService.UpdateAsync(request);
 
-                model.Update(request.Name, request.Show);
-                await _llmModelService.SaveObjectAsync(model);
-                return "ok";
-            });
+                    return "ok";
+                });
         }
 
         /// <summary>
@@ -76,14 +72,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="key"></param>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<LlmModel_GetPageResponse>> GetLlmModelList(int pageIndex, int pageSize,
-            string key)
+        public async Task<AppResponseBase<LlmModel_GetPageResponse>> GetLlmModelList(int pageIndex, int pageSize, string key)
         {
             return await this.GetResponseAsync<AppResponseBase<LlmModel_GetPageResponse>, LlmModel_GetPageResponse>(
                 async (response, logger) =>
                 {
                     var seh = new SenparcExpressionHelper<LlmModel>();
-                    seh.ValueCompare.AndAlso(!string.IsNullOrWhiteSpace(key), _ => _.GetModelId().Contains(key));
+                    seh.ValueCompare.AndAlso(!string.IsNullOrWhiteSpace(key), model => model.GetModelId().Contains(key));
                     var where = seh.BuildWhereExpression();
 
                     var llmModelList = await _llmModelService.GetObjectListAsync(pageIndex, pageSize, where, m => m.Id,
@@ -109,12 +104,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 foreach (var id in ids)
                 {
-                    var prompt = await _llmModelService.GetLlmModelById(id);
-                    if (prompt != null)
-                    {
-                        await _llmModelService.DeleteObjectAsync(prompt);
-                        deletedCount++;
-                    }
+                    var model = await _llmModelService.GetObjectAsync(n => n.Id == id);
+
+                    if (model == null) continue;
+                    
+                    await _llmModelService.DeleteObjectAsync(model);
+                    deletedCount++;
                 }
 
                 if (deletedCount == 0)
@@ -137,10 +132,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     return (await _llmModelService
                             .GetFullListAsync(p => true, p => p.Id, Ncf.Core.Enums.OrderingType.Ascending))
-                        .Select(p => new LlmModel_GetIdAndNameResponse
+                        .Select(model => new LlmModel_GetIdAndNameResponse
                         {
-                            Id = p.Id,
-                            Name = p.GetModelId()
+                            Id = model.Id,
+                            Name = model.Name
                         }).ToList();
                 });
         }

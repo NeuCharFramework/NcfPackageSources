@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
@@ -38,6 +39,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
+        public float PresencePenalty { get; private set; }
+
         /// <summary>
         /// 停止序列（JSON 数组）
         /// </summary>
@@ -50,33 +53,64 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public string Note { get; set; }
 
-        public DateTime LastRunTime { get; private set; } = DateTime.Now;
+        public new DateTime LastRunTime { get; private set; } = DateTime.Now;
 
         public bool IsShare { get; private set; } = false;
 
         /// <summary>
-        /// 期望结果 - Json List<string>
+        /// 期望结果 - Json 类型为List &lt; string &gt;
         /// </summary>
         public string ExpectedResultsJson { get; private set; }
 
         public List<PromptResult> PromptResultList { get; set; } = new();
 
+        /// <summary>
+        /// 评估参数, 平均分
+        /// </summary>
+        public int EvalAvgScore { get; private set; }
+
+        /// <summary>
+        /// 评估参数
+        /// </summary>
+        public int EvalMaxScore { get; private set; }
+
+        public string Prefix { get; set; }
+        public string Suffix { get; set; }
+        public string VariableDictJson { get; set; }
+
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson)
+            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore)
         {
-            Id = $"{promptItemId}";
+            Id = promptItemId;
             PromptContent = promptContent;
-            LastRunTime = DateTime.Now;
             FullVersion = fullVersion;
             ModelId = modelId;
             MaxToken = maxToken;
             Temperature = temperature;
             TopP = topP;
             FrequencyPenalty = frequencyPenalty;
+            PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             Note = note;
             ExpectedResultsJson = expectedResultsJson;
+            Prefix = prefix;
+            Suffix = suffix;
+            VariableDictJson = variableDictJson;
+            EvalAvgScore = evalAvgScore;
+            EvalMaxScore = evalMaxScore;
+        }
+
+        public PromptItem_AddResponse(PromptItem item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
+            item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
+            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
+        {
+        }
+        
+        public PromptItem_AddResponse(PromptItemDto item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
+            item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
+            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
+        {
         }
     }
 }

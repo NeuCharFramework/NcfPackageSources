@@ -6,6 +6,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Threading.Tasks;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -15,12 +16,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
         }
 
-        public Task<LlmModel> GetLlmModelById(int Id)
+        public async Task<LlmModelDto> GetLlmModelById(int Id)
         {
-            return base.GetObjectAsync(n => n.Id == Id);
+            var model = await base.GetObjectAsync(n => n.Id == Id) ?? throw new NcfExceptionBase($"找不到{Id}对应的模型");
+            return this.Mapper.Map<LlmModelDto>(model);
         }
 
-        public async Task<LlmModel> Add(LlmModel_AddRequest request)
+        public async Task<LlmModel> AddAsync(LlmModel_AddRequest request)
         {
             #region validate
 
@@ -51,6 +53,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await this.SaveObjectAsync(model);
             return model;
+        }
+
+        public async Task<bool> UpdateAsync(LlmModel_ModifyRequest request)
+        {
+            var model = await this.GetObjectAsync(m => m.Id == request.Id) ??
+                        throw new NcfExceptionBase("未找到该模型");
+
+            model.Update(request.Name, request.Show);
+            await this.SaveObjectAsync(model);
+
+            return true;
         }
     }
 }

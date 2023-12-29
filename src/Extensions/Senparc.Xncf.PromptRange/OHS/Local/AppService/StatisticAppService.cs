@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
+using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
@@ -45,11 +46,36 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             var response = await this.GetResponseAsync<AppResponseBase<Statistics_TodayTacticResponse>, Statistics_TodayTacticResponse>(
                 async (resp, logger) =>
                 {
-                    int cnt = await _promptItemService.GetCountAsync(p => p.Name.StartsWith(today));
+                    int cnt = await _promptItemService.GetCountAsync(p => p.RangeName.StartsWith(today));
 
                     return new Statistics_TodayTacticResponse(cnt);
                 });
             return response;
+        }
+        
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScoreAsync(int promptItemId)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
+                async (response, logger) =>
+                {
+                    logger.SaveLogs($"传入ID为{promptItemId}");
+                    
+                    return await _promptItemService.GetHistoryScoreAsync(promptItemId);
+                });
+        }
+        
+        
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg)
+        {
+            return await this.GetResponseAsync<AppResponseBase<Statistic_TodayTacticResponse>, Statistic_TodayTacticResponse>(
+                async (response, logger) =>
+                {
+                    logger.SaveLogs($"查询三维折现图，传入ID为{promptItemId}");
+                    
+                    return await _promptItemService.GetLineChartDataAsync(promptItemId,isAvg);
+                });
         }
     }
 }
