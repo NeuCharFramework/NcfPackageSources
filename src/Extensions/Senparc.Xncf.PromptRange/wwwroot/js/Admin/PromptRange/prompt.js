@@ -566,7 +566,7 @@ var app = new Vue({
         },
         // 靶道选择变化
         promptChangeHandel(val, itemKey, oldVal) {
-            console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
+            //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
                 if (this.pageChange && this.modelid) {
