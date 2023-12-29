@@ -27,7 +27,7 @@
         <el-main>
             <div class="d-flex justify-content-between align-items-center">
                 <h1>模型列表</h1>
-                <el-button type="primary" icon="el-icon-plus" size="mini" @click="addModel">添加模型</el-button>
+                <el-button type="primary" icon="el-icon-plus" size="mini" @@click="addModel">添加模型</el-button>
             </div>
            
             <el-table :data="tableData">
@@ -58,8 +58,8 @@
                 @* 操作 *@
                 <el-table-column label="操作" width="auto">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="editModel(scope.row)">编辑</el-button>
-                        <el-button type="danger" size="mini" @click="deleteModel(scope.row)">删除</el-button>
+                        <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
+                        <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -122,8 +122,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="addFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addModelSubmit">确 定</el-button>
+            <el-button @@click="addFormDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @@click="addModelSubmit">确 定</el-button>
         </span>
     </el-dialog>
     @* dialog for 编辑模型 *@
@@ -182,8 +182,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="editFormDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editModelSubmit">确 定</el-button>
+            <el-button @@click="editFormDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
         </span>
     </el-dialog>
 </div>
