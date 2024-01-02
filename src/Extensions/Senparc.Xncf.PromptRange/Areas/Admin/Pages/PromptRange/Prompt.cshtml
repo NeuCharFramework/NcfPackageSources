@@ -30,7 +30,6 @@
                         <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                         <div class="titleContent">选择靶场</div>
                     </div>
-                    @*  *@
                     <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
                 </div>
                 <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField',promptField)">
@@ -163,12 +162,18 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                         @* 打靶按钮  v-loading="targetShootLoading" *@
-                        <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                            {{sendBtnText}}
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&!promptid&&outputList.length>0" :command="btn.text">{{btn.text}}</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                                <div class="targetShootBtnRow">
+                                    <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
+                                        {{sendBtnText}}
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&!promptid&&outputList.length>0" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                    <el-tooltip class="item" effect="dark" placement="top">
+                                        <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br />连发：根据当前选择的靶道信息，连续输出多个结果。<br />草稿：保存当前输入的内容，并创建新的靶道。</div>
+                                        <i class="el-icon-warning-outline"></i>
+                                    </el-tooltip>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,6 +248,20 @@
 <div class="promptPage_rightArea">
     @*输出*@
     <div class="boxCard outputArea">
+            <div class="titleRow">
+                <div class="titleRow_scoreBox">
+                    <span>靶场:</span>
+                    <span>{{promptDetail.promptFieldStr||'--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>靶道:</span>
+                    <span>{{promptDetail.promptStr||'--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>战术:</span>
+                    <span>{{promptDetail.tacticsStr||'--'}}</span>
+                </div>
+        </div>
         <div class="titleRow">
             <div class="titleRow_leftBox">
                 <img src="~/image/Admin/PromptRange/prompt_output.svg" alt="" class="imgIcon"/>

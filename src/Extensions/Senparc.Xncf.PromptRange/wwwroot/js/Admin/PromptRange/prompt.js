@@ -74,7 +74,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -766,6 +766,10 @@ var app = new Vue({
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
+                        let vArr = copyResultData.fullVersion.split('-') 
+                        copyResultData.promptFieldStr = vArr[0] || ''
+                        copyResultData.promptStr = vArr[1] || ''
+                        copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
                         // 平均分 
                         this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
@@ -1023,6 +1027,17 @@ var app = new Vue({
         showRatingView(index, scoreType) {
             // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
             if (scoreType === '1') {
+                if (this.promptDetail.modelId) {
+                    // 在promptOpt是否存在
+                    let _index = this.promptOpt.findIndex(item => item.value == this.promptDetail.modelId)
+                    if (_index === -1) {
+                        this.$message({
+                            message: '模型已被删除，请选择模型后重新打靶！',
+                            type: 'warning'
+                        })
+                        return 
+                    }
+                }
                 let _list = this.outputList[index].alResultList.map(item => item.value)
                 _list = _list.filter(item => item)
                 if (_list.length === 0) {
@@ -1177,6 +1192,10 @@ var app = new Vue({
                     // 拷贝数据
                     let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                     delete copyResultData.promptResultList
+                    let vArr = copyResultData.fullVersion.split('-')
+                    copyResultData.promptFieldStr = vArr[0] || ''
+                    copyResultData.promptStr = vArr[1] || ''
+                    copyResultData.tacticsStr = vArr[2] || ''
                     this.promptDetail = copyResultData
                     // 平均分 
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
@@ -1358,7 +1377,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -1602,7 +1621,13 @@ var app = new Vue({
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
                 //console.log('getPromptetail:', res.data)
-                this.promptDetail = res.data.data
+                // 拷贝数据
+                let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                let vArr = copyResultData.fullVersion.split('-')
+                copyResultData.promptFieldStr = vArr[0] || ''
+                copyResultData.promptStr = vArr[1] || ''
+                copyResultData.tacticsStr = vArr[2] || ''
+                this.promptDetail = copyResultData
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)

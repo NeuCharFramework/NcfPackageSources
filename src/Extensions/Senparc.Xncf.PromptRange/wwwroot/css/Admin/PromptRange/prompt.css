@@ -48,8 +48,16 @@
     color:#f00;
 }
 
-.promptLoaderBox{
-position: fixed;
+.targetShootBtnRow{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    justify-content:flex-start;
+    gap:5px;
+}
+
+.promptLoaderBox {
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 999999999;
