@@ -799,9 +799,14 @@ var app = new Vue({
                             return item
                         })
                         //console.log('选择正确的靶场')
-                        this.getPromptOptData(id)
-                        // 获取分数趋势图表数据
-                        this.getScoringTrendData()
+                        //提交数据后，选择正确的靶场和靶道
+                        this.getFieldList().then(() => {
+                            this.promptField=fullVersion.split('-')[0]
+                            this.getPromptOptData(id)
+                            // 获取分数趋势图表数据
+                            this.getScoringTrendData()
+                        })
+                  
                         if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                             //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                             this.dealRapicFireHandel(this.numsOfResults - 1)
@@ -1208,12 +1213,12 @@ var app = new Vue({
                     })
                     //提交数据后，选择正确的靶场和靶道
                     this.getFieldList().then(() => {
+                        this.promptField=fullVersion.split('-')[0]
                         this.getPromptOptData(id)
+                        // 获取分数趋势图表数据
+                        this.getScoringTrendData()
                     })
-
-
-                    // 获取分数趋势图表数据
-                    this.getScoringTrendData()
+                    
                     if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                         //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                         this.dealRapicFireHandel(this.numsOfResults - 1)
