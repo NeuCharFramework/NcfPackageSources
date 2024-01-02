@@ -370,7 +370,6 @@ var app = new Vue({
                     formatter: (params) => {
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
-                        //
                         let _html = `<div style="text-align: left;font-size:10px;">
     <p>靶场：${_data?.rangeName || ''}</p>
     <p>版本：${_data?.fullVersion || ''}</p>
@@ -418,7 +417,7 @@ var app = new Vue({
                         show: true,//该参数需设为true
                         // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
                         lineStyle: {//坐标轴样式
-                            color: '#32b8be',
+                            color: 'rgba(250,250,250,0.3)',
                             opacity: 1,//(单个刻度不会受影响)
                             width: 2//线条宽度
                         }
@@ -475,8 +474,8 @@ var app = new Vue({
                     },
                     //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
                     viewControl: {
-                        // minBeta: -10, //最小旋转角度
-                        // maxBeta: 10, //最大旋转角度
+                         minBeta: 0, //最小旋转角度
+                         maxBeta: 90, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
@@ -486,7 +485,7 @@ var app = new Vue({
                         // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
                         distance: 350,//默认视角距离主体的距离(常用)
                         alpha: 1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
-                        beta: -30,//视角绕 y 轴，即左右旋转的角度。
+                        beta: 30,//视角绕 y 轴，即左右旋转的角度。
                         // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
                         animation: true,
                     },
