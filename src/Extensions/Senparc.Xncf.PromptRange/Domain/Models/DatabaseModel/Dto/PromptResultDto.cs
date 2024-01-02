@@ -4,6 +4,11 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
     public class PromptResultDto : DtoBase
     {
+        /// <summary>
+        /// ID 主键
+        /// </summary>
+        public int Id { get; set; }
+        
         #region LlmModel
 
         /// <summary>
@@ -14,7 +19,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// LlmModel 类型的 LlmModel
         /// </summary>
-        public LlmModel LlmModel { get; set; }
+        public LlModel LlModel { get; set; }
 
         #endregion
 
@@ -24,11 +29,6 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// PromptItem类型的PromptItem
         /// </summary>
         public int PromptItemId { get; set; }
-
-        /// <summary>
-        /// PromptItem
-        /// </summary>
-        public PromptItem PromptItem { get; set; }
 
         /// <summary>
         /// string类型的PromptItemVersion

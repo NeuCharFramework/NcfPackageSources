@@ -15,17 +15,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// </summary>
     public class StatisticAppService : AppServiceBase
     {
-        private readonly LlmModelService _llmModelService;
+        private readonly LlModelService _llModelService;
         private readonly PromptItemService _promptItemService;
         private readonly IMapper _mapper;
 
         public StatisticAppService(
-            LlmModelService llmModelService,
+            LlModelService llModelService,
             PromptItemService promptItemService,
             IServiceProvider serviceProvider,
             IMapper mapper) : base(serviceProvider)
         {
-            _llmModelService = llmModelService;
+            _llModelService = llModelService;
             _promptItemService = promptItemService;
             _mapper = mapper;
         }
