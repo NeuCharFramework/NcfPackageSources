@@ -110,7 +110,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptService>();
             services.AddScoped<PromptItemService>();
             services.AddScoped<PromptResultService>();
-            services.AddScoped<LlmModelService>();
+            services.AddScoped<LlModelService>();
 
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 

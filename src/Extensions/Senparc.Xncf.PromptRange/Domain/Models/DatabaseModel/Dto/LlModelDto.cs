@@ -1,59 +1,74 @@
+using Senparc.AI;
 using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
-    public class LlmModelDto : DtoBase
+    public class LlModelDto : DtoBase
     {
+        /// <summary>
+        /// ID 主键
+        /// </summary>
+        public int Id { get; set; }
+
+        public string Alias { get; private set; }
+
         /// <summary>
         /// 名称（必须）
         /// </summary>
-        public string Name { get; private set; }
+        public string DeploymentName { get; set; }
+
+        /// <summary>
+        /// 模型的类型
+        /// </summary>
+        public AiPlatform ModelType { get; private set; }
 
         /// <summary>
         /// Endpoint（必须）
         /// </summary>
-        public string Endpoint { get; private set; }
+        public string Endpoint { get; set; }
 
         /// <summary>
         /// OrganizationId（可选）
         /// </summary>
-        public string OrganizationId { get; private set; }
+        public string OrganizationId { get; set; }
 
         /// <summary>
         /// ApiKey（可选）
         /// </summary>
-        public string ApiKey { get; private set; }
+        public string ApiKey { get; set; }
 
         /// <summary>
         /// ApiVersion（可选）
         /// </summary>
-        public string ApiVersion { get; private set; }
+        public string ApiVersion { get; set; }
 
         /// <summary>
         /// Note（可选）
         /// </summary>
-        public string Note { get; private set; }
+        public string Note { get; set; }
 
         /// <summary>
         /// MaxToken（可选）
         /// </summary>
-        public int MaxToken { get; private set; }
+        public int MaxToken { get; set; }
 
         // /// <summary>
         // /// TextCompletionModelName（可选）
         // /// </summary>
-        // public string TextCompletionModelName { get; private set; }
+        // public string TextCompletionModelName { get;  set; }
         //
         // /// <summary>
         // /// TextEmbeddingModelName（可选）
         // /// </summary>
-        // public string TextEmbeddingModelName { get; private set; }
+        // public string TextEmbeddingModelName { get;  set; }
         //
         // /// <summary>
         // /// OtherModelName（可选）
         // /// </summary>
-        // public string OtherModelName { get; private set; }
+        // public string OtherModelName { get;  set; }
 
-        private LlmModelDto() { }
+        private LlModelDto()
+        {
+        }
     }
 }

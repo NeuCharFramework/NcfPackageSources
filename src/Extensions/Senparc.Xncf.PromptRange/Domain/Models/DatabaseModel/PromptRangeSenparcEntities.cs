@@ -23,7 +23,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// <summary>
         /// 数据库中的 LlmModel 实体
         /// </summary>
-        public DbSet<LlmModel> LlmModels { get; private set; }
+        public DbSet<LlModel> LlmModels { get; private set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
