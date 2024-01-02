@@ -22,7 +22,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.LlmModel", b =>
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.LlModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,11 +37,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("ApiKey")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ApiVersion")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("DeploymentName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -53,24 +63,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("MaxToken")
                         .HasColumnType("int");
 
-                    b.Property<string>("ModelType")
-                        .IsRequired()
+                    b.Property<int>("ModelType")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("int");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("OrganizationId")
                         .HasMaxLength(200)
@@ -80,15 +88,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<bool>("Show")
-                        .HasColumnType("bit");
-
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Senparc_PromptRange_LlmModel");
+                    b.ToTable("Senparc_PromptRange_LlModel");
                 });
 
             modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.PromptResult", b =>
@@ -114,9 +119,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<int>("HumanScore")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsRobotTestExactlyEquat")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
@@ -145,9 +147,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<int>("RobotScore")
                         .HasColumnType("int");
-
-                    b.Property<string>("RobotTestExceptedResult")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
