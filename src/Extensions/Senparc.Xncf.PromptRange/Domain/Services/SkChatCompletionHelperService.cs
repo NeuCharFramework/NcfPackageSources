@@ -14,7 +14,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
     public static class SkChatCompletionHelperService
     {
 
-        public static async Task<string> WithOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
+        public static async Task<string> WithOpenAIChatCompletionService(PromptItem promptItem, LlModel model)
         {
             OpenAIChatCompletionService chatGPT = new(
                 modelId: model.GetModelId(),
@@ -31,7 +31,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return reply;
         }
 
-        public static async Task<string> WithAzureOpenAIChatCompletionService(PromptItem promptItem, LlmModel model)
+        public static async Task<string> WithAzureOpenAIChatCompletionService(PromptItem promptItem, LlModel model)
         {
             // 不在意apiVersion， why?
             var chatGPT = new AzureOpenAIChatCompletionService(
@@ -63,7 +63,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="promptItem"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static async Task<string> WithHuggingFaceCompletionService(PromptItem promptItem, LlmModel model)
+        public static async Task<string> WithHuggingFaceCompletionService(PromptItem promptItem, LlModel model)
         {
 #pragma warning disable SKEXP0020
             var conn = new HuggingFaceTextGenerationService(model.GetModelId(), endpoint: model.Endpoint);

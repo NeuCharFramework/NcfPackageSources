@@ -5,29 +5,32 @@ using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Threading.Tasks;
+using Senparc.AI;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
-    public class LlmModelService : ServiceBase<LlmModel>
+    public class LlModelService : ServiceBase<LlModel>
     {
-        public LlmModelService(IRepositoryBase<LlmModel> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public LlModelService(IRepositoryBase<LlModel> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
-        public async Task<LlmModelDto> GetLlmModelById(int Id)
+        public async Task<LlModelDto> GetLlmModelById(int llmId)
         {
-            var model = await base.GetObjectAsync(n => n.Id == Id) ?? throw new NcfExceptionBase($"找不到{Id}对应的模型");
-            return this.Mapper.Map<LlmModelDto>(model);
+            var model = await base.GetObjectAsync(n => n.Id == llmId) ?? throw new NcfExceptionBase($"找不到{llmId}对应的模型");
+            return this.Mapper.Map<LlModelDto>(model);
         }
 
-        public async Task<LlmModel> AddAsync(LlmModel_AddRequest request)
+        public async Task<LlModelDto> AddAsync(LlmModel_AddRequest request)
         {
             #region validate
 
             // 如果是Azure OpenAI
-            if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharAI.ToString())
+            // if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharAI.ToString())
+
+            if (request.ModelType is AiPlatform.AzureOpenAI)
             {
                 // 强制要求ApiVersion和Endpoint不为空
                 if (string.IsNullOrWhiteSpace(request.ApiVersion) || string.IsNullOrWhiteSpace(request.Endpoint))
@@ -44,15 +47,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
-            LlmModel model = new LlmModel(
-                request.Name, request.Endpoint, request.ModelType,
-                request.OrganizationId, request.ApiKey, request.ApiVersion,
-                "", 0);
+            LlModel model = new LlModel(request);
 
             model.Switch(true);
 
             await this.SaveObjectAsync(model);
-            return model;
+
+            return this.Mapper.Map<LlModelDto>(model);
         }
 
         public async Task<bool> UpdateAsync(LlmModel_ModifyRequest request)

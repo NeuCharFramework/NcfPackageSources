@@ -39,15 +39,15 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         public int HumanScore { get; private set; }
 
-        /// <summary>
-        /// RobotTestExceptedResult 自动打分期望值
-        /// </summary>
-        public string RobotTestExceptedResult { get; private set; }
+        // /// <summary>
+        // /// RobotTestExceptedResult 自动打分期望值
+        // /// </summary>
+        // public string RobotTestExceptedResult { get; private set; }
 
-        /// <summary>
-        /// IsRobotTestExactlyEquat
-        /// </summary>
-        public bool IsRobotTestExactlyEquat { get; private set; }
+        // /// <summary>
+        // /// IsRobotTestExactlyEquat
+        // /// </summary>
+        // public bool IsRobotTestExactlyEquat { get; private set; }
 
         /// <summary>
         /// 测试类型，枚举中包含：文字、图形、声音
@@ -91,8 +91,6 @@ namespace Senparc.Xncf.PromptRange.Models
             CostTime = dto.CostTime;
             RobotScore = dto.RobotScore;
             HumanScore = dto.HumanScore;
-            RobotTestExceptedResult = dto.RobotTestExceptedResult;
-            IsRobotTestExactlyEquat = dto.IsRobotTestExactlyEquat;
             TestType = dto.TestType;
             PromptCostToken = dto.PromptCostToken;
             ResultCostToken = dto.ResultCostToken;
@@ -113,8 +111,6 @@ namespace Senparc.Xncf.PromptRange.Models
             CostTime = costTime;
             RobotScore = robotScore;
             HumanScore = humanScore;
-            RobotTestExceptedResult = robotTestExceptedResult;
-            IsRobotTestExactlyEquat = isRobotTestExactlyEquat;
             TestType = testType;
             PromptCostToken = promptCostToken;
             ResultCostToken = resultCostToken;
@@ -122,26 +118,7 @@ namespace Senparc.Xncf.PromptRange.Models
             PromptItemVersion = promptItemVersion;
             PromptItemId = promptItemId;
         }
-
-        //public PromptResult(PromptResultDto promptResultDto)
-        //{
-        //    PromptGroupId = promptResultDto.PromptGroupId;
-        //    //PromptGroup = promptResultDto.PromptGroup;
-        //    LlmModelId = promptResultDto.LlmModelId;
-        //    //LlmModel = promptResultDto.LlmModel;
-        //    ResultString = promptResultDto.ResultString;
-        //    CostTime = promptResultDto.CostTime;
-        //    RobotScore = promptResultDto.RobotScore;
-        //    HumanScore = promptResultDto.HumanScore;
-        //    RobotTestExceptedResult = promptResultDto.RobotTestExceptedResult;
-        //    IsRobotTestExactlyEquat = promptResultDto.IsRobotTestExactlyEquat;
-        //    TestType = promptResultDto.TestType;
-        //    PromptCostToken = promptResultDto.PromptCostToken;
-        //    ResultCostToken = promptResultDto.ResultCostToken;
-        //    TotalCostToken = promptResultDto.TotalCostToken;
-        //    //PromptItem = promptResultDto.PromptItem;
-        //    PromptItemVersion = promptResultDto.PromptItemVersion;
-        //}
+        
 
         /// <summary>
         /// 更新手动评分

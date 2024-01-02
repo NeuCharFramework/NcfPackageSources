@@ -27,17 +27,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            LlmModelService llmModelService,
+            LlModelService llModelService,
             PromptItemService promptItemService) : base(repo,
             serviceProvider)
         {
-            _llmModelService = llmModelService;
+            _llModelService = llModelService;
             _promptItemService = promptItemService;
         }
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
-        private readonly LlmModelService _llmModelService;
+        private readonly LlModelService _llModelService;
 
 
         public async Task<List<PromptResult>> BatchGenerateResultAsync(PromptItem promptItem, int count)
@@ -52,6 +52,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return list;
         }
 
+        public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
+        {
+            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
+            var resultList = (await this.GetFullListAsync(
+                p => p.PromptItemId == promptItemId,
+                p => p.Id,
+                OrderingType.Ascending));
+            var dtoList = resultList
+                .Select(p => this.Mapper.Map<PromptResultDto>(p))
+                .ToList();
+            return dtoList;
+        }
+
         /// <summary>
         /// 传入promptItem，生成结果
         /// 暂时只能在PromptItemAppService中调用
@@ -64,7 +77,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<PromptResult> GenerateResultAsync(PromptItem promptItem)
         {
             // 从数据库中获取模型信息
-            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
             if (model == null)
             {
                 throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
@@ -93,10 +106,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var dt1 = SystemTime.Now;
             var resp = model.ModelType switch
             {
-                Constants.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
-                Constants.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
-                Constants.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
-                Constants.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+                AiPlatform.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
+                AiPlatform.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+                AiPlatform.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
+                AiPlatform.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
                 _ => throw new NotImplementedException()
             };
 
@@ -127,10 +140,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptResult> SenparcGenerateResultAsync(PromptItemDto promptItem)
+        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             // 从数据库中获取模型信息
-            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
+            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
                         ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
 
 
@@ -208,11 +221,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 有期望结果， 进行自动打分
             if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
-                await this.RobotScoringAsync(promptResult.Id, promptItem.ExpectedResultsJson, false);
+                await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
             }
 
-            return promptResult;
-            // return this.Mapper.Map<PromptResultDto>(promptResult);
+            return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
 
@@ -240,53 +252,56 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        private SenparcAiSetting BuildSenparcAiSetting(LlmModel llmModel)
+        private SenparcAiSetting BuildSenparcAiSetting(LlModel llModel)
         {
-            var aiSettings = new SenparcAiSetting();
-
-            if (!Enum.TryParse(llmModel.ModelType, out AiPlatform aiPlatform))
+            var aiSettings = new SenparcAiSetting
             {
-                throw new Exception("无法转换为AiPlatform");
-            }
+                // if (!Enum.TryParse<AiPlatform>(llmModel.ModelType, out AiPlatform aiPlatform))
+                // {
+                //     throw new Exception("无法转换为AiPlatform");
+                // }
+                AiPlatform = llModel.ModelType
+            };
 
-            aiSettings.AiPlatform = aiPlatform;
-            switch (aiPlatform)
+            switch (aiSettings.AiPlatform)
             {
                 case AiPlatform.NeuCharAI:
                     aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
                     {
-                        ApiKey = llmModel.ApiKey,
-                        NeuCharOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = llmModel.Endpoint
+                        ApiKey = llModel.ApiKey,
+                        NeuCharOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharEndpoint = llModel.Endpoint
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
-                        ApiKey = llmModel.ApiKey,
-                        AzureOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llmModel.Endpoint
+                        ApiKey = llModel.ApiKey,
+                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = llModel.Endpoint
                     };
                     break;
                 case AiPlatform.AzureOpenAI:
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
-                        ApiKey = llmModel.ApiKey,
-                        AzureOpenAIApiVersion = llmModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llmModel.Endpoint
+                        ApiKey = llModel.ApiKey,
+                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = llModel.Endpoint
                     };
                     break;
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = llmModel.Endpoint
+                        Endpoint = llModel.Endpoint
                     };
                     break;
                 case AiPlatform.OpenAI:
                     aiSettings.OpenAIKeys = new OpenAIKeys()
                     {
-                        ApiKey = llmModel.ApiKey,
-                        OrganizationId = llmModel.OrganizationId
+                        ApiKey = llModel.ApiKey,
+                        OrganizationId = llModel.OrganizationId
                     };
                     break;
+                default:
+                    throw new NcfExceptionBase($"暂时不支持{aiSettings.AiPlatform}类型");
             }
 
 
@@ -294,18 +309,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptResult> RobotScoringAsync(int promptResultId, string expectedResultsJson, bool isRefresh)
+        public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, string expectedResultsJson)
         {
             List<string> list = //JsonConvert.DeserializeObject<>(expectedResultsJson);
                 expectedResultsJson.GetObject<List<string>>();
-            return await this.RobotScoringAsync(promptResultId, list, isRefresh);
+            return await this.RobotScoringAsync(promptResultId, isRefresh, list);
         }
 
 
-        public async Task<PromptResult> RobotScoringAsync(int promptResultId, List<string> expectedResultList, bool isRefresh)
+        public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, List<string> expectedResultList)
         {
             // get promptResult by id
-            var promptResult = await base.GetObjectAsync(z => z.Id == promptResultId)
+            var promptResult = await this.GetObjectAsync(z => z.Id == promptResultId)
                                ?? throw new NcfExceptionBase("找不到对应的promptResult");
 
 
@@ -335,7 +350,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // get model by promptItem
-            var model = await _llmModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
 
             // build aiSettings by model
             var aiSettings = this.BuildSenparcAiSetting(model);
