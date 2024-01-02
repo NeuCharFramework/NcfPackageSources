@@ -1101,7 +1101,7 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid && !isDraft) {
+            if (!isDraft && this.sendBtnText!=='连发') {
                 this.tacticalFormVisible = true
                 return
             }

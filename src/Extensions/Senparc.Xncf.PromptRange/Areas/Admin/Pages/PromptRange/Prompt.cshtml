@@ -166,7 +166,7 @@
                         <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
                             {{sendBtnText}}
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&!promptid" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&!promptid&&outputList.length>0" :command="btn.text">{{btn.text}}</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
