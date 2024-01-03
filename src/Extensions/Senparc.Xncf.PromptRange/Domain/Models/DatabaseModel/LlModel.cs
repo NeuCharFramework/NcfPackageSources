@@ -136,7 +136,7 @@ namespace Senparc.Xncf.PromptRange.Models
             Show = show;
         }
 
-        public LlModel(LlmModel_AddRequest request) : this(request.DeploymentName, request.Endpoint, request.ModelType,
+        public LlModel(LlModel_AddRequest request) : this(request.DeploymentName, request.Endpoint, request.ModelType,
             request.OrganizationId, request.ApiKey, request.ApiVersion, request.Note, 0, request.Alias, request.IsShared)
         {
         }

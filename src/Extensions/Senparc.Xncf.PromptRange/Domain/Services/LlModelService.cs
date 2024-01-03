@@ -25,7 +25,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<LlModelDto>(model);
         }
 
-        public async Task<LlModelDto> AddAsync(LlmModel_AddRequest request)
+        public async Task<LlModelDto> AddAsync(LlModel_AddRequest request)
         {
             #region validate
 

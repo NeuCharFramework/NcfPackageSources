@@ -35,7 +35,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<LlModelDto>> Add(LlmModel_AddRequest request)
+        public async Task<AppResponseBase<LlModelDto>> Add(LlModel_AddRequest request)
         {
             var resp = await this.GetResponseAsync<AppResponseBase<LlModelDto>, LlModelDto>(
                 async (response, logger) =>

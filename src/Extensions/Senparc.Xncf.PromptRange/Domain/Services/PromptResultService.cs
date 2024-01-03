@@ -16,6 +16,8 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -27,7 +29,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            LlModelService llModelService,
+            AIModelService llModelService,
             PromptItemService promptItemService) : base(repo,
             serviceProvider)
         {
@@ -37,20 +39,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
-        private readonly LlModelService _llModelService;
+        private readonly AIModelService _llModelService;
 
-
-        public async Task<List<PromptResult>> BatchGenerateResultAsync(PromptItem promptItem, int count)
-        {
-            List<PromptResult> list = new List<PromptResult>();
-            for (var i = 0; i < count; i++)
-            {
-                var promptResult = await this.GenerateResultAsync(promptItem);
-                list.Add(promptResult);
-            }
-
-            return list;
-        }
 
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
         {
@@ -63,80 +53,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 .Select(p => this.Mapper.Map<PromptResultDto>(p))
                 .ToList();
             return dtoList;
-        }
-
-        /// <summary>
-        /// 传入promptItem，生成结果
-        /// 暂时只能在PromptItemAppService中调用
-        /// 采用了SemanticKernel来实现
-        /// </summary>
-        /// <param name="promptItem"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
-        /// <exception cref="NotImplementedException"></exception>
-        public async Task<PromptResult> GenerateResultAsync(PromptItem promptItem)
-        {
-            // 从数据库中获取模型信息
-            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
-            if (model == null)
-            {
-                throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
-            }
-            //
-            //       var userId = "Test";
-            //
-            //       var aiSettings = this.BuildSenparcAiSetting(model);
-            //       // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            //       // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
-            //       //
-            //       // //定义 AI 接口调用参数和 Token 限制等
-            //       // var promptParameter = new PromptConfigParameter()
-            //       // {
-            //       //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
-            //       //     Temperature = promptItem.Temperature,
-            //       //     TopP = promptItem.TopP,
-            //       //     FrequencyPenalty = promptItem.FrequencyPenalty,
-            //       //     PresencePenalty = promptItem.PresencePenalty
-            //       // };
-            //
-            //       // 需要在变量前添加$
-            //       const string functionPrompt = @"请根据提示输出对应内容：
-            // {{$input}}";
-
-            var dt1 = SystemTime.Now;
-            var resp = model.ModelType switch
-            {
-                AiPlatform.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
-                AiPlatform.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
-                AiPlatform.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
-                AiPlatform.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
-                _ => throw new NotImplementedException()
-            };
-
-            // var skContext = iWantToRun.CreateNewContext().context;
-            // // var context = iWantToRun.CreateNewContext();
-            // skContext.Variables["input"] = promptItem.Content;
-            //
-            // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
-            // var result = await iWantToRun.RunAsync(aiRequest);
-
-            // todo 计算token消耗
-            // 简单计算
-            // num_prompt_tokens = len(encoding.encode(string))
-            // gap_between_send_receive = 15 * len(kwargs["messages"])
-            // num_prompt_tokens += gap_between_send_receive
-            var promptCostToken = 0;
-            var resultCostToken = 0;
-
-            var promptResult = new PromptResult(
-                promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
-                0, 0, null, false, TestType.Text,
-                promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-                promptItem.FullVersion, promptItem.Id);
-
-            await base.SaveObjectAsync(promptResult);
-
-            return promptResult;
         }
 
 
@@ -252,7 +168,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        private SenparcAiSetting BuildSenparcAiSetting(LlModel llModel)
+        private SenparcAiSetting BuildSenparcAiSetting(AIModel llModel)
         {
             var aiSettings = new SenparcAiSetting
             {
@@ -260,7 +176,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 // {
                 //     throw new Exception("无法转换为AiPlatform");
                 // }
-                AiPlatform = llModel.ModelType
+                AiPlatform = llModel.AiPlatform
             };
 
             switch (aiSettings.AiPlatform)
@@ -480,5 +396,95 @@ Human: 江苏的省会是：
             //     await _promptItemService.SaveObjectAsync(promptItem);
             // }
         }
+
+        #region Obsolete
+
+        // public async Task<List<PromptResult>> BatchGenerateResultAsync(PromptItem promptItem, int count)
+        // {
+        //     List<PromptResult> list = new List<PromptResult>();
+        //     for (var i = 0; i < count; i++)
+        //     {
+        //         var promptResult = await this.GenerateResultAsync(promptItem);
+        //         list.Add(promptResult);
+        //     }
+        //
+        //     return list;
+        // }
+        // [Obsolete("请使用SenparcGenerateResultAsync", true)]
+        // /// <summary>
+        // /// 传入promptItem，生成结果
+        // /// 暂时只能在PromptItemAppService中调用
+        // /// 采用了SemanticKernel来实现
+        // /// </summary>
+        // /// <param name="promptItem"></param>
+        // /// <returns></returns>
+        // /// <exception cref="NcfExceptionBase"></exception>
+        // /// <exception cref="NotImplementedException"></exception>
+        // public async Task<PromptResult> GenerateResultAsync(PromptItem promptItem)
+        // {
+        //     // 从数据库中获取模型信息
+        //     var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+        //     if (model == null)
+        //     {
+        //         throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
+        //     }
+        //     //
+        //     //       var userId = "Test";
+        //     //
+        //     //       var aiSettings = this.BuildSenparcAiSetting(model);
+        //     //       // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
+        //     //       // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
+        //     //       //
+        //     //       // //定义 AI 接口调用参数和 Token 限制等
+        //     //       // var promptParameter = new PromptConfigParameter()
+        //     //       // {
+        //     //       //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+        //     //       //     Temperature = promptItem.Temperature,
+        //     //       //     TopP = promptItem.TopP,
+        //     //       //     FrequencyPenalty = promptItem.FrequencyPenalty,
+        //     //       //     PresencePenalty = promptItem.PresencePenalty
+        //     //       // };
+        //     //
+        //     //       // 需要在变量前添加$
+        //     //       const string functionPrompt = @"请根据提示输出对应内容：
+        //     // {{$input}}";
+        //
+        //     var dt1 = SystemTime.Now;
+        //     var resp = model.AiPlatform switch
+        //     {
+        //         AiPlatform.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
+        //         AiPlatform.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+        //         AiPlatform.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
+        //         AiPlatform.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
+        //         _ => throw new NotImplementedException()
+        //     };
+        //
+        //     // var skContext = iWantToRun.CreateNewContext().context;
+        //     // // var context = iWantToRun.CreateNewContext();
+        //     // skContext.Variables["input"] = promptItem.Content;
+        //     //
+        //     // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
+        //     // var result = await iWantToRun.RunAsync(aiRequest);
+        //
+        //     // todo 计算token消耗
+        //     // 简单计算
+        //     // num_prompt_tokens = len(encoding.encode(string))
+        //     // gap_between_send_receive = 15 * len(kwargs["messages"])
+        //     // num_prompt_tokens += gap_between_send_receive
+        //     var promptCostToken = 0;
+        //     var resultCostToken = 0;
+        //
+        //     var promptResult = new PromptResult(
+        //         promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
+        //         0, 0, null, false, TestType.Text,
+        //         promptCostToken, resultCostToken, promptCostToken + resultCostToken,
+        //         promptItem.FullVersion, promptItem.Id);
+        //
+        //     await base.SaveObjectAsync(promptResult);
+        //
+        //     return promptResult;
+        // }
+
+        #endregion
     }
 }

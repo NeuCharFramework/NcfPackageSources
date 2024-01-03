@@ -2,7 +2,7 @@
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
-    public class LlmModel_AddRequest
+    public class LlModel_AddRequest
     {
         /// <summary>
         /// 代号

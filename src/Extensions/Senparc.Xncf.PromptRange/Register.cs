@@ -114,17 +114,15 @@ namespace Senparc.Xncf.PromptRange
 
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
-            SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
+            SenparcAiSetting ??= new SenparcAiSetting();
             configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
 
             services.AddAutoMapper(z =>
             {
-                z.CreateMap<PromptItem, PromptItemDto>();
-                z.CreateMap<PromptItemDto, PromptItem>();
-                z.CreateMap<PromptResult, PromptResultDto>();
-                z.CreateMap<PromptResultDto, PromptResult>();
-                z.CreateMap<LlModel, LlModelDto>();
-                z.CreateMap<LlModelDto, LlModel>();
+                z.CreateMap<PromptItem, PromptItemDto>().ReverseMap();
+                z.CreateMap<PromptResult, PromptResultDto>().ReverseMap();
+                z.CreateMap<LlModel, LlModelDto>().ReverseMap();
+
                 z.CreateMap<LlModel, LlmModel_GetPageItemResponse>();
 
                 //TODO:morek
@@ -134,23 +132,3 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
