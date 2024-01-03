@@ -681,6 +681,7 @@
             font-style: normal;
             font-weight: 400;
             line-height: normal;
+            white-space: pre-line;
         }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
