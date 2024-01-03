@@ -95,11 +95,16 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         public bool IsShared { get; private set; }
 
+        /// <summary>
+        /// 是否展示
+        /// </summary>
+        public bool Show { get; private set; }
+
 
         #region CTOR
 
         public LlModel(string deploymentName, string endpoint, string modelType, string organizationId, string apiKey,
-            string apiVersion, string note, int maxToken, string alias)
+            string apiVersion, string note, int maxToken, string alias, bool show)
         {
             DeploymentName = deploymentName;
             Endpoint = endpoint;
@@ -113,10 +118,11 @@ namespace Senparc.Xncf.PromptRange.Models
             Note = note;
             MaxToken = maxToken;
             Alias = alias;
+            Show = show;
         }
 
         public LlModel(string deploymentName, string endpoint, AiPlatform modelType, string organizationId, string apiKey,
-            string apiVersion, string note, int maxToken, string alias)
+            string apiVersion, string note, int maxToken, string alias, bool show)
         {
             DeploymentName = deploymentName;
             Endpoint = endpoint;
@@ -127,46 +133,17 @@ namespace Senparc.Xncf.PromptRange.Models
             Note = note;
             MaxToken = maxToken;
             Alias = alias;
+            Show = show;
         }
 
         public LlModel(LlmModel_AddRequest request) : this(request.DeploymentName, request.Endpoint, request.ModelType,
-            request.OrganizationId, request.ApiKey, request.ApiVersion, request.Note, 0, request.Alias)
+            request.OrganizationId, request.ApiKey, request.ApiVersion, request.Note, 0, request.Alias, request.IsShared)
         {
         }
 
-        // public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
-        //     string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName,
-        //     string otherModelName)
-        // {
-        //     Name = name;
-        //     Endpoint = endpoint;
-        //     ModelType = modelType;
-        //     OrganizationId = organizationId;
-        //     ApiKey = apiKey;
-        //     ApiVersion = apiVersion;
-        //     Note = note;
-        //     MaxToken = maxToken;
-        //     TextCompletionModelName = textCompletionModelName;
-        //     TextEmbeddingModelName = textEmbeddingModelName;
-        //     OtherModelName = otherModelName;
-        // }
-
-        //public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
-        //{
-        //    Name = name;
-        //    Endpoint = endpoint;
-        //    OrganizationId = organizationId;
-        //    ApiKey = apiKey;
-        //    ApiVersion = apiVersion;
-        //    Note = note;
-        //    MaxToken = maxToken;
-        //    TextCompletionModelName = textCompletionModelName;
-        //    TextEmbeddingModelName = textEmbeddingModelName;
-        //    OtherModelName = otherModelName;
-        //}
-
         public LlModel(LlModelDto llModelDto)
         {
+            Show = llModelDto.IsShared;
             Alias = llModelDto.Alias;
             DeploymentName = llModelDto.DeploymentName;
             Endpoint = llModelDto.Endpoint;
@@ -185,14 +162,16 @@ namespace Senparc.Xncf.PromptRange.Models
 
         public LlModel Switch(bool show)
         {
-            IsShared = show;
+            Show = show;
             return this;
         }
 
-        public LlModel Update(string name, bool show)
+        public LlModel Update(string alias, bool show, string deploymentName)
         {
-            this.DeploymentName = name;
-            return Switch(show);
+            this.Alias = alias;
+            this.DeploymentName = deploymentName;
+            Switch(show);
+            return this;
         }
 
         public string GetModelId()
