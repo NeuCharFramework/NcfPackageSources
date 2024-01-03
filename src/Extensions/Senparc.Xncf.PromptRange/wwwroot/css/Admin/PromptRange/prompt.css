@@ -53,7 +53,7 @@
     flex-wrap:nowrap;
     align-items:center;
     justify-content:flex-start;
-    gap:5px;
+    gap:7px;
 }
 
 .promptLoaderBox {

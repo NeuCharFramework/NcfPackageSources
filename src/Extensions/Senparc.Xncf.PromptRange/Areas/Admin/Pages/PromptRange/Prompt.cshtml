@@ -454,11 +454,12 @@
 <el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center @@close="aiScoreFormCloseDialog">
     <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
-        <div v-for="(item,index) in aiScoreForm.resultList" v-key="index">
+            <div v-for="(item,index) in aiScoreForm.resultList" v-key="index" class="targetShootBtnRow">
             @* :rules="rules.aiResultVal" *@
             <el-form-item :label="item.label" :prop="'resultList.' + index + '.value'" label-width="100px">
                 <el-input v-model="item.value" autocomplete="off" placeholder="请输入期望结果"></el-input>
             </el-form-item>
+                <i class="el-icon-delete deleteIcon" @@click="deleteAiScoreBtn(index)"></i>
         </div>
 
         <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
