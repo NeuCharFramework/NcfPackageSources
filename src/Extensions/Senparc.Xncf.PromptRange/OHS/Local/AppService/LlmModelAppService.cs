@@ -40,9 +40,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             var resp = await this.GetResponseAsync<AppResponseBase<LlModelDto>, LlModelDto>(
                 async (response, logger) =>
                 {
-                    var model = await _llModelService.AddAsync(request);
+                    var llModelDto = await _llModelService.AddAsync(request);
 
-                    return model;
+                    return llModelDto;
                 });
             return resp;
         }
@@ -73,9 +73,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="key"></param>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<LlmModel_GetPageResponse>> GetLlmModelList(int pageIndex, int pageSize, string key)
+        public async Task<AppResponseBase<LlModel_GetPageResponse>> GetLlmModelList(int pageIndex, int pageSize, string key)
         {
-            return await this.GetResponseAsync<AppResponseBase<LlmModel_GetPageResponse>, LlmModel_GetPageResponse>(
+            return await this.GetResponseAsync<AppResponseBase<LlModel_GetPageResponse>, LlModel_GetPageResponse>(
                 async (response, logger) =>
                 {
                     var seh = new SenparcExpressionHelper<LlModel>();
@@ -85,8 +85,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var llmModelList = await _llModelService.GetObjectListAsync(pageIndex, pageSize, where, m => m.Id,
                         Ncf.Core.Enums.OrderingType.Descending);
 
-                    return new LlmModel_GetPageResponse(_mapper.Map<List<LlmModel_GetPageItemResponse>>(llmModelList),
-                        llmModelList.TotalCount);
+
+                    // var llmModelGetPageItemResponses = _mapper.Map<List<LlmModel_GetPageItemResponse>>(llmModelList);
+
+                    return new LlModel_GetPageResponse(
+                        llmModelList.Select(m => _mapper.Map<LlmModel_GetPageItemResponse>(m)),
+                        llmModelList.TotalCount
+                    );
                 });
         }
 
@@ -108,8 +113,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var model = await _llModelService.GetObjectAsync(n => n.Id == id);
 
                     if (model == null) continue;
-                    
+
                     await _llModelService.DeleteObjectAsync(model);
+
                     deletedCount++;
                 }
 
@@ -125,18 +131,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind]
-        public async Task<AppResponseBase<List<LlmModel_GetIdAndNameResponse>>> GetIdAndName()
+        public async Task<AppResponseBase<List<LlModel_GetIdAndNameResponse>>> GetIdAndName()
         {
             return await this
-                .GetResponseAsync<AppResponseBase<List<LlmModel_GetIdAndNameResponse>>,
-                    List<LlmModel_GetIdAndNameResponse>>(async (response, logger) =>
+                .GetResponseAsync<AppResponseBase<List<LlModel_GetIdAndNameResponse>>,
+                    List<LlModel_GetIdAndNameResponse>>(async (response, logger) =>
                 {
                     return (await _llModelService
                             .GetFullListAsync(p => true, p => p.Id, Ncf.Core.Enums.OrderingType.Ascending))
-                        .Select(model => new LlmModel_GetIdAndNameResponse
+                        .Select(model => new LlModel_GetIdAndNameResponse
                         {
                             Id = model.Id,
-                            Name = model.DeploymentName
+                            Alias = model.Alias
                         }).ToList();
                 });
         }

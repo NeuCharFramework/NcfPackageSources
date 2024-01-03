@@ -10,7 +10,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public int Id { get; set; }
 
-        public string Alias { get; private set; }
+        public string Alias { get;  set; }
 
         /// <summary>
         /// 名称（必须）
@@ -20,7 +20,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 模型的类型
         /// </summary>
-        public AiPlatform ModelType { get; private set; }
+        public AiPlatform ModelType { get;  set; }
 
         /// <summary>
         /// Endpoint（必须）
@@ -51,6 +51,17 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// MaxToken（可选）
         /// </summary>
         public int MaxToken { get; set; }
+        
+        
+        /// <summary>
+        /// 是否共享
+        /// </summary>
+        public bool IsShared { get;  set; }
+        
+        /// <summary>
+        /// 是否展示
+        /// </summary>
+        public bool Show { get;  set; }
 
         // /// <summary>
         // /// TextCompletionModelName（可选）

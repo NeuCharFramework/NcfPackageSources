@@ -16,6 +16,18 @@
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2024.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddShow">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddShow.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddShow.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddShow.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
@@ -130,6 +142,16 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.MaxToken">
             <summary>
             MaxToken（可选）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.IsShared">
+            <summary>
+            是否共享
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Show">
+            <summary>
+            是否展示
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.NickName">
@@ -335,6 +357,11 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.LlModel.IsShared">
             <summary>
             是否共享
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.LlModel.Show">
+            <summary>
+            是否展示
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptRangeSenparcEntities.PromptItems">
@@ -779,7 +806,7 @@
             连发次数
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Name">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Alias">
             <summary>
             模型名称
             </summary>

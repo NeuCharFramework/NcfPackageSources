@@ -7,7 +7,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// <summary>
         /// 代号
         /// </summary>
-        public string Alias { get;  set; }
+        public string Alias { get; set; }
 
         /// <summary>
         /// 名称
@@ -36,8 +36,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         public string ApiVersion { get; set; }
 
-        public string Note { get; set; }
+        public string Note { get; set; } = "";
 
-        public bool IsShared { get; set; }
+        public bool IsShared { get; set; } = false;
     }
 }
