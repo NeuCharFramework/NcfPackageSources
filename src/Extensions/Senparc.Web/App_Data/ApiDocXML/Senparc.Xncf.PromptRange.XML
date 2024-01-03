@@ -4,6 +4,18 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2024">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2024.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2024.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.init2024.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
