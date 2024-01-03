@@ -1037,7 +1037,8 @@ var app = new Vue({
             if (scoreType === '1') {
                 if (this.promptDetail.modelId) {
                     // 在promptOpt是否存在
-                    let _index = this.promptOpt.findIndex(item => item.value == this.promptDetail.modelId)
+                    console.log(this.promptDetail)
+                    let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
                     if (_index === -1) {
                         this.$message({
                             message: '模型已被删除，请选择模型后重新打靶！',
