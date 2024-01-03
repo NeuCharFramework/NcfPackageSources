@@ -68,7 +68,7 @@
             <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
         </div>
         <div style="padding-right: 5px">
-            <el-select v-model="modelid" placeholder="请选择模型" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
+            <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
                 <el-option v-for="item in modelOpt"
                            v-key="item.id"
                            :label="item.label"
@@ -85,6 +85,13 @@
 </div>
 @*输入*@
 <div class="boxCard inputPromptArea">
+    <div class="prompt-mask" v-if="sendBtnText==='连发'">
+        <div class="text-center">
+            <i class="el-icon-lock" style="font-size:2.5rem"></i>
+            <br>当前处于连发模式，内容已锁定
+            <br>如需修改，请切换其他模式
+        </div>
+    </div>
     @*模型参数设置*@
     <div class="configurineAreaItem paramBox">
         <div class="titleRow">
@@ -150,7 +157,7 @@
                               show-word-limit
                               placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
                     </el-input>
-                    <div class="operationBox">
+                    <div class="operationBox" style="z-index: 1250;">
                         @* 选择连发次数 *@
                         <el-dropdown @@command="changeNumsBtn" type="primary" size="small">
                             <div class="numsOfResultsBox">
@@ -162,17 +169,17 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                         @* 打靶按钮  v-loading="targetShootLoading" *@
-                                <div class="targetShootBtnRow">
-                                    <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                                        {{sendBtnText}}
-                                        <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0)" :command="btn.text">{{btn.text}}</el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
-                                    <el-tooltip class="item" effect="dark" placement="top">
-                                        <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br />连发：根据当前选择的靶道信息，连续输出多个结果。<br />草稿：保存当前输入的内容，并创建新的靶道。</div>
-                                        <i class="el-icon-warning-outline"></i>
-                                    </el-tooltip>
+                        <div class="targetShootBtnRow">
+                            <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
+                                {{sendBtnText}}
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0)" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <el-tooltip class="item" effect="dark" placement="top">
+                                <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br/>连发：根据当前选择的靶道信息，连续输出多个结果。<br/>草稿：保存当前输入的内容，并创建新的靶道。</div>
+                                <i class="el-icon-warning-outline"></i>
+                            </el-tooltip>
                         </div>
                     </div>
                 </div>
