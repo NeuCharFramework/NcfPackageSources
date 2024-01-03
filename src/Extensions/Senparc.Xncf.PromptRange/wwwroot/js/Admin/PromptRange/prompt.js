@@ -271,6 +271,10 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // ai 评分删除
+        deleteAiScoreBtn(index) {
+            this.aiScoreForm.resultList.splice(index, 1)
+        },
         // 新增靶场
         addPromptField() {
             // 刷新页面
