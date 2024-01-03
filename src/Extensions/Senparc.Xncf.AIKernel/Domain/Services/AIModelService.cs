@@ -1,4 +1,3 @@
-
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using System;
@@ -10,13 +9,11 @@ using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
-	public class AIModelService : ServiceBase<AIModel>
-	{
-		public AIModelService(IRepositoryBase<AIModel> repo, IServiceProvider serviceProvider)
-		  : base(repo, serviceProvider)
-		{
-		}
-
-	}
+    public class AIModelService : ServiceBase<AIModel>
+    {
+        public AIModelService(IRepositoryBase<AIModel> repo, IServiceProvider serviceProvider)
+            : base(repo, serviceProvider)
+        {
+        }
+    }
 }
-
