@@ -1436,7 +1436,7 @@ var app = new Vue({
         },
         deleteModel(item) {
             //删除模型 confirm
-            this.$confirm(`此操作将永久删除模型【${item.name}】, 是否继续?`, '提示', {
+            this.$confirm(`此操作将永久删除模型【${item.alias}】, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -1547,6 +1547,11 @@ var app = new Vue({
                         // 重新获取模型列表
                         await this.getModelOptData().then(()=>{
                             this.modelid = res.data.data.id
+                        })
+                        // 提示添加成功
+                        this.$message({
+                            message: '添加成功！',
+                            type: 'success'
                         })
                         // 关闭dialog
                         this.modelFormVisible = false
