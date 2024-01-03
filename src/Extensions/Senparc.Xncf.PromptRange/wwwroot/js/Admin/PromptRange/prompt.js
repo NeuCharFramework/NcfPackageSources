@@ -610,6 +610,9 @@ var app = new Vue({
         },
         // 靶道选择变化
         promptChangeHandel(val, itemKey, oldVal) {
+            // 靶道变化时，重置打靶按钮
+            this.sendBtnText = '打靶'
+            this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -691,6 +694,8 @@ var app = new Vue({
                 suffix: '',
                 variableList: []
             }
+            this.sendBtnText = '打靶'
+            this.numsOfResults = 1
             // 获取靶道列表
             await this.getPromptOptData()
             // 获取分数趋势图表数据
