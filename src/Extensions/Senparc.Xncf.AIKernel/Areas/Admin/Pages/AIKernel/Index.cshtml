@@ -25,28 +25,15 @@
             </el-menu>
         </el-aside>*@
         <el-main>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px">
                 <h1>模型列表</h1>
                 <el-button type="primary" icon="el-icon-plus" size="mini" @@click="addModel">添加模型</el-button>
             </div>
 
-            <el-table :data="tableData">
-                @* ,[Name] *@
-                @* ,[Endpoint] *@
-                @* ,[AiPlatform] *@
-                @* ,[OrganizationId] *@
-                @* ,[ApiKey] *@
-                @* ,[ApiVersion] *@
-                @* ,[Note] *@
-                @* ,[MaxToken] *@
-                @* ,[Show] *@
-                @* ,[Flag] *@
-                @* ,[AddTime] *@
-                @* ,[LastUpdateTime] *@
-                @* ,[TenantId] *@
-                @* ,[AdminRemark] *@
-                @* ,[Remark] *@
-                <el-table-column prop="name" label="名称" width="auto"></el-table-column>
+            <el-table :data="tableData" v-loading="tableLoading">
+                @* alias *@
+                <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
+                <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
                 <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
                 <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
                 <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
@@ -72,38 +59,32 @@
                 :page-sizes="[10, 20, 30, 40]"
                 :page-size="page.size"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="total">
+                :total="total"
+                style="margin-top: 20px"
+                >
             </el-pagination>
         </el-main>
     </el-container>
 
     @* dialog for 添加模型 *@
     <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%">
-        @* ,[Name] *@
-        @* ,[Endpoint] *@
-        @* ,[AiPlatform] *@
-        @* ,[OrganizationId] *@
-
-        @* ,[Note] *@
-        @* ,[MaxToken] *@
-        @* ,[Show] *@
-        @* ,[AdminRemark] *@
-        @* ,[Remark] *@
-        @* show form of above item *@
         <el-form :model="addForm" label-width="120px">
-            <el-form-item label="名称">
-                <el-input v-model="addForm.name"></el-input>
+            <el-form-item label="别名">
+                <el-input v-model="addForm.alias"></el-input>
+            </el-form-item>
+            <el-form-item label="模型名称">
+                <el-input v-model="addForm.deploymentName"></el-input>
             </el-form-item>
             <el-form-item label="Endpoint">
                 <el-input v-model="addForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="平台">
-                             <el-select v-model="addForm.aiPlatform" placeholder="请选择">
-                                    <el-option label="NeuCharAI" value="4"></el-option>
-                                    <el-option label="OpenAI" value="8"></el-option>
-                                    <el-option label="AzureOpenAI" value="16"></el-option>
-                                <el-option label="HuggingFace" value="32"></el-option>
-                                </el-select>
+                <el-select v-model="addForm.aiPlatform" placeholder="请选择">
+                    <el-option label="NeuCharAI" value="4"></el-option>
+                    <el-option label="OpenAI" value="8"></el-option>
+                    <el-option label="AzureOpenAI" value="16"></el-option>
+                    <el-option label="HuggingFace" value="32"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="组织">
                 <el-input v-model="addForm.organizationId"></el-input>
@@ -130,12 +111,6 @@
             <el-form-item label="MaxToken">
                 <el-input v-model="addForm.maxToken"></el-input>
             </el-form-item>
-            <el-form-item label="AdminRemark">
-                <el-input v-model="addForm.adminRemark"></el-input>
-            </el-form-item>
-            <el-form-item label="Remark">
-                <el-input v-model="addForm.remark"></el-input>
-            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="addFormDialogVisible = false">取 消</el-button>
@@ -144,36 +119,28 @@
     </el-dialog>
     @* dialog for 编辑模型 *@
     <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%">
-        @* ,[Name] *@
-        @* ,[Endpoint] *@
-        @* ,[AiPlatform] *@
-        @* ,[OrganizationId] *@
-
-        @* ,[Note] *@
-        @* ,[MaxToken] *@
-        @* ,[Show] *@
-        @* ,[AdminRemark] *@
-        @* ,[Remark] *@
-        @* show form of above item *@
         <el-form :model="editForm" label-width="120px">
-            <el-form-item label="名称">
-                <el-input v-model="editForm.name"></el-input>
+            <el-form-item label="别名">
+                <el-input v-model="addForm.alias"></el-input>
+            </el-form-item>
+            <el-form-item label="模型名称">
+                <el-input v-model="editForm.deploymentName"></el-input>
             </el-form-item>
             <el-form-item label="Endpoint">
                 <el-input v-model="editForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="平台">
-                   @* NeuCharAI = 4, *@
-                   @*  OpenAI = 8, *@
-                   @*  AzureOpenAI = 16, *@
-                   @*  HuggingFace = 32 *@
-                   @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
-                   @* use el-select *@
+                @* NeuCharAI = 4, *@
+                @*  OpenAI = 8, *@
+                @*  AzureOpenAI = 16, *@
+                @*  HuggingFace = 32 *@
+                @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
+                @* use el-select *@
                 <el-select v-model="editForm.aiPlatform" placeholder="请选择">
                     <el-option label="NeuCharAI" value="4"></el-option>
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
-                <el-option label="HuggingFace" value="32"></el-option>
+                    <el-option label="HuggingFace" value="32"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="组织">
@@ -201,12 +168,6 @@
             <el-form-item label="MaxToken">
                 <el-input v-model="editForm.maxToken"></el-input>
             </el-form-item>
-            <el-form-item label="AdminRemark">
-                <el-input v-model="editForm.adminRemark"></el-input>
-            </el-form-item>
-            <el-form-item label="Remark">
-                <el-input v-model="editForm.remark"></el-input>
-            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="editFormDialogVisible = false">取 消</el-button>
@@ -227,10 +188,11 @@
                         page:1,
                         size:10
                     },
+                    tableLoading:true,
                     tableData: [],
                     addFormDialogVisible: false,
                     addForm:{
-                       "name": "",
+                       "deploymentName": "",
                        "endpoint": "",
                        "aiPlatform": '4',
                        "organizationId": "",
@@ -242,7 +204,7 @@
                     },
                     editFormDialogVisible: false,
                     editForm:{
-                       "name": "",
+                       "deploymentName": "",
                        "endpoint": "",
                        "aiPlatform": '4',
                        "organizationId": "",
@@ -285,6 +247,7 @@
                         console.log(res)
                         this.tableData=res.data.data.data;
                         this.total=res.data.data.total;
+                        this.tableLoading = false
                     })
                 },    
                 addModel(){
@@ -293,8 +256,9 @@
                 async addModelSubmit(){
                     this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
                     this.addForm.maxToken = parseInt(this.addForm.maxToken)
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',
-                        {...this.addForm}
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',{
+                        ...this.addForm
+                    }
                     ).then(res=>{
                             this.$message({
                                      type: res.data.success?'success':'error',
@@ -308,7 +272,7 @@
                 },
                 clearAddForm(){
                     this.addForm={
-                       "name": "",
+                       "deploymentName": "",
                        "endpoint": "",
                        "aiPlatform": '4',
                        "organizationId": "",
@@ -321,7 +285,7 @@
                 },
                 clearEditForm(){
                     this.editForm={
-                        "name": "",
+                        "deploymentName": "",
                        "endpoint": "",
                        "aiPlatform": '4',
                        "organizationId": "",
@@ -336,7 +300,7 @@
                     this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
                     this.editForm.maxToken = parseInt(this.addForm.maxToken)
                     await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync',{
-                      ...this.editForm
+                          ...this.editForm
                     }).then(res=>{
                             this.$message({
                                      type: res.data.success?'success':'error',
@@ -355,7 +319,7 @@
                     this.editForm = row;
                 },
                 deleteModel(row){
-                    this.$confirm(`此操作将永久删除【${row.name}】模型, 是否继续?`, '提示', {
+                    this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
@@ -381,4 +345,15 @@
             },
         });
     </script>
+    <style>
+        .d-flex{
+            display: flex;
+        }
+        .justify-content-between{
+            justify-content: space-between;
+         } 
+         .align-items-center{
+            align-items: center;
+         }
+    </style>
 }
