@@ -7,7 +7,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// <summary>
         /// 代号
         /// </summary>
-        public string Alias { get; private set; }
+        public string Alias { get;  set; }
 
         /// <summary>
         /// 名称
