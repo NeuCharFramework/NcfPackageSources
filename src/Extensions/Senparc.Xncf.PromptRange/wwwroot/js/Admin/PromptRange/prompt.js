@@ -156,27 +156,27 @@ var app = new Vue({
             modelFormSubmitLoading: false,
             modelForm: {
                 modelType: "", // string
-                name: "", // string
+                deploymentName: "", // string
                 apiVersion: "", // string
                 apiKey: "", // string
                 endpoint: "", // string
                 organizationId: "", // string
             },
             modelTypeOpt: [{
-                value: 'OpenAI',
+                value: '8',
                 label: 'OpenAI',
                 disabled: false
             }, {
-                value: 'AzureOpenAI',
+                value: '16',
                 label: 'AzureOpenAI',
                 disabled: false
             }, {
-                value: 'NeuCharAI',
+                value: '4',
                 label: 'NeuCharAI',
                 disabled: false
             }, {
-                value: 'HugginFace',
-                label: 'HugginFace',
+                value: '32',
+                label: 'HuggingFace',
                 disabled: false
             }],
             // 表单校验规则
@@ -1518,7 +1518,7 @@ var app = new Vue({
         modelFormCloseDialog() {
             this.modelForm = {
                 modelType: "", // string
-                name: "", // string
+                deploymentName: "", // string
                 apiVersion: "", // string
                 apiKey: "", // string
                 endpoint: "", // string
@@ -1535,7 +1535,9 @@ var app = new Vue({
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
-                        this.getModelOptData()
+                        await this.getModelOptData().then(()=>{
+                            this.modelid = res.data.data.id
+                        })
                         // 关闭dialog
                         this.modelFormVisible = false
                     } else {

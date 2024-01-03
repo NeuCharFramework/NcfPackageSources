@@ -417,18 +417,18 @@
             </el-select>
         </el-form-item>
         <el-form-item label="模型名称" prop="name" label-width="130px">
-            <el-input v-model="modelForm.name" autocomplete="off" placeholder="请输入模型名称"></el-input>
+            <el-input v-model="modelForm.deploymentName" autocomplete="off" placeholder="请输入模型名称"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'" label="API Version" prop="apiVersion" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">
             <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharAI'" label="API key" prop="apiKey" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='8'||modelForm.modelType==='4'" label="API key" prop="apiKey" label-width="130px">
             <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" placeholder="请输入API key"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'||modelForm.modelType==='32'" label="End Point" prop="endpoint" label-width="130px">
             <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='OpenAI'" label="Organization Id" prop="organizationId" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='8'" label="Organization Id" prop="organizationId" label-width="130px">
             <el-input v-model="modelForm.organizationId" autocomplete="off" placeholder="请输入Organization Id"></el-input>
         </el-form-item>
     </el-form>
