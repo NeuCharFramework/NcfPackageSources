@@ -1287,7 +1287,7 @@ var app = new Vue({
             for (let i = 0; i < howmany; i++) {
                 promises.push(this.rapidFireHandel());
             }
-            await Promise.all(promises);
+            await Promise.all(promises)
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
@@ -1298,6 +1298,10 @@ var app = new Vue({
             return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
+                if (!res.data.success){
+                    this.$message.error(res.data.errorMessage)
+                    return 
+                }
                 this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
                 this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                 //输出列表 
