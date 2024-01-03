@@ -416,7 +416,10 @@
                 <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="模型名称" prop="name" label-width="130px">
+        <el-form-item label="模型别名" prop="alias" label-width="130px">
+            <el-input v-model="modelForm.alias" autocomplete="off" placeholder="请输入模型别名"></el-input>
+        </el-form-item>
+        <el-form-item label="模型名称" prop="deploymentName" label-width="130px">
             <el-input v-model="modelForm.deploymentName" autocomplete="off" placeholder="请输入模型名称"></el-input>
         </el-form-item>
         <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">

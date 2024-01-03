@@ -155,6 +155,7 @@ var app = new Vue({
             modelFormVisible: false,
             modelFormSubmitLoading: false,
             modelForm: {
+                alias: "", // string
                 modelType: "", // string
                 deploymentName: "", // string
                 apiVersion: "", // string
@@ -199,7 +200,10 @@ var app = new Vue({
                 modelType: [
                     {required: true, message: '请选择模型类型', trigger: 'change'}
                 ],
-                name: [
+                alias: [
+                    {required: true, message: '请输入模型别名', trigger: 'blur'}
+                ],
+                deploymentName: [
                     {required: true, message: '请输入模型名称', trigger: 'blur'}
                 ],
                 apiVersion: [
@@ -1505,7 +1509,7 @@ var app = new Vue({
                 this.modelOpt = _optList.map(item => {
                     return {
                         ...item,
-                        label: item.name,
+                        label: item.alias,
                         value: item.id,
                         disabled: false
                     }
@@ -1517,6 +1521,7 @@ var app = new Vue({
         // 新增模型 dialog 关闭
         modelFormCloseDialog() {
             this.modelForm = {
+                alias: "", // string
                 modelType: "", // string
                 deploymentName: "", // string
                 apiVersion: "", // string
@@ -1531,7 +1536,12 @@ var app = new Vue({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm, {customAlert: true})
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add',
+                        {
+                            ...this.modelForm,
+                            modelType:parseInt(this.modelForm.modelType)
+                        },
+                        {customAlert: true})
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
