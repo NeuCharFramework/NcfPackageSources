@@ -37,7 +37,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
         protected virtual Expression<Func<AIModel, bool>> GetListWhere(AIModel_GetListRequest request)
         {
-            SenparcExpressionHelper<AIModel> helper = new SenparcExpressionHelper<AIModel>();
+            SenparcExpressionHelper<AIModel> helper = new ();
             helper.ValueCompare
                 .AndAlso(!request.Alias.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Alias, request.Alias))
                 .AndAlso(!request.DeploymentName.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.DeploymentName, request.DeploymentName))
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AIModel_GetIdAndNameResponse>>> GetPagedListAsync(AIModel_GetListRequest request)
         {
             return await this
@@ -93,7 +93,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AIModel_GetIdAndNameResponse>>> GetListAsync(AIModel_GetListRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<List<AIModel_GetIdAndNameResponse>>, List<AIModel_GetIdAndNameResponse>>(
