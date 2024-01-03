@@ -16,6 +16,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
 
@@ -119,22 +120,22 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(async (response, logger) =>
             {
+                #region Validate
+
                 var count = await _aIModelService.GetCountAsync(
                     z => z.DeploymentName == request.DeploymentName
                 );
                 if (count > 0)
                 {
-                    response.ErrorMessage = "AIModel已存在";
-                    response.Success = false;
-                    return null;
+                    //response.ErrorMessage = "AIModel已存在";
+                    //response.Success = false;
+                    //return null;
+                    throw new NcfExceptionBase("AIModel已存在");
                 }
 
-                AIModel aiModel = new AIModel(request);
-                // var aIModel = _aIModelService.Mapper.Map<AIModel>(request);
-
-                await _aIModelService.SaveObjectAsync(aiModel);
-
-                return _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+                #endregion
+                
+                return await _aIModelService.AddAsync(request);
             });
         }
 
@@ -149,19 +150,9 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(async (response, logger) =>
             {
-                AIModel aIModel = await _aIModelService.GetObjectAsync(z => z.Id == request.Id);
-                if (aIModel == null)
-                {
-                    response.ErrorMessage = "未查询到实体!";
-                    response.Success = false;
-                    return null;
-                }
+                var aiModelDto = await _aIModelService.EditAsync(request);
 
-                aIModel.Update(request.Alias, request.Show, request.IsShared);
-
-                await _aIModelService.SaveObjectAsync(aIModel);
-
-                return _aIModelService.Mapper.Map<AIModelDto>(aIModel);
+                return _aIModelService.Mapper.Map<AIModelDto>(aiModelDto);
             });
         }
 

@@ -7,14 +7,14 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
 
 
-namespace Senparc.Xncf.AIKernel.AutoMpperProfiles
+namespace Senparc.Xncf.AIKernel.AutoMapperProfiles
 {
     public class AIKernelAutoMapperProfile : Profile
     {
         public AIKernelAutoMapperProfile()
         {
             CreateMap<AIModel, AIModelDto>();
-            CreateMap<AIModel, AIModelDto>().ReverseMap();
+            CreateMap<AIModelDto, AIModel>();
             
             CreateMap<AIModel_CreateRequest, AIModel>();
             // CreateMap<AIModel, AIModel_GetDetailResponse>();

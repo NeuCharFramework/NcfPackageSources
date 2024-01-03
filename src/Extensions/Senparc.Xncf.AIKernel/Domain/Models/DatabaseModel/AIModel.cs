@@ -102,7 +102,7 @@ namespace Senparc.Xncf.AIKernel.Models
         public AIModel(AIModelDto llmModelDto)
         {
             Alias = llmModelDto.Alias;
-            DeploymentName = llmModelDto.Name;
+            DeploymentName = llmModelDto.DeploymentName;
             Endpoint = llmModelDto.Endpoint;
             AiPlatform = llmModelDto.AiPlatform;
             OrganizationId = llmModelDto.OrganizationId;

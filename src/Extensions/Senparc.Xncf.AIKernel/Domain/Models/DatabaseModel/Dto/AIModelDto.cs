@@ -1,10 +1,16 @@
 using Senparc.AI;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
 {
     public class AIModelDto : DtoBase
     {
+        /// <summary>
+        /// 主键 ID
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// 代号
         /// </summary>
@@ -13,7 +19,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// <summary>
         /// 名称（必须）
         /// </summary>
-        public string Name { get; set; }
+        public string DeploymentName { get; set; }
 
         /// <summary>
         /// Endpoint（必须）
@@ -56,8 +62,30 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public bool IsShared { get; set; } = false;
 
-        private AIModelDto()
+
+        /// <summary>
+        /// 是否展示
+        /// </summary>
+        public bool Show { get;  set; }
+
+        public AIModelDto()
         {
+        }
+
+        public AIModelDto(AIModel aIModel)
+        {
+            Id = aIModel.Id;
+            Alias = aIModel.Alias;
+            DeploymentName = aIModel.DeploymentName;
+            Endpoint = aIModel.Endpoint;
+            AiPlatform = aIModel.AiPlatform;
+            OrganizationId = aIModel.OrganizationId;
+            ApiKey = aIModel.ApiKey;
+            ApiVersion = aIModel.ApiVersion;
+            Note = aIModel.Note;
+            MaxToken = aIModel.MaxToken;
+            IsShared = aIModel.IsShared;
+            Show = aIModel.Show;
         }
     }
 }
