@@ -18,7 +18,7 @@ var app=new Vue({
                 "apiVersion": "",
                 "note": "",
                 "maxToken": 0,
-                "show": true
+                // "show": true
             },
             editFormDialogVisible: false,
             editForm:{
@@ -99,7 +99,7 @@ var app=new Vue({
                 "apiVersion": "",
                 "note": "",
                 "maxToken": 0,
-                "show": true
+                // "show": true
             }
         },
         clearEditForm(){
