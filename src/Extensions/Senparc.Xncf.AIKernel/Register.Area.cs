@@ -7,7 +7,11 @@ using System;
 using Senparc.Ncf.XncfBase;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Senparc.CO2NET.RegisterServices;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -33,6 +37,15 @@ namespace Senparc.Xncf.AIKernel
             SenparcTrace.SendCustomLog("AIKernel 启动", "完成 Area:Senparc.Xncf.AIKernel 注册");
 
             return builder;
+        }
+        
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
         }
 
         #endregion

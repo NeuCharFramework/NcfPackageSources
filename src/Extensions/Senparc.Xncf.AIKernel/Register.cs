@@ -82,14 +82,6 @@ namespace Senparc.Xncf.AIKernel
         }
         #endregion
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
-        {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
-            });
-            return base.UseXncfModule(app, registerService);
-        }
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<ColorAppService>();
