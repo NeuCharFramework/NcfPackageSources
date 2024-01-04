@@ -182,10 +182,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             switch (aiSettings.AiPlatform)
             {
                 case AiPlatform.NeuCharAI:
-                    aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        NeuCharOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
                         NeuCharEndpoint = llModel.Endpoint
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()

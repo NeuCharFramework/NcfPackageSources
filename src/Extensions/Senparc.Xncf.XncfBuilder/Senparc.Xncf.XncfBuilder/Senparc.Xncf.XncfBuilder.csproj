@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.20.0.9-beta2</Version>
+    <Version>0.20.0.10-beta2</Version>
     <LangVersion>9.0</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -67,7 +67,7 @@
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.7.1" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.8.0" />
     <!--<ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />-->
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>
