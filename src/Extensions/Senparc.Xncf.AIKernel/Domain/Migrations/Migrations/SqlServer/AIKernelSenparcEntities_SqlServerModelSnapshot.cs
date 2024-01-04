@@ -59,7 +59,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.SqlServer
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Endpoint")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
