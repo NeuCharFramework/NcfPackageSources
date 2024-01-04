@@ -10,10 +10,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public int PromptItemId { get; set; }
 
         public PromptItemDto PromptItem { get; set; }
-        public List<PromptResult> PromptResults { get; set; }
+        public List<PromptResultDto> PromptResults { get; set; }
         public DateTime QueryTime { get; set; } = DateTime.Now;
 
-        public PromptResult_ListResponse(int promptItemId, PromptItemDto promptItem, List<PromptResult> promptResults)
+        public PromptResult_ListResponse(int promptItemId, PromptItemDto promptItem, List<PromptResultDto> promptResults)
         {
             PromptItemId = promptItemId;
             PromptItem = promptItem;

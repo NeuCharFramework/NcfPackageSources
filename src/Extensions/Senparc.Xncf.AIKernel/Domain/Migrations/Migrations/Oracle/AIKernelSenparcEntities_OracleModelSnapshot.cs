@@ -40,6 +40,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
                     b.Property<int>("AiPlatform")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
                     b.Property<string>("ApiKey")
                         .HasMaxLength(200)
                         .HasColumnType("NVARCHAR2(200)");
@@ -48,12 +53,19 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
                         .HasMaxLength(100)
                         .HasColumnType("NVARCHAR2(100)");
 
-                    b.Property<string>("Endpoint")
+                    b.Property<string>("DeploymentName")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Endpoint")
                         .HasMaxLength(250)
                         .HasColumnType("NVARCHAR2(250)");
 
                     b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool>("IsShared")
                         .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
@@ -61,11 +73,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
 
                     b.Property<int>("MaxToken")
                         .HasColumnType("NUMBER(10)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("Note")
                         .HasColumnType("NVARCHAR2(2000)");

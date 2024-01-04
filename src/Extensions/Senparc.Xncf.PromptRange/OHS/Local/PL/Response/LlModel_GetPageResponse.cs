@@ -2,9 +2,9 @@
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
-    public class LlmModel_GetPageResponse
+    public class LlModel_GetPageResponse
     {
-        public LlmModel_GetPageResponse(IEnumerable<LlmModel_GetPageItemResponse> list, int TotalCount)
+        public LlModel_GetPageResponse(IEnumerable<LlmModel_GetPageItemResponse> list, int TotalCount)
         {
             List = list;
             this.TotalCount = TotalCount;
@@ -22,7 +22,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// <summary>
         /// 模型名称
         /// </summary>
-        public string Name { get; set; }
+        public string Alias { get; set; }
 
         /// <summary>
         /// 用户名

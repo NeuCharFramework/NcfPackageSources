@@ -7,7 +7,12 @@ using System;
 using Senparc.Ncf.XncfBase;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.AI;
 
 namespace Senparc.Xncf.AIKernel
 {

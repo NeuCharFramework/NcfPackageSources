@@ -33,6 +33,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
                     b.Property<int>("AiPlatform")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ApiKey")
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
@@ -41,12 +46,19 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Endpoint")
+                    b.Property<string>("DeploymentName")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Endpoint")
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsShared")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdateTime")
@@ -54,11 +66,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
 
                     b.Property<int>("MaxToken")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
                         .HasColumnType("TEXT");

@@ -5,6 +5,10 @@
     Layout = "_Layout_Vue";
 }
 
+@section Style{
+    <link href="~/css/Admin/AIKernel/index.css" rel="stylesheet" />
+}
+
 @section breadcrumbs{
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>AI 核心模块</el-breadcrumb-item>
@@ -12,113 +16,94 @@
 }
 
 <div>
-    <el-container>
-        <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
-        </el-header>
+    <div class="filter-container">
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
+    </div>
 
-        <!-- 此处也可以加 SideMenu -->
-        @*<el-aside width="200px">
-            <el-menu background-color="#304156" default-active="1"
-                        text-color="#bfcbd9" active-text-color="#409eff">
-                @(await Html.PartialAsync("_SideMenu"))
-            </el-menu>
-        </el-aside>*@
-        <el-main>
-            <div class="d-flex justify-content-between align-items-center">
-                <h1>模型列表</h1>
-                <el-button type="primary" icon="el-icon-plus" size="mini" @@click="addModel">添加模型</el-button>
-            </div>
-           
-            <el-table :data="tableData">
-                @* ,[Name] *@
-                @* ,[Endpoint] *@
-                @* ,[AiPlatform] *@
-                @* ,[OrganizationId] *@
-                @* ,[ApiKey] *@
-                @* ,[ApiVersion] *@
-                @* ,[Note] *@
-                @* ,[MaxToken] *@
-                @* ,[Show] *@
-                @* ,[Flag] *@
-                @* ,[AddTime] *@
-                @* ,[LastUpdateTime] *@
-                @* ,[TenantId] *@
-                @* ,[AdminRemark] *@
-                @* ,[Remark] *@
-                <el-table-column prop="name" label="名称" width="auto"></el-table-column>
-                <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
-                <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
-                <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
-                <el-table-column prop="note" label="备注" width="auto"></el-table-column>
-                <el-table-column prop="show" label="显示" width="auto"></el-table-column>
-                <el-table-column prop="addTime" label="添加时间" width="auto">
-                    {{dateformatter(scope.row.addTime)}}
-                </el-table-column>
-                @* 操作 *@
-                <el-table-column label="操作" width="auto">
-                    <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                        <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-main>
-    </el-container>
-    
+    <el-table :data="tableData" v-loading="tableLoading" border>
+        @* alias *@
+        <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
+        <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
+        <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
+        <el-table-column prop="aiPlatform" label="平台" width="auto">
+            <template slot-scope="scope">
+                <span v-if="scope.row.aiPlatform===4">NeuCharAI</span>
+                <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===16">AzureOpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
+                <span v-else type="danger">未知</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="note" label="备注" width="auto"></el-table-column>
+        <el-table-column prop="addTime" label="添加时间" width="auto">
+            <template slot-scope="scope">
+                {{ dateformatter(scope.row.addTime) }}
+            </template>
+        </el-table-column>
+        @* 操作 *@
+        <el-table-column label="操作" width="auto">
+            <template slot-scope="scope">
+                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
+                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="pagination-container">
+        <el-pagination
+            @@current-change="handleCurrentChange"
+            @@size-change="handleSizeChange"
+            :current-page="page.page"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="page.size"
+            layout="sizes, prev, next, jumper"
+            :total="total"
+            background
+            style="margin-top: 20px"
+        >
+        </el-pagination>
+    </div>
+
+
     @* dialog for 添加模型 *@
-    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="30%">
-        @* ,[Name] *@
-        @* ,[Endpoint] *@
-        @* ,[AiPlatform] *@
-        @* ,[OrganizationId] *@
-    
-        @* ,[Note] *@
-        @* ,[MaxToken] *@
-        @* ,[Show] *@
-        @* ,[AdminRemark] *@
-        @* ,[Remark] *@
-        @* show form of above item *@
-        <el-form :model="addForm" label-width="80px">
-            <el-form-item label="名称">
-                <el-input v-model="addForm.name"></el-input>
+    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
+        <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
+            <el-form-item label="别名" prop="alias">
+                <el-input v-model="addForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="Endpoint">
-                <el-input v-model="addForm.endpoint"></el-input>
+            <el-form-item label="平台" prop="aiPlatform">
+                <el-select v-model="addForm.aiPlatform" placeholder="请选择">
+                    <el-option label="NeuCharAI" value="4"></el-option>
+                    <el-option label="OpenAI" value="8"></el-option>
+                    <el-option label="AzureOpenAI" value="16"></el-option>
+                    <el-option label="HuggingFace" value="32"></el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item label="平台">
-                <el-input v-model="addForm.aiPlatform"></el-input>
+            <el-form-item label="模型名称" prop="deploymentName">
+                <el-input v-model="addForm.deploymentName"></el-input>
             </el-form-item>
-            <el-form-item label="组织">
-                <el-input v-model="addForm.organizationId"></el-input>
-            </el-form-item>
-            @* ,[ApiKey] *@
-            <el-form-item label="ApiKey">
-                <el-input v-model="addForm.apiKey" type="password"></el-input>
-            </el-form-item>
-        
             @* ,[ApiVersion] *@
-            <el-form-item label="ApiVersion">
+            <el-form-item label="ApiVersion" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'" prop="apiVersion">
                 <el-input v-model="addForm.apiVersion"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
+            @* ,[ApiKey] *@
+            <el-form-item label="ApiKey" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='8'||addForm.aiPlatform==='4'" prop="apiKey">
+                <el-input v-model="addForm.apiKey" type="password"></el-input>
+            </el-form-item>
+            <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'" prop="endpoint">
+                <el-input v-model="addForm.endpoint"></el-input>
+            </el-form-item>
+            <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
+                <el-input v-model="addForm.organizationId" type="password"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="note">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
-            <el-form-item label="显示">
-                @* use switch *@
-                <el-switch v-model="addForm.show"></el-switch>
-            </el-form-item>
-            @* ,[MaxToken] *@
-            @* ,[AdminRemark] *@
-            @* ,[Remark] *@
-            <el-form-item label="MaxToken">
+            @* <el-form-item label="显示"> *@
+            @*     $1$ use switch #1# *@
+            @*     <el-switch v-model="addForm.show"></el-switch> *@
+            @* </el-form-item> *@
+            <el-form-item label="MaxToken" prop="maxToken">
                 <el-input v-model="addForm.maxToken"></el-input>
-            </el-form-item>
-            <el-form-item label="AdminRemark">
-                <el-input v-model="addForm.adminRemark"></el-input>
-            </el-form-item>
-            <el-form-item label="Remark">
-                <el-input v-model="addForm.remark"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -127,161 +112,63 @@
         </span>
     </el-dialog>
     @* dialog for 编辑模型 *@
-    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="30%">
-        @* ,[Name] *@
-        @* ,[Endpoint] *@
-        @* ,[AiPlatform] *@
-        @* ,[OrganizationId] *@
-    
-        @* ,[Note] *@
-        @* ,[MaxToken] *@
-        @* ,[Show] *@
-        @* ,[AdminRemark] *@
-        @* ,[Remark] *@
-        @* show form of above item *@
-        <el-form :model="editForm" label-width="80px">
-            <el-form-item label="名称">
-                <el-input v-model="editForm.name"></el-input>
+    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
+        <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
+            <el-form-item label="别名" prop="alias">
+                <el-input v-model="editForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="Endpoint">
-                <el-input v-model="editForm.endpoint"></el-input>
+            <el-form-item label="平台" prop="aiPlatform">
+                @* NeuCharAI = 4, *@
+                @*  OpenAI = 8, *@
+                @*  AzureOpenAI = 16, *@
+                @*  HuggingFace = 32 *@
+                @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
+                @* use el-select *@
+                <el-select v-model="editForm.aiPlatform" placeholder="请选择">
+                    <el-option label="NeuCharAI" value="4"></el-option>
+                    <el-option label="OpenAI" value="8"></el-option>
+                    <el-option label="AzureOpenAI" value="16"></el-option>
+                    <el-option label="HuggingFace" value="32"></el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item label="平台">
-                <el-input v-model="editForm.aiPlatform"></el-input>
+            <el-form-item label="模型名称" prop="deploymentName">
+                <el-input v-model="editForm.deploymentName"></el-input>
             </el-form-item>
-            <el-form-item label="组织">
-                <el-input v-model="editForm.organizationId"></el-input>
-            </el-form-item>
-            @* ,[ApiKey] *@
-            <el-form-item label="ApiKey">
-                <el-input v-model="editForm.apiKey" type="password"></el-input>
-            </el-form-item>
-        
             @* ,[ApiVersion] *@
-            <el-form-item label="ApiVersion">
+            <el-form-item label="ApiVersion" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'" prop="apiVersion">
                 <el-input v-model="editForm.apiVersion"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
+            @* ,[ApiKey] *@
+            <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'" prop="apiKey">
+                <el-input v-model="editForm.apiKey" type="password" placeholder="********"></el-input>
+            </el-form-item>
+            <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'" prop="endpoint">
+                <el-input v-model="editForm.endpoint"></el-input>
+            </el-form-item>
+            <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
+                <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="note">
                 <el-input v-model="editForm.note"></el-input>
             </el-form-item>
-            <el-form-item label="显示">
+            <el-form-item label="显示" prop="show">
                 @* use switch *@
                 <el-switch v-model="editForm.show"></el-switch>
             </el-form-item>
             @* ,[MaxToken] *@
             @* ,[AdminRemark] *@
             @* ,[Remark] *@
-            <el-form-item label="MaxToken">
+            <el-form-item label="MaxToken" prop="maxToken">
                 <el-input v-model="editForm.maxToken"></el-input>
-            </el-form-item>
-            <el-form-item label="AdminRemark">
-                <el-input v-model="editForm.adminRemark"></el-input>
-            </el-form-item>
-            <el-form-item label="Remark">
-                <el-input v-model="editForm.remark"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="editFormDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
+            <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
         </span>
     </el-dialog>
 </div>
 
-
 @section scripts{
-    <script>
-        new Vue({
-            el: "#app",
-            data(){
-                return {
-                    tableData: [],
-                    addFormDialogVisible: false,
-                    addForm:{
-                        Name: '',
-                        Endpoint: '',
-                        AiPlatform: '',
-                        OrganizationId: '',
-                        ApiKey: '',
-                        ApiVersion: '',
-                        Note: '',
-                        MaxToken: '',
-                        Show: '',
-                        AdminRemark: '',
-                        Remark: ''
-                    },
-                    editFormDialogVisible: false,
-                    editForm:{
-                        Name: '',
-                        Endpoint: '',
-                        AiPlatform: '',
-                        OrganizationId: '',
-                        ApiKey: '',
-                        ApiVersion: '',
-                        Note: '',
-                        MaxToken: '',
-                        Show: '',
-                        AdminRemark: '',
-                        Remark: ''
-                    },
-                  
-                }
-            },
-            mounted () {
-                this.init();
-            },
-            method:{
-                init(){
-                    this.getDataList();
-                },
-                getDataList(){
-                    //todo get data from api
-                },    
-                addModel(){
-                    this.addFormDialogVisible = true;
-                },
-                addModelSubmit(){
-                    //todo 添加模型接口
-                    this.$message({
-                        type: 'success',
-                        message: '添加成功!'
-                    });
-                    this.addFormDialogVisible = false;
-                },
-                editModelSubmit(){
-                    //todo 编辑模型接口
-                    this.$message({
-                        type: 'success',
-                        message: '编辑成功!'
-                    });
-                    this.editFormDialogVisible = false;
-                },
-                dateformatter(date){
-                    return new Date(date).toLocaleString()
-                },
-                editModel(row){
-                    this.editFormDialogVisible = true;
-                    this.editForm = row;
-                },
-                deleteModel(row){
-                    this.$confirm(`此操作将永久删除【${row.name}】模型, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        //todo 添加删除接口
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });          
-                    });
-                },
-            },
-        });
-    </script>
+    <script src="~/js/Admin/AIKernel/index.js"></script>
 }
