@@ -15,8 +15,10 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Microsoft.AspNetCore.Builder;
-using Senparc.CO2NET.RegisterServices;
+using Microsoft.Extensions.FileProviders;
 using Senparc.AI.Kernel;
+using Senparc.CO2NET.RegisterServices;
+using System.Reflection;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -29,7 +31,7 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Uid => "796D12D8-580B-40F3-A6E8-A5D9D2EABB69";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.0";//必须填写版本号
+        public override string Version => "0.1.4";//必须填写版本号
 
         public override string MenuName => "AI 核心模块";
 
@@ -83,18 +85,29 @@ namespace Senparc.Xncf.AIKernel
 
         private static SenparcAiSetting SenparcAiSetting { get; set; }
 
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        {
+            //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
+
+            SenparcAiSetting ??= new SenparcAiSetting();
+            configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
+
+            return base.AddXncfModule(services, configuration, env);
+        }
+
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             registerService.UseSenparcAI(SenparcAiSetting);
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
             return base.UseXncfModule(app, registerService);
-        }
-
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
-        {
-            //services.AddScoped<ColorAppService>();
-            return base.AddXncfModule(services, configuration, env);
         }
     }
 }
+
+
+
 

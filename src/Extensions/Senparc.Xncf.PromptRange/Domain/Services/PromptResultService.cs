@@ -88,7 +88,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 handler.IWantTo()
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
-                    .CreateFunctionFromPrompt("TestPrompt", "PromptRange", promptParameter, completionPrompt)
+                    .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             aiArguments["input"] = promptItem.Content;
@@ -308,7 +308,7 @@ Human: 江苏的省会是：
                 handler.IWantTo()
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
-                    .CreateFunctionFromPrompt("Test", "Score", promptParameter, scorePrompt)
+                    .CreateFunctionFromPrompt(scorePrompt, promptParameter)
                     .iWantToRun;
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             aiArguments["actualResult"] = promptResult.ResultString;
@@ -363,7 +363,7 @@ Human: 江苏的省会是：
                              throw new NcfExceptionBase("找不到对应的promptItem");
 
             List<PromptResult> promptResults = await this.GetFullListAsync(
-                p => p.PromptItemId == promptItemId　&& (p.HumanScore >= 0 || p.RobotScore >= 0),
+                p => p.PromptItemId == promptItemId && (p.HumanScore >= 0 || p.RobotScore >= 0),
                 p => p.Id, OrderingType.Ascending);
 
             if (promptResults.Count == 0)

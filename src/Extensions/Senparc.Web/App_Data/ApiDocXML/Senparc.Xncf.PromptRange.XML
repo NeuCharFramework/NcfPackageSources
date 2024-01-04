@@ -78,16 +78,6 @@
             <param name="functionPiple">functionPiple</param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.SkChatCompletionHelperService.WithHuggingFaceCompletionService(Senparc.Xncf.PromptRange.PromptItem,Senparc.Xncf.PromptRange.Models.LlModel)">
-            <summary>
-            先用sk的原生Connector
-            调用hf模型,
-            **模型接口需要遵循SK的规范**
-            </summary>
-            <param name="promptItem"></param>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Id">
             <summary>
             ID 主键
