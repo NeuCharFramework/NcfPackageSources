@@ -34,7 +34,30 @@ var app=new Vue({
                 "maxToken": 0,
                 "show": true
             },
-            total:0
+            total:0,
+            rules: {
+                alias: [
+                    {required: true, message: '请选择别名', trigger: 'change'}
+                ],
+                aiPlatform: [
+                    {required: true, message: '请选择模型类型', trigger: 'change'}
+                ],
+                deploymentName: [
+                    {required: true, message: '请输入模型名称', trigger: 'blur'}
+                ],
+                apiVersion: [
+                    {required: true, message: '请输入API Version', trigger: 'blur'}
+                ],
+                apiKey: [
+                    {required: true, message: '请输入API key', trigger: 'blur'}
+                ],
+                endpoint: [
+                    {required: true, message: '请输入End Point', trigger: 'blur'}
+                ],
+                organizationId: [
+                    {required: true, message: '请输入Organization Id', trigger: 'blur'}
+                ]
+            },
 
         }
     },
