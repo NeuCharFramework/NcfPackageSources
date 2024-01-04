@@ -25,15 +25,16 @@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
-        <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
-        <el-table-column prop="organizationId" label="组织Id" width="auto"></el-table-column>
-        <el-table-column prop="note" label="备注" width="auto"></el-table-column>
-        <el-table-column prop="show" label="显示" width="auto">
+        <el-table-column prop="aiPlatform" label="平台" width="auto">
             <template slot-scope="scope">
-                <el-tag v-if="scope.row.show" type="success">显示</el-tag>
-                <el-tag v-else type="danger">隐藏</el-tag>
+                <span v-if="scope.row.aiPlatform===4">NeuCharAI</span>
+                <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===16">AzureOpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
+                <span v-else type="danger">未知</span>
             </template>
         </el-table-column>
+        <el-table-column prop="note" label="备注" width="auto"></el-table-column>
         <el-table-column prop="addTime" label="添加时间" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
@@ -91,7 +92,7 @@
             <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'">
                 <el-input v-model="addForm.endpoint"></el-input>
             </el-form-item>
-            <el-form-item label="组织Id"  v-if="addForm.aiPlatform==='8'">
+            <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'">
                 <el-input v-model="addForm.organizationId"></el-input>
             </el-form-item>
             <el-form-item label="备注">
@@ -114,13 +115,7 @@
     <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px">
             <el-form-item label="别名">
-                <el-input v-model="addForm.alias"></el-input>
-            </el-form-item>
-            <el-form-item label="模型名称">
-                <el-input v-model="editForm.deploymentName"></el-input>
-            </el-form-item>
-            <el-form-item label="Endpoint">
-                <el-input v-model="editForm.endpoint"></el-input>
+                <el-input v-model="editForm.alias"></el-input>
             </el-form-item>
             <el-form-item label="平台">
                 @* NeuCharAI = 4, *@
@@ -136,17 +131,22 @@
                     <el-option label="HuggingFace" value="32"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="组织Id">
-                <el-input v-model="editForm.organizationId"></el-input>
+            <el-form-item label="模型名称">
+                <el-input v-model="editForm.deploymentName"></el-input>
+            </el-form-item>
+            @* ,[ApiVersion] *@
+            <el-form-item label="ApiVersion" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'">
+                <el-input v-model="editForm.apiVersion"></el-input>
             </el-form-item>
             @* ,[ApiKey] *@
-            <el-form-item label="ApiKey">
+            <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'">
                 <el-input v-model="editForm.apiKey" type="password"></el-input>
             </el-form-item>
-
-            @* ,[ApiVersion] *@
-            <el-form-item label="ApiVersion">
-                <el-input v-model="editForm.apiVersion"></el-input>
+            <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'">
+                <el-input v-model="editForm.endpoint"></el-input>
+            </el-form-item>
+            <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'">
+                <el-input v-model="editForm.organizationId"></el-input>
             </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="editForm.note"></el-input>
