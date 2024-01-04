@@ -1,3 +1,4 @@
+using System;
 using Senparc.AI;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AIKernel.Models;
@@ -67,6 +68,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// 是否展示
         /// </summary>
         public bool Show { get;  set; }
+        
+        
+        public DateTime AddTime { get; set; }
+
+        public DateTime LastUpdateTime { get; set; }
+
+        public int TenantId { get; set; }
 
         public AIModelDto()
         {
@@ -79,13 +87,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
             DeploymentName = aIModel.DeploymentName;
             Endpoint = aIModel.Endpoint;
             AiPlatform = aIModel.AiPlatform;
-            OrganizationId = aIModel.OrganizationId;
-            ApiKey = aIModel.ApiKey;
+            // OrganizationId = aIModel.OrganizationId;
+            // ApiKey = aIModel.ApiKey;
             ApiVersion = aIModel.ApiVersion;
             Note = aIModel.Note;
             MaxToken = aIModel.MaxToken;
             IsShared = aIModel.IsShared;
             Show = aIModel.Show;
+            
+            AddTime = aIModel.AddTime;
+            LastUpdateTime = aIModel.LastUpdateTime;
+            TenantId = aIModel.TenantId;
         }
     }
 }

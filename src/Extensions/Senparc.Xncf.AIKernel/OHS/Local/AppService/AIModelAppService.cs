@@ -70,10 +70,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<PagedResponse<AIModel_GetDetailResponse>>> GetPagedListAsync(AIModel_GetListRequest request)
+        public async Task<AppResponseBase<PagedResponse<AIModelDto>>> GetPagedListAsync(AIModel_GetListRequest request)
         {
             return await this
-                .GetResponseAsync<AppResponseBase<PagedResponse<AIModel_GetDetailResponse>>, PagedResponse<AIModel_GetDetailResponse>>(
+                .GetResponseAsync<AppResponseBase<PagedResponse<AIModelDto>>, PagedResponse<AIModelDto>>(
                     async (response, logger) =>
                     {
                         var where = GetListWhere(request);
@@ -82,9 +82,9 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                         var total = await _aIModelService.GetCountAsync(where);
 
-                        return new PagedResponse<AIModel_GetDetailResponse>(
+                        return new PagedResponse<AIModelDto>(
                             total,
-                            modelList.Select(m => new AIModel_GetDetailResponse(m))
+                            modelList.Select(m => new AIModelDto(m))
                         );
                     });
         }
@@ -95,15 +95,15 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<List<AIModel_GetDetailResponse>>> GetListAsync(AIModel_GetListRequest request)
+        public async Task<AppResponseBase<List<AIModelDto>>> GetListAsync(AIModel_GetListRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<List<AIModel_GetDetailResponse>>, List<AIModel_GetDetailResponse>>(
+            return await this.GetResponseAsync<AppResponseBase<List<AIModelDto>>, List<AIModelDto>>(
                 async (response, logger) =>
                 {
                     var where = this.GetListWhere(request);
 
                     var modelList = (await _aIModelService.GetFullListAsync(where, request.Order))
-                        .Select(m => new AIModel_GetDetailResponse(m))
+                        .Select(m => new AIModelDto(m))
                         .ToList();
 
                     return modelList;
