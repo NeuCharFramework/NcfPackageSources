@@ -35,7 +35,7 @@ var app=new Vue({
                 "show": true
             },
             total:0,
-            rules: {
+            addRules: {
                 alias: [
                     {required: true, message: '请输入别名', trigger: 'change'}
                 ],
@@ -58,6 +58,23 @@ var app=new Vue({
                     {required: true, message: '请输入Organization Id', trigger: 'blur'}
                 ]
             },
+            editRules: {
+                alias: [
+                    {required: true, message: '请输入别名', trigger: 'change'}
+                ],
+                aiPlatform: [
+                    {required: true, message: '请选择模型类型', trigger: 'change'}
+                ],
+                deploymentName: [
+                    {required: true, message: '请输入模型名称', trigger: 'blur'}
+                ],
+                apiVersion: [
+                    {required: true, message: '请输入API Version', trigger: 'blur'}
+                ],
+                endpoint: [
+                    {required: true, message: '请输入End Point', trigger: 'blur'}
+                ]
+            }
 
         }
     },
@@ -156,7 +173,7 @@ var app=new Vue({
                     for (const key in this.editForm) {
                         if (this.editForm.hasOwnProperty(key)) {
                             const element = this.editForm[key];
-                            if(element === null || element === undefined|| element === '**********'){
+                            if(element === null || element === undefined){
                                 delete this.editForm[key]
                             }
                         }
@@ -185,9 +202,7 @@ var app=new Vue({
             this.editFormDialogVisible = true;
             this.editForm = {
                 ...row,
-                aiPlatform:row.aiPlatform.toString(),
-                apiKey:!row.apiKey?'**********':row.apiKey,
-                organizationId:!row.organizationId?'**********':row.organizationId,
+                aiPlatform:row.aiPlatform.toString()
             };
         },
         deleteModel(row){
