@@ -10,6 +10,7 @@ var app=new Vue({
             tableData: [],
             addFormDialogVisible: false,
             addForm:{
+                alias: "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
@@ -22,6 +23,7 @@ var app=new Vue({
             },
             editFormDialogVisible: false,
             editForm:{
+                alias: "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
@@ -91,6 +93,7 @@ var app=new Vue({
         },
         clearAddForm(){
             this.addForm={
+                "alias": "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
@@ -104,6 +107,7 @@ var app=new Vue({
         },
         clearEditForm(){
             this.editForm={
+                "alias": "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
@@ -135,7 +139,10 @@ var app=new Vue({
         },
         editModel(row){
             this.editFormDialogVisible = true;
-            this.editForm = {...row};
+            this.editForm = {
+                ...row,
+                aiPlatform:row.aiPlatform.toString()
+            };
         },
         deleteModel(row){
             this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
