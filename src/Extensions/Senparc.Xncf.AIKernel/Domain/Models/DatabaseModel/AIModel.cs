@@ -79,8 +79,8 @@ namespace Senparc.Xncf.AIKernel.Models
         /// 是否展示
         /// </summary>
         public bool Show { get; private set; }
-        
-        
+
+
         public AIModel(string deploymentName, string endpoint, AiPlatform aiPlatform, string organizationId, string apiKey,
             string apiVersion, string note, int maxToken, string alias)
         {
@@ -117,9 +117,9 @@ namespace Senparc.Xncf.AIKernel.Models
             // OtherModelName = llmModelDto.OtherModelName;
         }
 
-        public AIModel(AIModel_CreateRequest request) : this(request.DeploymentName, request.Endpoint,
-            request.AiPlatform, request.OrganizationId, request.ApiKey, request.ApiVersion, request.Note,
-            request.MaxToken, request.Alias)
+        public AIModel(AIModel_CreateOrEditRequest orEditRequest) : this(orEditRequest.DeploymentName, orEditRequest.Endpoint,
+            orEditRequest.AiPlatform, orEditRequest.OrganizationId, orEditRequest.ApiKey, orEditRequest.ApiVersion, orEditRequest.Note,
+            orEditRequest.MaxToken, orEditRequest.Alias)
         {
         }
 
@@ -129,11 +129,21 @@ namespace Senparc.Xncf.AIKernel.Models
             return this;
         }
 
-        public AIModel Update(string alias, bool show, bool isShared)
+        public AIModel Update(AIModel_CreateOrEditRequest request)
         {
-            this.Alias = alias;
-            this.IsShared = isShared;
-            return SwitchShow(show);
+            DeploymentName = request.DeploymentName;
+            Endpoint = request.Endpoint;
+            AiPlatform = request.AiPlatform;
+            OrganizationId = request.OrganizationId;
+            ApiKey = request.ApiKey;
+            ApiVersion = request.ApiVersion;
+            Note = request.Note;
+            MaxToken = request.MaxToken;
+            Alias = request.Alias;
+
+            IsShared = request.IsShared;
+            SwitchShow(request.Show);
+            return this;
         }
 
         public string GetModelId()

@@ -19,13 +19,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         {
         }
 
-        public async Task<AIModelDto> AddAsync(AIModel_CreateRequest request)
+        public async Task<AIModelDto> AddAsync(AIModel_CreateOrEditRequest orEditRequest)
         {
-            AIModel aiModel = new AIModel(request);
+            AIModel aiModel = new AIModel(orEditRequest);
             // var aIModel = _aIModelService.Mapper.Map<AIModel>(request);
-            
+
             aiModel.SwitchShow(true);
-            
+
             await this.SaveObjectAsync(aiModel);
 
             var aiModelDto = new AIModelDto(aiModel);
@@ -33,12 +33,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiModelDto;
         }
 
-        public async Task<AIModelDto> EditAsync(AIModel_EditRequest request)
+        public async Task<AIModelDto> EditAsync(AIModel_CreateOrEditRequest request)
         {
             AIModel aiModel = await this.GetObjectAsync(z => z.Id == request.Id)
                               ?? throw new NcfExceptionBase("未查询到实体!");
 
-            aiModel.Update(request.Alias, request.Show, request.IsShared);
+            aiModel.Update(request);
 
             await this.SaveObjectAsync(aiModel);
 

@@ -38,7 +38,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
         protected virtual Expression<Func<AIModel, bool>> GetListWhere(AIModel_GetListRequest request)
         {
-            SenparcExpressionHelper<AIModel> helper = new ();
+            SenparcExpressionHelper<AIModel> helper = new();
             helper.ValueCompare
                 .AndAlso(!request.Alias.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Alias, request.Alias))
                 .AndAlso(!request.DeploymentName.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.DeploymentName, request.DeploymentName))
@@ -113,30 +113,31 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// <summary>
         /// 新建一个AIModel
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="orEditRequest"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<AIModelDto>> CreateAsync(AIModel_CreateRequest request)
+        public async Task<AppResponseBase<AIModelDto>> CreateAsync(AIModel_CreateOrEditRequest orEditRequest)
         {
-            return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(async (response, logger) =>
-            {
-                #region Validate
-
-                var count = await _aIModelService.GetCountAsync(
-                    z => z.DeploymentName == request.DeploymentName
-                );
-                if (count > 0)
+            return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(
+                async (response, logger) =>
                 {
-                    //response.ErrorMessage = "AIModel已存在";
-                    //response.Success = false;
-                    //return null;
-                    throw new NcfExceptionBase("AIModel已存在");
-                }
+                    #region Validate
 
-                #endregion
-                
-                return await _aIModelService.AddAsync(request);
-            });
+                    var count = await _aIModelService.GetCountAsync(
+                        z => z.DeploymentName == orEditRequest.DeploymentName
+                    );
+                    if (count > 0)
+                    {
+                        //response.ErrorMessage = "AIModel已存在";
+                        //response.Success = false;
+                        //return null;
+                        throw new NcfExceptionBase("AIModel已存在");
+                    }
+
+                    #endregion
+
+                    return await _aIModelService.AddAsync(orEditRequest);
+                });
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<AIModelDto>> EditAsync(AIModel_EditRequest request)
+        public async Task<AppResponseBase<AIModelDto>> EditAsync(AIModel_CreateOrEditRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(async (response, logger) =>
             {

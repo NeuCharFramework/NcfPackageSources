@@ -78,8 +78,13 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public bool? Show { get; set; }
     }
 
-    public class AIModel_CreateRequest
+    public class AIModel_CreateOrEditRequest
     {
+        /// <summary>
+        /// 主键 ID
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// 代号
         /// </summary>
@@ -124,6 +129,16 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// 最大令牌
         /// </summary>
         public int MaxToken { get; set; }
+        
+        /// <summary>
+        /// 是否显示
+        /// </summary>
+        public bool Show { get; set; }
+
+        /// <summary>
+        /// 是否共享
+        /// </summary>
+        public bool IsShared { get; set; }
     }
 
     public class AIModel_EditRequest
