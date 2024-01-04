@@ -45,7 +45,10 @@
             <div class="w-100">
                 <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
                     <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
-                    <div class="titleContent">选择靶道</div>
+                    <div class="titleContent d-flex justify-content-between  align-center w-100">
+                        <span>选择靶道</span>
+                        <i class="el-icon-document-copy" style="font-size: 1.3rem" @@click="copyInfo"></i>
+                    </div>
                 </div>
                 <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid',promptid)">
                     <el-option v-for="item in promptOpt"
@@ -65,7 +68,7 @@
                 <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">选择模型</div>
             </div>
-            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
+            <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
         </div>
         <div style="padding-right: 5px">
             <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
@@ -74,10 +77,7 @@
                            :label="item.label"
                            :value="item.value"
                            :disabled="item.disabled">
-                    <div class="d-flex justify-content-between align-center">
-                        <span>{{ item.label }}</span>
-                        <el-button type="danger" size="mini" @@click="deleteModel(item)">删除</el-button>
-                    </div>
+                    <span>{{ item.label }}</span>
                 </el-option>
             </el-select>
         </div>

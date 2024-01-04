@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -22,10 +23,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly LlModelService _llModelService;
         private readonly IMapper _mapper;
 
-        public LlmModelAppService(IServiceProvider serviceProvider, LlModelService promptAddService,
+        public LlmModelAppService(
+            IServiceProvider serviceProvider,
+            LlModelService llModelService,
             IMapper mapper) : base(serviceProvider)
         {
-            _llModelService = promptAddService;
+            _llModelService = llModelService;
             _mapper = mapper;
         }
 

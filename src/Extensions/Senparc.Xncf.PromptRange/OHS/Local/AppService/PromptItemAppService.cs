@@ -35,12 +35,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             _promptResultService = promptResultService;
         }
 
+        /// <summary>
+        /// Add方法用于添加一个新的PromptItem，并根据请求中的IsDraft字段决定是否立即生成结果
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptItem_AddResponse>> Add(PromptItem_AddRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
+                    // 新增promptItem
                     var promptItemDto = await _promptItemService.AddPromptItemAsync(request)
                                         ?? throw new NcfExceptionBase("新增失败");
 
@@ -57,7 +64,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
@@ -70,8 +77,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        /// 列出所有的promptItem的id和name
+        /// 列出 靶场名称 下所有的promptItem的id和name
         /// </summary>
+        /// <param name="rangeName">靶场名称（必须）</param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([NotNull] string rangeName)
@@ -90,6 +98,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
 
+        /// <summary>
+        /// 列出所有的promptItem的RangeName
+        /// </summary>
+        /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>> GetRangeNameList()
         {
@@ -129,13 +141,40 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         //         });
         // }
 
+        /// <summary>
+        /// 根据主键 ID　获取 PromptItem 所有信息
+        /// </summary>
+        /// <param name="id">主键 ID </param>
+        /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
-                    PromptItemDto promptItem = await _promptItemService.Get(id);
+                    PromptItemDto promptItem = await _promptItemService.GetAsync(id);
+
+                    List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
+
+                    var resp = new PromptItem_GetResponse(promptItem);
+                    resp.PromptResultList.AddRange(resultList);
+
+                    return resp;
+                });
+        }
+
+        /// <summary>
+        /// 根据 完整版号 获取 PromptItem 所有信息
+        /// </summary>
+        /// <param name="fullVersion">完整版号</param>
+        /// <returns></returns>
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
+                async (response, logger) =>
+                {
+                    PromptItemDto promptItem = await _promptItemService.GetWithVersionAsync(fullVersion);
 
                     List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
 
@@ -149,6 +188,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <summary>
         /// 获取版本树
         /// </summary>
+        /// <param name="rangeName">靶场名称</param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree([NotNull] string rangeName)
@@ -179,6 +219,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// 根据主键 ID　删除 PromptItem 所有信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> Del(int id)
         {
