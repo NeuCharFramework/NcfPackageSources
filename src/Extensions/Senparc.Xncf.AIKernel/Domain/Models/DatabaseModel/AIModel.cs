@@ -72,12 +72,14 @@ namespace Senparc.Xncf.AIKernel.Models
         /// <summary>
         /// 是否共享
         /// </summary>
+        [Required, DefaultValue(false)]
         public bool IsShared { get; private set; } = false;
 
 
         /// <summary>
         /// 是否展示
         /// </summary>
+        [Required, DefaultValue(true)]
         public bool Show { get; private set; }
 
 

@@ -98,7 +98,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// <summary>
         /// 端点
         /// </summary>
-        public string Endpoint { get; set; }
+        public string Endpoint { get; set; } = "";
 
         /// <summary>
         /// AI平台
@@ -108,7 +108,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// <summary>
         /// 组织ID
         /// </summary>
-        public string OrganizationId { get; set; }
+        public string OrganizationId { get; set; }= "";
 
         /// <summary>
         /// API密钥
