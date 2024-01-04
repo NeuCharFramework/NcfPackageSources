@@ -156,7 +156,7 @@ var app=new Vue({
                     for (const key in this.editForm) {
                         if (this.editForm.hasOwnProperty(key)) {
                             const element = this.editForm[key];
-                            if(element === ''|| element === null || element === undefined|| element === '**********'){
+                            if(element === null || element === undefined|| element === '**********'){
                                 delete this.editForm[key]
                             }
                         }
