@@ -68,7 +68,7 @@
                 <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">选择模型</div>
             </div>
-            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
+            <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
         </div>
         <div style="padding-right: 5px">
             <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
@@ -77,10 +77,7 @@
                            :label="item.label"
                            :value="item.value"
                            :disabled="item.disabled">
-                    <div class="d-flex justify-content-between align-center">
-                        <span>{{ item.label }}</span>
-                        <el-button type="danger" size="mini" @@click="deleteModel(item)">删除</el-button>
-                    </div>
+                    <span>{{ item.label }}</span>
                 </el-option>
             </el-select>
         </div>

@@ -1535,6 +1535,10 @@ var app = new Vue({
                 value: ''
             })
         },
+        toAIKernel(){
+          // TODO open url of AI kernel
+            
+        },
         // prompt请求参数 删除变量行btn
         deleteVariableBtn(index) {
             this.promptParamForm.variableList.splice(index, 1)
@@ -1563,7 +1567,7 @@ var app = new Vue({
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetIdAndName')
+            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync')
             //console.log('getModelOptData:', res)
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
