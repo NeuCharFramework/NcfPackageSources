@@ -97,25 +97,25 @@ namespace Senparc.Xncf.AIKernel.Models
             IsShared = false;
         }
 
-        public AIModel(AIModelDto llmModelDto)
-        {
-            Alias = llmModelDto.Alias;
-            DeploymentName = llmModelDto.DeploymentName;
-            Endpoint = llmModelDto.Endpoint;
-            AiPlatform = llmModelDto.AiPlatform;
-            OrganizationId = llmModelDto.OrganizationId;
-            ApiKey = llmModelDto.ApiKey;
-            ApiVersion = llmModelDto.ApiVersion;
-            Note = llmModelDto.Note;
-            MaxToken = llmModelDto.MaxToken;
-
-            Show = true;
-            IsShared = false;
-
-            // TextCompletionModelName = llmModelDto.TextCompletionModelName;
-            // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
-            // OtherModelName = llmModelDto.OtherModelName;
-        }
+        // public AIModel(AIModelDto llmModelDto)
+        // {
+        //     Alias = llmModelDto.Alias;
+        //     DeploymentName = llmModelDto.DeploymentName;
+        //     Endpoint = llmModelDto.Endpoint;
+        //     AiPlatform = llmModelDto.AiPlatform;
+        //     OrganizationId = llmModelDto.OrganizationId;
+        //     ApiKey = llmModelDto.ApiKey;
+        //     ApiVersion = llmModelDto.ApiVersion;
+        //     Note = llmModelDto.Note;
+        //     MaxToken = llmModelDto.MaxToken;
+        //
+        //     Show = true;
+        //     IsShared = false;
+        //
+        //     // TextCompletionModelName = llmModelDto.TextCompletionModelName;
+        //     // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
+        //     // OtherModelName = llmModelDto.OtherModelName;
+        // }
 
         public AIModel(AIModel_CreateOrEditRequest orEditRequest) : this(orEditRequest.DeploymentName, orEditRequest.Endpoint,
             orEditRequest.AiPlatform, orEditRequest.OrganizationId, orEditRequest.ApiKey, orEditRequest.ApiVersion, orEditRequest.Note,
