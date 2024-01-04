@@ -38,6 +38,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             AIModel aiModel = await this.GetObjectAsync(z => z.Id == request.Id)
                               ?? throw new NcfExceptionBase("未查询到实体!");
 
+            #region 如果字段为空就不更新
+
+            if (string.IsNullOrWhiteSpace(request.ApiKey))
+            {
+                request.ApiKey = aiModel.ApiKey;
+                request.OrganizationId = aiModel.OrganizationId;
+            }
+
+            #endregion
+
             aiModel.Update(request);
 
             await this.SaveObjectAsync(aiModel);
