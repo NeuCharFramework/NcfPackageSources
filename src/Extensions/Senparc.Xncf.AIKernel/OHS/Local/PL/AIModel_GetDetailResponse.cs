@@ -48,6 +48,19 @@ public class AIModel_GetDetailResponse
     {
     }
 
+    public AIModel_GetDetailResponse(AIModel model)
+    {
+        Id = model.Id;
+        Alias = model.Alias;
+        DeploymentName = model.DeploymentName;
+        Endpoint = model.Endpoint;
+        AiPlatform = model.AiPlatform;
+        OrganizationId = model.OrganizationId;
+        ApiVersion = model.ApiVersion;
+        Note = model.Note;
+        MaxToken = model.MaxToken;
+        Show = model.Show;
+    }
     public AIModel_GetDetailResponse(AIModelDto dto)
     {
         Id = dto.Id;
