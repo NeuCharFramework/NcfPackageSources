@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.0.14</Version>
+    <Version>0.1.0.15</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -27,7 +27,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.7.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.7.1" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
