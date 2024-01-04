@@ -16,53 +16,52 @@
 }
 
 <div>
-    <el-container>
-        <el-main>
-            <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px">
-                <h1>模型列表</h1>
-                <el-button type="primary" icon="el-icon-plus" size="mini" @@click="addModel">添加模型</el-button>
-            </div>
+    <div class="filter-container">
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
+    </div>
 
-            <el-table :data="tableData" v-loading="tableLoading">
-                @* alias *@
-                <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
-                <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
-                <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
-                <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
-                <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
-                <el-table-column prop="note" label="备注" width="auto"></el-table-column>
-                <el-table-column prop="show" label="显示" width="auto">
-                    <template slot-scope="scope">
-                        <el-tag v-if="scope.row.show" type="success">显示</el-tag>
-                        <el-tag v-else type="danger">隐藏</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="addTime" label="添加时间" width="auto">
-                    <template slot-scope="scope">
-                        {{ dateformatter(scope.row.addTime) }}
-                    </template>
-                </el-table-column>
-                @* 操作 *@
-                <el-table-column label="操作" width="auto">
-                    <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                        <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                @@current-change="handleCurrentChange"
-                @@size-change="handleSizeChange"
-                :current-page="page.page"
-                :page-sizes="[10, 20, 30, 40]"
-                :page-size="page.size"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total"
-                style="margin-top: 20px"
-                >
-            </el-pagination>
-        </el-main>
-    </el-container>
+    <el-table :data="tableData" v-loading="tableLoading">
+        @* alias *@
+        <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
+        <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
+        <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
+        <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
+        <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
+        <el-table-column prop="note" label="备注" width="auto"></el-table-column>
+        <el-table-column prop="show" label="显示" width="auto">
+            <template slot-scope="scope">
+                <el-tag v-if="scope.row.show" type="success">显示</el-tag>
+                <el-tag v-else type="danger">隐藏</el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column prop="addTime" label="添加时间" width="auto">
+            <template slot-scope="scope">
+                {{ dateformatter(scope.row.addTime) }}
+            </template>
+        </el-table-column>
+        @* 操作 *@
+        <el-table-column label="操作" width="auto">
+            <template slot-scope="scope">
+                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
+                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="pagination-container">
+        <el-pagination
+            @@current-change="handleCurrentChange"
+            @@size-change="handleSizeChange"
+            :current-page="page.page"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="page.size"
+            layout="sizes, prev, next, jumper"
+            :total="total"
+            background
+            style="margin-top: 20px"
+        >
+        </el-pagination>
+    </div>
+
 
     @* dialog for 添加模型 *@
     <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
