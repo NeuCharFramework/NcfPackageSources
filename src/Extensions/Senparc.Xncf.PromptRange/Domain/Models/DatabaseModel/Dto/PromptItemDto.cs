@@ -4,6 +4,7 @@ using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
@@ -24,6 +25,8 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         #region Model Config
 
         public int ModelId { get; set; }
+        
+        public AIModelDto AIModelDto { get; set; }
 
         /// <summary>
         /// TopP

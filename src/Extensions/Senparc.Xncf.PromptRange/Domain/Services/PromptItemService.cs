@@ -10,6 +10,8 @@ using JetBrains.Annotations;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
@@ -19,8 +21,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptItemService : ServiceBase<PromptItem>
     {
-        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        private readonly AIModelService _aiModelService;
+
+        public PromptItemService(
+            IRepositoryBase<PromptItem> repo,
+            IServiceProvider serviceProvider,
+            AIModelService aiModelService) : base(repo, serviceProvider)
         {
+            _aiModelService = aiModelService;
         }
 
         /// <summary>
@@ -341,7 +349,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
                        throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
 
-            return this.Mapper.Map<PromptItemDto>(item);
+            var dto = this.Mapper.Map<PromptItemDto>(item);
+
+            var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
+                          throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
+
+            dto.AIModelDto = new AIModelDto(aiModel)
+            {
+                ApiKey = aiModel.ApiKey,
+                OrganizationId = aiModel.OrganizationId
+            };
+
+            return dto;
         }
     }
 }
