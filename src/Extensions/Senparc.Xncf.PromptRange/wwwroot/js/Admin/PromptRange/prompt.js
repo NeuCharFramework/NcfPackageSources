@@ -253,9 +253,11 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶道列表
-        this.getFieldList()
-        // 获取模型列表
-        this.getModelOptData()
+        setTimeout(()=>{
+            this.getFieldList()
+            // 获取模型列表
+            this.getModelOptData()
+        },100)
         // 获取分数趋势图
         // this.getScoringTrendData()
         // 图表自适应
