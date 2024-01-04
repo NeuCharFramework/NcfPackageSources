@@ -1568,7 +1568,7 @@ var app = new Vue({
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
-            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync')
+            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
             //console.log('getModelOptData:', res)
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
