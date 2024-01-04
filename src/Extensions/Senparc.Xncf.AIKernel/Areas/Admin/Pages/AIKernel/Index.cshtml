@@ -20,13 +20,13 @@
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
     </div>
 
-    <el-table :data="tableData" v-loading="tableLoading">
+    <el-table :data="tableData" v-loading="tableLoading" border>
         @* alias *@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
         <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
-        <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
+        <el-table-column prop="organizationId" label="组织Id" width="auto"></el-table-column>
         <el-table-column prop="note" label="备注" width="auto"></el-table-column>
         <el-table-column prop="show" label="显示" width="auto">
             <template slot-scope="scope">
@@ -69,12 +69,6 @@
             <el-form-item label="别名">
                 <el-input v-model="addForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="模型名称">
-                <el-input v-model="addForm.deploymentName"></el-input>
-            </el-form-item>
-            <el-form-item label="Endpoint">
-                <el-input v-model="addForm.endpoint"></el-input>
-            </el-form-item>
             <el-form-item label="平台">
                 <el-select v-model="addForm.aiPlatform" placeholder="请选择">
                     <el-option label="NeuCharAI" value="4"></el-option>
@@ -83,17 +77,22 @@
                     <el-option label="HuggingFace" value="32"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="组织">
-                <el-input v-model="addForm.organizationId"></el-input>
+            <el-form-item label="模型名称">
+                <el-input v-model="addForm.deploymentName"></el-input>
+            </el-form-item>
+            @* ,[ApiVersion] *@
+            <el-form-item label="ApiVersion" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'">
+                <el-input v-model="addForm.apiVersion"></el-input>
             </el-form-item>
             @* ,[ApiKey] *@
-            <el-form-item label="ApiKey">
+            <el-form-item label="ApiKey" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='8'||addForm.aiPlatform==='4'">
                 <el-input v-model="addForm.apiKey" type="password"></el-input>
             </el-form-item>
-
-            @* ,[ApiVersion] *@
-            <el-form-item label="ApiVersion">
-                <el-input v-model="addForm.apiVersion"></el-input>
+            <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'">
+                <el-input v-model="addForm.endpoint"></el-input>
+            </el-form-item>
+            <el-form-item label="组织Id"  v-if="addForm.aiPlatform==='8'">
+                <el-input v-model="addForm.organizationId"></el-input>
             </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="addForm.note"></el-input>
@@ -137,7 +136,7 @@
                     <el-option label="HuggingFace" value="32"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="组织">
+            <el-form-item label="组织Id">
                 <el-input v-model="editForm.organizationId"></el-input>
             </el-form-item>
             @* ,[ApiKey] *@
