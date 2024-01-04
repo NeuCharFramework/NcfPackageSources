@@ -63,7 +63,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 
-        public List<PromptResult> PromptResultList { get; set; } = new();
+        public List<PromptResultDto> PromptResultList { get; set; } = new();
 
         /// <summary>
         /// 评估参数, 平均分

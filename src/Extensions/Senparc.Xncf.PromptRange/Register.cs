@@ -35,7 +35,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18"; //必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.14.6"; //必须填写版本号
+        public override string Version => "0.14.7"; //必须填写版本号
 
         public override string MenuName => "提示词靶场";
 
@@ -108,19 +108,20 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptService>();
             services.AddScoped<PromptItemService>();
             services.AddScoped<PromptResultService>();
-            services.AddScoped<LlmModelService>();
+            services.AddScoped<LlModelService>();
 
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
-            SenparcAiSetting = SenparcAiSetting ?? new SenparcAiSetting();
+            SenparcAiSetting ??= new SenparcAiSetting();
             configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
 
             services.AddAutoMapper(z =>
             {
-                z.CreateMap<PromptItem, PromptItemDto>();
-                z.CreateMap<PromptItemDto, PromptItem>();
-                z.CreateMap<PromptResult, PromptResultDto>();
-                z.CreateMap<PromptResultDto, PromptResult>();
+                z.CreateMap<PromptItem, PromptItemDto>().ReverseMap();
+                z.CreateMap<PromptResult, PromptResultDto>().ReverseMap();
+                z.CreateMap<LlModel, LlModelDto>().ReverseMap();
+
+                z.CreateMap<LlModel, LlmModel_GetPageItemResponse>();
 
                 //TODO:morek
             });
@@ -129,16 +130,3 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

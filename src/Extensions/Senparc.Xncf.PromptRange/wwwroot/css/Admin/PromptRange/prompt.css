@@ -48,8 +48,16 @@
     color:#f00;
 }
 
-.promptLoaderBox{
-position: fixed;
+.targetShootBtnRow{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    justify-content:flex-start;
+    gap:7px;
+}
+
+.promptLoaderBox {
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 999999999;
@@ -173,6 +181,21 @@ position: fixed;
         right: 100%;
         opacity: 0;
     }
+}
+
+.text-center{
+    text-align: center;
+}
+
+.prompt-mask{
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.7);
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
 }
 
 .promptPage {
@@ -658,6 +681,7 @@ position: fixed;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
+            white-space: pre-line;
         }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
