@@ -150,9 +150,8 @@ var app=new Vue({
         async editModelSubmit(){
             this.$refs.editForm.validate(async (valid) => {
                 if (valid) {
-        
-                    this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
-                    this.editForm.maxToken = parseInt(this.addForm.maxToken)
+                    this.editForm.aiPlatform = parseInt(this.editForm.aiPlatform)
+                    this.editForm.maxToken = parseInt(this.editForm.maxToken)
                     // clear empty value
                     for (const key in this.editForm) {
                         if (this.editForm.hasOwnProperty(key)) {
@@ -187,8 +186,8 @@ var app=new Vue({
             this.editForm = {
                 ...row,
                 aiPlatform:row.aiPlatform.toString(),
-                apiKey:row.apiKey===''?'**********':row.apiKey,
-                organizationId:row.organizationId===''?'**********':row.organizationId,
+                apiKey:!row.apiKey?'**********':row.apiKey,
+                organizationId:!row.organizationId?'**********':row.organizationId,
             };
         },
         deleteModel(row){
