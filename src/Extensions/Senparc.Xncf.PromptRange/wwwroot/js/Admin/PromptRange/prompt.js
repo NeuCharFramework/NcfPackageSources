@@ -349,6 +349,22 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
+        copyInfo(){
+          // 找到promptOpt里面的promptid
+            const promptItem = this.promptOpt.find(item => item.promptid === this.promptid)
+            const fullVersion = promptItem.fullVersion
+            // 把结果复制到剪切板
+            const input = document.createElement('input')
+            input.setAttribute('readonly', 'readonly')
+            input.setAttribute('value', fullVersion)
+            document.body.appendChild(input)
+            input.select()
+            input.setSelectionRange(0, 9999)
+            if (document.execCommand('copy')) {
+                document.execCommand('copy')
+                this.$message.success(`复制【${fullVersion}】成功`)
+            }
+        },
         // 格式化时间
         formatDate(d) {
             var date = new Date(d);
