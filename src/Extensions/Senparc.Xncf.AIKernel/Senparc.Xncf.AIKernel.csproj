@@ -61,4 +61,8 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
     <None Include="App_Data\Database\SenparcConfig.Development.config" />
   </ItemGroup>
+<ItemGroup>
+  <EmbeddedResource Include="wwwroot\**\*" />
+  <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.6" />
+</ItemGroup>
 </Project>

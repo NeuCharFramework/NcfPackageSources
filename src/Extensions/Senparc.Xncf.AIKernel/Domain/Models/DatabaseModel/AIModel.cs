@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Senparc.AI;
+using Senparc.Xncf.AIKernel.OHS.Local.PL;
 
 namespace Senparc.Xncf.AIKernel.Models
 {
@@ -16,10 +17,16 @@ namespace Senparc.Xncf.AIKernel.Models
     public class AIModel : EntityBase<int>
     {
         /// <summary>
-        /// 名称（必须）
+        /// 代号
+        /// </summary>
+        [Required, MaxLength(50)]
+        public string Alias { get; private set; }
+
+        /// <summary>
+        /// 模型名称（必须）
         /// </summary>
         [Required, MaxLength(100)]
-        public string Name { get; private set; }
+        public string DeploymentName { get; private set; }
 
         /// <summary>
         /// Endpoint（必须）
@@ -62,37 +69,24 @@ namespace Senparc.Xncf.AIKernel.Models
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
-        // /// <summary>
-        // /// TextCompletionModelName（可选）
-        // /// </summary>
-        // [MaxLength(100)]
-        // public string TextCompletionModelName { get; private set; }
-        //
-        // /// <summary>
-        // /// TextEmbeddingModelName（可选）
-        // /// </summary>
-        // [MaxLength(100)]
-        // public string TextEmbeddingModelName { get; private set; }
-        //
-        // /// <summary>
-        // /// OtherModelName（可选）
-        // /// </summary>
-        // [MaxLength(100)]
-        // public string OtherModelName { get; private set; }
+        /// <summary>
+        /// 是否共享
+        /// </summary>
+        [Required, DefaultValue(false)]
+        public bool IsShared { get; private set; } = false;
+
 
         /// <summary>
         /// 是否展示
         /// </summary>
+        [Required, DefaultValue(true)]
         public bool Show { get; private set; }
 
-        private AIModel()
-        {
-        }
 
-        public AIModel(string name, string endpoint, AiPlatform aiPlatform, string organizationId, string apiKey,
-            string apiVersion, string note, int maxToken)
+        public AIModel(string deploymentName, string endpoint, AiPlatform aiPlatform, string organizationId, string apiKey,
+            string apiVersion, string note, int maxToken, string alias)
         {
-            Name = name;
+            DeploymentName = deploymentName;
             Endpoint = endpoint;
             AiPlatform = aiPlatform;
             OrganizationId = organizationId;
@@ -100,76 +94,68 @@ namespace Senparc.Xncf.AIKernel.Models
             ApiVersion = apiVersion;
             Note = note;
             MaxToken = maxToken;
+            Alias = alias;
+            Show = true;
+            IsShared = false;
         }
 
-        // public LlmModel(string name, string endpoint, string modelType, string organizationId, string apiKey,
-        //     string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName,
-        //     string otherModelName)
+        // public AIModel(AIModelDto llmModelDto)
         // {
-        //     Name = name;
-        //     Endpoint = endpoint;
-        //     ModelType = modelType;
-        //     OrganizationId = organizationId;
-        //     ApiKey = apiKey;
-        //     ApiVersion = apiVersion;
-        //     Note = note;
-        //     MaxToken = maxToken;
-        //     TextCompletionModelName = textCompletionModelName;
-        //     TextEmbeddingModelName = textEmbeddingModelName;
-        //     OtherModelName = otherModelName;
+        //     Alias = llmModelDto.Alias;
+        //     DeploymentName = llmModelDto.DeploymentName;
+        //     Endpoint = llmModelDto.Endpoint;
+        //     AiPlatform = llmModelDto.AiPlatform;
+        //     OrganizationId = llmModelDto.OrganizationId;
+        //     ApiKey = llmModelDto.ApiKey;
+        //     ApiVersion = llmModelDto.ApiVersion;
+        //     Note = llmModelDto.Note;
+        //     MaxToken = llmModelDto.MaxToken;
+        //
+        //     Show = true;
+        //     IsShared = false;
+        //
+        //     // TextCompletionModelName = llmModelDto.TextCompletionModelName;
+        //     // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
+        //     // OtherModelName = llmModelDto.OtherModelName;
         // }
 
-        //public LlmModel(string name, string endpoint, string organizationId, string apiKey, string apiVersion, string note, int maxToken, string textCompletionModelName, string textEmbeddingModelName, string otherModelName)
-        //{
-        //    Name = name;
-        //    Endpoint = endpoint;
-        //    OrganizationId = organizationId;
-        //    ApiKey = apiKey;
-        //    ApiVersion = apiVersion;
-        //    Note = note;
-        //    MaxToken = maxToken;
-        //    TextCompletionModelName = textCompletionModelName;
-        //    TextEmbeddingModelName = textEmbeddingModelName;
-        //    OtherModelName = otherModelName;
-        //}
-
-        public AIModel(AIModelDto llmModelDto)
+        public AIModel(AIModel_CreateOrEditRequest orEditRequest) : this(orEditRequest.DeploymentName, orEditRequest.Endpoint,
+            orEditRequest.AiPlatform, orEditRequest.OrganizationId, orEditRequest.ApiKey, orEditRequest.ApiVersion, orEditRequest.Note,
+            orEditRequest.MaxToken, orEditRequest.Alias)
         {
-            Name = llmModelDto.Name;
-            Endpoint = llmModelDto.Endpoint;
-            AiPlatform = llmModelDto.AiPlatform;
-            OrganizationId = llmModelDto.OrganizationId;
-            ApiKey = llmModelDto.ApiKey;
-            ApiVersion = llmModelDto.ApiVersion;
-            Note = llmModelDto.Note;
-            MaxToken = llmModelDto.MaxToken;
-
-
-            // TextCompletionModelName = llmModelDto.TextCompletionModelName;
-            // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
-            // OtherModelName = llmModelDto.OtherModelName;
         }
 
-        public AIModel Switch(bool show)
+        public AIModel SwitchShow(bool show)
         {
             Show = show;
             return this;
         }
 
-        public AIModel Update(string name, bool show)
+        public AIModel Update(AIModel_CreateOrEditRequest request)
         {
-            this.Name = name;
-            return Switch(show);
+            DeploymentName = request.DeploymentName;
+            Endpoint = request.Endpoint;
+            AiPlatform = request.AiPlatform;
+            OrganizationId = request.OrganizationId;
+            ApiKey = request.ApiKey;
+            ApiVersion = request.ApiVersion;
+            Note = request.Note;
+            MaxToken = request.MaxToken;
+            Alias = request.Alias;
+
+            IsShared = request.IsShared;
+            SwitchShow(request.Show);
+            return this;
         }
 
         public string GetModelId()
         {
-            if (string.IsNullOrWhiteSpace(this.Name))
+            if (string.IsNullOrWhiteSpace(this.DeploymentName))
             {
                 return "text-davinci-003";
             }
 
-            return this.Name.Contains("azure") ? this.Name.Substring("azure-".Length) : this.Name;
+            return this.DeploymentName.Contains("azure") ? this.DeploymentName.Substring("azure-".Length) : this.DeploymentName;
         }
     }
 }
