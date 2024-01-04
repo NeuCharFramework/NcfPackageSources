@@ -98,21 +98,26 @@ var app=new Vue({
             this.addFormDialogVisible = true;
         },
         async addModelSubmit(){
-            this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
-            this.addForm.maxToken = parseInt(this.addForm.maxToken)
-            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',{
-                    ...this.addForm
+            this.$refs.addForm.validate(async (valid) => {
+                if (valid) {
+                    this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+                    this.addForm.maxToken = parseInt(this.addForm.maxToken)
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync', {
+                            ...this.addForm
+                        }
+                    ).then(res => {
+                        this.$message({
+                            type: res.data.success ? 'success' : 'error',
+                            message: res.data.success ? '添加成功!' : '添加失败'
+                        });
+                        this.getDataList()
+                        this.clearAddForm()
+                        this.addFormDialogVisible = false;
+                    })
+                } else {
+                    return false;
                 }
-            ).then(res=>{
-                this.$message({
-                    type: res.data.success?'success':'error',
-                    message: res.data.success?'添加成功!':'添加失败'
-                });
-                this.getDataList()
-                this.clearAddForm()
-                this.addFormDialogVisible = false;
-            })
-
+            });
         },
         clearAddForm(){
             this.addForm={
@@ -143,19 +148,26 @@ var app=new Vue({
             }
         },
         async editModelSubmit(){
-            this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
-            this.editForm.maxToken = parseInt(this.addForm.maxToken)
-            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync',{
-                ...this.editForm
-            }).then(res=>{
-                this.$message({
-                    type: res.data.success?'success':'error',
-                    message: res.data.success?'添加成功!':'添加失败'
-                });
-                this.clearEditForm()
-                this.getDataList()
-                this.editFormDialogVisible = false;
-            })
+            this.$refs.editForm.validate(async (valid) => {
+                if (valid) {
+
+                    this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+                    this.editForm.maxToken = parseInt(this.addForm.maxToken)
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync', {
+                        ...this.editForm
+                    }).then(res => {
+                        this.$message({
+                            type: res.data.success ? 'success' : 'error',
+                            message: res.data.success ? '添加成功!' : '添加失败'
+                        });
+                        this.clearEditForm()
+                        this.getDataList()
+                        this.editFormDialogVisible = false;
+                    })
+                } else {
+                    return false;
+                }
+            });
         },
         dateformatter(date){
             return new Date(date).toLocaleString()
