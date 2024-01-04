@@ -75,7 +75,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// <summary>
         /// 是否显示
         /// </summary>
-        public bool Show { get; set; }
+        public bool? Show { get; set; }
     }
 
     public class AIModel_CreateRequest

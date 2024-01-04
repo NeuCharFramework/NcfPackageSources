@@ -44,7 +44,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                 .AndAlso(!request.DeploymentName.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.DeploymentName, request.DeploymentName))
                 .AndAlso(!request.Endpoint.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Endpoint, request.Endpoint))
                 .AndAlso(!request.OrganizationId.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.OrganizationId, request.OrganizationId))
-                .AndAlso((true), z => z.Show == request.Show)
+                .AndAlso(request.Show != null, z => z.Show == request.Show)
                 ;
             return helper.BuildWhereExpression();
         }
