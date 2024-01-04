@@ -168,7 +168,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <param name="fullVersion">完整版号</param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
