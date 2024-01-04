@@ -89,11 +89,9 @@ namespace Senparc.Xncf.PromptRange
 
         #endregion
 
-        private static SenparcAiSetting SenparcAiSetting { get; set; }
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            registerService.UseSenparcAI(SenparcAiSetting);
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")

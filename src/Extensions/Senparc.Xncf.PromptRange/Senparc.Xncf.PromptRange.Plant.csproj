@@ -66,7 +66,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.6.5-rc3" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.7.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->

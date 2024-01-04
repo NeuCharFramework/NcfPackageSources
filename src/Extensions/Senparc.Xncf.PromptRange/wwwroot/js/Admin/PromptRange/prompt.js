@@ -425,7 +425,7 @@ var app = new Vue({
                         show: true,//该参数需设为true
                         // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
                         lineStyle: {//坐标轴样式
-                            color: 'rgba(250,250,250,0.3)',
+                            color: 'rgba(0,0,0,0.3)',
                             opacity: 1,//(单个刻度不会受影响)
                             width: 2//线条宽度
                         }
@@ -433,7 +433,7 @@ var app = new Vue({
                     // 坐标轴 label
                     axisLabel: {
                         show: true,//是否显示刻度  (刻度上的数字，或者类目)
-                        interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        //interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
                         //formatter: function (v) {
                         //    // return;
                         //},
@@ -450,26 +450,31 @@ var app = new Vue({
                     },
                     //刻度
                     axisTick: {
-                        show: false,//是否显示出
+                        show: true,//是否显示出
                         // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        length: 5,//坐标轴刻度的长度
-                        lineStyle: {//举个例子，样式太丑将就
-                            color: '#000',//颜色
-                            opacity: 1,
-                            width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
-                        }
+                        //length: 5,//坐标轴刻度的长度
+                        //lineStyle: {//举个例子，样式太丑将就
+                        //    color: '#000',//颜色
+                        //    opacity: 1,
+                        //    width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        //}
                     },
                     //平面上的分隔线。
                     splitLine: {
-                        show: true,//立体网格线  
+                        show: true,//立体网格线
                         // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        splitArea: {
-                            show: true,
-                            // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                            areaStyle: {
-                                color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
-                            }
+                        lineStyle: {//坐标轴样式
+                            color: 'rgba(0,0,0,0.05)',
+                            opacity: 1,//(单个刻度不会受影响)
+                            width: 1//线条宽度
                         },
+                        //splitArea: {
+                        //    show: true,
+                        //    // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        //    areaStyle: {
+                        //        color: ['rgba(250,250,250,0.2)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.2)', 'rgba(200,200,200,0.2)']
+                        //    }
+                        //},
                     },
                     // 坐标轴指示线。
                     axisPointer: {
@@ -482,8 +487,8 @@ var app = new Vue({
                     },
                     //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
                     viewControl: {
-                         minBeta: 0, //最小旋转角度
-                         maxBeta: 90, //最大旋转角度
+                        minBeta: 0, //最小旋转角度
+                        maxBeta: 90, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
@@ -525,36 +530,63 @@ var app = new Vue({
                 },
                 series: []
             };
-            let _series = []
+            let _series = [],_copySeries = []
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
                     _series.push({
                         type: 'line3D', // line3D scatter3D
                         name: item[0][1],
-                        //itemStyle: {
-                        //    color: 'rgb(165,  0, 38)'
-                        //},
-                        //label: {  //当type为scatter3D时有label出现
-                        //    show: false,
-                        //    position: 'bottom',
-                        //    distance: 0,
-                        //    textStyle: {
-                        //        color: '#ffffff',
-                        //        fontSize: 12,
-                        //        borderWidth: 0,
-                        //        borderColor: '#c6c6c6',
-                        //        backgroundColor: 'transparent'
-                        //    }
-                        //},
-                        data: item    //每个区的数据一一对应
+                        data: item,    //每个区的数据一一对应
+                        //tooltip: {
+                        //    show: false
+                        //}
                     })
                 }
             })
+            _copySeries = JSON.parse(JSON.stringify(_series))
             chartOption.series = _series
             //console.log('chartOption', chartOption)
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
+  
+             //监听图表鼠标移入事件 mouseover globalout
+            chartInstance.on('mouseover', (params) => {
+                let _sFilter = _copySeries.filter(item => {
+                    if (item.type === 'scatter3D') return true
+                    return false
+                })
+                //console.log('params', _sFilter, params)
+                if (_sFilter && _sFilter.length > 0) {
+                    _sFilter.forEach(item => {
+                        let _sFindIndex = _copySeries.findIndex(el => item.data == el.data)
+                        _copySeries.splice(_sFindIndex, 1)
+                    })
+                }
+                // 添加对应的 scatter3D
+                _copySeries.push({
+                    type: 'scatter3D',
+                    name: params.seriesName,
+                    symbol: 'circle',  // 设置圆点样式为圆形
+                    symbolSize: 10,  // 设置圆点的大小
+                    label: {
+                        show: false,  // 设置 label 显示
+                        formatter: function (params) {
+                            return '';  // 将 label 内容固定为 ""
+                        }
+                    },
+                    data: [params.data]    //每个区的数据一一对应
+                })
+                chartInstance.setOption({ series: _copySeries });
+            })
+            //监听图表鼠标移出事件
+            chartInstance.on('mouseout', (params) => {
+                /*console.log('globalout', _series, _sFilter, params)*/
+                _copySeries = JSON.parse(JSON.stringify(_series))
+                //chartOption.series = _series
+                //this.chartInstance.setOption(chartOption);
+                chartInstance.setOption({ series: _series });
+            })
         },
         // 输出 获取评分趋势 图表数据
         async getScoringTrendData() {
@@ -575,13 +607,13 @@ var app = new Vue({
                             let _zData = []
                             item.forEach(el => {
                                 if (el) {
-                                    if (_xData.indexOf(el.y) === -1) {
+                                    if (_xData.indexOf(`${el.y}`) === -1) {
                                         _xData.push(`${el.y}`)
                                     }
-                                    if (_yData.indexOf(el.x) === -1) {
+                                    if (_yData.indexOf(`${el.x}`) === -1) {
                                         _yData.push(`${el.x}`)
                                     }
-                                    _zData.push([`${el.y}`, `${el.x}`, el.z, el.data])
+                                    _zData.push([`${el.y}`, `${el.x}`, `${el.z}`, el.data])
                                 }
                             })
                             _seriesData.push(_zData)
@@ -589,8 +621,12 @@ var app = new Vue({
                     })
                     //console.log('_xData',_xData,_yData, _seriesData)
                     this.chartData = {
-                        xData: _xData,
-                        yData: _yData,
+                        xData: _xData.sort((a, b) => {
+                            return a - b
+                        }),
+                        yData: _yData.sort((a, b) => {
+                            return a - b
+                        }),
                         seriesData: _seriesData
                     }
                 }
