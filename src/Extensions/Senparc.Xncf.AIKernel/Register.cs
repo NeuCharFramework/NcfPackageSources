@@ -83,17 +83,20 @@ namespace Senparc.Xncf.AIKernel
 
         private static SenparcAiSetting SenparcAiSetting { get; set; }
 
+        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        {
+            //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
+
+            SenparcAiSetting ??= new SenparcAiSetting();
+            configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
+
+            return base.AddXncfModule(services, configuration, env);
+        }
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             registerService.UseSenparcAI(SenparcAiSetting);
 
             return base.UseXncfModule(app, registerService);
-        }
-
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
-        {
-            //services.AddScoped<ColorAppService>();
-            return base.AddXncfModule(services, configuration, env);
         }
     }
 }

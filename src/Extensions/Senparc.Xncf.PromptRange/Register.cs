@@ -110,12 +110,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptResultService>();
             services.AddScoped<LlModelService>();
 
-            //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
-
-            SenparcAiSetting ??= new SenparcAiSetting();
-            configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
-
-            services.AddAutoMapper(z =>
+             services.AddAutoMapper(z =>
             {
                 z.CreateMap<PromptItem, PromptItemDto>().ReverseMap();
                 z.CreateMap<PromptResult, PromptResultDto>().ReverseMap();
