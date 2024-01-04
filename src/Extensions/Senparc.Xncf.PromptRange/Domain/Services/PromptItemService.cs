@@ -232,14 +232,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
-        public async Task<PromptItemDto> Get(int id)
-        {
-            var item = await this.GetObjectAsync(p => p.Id == id) ??
-                       throw new NcfExceptionBase($"找不到{id}对应的promptItem");
-
-            return this.Mapper.Map<PromptItemDto>(item);
-        }
-
 
         /// <summary>
         /// 分数趋势图（依据时间）
@@ -253,7 +245,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             List<int> avgScoreHistoryList = new List<int>();
             List<int> maxScoreHistoryList = new List<int>();
 
-            var curItem = await this.Get(promptItemId);
+            var curItem = await this.GetAsync(promptItemId);
 
             // 获取同一个靶道下的所有打过分的item
             List<PromptItem> fullList = await this.GetFullListAsync(
@@ -342,6 +334,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await this.SaveObjectAsync(promptItem);
 
             return this.Mapper.Map<PromptItemDto>(promptItem);
+        }
+
+        public async Task<PromptItemDto> GetWithVersionAsync(string fullVersion)
+        {
+            var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
+                       throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
+
+            return this.Mapper.Map<PromptItemDto>(item);
         }
     }
 }

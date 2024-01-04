@@ -57,17 +57,6 @@
             <param name="promptItemId"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
-            <summary>
-            传入promptItem，生成结果
-            暂时只能在PromptItemAppService中调用
-            采用了SemanticKernel来实现
-            </summary>
-            <param name="promptItem"></param>
-            <returns></returns>
-            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.UpdateEvalScoreAsync(System.Int32)">
             <summary>
             更新promptItem的平均分和最高分
@@ -656,7 +645,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest)">
             <summary>
             添加模型
             </summary>
@@ -688,17 +677,55 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
+            <summary>
+            Add方法用于添加一个新的PromptItem，并根据请求中的IsDraft字段决定是否立即生成结果
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.String)">
             <summary>
-            列出所有的promptItem的id和name
+            列出 靶场名称 下所有的promptItem的id和name
             </summary>
+            <param name="rangeName">靶场名称（必须）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetRangeNameList">
+            <summary>
+            列出所有的promptItem的RangeName
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Get(System.Int32)">
+            <summary>
+            根据主键 ID　获取 PromptItem 所有信息
+            </summary>
+            <param name="id">主键 ID </param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetByVersion(System.String)">
+            <summary>
+            根据 完整版号 获取 PromptItem 所有信息
+            </summary>
+            <param name="fullVersion">完整版号</param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetTacticTree(System.String)">
             <summary>
             获取版本树
             </summary>
+            <param name="rangeName">靶场名称</param>
             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Del(System.Int32)">
+            <summary>
+            根据主键 ID　删除 PromptItem 所有信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">
             <summary>
@@ -746,32 +773,32 @@
             用于传送统计数据的接口服务
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Alias">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.Alias">
             <summary>
             代号
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.DeploymentName">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.DeploymentName">
             <summary>
             名称
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Endpoint">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.Endpoint">
             <summary>
             Endpoint（必须）
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ModelType">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.ModelType">
             <summary>
             模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ApiKey">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.ApiKey">
             <summary>
             ApiKey
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.OrganizationId">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.OrganizationId">
             <summary>
             OrganizationId
             </summary>
@@ -814,6 +841,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Developer">
             <summary>
             用户名
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.NickName">
+            <summary>
+            昵称
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FullVersion">
@@ -870,6 +902,46 @@
             <summary>
             x,y,z
             
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.Id">
+            <summary>
+            主键 ID
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.RangeName">
+            <summary>
+            靶场名称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.FullVersion">
+            <summary>
+            完整版号
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.EvalAvgScore">
+            <summary>
+            评估参数, 平均分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.EvalMaxScore">
+            <summary>
+            评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.IsDraft">
+            <summary>
+            是否是草稿
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.NickName">
+            <summary>
+            昵称
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.MaxToken">

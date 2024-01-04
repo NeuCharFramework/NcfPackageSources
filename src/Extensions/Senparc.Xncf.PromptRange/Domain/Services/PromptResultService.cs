@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
@@ -18,7 +17,6 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.Models;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -44,14 +42,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
         {
-            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
+            // var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId)
+            //     ?? throw new NcfExceptionBase($"未找到{promptItemId}对应的提示词");
+
             var resultList = (await this.GetFullListAsync(
                 p => p.PromptItemId == promptItemId,
                 p => p.Id,
                 OrderingType.Ascending));
+
             var dtoList = resultList
                 .Select(p => this.Mapper.Map<PromptResultDto>(p))
                 .ToList();
+
             return dtoList;
         }
 
@@ -62,11 +64,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
                         ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
 
-
-            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
-            // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
-            //
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
@@ -82,8 +79,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             const string completionPrompt = @"请根据提示输出对应内容：
 {{$input}}";
 
-            var skHelper = new SemanticKernelHelper(aiSettings);
-            var handler = new SemanticAiHandler(skHelper);
+            // 构建生成AI设置
+            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+
+            // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
+            var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
             var iWantToRun =
                 handler.IWantTo()
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
