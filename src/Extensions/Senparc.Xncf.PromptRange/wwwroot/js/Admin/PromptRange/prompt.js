@@ -155,28 +155,29 @@ var app = new Vue({
             modelFormVisible: false,
             modelFormSubmitLoading: false,
             modelForm: {
+                alias: "", // string
                 modelType: "", // string
-                name: "", // string
+                deploymentName: "", // string
                 apiVersion: "", // string
                 apiKey: "", // string
                 endpoint: "", // string
                 organizationId: "", // string
             },
             modelTypeOpt: [{
-                value: 'OpenAI',
+                value: '8',
                 label: 'OpenAI',
                 disabled: false
             }, {
-                value: 'AzureOpenAI',
+                value: '16',
                 label: 'AzureOpenAI',
                 disabled: false
             }, {
-                value: 'NeuCharAI',
+                value: '4',
                 label: 'NeuCharAI',
                 disabled: false
             }, {
-                value: 'HugginFace',
-                label: 'HugginFace',
+                value: '32',
+                label: 'HuggingFace',
                 disabled: false
             }],
             // 表单校验规则
@@ -199,7 +200,10 @@ var app = new Vue({
                 modelType: [
                     {required: true, message: '请选择模型类型', trigger: 'change'}
                 ],
-                name: [
+                alias: [
+                    {required: true, message: '请输入模型别名', trigger: 'blur'}
+                ],
+                deploymentName: [
                     {required: true, message: '请输入模型名称', trigger: 'blur'}
                 ],
                 apiVersion: [
@@ -606,6 +610,9 @@ var app = new Vue({
         },
         // 靶道选择变化
         promptChangeHandel(val, itemKey, oldVal) {
+            // 靶道变化时，重置打靶按钮
+            this.sendBtnText = '打靶'
+            this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -687,6 +694,8 @@ var app = new Vue({
                 suffix: '',
                 variableList: []
             }
+            this.sendBtnText = '打靶'
+            this.numsOfResults = 1
             // 获取靶道列表
             await this.getPromptOptData()
             // 获取分数趋势图表数据
@@ -806,9 +815,14 @@ var app = new Vue({
                             return item
                         })
                         //console.log('选择正确的靶场')
-                        this.getPromptOptData(id)
-                        // 获取分数趋势图表数据
-                        this.getScoringTrendData()
+                        //提交数据后，选择正确的靶场和靶道
+                        this.getFieldList().then(() => {
+                            this.promptField=fullVersion.split('-')[0]
+                            this.getPromptOptData(id)
+                            // 获取分数趋势图表数据
+                            this.getScoringTrendData()
+                        })
+                  
                         if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                             //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                             this.dealRapicFireHandel(this.numsOfResults - 1)
@@ -1028,7 +1042,8 @@ var app = new Vue({
             if (scoreType === '1') {
                 if (this.promptDetail.modelId) {
                     // 在promptOpt是否存在
-                    let _index = this.promptOpt.findIndex(item => item.value == this.promptDetail.modelId)
+                    console.log(this.promptDetail)
+                    let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
                     if (_index === -1) {
                         this.$message({
                             message: '模型已被删除，请选择模型后重新打靶！',
@@ -1114,7 +1129,7 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid && !isDraft) {
+            if (!isDraft && this.sendBtnText!=='连发') {
                 this.tacticalFormVisible = true
                 return
             }
@@ -1230,12 +1245,12 @@ var app = new Vue({
                     })
                     //提交数据后，选择正确的靶场和靶道
                     this.getFieldList().then(() => {
+                        this.promptField=fullVersion.split('-')[0]
                         this.getPromptOptData(id)
+                        // 获取分数趋势图表数据
+                        this.getScoringTrendData()
                     })
-
-
-                    // 获取分数趋势图表数据
-                    this.getScoringTrendData()
+                    
                     if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                         //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                         this.dealRapicFireHandel(this.numsOfResults - 1)
@@ -1272,7 +1287,7 @@ var app = new Vue({
             for (let i = 0; i < howmany; i++) {
                 promises.push(this.rapidFireHandel());
             }
-            await Promise.all(promises);
+            await Promise.all(promises)
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
@@ -1283,6 +1298,10 @@ var app = new Vue({
             return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
+                if (!res.data.success){
+                    this.$message.error(res.data.errorMessage)
+                    return 
+                }
                 this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
                 this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                 //输出列表 
@@ -1427,7 +1446,7 @@ var app = new Vue({
         },
         deleteModel(item) {
             //删除模型 confirm
-            this.$confirm(`此操作将永久删除模型【${item.name}】, 是否继续?`, '提示', {
+            this.$confirm(`此操作将永久删除模型【${item.alias}】, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -1500,7 +1519,7 @@ var app = new Vue({
                 this.modelOpt = _optList.map(item => {
                     return {
                         ...item,
-                        label: item.name,
+                        label: item.alias,
                         value: item.id,
                         disabled: false
                     }
@@ -1512,8 +1531,9 @@ var app = new Vue({
         // 新增模型 dialog 关闭
         modelFormCloseDialog() {
             this.modelForm = {
+                alias: "", // string
                 modelType: "", // string
-                name: "", // string
+                deploymentName: "", // string
                 apiVersion: "", // string
                 apiKey: "", // string
                 endpoint: "", // string
@@ -1526,11 +1546,23 @@ var app = new Vue({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm, {customAlert: true})
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add',
+                        {
+                            ...this.modelForm,
+                            modelType:parseInt(this.modelForm.modelType)
+                        },
+                        {customAlert: true})
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
-                        this.getModelOptData()
+                        await this.getModelOptData().then(()=>{
+                            this.modelid = res.data.data.id
+                        })
+                        // 提示添加成功
+                        this.$message({
+                            message: '添加成功！',
+                            type: 'success'
+                        })
                         // 关闭dialog
                         this.modelFormVisible = false
                     } else {

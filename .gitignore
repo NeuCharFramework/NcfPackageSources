@@ -72,5 +72,4 @@ obj/
 /src/Extensions/Senparc.Xncf.PromptRange/objForNcf
 /src/DevelopmentTools/Senparc.Web.DatabasePlant/App_Data/Database/SenparcConfig.config
 SenparcConfig.Development.config
-
-.idea/
+/src/.idea/.idea.NcfPackageSources/.idea
