@@ -14,6 +14,11 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
+using Senparc.AI.Kernel;
+using Senparc.CO2NET.RegisterServices;
+using System.Reflection;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -77,6 +82,14 @@ namespace Senparc.Xncf.AIKernel
         }
         #endregion
 
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
+        }
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<ColorAppService>();
