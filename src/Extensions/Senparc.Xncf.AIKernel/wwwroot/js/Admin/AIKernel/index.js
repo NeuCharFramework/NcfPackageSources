@@ -177,12 +177,17 @@ var app=new Vue({
                     params:{
                         id:row.id
                     }
-                }).then(res=>{
+                }).then(async res => {
                     this.$message({
-                        type: res.data.success?'success':'error',
-                        message: res.data.success?'删除成功!':'删除失败'
+                        type: res.data.success ? 'success' : 'error',
+                        message: res.data.success ? '删除成功!' : '删除失败'
                     });
-                    this.getDataList()
+                    await this.getDataList().then(()=>{
+                        if (this.tableData.length === 0 && this.page.page > 1) {
+                            this.page.page--;
+                            this.getDataList();
+                        }
+                    })
                 })
 
             }).catch(() => {
