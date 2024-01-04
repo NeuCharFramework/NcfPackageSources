@@ -1538,8 +1538,7 @@ var app = new Vue({
             })
         },
         toAIKernel(){
-          // TODO open url of AI kernel
-            
+            window.open('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
         },
         // prompt请求参数 删除变量行btn
         deleteVariableBtn(index) {
