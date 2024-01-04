@@ -124,11 +124,6 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// 最大令牌
         /// </summary>
         public int MaxToken { get; set; }
-
-        /// <summary>
-        /// 是否显示
-        /// </summary>
-        public bool Show { get; set; }
     }
 
     public class AIModel_EditRequest
