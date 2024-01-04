@@ -1183,7 +1183,7 @@ var app = new Vue({
                 })
                 return
             }
-            if (!isDraft && this.sendBtnText!=='连发') {
+            if (this.promptid || this.sendBtnText!=='连发'||(!this.promptid&&this.sendBtnText==="保存草稿")) {
                 this.tacticalFormVisible = true
                 return
             }
