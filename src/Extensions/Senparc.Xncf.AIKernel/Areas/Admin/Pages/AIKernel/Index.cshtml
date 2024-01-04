@@ -26,12 +26,11 @@
         <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
         <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
-        <el-table-column prop="organizationId" label="组织Id" width="auto"></el-table-column>
         <el-table-column prop="note" label="备注" width="auto"></el-table-column>
         <el-table-column prop="show" label="显示" width="auto">
             <template slot-scope="scope">
-                <el-tag v-if="scope.row.show" type="success">显示</el-tag>
-                <el-tag v-else type="danger">隐藏</el-tag>
+                <el-tag v-if="scope.row.show" type="success">是</el-tag>
+                <el-tag v-else type="danger">否</el-tag>
             </template>
         </el-table-column>
         <el-table-column prop="addTime" label="添加时间" width="auto">
@@ -91,7 +90,7 @@
             <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'">
                 <el-input v-model="addForm.endpoint"></el-input>
             </el-form-item>
-            <el-form-item label="组织Id"  v-if="addForm.aiPlatform==='8'">
+            <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'">
                 <el-input v-model="addForm.organizationId"></el-input>
             </el-form-item>
             <el-form-item label="备注">
@@ -136,7 +135,7 @@
                     <el-option label="HuggingFace" value="32"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="组织Id">
+            <el-form-item label="组织ID">
                 <el-input v-model="editForm.organizationId"></el-input>
             </el-form-item>
             @* ,[ApiKey] *@
