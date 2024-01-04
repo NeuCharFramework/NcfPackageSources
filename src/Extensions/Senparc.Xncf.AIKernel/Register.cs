@@ -14,6 +14,9 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.AI.Kernel;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -59,6 +62,7 @@ namespace Senparc.Xncf.AIKernel
             }
         }
 
+
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region 删除数据库（演示）
@@ -76,6 +80,15 @@ namespace Senparc.Xncf.AIKernel
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
+
+        private static SenparcAiSetting SenparcAiSetting { get; set; }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            registerService.UseSenparcAI(SenparcAiSetting);
+
+            return base.UseXncfModule(app, registerService);
+        }
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
