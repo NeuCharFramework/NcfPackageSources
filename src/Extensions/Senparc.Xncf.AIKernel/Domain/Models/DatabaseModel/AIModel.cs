@@ -79,12 +79,8 @@ namespace Senparc.Xncf.AIKernel.Models
         /// 是否展示
         /// </summary>
         public bool Show { get; private set; }
-
-        private AIModel(string alias)
-        {
-            Alias = alias;
-        }
-
+        
+        
         public AIModel(string deploymentName, string endpoint, AiPlatform aiPlatform, string organizationId, string apiKey,
             string apiVersion, string note, int maxToken, string alias)
         {
@@ -97,6 +93,8 @@ namespace Senparc.Xncf.AIKernel.Models
             Note = note;
             MaxToken = maxToken;
             Alias = alias;
+            Show = true;
+            IsShared = false;
         }
 
         public AIModel(AIModelDto llmModelDto)
@@ -111,6 +109,8 @@ namespace Senparc.Xncf.AIKernel.Models
             Note = llmModelDto.Note;
             MaxToken = llmModelDto.MaxToken;
 
+            Show = true;
+            IsShared = false;
 
             // TextCompletionModelName = llmModelDto.TextCompletionModelName;
             // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
@@ -123,7 +123,7 @@ namespace Senparc.Xncf.AIKernel.Models
         {
         }
 
-        public AIModel Switch(bool show)
+        public AIModel SwitchShow(bool show)
         {
             Show = show;
             return this;
@@ -133,7 +133,7 @@ namespace Senparc.Xncf.AIKernel.Models
         {
             this.Alias = alias;
             this.IsShared = isShared;
-            return Switch(show);
+            return SwitchShow(show);
         }
 
         public string GetModelId()
