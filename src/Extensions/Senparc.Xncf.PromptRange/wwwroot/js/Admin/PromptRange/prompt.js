@@ -253,9 +253,11 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶道列表
-        this.getFieldList()
-        // 获取模型列表
-        this.getModelOptData()
+        setTimeout(()=>{
+            this.getFieldList()
+            // 获取模型列表
+            this.getModelOptData()
+        },100)
         // 获取分数趋势图
         // this.getScoringTrendData()
         // 图表自适应
@@ -348,6 +350,22 @@ var app = new Vue({
             //    modal.appendChild(btn);
             //    document.body.appendChild(modal);
             //}, 0);
+        },
+        copyInfo(){
+          // 找到promptOpt里面的promptid
+            const promptItem = this.promptOpt.find(item => item.promptid === this.promptid)
+            const fullVersion = promptItem.fullVersion
+            // 把结果复制到剪切板
+            const input = document.createElement('input')
+            input.setAttribute('readonly', 'readonly')
+            input.setAttribute('value', fullVersion)
+            document.body.appendChild(input)
+            input.select()
+            input.setSelectionRange(0, 9999)
+            if (document.execCommand('copy')) {
+                document.execCommand('copy')
+                this.$message.success(`复制【${fullVersion}】成功`)
+            }
         },
         // 格式化时间
         formatDate(d) {
@@ -1519,6 +1537,9 @@ var app = new Vue({
                 value: ''
             })
         },
+        toAIKernel(){
+            window.open('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
+        },
         // prompt请求参数 删除变量行btn
         deleteVariableBtn(index) {
             this.promptParamForm.variableList.splice(index, 1)
@@ -1547,7 +1568,7 @@ var app = new Vue({
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetIdAndName')
+            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync')
             //console.log('getModelOptData:', res)
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
