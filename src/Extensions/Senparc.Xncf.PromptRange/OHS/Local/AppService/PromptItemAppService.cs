@@ -64,7 +64,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        var promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 

@@ -27,17 +27,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            AIModelService llModelService,
+            AIModelService aiModelService,
             PromptItemService promptItemService) : base(repo,
             serviceProvider)
         {
-            _llModelService = llModelService;
+            _aiModelService = aiModelService;
             _promptItemService = promptItemService;
         }
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
-        private readonly AIModelService _llModelService;
+        private readonly AIModelService _aiModelService;
 
 
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
@@ -61,7 +61,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             // 从数据库中获取模型信息
-            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
+            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
                         ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
 
             //定义 AI 接口调用参数和 Token 限制等
@@ -266,7 +266,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // get model by promptItem
-            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
 
             // build aiSettings by model
             var aiSettings = this.BuildSenparcAiSetting(model);
