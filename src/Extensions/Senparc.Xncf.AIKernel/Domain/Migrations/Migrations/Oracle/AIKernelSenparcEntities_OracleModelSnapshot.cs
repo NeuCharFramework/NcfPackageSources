@@ -59,7 +59,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
                         .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("Endpoint")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("NVARCHAR2(250)");
 
