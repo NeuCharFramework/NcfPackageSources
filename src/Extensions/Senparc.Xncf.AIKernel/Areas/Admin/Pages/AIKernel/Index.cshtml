@@ -25,7 +25,15 @@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
-        <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
+        <el-table-column prop="aiPlatform" label="平台" width="auto">
+            <template slot-scope="scope">
+                <span v-if="scope.row.aiPlatform===4">NeuCharAI</span>
+                <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===16">AzureOpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
+                <span v-else type="danger">未知</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="note" label="备注" width="auto"></el-table-column>
         <el-table-column prop="show" label="显示" width="auto">
             <template slot-scope="scope">
