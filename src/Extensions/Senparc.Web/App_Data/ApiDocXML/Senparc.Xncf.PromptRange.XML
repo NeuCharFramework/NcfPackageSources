@@ -57,17 +57,6 @@
             <param name="promptItemId"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.GenerateResultAsync(Senparc.Xncf.PromptRange.PromptItem)">
-            <summary>
-            传入promptItem，生成结果
-            暂时只能在PromptItemAppService中调用
-            采用了SemanticKernel来实现
-            </summary>
-            <param name="promptItem"></param>
-            <returns></returns>
-            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.UpdateEvalScoreAsync(System.Int32)">
             <summary>
             更新promptItem的平均分和最高分
@@ -87,16 +76,6 @@
             <para>Value：Function Name List</para>
             </param>
             <param name="functionPiple">functionPiple</param>
-            <returns></returns>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.SkChatCompletionHelperService.WithHuggingFaceCompletionService(Senparc.Xncf.PromptRange.PromptItem,Senparc.Xncf.PromptRange.Models.LlModel)">
-            <summary>
-            先用sk的原生Connector
-            调用hf模型,
-            **模型接口需要遵循SK的规范**
-            </summary>
-            <param name="promptItem"></param>
-            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Id">
@@ -656,7 +635,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest)">
             <summary>
             添加模型
             </summary>
@@ -746,32 +725,32 @@
             用于传送统计数据的接口服务
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Alias">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.Alias">
             <summary>
             代号
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.DeploymentName">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.DeploymentName">
             <summary>
             名称
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.Endpoint">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.Endpoint">
             <summary>
             Endpoint（必须）
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ModelType">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.ModelType">
             <summary>
             模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.ApiKey">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.ApiKey">
             <summary>
             ApiKey
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_AddRequest.OrganizationId">
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.OrganizationId">
             <summary>
             OrganizationId
             </summary>

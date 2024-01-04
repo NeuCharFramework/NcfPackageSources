@@ -94,10 +94,15 @@ namespace Senparc.Xncf.AIKernel
 
             return base.AddXncfModule(services, configuration, env);
         }
+
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             registerService.UseSenparcAI(SenparcAiSetting);
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
             return base.UseXncfModule(app, registerService);
         }
     }
