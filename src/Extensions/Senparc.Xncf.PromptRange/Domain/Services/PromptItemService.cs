@@ -86,9 +86,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                 if (request.IsNewTactic)
                 {
+                    // 目标版号的父 T 应该是当前版本的父 T
                     var parentTac = oldPrompt.ParentTac;
                     List<PromptItem> fullList = await base.GetFullListAsync(p =>
-                        p.FullVersion.StartsWith($"{name}-T{parentTac}") && p.FullVersion.EndsWith("A1")
+                        p.RangeName == name &&
+                        p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
                     toSavePromptItem = new PromptItem(
                         rangeName: name,
@@ -100,9 +102,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
                 else if (request.IsNewSubTactic)
                 {
+                    // 目标版号的父 T 应该是当前版本的 T
                     var parentTac = oldPrompt.Tactic;
-                    List<PromptItem> fullList = await base.GetFullListAsync(p =>
-                        p.FullVersion.StartsWith($"{name}-T{parentTac}.") && p.FullVersion.EndsWith("A1")
+                    List<PromptItem> fullList = await base.GetFullListAsync(
+                        p => p.RangeName == name &&
+                             p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
                     toSavePromptItem = new PromptItem(
                         rangeName: name,
