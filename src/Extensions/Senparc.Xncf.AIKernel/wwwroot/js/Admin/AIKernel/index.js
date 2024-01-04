@@ -37,7 +37,7 @@ var app=new Vue({
             total:0,
             rules: {
                 alias: [
-                    {required: true, message: '请选择别名', trigger: 'change'}
+                    {required: true, message: '请输入别名', trigger: 'change'}
                 ],
                 aiPlatform: [
                     {required: true, message: '请选择模型类型', trigger: 'change'}
@@ -150,9 +150,19 @@ var app=new Vue({
         async editModelSubmit(){
             this.$refs.editForm.validate(async (valid) => {
                 if (valid) {
-
+        
                     this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
                     this.editForm.maxToken = parseInt(this.addForm.maxToken)
+                    // clear empty value
+                    for (const key in this.editForm) {
+                        if (this.editForm.hasOwnProperty(key)) {
+                            const element = this.editForm[key];
+                            if(element === ''|| element === null || element === undefined|| element === '**********'){
+                                delete this.editForm[key]
+                            }
+                        }
+                    }
+                    
                     await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync', {
                         ...this.editForm
                     }).then(res => {
@@ -176,7 +186,9 @@ var app=new Vue({
             this.editFormDialogVisible = true;
             this.editForm = {
                 ...row,
-                aiPlatform:row.aiPlatform.toString()
+                aiPlatform:row.aiPlatform.toString(),
+                apiKey:row.apiKey===''?'**********':row.apiKey,
+                organizationId:row.organizationId===''?'**********':row.organizationId,
             };
         },
         deleteModel(row){

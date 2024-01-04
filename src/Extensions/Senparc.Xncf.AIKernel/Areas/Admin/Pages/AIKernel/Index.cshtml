@@ -93,7 +93,7 @@
                 <el-input v-model="addForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
-                <el-input v-model="addForm.organizationId"></el-input>
+                <el-input v-model="addForm.organizationId" type="password"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
                 <el-input v-model="addForm.note"></el-input>
@@ -146,7 +146,7 @@
                 <el-input v-model="editForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
-                <el-input v-model="editForm.organizationId"></el-input>
+                <el-input v-model="editForm.organizationId" type="password"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
                 <el-input v-model="editForm.note"></el-input>
