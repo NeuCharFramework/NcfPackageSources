@@ -5,6 +5,10 @@
     Layout = "_Layout_Vue";
 }
 
+@section Style{
+    <link href="~/css/Admin/AIKernel/index.css" rel="stylesheet" />
+}
+
 @section breadcrumbs{
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>AI 核心模块</el-breadcrumb-item>
@@ -13,17 +17,6 @@
 
 <div>
     <el-container>
-        <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
-        </el-header>
-
-        <!-- 此处也可以加 SideMenu -->
-        @*<el-aside width="200px">
-            <el-menu background-color="#304156" default-active="1"
-                        text-color="#bfcbd9" active-text-color="#409eff">
-                @(await Html.PartialAsync("_SideMenu"))
-            </el-menu>
-        </el-aside>*@
         <el-main>
             <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px">
                 <h1>模型列表</h1>
@@ -38,7 +31,12 @@
                 <el-table-column prop="aiPlatform" label="平台" width="auto"></el-table-column>
                 <el-table-column prop="organizationId" label="组织" width="auto"></el-table-column>
                 <el-table-column prop="note" label="备注" width="auto"></el-table-column>
-                <el-table-column prop="show" label="显示" width="auto"></el-table-column>
+                <el-table-column prop="show" label="显示" width="auto">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.show" type="success">显示</el-tag>
+                        <el-tag v-else type="danger">隐藏</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="addTime" label="添加时间" width="auto">
                     <template slot-scope="scope">
                         {{ dateformatter(scope.row.addTime) }}
@@ -67,7 +65,7 @@
     </el-container>
 
     @* dialog for 添加模型 *@
-    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%">
+    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px">
             <el-form-item label="别名">
                 <el-input v-model="addForm.alias"></el-input>
@@ -118,7 +116,7 @@
         </span>
     </el-dialog>
     @* dialog for 编辑模型 *@
-    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%">
+    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px">
             <el-form-item label="别名">
                 <el-input v-model="addForm.alias"></el-input>
@@ -176,184 +174,6 @@
     </el-dialog>
 </div>
 
-
 @section scripts{
-
-    <script>
-        var app=new Vue({
-            el: "#app",
-            data(){
-                return {
-                    page:{
-                        page:1,
-                        size:10
-                    },
-                    tableLoading:true,
-                    tableData: [],
-                    addFormDialogVisible: false,
-                    addForm:{
-                       "deploymentName": "",
-                       "endpoint": "",
-                       "aiPlatform": '4',
-                       "organizationId": "",
-                       "apiKey": "",
-                       "apiVersion": "",
-                       "note": "",
-                       "maxToken": 0,
-                       "show": true
-                    },
-                    editFormDialogVisible: false,
-                    editForm:{
-                       "deploymentName": "",
-                       "endpoint": "",
-                       "aiPlatform": '4',
-                       "organizationId": "",
-                       "apiKey": "",
-                       "apiVersion": "",
-                       "note": "",
-                       "maxToken": 0,
-                       "show": true
-                    },
-                    total:0
-                  
-                }
-            },
-            async mounted () {
-                //wait for page rendered then init
-                setTimeout(async ()=>{
-                    await this.init();
-                },3000)
-            },
-            methods:{
-                async init(){
-                    await this.getDataList();
-                },
-                handleSizeChange(val) {
-                    this.page.size=val;
-                    this.getDataList();
-                },
-                handleCurrentChange(val) {
-                    this.page.page=val;
-                    this.getDataList();
-                },
-                async getDataList(){
-                    //todo get data from api
-                    // /api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync'
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{
-                          "page": this.page.page,
-                          "size": this.page.size,
-                    })
-                    .then(res=>{
-                        console.log(res)
-                        this.tableData=res.data.data.data;
-                        this.total=res.data.data.total;
-                        this.tableLoading = false
-                    })
-                },    
-                addModel(){
-                    this.addFormDialogVisible = true;
-                },
-                async addModelSubmit(){
-                    this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
-                    this.addForm.maxToken = parseInt(this.addForm.maxToken)
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',{
-                        ...this.addForm
-                    }
-                    ).then(res=>{
-                            this.$message({
-                                     type: res.data.success?'success':'error',
-                                     message: res.data.success?'添加成功!':'添加失败'
-                            });
-                            this.getDataList()
-                            this.clearAddForm()
-                            this.addFormDialogVisible = false;
-                    })
-                   
-                },
-                clearAddForm(){
-                    this.addForm={
-                       "deploymentName": "",
-                       "endpoint": "",
-                       "aiPlatform": '4',
-                       "organizationId": "",
-                       "apiKey": "",
-                       "apiVersion": "",
-                       "note": "",
-                       "maxToken": 0,
-                       "show": true
-                    }
-                },
-                clearEditForm(){
-                    this.editForm={
-                        "deploymentName": "",
-                       "endpoint": "",
-                       "aiPlatform": '4',
-                       "organizationId": "",
-                       "apiKey": "",
-                       "apiVersion": "",
-                       "note": "",
-                       "maxToken": 0,
-                       "show": true
-                    }
-                },
-                async editModelSubmit(){
-                    this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
-                    this.editForm.maxToken = parseInt(this.addForm.maxToken)
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync',{
-                          ...this.editForm
-                    }).then(res=>{
-                            this.$message({
-                                     type: res.data.success?'success':'error',
-                                     message: res.data.success?'添加成功!':'添加失败'
-                            });
-                            this.clearEditForm()
-                            this.getDataList()
-                            this.editFormDialogVisible = false;
-                    })
-                },
-                dateformatter(date){
-                    return new Date(date).toLocaleString()
-                },
-                editModel(row){
-                    this.editFormDialogVisible = true;
-                    this.editForm = row;
-                },
-                deleteModel(row){
-                    this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(async () => {
-                        await service.delete('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.DeleteAsync',{
-                        params:{
-                            id:row.id
-                        }    
-                       }).then(res=>{
-                            this.$message({
-                                 type: res.data.success?'success':'error',
-                                 message: res.data.success?'删除成功!':'删除失败'
-                            });
-                       })
-                  
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });          
-                    });
-                },
-            },
-        });
-    </script>
-    <style>
-        .d-flex{
-            display: flex;
-        }
-        .justify-content-between{
-            justify-content: space-between;
-         } 
-         .align-items-center{
-            align-items: center;
-         }
-    </style>
+    <script src="~/js/Admin/AIKernel/index.js"></script>
 }

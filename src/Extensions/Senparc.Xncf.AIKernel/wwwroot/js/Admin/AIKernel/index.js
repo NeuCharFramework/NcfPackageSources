@@ -1,0 +1,166 @@
+var app=new Vue({
+    el: "#app",
+    data(){
+        return {
+            page:{
+                page:1,
+                size:10
+            },
+            tableLoading:true,
+            tableData: [],
+            addFormDialogVisible: false,
+            addForm:{
+                "deploymentName": "",
+                "endpoint": "",
+                "aiPlatform": '4',
+                "organizationId": "",
+                "apiKey": "",
+                "apiVersion": "",
+                "note": "",
+                "maxToken": 0,
+                "show": true
+            },
+            editFormDialogVisible: false,
+            editForm:{
+                "deploymentName": "",
+                "endpoint": "",
+                "aiPlatform": '4',
+                "organizationId": "",
+                "apiKey": "",
+                "apiVersion": "",
+                "note": "",
+                "maxToken": 0,
+                "show": true
+            },
+            total:0
+
+        }
+    },
+    mounted () {
+        //wait page load
+        setTimeout(async () => {
+            await this.init();
+        },100)
+    },
+    methods:{
+        async init(){
+            await this.getDataList();
+        },
+        async handleSizeChange(val) {
+            this.page.size = val;
+            await this.getDataList();
+        },
+        async handleCurrentChange(val) {
+            this.page.page = val;
+            await this.getDataList();
+        },
+        async getDataList(){
+            //todo get data from api
+            // /api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync'
+            this.tableLoading = true
+            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync',{
+                "page": this.page.page,
+                "size": this.page.size,
+            })
+                .then(res=>{
+                    console.log(res)
+                    this.tableData=res.data.data.data;
+                    this.total=res.data.data.total;
+                    this.tableLoading = false
+                })
+        },
+        addModel(){
+            this.addFormDialogVisible = true;
+        },
+        async addModelSubmit(){
+            this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+            this.addForm.maxToken = parseInt(this.addForm.maxToken)
+            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync',{
+                    ...this.addForm
+                }
+            ).then(res=>{
+                this.$message({
+                    type: res.data.success?'success':'error',
+                    message: res.data.success?'添加成功!':'添加失败'
+                });
+                this.getDataList()
+                this.clearAddForm()
+                this.addFormDialogVisible = false;
+            })
+
+        },
+        clearAddForm(){
+            this.addForm={
+                "deploymentName": "",
+                "endpoint": "",
+                "aiPlatform": '4',
+                "organizationId": "",
+                "apiKey": "",
+                "apiVersion": "",
+                "note": "",
+                "maxToken": 0,
+                "show": true
+            }
+        },
+        clearEditForm(){
+            this.editForm={
+                "deploymentName": "",
+                "endpoint": "",
+                "aiPlatform": '4',
+                "organizationId": "",
+                "apiKey": "",
+                "apiVersion": "",
+                "note": "",
+                "maxToken": 0,
+                "show": true
+            }
+        },
+        async editModelSubmit(){
+            this.editForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+            this.editForm.maxToken = parseInt(this.addForm.maxToken)
+            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync',{
+                ...this.editForm
+            }).then(res=>{
+                this.$message({
+                    type: res.data.success?'success':'error',
+                    message: res.data.success?'添加成功!':'添加失败'
+                });
+                this.clearEditForm()
+                this.getDataList()
+                this.editFormDialogVisible = false;
+            })
+        },
+        dateformatter(date){
+            return new Date(date).toLocaleString()
+        },
+        editModel(row){
+            this.editFormDialogVisible = true;
+            this.editForm = {...row};
+        },
+        deleteModel(row){
+            this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await service.delete('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.DeleteAsync',{
+                    params:{
+                        id:row.id
+                    }
+                }).then(res=>{
+                    this.$message({
+                        type: res.data.success?'success':'error',
+                        message: res.data.success?'删除成功!':'删除失败'
+                    });
+                    this.getDataList()
+                })
+
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+    },
+});
