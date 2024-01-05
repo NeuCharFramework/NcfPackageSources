@@ -17,6 +17,7 @@ using Senparc.CO2NET.RegisterServices;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -100,17 +101,19 @@ namespace Senparc.Xncf.PromptRange
             //services.AddScoped<ColorDto>();
             //services.AddScoped<ColorService>();
             services.AddScoped<PromptService>();
+            services.AddScoped<PromptRangeService>();
             services.AddScoped<PromptItemService>();
             services.AddScoped<PromptResultService>();
             services.AddScoped<LlModelService>();
 
-             services.AddAutoMapper(z =>
+            services.AddAutoMapper(z =>
             {
+                z.CreateMap<PromptRange, PromptRangeDto>().ReverseMap();
                 z.CreateMap<PromptItem, PromptItemDto>().ReverseMap();
                 z.CreateMap<PromptResult, PromptResultDto>().ReverseMap();
-                z.CreateMap<LlModel, LlModelDto>().ReverseMap();
-
-                z.CreateMap<LlModel, LlmModel_GetPageItemResponse>();
+                // z.CreateMap<LlModel, LlModelDto>().ReverseMap();
+                //
+                // z.CreateMap<LlModel, LlmModel_GetPageItemResponse>();
 
                 //TODO:morek
             });

@@ -5,8 +5,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptItem_AddRequest
     {
-        [Required] public bool IsDraft { get; set; }
-
         #region Model Config
 
         /// <summary>
@@ -60,12 +58,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         public int? Id { get; set; }
 
+        public int RangeId { get; set; }
+
         public string Note { get; set; }
 
         public string ExpectedResultsJson { get; set; }
-        
-        public string Prefix { get;  set; }
-        public string Suffix { get;  set; }
-        public string VariableDictJson{ get;  set; }
+
+        public string Prefix { get; set; }
+        public string Suffix { get; set; }
+        public string VariableDictJson { get; set; }
+
+        [Required] public bool IsDraft { get; set; }
     }
 }

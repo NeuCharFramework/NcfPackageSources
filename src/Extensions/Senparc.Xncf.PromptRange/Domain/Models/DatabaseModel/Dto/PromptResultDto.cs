@@ -8,7 +8,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// ID 主键
         /// </summary>
         public int Id { get; set; }
-        
+
         #region LlmModel
 
         /// <summary>
@@ -57,6 +57,12 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// 人类打分，0-100分
         /// </summary>
         public int HumanScore { get; set; }
+
+        /// <summary>
+        /// 最终得分
+        /// </summary>
+        public int FinalScore { get; set; }
+
 
         /// <summary>
         /// 机器人测试期望结果
