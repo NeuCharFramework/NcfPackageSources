@@ -348,6 +348,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptItemDto>(promptItem);
         }
 
+        /// <summary>
+        /// 根据具体版本号，获取模型信息
+        /// </summary>
+        /// <param name="fullVersion"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
         public async Task<PromptItemDto> GetWithVersionAsync(string fullVersion)
         {
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
