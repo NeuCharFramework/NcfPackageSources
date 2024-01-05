@@ -1770,27 +1770,6 @@ var app = new Vue({
                 copyResultData.tacticsStr = vArr[2] || ''
                 this.promptDetail = copyResultData
                 if (overwrite) {
-                    if (copyResultData && copyResultData.expectedResultsJson) {
-                        let _expectedResultsJson = JSON.parse(copyResultData.expectedResultsJson)
-                        this.aiScoreForm = {
-                            resultList: _expectedResultsJson.map((item, index) => {
-                                return {
-                                    id: index + 1,
-                                    label: `预期结果${index + 1}`,
-                                    value: item
-                                }
-                            })
-                        }
-                    } else {
-                        // 如果没有预期结果就重置
-                        this.aiScoreForm = {
-                            resultList: [{
-                                id: 1,
-                                label: '预期结果1',
-                                value: ''
-                            }]
-                        }
-                    }
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
                     // 重新获取图表
