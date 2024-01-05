@@ -85,7 +85,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
             var iWantToRun =
-                handler.IWantTo()
+                handler.IWantTo(aiSettings)
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
@@ -182,10 +182,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             switch (aiSettings.AiPlatform)
             {
                 case AiPlatform.NeuCharAI:
-                    aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        NeuCharOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
                         NeuCharEndpoint = llModel.Endpoint
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
@@ -305,7 +305,7 @@ Human: 江苏的省会是：
             var skHelper = new SemanticKernelHelper(aiSettings);
             var handler = new SemanticAiHandler(skHelper);
             var iWantToRun =
-                handler.IWantTo()
+                handler.IWantTo(aiSettings)
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(scorePrompt, promptParameter)

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.0.11</Version>
+    <Version>0.1.0.16</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -27,7 +27,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.7.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.8.0" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.1.2" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
@@ -53,6 +53,11 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
+    <Folder Include="Domain\Migrations\Migrations.MySql\" />
+    <Folder Include="Domain\Migrations\Migrations.Oracle\" />
+    <Folder Include="Domain\Migrations\Migrations.PostgreSQL\" />
+    <Folder Include="Domain\Migrations\Migrations.Sqlite\" />
+    <Folder Include="Domain\Migrations\Migrations.SqlServer\" />
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
     <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
