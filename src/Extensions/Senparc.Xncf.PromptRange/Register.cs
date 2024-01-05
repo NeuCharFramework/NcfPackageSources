@@ -1,29 +1,22 @@
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.PromptRange.Models;
-using Senparc.Xncf.PromptRange.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
-using Senparc.CO2NET;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
-using AutoMapper;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange
 {
