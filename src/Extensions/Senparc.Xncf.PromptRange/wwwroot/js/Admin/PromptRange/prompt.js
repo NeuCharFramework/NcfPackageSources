@@ -1144,7 +1144,7 @@ var app = new Vue({
                     let _listVal = this.aiScoreForm.resultList.filter(item => item.value)
                     if (_listVal.length > 0) {
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
-                            return item.value
+                            return item
                         })
                         this.saveManualScore(this.outputList[index])
                     } else {
