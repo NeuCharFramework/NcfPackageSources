@@ -138,7 +138,7 @@ var app = new Vue({
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
             fieldForm: {
-                fieldName: ''
+                alias: ''
             },
             // ai 评分标准
             aiScoreFormVisible: false,
@@ -283,24 +283,8 @@ var app = new Vue({
         },
         // 新增靶场
         addPromptField() {
-            // 刷新页面
-            window.location.reload()
             // 如果靶场变化 靶道
-            // if (this.pageChange && this.modelid) {
-            //     // 提示 有数据变化 是否保存为草稿
-            //     this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
-            //         confirmButtonText: '保存',
-            //         cancelButtonText: '不保存',
-            //         type: 'warning'
-            //     }).then(() => {
-            //         // 保存草稿
-            //         this.targetShootHandel(true).then(() => {
-            //             this.resetPageData()
-            //         })
-            //     }).catch(() => {
-            //     });
-            //     return
-            // }
+            this.fieldFormVisible = true
         },
         // 连发次数 数量变化
         changeNumsBtn(command = 1) {
@@ -1690,7 +1674,7 @@ var app = new Vue({
         // 关闭新增靶场 dialog
         fieldFormCloseDialog() {
             this.fieldForm = {
-                fieldName: ''
+                alias: ''
             }
             this.$refs.fieldForm.resetFields();
         },
@@ -1699,15 +1683,20 @@ var app = new Vue({
             this.$refs.fieldForm.validate(async (valid) => {
                 if (valid) {
                     this.fieldFormVisible = false
-                    //this.fieldFormSubmitLoading = true
-                    //// todo 对接接口
-                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.fieldForm)
-                    //this.fieldFormSubmitLoading = false
-                    //if (res.data.success) {
-                    //    // todo 重新获取靶场列表
-                    //    // 关闭dialog
-                    //    this.fieldFormVisible = false
-                    //}
+                    // post 接口 /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync', this.fieldForm)
+                    if (res.data.success) {
+                        // 重新获取靶场列表
+                        this.getFieldList()
+                        // 提示添加成功
+                        this.$message({
+                            message: '添加成功！',
+                            type: 'success'
+                        })
+                        // 关闭dialog
+                        this.fieldFormVisible = false
+                    }
+                    
                 } else {
                     return false;
                 }

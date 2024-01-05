@@ -459,8 +459,8 @@
 @*新增靶场 dialog*@
 <el-dialog title="新增靶场" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
     <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
-        <el-form-item label="靶场名称" prop="fieldName" label-width="130px">
-            <el-input v-model="fieldForm.fieldName" autocomplete="off" placeholder="请输入靶场名称"></el-input>
+        <el-form-item label="靶场名称" prop="alias" label-width="130px">
+            <el-input v-model="fieldForm.alias" autocomplete="off" placeholder="请输入靶场名称"></el-input>
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
