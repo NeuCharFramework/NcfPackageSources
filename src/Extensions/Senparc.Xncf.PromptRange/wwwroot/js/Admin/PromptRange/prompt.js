@@ -667,6 +667,14 @@ var app = new Vue({
             // 靶道变化时，重置打靶按钮
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
+            // 重置 ai 评分标准
+            this.aiScoreForm = {
+                resultList: [{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }]
+            }
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -1842,29 +1850,28 @@ var app = new Vue({
         },
         // ai评分设置 打开 dialog 
         aiScoreFormOpenDialog() {
-            if (this.promptDetail && this.promptDetail.expectedResultsJson) {
-                let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
-                this.aiScoreForm = {
-                    resultList: _expectedResultsJson.map((item, index) => {
-                        return {
-                            id: index + 1,
-                            label: `预期结果${index + 1}`,
-                            value: item
-                        }
-                    })
+            // 判断 this.aiScoreForm.resultList 是否有值
+            let _list = this.aiScoreForm.resultList
+            let _listVal = _list.map(item => item.value)
+            if (_list.length === 1 && _listVal.length === 0) {
+                if (this.promptDetail && this.promptDetail.expectedResultsJson) {
+                    let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
+                    this.aiScoreForm = {
+                        resultList: _expectedResultsJson.map((item, index) => {
+                            return {
+                                id: index + 1,
+                                label: `预期结果${index + 1}`,
+                                value: item
+                            }
+                        })
+                    }
                 }
             }
+            
             this.aiScoreFormVisible = !this.aiScoreFormVisible
         },
         // 关闭ai评分设置 dialog
         aiScoreFormCloseDialog() {
-            this.aiScoreForm = {
-                resultList: [{
-                    id: 1,
-                    label: '预期结果1',
-                    value: ''
-                }]
-            }
             this.$refs.aiScoreForm.resetFields();
         },
         // dialog ai评分设置 提交按钮
