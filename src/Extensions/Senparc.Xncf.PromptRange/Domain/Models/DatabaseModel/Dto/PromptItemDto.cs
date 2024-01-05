@@ -78,10 +78,10 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public int EvalMaxScore { get; set; } = -1;
 
-        // /// <summary>
-        // /// 期望结果Json
-        // /// </summary>
-        // public string ExpectedResultsJson { get; set; }
+        /// <summary>
+        /// 期望结果Json
+        /// </summary>
+        public string ExpectedResultsJson { get; set; }
 
         #endregion
 

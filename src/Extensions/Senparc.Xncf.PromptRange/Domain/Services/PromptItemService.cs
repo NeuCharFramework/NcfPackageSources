@@ -302,17 +302,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             );
         }
 
-        // public async Task<PromptItemDto> UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
-        // {
-        //     var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
-        //                      throw new Exception("未找到prompt");
-        //
-        //     promptItem.UpdateExpectedResultsJson(expectedResults);
-        //
-        //     await this.SaveObjectAsync(promptItem);
-        //
-        //     return this.Mapper.Map<PromptItemDto>(promptItem);
-        // }
+        public async Task<PromptItemDto> UpdateExpectedResultsAsync(int promptItemId, string expectedResults)
+        {
+            var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
+                             throw new Exception("未找到prompt");
+        
+            promptItem.UpdateExpectedResultsJson(expectedResults);
+        
+            await this.SaveObjectAsync(promptItem);
+        
+            return this.Mapper.Map<PromptItemDto>(promptItem);
+        }
 
         public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
         {

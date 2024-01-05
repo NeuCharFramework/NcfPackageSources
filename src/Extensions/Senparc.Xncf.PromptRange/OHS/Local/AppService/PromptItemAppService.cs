@@ -243,20 +243,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             });
         }
 
-        // /// <summary>
-        // /// 设置 AI 自动打分评分标准接口
-        // /// </summary>
-        // /// <param name="promptItemId"></param>
-        // /// <param name="expectedResults"></param>
-        // /// <returns></returns>
-        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        // public async Task<AppResponseBase<PromptRangeDto>> UpdateExpectedResults(int promptRangeId, string expectedResults)
-        // {
-        //     return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-        //         async (response, logger) =>
-        //         {
-        //             return await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults);
-        //         });
-        // }
+        /// <summary>
+        /// 设置 AI 自动打分评分标准接口
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <param name="expectedResults"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+                async (response, logger) =>
+                {
+                    return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
+                });
+        }
     }
 }

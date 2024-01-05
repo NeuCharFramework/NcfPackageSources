@@ -85,11 +85,10 @@ public class PromptItem : EntityBase<int>
     [MaxLength(3)]
     public int EvalMaxScore { get; private set; } = -1;
 
-    // /// <summary>
-    // /// 期望结果Json
-    // /// </summary>
-    // [Obsolete("已废弃，移动到 PromptRange 类中", true)]
-    // public string ExpectedResultsJson { get; private set; }
+    /// <summary>
+    /// 期望结果Json
+    /// </summary>
+    public string ExpectedResultsJson { get; private set; }
 
     #endregion
 
@@ -112,7 +111,7 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 靶场名
+    /// 靶场名 -> 应该采用 PromptRange 中的名字
     /// <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
     /// <example>示例一
     ///     <code>2023.12.14.1</code>
@@ -238,6 +237,13 @@ public class PromptItem : EntityBase<int>
 
     #endregion
 
+    public PromptItem UpdateExpectedResultsJson(string expectedResultsJson)
+    {
+        this.ExpectedResultsJson = expectedResultsJson;
+
+        return this;
+    }
+    
     public PromptItem ShareSwitch(bool show)
     {
         this.IsShare = show;

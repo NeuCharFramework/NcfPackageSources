@@ -226,6 +226,11 @@
             评估参数
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ExpectedResultsJson">
+            <summary>
+            期望结果Json
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Aiming">
             <summary>
             <para>为打靶次数，int</para>
@@ -612,6 +617,11 @@
             评估参数
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ExpectedResultsJson">
+            <summary>
+            期望结果Json
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.FullVersion">
             <summary>
             <para>版本号，格式为 Name-Tactic-Aiming</para> 
@@ -625,7 +635,7 @@
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.RangeName">
             <summary>
-            靶场名
+            靶场名 -> 应该采用 PromptRange 中的名字
             <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
             <example>示例一
                 <code>2023.12.14.1</code>
@@ -691,11 +701,6 @@
         <member name="P:Senparc.Xncf.PromptRange.PromptRange.RangeName">
             <summary>
             靶场名称（来自版号生成）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptRange.ExpectedResultsJson">
-            <summary>
-            期望结果Json
             </summary>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
@@ -788,11 +793,11 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.UpdateExpectedResults(System.Int32,System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">
             <summary>
             设置 AI 自动打分评分标准接口
             </summary>
-            <param name="promptRangeId"></param>
+            <param name="promptItemId"></param>
             <param name="expectedResults"></param>
             <returns></returns>
         </member>

@@ -19,17 +19,17 @@ public class PromptRangeService : ServiceBase<PromptRange>
     {
     }
 
-    public async Task<PromptRangeDto> UpdateExpectedResultsAsync(int promptRangeId, string expectedResults)
-    {
-        var promptRange = await this.GetObjectAsync(p => p.Id == promptRangeId) ??
-                          throw new Exception($"未找到{promptRangeId}对应的靶场");
-
-        promptRange.UpdateExpectedResultsJson(expectedResults);
-
-        await this.SaveObjectAsync(promptRange);
-
-        return this.TransEntityToDto(promptRange);
-    }
+    // public async Task<PromptRangeDto> UpdateExpectedResultsAsync(int promptRangeId, string expectedResults)
+    // {
+    //     var promptRange = await this.GetObjectAsync(p => p.Id == promptRangeId) ??
+    //                       throw new Exception($"未找到{promptRangeId}对应的靶场");
+    //
+    //     promptRange.UpdateExpectedResultsJson(expectedResults);
+    //
+    //     await this.SaveObjectAsync(promptRange);
+    //
+    //     return this.TransEntityToDto(promptRange);
+    // }
 
 
     public async Task<PromptRangeDto> GetAsync(int Id)

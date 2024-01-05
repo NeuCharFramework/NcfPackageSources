@@ -134,13 +134,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(promptResult);
 
-            // 获取PromptRange
-            var promptRange = await _promptRangeService.GetObjectAsync(p => p.Id == promptItem.RangeId);
-
             // 有期望结果， 进行自动打分
-            if (!string.IsNullOrWhiteSpace(promptRange.ExpectedResultsJson))
+            if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
-                await this.RobotScoringAsync(promptResult.Id, false, promptRange.ExpectedResultsJson);
+                await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
             }
 
             return this.Mapper.Map<PromptResultDto>(promptResult);
@@ -251,7 +248,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                              ?? throw new NcfExceptionBase("找不到对应的promptItem");
 
             // 保存期望结果列表
-            await _promptRangeService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
+            await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
 
 
             // if user dont want force refreshing, and this promptResult is scored 

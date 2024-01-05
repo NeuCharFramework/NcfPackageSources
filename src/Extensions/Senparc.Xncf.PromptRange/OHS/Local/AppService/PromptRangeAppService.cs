@@ -23,20 +23,20 @@ public class PromptRangeAppService : AppServiceBase
     }
 
 
-    /// <summary>
-    /// 设置 AI 自动打分评分标准接口
-    /// </summary>
-    /// <param name="promptRangeId"></param>
-    /// <param name="expectedResults"></param>
-    /// <returns></returns>
-    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-    public async Task<AppResponseBase<PromptRangeDto>> UpdateExpectedResults(int promptRangeId, string expectedResults)
-    {
-        return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
-            async (response, logger) =>
-                await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults)
-        );
-    }
+    // /// <summary>
+    // /// 设置 AI 自动打分评分标准接口
+    // /// </summary>
+    // /// <param name="promptRangeId"></param>
+    // /// <param name="expectedResults"></param>
+    // /// <returns></returns>
+    // [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    // public async Task<AppResponseBase<PromptRangeDto>> UpdateExpectedResults(int promptRangeId, string expectedResults)
+    // {
+    //     return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
+    //         async (response, logger) =>
+    //             await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults)
+    //     );
+    // }
 
     /// <summary>
     /// 获取靶场列表详情（添加时间倒序）

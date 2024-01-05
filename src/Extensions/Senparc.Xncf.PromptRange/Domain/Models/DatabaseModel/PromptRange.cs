@@ -24,12 +24,12 @@ public class PromptRange : EntityBase<int>
     [NotNull]
     public string RangeName { get; private set; }
 
-    /// <summary>
-    /// 期望结果Json
-    /// </summary>
-    [MaxLength(200)]
-    [CanBeNull]
-    public string ExpectedResultsJson { get; private set; }
+    // /// <summary>
+    // /// 期望结果Json
+    // /// </summary>
+    // [MaxLength(200)]
+    // [CanBeNull]
+    // public string ExpectedResultsJson { get; private set; }
 
     #region CTOR
 
@@ -38,12 +38,12 @@ public class PromptRange : EntityBase<int>
         RangeName = rangeName;
     }
 
-    public PromptRange(string alias, string rangeName, string expectedResultsJson)
-    {
-        Alias = alias;
-        RangeName = rangeName;
-        ExpectedResultsJson = expectedResultsJson;
-    }
+    // public PromptRange(string alias, string rangeName, string expectedResultsJson)
+    // {
+    //     Alias = alias;
+    //     RangeName = rangeName;
+    //     // ExpectedResultsJson = expectedResultsJson;
+    // }
 
     #endregion
 
@@ -55,12 +55,12 @@ public class PromptRange : EntityBase<int>
         return this;
     }
 
-    public PromptRange UpdateExpectedResultsJson(string expectedResultsJson)
-    {
-        this.ExpectedResultsJson = expectedResultsJson;
-
-        return this;
-    }
+    // public PromptRange UpdateExpectedResultsJson(string expectedResultsJson)
+    // {
+    //     this.ExpectedResultsJson = expectedResultsJson;
+    //
+    //     return this;
+    // }
     
     public PromptRange ChangeAlias(string alias)
     {
