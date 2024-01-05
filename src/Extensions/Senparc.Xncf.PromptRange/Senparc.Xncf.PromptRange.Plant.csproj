@@ -79,7 +79,7 @@
 	<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.13.1.1-beta1" />
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.7-beta1" />
-		<PackageReference Include="Senparc.Xncf.AIKernel" Version="0.1.0.8" />
+		<PackageReference Include="Senparc.Xncf.AIKernel" Version="0.1.0.16" />
 		<PackageReference Include="Senparc.Xncf.SystemCore" Version="0.5.2.1-beta1" />
 		<PackageReference Include="Senparc.Xncf.SystemManager" Version="0.5.1.2-beta1" />
 		<PackageReference Include="Senparc.Xncf.Tenant" Version="0.5.1.4-beta1" />

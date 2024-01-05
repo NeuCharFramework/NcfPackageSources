@@ -745,7 +745,7 @@
             <summary>
             根据靶场 ID, 查询其中所有的promptItem的id和name
             </summary>
-            <param name="rangeName">靶场名称（必须）</param>
+            <param name="rangeId">靶场 ID（必须）</param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetRangeNameList">

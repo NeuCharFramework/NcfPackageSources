@@ -113,10 +113,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         p.RangeName == rangeName &&
                         p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
+                    var tactic = (parentTac == "" ? "" : parentTac + ".") + $"{fullList.Count + 1}";
                     toSavePromptItem = new PromptItem(
                         rangeId: basePrompt.RangeId,
                         rangeName: rangeName,
-                        tactic: $"{fullList.Count + 1}",
+                        tactic: tactic,
                         aiming: 1,
                         parentTac: parentTac,
                         request: request
