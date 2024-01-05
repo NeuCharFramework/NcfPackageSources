@@ -126,7 +126,7 @@
     </div>
     @* 设置ai评分标准 :disabled="!promptid" *@
     <div style="z-index: 1250">
-        <el-button type="primary" :disabled="!promptid" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+        <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
     <div class="promptContetnPmroparaBox">
@@ -460,8 +460,8 @@
         <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">确 定</el-button>
     </div>
 </el-dialog>
-@*ai评分标准 dialog*@
-<el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center @@close="aiScoreFormCloseDialog">
+@*ai评分标准 dialog @@close="aiScoreFormCloseDialog" *@
+<el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center>
     <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
             <div v-for="(item,index) in aiScoreForm.resultList" v-key="index" class="targetShootBtnRow">
@@ -476,9 +476,9 @@
         <div class="warnRow">注意：设置预期结果后，将会根据预期结果自动进行AI评分。</div>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @@click="aiScoreFormVisible = false">取 消</el-button>
+        <el-button @@click="aiScoreFormVisible = false">关闭</el-button>
         @* v-loading="aiScoreFormSubmitLoading" *@
-        <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button>
+        @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button> *@
     </div>
 </el-dialog>
 </div>
