@@ -40,6 +40,18 @@
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddPromptRange.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.DelExpRes">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.DelExpRes.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.DelExpRes.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.DelExpRes.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
@@ -53,11 +65,6 @@
         <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
             <summary>
             靶场名称（来自版号生成）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.ExpectedResultsJson">
-            <summary>
-            期望结果Json
             </summary>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.AddPromptItemAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">

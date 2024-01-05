@@ -16,6 +16,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI;
 using Senparc.AI.Kernel;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -51,35 +52,34 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 throw new NcfExceptionBase("IsNewTactic IsNewSubTactic不能同时为True");
             }
-            // var name = request.Content.SubString(0, 5);
 
             // 默认值为2000
             request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
             request.StopSequences = request.StopSequences == "" ? null : request.StopSequences;
 
+            if (request.RangeId <= 0)
+            {
+                throw new NcfExceptionBase($"RangeId必须为正整数，当前是{request.RangeId}");
+            }
+
             #endregion
 
-            // 更新版本号
-            var today = SystemTime.Now;
-            var todayStr = today.ToString("yyyy.MM.dd");
+            #region 获取靶场
+
+            var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == request.RangeId);
+
+            #endregion
+
+            // // 更新版本号
+            // var today = SystemTime.Now;
+            // var todayStr = today.ToString("yyyy.MM.dd");
 
             #region 根据参数构造PromptItem
 
             PromptItem toSavePromptItem = null;
             if (request.Id == null)
             {
-                // 如果没有id，就先新建一个全新的靶场，再新建一个靶道
-
-                #region 新建靶场
-
-                List<PromptRange> todayRangeList = await _promptRangeService.GetFullListAsync(
-                    p => p.RangeName.StartsWith($"{todayStr}.")
-                );
-
-                var promptRange = new PromptRange($"{todayStr}.{todayRangeList.Count + 1}");
-                await _promptRangeService.SaveObjectAsync(promptRange);
-
-                #endregion
+                // 如果没有id，就新建一个靶道
 
 
                 // List<PromptItem> todayPromptList = await base.GetFullListAsync(

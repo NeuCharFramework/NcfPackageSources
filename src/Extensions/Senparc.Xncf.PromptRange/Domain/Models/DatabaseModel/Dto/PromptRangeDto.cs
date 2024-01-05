@@ -14,9 +14,9 @@ public class PromptRangeDto : DtoBase
     /// </summary>
     public string RangeName { get;  set; }
 
-    /// <summary>
-    /// 期望结果Json
-    /// </summary>
-    public string ExpectedResultsJson { get;  set; }
+    // /// <summary>
+    // /// 期望结果Json
+    // /// </summary>
+    // public string ExpectedResultsJson { get;  set; }
     
 }

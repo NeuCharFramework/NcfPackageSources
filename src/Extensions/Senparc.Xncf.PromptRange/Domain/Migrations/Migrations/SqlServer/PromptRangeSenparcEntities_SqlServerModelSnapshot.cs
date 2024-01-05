@@ -199,6 +199,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(3)
                         .HasColumnType("int");
 
+                    b.Property<string>("ExpectedResultsJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
@@ -302,10 +305,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<string>("Alias")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ExpectedResultsJson")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
