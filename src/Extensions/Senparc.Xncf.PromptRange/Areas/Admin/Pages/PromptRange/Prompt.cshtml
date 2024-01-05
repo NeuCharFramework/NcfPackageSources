@@ -38,6 +38,10 @@
                                :label="item.label"
                                :value="item.value"
                                :disabled="item.disabled">
+                        <div class="d-flex justify-content-between align-center">
+                            <span>{{ item.label }}</span>
+                            <el-button type="primary" size="mini" @@click="renameField(item)">重命名靶场</el-button>
+                        </div>
                     </el-option>
                 </el-select>
             </div>
@@ -85,6 +89,12 @@
 </div>
 @*输入*@
 <div class="boxCard inputPromptArea" style="padding: 0">
+    <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
+        <div class="text-center">
+            <i class="el-icon-lock" style="font-size:2.5rem"></i>
+            <br>请新建或选择靶场后再进行操作
+        </div>
+    </div>
     <div class="prompt-mask" v-if="sendBtnText==='连发'">
         <div class="text-center">
             <i class="el-icon-lock" style="font-size:2.5rem"></i>
@@ -126,7 +136,7 @@
     </div>
     @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
     <div style="padding-left: 15px">
-                <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+        <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
     <div class="promptContetnPmroparaBox" style="padding: 15px">
@@ -296,11 +306,11 @@
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                         <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span>AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
+                        <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
                     </div>
                     <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                         <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span>手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
+                        <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
                     </div>
                 </div>
                 <div v-if="item.isScoreView" class="scoreRow">
@@ -455,8 +465,8 @@
 @*新增靶场 dialog*@
 <el-dialog title="新增靶场" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
     <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
-        <el-form-item label="靶场名称" prop="fieldName" label-width="130px">
-            <el-input v-model="fieldForm.fieldName" autocomplete="off" placeholder="请输入靶场名称"></el-input>
+        <el-form-item label="靶场名称" prop="alias" label-width="130px">
+            <el-input v-model="fieldForm.alias" autocomplete="off" placeholder="请输入靶场名称"></el-input>
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">

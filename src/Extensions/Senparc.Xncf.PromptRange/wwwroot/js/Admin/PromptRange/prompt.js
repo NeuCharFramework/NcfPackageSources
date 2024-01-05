@@ -138,7 +138,7 @@ var app = new Vue({
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
             fieldForm: {
-                fieldName: ''
+                alias: ''
             },
             // ai 评分标准
             aiScoreFormVisible: false,
@@ -283,24 +283,8 @@ var app = new Vue({
         },
         // 新增靶场
         addPromptField() {
-            // 刷新页面
-            window.location.reload()
             // 如果靶场变化 靶道
-            // if (this.pageChange && this.modelid) {
-            //     // 提示 有数据变化 是否保存为草稿
-            //     this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
-            //         confirmButtonText: '保存',
-            //         cancelButtonText: '不保存',
-            //         type: 'warning'
-            //     }).then(() => {
-            //         // 保存草稿
-            //         this.targetShootHandel(true).then(() => {
-            //             this.resetPageData()
-            //         })
-            //     }).catch(() => {
-            //     });
-            //     return
-            // }
+            this.fieldFormVisible = true
         },
         // 连发次数 数量变化
         changeNumsBtn(command = 1) {
@@ -574,7 +558,7 @@ var app = new Vue({
                                 // console.log('params',params,this.promptid)
                                  // fullVersion
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
-                                const fullVersion = promptItem.fullVersion || ''
+                                const fullVersion = promptItem?promptItem.fullVersion:''
                                 console.log('fullVersion',fullVersion,params.data[3].fullVersion)
                                 console.log('params.data[3].fullVersion === fullVersion',params.data[3].fullVersion === fullVersion)
                                 return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
@@ -865,6 +849,8 @@ var app = new Vue({
                         }
                     })
 
+                    // 要提交this.promptField
+                    _postData['rangeId'] = this.promptField
                     let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
                     // console.log('testHandel res ', res.data)
                     this.tacticalFormSubmitLoading = false
@@ -921,7 +907,6 @@ var app = new Vue({
                         //console.log('选择正确的靶场')
                         //提交数据后，选择正确的靶场和靶道
                         this.getFieldList().then(() => {
-                            this.promptField=fullVersion.split('-')[0]
                             this.getPromptOptData(id)
                             // 获取分数趋势图表数据
                             this.getScoringTrendData()
@@ -938,7 +923,10 @@ var app = new Vue({
                 }
             });
         },
-
+        checkUseRed(item,which){
+            if(item.finalScore===-1||item.finalScore==='-1') return '';   
+            return item.finalScore===item[which]?'warnRow':''  
+        },
         // 版本记录 获取版本记录 树形数据
         async getVersionRecordData() {
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${this.promptField}`)
@@ -1287,7 +1275,8 @@ var app = new Vue({
                 }
             })
             console.log('testHandel _postData:', _postData)
-
+            // 要提交this.promptField
+            _postData['rangeId'] = this.promptField
             return await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
                 this.targetShootLoading = false
                 if (res.data.success) {
@@ -1348,7 +1337,7 @@ var app = new Vue({
                     })
                     //提交数据后，选择正确的靶场和靶道
                     this.getFieldList().then(() => {
-                        this.promptField=fullVersion.split('-')[0]
+                
                         this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
@@ -1690,24 +1679,33 @@ var app = new Vue({
         // 关闭新增靶场 dialog
         fieldFormCloseDialog() {
             this.fieldForm = {
-                fieldName: ''
+                alias: ''
             }
             this.$refs.fieldForm.resetFields();
         },
         // dialog 新增靶场 提交按钮
         fieldFormSubmitBtn() {
+            const that=this
             this.$refs.fieldForm.validate(async (valid) => {
                 if (valid) {
                     this.fieldFormVisible = false
-                    //this.fieldFormSubmitLoading = true
-                    //// todo 对接接口
-                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.fieldForm)
-                    //this.fieldFormSubmitLoading = false
-                    //if (res.data.success) {
-                    //    // todo 重新获取靶场列表
-                    //    // 关闭dialog
-                    //    this.fieldFormVisible = false
-                    //}
+                    // post 接口 /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync?alias='
+                        +that.fieldForm.alias, {})
+                    if (res.data.success) {
+                        // 重新获取靶场列表
+                        await this.getFieldList().then(()=> {
+                            that.promptField = res.data.data.id
+                        })
+                        // 提示添加成功
+                        this.$message({
+                            message: '添加成功！',
+                            type: 'success'
+                        })
+                        // 关闭dialog
+                        this.fieldFormVisible = false
+                    }
+                    
                 } else {
                     return false;
                 }
@@ -1715,19 +1713,43 @@ var app = new Vue({
         },
         // 配置 获取靶场 下拉列表数据
         async getFieldList() {
-            await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
+            await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync',{})
                 .then(res => {
                     if (res.data.success) {
                         this.promptFieldOpt = res.data.data.map(item => {
                             return {
                                 ...item,
-                                label: item.rangeName,
-                                value: item.rangeName,
+                                label: item.alias+'（'+item.rangeName+'）',
+                                value: item.id,
                                 disabled: false
                             }
                         })
                     }
                 })
+        },
+        renameField(item){
+          //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
+            this.$prompt('请输入新的靶场名称', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputErrorMessage: '靶场名称不能为空',
+            }).then(async ({ value }) => {
+                const res = await service.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
+                    params:{
+                        rangeId: item.id,
+                        alias: value
+                    }
+                })
+                if (res.data.success) {
+                    this.getFieldList()
+                }
+            }).catch(() => {
+                this.$message({
+                type: 'info',
+                message: '已取消操作'
+                });       
+            });
+            
         },
         // 获取靶道 下拉列表数据
         async getPromptOptData(id) {
