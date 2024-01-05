@@ -12,7 +12,7 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 {
     [DbContext(typeof(PromptRangeSenparcEntities_SqlServer))]
-    [Migration("20240105131750_Init2024")]
+    [Migration("20240105152737_Init2024")]
     partial class Init2024
     {
         /// <inheritdoc />
