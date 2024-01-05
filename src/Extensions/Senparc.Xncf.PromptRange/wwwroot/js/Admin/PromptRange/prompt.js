@@ -1715,13 +1715,13 @@ var app = new Vue({
         },
         // 配置 获取靶场 下拉列表数据
         async getFieldList() {
-            await service.get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetRangeNameList')
+            await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync',{})
                 .then(res => {
                     if (res.data.success) {
                         this.promptFieldOpt = res.data.data.map(item => {
                             return {
                                 ...item,
-                                label: item.rangeName,
+                                label: item.alias+'（'+item.rangeName+'）',
                                 value: item.rangeName,
                                 disabled: false
                             }
