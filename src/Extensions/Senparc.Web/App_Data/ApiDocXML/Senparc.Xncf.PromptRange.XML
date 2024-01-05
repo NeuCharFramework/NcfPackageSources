@@ -4,24 +4,21 @@
         <name>Senparc.Xncf.PromptRange</name>
     </assembly>
     <members>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Id">
-            <summary>
-            主键 ID
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
-            <summary>
-            靶场代号（用户自定义）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
-            <summary>
-            靶场名称（来自版号生成）
             </summary>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.AddPromptItemAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
@@ -218,6 +215,21 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.IsShare">
             <summary>
             是否公开
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.Id">
+            <summary>
+            主键 ID
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
+            <summary>
+            靶场代号（用户自定义）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
+            <summary>
+            靶场名称（来自版号生成）
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.Id">
@@ -729,6 +741,13 @@
             <param name="rangeName">靶场名称（必须）</param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.Int32)">
+            <summary>
+            根据靶场 ID, 查询其中所有的promptItem的id和name
+            </summary>
+            <param name="rangeName">靶场名称（必须）</param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetRangeNameList">
             <summary>
             列出所有的promptItem的RangeName
@@ -777,7 +796,7 @@
             <summary>
             获取靶场列表详情（添加时间倒序）
             </summary>
-            <param name="request"></param>
+            <param name="alias"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.GetListAsync">
@@ -915,6 +934,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Developer">
             <summary>
             用户名
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.RangeId">
+            <summary>
+            靶场　ID
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.NickName">
