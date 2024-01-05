@@ -128,7 +128,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             var promptResult = new PromptResult(
                 promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
-                -1, -1, null, false, TestType.Text,
+                -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.FullVersion, promptItem.Id);
 

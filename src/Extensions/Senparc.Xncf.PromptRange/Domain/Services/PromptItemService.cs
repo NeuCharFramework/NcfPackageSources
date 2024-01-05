@@ -468,15 +468,35 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         [ItemNotNull]
-        private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needRange = true)
+        private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needModel = true, bool needRange = true)
         {
             var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
+
+            #region 补充AIModel信息
+
+            if (needModel)
+            {
+                var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId) ??
+                              throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
+
+                promptItemDto.AIModelDto = new AIModelDto(aiModel)
+                {
+                    ApiKey = aiModel.ApiKey,
+                    OrganizationId = aiModel.OrganizationId
+                };
+            }
+
+            #endregion
+
+            #region 补充靶场信息
 
             if (needRange)
             {
                 var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
                 promptItemDto.PromptRange = promptRangeDto;
             }
+
+            #endregion
 
             // if (needResult)
             // {
