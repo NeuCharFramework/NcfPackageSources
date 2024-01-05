@@ -742,7 +742,6 @@ var app = new Vue({
                         // 重新获取靶道列表
                         //this.getFieldList()
                         // 靶道
-                        this.resetPageData()
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
                         this.pageChange = false
@@ -929,7 +928,13 @@ var app = new Vue({
         },
         // 版本记录 获取版本记录 树形数据
         async getVersionRecordData() {
-            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${this.promptField}`)
+            //find rangeName by id
+            
+            // const rangeName
+            let _find= this.promptFieldOpt.find(item => item.value === this.promptField)
+            const name = _find ? _find.rangeName : ''
+            
+            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${name}`)
             if (res.data.success) {
                 //console.log('获取版本记录数据', res.data.data.rootNodeList)
                 let _listData = res?.data?.data?.rootNodeList || []
