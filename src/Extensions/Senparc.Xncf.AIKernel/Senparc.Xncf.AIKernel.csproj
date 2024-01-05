@@ -32,10 +32,7 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.13.5-beta1" />
+    <!--<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.13.5-beta1" />-->
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.6-beta1+d29af850107e637cc591f6da9b086e8fa73ec9ac" />
@@ -67,6 +64,7 @@
 </ItemGroup>
 <ItemGroup>
   <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+  <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
   <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 </ItemGroup>
 </Project>
