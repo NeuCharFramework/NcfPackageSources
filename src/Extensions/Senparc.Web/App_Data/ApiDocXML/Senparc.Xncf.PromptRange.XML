@@ -57,6 +57,14 @@
             <param name="promptItemId"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetWithVersionAsync(System.String)">
+            <summary>
+            根据具体版本号，获取模型信息
+            </summary>
+            <param name="fullVersion"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.UpdateEvalScoreAsync(System.Int32)">
             <summary>
             更新promptItem的平均分和最高分
