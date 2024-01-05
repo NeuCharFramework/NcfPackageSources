@@ -707,6 +707,7 @@ var app = new Vue({
                     }).then(() => {
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
+                            this.resetPageData()
                             this.getPromptetail(val, true)
                         })
                         // 重置 页面变化记录
@@ -717,6 +718,7 @@ var app = new Vue({
                         // 重新获取靶道列表
                         //this.getFieldList()
                         // 靶道
+                        this.resetPageData()
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
                         this.pageChange = false
@@ -1187,10 +1189,17 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid || this.sendBtnText!=='连发'||(!this.promptid&&this.sendBtnText==="保存草稿")) {
+            // 弹窗逻辑1，有promptid，就要弹窗
+            if (this.promptid){
                 this.tacticalFormVisible = true
                 return
             }
+            // 弹窗逻辑2，只要保存草稿就弹
+            if (this.sendBtnText === '保存草稿'){
+                this.tacticalFormVisible = true
+                return
+            }
+
 
             this.targetShootLoading = true
             let _postData = {

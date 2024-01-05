@@ -15,7 +15,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// x,y,z
         /// 
         /// </summary>
-
         public List<List<Point>> DataPoints { get; set; }
 
         public Statistic_TodayTacticResponse(string rangeName, DateTime queryTime)
@@ -27,11 +26,26 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public class Point
         {
+            #region property
+
+            public string X { get; set; }
+
+            public string Y { get; set; }
+
+            public int Z { get; set; }
+
+            public PromptItemDto Data { get; set; }
+
+            #endregion
+
+
+            #region ctor
+
             public Point()
             {
             }
 
-            public Point(int x, int y, int z, PromptItemDto data)
+            public Point(string x, string y, int z, PromptItemDto data)
             {
                 X = x;
                 Y = y;
@@ -39,11 +53,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
                 Data = data;
             }
 
-            public int X { get; set; }
-            public int Y { get; set; }
-            public int Z { get; set; }
-
-            public PromptItemDto Data { get; set; }
+            #endregion
         }
     }
 }

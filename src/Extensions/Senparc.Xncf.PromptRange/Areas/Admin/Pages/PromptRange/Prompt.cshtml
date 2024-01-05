@@ -118,7 +118,7 @@
                 <el-input v-model="item.value" placeholder="" class="inputBox" v-bind:style="{'flex':item.isStr?'1':''}" @@input="parameterInputHandle($event,item)" @@change="promptChangeHandel($event,item.formField)"></el-input>
                 <div v-if="item.isSlider" class="sliderBox">
                     <span>{{item.sliderMin}}</span>
-                    <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider"></el-slider>
+                    <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider" @@change="promptChangeHandel($event,item.formField)"></el-slider>
                     <span>{{item.sliderMax}}</span>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                             <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
                                 {{sendBtnText}}
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0)" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">{{btn.text}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             <el-tooltip class="item" effect="dark" placement="top">
