@@ -1695,6 +1695,7 @@ var app = new Vue({
                     if (res.data.success) {
                         // 重新获取靶场列表
                         await this.getFieldList().then(()=> {
+                            this.resetPageData()
                             that.promptField = res.data.data.id
                         })
                         // 提示添加成功
