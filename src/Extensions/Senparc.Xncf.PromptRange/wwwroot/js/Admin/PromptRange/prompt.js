@@ -558,7 +558,7 @@ var app = new Vue({
                                 // console.log('params',params,this.promptid)
                                  // fullVersion
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
-                                const fullVersion = promptItem.fullVersion || ''
+                                const fullVersion = promptItem?promptItem.fullVersion:''
                                 console.log('fullVersion',fullVersion,params.data[3].fullVersion)
                                 console.log('params.data[3].fullVersion === fullVersion',params.data[3].fullVersion === fullVersion)
                                 return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
@@ -907,7 +907,6 @@ var app = new Vue({
                         //console.log('选择正确的靶场')
                         //提交数据后，选择正确的靶场和靶道
                         this.getFieldList().then(() => {
-                            this.promptField=fullVersion.split('-')[0]
                             this.getPromptOptData(id)
                             // 获取分数趋势图表数据
                             this.getScoringTrendData()
@@ -1338,7 +1337,7 @@ var app = new Vue({
                     })
                     //提交数据后，选择正确的靶场和靶道
                     this.getFieldList().then(() => {
-                        this.promptField=fullVersion.split('-')[0]
+                
                         this.getPromptOptData(id)
                         // 获取分数趋势图表数据
                         this.getScoringTrendData()
@@ -1686,14 +1685,18 @@ var app = new Vue({
         },
         // dialog 新增靶场 提交按钮
         fieldFormSubmitBtn() {
+            const that=this
             this.$refs.fieldForm.validate(async (valid) => {
                 if (valid) {
                     this.fieldFormVisible = false
                     // post 接口 /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync', this.fieldForm)
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync?alias='
+                        +that.fieldForm.alias, {})
                     if (res.data.success) {
                         // 重新获取靶场列表
-                        this.getFieldList()
+                        await this.getFieldList().then(()=> {
+                            that.promptField = res.data.data.id
+                        })
                         // 提示添加成功
                         this.$message({
                             message: '添加成功！',
