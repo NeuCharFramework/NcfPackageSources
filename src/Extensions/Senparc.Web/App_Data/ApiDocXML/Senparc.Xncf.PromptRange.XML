@@ -57,6 +57,11 @@
             全局常量配置
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Id">
+            <summary>
+            主键 ID
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
             <summary>
             靶场代号（用户自定义）
@@ -806,6 +811,14 @@
             </summary>
             <param name="promptItemId"></param>
             <param name="expectedResults"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetBestPromptAsync(System.String,System.Boolean)">
+            <summary>
+            根据靶场名（自动生成）获取靶场里最好的promptItem
+            </summary>
+            <param name="rangeName"></param>
+            <param name="isAvg"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">

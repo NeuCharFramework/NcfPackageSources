@@ -258,5 +258,21 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
                 });
         }
+        
+        /// <summary>
+        /// 根据靶场名（自动生成）获取靶场里最好的promptItem
+        /// </summary>
+        /// <param name="rangeName"></param>
+        /// <param name="isAvg"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        {
+            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+                async (response, logger) =>
+                {
+                    return await _promptItemService.GetBestPromptAsync(rangeName, isAvg);
+                });
+        }
     }
 }

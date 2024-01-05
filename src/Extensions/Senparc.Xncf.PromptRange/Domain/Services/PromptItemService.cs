@@ -452,6 +452,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
+        public async Task<PromptItemDto> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        {
+            // validate rangeName
+            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
+                              throw new NcfExceptionBase($"找不到{rangeName}对应的靶场");
+
+
+            var promptItem = await this.GetObjectAsync(
+                p => p.RangeName == rangeName && (isAvg ? p.EvalAvgScore : p.EvalMaxScore) >= 0,
+                p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
+                OrderingType.Descending);
+
+            return await this.TransEntityToDtoAsync(promptItem);
+        }
+
         [ItemNotNull]
         private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needRange = true)
         {
