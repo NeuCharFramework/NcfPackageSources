@@ -99,7 +99,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
                 var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
 
-                var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
+                // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
 
                 string rangeName = basePrompt.RangeName;
                 string baseTactic = basePrompt.Tactic;
@@ -121,6 +121,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         parentTac: parentTac,
                         request: request
                     );
+                    // 关联复制预期结果过来
+                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
                 }
                 else if (request.IsNewSubTactic)
                 {
@@ -138,6 +140,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         parentTac: parentTac,
                         request: request
                     );
+                    // 关联复制预期结果过来
+                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
                 }
                 else
                 {
@@ -155,6 +159,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             parentTac: basePrompt.ParentTac,
                             request: request
                         );
+                        // 关联复制预期结果过来
+                        toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
                     }
                 }
             }
@@ -306,11 +312,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
                              throw new Exception("未找到prompt");
-        
+
             promptItem.UpdateExpectedResultsJson(expectedResults);
-        
+
             await this.SaveObjectAsync(promptItem);
-        
+
             return this.Mapper.Map<PromptItemDto>(promptItem);
         }
 
