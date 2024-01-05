@@ -14,40 +14,39 @@ namespace Senparc.Xncf.PromptRange.Tests
     [TestClass()]
     public class PromptItemTests
     {
-        // 由于代码更改  目前已经废弃所测方法
-        // [TestMethod()]
-        // public void GenerateNewVersionTest()
-        // {
-        //     VersionInfo testVersion(DateTime date, int build)
-        //     {
-        //         int major = date.Year;
-        //         int minor = date.Month;
-        //         int patch = date.Day;
-        //         var lastVersion = $"{major}.{minor}.{patch}.{build}";
-        //
-        //         var moqDto = new Mock<PromptItemDto>();
-        //         moqDto.Setup(z => z.Version).Returns("");
-        //
-        //         var promptItem = new PromptItem(moqDto.Object);
-        //         return promptItem.GenerateNewVersion(lastVersion);
-        //     }
-        //
-        //     var today = SystemTime.Now.DateTime;
-        //
-        //     //测试当天时间
-        //     var newVersion = testVersion(today, 3);
-        //     Assert.AreEqual(today.Year, newVersion.Major);
-        //     Assert.AreEqual(today.Month, newVersion.Minor);
-        //     Assert.AreEqual(today.Day, newVersion.Patch);
-        //     Assert.AreEqual(3 + 1, newVersion.Build);//版本号 +1
-        //
-        //     //测试过去时间
-        //     newVersion = testVersion(today.AddDays(-1), 4);
-        //     Assert.AreEqual(today.Year, newVersion.Major);
-        //     Assert.AreEqual(today.Month, newVersion.Minor);
-        //     Assert.AreEqual(today.Day, newVersion.Patch);
-        //     Assert.AreEqual(1, newVersion.Build);//版本号从 1 开始
-        // }
+        [TestMethod()]
+        public void GenerateNewVersionTest()
+        {
+            VersionInfo testVersion(DateTime date, int build)
+            {
+                int major = date.Year;
+                int minor = date.Month;
+                int patch = date.Day;
+                var lastVersion = $"{major}.{minor}.{patch}.{build}";
+
+                var moqDto = new Mock<PromptItemDto>();
+                moqDto.Setup(z => z.Version).Returns("");
+
+                var promptItem = new PromptItem(moqDto.Object);
+                return promptItem.GenerateNewVersion(lastVersion);
+            }
+
+            var today = SystemTime.Now.DateTime;
+
+            //测试当天时间
+            var newVersion = testVersion(today, 3);
+            Assert.AreEqual(today.Year, newVersion.Major);
+            Assert.AreEqual(today.Month, newVersion.Minor);
+            Assert.AreEqual(today.Day, newVersion.Patch);
+            Assert.AreEqual(3 + 1, newVersion.Build);//版本号 +1
+
+            //测试过去时间
+            newVersion = testVersion(today.AddDays(-1), 4);
+            Assert.AreEqual(today.Year, newVersion.Major);
+            Assert.AreEqual(today.Month, newVersion.Minor);
+            Assert.AreEqual(today.Day, newVersion.Patch);
+            Assert.AreEqual(1, newVersion.Build);//版本号从 1 开始
+        }
 
         [TestMethod()]
         public void GetVersionInfoTest()

@@ -222,8 +222,6 @@ namespace Senparc.Xncf.PromptRange
             LastRunTime = dto.LastRunTime;
             IsShare = dto.IsShare;
         }
-       
-
         public PromptItem(string content,
             int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
             // int numsOfResults,
