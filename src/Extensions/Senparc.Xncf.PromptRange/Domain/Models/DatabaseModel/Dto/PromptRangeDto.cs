@@ -1,6 +1,6 @@
 ﻿using Senparc.Ncf.Core.Models;
 
-namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 public class PromptRangeDto : DtoBase
 {

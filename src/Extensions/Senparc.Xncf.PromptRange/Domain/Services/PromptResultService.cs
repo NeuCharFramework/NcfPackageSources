@@ -278,9 +278,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = 8000,
-                Temperature = 0.5,
-                TopP = 0.5,
+                MaxTokens = /*model.MaxToken > 0 ? model.MaxToken :*/ 2000,
+                Temperature = 0.2,
+                TopP = 0.2,
                 // FrequencyPenalty = 0,
                 // PresencePenalty = 0,
             };

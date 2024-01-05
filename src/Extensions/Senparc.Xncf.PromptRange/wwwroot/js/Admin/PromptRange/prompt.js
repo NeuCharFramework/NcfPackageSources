@@ -1144,11 +1144,7 @@ var app = new Vue({
                     let _listVal = this.aiScoreForm.resultList.filter(item => item.value)
                     if (_listVal.length > 0) {
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
-                            return {
-                                id: index + 1,
-                                label: `预期结果${index + 1}`,
-                                value: item
-                            }
+                            return item
                         })
                         this.saveManualScore(this.outputList[index])
                     } else {
@@ -1695,6 +1691,7 @@ var app = new Vue({
                     if (res.data.success) {
                         // 重新获取靶场列表
                         await this.getFieldList().then(()=> {
+                            this.resetPageData()
                             that.promptField = res.data.data.id
                         })
                         // 提示添加成功

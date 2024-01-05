@@ -21,21 +21,6 @@
             全局常量配置
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Id">
-            <summary>
-            主键 ID
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
-            <summary>
-            靶场代号（用户自定义）
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
-            <summary>
-            靶场名称（来自版号生成）
-            </summary>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.AddPromptItemAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
             <summary>
             新增， 打靶时
@@ -230,6 +215,21 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.IsShare">
             <summary>
             是否公开
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.Id">
+            <summary>
+            主键 ID
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
+            <summary>
+            靶场代号（用户自定义）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
+            <summary>
+            靶场名称（来自版号生成）
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.Id">
@@ -737,6 +737,13 @@
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.String)">
             <summary>
             列出 靶场名称 下所有的promptItem的id和name
+            </summary>
+            <param name="rangeName">靶场名称（必须）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.Int32)">
+            <summary>
+            根据靶场 ID, 查询其中所有的promptItem的id和name
             </summary>
             <param name="rangeName">靶场名称（必须）</param>
             <returns></returns>

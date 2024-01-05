@@ -97,6 +97,26 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     });
         }
 
+        /// <summary>
+        /// 根据靶场 ID, 查询其中所有的promptItem的id和name
+        /// </summary>
+        /// <param name="rangeId">靶场 ID（必须）</param>
+        /// <returns></returns>
+        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([NotNull] int rangeId)
+        {
+            return await
+                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>, List<PromptItem_GetIdAndNameResponse>>(
+                    async (response, logger) =>
+                    {
+                        List<PromptItem> promptItems = await _promptItemService
+                            .GetFullListAsync(p => p.RangeId == rangeId,
+                                p => p.Id,
+                                Ncf.Core.Enums.OrderingType.Ascending);
+                        return promptItems.Select(p => new PromptItem_GetIdAndNameResponse(p)
+                        ).ToList();
+                    });
+        }
+
 
         /// <summary>
         /// 列出所有的promptItem的RangeName
@@ -253,12 +273,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-                async (response, logger) =>
-                {
-                    return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
-                });
+                async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
         }
-        
+
         /// <summary>
         /// 根据靶场名（自动生成）获取靶场里最好的promptItem
         /// </summary>
@@ -269,10 +286,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-                async (response, logger) =>
-                {
-                    return await _promptItemService.GetBestPromptAsync(rangeName, isAvg);
-                });
+                async (response, logger) => { return await _promptItemService.GetBestPromptAsync(rangeName, isAvg); });
         }
     }
 }
