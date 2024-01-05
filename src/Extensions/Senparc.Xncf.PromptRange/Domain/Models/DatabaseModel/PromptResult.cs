@@ -1,6 +1,7 @@
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.PromptRange.Models
@@ -29,25 +30,24 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         public double CostTime { get; private set; }
 
+        #region 打分
+
         /// <summary>
         /// 机器人打分，0-10分
         /// </summary>
-        public int RobotScore { get; private set; }
+        public int RobotScore { get; private set; } = -1;
 
         /// <summary>
         /// 人类打分，0-10分
         /// </summary>
-        public int HumanScore { get; private set; }
+        public int HumanScore { get; private set; } = -1;
 
-        // /// <summary>
-        // /// RobotTestExceptedResult 自动打分期望值
-        // /// </summary>
-        // public string RobotTestExceptedResult { get; private set; }
+        /// <summary>
+        /// 最终得分
+        /// </summary>
+        public int FinalScore { get; private set; } = -1;
 
-        // /// <summary>
-        // /// IsRobotTestExactlyEquat
-        // /// </summary>
-        // public bool IsRobotTestExactlyEquat { get; private set; }
+        #endregion
 
         /// <summary>
         /// 测试类型，枚举中包含：文字、图形、声音
@@ -72,12 +72,12 @@ namespace Senparc.Xncf.PromptRange.Models
         /// <summary>
         /// PromptItem，并添加PromptItem类作为属性
         /// </summary>
-        //public PromptItem PromptItem { get; private set; }
         public int PromptItemId { get; private set; }
 
         /// <summary>
         /// PromptItemVersion 
         /// </summary>
+        [MaxLength(50)]
         public string PromptItemVersion { get; private set; }
 
         private PromptResult()
@@ -98,12 +98,12 @@ namespace Senparc.Xncf.PromptRange.Models
             PromptItemVersion = dto.PromptItemVersion;
             PromptItemId = dto.PromptItemId;
         }
-        
-        
-        
+
+
         public PromptResult(
-            int llmModelId, string resultString, double costTime, int robotScore, int humanScore,
-            string robotTestExceptedResult, bool isRobotTestExactlyEquat, TestType testType, int promptCostToken,
+            int llmModelId, string resultString, double costTime,
+            int robotScore, int humanScore, int finalScore, // 分数
+            TestType testType, int promptCostToken,
             int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId)
         {
             LlmModelId = llmModelId;
@@ -118,7 +118,7 @@ namespace Senparc.Xncf.PromptRange.Models
             PromptItemVersion = promptItemVersion;
             PromptItemId = promptItemId;
         }
-        
+
 
         /// <summary>
         /// 更新手动评分
@@ -131,7 +131,7 @@ namespace Senparc.Xncf.PromptRange.Models
 
             return this;
         }
-        
+
         /// <summary>
         /// 更新自动机器评分
         /// </summary>
@@ -140,6 +140,18 @@ namespace Senparc.Xncf.PromptRange.Models
         public PromptResult RobotScoring(int score)
         {
             RobotScore = score;
+
+            return this;
+        }
+
+        /// <summary>
+        /// 更新最终得分
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        public PromptResult FinalScoring(int score)
+        {
+            FinalScore = score;
 
             return this;
         }

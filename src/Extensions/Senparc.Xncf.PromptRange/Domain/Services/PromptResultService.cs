@@ -16,6 +16,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Models;
@@ -25,20 +26,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptResultService : ServiceBase<PromptResult>
     {
+        // private readonly RepositoryBase<PromptItem> _promptItemRepository;
+        private readonly PromptItemService _promptItemService;
+        private readonly PromptRangeService _promptRangeService;
+
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            AIModelService aiModelService,
-            PromptItemService promptItemService) : base(repo,
+            PromptItemService promptItemService, PromptRangeService promptRangeService) : base(repo,
             serviceProvider)
         {
-            _aiModelService = aiModelService;
             _promptItemService = promptItemService;
+            _promptRangeService = promptRangeService;
         }
-
-        // private readonly RepositoryBase<PromptItem> _promptItemRepository;
-        private readonly PromptItemService _promptItemService;
-        private readonly AIModelService _aiModelService;
 
 
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
@@ -61,10 +61,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
-            // 从数据库中获取模型信息
-            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
-                        ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
-
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
@@ -80,6 +76,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             const string completionPrompt = @"请根据提示输出对应内容：
 {{$input}}";
 
+            // 从数据库中获取模型信息
+            var model = promptItem.AIModelDto;
             // 构建生成AI设置
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
@@ -87,8 +85,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
             var iWantToRun =
                 handler.IWantTo(aiSettings)
-                    // todo 替换为真实用户名，可能需要从Neurchar获取？
-                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
+                    // todo 替换为真实用户名，可能需要从NeuChar获取？
+                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;
@@ -130,7 +128,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             var promptResult = new PromptResult(
                 promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
-                -1, -1, null, false, TestType.Text,
+                -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.FullVersion, promptItem.Id);
 
@@ -163,6 +161,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                throw new NcfExceptionBase($"未找到{id}对应的结果");
 
             promptResult.ManualScoring(score);
+            promptResult.FinalScoring(score);
 
             await base.SaveObjectAsync(promptResult);
 
@@ -170,14 +169,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        private SenparcAiSetting BuildSenparcAiSetting(AIModel llModel)
+        /// <summary>
+        /// 构造 SenparcAiSetting, 在两个地方使用
+        /// </summary>
+        /// <param name="llModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
         {
             var aiSettings = new SenparcAiSetting
             {
-                // if (!Enum.TryParse<AiPlatform>(llmModel.ModelType, out AiPlatform aiPlatform))
-                // {
-                //     throw new Exception("无法转换为AiPlatform");
-                // }
                 AiPlatform = llModel.AiPlatform
             };
 
@@ -243,7 +244,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // get promptItem by promptResult.PromptItemId
-            var promptItem = await _promptItemService.GetObjectAsync(z => z.Id == promptResult.PromptItemId)
+            var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId)
                              ?? throw new NcfExceptionBase("找不到对应的promptItem");
 
             // 保存期望结果列表
@@ -262,13 +263,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (isMatch)
             {
                 promptResult.RobotScoring(10);
+                promptResult.FinalScoring(promptResult.RobotScore);
                 await base.SaveObjectAsync(promptResult);
                 return promptResult;
             }
 
 
             // 获取模型
-            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            var model = promptItem.AIModelDto;
 
             // build aiSettings by model
             var aiSettings = this.BuildSenparcAiSetting(model);
@@ -276,7 +278,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = 500,
+                MaxTokens = 8000,
                 Temperature = 0.5,
                 TopP = 0.5,
                 // FrequencyPenalty = 0,
@@ -304,7 +306,7 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
             var handler = new SemanticAiHandler(skHelper);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
-                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
+                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(scorePrompt, promptParameter)
                     .iWantToRun;
@@ -326,19 +328,28 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
             if (match.Success)
             {
                 int score = Convert.ToInt32(match.Value);
-                if (score > 10 || score < 0)
-                {
-                    throw new NcfExceptionBase($"自动打分失败，打分结果不在0-10之间，为{score}，被打分的结果字符串为{promptResult.ResultString}");
-                }
+
+                #region error 打分结果不在0-10之间
+
+                // if (score > 10 || score < 0)
+                // {
+                // throw new NcfExceptionBase($"自动打分失败，打分结果不在0-10之间，为{score}，被打分的结果字符串为{promptResult.ResultString}");
+                // }
+                score = score > 10 ? 10 : score < 0 ? 0 : score;
+
+                #endregion
 
                 promptResult.RobotScoring(score);
+                promptResult.FinalScoring(promptResult.RobotScore);
+
                 await this.SaveObjectAsync(promptResult);
 
                 return promptResult;
             }
+
             SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
 
-            
+
             throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
         }
 
@@ -362,14 +373,14 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
         /// <param name="promptItemId"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<Boolean> UpdateEvalScoreAsync(int promptItemId)
+        public async Task<bool> UpdateEvalScoreAsync(int promptItemId)
         {
             var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId) ??
                              throw new NcfExceptionBase("找不到对应的promptItem");
 
             List<PromptResult> promptResults = await this.GetFullListAsync(
-                p => p.PromptItemId == promptItemId && (p.HumanScore >= 0 || p.RobotScore >= 0),
-                p => p.Id, OrderingType.Ascending);
+                p => p.PromptItemId == promptItemId && p.FinalScore >= 0
+            );
 
             if (promptResults.Count == 0)
             {
@@ -377,119 +388,15 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
                 return false;
             }
 
-            double avg = promptResults.Average(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
+            double avg = promptResults.Average(r => r.FinalScore);
             promptItem.UpdateEvalAvgScore((int)avg);
 
-            int max = promptResults.Max(r => r.HumanScore < 0 ? (r.RobotScore < 0 ? 0 : r.RobotScore) : r.HumanScore);
+            int max = promptResults.Max(r => r.FinalScore);
             promptItem.UpdateEvalMaxScore(max);
 
             await _promptItemService.SaveObjectAsync(promptItem);
 
             return true;
-
-            // int sum = 0;
-            // int cnt = 0;
-            // foreach (var promptResult in promptResults)
-            // {
-            //     sum += promptResult.HumanScore < 0 ? (promptResult.RobotScore < 0 ? 0 : promptResult.RobotScore) : promptResult.HumanScore;
-            //     cnt++;
-            // }
-            // if (cnt != 0)
-            // {
-            //     promptItem.UpdateEvalAvgScore((int)sum / cnt);
-            //
-            //     await _promptItemService.SaveObjectAsync(promptItem);
-            // }
         }
-
-        #region Obsolete
-
-        // public async Task<List<PromptResult>> BatchGenerateResultAsync(PromptItem promptItem, int count)
-        // {
-        //     List<PromptResult> list = new List<PromptResult>();
-        //     for (var i = 0; i < count; i++)
-        //     {
-        //         var promptResult = await this.GenerateResultAsync(promptItem);
-        //         list.Add(promptResult);
-        //     }
-        //
-        //     return list;
-        // }
-        // [Obsolete("请使用SenparcGenerateResultAsync", true)]
-        // /// <summary>
-        // /// 传入promptItem，生成结果
-        // /// 暂时只能在PromptItemAppService中调用
-        // /// 采用了SemanticKernel来实现
-        // /// </summary>
-        // /// <param name="promptItem"></param>
-        // /// <returns></returns>
-        // /// <exception cref="NcfExceptionBase"></exception>
-        // /// <exception cref="NotImplementedException"></exception>
-        // public async Task<PromptResult> GenerateResultAsync(PromptItem promptItem)
-        // {
-        //     // 从数据库中获取模型信息
-        //     var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
-        //     if (model == null)
-        //     {
-        //         throw new NcfExceptionBase($"未找到模型{promptItem.ModelId}");
-        //     }
-        //     //
-        //     //       var userId = "Test";
-        //     //
-        //     //       var aiSettings = this.BuildSenparcAiSetting(model);
-        //     //       // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-        //     //       // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
-        //     //       //
-        //     //       // //定义 AI 接口调用参数和 Token 限制等
-        //     //       // var promptParameter = new PromptConfigParameter()
-        //     //       // {
-        //     //       //     MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
-        //     //       //     Temperature = promptItem.Temperature,
-        //     //       //     TopP = promptItem.TopP,
-        //     //       //     FrequencyPenalty = promptItem.FrequencyPenalty,
-        //     //       //     PresencePenalty = promptItem.PresencePenalty
-        //     //       // };
-        //     //
-        //     //       // 需要在变量前添加$
-        //     //       const string functionPrompt = @"请根据提示输出对应内容：
-        //     // {{$input}}";
-        //
-        //     var dt1 = SystemTime.Now;
-        //     var resp = model.AiPlatform switch
-        //     {
-        //         AiPlatform.OpenAI => await SkChatCompletionHelperService.WithOpenAIChatCompletionService(promptItem, model),
-        //         AiPlatform.AzureOpenAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
-        //         AiPlatform.HuggingFace => await SkChatCompletionHelperService.WithHuggingFaceCompletionService(promptItem, model),
-        //         AiPlatform.NeuCharAI => await SkChatCompletionHelperService.WithAzureOpenAIChatCompletionService(promptItem, model),
-        //         _ => throw new NotImplementedException()
-        //     };
-        //
-        //     // var skContext = iWantToRun.CreateNewContext().context;
-        //     // // var context = iWantToRun.CreateNewContext();
-        //     // skContext.Variables["input"] = promptItem.Content;
-        //     //
-        //     // var aiRequest = iWantToRun.CreateRequest(skContext.Variables, true);
-        //     // var result = await iWantToRun.RunAsync(aiRequest);
-        //
-        //     // todo 计算token消耗
-        //     // 简单计算
-        //     // num_prompt_tokens = len(encoding.encode(string))
-        //     // gap_between_send_receive = 15 * len(kwargs["messages"])
-        //     // num_prompt_tokens += gap_between_send_receive
-        //     var promptCostToken = 0;
-        //     var resultCostToken = 0;
-        //
-        //     var promptResult = new PromptResult(
-        //         promptItem.ModelId, resp, SystemTime.DiffTotalMS(dt1),
-        //         0, 0, null, false, TestType.Text,
-        //         promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-        //         promptItem.FullVersion, promptItem.Id);
-        //
-        //     await base.SaveObjectAsync(promptResult);
-        //
-        //     return promptResult;
-        // }
-
-        #endregion
     }
 }

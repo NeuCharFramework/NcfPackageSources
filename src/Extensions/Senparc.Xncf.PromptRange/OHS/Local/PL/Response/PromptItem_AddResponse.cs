@@ -8,6 +8,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
     public class PromptItem_AddResponse : BaseResponse
     {
         /// <summary>
+        /// 靶场　ID
+        /// </summary>
+        public int RangeId { get; set; }
+
+        /// <summary>
         /// 昵称
         /// </summary>
         public string NickName { get; set; }
@@ -63,11 +68,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public bool IsDraft { get; set; }
         public bool IsShare { get; set; }
 
-        /// <summary>
-        /// 期望结果 - Json 类型为List &lt; string &gt;
-        /// </summary>
-        public string ExpectedResultsJson { get; set; }
-
         public List<PromptResultDto> PromptResultList { get; set; } = new();
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore,
-            bool isDraft, bool isShare, string nickName)
+            string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore,
+            bool isDraft, bool isShare, string nickName, int rangeId)
         {
             Id = promptItemId;
             PromptContent = promptContent;
@@ -100,7 +100,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             Note = note;
-            ExpectedResultsJson = expectedResultsJson;
             Prefix = prefix;
             Suffix = suffix;
             VariableDictJson = variableDictJson;
@@ -109,19 +108,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             IsDraft = isDraft;
             IsShare = isShare;
             NickName = nickName;
+            RangeId = rangeId;
         }
 
         public PromptItem_AddResponse(PromptItem item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
             item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
-            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore,
-            item.IsDraft, item.IsShare, item.NickName)
+            item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore,
+            item.IsDraft, item.IsShare, item.NickName, item.RangeId)
         {
         }
 
         public PromptItem_AddResponse(PromptItemDto dto) : this(dto.Id, dto.Content, dto.FullVersion, dto.ModelId,
             dto.MaxToken, dto.Temperature, dto.TopP, dto.FrequencyPenalty, dto.PresencePenalty, dto.StopSequences, dto.Note,
-            dto.ExpectedResultsJson, dto.Prefix, dto.Suffix, dto.VariableDictJson, dto.EvalAvgScore, dto.EvalMaxScore,
-            dto.IsDraft, dto.IsShare, dto.NickName)
+            dto.Prefix, dto.Suffix, dto.VariableDictJson, dto.EvalAvgScore, dto.EvalMaxScore,
+            dto.IsDraft, dto.IsShare, dto.NickName, dto.RangeId)
         {
         }
     }

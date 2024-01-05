@@ -117,6 +117,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<double>("CostTime")
                         .HasColumnType("float");
 
+                    b.Property<int>("FinalScore")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
@@ -136,7 +139,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.Property<string>("PromptItemVersion")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -183,9 +187,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("Aiming")
                         .HasMaxLength(5)
                         .HasColumnType("int");
-
-                    b.Property<string>("ChatSystemPrompt")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -237,9 +238,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("NumsOfResults")
-                        .HasColumnType("int");
-
                     b.Property<string>("ParentTac")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -250,6 +248,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 
                     b.Property<float>("PresencePenalty")
                         .HasColumnType("real");
+
+                    b.Property<int>("RangeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("RangeName")
                         .HasMaxLength(20)
@@ -275,9 +276,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TokenSelectionBiases")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<float>("TopP")
                         .HasColumnType("real");
 
@@ -287,6 +285,48 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptItem");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.PromptRange", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Alias")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RangeName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_PromptRange_PromptRange");
                 });
 #pragma warning restore 612, 618
         }

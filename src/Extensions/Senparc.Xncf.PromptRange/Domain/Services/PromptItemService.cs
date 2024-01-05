@@ -2,33 +2,39 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI;
+using Senparc.AI.Kernel;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptItemService : ServiceBase<PromptItem>
     {
         private readonly AIModelService _aiModelService;
+        private readonly PromptRangeService _promptRangeService;
+        // private readonly PromptResultService _promptResultService;
 
         public PromptItemService(
             IRepositoryBase<PromptItem> repo,
             IServiceProvider serviceProvider,
-            AIModelService aiModelService) : base(repo, serviceProvider)
+            AIModelService aiModelService,
+            PromptRangeService promptRangeService
+        ) : base(repo, serviceProvider)
         {
             _aiModelService = aiModelService;
+            _promptRangeService = promptRangeService;
         }
 
         /// <summary>
@@ -46,30 +52,42 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 throw new NcfExceptionBase("IsNewTactic IsNewSubTactic不能同时为True");
             }
-            // var name = request.Content.SubString(0, 5);
 
             // 默认值为2000
             request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
             request.StopSequences = request.StopSequences == "" ? null : request.StopSequences;
 
+            if (request.RangeId <= 0)
+            {
+                throw new NcfExceptionBase($"RangeId必须为正整数，当前是{request.RangeId}");
+            }
+
             #endregion
 
-            // 更新版本号
-            var today = SystemTime.Now;
-            var todayStr = today.ToString("yyyy.MM.dd");
+            #region 获取靶场
+
+            var promptRange = await _promptRangeService.GetAsync(request.RangeId);
+
+            #endregion
+
+            // // 更新版本号
+            // var today = SystemTime.Now;
+            // var todayStr = today.ToString("yyyy.MM.dd");
 
             #region 根据参数构造PromptItem
 
             PromptItem toSavePromptItem = null;
             if (request.Id == null)
             {
-                // 如果没有id，就新建一个全新的Item
+                // 如果没有id，就新建一个靶道
 
-                List<PromptItem> todayPromptList = await base.GetFullListAsync(
-                    p => p.RangeName.StartsWith($"{todayStr}.") && p.FullVersion.EndsWith("T1-A1")
-                );
+
+                // List<PromptItem> todayPromptList = await base.GetFullListAsync(
+                //     p => p.RangeName.StartsWith($"{todayStr}.") && p.FullVersion.EndsWith("T1-A1")
+                // );
                 toSavePromptItem = new PromptItem(
-                    rangeName: $"{todayStr}.{todayPromptList.Count + 1}",
+                    rangeId: promptRange.Id,
+                    rangeName: promptRange.RangeName, //$"{todayStr}.{todayPromptList.Count + 1}",
                     tactic: "1",
                     aiming: 1,
                     parentTac: "",
@@ -78,43 +96,52 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
             else
             {
-                // 如果有id，就先找到对应的promptItem
-                var oldPrompt = await base.GetObjectAsync(p => p.Id == request.Id);
-                string name = oldPrompt.RangeName;
-                string oldTactic = oldPrompt.Tactic;
-                int oldAiming = oldPrompt.Aiming;
+                // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
+                var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
+
+                // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
+
+                string rangeName = basePrompt.RangeName;
+                string baseTactic = basePrompt.Tactic;
+                int oldAiming = basePrompt.Aiming;
 
                 if (request.IsNewTactic)
                 {
                     // 目标版号的父 T 应该是当前版本的父 T
-                    var parentTac = oldPrompt.ParentTac;
+                    var parentTac = basePrompt.ParentTac;
                     List<PromptItem> fullList = await base.GetFullListAsync(p =>
-                        p.RangeName == name &&
+                        p.RangeName == rangeName &&
                         p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
                     toSavePromptItem = new PromptItem(
-                        rangeName: name,
+                        rangeId: basePrompt.RangeId,
+                        rangeName: rangeName,
                         tactic: $"{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac,
                         request: request
                     );
+                    // 关联复制预期结果过来
+                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
                 }
                 else if (request.IsNewSubTactic)
                 {
                     // 目标版号的父 T 应该是当前版本的 T
-                    var parentTac = oldPrompt.Tactic;
+                    var parentTac = basePrompt.Tactic;
                     List<PromptItem> fullList = await base.GetFullListAsync(
-                        p => p.RangeName == name &&
+                        p => p.RangeName == rangeName &&
                              p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
                     toSavePromptItem = new PromptItem(
-                        rangeName: name,
+                        rangeId: basePrompt.RangeId,
+                        rangeName: rangeName,
                         tactic: $"{parentTac}.{fullList.Count + 1}",
                         aiming: 1,
                         parentTac: parentTac,
                         request: request
                     );
+                    // 关联复制预期结果过来
+                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
                 }
                 else
                 {
@@ -122,18 +149,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     {
                         List<PromptItem> fullList = await base.GetFullListAsync(p =>
                             // p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A')))
-                            p.FullVersion.StartsWith($"{oldPrompt.RangeName}-T{oldPrompt.Tactic}-A")
+                            p.FullVersion.StartsWith($"{basePrompt.RangeName}-T{basePrompt.Tactic}-A")
                         );
                         toSavePromptItem = new PromptItem(
-                            rangeName: name,
-                            tactic: oldTactic,
+                            rangeId: basePrompt.RangeId,
+                            rangeName: rangeName,
+                            tactic: baseTactic,
                             aiming: fullList.Count + 1,
-                            parentTac: oldPrompt.ParentTac,
+                            parentTac: basePrompt.ParentTac,
                             request: request
                         );
+                        // 关联复制预期结果过来
+                        toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
                     }
-                    // todo 是否允许重新生成？
-                    // return toSavePromptItem;
                 }
             }
 
@@ -141,7 +169,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(toSavePromptItem);
 
-            return this.Mapper.Map<PromptItemDto>(toSavePromptItem);
+            return await this.TransEntityToDtoAsync(toSavePromptItem);
         }
 
 
@@ -285,7 +313,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
                              throw new Exception("未找到prompt");
 
-
             promptItem.UpdateExpectedResultsJson(expectedResults);
 
             await this.SaveObjectAsync(promptItem);
@@ -314,13 +341,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // [t2, 版号, 平均分]
             foreach (var (tac, itemList) in itemGroupByT)
             {
-                List<Statistic_TodayTacticResponse.Point> points = new List<Statistic_TodayTacticResponse.Point>();
-                for (var i = 0; i < itemList.Count; i++)
-                {
-                    var zScore = isAvg ? itemList[i].EvalAvgScore : itemList[i].EvalMaxScore;
-                    var point = new Statistic_TodayTacticResponse.Point($"T{tac}", itemList[i].FullVersion, zScore, itemList[i]);
-                    points.Add(point);
-                }
+                List<Statistic_TodayTacticResponse.Point> points = (
+                        from t in itemList
+                        let zScore = isAvg ? t.EvalAvgScore : t.EvalMaxScore
+                        select new Statistic_TodayTacticResponse.Point($"T{tac}", t.FullVersion, zScore, t)
+                    )
+                    .ToList();
 
                 resp.DataPoints.Add(points);
             }
@@ -333,7 +359,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var item = await this.GetObjectAsync(p => p.Id == id) ??
                        throw new NcfExceptionBase($"找不到{id}对应的promptItem");
 
-            return this.Mapper.Map<PromptItemDto>(item);
+            return await this.TransEntityToDtoAsync(item, needRange: true);
         }
 
         public async Task<PromptItemDto> DraftSwitch(int id, bool status)
@@ -345,21 +371,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await this.SaveObjectAsync(promptItem);
 
-            return this.Mapper.Map<PromptItemDto>(promptItem);
+            return await this.TransEntityToDtoAsync(promptItem);
         }
 
-        /// <summary>
-        /// 根据具体版本号，获取模型信息
-        /// </summary>
-        /// <param name="fullVersion"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<PromptItemDto> GetWithVersionAsync(string fullVersion)
+        public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion)
         {
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
                        throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
 
-            var dto = this.Mapper.Map<PromptItemDto>(item);
+            var dto = await this.TransEntityToDtoAsync(item); // this.Mapper.Map<PromptItemDto>(item);
 
             var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
                           throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
@@ -370,7 +390,123 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 OrganizationId = aiModel.OrganizationId
             };
 
-            return dto;
+            return new SenparcAI_GetByVersionResponse(BuildSenparcAiSetting(dto.AIModelDto), dto);
+        }
+
+        /// <summary>
+        /// 构造 SenparcAiSetting
+        /// </summary>
+        /// <param name="aiModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        private SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel)
+        {
+            var aiSettings = new SenparcAiSetting
+            {
+                AiPlatform = aiModel.AiPlatform
+            };
+
+            switch (aiSettings.AiPlatform)
+            {
+                case AiPlatform.NeuCharAI:
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharEndpoint = aiModel.Endpoint
+                    };
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = aiModel.Endpoint
+                    };
+                    break;
+                case AiPlatform.AzureOpenAI:
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = aiModel.Endpoint
+                    };
+                    break;
+                case AiPlatform.HuggingFace:
+                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
+                    {
+                        Endpoint = aiModel.Endpoint
+                    };
+                    break;
+                case AiPlatform.OpenAI:
+                    aiSettings.OpenAIKeys = new OpenAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        OrganizationId = aiModel.OrganizationId
+                    };
+                    break;
+                default:
+                    throw new NcfExceptionBase($"暂时不支持{aiSettings.AiPlatform}类型");
+            }
+
+
+            return aiSettings;
+        }
+
+
+        public async Task<PromptItemDto> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        {
+            // validate rangeName
+            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
+                              throw new NcfExceptionBase($"找不到{rangeName}对应的靶场");
+
+
+            var promptItem = await this.GetObjectAsync(
+                p => p.RangeName == rangeName && (isAvg ? p.EvalAvgScore : p.EvalMaxScore) >= 0,
+                p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
+                OrderingType.Descending);
+
+            return await this.TransEntityToDtoAsync(promptItem);
+        }
+
+        [ItemNotNull]
+        private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needModel = true, bool needRange = true)
+        {
+            var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
+
+            #region 补充AIModel信息
+
+            if (needModel)
+            {
+                var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId) ??
+                              throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
+
+                promptItemDto.AIModelDto = new AIModelDto(aiModel)
+                {
+                    ApiKey = aiModel.ApiKey,
+                    OrganizationId = aiModel.OrganizationId
+                };
+            }
+
+            #endregion
+
+            #region 补充靶场信息
+
+            if (needRange)
+            {
+                var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
+                promptItemDto.PromptRange = promptRangeDto;
+            }
+
+            #endregion
+
+            // if (needResult)
+            // {
+            //     var promptResultService = _serviceProvider.GetService<PromptResultService>();
+            //
+            //     List<PromptResultDto> promptResultList = await promptResultService.GetByItemId(promptItem.Id);
+            //     promptItemDto.PromptResultList = promptResultList;
+            // }
+
+            return promptItemDto;
         }
     }
 }
