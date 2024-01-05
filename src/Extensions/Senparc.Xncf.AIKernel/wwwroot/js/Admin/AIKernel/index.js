@@ -97,8 +97,6 @@ var app=new Vue({
             await this.getDataList();
         },
         async getDataList(){
-            //todo get data from api
-            // /api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync'
             this.tableLoading = true
             await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync',{
                 "page": this.page.page,
@@ -113,6 +111,20 @@ var app=new Vue({
         },
         addModel(){
             this.addFormDialogVisible = true;
+        },
+        copyInfo(key){
+            // 把结果复制到剪切板
+            const input = document.createElement('input')
+            input.setAttribute('readonly', 'readonly')
+            input.setAttribute('value', key)
+            document.body.appendChild(input)
+            input.select()
+            input.setSelectionRange(0, 9999)
+            if (document.execCommand('copy')) {
+                document.execCommand('copy')
+                //提示时展示'******'+key的后4位
+                this.$message.success(`已复制【******${key.slice(-4)}】！`)
+            }
         },
         async addModelSubmit(){
             this.$refs.addForm.validate(async (valid) => {

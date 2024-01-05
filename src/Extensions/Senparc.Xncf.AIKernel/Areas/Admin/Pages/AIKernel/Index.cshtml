@@ -34,6 +34,15 @@
                 <span v-else type="danger">未知</span>
             </template>
         </el-table-column>
+        @* apiKey: only show options of copy *@
+        <el-table-column prop="apiKey" label="Api Key" width="auto">
+            <template slot-scope="scope">
+                <div class="d-flex align-items-center" style="gap: 5px">
+                    <span>******{{scope.row.apiKey?scope.row.apiKey.slice(-4):''}}</span>
+                    <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo(scope.row.apiKey)"></i>
+                </div>
+            </template>
+        </el-table-column>
         <el-table-column prop="note" label="备注" width="auto"></el-table-column>
         <el-table-column prop="addTime" label="添加时间" width="auto">
             <template slot-scope="scope">
