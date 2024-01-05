@@ -30,7 +30,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             _promptItemService = promptItemService;
         }
 
-
+        /// <summary>
+        /// 手动打分
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> HumanScore(PromptResult_HumanScoreRequest request)
         {
@@ -55,6 +59,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 自动打分
         /// 接受一个promptItemId，然后找到所有的promptResult，然后进行评分
         /// </summary>
         /// <param name="promptResultId"></param>
@@ -76,7 +81,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                     #endregion
 
-                    var promptResult = await _promptResultService.RobotScoringAsync(promptResultId, expectedResultList, isRefresh);
+                    var promptResult = await _promptResultService.RobotScoringAsync(promptResultId, isRefresh, expectedResultList);
 
                     await _promptResultService.UpdateEvalScoreAsync(promptResult.PromptItemId);
 
@@ -84,18 +89,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
-
+        /// <summary>
+        /// 根据靶道ID获取对应的结果列表
+        /// </summary>
+        /// <param name="promptItemId"></param>
+        /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GetByItemId(int promptItemId)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
-                    var result = (await _promptResultService.GetFullListAsync(
-                        p => p.PromptItemId == promptItemId,
-                        p => p.Id,
-                        OrderingType.Ascending
-                    )).ToList();
+                    var result = await _promptResultService.GetByItemId(promptItemId);
 
                     var item = await _promptItemService.GetAsync(promptItemId);
 
@@ -117,6 +122,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     var promptItem = await _promptItemService.DraftSwitch(promptItemId, false);
+                    
                     // #region 删除之前的结果
                     //
                     // var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);
@@ -128,7 +134,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     // #endregion
 
 
-                    var resp = new PromptResult_ListResponse(promptItemId, promptItem, new List<PromptResult>());
+                    var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
                     for (int i = 0; i < numsOfResults; i++)
                     {
                         var result = await _promptResultService.SenparcGenerateResultAsync(promptItem);

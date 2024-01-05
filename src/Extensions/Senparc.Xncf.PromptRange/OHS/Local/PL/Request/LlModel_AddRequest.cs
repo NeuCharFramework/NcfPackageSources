@@ -1,11 +1,18 @@
-﻿namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
+﻿using Senparc.AI;
+
+namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
-    public class LlmModel_AddRequest
+    public class LlModel_AddRequest
     {
+        /// <summary>
+        /// 代号
+        /// </summary>
+        public string Alias { get; set; }
+
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name { get; set; }
+        public string DeploymentName { get; set; }
 
         /// <summary>
         /// Endpoint（必须）
@@ -15,7 +22,7 @@
         /// <summary>
         /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
         /// </summary>
-        public string ModelType { get;  set; }
+        public AiPlatform ModelType { get; set; }
 
         /// <summary>
         /// ApiKey
@@ -28,5 +35,9 @@
         public string OrganizationId { get; set; }
 
         public string ApiVersion { get; set; }
+
+        public string Note { get; set; } = "";
+
+        public bool IsShared { get; set; } = false;
     }
 }

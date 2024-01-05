@@ -64,6 +64,7 @@ namespace Senparc.Xncf.AIKernel
             }
         }
 
+
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region 删除数据库（演示）
@@ -82,10 +83,27 @@ namespace Senparc.Xncf.AIKernel
         }
         #endregion
 
+        private static SenparcAiSetting SenparcAiSetting { get; set; }
+
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //services.AddScoped<ColorAppService>();
+            //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
+
+            SenparcAiSetting ??= new SenparcAiSetting();
+            configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
+
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            registerService.UseSenparcAI(SenparcAiSetting);
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
         }
     }
 }

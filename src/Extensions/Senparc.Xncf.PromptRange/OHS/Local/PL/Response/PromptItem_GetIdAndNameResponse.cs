@@ -4,16 +4,39 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {
     public class PromptItem_GetIdAndNameResponse : AppResponseBase<string>
     {
+        /// <summary>
+        /// 主键 ID
+        /// </summary>
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { get; set; }
 
+        /// <summary>
+        /// 靶场名称
+        /// </summary>
+        public string RangeName { get; set; }
+
+        /// <summary>
+        /// 完整版号
+        /// </summary>
         public string FullVersion { get; set; }
 
+        /// <summary>
+        /// 评估参数, 平均分
+        /// </summary>
         public int EvalAvgScore { get; set; }
 
+        /// <summary>
+        /// 评估参数
+        /// </summary>
         public int EvalMaxScore { get; set; }
 
+        /// <summary>
+        /// 是否是草稿
+        /// </summary>
         public bool IsDraft { get; set; }
 
         public PromptItem_GetIdAndNameResponse()
@@ -23,7 +46,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public PromptItem_GetIdAndNameResponse(PromptItem promptItem)
         {
             Id = promptItem.Id;
-            Name = promptItem.RangeName;
+            NickName = promptItem.NickName;
+            RangeName = promptItem.RangeName;
             FullVersion = promptItem.FullVersion;
             EvalAvgScore = promptItem.EvalAvgScore;
             EvalMaxScore = promptItem.EvalMaxScore;

@@ -74,7 +74,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -155,28 +155,29 @@ var app = new Vue({
             modelFormVisible: false,
             modelFormSubmitLoading: false,
             modelForm: {
+                alias: "", // string
                 modelType: "", // string
-                name: "", // string
+                deploymentName: "", // string
                 apiVersion: "", // string
                 apiKey: "", // string
                 endpoint: "", // string
                 organizationId: "", // string
             },
             modelTypeOpt: [{
-                value: 'OpenAI',
+                value: '8',
                 label: 'OpenAI',
                 disabled: false
             }, {
-                value: 'AzureOpenAI',
+                value: '16',
                 label: 'AzureOpenAI',
                 disabled: false
             }, {
-                value: 'NeuCharAI',
+                value: '4',
                 label: 'NeuCharAI',
                 disabled: false
             }, {
-                value: 'HugginFace',
-                label: 'HugginFace',
+                value: '32',
+                label: 'HuggingFace',
                 disabled: false
             }],
             // 表单校验规则
@@ -199,7 +200,10 @@ var app = new Vue({
                 modelType: [
                     {required: true, message: '请选择模型类型', trigger: 'change'}
                 ],
-                name: [
+                alias: [
+                    {required: true, message: '请输入模型别名', trigger: 'blur'}
+                ],
+                deploymentName: [
                     {required: true, message: '请输入模型名称', trigger: 'blur'}
                 ],
                 apiVersion: [
@@ -249,9 +253,11 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶道列表
-        this.getFieldList()
-        // 获取模型列表
-        this.getModelOptData()
+        setTimeout(()=>{
+            this.getFieldList()
+            // 获取模型列表
+            this.getModelOptData()
+        },100)
         // 获取分数趋势图
         // this.getScoringTrendData()
         // 图表自适应
@@ -271,6 +277,10 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // ai 评分删除
+        deleteAiScoreBtn(index) {
+            this.aiScoreForm.resultList.splice(index, 1)
+        },
         // 新增靶场
         addPromptField() {
             // 刷新页面
@@ -341,6 +351,22 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
+        copyInfo(){
+          // 找到promptOpt里面的promptid
+            const promptItem = this.promptOpt.find(item => item.promptid === this.promptid)
+            const fullVersion = promptItem.fullVersion
+            // 把结果复制到剪切板
+            const input = document.createElement('input')
+            input.setAttribute('readonly', 'readonly')
+            input.setAttribute('value', fullVersion)
+            document.body.appendChild(input)
+            input.select()
+            input.setSelectionRange(0, 9999)
+            if (document.execCommand('copy')) {
+                document.execCommand('copy')
+                this.$message.success(`复制【${fullVersion}】成功`)
+            }
+        },
         // 格式化时间
         formatDate(d) {
             var date = new Date(d);
@@ -370,7 +396,6 @@ var app = new Vue({
                     formatter: (params) => {
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
-                        //
                         let _html = `<div style="text-align: left;font-size:10px;">
     <p>靶场：${_data?.rangeName || ''}</p>
     <p>版本：${_data?.fullVersion || ''}</p>
@@ -418,7 +443,7 @@ var app = new Vue({
                         show: true,//该参数需设为true
                         // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
                         lineStyle: {//坐标轴样式
-                            color: '#32b8be',
+                            color: 'rgba(0,0,0,0.3)',
                             opacity: 1,//(单个刻度不会受影响)
                             width: 2//线条宽度
                         }
@@ -426,7 +451,7 @@ var app = new Vue({
                     // 坐标轴 label
                     axisLabel: {
                         show: true,//是否显示刻度  (刻度上的数字，或者类目)
-                        interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        //interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
                         //formatter: function (v) {
                         //    // return;
                         //},
@@ -443,26 +468,31 @@ var app = new Vue({
                     },
                     //刻度
                     axisTick: {
-                        show: false,//是否显示出
+                        show: true,//是否显示出
                         // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        length: 5,//坐标轴刻度的长度
-                        lineStyle: {//举个例子，样式太丑将就
-                            color: '#000',//颜色
-                            opacity: 1,
-                            width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
-                        }
+                        //length: 5,//坐标轴刻度的长度
+                        //lineStyle: {//举个例子，样式太丑将就
+                        //    color: '#000',//颜色
+                        //    opacity: 1,
+                        //    width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        //}
                     },
                     //平面上的分隔线。
                     splitLine: {
-                        show: true,//立体网格线  
+                        show: true,//立体网格线
                         // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        splitArea: {
-                            show: true,
-                            // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                            areaStyle: {
-                                color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)']
-                            }
+                        lineStyle: {//坐标轴样式
+                            color: 'rgba(0,0,0,0.05)',
+                            opacity: 1,//(单个刻度不会受影响)
+                            width: 1//线条宽度
                         },
+                        //splitArea: {
+                        //    show: true,
+                        //    // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        //    areaStyle: {
+                        //        color: ['rgba(250,250,250,0.2)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.2)', 'rgba(200,200,200,0.2)']
+                        //    }
+                        //},
                     },
                     // 坐标轴指示线。
                     axisPointer: {
@@ -475,8 +505,8 @@ var app = new Vue({
                     },
                     //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
                     viewControl: {
-                        // minBeta: -10, //最小旋转角度
-                        // maxBeta: 10, //最大旋转角度
+                        minBeta: 0, //最小旋转角度
+                        maxBeta: 90, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
@@ -486,7 +516,7 @@ var app = new Vue({
                         // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
                         distance: 350,//默认视角距离主体的距离(常用)
                         alpha: 1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
-                        beta: -30,//视角绕 y 轴，即左右旋转的角度。
+                        beta: 30,//视角绕 y 轴，即左右旋转的角度。
                         // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
                         animation: true,
                     },
@@ -518,36 +548,63 @@ var app = new Vue({
                 },
                 series: []
             };
-            let _series = []
+            let _series = [],_copySeries = []
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
                     _series.push({
                         type: 'line3D', // line3D scatter3D
                         name: item[0][1],
-                        //itemStyle: {
-                        //    color: 'rgb(165,  0, 38)'
-                        //},
-                        //label: {  //当type为scatter3D时有label出现
-                        //    show: false,
-                        //    position: 'bottom',
-                        //    distance: 0,
-                        //    textStyle: {
-                        //        color: '#ffffff',
-                        //        fontSize: 12,
-                        //        borderWidth: 0,
-                        //        borderColor: '#c6c6c6',
-                        //        backgroundColor: 'transparent'
-                        //    }
-                        //},
-                        data: item    //每个区的数据一一对应
+                        data: item,    //每个区的数据一一对应
+                        //tooltip: {
+                        //    show: false
+                        //}
                     })
                 }
             })
+            _copySeries = JSON.parse(JSON.stringify(_series))
             chartOption.series = _series
             //console.log('chartOption', chartOption)
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
+  
+             //监听图表鼠标移入事件 mouseover globalout
+            chartInstance.on('mouseover', (params) => {
+                let _sFilter = _copySeries.filter(item => {
+                    if (item.type === 'scatter3D') return true
+                    return false
+                })
+                //console.log('params', _sFilter, params)
+                if (_sFilter && _sFilter.length > 0) {
+                    _sFilter.forEach(item => {
+                        let _sFindIndex = _copySeries.findIndex(el => item.data == el.data)
+                        _copySeries.splice(_sFindIndex, 1)
+                    })
+                }
+                // 添加对应的 scatter3D
+                _copySeries.push({
+                    type: 'scatter3D',
+                    name: params.seriesName,
+                    symbol: 'circle',  // 设置圆点样式为圆形
+                    symbolSize: 10,  // 设置圆点的大小
+                    label: {
+                        show: false,  // 设置 label 显示
+                        formatter: function (params) {
+                            return '';  // 将 label 内容固定为 ""
+                        }
+                    },
+                    data: [params.data]    //每个区的数据一一对应
+                })
+                chartInstance.setOption({ series: _copySeries });
+            })
+            //监听图表鼠标移出事件
+            chartInstance.on('mouseout', (params) => {
+                /*console.log('globalout', _series, _sFilter, params)*/
+                _copySeries = JSON.parse(JSON.stringify(_series))
+                //chartOption.series = _series
+                //this.chartInstance.setOption(chartOption);
+                chartInstance.setOption({ series: _series });
+            })
         },
         // 输出 获取评分趋势 图表数据
         async getScoringTrendData() {
@@ -568,13 +625,13 @@ var app = new Vue({
                             let _zData = []
                             item.forEach(el => {
                                 if (el) {
-                                    if (_xData.indexOf(el.y) === -1) {
+                                    if (_xData.indexOf(`${el.y}`) === -1) {
                                         _xData.push(`${el.y}`)
                                     }
-                                    if (_yData.indexOf(el.x) === -1) {
+                                    if (_yData.indexOf(`${el.x}`) === -1) {
                                         _yData.push(`${el.x}`)
                                     }
-                                    _zData.push([`${el.y}`, `${el.x}`, el.z, el.data])
+                                    _zData.push([`${el.y}`, `${el.x}`, `${el.z}`, el.data])
                                 }
                             })
                             _seriesData.push(_zData)
@@ -582,8 +639,12 @@ var app = new Vue({
                     })
                     //console.log('_xData',_xData,_yData, _seriesData)
                     this.chartData = {
-                        xData: _xData,
-                        yData: _yData,
+                        xData: _xData.sort((a, b) => {
+                            return a - b
+                        }),
+                        yData: _yData.sort((a, b) => {
+                            return a - b
+                        }),
                         seriesData: _seriesData
                     }
                 }
@@ -603,6 +664,9 @@ var app = new Vue({
         },
         // 靶道选择变化
         promptChangeHandel(val, itemKey, oldVal) {
+            // 靶道变化时，重置打靶按钮
+            this.sendBtnText = '打靶'
+            this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -684,6 +748,8 @@ var app = new Vue({
                 suffix: '',
                 variableList: []
             }
+            this.sendBtnText = '打靶'
+            this.numsOfResults = 1
             // 获取靶道列表
             await this.getPromptOptData()
             // 获取分数趋势图表数据
@@ -767,6 +833,10 @@ var app = new Vue({
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
+                        let vArr = copyResultData.fullVersion.split('-') 
+                        copyResultData.promptFieldStr = vArr[0] || ''
+                        copyResultData.promptStr = vArr[1] || ''
+                        copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
                         // 平均分 
                         this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
@@ -799,9 +869,14 @@ var app = new Vue({
                             return item
                         })
                         //console.log('选择正确的靶场')
-                        this.getPromptOptData(id)
-                        // 获取分数趋势图表数据
-                        this.getScoringTrendData()
+                        //提交数据后，选择正确的靶场和靶道
+                        this.getFieldList().then(() => {
+                            this.promptField=fullVersion.split('-')[0]
+                            this.getPromptOptData(id)
+                            // 获取分数趋势图表数据
+                            this.getScoringTrendData()
+                        })
+                  
                         if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                             //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                             this.dealRapicFireHandel(this.numsOfResults - 1)
@@ -1019,6 +1094,18 @@ var app = new Vue({
         showRatingView(index, scoreType) {
             // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
             if (scoreType === '1') {
+                if (this.promptDetail.modelId) {
+                    // 在promptOpt是否存在
+                    console.log(this.promptDetail)
+                    let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
+                    if (_index === -1) {
+                        this.$message({
+                            message: '模型已被删除，请选择模型后重新打靶！',
+                            type: 'warning'
+                        })
+                        return 
+                    }
+                }
                 let _list = this.outputList[index].alResultList.map(item => item.value)
                 _list = _list.filter(item => item)
                 if (_list.length === 0) {
@@ -1096,7 +1183,7 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid && !isDraft) {
+            if (this.promptid || this.sendBtnText!=='连发'||(!this.promptid&&this.sendBtnText==="保存草稿")) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -1173,6 +1260,10 @@ var app = new Vue({
                     // 拷贝数据
                     let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                     delete copyResultData.promptResultList
+                    let vArr = copyResultData.fullVersion.split('-')
+                    copyResultData.promptFieldStr = vArr[0] || ''
+                    copyResultData.promptStr = vArr[1] || ''
+                    copyResultData.tacticsStr = vArr[2] || ''
                     this.promptDetail = copyResultData
                     // 平均分 
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
@@ -1208,12 +1299,12 @@ var app = new Vue({
                     })
                     //提交数据后，选择正确的靶场和靶道
                     this.getFieldList().then(() => {
+                        this.promptField=fullVersion.split('-')[0]
                         this.getPromptOptData(id)
+                        // 获取分数趋势图表数据
+                        this.getScoringTrendData()
                     })
-
-
-                    // 获取分数趋势图表数据
-                    this.getScoringTrendData()
+                    
                     if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                         //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
                         this.dealRapicFireHandel(this.numsOfResults - 1)
@@ -1250,7 +1341,7 @@ var app = new Vue({
             for (let i = 0; i < howmany; i++) {
                 promises.push(this.rapidFireHandel());
             }
-            await Promise.all(promises);
+            await Promise.all(promises)
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
@@ -1261,6 +1352,10 @@ var app = new Vue({
             return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
+                if (!res.data.success){
+                    this.$message.error(res.data.errorMessage)
+                    return 
+                }
                 this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
                 this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                 //输出列表 
@@ -1354,7 +1449,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成',
+                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）',
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -1405,7 +1500,7 @@ var app = new Vue({
         },
         deleteModel(item) {
             //删除模型 confirm
-            this.$confirm(`此操作将永久删除模型【${item.name}】, 是否继续?`, '提示', {
+            this.$confirm(`此操作将永久删除模型【${item.alias}】, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -1442,6 +1537,9 @@ var app = new Vue({
                 value: ''
             })
         },
+        toAIKernel(){
+            window.open('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
+        },
         // prompt请求参数 删除变量行btn
         deleteVariableBtn(index) {
             this.promptParamForm.variableList.splice(index, 1)
@@ -1470,7 +1568,7 @@ var app = new Vue({
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetIdAndName')
+            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
             //console.log('getModelOptData:', res)
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
@@ -1478,7 +1576,7 @@ var app = new Vue({
                 this.modelOpt = _optList.map(item => {
                     return {
                         ...item,
-                        label: item.name,
+                        label: item.alias,
                         value: item.id,
                         disabled: false
                     }
@@ -1490,8 +1588,9 @@ var app = new Vue({
         // 新增模型 dialog 关闭
         modelFormCloseDialog() {
             this.modelForm = {
+                alias: "", // string
                 modelType: "", // string
-                name: "", // string
+                deploymentName: "", // string
                 apiVersion: "", // string
                 apiKey: "", // string
                 endpoint: "", // string
@@ -1504,11 +1603,23 @@ var app = new Vue({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm, {customAlert: true})
+                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add',
+                        {
+                            ...this.modelForm,
+                            modelType:parseInt(this.modelForm.modelType)
+                        },
+                        {customAlert: true})
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
                         // 重新获取模型列表
-                        this.getModelOptData()
+                        await this.getModelOptData().then(()=>{
+                            this.modelid = res.data.data.id
+                        })
+                        // 提示添加成功
+                        this.$message({
+                            message: '添加成功！',
+                            type: 'success'
+                        })
                         // 关闭dialog
                         this.modelFormVisible = false
                     } else {
@@ -1598,7 +1709,13 @@ var app = new Vue({
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
                 //console.log('getPromptetail:', res.data)
-                this.promptDetail = res.data.data
+                // 拷贝数据
+                let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                let vArr = copyResultData.fullVersion.split('-')
+                copyResultData.promptFieldStr = vArr[0] || ''
+                copyResultData.promptStr = vArr[1] || ''
+                copyResultData.tacticsStr = vArr[2] || ''
+                this.promptDetail = copyResultData
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)

@@ -30,7 +30,6 @@
                         <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                         <div class="titleContent">选择靶场</div>
                     </div>
-                    @*  *@
                     <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
                 </div>
                 <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField',promptField)">
@@ -46,7 +45,10 @@
             <div class="w-100">
                 <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
                     <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
-                    <div class="titleContent">选择靶道</div>
+                    <div class="titleContent d-flex justify-content-between  align-center w-100">
+                        <span>选择靶道</span>
+                        <i class="el-icon-document-copy" style="font-size: 1.3rem" @@click="copyInfo"></i>
+                    </div>
                 </div>
                 <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid',promptid)">
                     <el-option v-for="item in promptOpt"
@@ -66,19 +68,16 @@
                 <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">选择模型</div>
             </div>
-            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
+            <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
         </div>
         <div style="padding-right: 5px">
-            <el-select v-model="modelid" placeholder="请选择模型" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
+            <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
                 <el-option v-for="item in modelOpt"
                            v-key="item.id"
                            :label="item.label"
                            :value="item.value"
                            :disabled="item.disabled">
-                    <div class="d-flex justify-content-between align-center">
-                        <span>{{ item.label }}</span>
-                        <el-button type="danger" size="mini" @@click="deleteModel(item)">删除</el-button>
-                    </div>
+                    <span>{{ item.label }}</span>
                 </el-option>
             </el-select>
         </div>
@@ -86,6 +85,13 @@
 </div>
 @*输入*@
 <div class="boxCard inputPromptArea">
+    <div class="prompt-mask" v-if="sendBtnText==='连发'">
+        <div class="text-center">
+            <i class="el-icon-lock" style="font-size:2.5rem"></i>
+            <br>当前处于连发模式，内容已锁定
+            <br>如需修改，请切换其他模式
+        </div>
+    </div>
     @*模型参数设置*@
     <div class="configurineAreaItem paramBox">
         <div class="titleRow">
@@ -119,7 +125,7 @@
         </div>
     </div>
     @* 设置ai评分标准 :disabled="!promptid" *@
-    <div>
+    <div style="z-index: 1250">
         <el-button type="primary" :disabled="!promptid" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
@@ -151,7 +157,7 @@
                               show-word-limit
                               placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')">
                     </el-input>
-                    <div class="operationBox">
+                    <div class="operationBox" style="z-index: 1250;">
                         @* 选择连发次数 *@
                         <el-dropdown @@command="changeNumsBtn" type="primary" size="small">
                             <div class="numsOfResultsBox">
@@ -163,12 +169,18 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                         @* 打靶按钮  v-loading="targetShootLoading" *@
-                        <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                            {{sendBtnText}}
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&!promptid" :command="btn.text">{{btn.text}}</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <div class="targetShootBtnRow">
+                            <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
+                                {{sendBtnText}}
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0)" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <el-tooltip class="item" effect="dark" placement="top">
+                                <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br/>连发：根据当前选择的靶道信息，连续输出多个结果。<br/>草稿：保存当前输入的内容，并创建新的靶道。</div>
+                                <i class="el-icon-warning-outline"></i>
+                            </el-tooltip>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,6 +255,20 @@
 <div class="promptPage_rightArea">
     @*输出*@
     <div class="boxCard outputArea">
+            <div class="titleRow">
+                <div class="titleRow_scoreBox">
+                    <span>靶场:</span>
+                    <span>{{promptDetail.promptFieldStr||'--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>靶道:</span>
+                    <span>{{promptDetail.promptStr||'--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>战术:</span>
+                    <span>{{promptDetail.tacticsStr||'--'}}</span>
+                </div>
+        </div>
         <div class="titleRow">
             <div class="titleRow_leftBox">
                 <img src="~/image/Admin/PromptRange/prompt_output.svg" alt="" class="imgIcon"/>
@@ -397,19 +423,22 @@
                 <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="模型名称" prop="name" label-width="130px">
-            <el-input v-model="modelForm.name" autocomplete="off" placeholder="请输入模型名称"></el-input>
+        <el-form-item label="模型别名" prop="alias" label-width="130px">
+            <el-input v-model="modelForm.alias" autocomplete="off" placeholder="请输入模型别名"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'" label="API Version" prop="apiVersion" label-width="130px">
+        <el-form-item label="模型名称" prop="deploymentName" label-width="130px">
+            <el-input v-model="modelForm.deploymentName" autocomplete="off" placeholder="请输入模型名称"></el-input>
+        </el-form-item>
+        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">
             <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='OpenAI'||modelForm.modelType==='NeuCharAI'" label="API key" prop="apiKey" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='8'||modelForm.modelType==='4'" label="API key" prop="apiKey" label-width="130px">
             <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" placeholder="请输入API key"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='AzureOpenAI'||modelForm.modelType==='NeuCharAI'||modelForm.modelType==='HugginFace'" label="End Point" prop="endpoint" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'||modelForm.modelType==='32'" label="End Point" prop="endpoint" label-width="130px">
             <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
         </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='OpenAI'" label="Organization Id" prop="organizationId" label-width="130px">
+        <el-form-item v-if="modelForm.modelType==='8'" label="Organization Id" prop="organizationId" label-width="130px">
             <el-input v-model="modelForm.organizationId" autocomplete="off" placeholder="请输入Organization Id"></el-input>
         </el-form-item>
     </el-form>
@@ -435,11 +464,12 @@
 <el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center @@close="aiScoreFormCloseDialog">
     <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
-        <div v-for="(item,index) in aiScoreForm.resultList" v-key="index">
+            <div v-for="(item,index) in aiScoreForm.resultList" v-key="index" class="targetShootBtnRow">
             @* :rules="rules.aiResultVal" *@
             <el-form-item :label="item.label" :prop="'resultList.' + index + '.value'" label-width="100px">
                 <el-input v-model="item.value" autocomplete="off" placeholder="请输入期望结果"></el-input>
             </el-form-item>
+                <i class="el-icon-delete deleteIcon" @@click="deleteAiScoreBtn(index)"></i>
         </div>
 
         <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
