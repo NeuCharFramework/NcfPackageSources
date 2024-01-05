@@ -924,7 +924,10 @@ var app = new Vue({
                 }
             });
         },
-
+        checkUseRed(item,which){
+            if(item.finalScore===-1||item.finalScore==='-1') return '';   
+            return item.finalScore===item[which]?'warnRow':''  
+        },
         // 版本记录 获取版本记录 树形数据
         async getVersionRecordData() {
             let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${this.promptField}`)

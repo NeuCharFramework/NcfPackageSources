@@ -89,10 +89,10 @@
 </div>
 @*输入*@
 <div class="boxCard inputPromptArea" style="padding: 0">
-    <div class="overall-mask" v-if="promptFieldOpt.length===0" style="z-index: 1350;">
+    <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
         <div class="text-center">
             <i class="el-icon-lock" style="font-size:2.5rem"></i>
-            <br>请新建靶场后再进行操作
+            <br>请新建或选择靶场后再进行操作
         </div>
     </div>
     <div class="prompt-mask" v-if="sendBtnText==='连发'">
@@ -306,11 +306,11 @@
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                         <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span>AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
+                        <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
                     </div>
                     <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                         <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span>手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
+                        <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
                     </div>
                 </div>
                 <div v-if="item.isScoreView" class="scoreRow">
