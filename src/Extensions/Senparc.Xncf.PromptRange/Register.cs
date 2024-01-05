@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange
 {
