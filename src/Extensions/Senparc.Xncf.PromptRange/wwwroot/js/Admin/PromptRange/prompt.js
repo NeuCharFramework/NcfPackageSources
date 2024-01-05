@@ -457,7 +457,7 @@ var app = new Vue({
                     // 坐标轴 label
                     axisLabel: {
                         show: true,//是否显示刻度  (刻度上的数字，或者类目)
-                        //interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        interval: 0,//坐标轴刻度标签的显示间隔，在类目轴中有效。
                         //formatter: function (v) {
                         //    // return;
                         //},
@@ -713,6 +713,7 @@ var app = new Vue({
                     }).then(() => {
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
+                            this.resetPageData()
                             this.getPromptetail(val, true)
                         })
                         // 重置 页面变化记录
@@ -723,6 +724,7 @@ var app = new Vue({
                         // 重新获取靶道列表
                         //this.getFieldList()
                         // 靶道
+                        this.resetPageData()
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
                         this.pageChange = false
@@ -1109,10 +1111,8 @@ var app = new Vue({
             // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
             if (scoreType === '1') {
                 if (this.promptDetail.modelId) {
-                    // 在promptOpt是否存在
-                    console.log(this.promptDetail)
                     let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
-                    if (_index === -1) {
+                    if (_index === -1 && !this.modelid) {
                         this.$message({
                             message: '模型已被删除，请选择模型后重新打靶！',
                             type: 'warning'
@@ -1123,10 +1123,9 @@ var app = new Vue({
                 let _list = this.outputList[index].alResultList.map(item => item.value)
                 _list = _list.filter(item => item)
                 if (_list.length === 0) {
-
-                    if (this.promptDetail && this.promptDetail.expectedResultsJson) {
-                        let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
-                        this.outputList[index].alResultList = _expectedResultsJson.map((item, index) => {
+                    let _listVal = this.aiScoreForm.resultList.filter(item => item.value)
+                    if (_listVal.length > 0) {
+                        this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return {
                                 id: index + 1,
                                 label: `预期结果${index + 1}`,
@@ -1140,7 +1139,6 @@ var app = new Vue({
                             type: 'warning'
                         })
                     }
-
                 } else {
                     // todo 接口对接 重新评分
                     this.saveManualScore(this.outputList[index])
@@ -1197,10 +1195,17 @@ var app = new Vue({
                 })
                 return
             }
-            if (this.promptid || this.sendBtnText!=='连发'||(!this.promptid&&this.sendBtnText==="保存草稿")) {
+            // 弹窗逻辑1，有promptid，就要弹窗
+            if (this.promptid){
                 this.tacticalFormVisible = true
                 return
             }
+            // 弹窗逻辑2，只要保存草稿就弹
+            if (this.sendBtnText === '保存草稿'){
+                this.tacticalFormVisible = true
+                return
+            }
+
 
             this.targetShootLoading = true
             let _postData = {
@@ -1731,6 +1736,27 @@ var app = new Vue({
                 copyResultData.tacticsStr = vArr[2] || ''
                 this.promptDetail = copyResultData
                 if (overwrite) {
+                    if (copyResultData && copyResultData.expectedResultsJson) {
+                        let _expectedResultsJson = JSON.parse(copyResultData.expectedResultsJson)
+                        this.aiScoreForm = {
+                            resultList: _expectedResultsJson.map((item, index) => {
+                                return {
+                                    id: index + 1,
+                                    label: `预期结果${index + 1}`,
+                                    value: item
+                                }
+                            })
+                        }
+                    } else {
+                        // 如果没有预期结果就重置
+                        this.aiScoreForm = {
+                            resultList: [{
+                                id: 1,
+                                label: '预期结果1',
+                                value: ''
+                            }]
+                        }
+                    }
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
                     // 重新获取图表
@@ -1868,24 +1894,32 @@ var app = new Vue({
         },
         // ai评分设置 打开 dialog 
         aiScoreFormOpenDialog() {
-            // 判断 this.aiScoreForm.resultList 是否有值
             let _list = this.aiScoreForm.resultList
-            let _listVal = _list.map(item => item.value)
-            if (_list.length === 1 && _listVal.length === 0) {
-                if (this.promptDetail && this.promptDetail.expectedResultsJson) {
-                    let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
-                    this.aiScoreForm = {
-                        resultList: _expectedResultsJson.map((item, index) => {
-                            return {
-                                id: index + 1,
-                                label: `预期结果${index + 1}`,
-                                value: item
-                            }
-                        })
-                    }
+            let _listVal = _list.filter(item => item.value)
+            console.log('_listVal:', _list, _listVal, this.promptDetail)
+            if (_list.length === 1 && _listVal.length ===0&&this.promptDetail && this.promptDetail.expectedResultsJson) {
+                let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
+                this.aiScoreForm = {
+                    resultList: _expectedResultsJson.map((item, index) => {
+                        return {
+                            id: index + 1,
+                            label: `预期结果${index + 1}`,
+                            value: item
+                        }
+                    })
                 }
             }
-            
+            //else {
+            //    // 如果没有预期结果就重置
+            //    this.aiScoreForm = {
+            //        resultList: [{
+            //            id: 1,
+            //            label: '预期结果1',
+            //            value: ''
+            //        }]
+            //    }
+            //}
+            // 判断 this.aiScoreForm.resultList 是否有值            
             this.aiScoreFormVisible = !this.aiScoreFormVisible
         },
         // 关闭ai评分设置 dialog
