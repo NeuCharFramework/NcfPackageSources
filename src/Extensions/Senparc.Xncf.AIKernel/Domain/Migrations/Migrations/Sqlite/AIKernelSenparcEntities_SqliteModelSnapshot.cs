@@ -52,7 +52,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Endpoint")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 

@@ -211,7 +211,17 @@ namespace Senparc.Xncf.PromptRange
         //     Note = note;
         //     IsDraft = isDraft;
         // }
-
+        public PromptItem(PromptItemDto dto) : this(dto.Content, dto.ModelId, dto.TopP, dto.Temperature, dto.MaxToken, dto.FrequencyPenalty,
+            dto.PresencePenalty, dto.StopSequences, dto.RangeName, dto.Tactic, dto.Aiming, dto.ParentTac, dto.Note,
+            dto.ExpectedResultsJson, dto.IsDraft, dto.Prefix, dto.Suffix, dto.VariableDictJson)
+        {
+            Id = dto.Id;
+            NickName = dto.NickName;
+            EvalAvgScore = dto.EvalAvgScore;
+            EvalMaxScore = dto.EvalMaxScore;
+            LastRunTime = dto.LastRunTime;
+            IsShare = dto.IsShare;
+        }
         public PromptItem(string content,
             int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
             // int numsOfResults,
