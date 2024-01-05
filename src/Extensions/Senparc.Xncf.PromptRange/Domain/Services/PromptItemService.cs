@@ -163,7 +163,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(toSavePromptItem);
 
-            return await this.TransEntityToDto(toSavePromptItem);
+            return await this.TransEntityToDtoAsync(toSavePromptItem);
         }
 
 
@@ -353,7 +353,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var item = await this.GetObjectAsync(p => p.Id == id) ??
                        throw new NcfExceptionBase($"找不到{id}对应的promptItem");
 
-            return await this.TransEntityToDto(item, needRange: true);
+            return await this.TransEntityToDtoAsync(item, needRange: true);
         }
 
         public async Task<PromptItemDto> DraftSwitch(int id, bool status)
@@ -365,7 +365,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await this.SaveObjectAsync(promptItem);
 
-            return await this.TransEntityToDto(promptItem);
+            return await this.TransEntityToDtoAsync(promptItem);
         }
 
         public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion)
@@ -373,7 +373,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
                        throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
 
-            var dto = this.Mapper.Map<PromptItemDto>(item);
+            var dto = await this.TransEntityToDtoAsync(item); // this.Mapper.Map<PromptItemDto>(item);
 
             var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
                           throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
@@ -447,7 +447,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
         [ItemNotNull]
-        private async Task<PromptItemDto> TransEntityToDto([NotNull] PromptItem promptItem, bool needRange = true, bool needResult = false)
+        private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needRange = true)
         {
             var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
 
@@ -457,12 +457,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 promptItemDto.PromptRange = promptRangeDto;
             }
 
-            if (needResult)
-            {
-                var promptResultService = _serviceProvider.GetService<PromptResultService>();
-
-                await promptResultService.GetByItemId(promptItem.Id);
-            }
+            // if (needResult)
+            // {
+            //     var promptResultService = _serviceProvider.GetService<PromptResultService>();
+            //
+            //     List<PromptResultDto> promptResultList = await promptResultService.GetByItemId(promptItem.Id);
+            //     promptItemDto.PromptResultList = promptResultList;
+            // }
 
             return promptItemDto;
         }

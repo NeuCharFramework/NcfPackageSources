@@ -796,7 +796,7 @@
             <param name="expectedResults"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">
             <summary>
             获取靶场列表详情（添加时间倒序）
             </summary>

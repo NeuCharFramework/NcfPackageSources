@@ -44,11 +44,11 @@ public class PromptRangeAppService : AppServiceBase
     /// <param name="request"></param>
     /// <returns></returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-    public async Task<AppResponseBase<PromptRangeDto>> AddAsync(PromptRange_AddRequest request)
+    public async Task<AppResponseBase<PromptRangeDto>> AddAsync(string alias)
     {
         return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
             async (response, logger) =>
-                await _promptRangeService.AddAsync(request)
+                await _promptRangeService.AddAsync(alias)
         );
     }
 

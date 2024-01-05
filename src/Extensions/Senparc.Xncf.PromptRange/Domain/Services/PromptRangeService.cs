@@ -47,7 +47,7 @@ public class PromptRangeService : ServiceBase<PromptRange>
         return promptRange.Select(TransEntityToDto).ToList();
     }
 
-    public async Task<PromptRangeDto> AddAsync(PromptRange_AddRequest request)
+    public async Task<PromptRangeDto> AddAsync(string alias)
     {
         var today = SystemTime.Now;
         var todayStr = today.ToString("yyyy.MM.dd");
@@ -59,6 +59,7 @@ public class PromptRangeService : ServiceBase<PromptRange>
         );
 
         var promptRange = new PromptRange($"{todayStr}.{todayRangeList.Count + 1}");
+        promptRange.ChangeAlias(alias);
 
         await this.SaveObjectAsync(promptRange);
 
