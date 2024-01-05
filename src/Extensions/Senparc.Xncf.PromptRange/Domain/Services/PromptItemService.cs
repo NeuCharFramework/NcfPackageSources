@@ -13,6 +13,9 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI;
+using Senparc.AI.Kernel;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -20,18 +23,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
     {
         private readonly AIModelService _aiModelService;
         private readonly PromptRangeService _promptRangeService;
-        private readonly PromptResultService _promptResultService;
+        // private readonly PromptResultService _promptResultService;
 
         public PromptItemService(
             IRepositoryBase<PromptItem> repo,
             IServiceProvider serviceProvider,
             AIModelService aiModelService,
-            PromptRangeService promptRangeService, 
-            PromptResultService promptResultService) : base(repo, serviceProvider)
+            PromptRangeService promptRangeService
+        ) : base(repo, serviceProvider)
         {
             _aiModelService = aiModelService;
             _promptRangeService = promptRangeService;
-            _promptResultService = promptResultService;
         }
 
         /// <summary>
@@ -161,7 +163,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await base.SaveObjectAsync(toSavePromptItem);
 
-            return this.Mapper.Map<PromptItemDto>(toSavePromptItem);
+            return await this.TransEntityToDto(toSavePromptItem);
         }
 
 
@@ -333,13 +335,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // [t2, 版号, 平均分]
             foreach (var (tac, itemList) in itemGroupByT)
             {
-                List<Statistic_TodayTacticResponse.Point> points = new List<Statistic_TodayTacticResponse.Point>();
-                for (var i = 0; i < itemList.Count; i++)
-                {
-                    var zScore = isAvg ? itemList[i].EvalAvgScore : itemList[i].EvalMaxScore;
-                    var point = new Statistic_TodayTacticResponse.Point($"T{tac}", itemList[i].FullVersion, zScore, itemList[i]);
-                    points.Add(point);
-                }
+                List<Statistic_TodayTacticResponse.Point> points = (
+                        from t in itemList
+                        let zScore = isAvg ? t.EvalAvgScore : t.EvalMaxScore
+                        select new Statistic_TodayTacticResponse.Point($"T{tac}", t.FullVersion, zScore, t)
+                    )
+                    .ToList();
 
                 resp.DataPoints.Add(points);
             }
@@ -352,7 +353,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var item = await this.GetObjectAsync(p => p.Id == id) ??
                        throw new NcfExceptionBase($"找不到{id}对应的promptItem");
 
-            return this.Mapper.Map<PromptItemDto>(item);
+            return await this.TransEntityToDto(item, needRange: true);
         }
 
         public async Task<PromptItemDto> DraftSwitch(int id, bool status)
@@ -364,28 +365,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             await this.SaveObjectAsync(promptItem);
 
-            return await TransEntityToDto(promptItem);
+            return await this.TransEntityToDto(promptItem);
         }
 
-        private async Task<PromptItemDto> TransEntityToDto(PromptItem promptItem, bool needRange = false, bool needResult = false)
-        {
-            var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
-
-            if (needRange)
-            {
-                var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
-                promptItemDto.PromptRange = promptRangeDto;
-            }
-
-            if (needResult)
-            {
-                await _promptResultService.GetByItemId(promptItem.Id);
-            }
-
-            return promptItemDto;
-        }
-
-        public async Task<PromptItemDto> GetWithVersionAsync(string fullVersion)
+        public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion)
         {
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
                        throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
@@ -401,7 +384,87 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 OrganizationId = aiModel.OrganizationId
             };
 
-            return dto;
+            return new SenparcAI_GetByVersionResponse(BuildSenparcAiSetting(dto.AIModelDto), dto);
+        }
+
+        /// <summary>
+        /// 构造 SenparcAiSetting
+        /// </summary>
+        /// <param name="aiModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        private SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel)
+        {
+            var aiSettings = new SenparcAiSetting
+            {
+                AiPlatform = aiModel.AiPlatform
+            };
+
+            switch (aiSettings.AiPlatform)
+            {
+                case AiPlatform.NeuCharAI:
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharEndpoint = aiModel.Endpoint
+                    };
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = aiModel.Endpoint
+                    };
+                    break;
+                case AiPlatform.AzureOpenAI:
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = aiModel.Endpoint
+                    };
+                    break;
+                case AiPlatform.HuggingFace:
+                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
+                    {
+                        Endpoint = aiModel.Endpoint
+                    };
+                    break;
+                case AiPlatform.OpenAI:
+                    aiSettings.OpenAIKeys = new OpenAIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        OrganizationId = aiModel.OrganizationId
+                    };
+                    break;
+                default:
+                    throw new NcfExceptionBase($"暂时不支持{aiSettings.AiPlatform}类型");
+            }
+
+
+            return aiSettings;
+        }
+
+
+        [ItemNotNull]
+        private async Task<PromptItemDto> TransEntityToDto([NotNull] PromptItem promptItem, bool needRange = true, bool needResult = false)
+        {
+            var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
+
+            if (needRange)
+            {
+                var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
+                promptItemDto.PromptRange = promptRangeDto;
+            }
+
+            if (needResult)
+            {
+                var promptResultService = _serviceProvider.GetService<PromptResultService>();
+
+                await promptResultService.GetByItemId(promptItem.Id);
+            }
+
+            return promptItemDto;
         }
     }
 }

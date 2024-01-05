@@ -23,17 +23,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     public class PromptItemAppService : AppServiceBase
     {
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
-        private readonly PromptRangeService _promptRangeService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptResultService _promptResultService;
 
         /// <inheritdoc />
         public PromptItemAppService(IServiceProvider serviceProvider,
-            PromptRangeService promptRangeService,
             PromptItemService promptItemService,
             PromptResultService promptResultService) : base(serviceProvider)
         {
-            _promptRangeService = promptRangeService;
             _promptItemService = promptItemService;
             _promptResultService = promptResultService;
         }
@@ -51,8 +48,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     // 新增promptItem
-                    var promptItemDto = await _promptItemService.AddPromptItemAsync(request)
-                                        ?? throw new NcfExceptionBase("新增失败");
+                    var promptItemDto = await _promptItemService.AddPromptItemAsync(request);
+                    // ?? throw new NcfExceptionBase("新增失败");
 
                     var promptItemResponseDto = new PromptItem_AddResponse(promptItemDto);
 
@@ -88,16 +85,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([NotNull] string rangeName)
         {
             return await
-                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>,
-                    List<PromptItem_GetIdAndNameResponse>>(async (response, logger) =>
-                {
-                    List<PromptItem> promptItems = await _promptItemService
-                        .GetFullListAsync(p => p.RangeName == rangeName,
-                            p => p.Id,
-                            Ncf.Core.Enums.OrderingType.Ascending);
-                    return promptItems.Select(p => new PromptItem_GetIdAndNameResponse(p)
-                    ).ToList();
-                });
+                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>, List<PromptItem_GetIdAndNameResponse>>(
+                    async (response, logger) =>
+                    {
+                        List<PromptItem> promptItems = await _promptItemService
+                            .GetFullListAsync(p => p.RangeName == rangeName,
+                                p => p.Id,
+                                Ncf.Core.Enums.OrderingType.Ascending);
+                        return promptItems.Select(p => new PromptItem_GetIdAndNameResponse(p)
+                        ).ToList();
+                    });
         }
 
 
@@ -109,22 +106,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>> GetRangeNameList()
         {
             return await
-                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>,
-                    List<PromptItem_GetRangeNameListResponse>>(async (response, logger) =>
-                {
-                    List<PromptItem> promptItems = await _promptItemService
-                        .GetFullListAsync(
-                            p => true,
-                            p => p.Id,
-                            Ncf.Core.Enums.OrderingType.Ascending);
+                this.GetResponseAsync<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>, List<PromptItem_GetRangeNameListResponse>>(
+                    async (response, logger) =>
+                    {
+                        List<PromptItem> promptItems = await _promptItemService
+                            .GetFullListAsync(
+                                p => true,
+                                p => p.Id,
+                                Ncf.Core.Enums.OrderingType.Ascending);
 
-                    return promptItems.DistinctBy(p => p.RangeName)
-                        .Select(p => new PromptItem_GetRangeNameListResponse
-                        {
-                            Id = p.Id,
-                            RangeName = p.RangeName,
-                        }).ToList();
-                });
+                        return promptItems.DistinctBy(p => p.RangeName)
+                            .Select(p => new PromptItem_GetRangeNameListResponse
+                            {
+                                Id = p.Id,
+                                RangeName = p.RangeName,
+                            }).ToList();
+                    });
         }
 
         // /// <summary>
@@ -166,27 +163,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
-        /// <summary>
-        /// 根据 完整版号 获取 PromptItem 所有信息
-        /// </summary>
-        /// <param name="fullVersion">完整版号</param>
-        /// <returns></returns>
+        // /// <summary>
+        // /// 根据 完整版号 获取 PromptItem 所有信息
+        // /// </summary>
+        // /// <param name="fullVersion">完整版号</param>
+        // /// <returns></returns>
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
-        {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
-                async (response, logger) =>
-                {
-                    PromptItemDto promptItem = await _promptItemService.GetWithVersionAsync(fullVersion);
-
-                    List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
-
-                    var resp = new PromptItem_GetResponse(promptItem);
-                    resp.PromptResultList.AddRange(resultList);
-
-                    return resp;
-                });
-        }
+        // public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
+        // {
+        //     return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
+        //         async (response, logger) =>
+        //         {
+        //             SenparcAI_GetByVersionResponse promptItem = await _promptItemService.GetWithVersionAsync(fullVersion);
+        //
+        //             List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
+        //
+        //             var resp = new PromptItem_GetResponse(promptItem);
+        //             resp.PromptResultList.AddRange(resultList);
+        //
+        //             return resp;
+        //         });
+        // }
 
         /// <summary>
         /// 获取版本树

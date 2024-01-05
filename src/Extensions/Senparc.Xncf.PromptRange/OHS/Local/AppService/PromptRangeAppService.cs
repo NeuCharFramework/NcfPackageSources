@@ -6,6 +6,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -13,7 +14,9 @@ public class PromptRangeAppService : AppServiceBase
 {
     private readonly PromptRangeService _promptRangeService;
 
-    public PromptRangeAppService(IServiceProvider serviceProvider, PromptRangeService promptRangeService) : base(serviceProvider)
+    public PromptRangeAppService(
+        IServiceProvider serviceProvider,
+        PromptRangeService promptRangeService) : base(serviceProvider)
     {
         _promptRangeService = promptRangeService;
     }
@@ -30,6 +33,30 @@ public class PromptRangeAppService : AppServiceBase
     {
         return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
             async (response, logger) =>
-                await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults));
+                await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults)
+        );
+    }
+
+    /// <summary>
+    /// 获取靶场列表详情（添加时间倒序）
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public async Task<AppResponseBase<PromptRangeDto>> AddAsync(PromptRange_AddRequest request)
+    {
+        return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
+            async (response, logger) =>
+                await _promptRangeService.AddAsync(request)
+        );
+    }
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public async Task<AppResponseBase<PromptRangeDto>> ChangeAliasAsync(int rangeId, string alias)
+    {
+        return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
+            async (response, logger) =>
+                await _promptRangeService.ChangeAliasAsync(rangeId, alias)
+        );
     }
 }

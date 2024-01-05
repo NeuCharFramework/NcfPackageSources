@@ -16,6 +16,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Models;
@@ -28,16 +29,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
-        private readonly AIModelService _aiModelService;
 
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            AIModelService aiModelService,
             PromptItemService promptItemService, PromptRangeService promptRangeService) : base(repo,
             serviceProvider)
         {
-            _aiModelService = aiModelService;
             _promptItemService = promptItemService;
             _promptRangeService = promptRangeService;
         }
@@ -79,8 +77,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {{$input}}";
 
             // 从数据库中获取模型信息
-            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
-                        ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
+            var model = promptItem.AIModelDto;
             // 构建生成AI设置
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
@@ -88,8 +85,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
             var iWantToRun =
                 handler.IWantTo(aiSettings)
-                    // todo 替换为真实用户名，可能需要从Neurchar获取？
-                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
+                    // todo 替换为真实用户名，可能需要从NeuChar获取？
+                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;
@@ -175,14 +172,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        private SenparcAiSetting BuildSenparcAiSetting(AIModel llModel)
+        /// <summary>
+        /// 构造 SenparcAiSetting, 在两个地方使用
+        /// </summary>
+        /// <param name="llModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
         {
             var aiSettings = new SenparcAiSetting
             {
-                // if (!Enum.TryParse<AiPlatform>(llmModel.ModelType, out AiPlatform aiPlatform))
-                // {
-                //     throw new Exception("无法转换为AiPlatform");
-                // }
                 AiPlatform = llModel.AiPlatform
             };
 
@@ -248,7 +247,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // get promptItem by promptResult.PromptItemId
-            var promptItem = await _promptItemService.GetObjectAsync(z => z.Id == promptResult.PromptItemId)
+            var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId)
                              ?? throw new NcfExceptionBase("找不到对应的promptItem");
 
             // 保存期望结果列表
@@ -274,7 +273,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // 获取模型
-            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            var model = promptItem.AIModelDto;
 
             // build aiSettings by model
             var aiSettings = this.BuildSenparcAiSetting(model);
@@ -310,7 +309,7 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
             var handler = new SemanticAiHandler(skHelper);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
-                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
+                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(scorePrompt, promptParameter)
                     .iWantToRun;

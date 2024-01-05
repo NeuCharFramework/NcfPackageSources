@@ -28,6 +28,18 @@
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddShow.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddPromptRange">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddPromptRange.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddPromptRange.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.AddPromptRange.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
@@ -268,6 +280,11 @@
             人类打分，0-100分
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.FinalScore">
+            <summary>
+            最终得分
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.RobotTestExceptedResult">
             <summary>
             机器人测试期望结果
@@ -403,6 +420,11 @@
             人类打分，0-10分
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.FinalScore">
+            <summary>
+            最终得分
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.PromptResult.TestType">
             <summary>
             测试类型，枚举中包含：文字、图形、声音
@@ -443,6 +465,13 @@
         <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScoring(System.Int32)">
             <summary>
             更新自动机器评分
+            </summary>
+            <param name="score"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.FinalScoring(System.Int32)">
+            <summary>
+            更新最终得分
             </summary>
             <param name="score"></param>
             <returns></returns>
@@ -697,7 +726,7 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.#ctor(System.IServiceProvider,Senparc.Xncf.PromptRange.Domain.Services.PromptRangeService,Senparc.Xncf.PromptRange.Domain.Services.PromptItemService,Senparc.Xncf.PromptRange.Domain.Services.PromptResultService)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.#ctor(System.IServiceProvider,Senparc.Xncf.PromptRange.Domain.Services.PromptItemService,Senparc.Xncf.PromptRange.Domain.Services.PromptResultService)">
             <inheritdoc />
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
@@ -756,6 +785,13 @@
             </summary>
             <param name="promptRangeId"></param>
             <param name="expectedResults"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest)">
+            <summary>
+            获取靶场列表详情（添加时间倒序）
+            </summary>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.HumanScore(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_HumanScoreRequest)">
@@ -854,6 +890,21 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.NumsOfResults">
             <summary>
             连发次数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest.Alias">
+            <summary>
+            靶场代号（用户自定义）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest.RangeName">
+            <summary>
+            靶场名称（来自版号生成）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest.ExpectedResultsJson">
+            <summary>
+            期望结果Json
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Alias">
