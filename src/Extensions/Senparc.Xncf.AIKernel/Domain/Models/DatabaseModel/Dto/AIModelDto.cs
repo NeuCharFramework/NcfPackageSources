@@ -87,8 +87,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
             DeploymentName = aIModel.DeploymentName;
             Endpoint = aIModel.Endpoint;
             AiPlatform = aIModel.AiPlatform;
-            // OrganizationId = aIModel.OrganizationId;
-            // ApiKey = aIModel.ApiKey;
+            OrganizationId = aIModel.OrganizationId;
+            ApiKey = aIModel.ApiKey;
             ApiVersion = aIModel.ApiVersion;
             Note = aIModel.Note;
             MaxToken = aIModel.MaxToken;
