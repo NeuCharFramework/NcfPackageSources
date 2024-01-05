@@ -1729,6 +1729,30 @@ var app = new Vue({
                     }
                 })
         },
+        renameField(item){
+          //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
+            this.$prompt('请输入新的靶场名称', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputErrorMessage: '靶场名称不能为空',
+            }).then(async ({ value }) => {
+                const res = await service.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
+                    params:{
+                        rangeId: item.id,
+                        alias: value
+                    }
+                })
+                if (res.data.success) {
+                    this.getFieldList()
+                }
+            }).catch(() => {
+                this.$message({
+                type: 'info',
+                message: '已取消操作'
+                });       
+            });
+            
+        },
         // 获取靶道 下拉列表数据
         async getPromptOptData(id) {
             let res = await service

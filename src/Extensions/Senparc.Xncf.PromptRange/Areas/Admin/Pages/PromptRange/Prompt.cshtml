@@ -38,6 +38,10 @@
                                :label="item.label"
                                :value="item.value"
                                :disabled="item.disabled">
+                        <div class="d-flex justify-content-between align-center">
+                            <span>{{ item.label }}</span>
+                            <el-button type="primary" size="mini" @@click="renameField(item)">重命名靶场</el-button>
+                        </div>
                     </el-option>
                 </el-select>
             </div>
