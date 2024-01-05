@@ -287,8 +287,8 @@
             <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                 <div class="infoRow">
                     <span>版本: {{item.version}}</span>
-                    <span>#{{item.addTime}}</span>
-                    <span>#{{item.costTime}}</span>
+                    <span>打靶时间: {{item.addTime}}</span>
+                    <span>耗时(毫秒): {{item.costTime}}</span>
                 </div>
                 <div class="contentRow">
                     {{item.resultString}}

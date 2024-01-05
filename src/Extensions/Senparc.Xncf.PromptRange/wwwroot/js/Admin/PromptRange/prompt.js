@@ -372,6 +372,7 @@ var app = new Vue({
                 document.execCommand('copy')
                 this.$message.success(`复制【${fullVersion}】成功`)
             }
+            
         },
         // 格式化时间
         formatDate(d) {
@@ -515,6 +516,7 @@ var app = new Vue({
                         maxBeta: 90, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
+                        rotateSensitivity: 30,//旋转灵敏度，值越大旋转越快
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
                         // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
                         // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
@@ -558,53 +560,88 @@ var app = new Vue({
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
                     _series.push({
-                        type: 'line3D',
+                        type: 'bar3D',
                         name: item[0][1],
-                        data: item    //每个区的数据一一对应
+                        data: item,    //每个区的数据一一对应
+                        itemStyle:{
+                            opacity: 0.7
+                        },
+                        label:{
+                            show:true,
+                            formatter: (params)=> {
+                                // console.log('params',params,this.promptid)
+                                 // fullVersion 
+                                const promptItem = this.promptOpt.find(item => item.id == this.promptid)
+                                const fullVersion = promptItem.fullVersion || ''
+                                console.log('****',fullVersion,'|',params.data[3].fullVersion,params.data[3].fullVersion == fullVersion)
+                                return params.data[3].fullVersion === fullVersion ? '当前' : '';  // 将 label 内容固定为 ""
+                            },
+                            textStyle:{
+                                color: '#000',
+                                fontSize: 12,
+                                fontWeight: '400',
+                            }
+                        }
                     })
                 }
             })
             chartOption.series = _series
             //console.log('chartOption', chartOption)
+            this.chartInstance = null
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
-  
-             //监听图表鼠标移入事件 mouseover globalout
-            chartInstance.on('mouseover', (params) => {
-                //console.log('mouseover', params)
-                if (params.seriesType !== "line3D") return
-                let _sFilter = JSON.parse(JSON.stringify(_scatterSeries))
-                if (_sFilter && _sFilter.length > 0) {
-                    _sFilter.forEach(item => {
-                        let _sFindIndex = _scatterSeries.findIndex(el => item.data == el.data)
-                        _scatterSeries.splice(_sFindIndex, 1)
-                    })
+            chartInstance.off('click')
+            // 监听点击事件
+            chartInstance.on('click', (params) => {
+                // console.log('click params：', params)
+                const promptItem = this.promptOpt.find(item => item.fullVersion === params.data[3].fullVersion)
+                if (promptItem) {
+                    // 设置霸道选中
+                    this.promptid = promptItem.id
+                    // 获取靶道详情
+                    this.getPromptetail(promptItem.id, true)
+                    // 获取输出列表和平均分
+                    //this.getOutputList()
+                    // 获取分数趋势图表数据
+                    this.getScoringTrendData()
                 }
-                // 添加对应的 scatter3D
-                _scatterSeries.push({
-                    type: 'scatter3D',
-                    name: params.seriesName,
-                    symbol: 'circle',  // 设置圆点样式为圆形
-                    symbolSize: 10,  // 设置圆点的大小
-                    label: {
-                        show: false,  // 设置 label 显示
-                        formatter: function (params) {
-                            return '';  // 将 label 内容固定为 ""
-                        }
-                    },
-                    data: [params.data]    //每个区的数据一一对应
-                })
-                chartInstance.setOption({ series: [..._series, ..._scatterSeries] });
             })
+             //监听图表鼠标移入事件 mouseover globalout
+            // chartInstance.on('mouseover', (params) => {
+            //     //console.log('mouseover', params)
+            //     if (params.seriesType !== "line3D") return
+            //     let _sFilter = JSON.parse(JSON.stringify(_scatterSeries))
+            //     if (_sFilter && _sFilter.length > 0) {
+            //         _sFilter.forEach(item => {
+            //             let _sFindIndex = _scatterSeries.findIndex(el => item.data == el.data)
+            //             _scatterSeries.splice(_sFindIndex, 1)
+            //         })
+            //     }
+            //     // 添加对应的 scatter3D
+            //     _scatterSeries.push({
+            //         type: 'scatter3D',
+            //         name: params.seriesName,
+            //         symbol: 'circle',  // 设置圆点样式为圆形
+            //         symbolSize: 10,  // 设置圆点的大小
+            //         label: {
+            //             show: false,  // 设置 label 显示
+            //             formatter: function (params) {
+            //                 return '';  // 将 label 内容固定为 ""
+            //             }
+            //         },
+            //         data: [params.data]    //每个区的数据一一对应
+            //     })
+            //     chartInstance.setOption({ series: [..._series, ..._scatterSeries] });
+            // })
             //监听图表鼠标移出事件
-            chartInstance.on('mouseout', (params) => {
-                /*console.log('globalout', _series, _sFilter, params)*/
-                _copySeries = []
-                //chartOption.series = _series
-                //this.chartInstance.setOption(chartOption);
-                chartInstance.setOption({ series: _series });
-            })
+            // chartInstance.on('mouseout', (params) => {
+            //     /*console.log('globalout', _series, _sFilter, params)*/
+            //     _scatterSeries = []
+            //     //chartOption.series = _series
+            //     //this.chartInstance.setOption(chartOption);
+            //     chartInstance.setOption({ series: _series });
+            // })
         },
         // 输出 获取评分趋势 图表数据
         async getScoringTrendData() {
@@ -1052,8 +1089,6 @@ var app = new Vue({
                 })
 
 
-            } else {
-                alert('error');
             }
         },
         // 输出 保存评分
@@ -1070,8 +1105,6 @@ var app = new Vue({
                     this.getOutputList(item.promptId)
                     // 重新获取图表
                     this.getScoringTrendData()
-                } else {
-                    this.$message.error(res.data.errorMessage);
                 }
             }
             if (item.scoreType === '2') {
@@ -1366,7 +1399,6 @@ var app = new Vue({
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
                 if (!res.data.success){
-                    this.$message.error(res.data.errorMessage)
                     return 
                 }
                 this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
@@ -1594,8 +1626,6 @@ var app = new Vue({
                         disabled: false
                     }
                 })
-            } else {
-                alert('error');
             }
         },
         // 新增模型 dialog 关闭
@@ -1712,8 +1742,6 @@ var app = new Vue({
                     this.promptid = id
                 }
 
-            } else {
-                alert('error');
             }
         },
         // 获取 prompt 详情
@@ -1812,8 +1840,6 @@ var app = new Vue({
                 }
 
 
-            } else {
-                alert('error');
             }
         },
         // 删除 prompt 
