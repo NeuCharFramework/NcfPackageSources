@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.1</Version>
+    <Version>0.1.1.1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -58,6 +58,7 @@
     <Folder Include="Domain\Migrations\Migrations.PostgreSQL\" />
     <Folder Include="Domain\Migrations\Migrations.Sqlite\" />
     <Folder Include="Domain\Migrations\Migrations.SqlServer\" />
+    <Folder Include="Domain\Migrations\Migrations\MySql\" />
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
     <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
