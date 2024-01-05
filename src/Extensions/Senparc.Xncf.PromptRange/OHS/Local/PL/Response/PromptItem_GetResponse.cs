@@ -8,6 +8,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {
     public class PromptItem_GetResponse : BaseResponse
     {
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { get; set; }
+
         #region model config
 
         public int ModelId { get; set; }

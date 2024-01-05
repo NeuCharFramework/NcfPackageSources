@@ -45,7 +45,10 @@
             <div class="w-100">
                 <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
                     <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
-                    <div class="titleContent">选择靶道</div>
+                    <div class="titleContent d-flex justify-content-between  align-center w-100">
+                        <span>选择靶道</span>
+                        <i class="el-icon-document-copy" style="font-size: 1.3rem" @@click="copyInfo"></i>
+                    </div>
                 </div>
                 <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid',promptid)">
                     <el-option v-for="item in promptOpt"
@@ -65,7 +68,7 @@
                 <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">选择模型</div>
             </div>
-            <el-button type="primary" size="mini" icon="el-icon-plus" @@click="modelFormVisible = true">新增模型</el-button>
+            <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
         </div>
         <div style="padding-right: 5px">
             <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
@@ -74,17 +77,14 @@
                            :label="item.label"
                            :value="item.value"
                            :disabled="item.disabled">
-                    <div class="d-flex justify-content-between align-center">
-                        <span>{{ item.label }}</span>
-                        <el-button type="danger" size="mini" @@click="deleteModel(item)">删除</el-button>
-                    </div>
+                    <span>{{ item.label }}</span>
                 </el-option>
             </el-select>
         </div>
     </div>
 </div>
 @*输入*@
-<div class="boxCard inputPromptArea">
+<div class="boxCard inputPromptArea" style="padding: 0">
     <div class="prompt-mask" v-if="sendBtnText==='连发'">
         <div class="text-center">
             <i class="el-icon-lock" style="font-size:2.5rem"></i>
@@ -93,7 +93,7 @@
         </div>
     </div>
     @*模型参数设置*@
-    <div class="configurineAreaItem paramBox">
+    <div class="configurineAreaItem paramBox" style="padding: 15px">
         <div class="titleRow">
             <div class="titleRow_leftBox">
                 <i class="requirIcon">*</i>
@@ -118,18 +118,18 @@
                 <el-input v-model="item.value" placeholder="" class="inputBox" v-bind:style="{'flex':item.isStr?'1':''}" @@input="parameterInputHandle($event,item)" @@change="promptChangeHandel($event,item.formField)"></el-input>
                 <div v-if="item.isSlider" class="sliderBox">
                     <span>{{item.sliderMin}}</span>
-                    <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider"></el-slider>
+                    <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider" @@change="promptChangeHandel($event,item.formField)"></el-slider>
                     <span>{{item.sliderMax}}</span>
                 </div>
             </div>
         </div>
     </div>
-    @* 设置ai评分标准 :disabled="!promptid" *@
-    <div style="z-index: 1250">
-        <el-button type="primary" :disabled="!promptid" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+    @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
+    <div style="padding-left: 15px">
+                <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
-    <div class="promptContetnPmroparaBox">
+    <div class="promptContetnPmroparaBox" style="padding: 15px">
         @* 输入Prompt内容 *@
         <div class="configurineAreaItem leftItemBox">
             <div class="titleRow">
@@ -173,12 +173,12 @@
                             <el-dropdown @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
                                 {{sendBtnText}}
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0)" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">{{btn.text}}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             <el-tooltip class="item" effect="dark" placement="top">
                                 <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br/>连发：根据当前选择的靶道信息，连续输出多个结果。<br/>草稿：保存当前输入的内容，并创建新的靶道。</div>
-                                <i class="el-icon-warning-outline"></i>
+                                <i class="el-icon-warning-outline" :style="sendBtnText==='连发'?'filter:invert(1)':''"></i>
                             </el-tooltip>
                         </div>
                     </div>
@@ -283,12 +283,12 @@
                 <span>{{outputMaxDeci>-1?outputMaxDeci:'--'}}</span>
             </div>
         </div>
-        <div class="outputArea_contentBox">
+        <div class="outputArea_contentBox" id="resultBox">
             <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                 <div class="infoRow">
                     <span>版本: {{item.version}}</span>
-                    <span>#{{item.addTime}}</span>
-                    <span>#{{item.costTime}}</span>
+                    <span>打靶时间: {{item.addTime}}</span>
+                    <span>耗时(毫秒): {{item.costTime}}</span>
                 </div>
                 <div class="contentRow">
                     {{item.resultString}}
@@ -342,7 +342,11 @@
         <div class="titleRow">
             <div class="titleRow_leftBox">
                 <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon"/>
-                <div class="titleContent">分数趋势图</div>
+                    <div class="titleContent">
+                        分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个数构成的折线" effect="dark" placement="top">
+                            <i class="el-icon-warning-outline" style="color:#f00"></i>
+                        </el-tooltip>
+                    </div>
                 <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">平均分</el-radio>
                 <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
             </div>
@@ -460,8 +464,8 @@
         <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">确 定</el-button>
     </div>
 </el-dialog>
-@*ai评分标准 dialog*@
-<el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center @@close="aiScoreFormCloseDialog">
+@*ai评分标准 dialog @@close="aiScoreFormCloseDialog" *@
+<el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center>
     <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
             <div v-for="(item,index) in aiScoreForm.resultList" v-key="index" class="targetShootBtnRow">
@@ -476,9 +480,9 @@
         <div class="warnRow">注意：设置预期结果后，将会根据预期结果自动进行AI评分。</div>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @@click="aiScoreFormVisible = false">取 消</el-button>
+        <el-button @@click="aiScoreFormVisible = false">关闭</el-button>
         @* v-loading="aiScoreFormSubmitLoading" *@
-        <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button>
+        @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button> *@
     </div>
 </el-dialog>
 </div>

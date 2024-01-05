@@ -253,9 +253,11 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶道列表
-        this.getFieldList()
-        // 获取模型列表
-        this.getModelOptData()
+        setTimeout(()=>{
+            this.getFieldList()
+            // 获取模型列表
+            this.getModelOptData()
+        },100)
         // 获取分数趋势图
         // this.getScoringTrendData()
         // 图表自适应
@@ -349,6 +351,29 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
+        copyInfo(){
+          // 找到promptOpt里面的promptid
+            if (!this.promptid){
+                this.$message.info('请选择靶道后再复制信息！')
+                return
+            }
+
+            const promptItem = this.promptOpt.find(item => item.id === this.promptid)
+           
+            const fullVersion = promptItem.fullVersion
+            // 把结果复制到剪切板
+            const input = document.createElement('input')
+            input.setAttribute('readonly', 'readonly')
+            input.setAttribute('value', fullVersion)
+            document.body.appendChild(input)
+            input.select()
+            input.setSelectionRange(0, 9999)
+            if (document.execCommand('copy')) {
+                document.execCommand('copy')
+                this.$message.success(`复制【${fullVersion}】成功`)
+            }
+            
+        },
         // 格式化时间
         formatDate(d) {
             var date = new Date(d);
@@ -391,19 +416,19 @@ var app = new Vue({
                 xAxis3D: {
                     type: "category",
                     name: "",
-                    axisLabel: {
-                        show: true,
-                        interval: 0  //使x轴都显示
-                    },
+                    //axisLabel: {
+                    //    show: true,
+                    //    interval: 10  //使x轴都显示
+                    //},
                     data: this.chartData?.xData || [],
                 },
                 yAxis3D: {
                     type: "category",
                     name: "",
-                    axisLabel: {
-                        show: true,
-                        interval: 0  //使x轴都显示
-                    },
+                    //axisLabel: {
+                    //    show: true,
+                    //    interval: 10  
+                    //},
                     data: this.chartData?.yData || [],
 
                 },
@@ -433,7 +458,7 @@ var app = new Vue({
                     // 坐标轴 label
                     axisLabel: {
                         show: true,//是否显示刻度  (刻度上的数字，或者类目)
-                        //interval: 5,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        interval: 0,//坐标轴刻度标签的显示间隔，在类目轴中有效。
                         //formatter: function (v) {
                         //    // return;
                         //},
@@ -491,6 +516,7 @@ var app = new Vue({
                         maxBeta: 90, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
+                        rotateSensitivity: 10,//旋转灵敏度，值越大旋转越快
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
                         // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
                         // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
@@ -530,63 +556,92 @@ var app = new Vue({
                 },
                 series: []
             };
-            let _series = [],_copySeries = []
+            let _series = [],_scatterSeries = []
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
                     _series.push({
-                        type: 'line3D', // line3D scatter3D
+                        type: 'bar3D',
                         name: item[0][1],
                         data: item,    //每个区的数据一一对应
-                        //tooltip: {
-                        //    show: false
-                        //}
+                        itemStyle:{
+                            opacity: 0.7
+                        },
+                        label:{
+                            show:true,
+                            formatter: (params)=> {
+                                // console.log('params',params,this.promptid)
+                                 // fullVersion 
+                                const promptItem = this.promptOpt.find(item => item.id == this.promptid)
+                                const fullVersion = promptItem.fullVersion || ''
+                                console.log('****',fullVersion,'|',params.data[3].fullVersion,params.data[3].fullVersion == fullVersion)
+                                return params.data[3].fullVersion === fullVersion ? '当前' : '';  // 将 label 内容固定为 ""
+                            },
+                            textStyle:{
+                                color: '#000',
+                                fontSize: 12,
+                                fontWeight: '400',
+                            }
+                        }
                     })
                 }
             })
-            _copySeries = JSON.parse(JSON.stringify(_series))
             chartOption.series = _series
             //console.log('chartOption', chartOption)
+            this.chartInstance = null
             let chartInstance = echarts.init(scoreChart);
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
-  
-             //监听图表鼠标移入事件 mouseover globalout
-            chartInstance.on('mouseover', (params) => {
-                let _sFilter = _copySeries.filter(item => {
-                    if (item.type === 'scatter3D') return true
-                    return false
-                })
-                //console.log('params', _sFilter, params)
-                if (_sFilter && _sFilter.length > 0) {
-                    _sFilter.forEach(item => {
-                        let _sFindIndex = _copySeries.findIndex(el => item.data == el.data)
-                        _copySeries.splice(_sFindIndex, 1)
-                    })
+            chartInstance.off('click')
+            // 监听点击事件
+            chartInstance.on('click', (params) => {
+                // console.log('click params：', params)
+                const promptItem = this.promptOpt.find(item => item.fullVersion === params.data[3].fullVersion)
+                if (promptItem) {
+                    // 设置霸道选中
+                    this.promptid = promptItem.id
+                    // 获取靶道详情
+                    this.getPromptetail(promptItem.id, true)
+                    // 获取输出列表和平均分
+                    //this.getOutputList()
+                    // 获取分数趋势图表数据
+                    this.getScoringTrendData()
                 }
-                // 添加对应的 scatter3D
-                _copySeries.push({
-                    type: 'scatter3D',
-                    name: params.seriesName,
-                    symbol: 'circle',  // 设置圆点样式为圆形
-                    symbolSize: 10,  // 设置圆点的大小
-                    label: {
-                        show: false,  // 设置 label 显示
-                        formatter: function (params) {
-                            return '';  // 将 label 内容固定为 ""
-                        }
-                    },
-                    data: [params.data]    //每个区的数据一一对应
-                })
-                chartInstance.setOption({ series: _copySeries });
             })
+             //监听图表鼠标移入事件 mouseover globalout
+            // chartInstance.on('mouseover', (params) => {
+            //     //console.log('mouseover', params)
+            //     if (params.seriesType !== "line3D") return
+            //     let _sFilter = JSON.parse(JSON.stringify(_scatterSeries))
+            //     if (_sFilter && _sFilter.length > 0) {
+            //         _sFilter.forEach(item => {
+            //             let _sFindIndex = _scatterSeries.findIndex(el => item.data == el.data)
+            //             _scatterSeries.splice(_sFindIndex, 1)
+            //         })
+            //     }
+            //     // 添加对应的 scatter3D
+            //     _scatterSeries.push({
+            //         type: 'scatter3D',
+            //         name: params.seriesName,
+            //         symbol: 'circle',  // 设置圆点样式为圆形
+            //         symbolSize: 10,  // 设置圆点的大小
+            //         label: {
+            //             show: false,  // 设置 label 显示
+            //             formatter: function (params) {
+            //                 return '';  // 将 label 内容固定为 ""
+            //             }
+            //         },
+            //         data: [params.data]    //每个区的数据一一对应
+            //     })
+            //     chartInstance.setOption({ series: [..._series, ..._scatterSeries] });
+            // })
             //监听图表鼠标移出事件
-            chartInstance.on('mouseout', (params) => {
-                /*console.log('globalout', _series, _sFilter, params)*/
-                _copySeries = JSON.parse(JSON.stringify(_series))
-                //chartOption.series = _series
-                //this.chartInstance.setOption(chartOption);
-                chartInstance.setOption({ series: _series });
-            })
+            // chartInstance.on('mouseout', (params) => {
+            //     /*console.log('globalout', _series, _sFilter, params)*/
+            //     _scatterSeries = []
+            //     //chartOption.series = _series
+            //     //this.chartInstance.setOption(chartOption);
+            //     chartInstance.setOption({ series: _series });
+            // })
         },
         // 输出 获取评分趋势 图表数据
         async getScoringTrendData() {
@@ -649,6 +704,14 @@ var app = new Vue({
             // 靶道变化时，重置打靶按钮
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
+            // 重置 ai 评分标准
+            this.aiScoreForm = {
+                resultList: [{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }]
+            }
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -681,6 +744,7 @@ var app = new Vue({
                     }).then(() => {
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
+                            this.resetPageData()
                             this.getPromptetail(val, true)
                         })
                         // 重置 页面变化记录
@@ -691,6 +755,7 @@ var app = new Vue({
                         // 重新获取靶道列表
                         //this.getFieldList()
                         // 靶道
+                        this.resetPageData()
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
                         this.pageChange = false
@@ -1024,8 +1089,6 @@ var app = new Vue({
                 })
 
 
-            } else {
-                alert('error');
             }
         },
         // 输出 保存评分
@@ -1042,8 +1105,6 @@ var app = new Vue({
                     this.getOutputList(item.promptId)
                     // 重新获取图表
                     this.getScoringTrendData()
-                } else {
-                    this.$message.error(res.data.errorMessage);
                 }
             }
             if (item.scoreType === '2') {
@@ -1077,10 +1138,8 @@ var app = new Vue({
             // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
             if (scoreType === '1') {
                 if (this.promptDetail.modelId) {
-                    // 在promptOpt是否存在
-                    console.log(this.promptDetail)
                     let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
-                    if (_index === -1) {
+                    if (_index === -1 && !this.modelid) {
                         this.$message({
                             message: '模型已被删除，请选择模型后重新打靶！',
                             type: 'warning'
@@ -1091,10 +1150,9 @@ var app = new Vue({
                 let _list = this.outputList[index].alResultList.map(item => item.value)
                 _list = _list.filter(item => item)
                 if (_list.length === 0) {
-
-                    if (this.promptDetail && this.promptDetail.expectedResultsJson) {
-                        let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
-                        this.outputList[index].alResultList = _expectedResultsJson.map((item, index) => {
+                    let _listVal = this.aiScoreForm.resultList.filter(item => item.value)
+                    if (_listVal.length > 0) {
+                        this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return {
                                 id: index + 1,
                                 label: `预期结果${index + 1}`,
@@ -1108,7 +1166,6 @@ var app = new Vue({
                             type: 'warning'
                         })
                     }
-
                 } else {
                     // todo 接口对接 重新评分
                     this.saveManualScore(this.outputList[index])
@@ -1165,10 +1222,17 @@ var app = new Vue({
                 })
                 return
             }
-            if (!isDraft && this.sendBtnText!=='连发') {
+            // 弹窗逻辑1，有promptid，就要弹窗
+            if (this.promptid){
                 this.tacticalFormVisible = true
                 return
             }
+            // 弹窗逻辑2，只要保存草稿就弹
+            if (this.sendBtnText === '保存草稿'){
+                this.tacticalFormVisible = true
+                return
+            }
+
 
             this.targetShootLoading = true
             let _postData = {
@@ -1335,7 +1399,6 @@ var app = new Vue({
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
                 if (!res.data.success){
-                    this.$message.error(res.data.errorMessage)
                     return 
                 }
                 this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
@@ -1365,6 +1428,15 @@ var app = new Vue({
                     }]
                     this.outputList.push(item)
                 })
+                this.scrollToBtm()
+            })
+        },
+        
+        scrollToBtm(){
+            // scroll to btm of resultBox  at nextick
+            this.$nextTick(() => {
+                let _outputArea_contentBox = document.getElementById('resultBox')
+                _outputArea_contentBox.scrollTop = _outputArea_contentBox.scrollHeight
             })
         },
 
@@ -1519,6 +1591,9 @@ var app = new Vue({
                 value: ''
             })
         },
+        toAIKernel(){
+            window.open('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
+        },
         // prompt请求参数 删除变量行btn
         deleteVariableBtn(index) {
             this.promptParamForm.variableList.splice(index, 1)
@@ -1547,7 +1622,7 @@ var app = new Vue({
 
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
-            let res = await service.get('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetIdAndName')
+            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
             //console.log('getModelOptData:', res)
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
@@ -1560,8 +1635,6 @@ var app = new Vue({
                         disabled: false
                     }
                 })
-            } else {
-                alert('error');
             }
         },
         // 新增模型 dialog 关闭
@@ -1678,8 +1751,6 @@ var app = new Vue({
                     this.promptid = id
                 }
 
-            } else {
-                alert('error');
             }
         },
         // 获取 prompt 详情
@@ -1696,6 +1767,27 @@ var app = new Vue({
                 copyResultData.tacticsStr = vArr[2] || ''
                 this.promptDetail = copyResultData
                 if (overwrite) {
+                    if (copyResultData && copyResultData.expectedResultsJson) {
+                        let _expectedResultsJson = JSON.parse(copyResultData.expectedResultsJson)
+                        this.aiScoreForm = {
+                            resultList: _expectedResultsJson.map((item, index) => {
+                                return {
+                                    id: index + 1,
+                                    label: `预期结果${index + 1}`,
+                                    value: item
+                                }
+                            })
+                        }
+                    } else {
+                        // 如果没有预期结果就重置
+                        this.aiScoreForm = {
+                            resultList: [{
+                                id: 1,
+                                label: '预期结果1',
+                                value: ''
+                            }]
+                        }
+                    }
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
                     // 重新获取图表
@@ -1742,11 +1834,21 @@ var app = new Vue({
 
                     }
                     this.promptParamForm = _promptParamForm
+                    
+                    //ai 期望结果里面增加接口返回内容
+                    if(res.data.data.expectedResultsJson) {
+                        const expectedResultsJson = JSON.parse(res.data.data.expectedResultsJson)
+                        this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
+                            return {
+                                id: index + 1,
+                                label: `预期结果${index + 1}`,
+                                value: item
+                            }
+                        })
+                    }
                 }
 
 
-            } else {
-                alert('error');
             }
         },
         // 删除 prompt 
@@ -1821,7 +1923,10 @@ var app = new Vue({
         },
         // ai评分设置 打开 dialog 
         aiScoreFormOpenDialog() {
-            if (this.promptDetail && this.promptDetail.expectedResultsJson) {
+            let _list = this.aiScoreForm.resultList
+            let _listVal = _list.filter(item => item.value)
+            console.log('_listVal:', _list, _listVal, this.promptDetail)
+            if (_list.length === 1 && _listVal.length ===0&&this.promptDetail && this.promptDetail.expectedResultsJson) {
                 let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
                 this.aiScoreForm = {
                     resultList: _expectedResultsJson.map((item, index) => {
@@ -1833,17 +1938,21 @@ var app = new Vue({
                     })
                 }
             }
+            //else {
+            //    // 如果没有预期结果就重置
+            //    this.aiScoreForm = {
+            //        resultList: [{
+            //            id: 1,
+            //            label: '预期结果1',
+            //            value: ''
+            //        }]
+            //    }
+            //}
+            // 判断 this.aiScoreForm.resultList 是否有值            
             this.aiScoreFormVisible = !this.aiScoreFormVisible
         },
         // 关闭ai评分设置 dialog
         aiScoreFormCloseDialog() {
-            this.aiScoreForm = {
-                resultList: [{
-                    id: 1,
-                    label: '预期结果1',
-                    value: ''
-                }]
-            }
             this.$refs.aiScoreForm.resetFields();
         },
         // dialog ai评分设置 提交按钮

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
@@ -12,13 +11,13 @@ using Senparc.AI.Kernel.Helpers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.Models;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -29,29 +28,33 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            AIModelService llModelService,
+            AIModelService aiModelService,
             PromptItemService promptItemService) : base(repo,
             serviceProvider)
         {
-            _llModelService = llModelService;
+            _aiModelService = aiModelService;
             _promptItemService = promptItemService;
         }
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
-        private readonly AIModelService _llModelService;
+        private readonly AIModelService _aiModelService;
 
 
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
         {
-            var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
+            // var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId)
+            //     ?? throw new NcfExceptionBase($"未找到{promptItemId}对应的提示词");
+
             var resultList = (await this.GetFullListAsync(
                 p => p.PromptItemId == promptItemId,
                 p => p.Id,
                 OrderingType.Ascending));
+
             var dtoList = resultList
                 .Select(p => this.Mapper.Map<PromptResultDto>(p))
                 .ToList();
+
             return dtoList;
         }
 
@@ -59,14 +62,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             // 从数据库中获取模型信息
-            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
+            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
                         ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
 
-
-            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
-            // //创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            // var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
-            //
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
@@ -82,10 +80,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             const string completionPrompt = @"请根据提示输出对应内容：
 {{$input}}";
 
-            var skHelper = new SemanticKernelHelper(aiSettings);
-            var handler = new SemanticAiHandler(skHelper);
+            // 构建生成AI设置
+            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+
+            // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
+            var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
             var iWantToRun =
-                handler.IWantTo()
+                handler.IWantTo(aiSettings)
+                    // todo 替换为真实用户名，可能需要从Neurchar获取？
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
@@ -182,10 +184,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             switch (aiSettings.AiPlatform)
             {
                 case AiPlatform.NeuCharAI:
-                    aiSettings.NeuCharOpenAIKeys = new NeuCharOpenAIKeys()
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        NeuCharOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
                         NeuCharEndpoint = llModel.Endpoint
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
@@ -265,8 +267,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
 
-            // get model by promptItem
-            var model = await _llModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+            // 获取模型
+            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
 
             // build aiSettings by model
             var aiSettings = this.BuildSenparcAiSetting(model);
@@ -284,7 +286,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 需要在变量前添加$
             const string scorePrompt = @"
 你是一个语言专家，你的工作是根据以下给定的期望结果和实际结果,对实际结果进行打分。
-IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标点符号，
+IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标点符号，
 !!不要返回任何我告诉你的内容!!
 打分规则：
 1. 打分结果应该为0-10之间的整数数字，包含0和10。
@@ -295,17 +297,13 @@ IMPORTANT: 返回的结果应当有且仅有整数数字，且不包含任何标
 
 实际结果是一个字符串，以下为：{{$actualResult}}
 
-***********************************************************************
-以下是一个对话历史，你可以参考这个对话历史来进行打分：
-Human: 江苏的省会是：
-
-
+********************************************************************************
 ";
 
             var skHelper = new SemanticKernelHelper(aiSettings);
             var handler = new SemanticAiHandler(skHelper);
             var iWantToRun =
-                handler.IWantTo()
+                handler.IWantTo(aiSettings)
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.GetModelId(), aiSettings)
                     .BuildKernel()
                     .CreateFunctionFromPrompt(scorePrompt, promptParameter)
@@ -318,6 +316,7 @@ Human: 江苏的省会是：
             var dt1 = SystemTime.Now;
 
             var result = await iWantToRun.RunAsync(aiRequest);
+            SenparcTrace.SendCustomLog("自动打分结束", $"模型返回为{result.Output}，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
 
             // 正则匹配出result.Output中的数字
             // Use regular expression to find matches
@@ -326,15 +325,21 @@ Human: 江苏的省会是：
             // If there is a match, the number will be match.Value
             if (match.Success)
             {
-                promptResult.RobotScoring(Convert.ToInt32(match.Value));
+                int score = Convert.ToInt32(match.Value);
+                if (score > 10 || score < 0)
+                {
+                    throw new NcfExceptionBase($"自动打分失败，打分结果不在0-10之间，为{score}，被打分的结果字符串为{promptResult.ResultString}");
+                }
+
+                promptResult.RobotScoring(score);
                 await this.SaveObjectAsync(promptResult);
 
                 return promptResult;
             }
+            SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
 
-            // SenparcTrace.SendCustomLog("自动打分结果匹配失败", $"原文为{result.Output}，分数匹配失败");
-
-            throw new NcfExceptionBase($"自动打分结果匹配失败, 原文为{result.Output}，分数匹配失败，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
+            
+            throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
         }
 
         public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)

@@ -59,7 +59,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.PostgreSQL
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("Endpoint")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 

@@ -667,17 +667,55 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
+            <summary>
+            Add方法用于添加一个新的PromptItem，并根据请求中的IsDraft字段决定是否立即生成结果
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.String)">
             <summary>
-            列出所有的promptItem的id和name
+            列出 靶场名称 下所有的promptItem的id和name
             </summary>
+            <param name="rangeName">靶场名称（必须）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetRangeNameList">
+            <summary>
+            列出所有的promptItem的RangeName
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Get(System.Int32)">
+            <summary>
+            根据主键 ID　获取 PromptItem 所有信息
+            </summary>
+            <param name="id">主键 ID </param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetByVersion(System.String)">
+            <summary>
+            根据 完整版号 获取 PromptItem 所有信息
+            </summary>
+            <param name="fullVersion">完整版号</param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetTacticTree(System.String)">
             <summary>
             获取版本树
             </summary>
+            <param name="rangeName">靶场名称</param>
             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Del(System.Int32)">
+            <summary>
+            根据主键 ID　删除 PromptItem 所有信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">
             <summary>
@@ -795,6 +833,11 @@
             用户名
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FullVersion">
             <summary>
             完整版本号
@@ -849,6 +892,46 @@
             <summary>
             x,y,z
             
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.Id">
+            <summary>
+            主键 ID
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.RangeName">
+            <summary>
+            靶场名称
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.FullVersion">
+            <summary>
+            完整版号
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.EvalAvgScore">
+            <summary>
+            评估参数, 平均分
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.EvalMaxScore">
+            <summary>
+            评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.IsDraft">
+            <summary>
+            是否是草稿
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.NickName">
+            <summary>
+            昵称
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.MaxToken">

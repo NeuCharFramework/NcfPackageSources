@@ -10,6 +10,8 @@ using JetBrains.Annotations;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
@@ -19,8 +21,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptItemService : ServiceBase<PromptItem>
     {
-        public PromptItemService(IRepositoryBase<PromptItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        private readonly AIModelService _aiModelService;
+
+        public PromptItemService(
+            IRepositoryBase<PromptItem> repo,
+            IServiceProvider serviceProvider,
+            AIModelService aiModelService) : base(repo, serviceProvider)
         {
+            _aiModelService = aiModelService;
         }
 
         /// <summary>
@@ -78,9 +86,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                 if (request.IsNewTactic)
                 {
+                    // 目标版号的父 T 应该是当前版本的父 T
                     var parentTac = oldPrompt.ParentTac;
                     List<PromptItem> fullList = await base.GetFullListAsync(p =>
-                        p.FullVersion.StartsWith($"{name}-T{parentTac}") && p.FullVersion.EndsWith("A1")
+                        p.RangeName == name &&
+                        p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
                     toSavePromptItem = new PromptItem(
                         rangeName: name,
@@ -92,9 +102,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
                 else if (request.IsNewSubTactic)
                 {
+                    // 目标版号的父 T 应该是当前版本的 T
                     var parentTac = oldPrompt.Tactic;
-                    List<PromptItem> fullList = await base.GetFullListAsync(p =>
-                        p.FullVersion.StartsWith($"{name}-T{parentTac}.") && p.FullVersion.EndsWith("A1")
+                    List<PromptItem> fullList = await base.GetFullListAsync(
+                        p => p.RangeName == name &&
+                             p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                     );
                     toSavePromptItem = new PromptItem(
                         rangeName: name,
@@ -232,14 +244,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
         }
 
-        public async Task<PromptItemDto> Get(int id)
-        {
-            var item = await this.GetObjectAsync(p => p.Id == id) ??
-                       throw new NcfExceptionBase($"找不到{id}对应的promptItem");
-
-            return this.Mapper.Map<PromptItemDto>(item);
-        }
-
 
         /// <summary>
         /// 分数趋势图（依据时间）
@@ -253,7 +257,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             List<int> avgScoreHistoryList = new List<int>();
             List<int> maxScoreHistoryList = new List<int>();
 
-            var curItem = await this.Get(promptItemId);
+            var curItem = await this.GetAsync(promptItemId);
 
             // 获取同一个靶道下的所有打过分的item
             List<PromptItem> fullList = await this.GetFullListAsync(
@@ -314,7 +318,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 for (var i = 0; i < itemList.Count; i++)
                 {
                     var zScore = isAvg ? itemList[i].EvalAvgScore : itemList[i].EvalMaxScore;
-                    var point = new Statistic_TodayTacticResponse.Point(Convert.ToInt32(tac), i + 1, zScore, itemList[i]);
+                    var point = new Statistic_TodayTacticResponse.Point($"T{tac}", itemList[i].FullVersion, zScore, itemList[i]);
                     points.Add(point);
                 }
 
@@ -342,6 +346,25 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await this.SaveObjectAsync(promptItem);
 
             return this.Mapper.Map<PromptItemDto>(promptItem);
+        }
+
+        public async Task<PromptItemDto> GetWithVersionAsync(string fullVersion)
+        {
+            var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
+                       throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
+
+            var dto = this.Mapper.Map<PromptItemDto>(item);
+
+            var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
+                          throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
+
+            dto.AIModelDto = new AIModelDto(aiModel)
+            {
+                ApiKey = aiModel.ApiKey,
+                OrganizationId = aiModel.OrganizationId
+            };
+
+            return dto;
         }
     }
 }
