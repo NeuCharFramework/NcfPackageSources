@@ -1753,10 +1753,13 @@ var app = new Vue({
         },
         // 获取靶道 下拉列表数据
         async getPromptOptData(id) {
+            // find rangeName by id
+            let _find= this.promptFieldOpt.find(item => item.value === this.promptField)
+            const name = _find ? _find.rangeName : ''
             let res = await service
                 .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName', {
                     params: {
-                        rangeName: this.promptField
+                        rangeName: name
                     }
                 })
             if (res.data.success) {
