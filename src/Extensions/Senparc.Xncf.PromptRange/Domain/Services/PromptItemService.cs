@@ -66,7 +66,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #region 获取靶场
 
-            var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == request.RangeId);
+            var promptRange = await _promptRangeService.GetAsync(request.RangeId);
 
             #endregion
 

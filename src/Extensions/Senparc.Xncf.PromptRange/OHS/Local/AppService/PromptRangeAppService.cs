@@ -60,7 +60,10 @@ public class PromptRangeAppService : AppServiceBase
     public async Task<AppResponseBase<List<PromptRangeDto>>> GetListAsync()
     {
         return await this.GetResponseAsync<AppResponseBase<List<PromptRangeDto>>, List<PromptRangeDto>>(
-            async (response, logger) => await _promptRangeService.GetListAsync());
+            async (response, logger) =>
+            {
+                return await _promptRangeService.GetListAsync();
+            });
     }
 
     /// <summary>
