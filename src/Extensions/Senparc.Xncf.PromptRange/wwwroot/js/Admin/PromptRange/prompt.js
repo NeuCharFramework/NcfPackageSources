@@ -516,7 +516,7 @@ var app = new Vue({
                         maxBeta: 90, //最大旋转角度
                         minAlpha: 0, //最小旋转角度
                         maxAlpha: 90, //最大旋转角度
-                        rotateSensitivity: 30,//旋转灵敏度，值越大旋转越快
+                        rotateSensitivity: 10,//旋转灵敏度，值越大旋转越快
                         // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
                         // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
                         // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
