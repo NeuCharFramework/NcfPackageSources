@@ -654,7 +654,7 @@
     }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
-            padding: 10px 15px;
+            padding: 10px 5px;
             border-radius: 5px;
             border: 1px solid #DCDFE6;
             word-break: break-all;
@@ -677,6 +677,7 @@
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow {
             margin-top: 5px;
+            padding: 0 5px;
             color: #333;
             font-size: 14px;
             font-style: normal;
