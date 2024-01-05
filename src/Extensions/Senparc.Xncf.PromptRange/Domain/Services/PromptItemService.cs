@@ -452,16 +452,51 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
+        public async Task<PromptItemDto> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        {
+            // validate rangeName
+            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
+                              throw new NcfExceptionBase($"找不到{rangeName}对应的靶场");
+
+
+            var promptItem = await this.GetObjectAsync(
+                p => p.RangeName == rangeName && (isAvg ? p.EvalAvgScore : p.EvalMaxScore) >= 0,
+                p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
+                OrderingType.Descending);
+
+            return await this.TransEntityToDtoAsync(promptItem);
+        }
+
         [ItemNotNull]
-        private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needRange = true)
+        private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needModel = true, bool needRange = true)
         {
             var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
+
+            #region 补充AIModel信息
+
+            if (needModel)
+            {
+                var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId) ??
+                              throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
+
+                promptItemDto.AIModelDto = new AIModelDto(aiModel)
+                {
+                    ApiKey = aiModel.ApiKey,
+                    OrganizationId = aiModel.OrganizationId
+                };
+            }
+
+            #endregion
+
+            #region 补充靶场信息
 
             if (needRange)
             {
                 var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
                 promptItemDto.PromptRange = promptRangeDto;
             }
+
+            #endregion
 
             // if (needResult)
             // {
