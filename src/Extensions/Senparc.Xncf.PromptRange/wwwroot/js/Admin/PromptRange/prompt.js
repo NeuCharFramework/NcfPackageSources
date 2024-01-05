@@ -415,19 +415,19 @@ var app = new Vue({
                 xAxis3D: {
                     type: "category",
                     name: "",
-                    axisLabel: {
-                        show: true,
-                        interval: 0  //使x轴都显示
-                    },
+                    //axisLabel: {
+                    //    show: true,
+                    //    interval: 10  //使x轴都显示
+                    //},
                     data: this.chartData?.xData || [],
                 },
                 yAxis3D: {
                     type: "category",
                     name: "",
-                    axisLabel: {
-                        show: true,
-                        interval: 0  //使x轴都显示
-                    },
+                    //axisLabel: {
+                    //    show: true,
+                    //    interval: 10  
+                    //},
                     data: this.chartData?.yData || [],
 
                 },
@@ -554,20 +554,16 @@ var app = new Vue({
                 },
                 series: []
             };
-            let _series = [],_copySeries = []
+            let _series = [],_scatterSeries = []
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
                     _series.push({
-                        type: 'line3D', // line3D scatter3D
+                        type: 'line3D',
                         name: item[0][1],
-                        data: item,    //每个区的数据一一对应
-                        //tooltip: {
-                        //    show: false
-                        //}
+                        data: item    //每个区的数据一一对应
                     })
                 }
             })
-            _copySeries = JSON.parse(JSON.stringify(_series))
             chartOption.series = _series
             //console.log('chartOption', chartOption)
             let chartInstance = echarts.init(scoreChart);
@@ -576,19 +572,17 @@ var app = new Vue({
   
              //监听图表鼠标移入事件 mouseover globalout
             chartInstance.on('mouseover', (params) => {
-                let _sFilter = _copySeries.filter(item => {
-                    if (item.type === 'scatter3D') return true
-                    return false
-                })
-                //console.log('params', _sFilter, params)
+                //console.log('mouseover', params)
+                if (params.seriesType !== "line3D") return
+                let _sFilter = JSON.parse(JSON.stringify(_scatterSeries))
                 if (_sFilter && _sFilter.length > 0) {
                     _sFilter.forEach(item => {
-                        let _sFindIndex = _copySeries.findIndex(el => item.data == el.data)
-                        _copySeries.splice(_sFindIndex, 1)
+                        let _sFindIndex = _scatterSeries.findIndex(el => item.data == el.data)
+                        _scatterSeries.splice(_sFindIndex, 1)
                     })
                 }
                 // 添加对应的 scatter3D
-                _copySeries.push({
+                _scatterSeries.push({
                     type: 'scatter3D',
                     name: params.seriesName,
                     symbol: 'circle',  // 设置圆点样式为圆形
@@ -601,12 +595,12 @@ var app = new Vue({
                     },
                     data: [params.data]    //每个区的数据一一对应
                 })
-                chartInstance.setOption({ series: _copySeries });
+                chartInstance.setOption({ series: [..._series, ..._scatterSeries] });
             })
             //监听图表鼠标移出事件
             chartInstance.on('mouseout', (params) => {
                 /*console.log('globalout', _series, _sFilter, params)*/
-                _copySeries = JSON.parse(JSON.stringify(_series))
+                _copySeries = []
                 //chartOption.series = _series
                 //this.chartInstance.setOption(chartOption);
                 chartInstance.setOption({ series: _series });

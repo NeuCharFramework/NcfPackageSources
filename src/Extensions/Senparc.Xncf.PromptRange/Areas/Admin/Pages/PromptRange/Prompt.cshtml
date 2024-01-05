@@ -342,7 +342,11 @@
         <div class="titleRow">
             <div class="titleRow_leftBox">
                 <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon"/>
-                <div class="titleContent">分数趋势图</div>
+                    <div class="titleContent">
+                        分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个人数构成的折线" effect="dark" placement="top">
+                            <i class="el-icon-warning-outline" style="color:#f00"></i>
+                        </el-tooltip>
+                    </div>
                 <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">平均分</el-radio>
                 <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
             </div>
