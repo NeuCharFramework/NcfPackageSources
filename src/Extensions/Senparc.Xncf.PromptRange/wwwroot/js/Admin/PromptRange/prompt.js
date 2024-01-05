@@ -1428,6 +1428,15 @@ var app = new Vue({
                     }]
                     this.outputList.push(item)
                 })
+                this.scrollToBtm()
+            })
+        },
+        
+        scrollToBtm(){
+            // scroll to btm of resultBox  at nextick
+            this.$nextTick(() => {
+                let _outputArea_contentBox = document.getElementById('resultBox')
+                _outputArea_contentBox.scrollTop = _outputArea_contentBox.scrollHeight
             })
         },
 

@@ -84,7 +84,7 @@
     </div>
 </div>
 @*输入*@
-<div class="boxCard inputPromptArea">
+<div class="boxCard inputPromptArea" style="padding: 0">
     <div class="prompt-mask" v-if="sendBtnText==='连发'">
         <div class="text-center">
             <i class="el-icon-lock" style="font-size:2.5rem"></i>
@@ -93,7 +93,7 @@
         </div>
     </div>
     @*模型参数设置*@
-    <div class="configurineAreaItem paramBox">
+    <div class="configurineAreaItem paramBox" style="padding: 15px">
         <div class="titleRow">
             <div class="titleRow_leftBox">
                 <i class="requirIcon">*</i>
@@ -125,11 +125,11 @@
         </div>
     </div>
     @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
-    <div>
+    <div style="padding-left: 15px">
                 <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
-    <div class="promptContetnPmroparaBox">
+    <div class="promptContetnPmroparaBox" style="padding: 15px">
         @* 输入Prompt内容 *@
         <div class="configurineAreaItem leftItemBox">
             <div class="titleRow">
@@ -178,7 +178,7 @@
                             </el-dropdown>
                             <el-tooltip class="item" effect="dark" placement="top">
                                 <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br/>连发：根据当前选择的靶道信息，连续输出多个结果。<br/>草稿：保存当前输入的内容，并创建新的靶道。</div>
-                                <i class="el-icon-warning-outline"></i>
+                                <i class="el-icon-warning-outline" :style="sendBtnText==='连发'?'filter:invert(1)':''"></i>
                             </el-tooltip>
                         </div>
                     </div>
@@ -283,7 +283,7 @@
                 <span>{{outputMaxDeci>-1?outputMaxDeci:'--'}}</span>
             </div>
         </div>
-        <div class="outputArea_contentBox">
+        <div class="outputArea_contentBox" id="resultBox">
             <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                 <div class="infoRow">
                     <span>版本: {{item.version}}</span>
@@ -343,7 +343,7 @@
             <div class="titleRow_leftBox">
                 <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon"/>
                     <div class="titleContent">
-                        分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个人数构成的折线" effect="dark" placement="top">
+                        分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个数构成的折线" effect="dark" placement="top">
                             <i class="el-icon-warning-outline" style="color:#f00"></i>
                         </el-tooltip>
                     </div>
