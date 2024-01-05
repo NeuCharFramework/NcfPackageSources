@@ -713,6 +713,7 @@ var app = new Vue({
                     }).then(() => {
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
+                            this.resetPageData()
                             this.getPromptetail(val, true)
                         })
                         // 重置 页面变化记录
@@ -723,6 +724,7 @@ var app = new Vue({
                         // 重新获取靶道列表
                         //this.getFieldList()
                         // 靶道
+                        this.resetPageData()
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
                         this.pageChange = false
