@@ -124,9 +124,9 @@
             </div>
         </div>
     </div>
-    @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog*@
+    @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
     <div style="z-index: 1250">
-                <el-button type="primary" size="mini" @@click="aiScoreFormVisible = true">设置 AI 评分标准</el-button>
+                <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
     <div class="promptContetnPmroparaBox">

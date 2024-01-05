@@ -1885,6 +1885,31 @@ var app = new Vue({
         },
         // ai评分设置 打开 dialog 
         aiScoreFormOpenDialog() {
+            let _list = this.aiScoreForm.resultList
+            let _listVal = _list.filter(item => item.value)
+            console.log('_listVal:', _list, _listVal, this.promptDetail)
+            if (_list.length === 1 && _listVal.length ===0&&this.promptDetail && this.promptDetail.expectedResultsJson) {
+                let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
+                this.aiScoreForm = {
+                    resultList: _expectedResultsJson.map((item, index) => {
+                        return {
+                            id: index + 1,
+                            label: `预期结果${index + 1}`,
+                            value: item
+                        }
+                    })
+                }
+            }
+            //else {
+            //    // 如果没有预期结果就重置
+            //    this.aiScoreForm = {
+            //        resultList: [{
+            //            id: 1,
+            //            label: '预期结果1',
+            //            value: ''
+            //        }]
+            //    }
+            //}
             // 判断 this.aiScoreForm.resultList 是否有值            
             this.aiScoreFormVisible = !this.aiScoreFormVisible
         },
