@@ -89,6 +89,12 @@
 </div>
 @*输入*@
 <div class="boxCard inputPromptArea" style="padding: 0">
+    <div class="overall-mask" v-if="promptFieldOpt.length===0" style="z-index: 1350;">
+        <div class="text-center">
+            <i class="el-icon-lock" style="font-size:2.5rem"></i>
+            <br>请新建靶场后再进行操作
+        </div>
+    </div>
     <div class="prompt-mask" v-if="sendBtnText==='连发'">
         <div class="text-center">
             <i class="el-icon-lock" style="font-size:2.5rem"></i>
@@ -130,7 +136,7 @@
     </div>
     @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
     <div style="padding-left: 15px">
-                <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+        <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
     </div>
     @*输入Prompt*@
     <div class="promptContetnPmroparaBox" style="padding: 15px">
