@@ -318,7 +318,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 for (var i = 0; i < itemList.Count; i++)
                 {
                     var zScore = isAvg ? itemList[i].EvalAvgScore : itemList[i].EvalMaxScore;
-                    var point = new Statistic_TodayTacticResponse.Point(Convert.ToInt32(tac), i + 1, zScore, itemList[i]);
+                    var point = new Statistic_TodayTacticResponse.Point($"T{tac}", itemList[i].FullVersion, zScore, itemList[i]);
                     points.Add(point);
                 }
 
