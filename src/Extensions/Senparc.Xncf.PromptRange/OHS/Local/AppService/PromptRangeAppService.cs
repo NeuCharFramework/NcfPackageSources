@@ -41,7 +41,7 @@ public class PromptRangeAppService : AppServiceBase
     /// <summary>
     /// 获取靶场列表详情（添加时间倒序）
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="alias"></param>
     /// <returns></returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<PromptRangeDto>> AddAsync(string alias)

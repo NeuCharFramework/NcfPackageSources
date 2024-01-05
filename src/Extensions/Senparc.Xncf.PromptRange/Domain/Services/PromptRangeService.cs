@@ -59,6 +59,7 @@ public class PromptRangeService : ServiceBase<PromptRange>
         );
 
         var promptRange = new PromptRange($"{todayStr}.{todayRangeList.Count + 1}");
+
         promptRange.ChangeAlias(alias);
 
         await this.SaveObjectAsync(promptRange);
