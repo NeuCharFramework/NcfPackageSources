@@ -5,12 +5,20 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
     public class PromptItemDto : DtoBase
     {
         public int Id { get; set; }
+
+        /// <summary>
+        /// 靶场　ID
+        /// </summary>
+        public int RangeId { get; set; }
+
+        public PromptRangeDto PromptRange { get; set; }
 
         /// <summary>
         /// 昵称
@@ -25,7 +33,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         #region Model Config
 
         public int ModelId { get; set; }
-        
+
         public AIModelDto AIModelDto { get; set; }
 
         /// <summary>
@@ -70,10 +78,10 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public int EvalMaxScore { get; set; } = -1;
 
-        /// <summary>
-        /// 期望结果Json
-        /// </summary>
-        public string ExpectedResultsJson { get; set; }
+        // /// <summary>
+        // /// 期望结果Json
+        // /// </summary>
+        // public string ExpectedResultsJson { get; set; }
 
         #endregion
 
@@ -127,9 +135,5 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public string VariableDictJson { get; set; }
 
         #endregion
-
-        private PromptItemDto()
-        {
-        }
     }
 }

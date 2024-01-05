@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
@@ -22,15 +23,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     public class PromptItemAppService : AppServiceBase
     {
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
+        private readonly PromptRangeService _promptRangeService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptResultService _promptResultService;
 
+        /// <inheritdoc />
         public PromptItemAppService(IServiceProvider serviceProvider,
+            PromptRangeService promptRangeService,
             PromptItemService promptItemService,
-            PromptResultService promptResultService
-        ) : base(serviceProvider)
+            PromptResultService promptResultService) : base(serviceProvider)
         {
-            // _promptItemRepository = promptItemRepository;
+            _promptRangeService = promptRangeService;
             _promptItemService = promptItemService;
             _promptResultService = promptResultService;
         }
@@ -243,17 +246,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             });
         }
 
-        /// <summary>
-        /// 设置 AI 自动打分评分标准接口
-        /// </summary>
-        /// <param name="promptItemId"></param>
-        /// <param name="expectedResults"></param>
-        /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
-        {
-            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-                async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
-        }
+        // /// <summary>
+        // /// 设置 AI 自动打分评分标准接口
+        // /// </summary>
+        // /// <param name="promptItemId"></param>
+        // /// <param name="expectedResults"></param>
+        // /// <returns></returns>
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        // public async Task<AppResponseBase<PromptRangeDto>> UpdateExpectedResults(int promptRangeId, string expectedResults)
+        // {
+        //     return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+        //         async (response, logger) =>
+        //         {
+        //             return await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults);
+        //         });
+        // }
     }
 }

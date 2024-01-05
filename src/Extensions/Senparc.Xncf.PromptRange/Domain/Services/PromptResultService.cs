@@ -25,20 +25,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptResultService : ServiceBase<PromptResult>
     {
+        // private readonly RepositoryBase<PromptItem> _promptItemRepository;
+        private readonly PromptItemService _promptItemService;
+        private readonly PromptRangeService _promptRangeService;
+        private readonly AIModelService _aiModelService;
+
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
             AIModelService aiModelService,
-            PromptItemService promptItemService) : base(repo,
+            PromptItemService promptItemService, PromptRangeService promptRangeService) : base(repo,
             serviceProvider)
         {
             _aiModelService = aiModelService;
             _promptItemService = promptItemService;
+            _promptRangeService = promptRangeService;
         }
-
-        // private readonly RepositoryBase<PromptItem> _promptItemRepository;
-        private readonly PromptItemService _promptItemService;
-        private readonly AIModelService _aiModelService;
 
 
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
@@ -61,9 +63,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
-            // 从数据库中获取模型信息
-            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
-                        ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
 
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
@@ -80,6 +79,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             const string completionPrompt = @"请根据提示输出对应内容：
 {{$input}}";
 
+            // 从数据库中获取模型信息
+            var model = await _aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId)
+                        ?? throw new NcfExceptionBase($"未找到模型：{promptItem.ModelId}");
             // 构建生成AI设置
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
@@ -135,11 +137,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 promptItem.FullVersion, promptItem.Id);
 
             await base.SaveObjectAsync(promptResult);
+            
+            // 获取PromptRange
+            var promptRange = await _promptRangeService.GetObjectAsync(p => p.Id == promptItem.RangeId);
 
             // 有期望结果， 进行自动打分
-            if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            if (!string.IsNullOrWhiteSpace(promptRange.ExpectedResultsJson))
             {
-                await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
+                await this.RobotScoringAsync(promptResult.Id, false, promptRange.ExpectedResultsJson);
             }
 
             return this.Mapper.Map<PromptResultDto>(promptResult);
@@ -247,7 +252,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                              ?? throw new NcfExceptionBase("找不到对应的promptItem");
 
             // 保存期望结果列表
-            await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
+            await _promptRangeService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
 
 
             // if user dont want force refreshing, and this promptResult is scored 
@@ -276,7 +281,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
             {
-                MaxTokens = 500,
+                MaxTokens = 8000,
                 Temperature = 0.5,
                 TopP = 0.5,
                 // FrequencyPenalty = 0,
@@ -336,9 +341,10 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
 
                 return promptResult;
             }
+
             SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
 
-            
+
             throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
         }
 

@@ -33,6 +33,21 @@
             全局常量配置
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
+            <summary>
+            靶场代号（用户自定义）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
+            <summary>
+            靶场名称（来自版号生成）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.PromptRangeDto.ExpectedResultsJson">
+            <summary>
+            期望结果Json
+            </summary>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.AddPromptItemAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
             <summary>
             新增， 打靶时
@@ -133,6 +148,11 @@
             是否展示
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.RangeId">
+            <summary>
+            靶场　ID
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.NickName">
             <summary>
             昵称
@@ -176,11 +196,6 @@
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvalMaxScore">
             <summary>
             评估参数
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ExpectedResultsJson">
-            <summary>
-            期望结果Json
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Aiming">
@@ -502,6 +517,11 @@
             PromptItem
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.RangeId">
+            <summary>
+            靶场 ID
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.NickName">
             <summary>
             昵称
@@ -537,21 +557,6 @@
             停止序列（JSON 数组）
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.NumsOfResults">
-            <summary>
-            每个 Prompt 的结果数
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ChatSystemPrompt">
-            <summary>
-            聊天系统 Prompt
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.TokenSelectionBiases">
-            <summary>
-            Token 选择偏好
-            </summary>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.EvalAvgScore">
             <summary>
             评估参数, 平均分
@@ -560,11 +565,6 @@
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.EvalMaxScore">
             <summary>
             评估参数
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.PromptItem.ExpectedResultsJson">
-            <summary>
-            期望结果Json
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.FullVersion">
@@ -608,6 +608,21 @@
             父Tactic, 可以是空串
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Prefix">
+            <summary>
+            前缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.Suffix">
+            <summary>
+            后缀
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptItem.VariableDictJson">
+            <summary>
+            请求参数键值对 JSON 
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.Note">
             <summary>
             Note（可选）
@@ -621,6 +636,21 @@
         <member name="P:Senparc.Xncf.PromptRange.PromptItem.IsShare">
             <summary>
             是否公开
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptRange.Alias">
+            <summary>
+            靶场代号（用户自定义）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptRange.RangeName">
+            <summary>
+            靶场名称（来自版号生成）
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.PromptRange.ExpectedResultsJson">
+            <summary>
+            期望结果Json
             </summary>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
@@ -666,6 +696,9 @@
             <param name="ids"></param>
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.#ctor(System.IServiceProvider,Senparc.Xncf.PromptRange.Domain.Services.PromptRangeService,Senparc.Xncf.PromptRange.Domain.Services.PromptItemService,Senparc.Xncf.PromptRange.Domain.Services.PromptResultService)">
+            <inheritdoc />
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
             <summary>
@@ -717,11 +750,11 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.UpdateExpectedResults(System.Int32,System.String)">
             <summary>
             设置 AI 自动打分评分标准接口
             </summary>
-            <param name="promptItemId"></param>
+            <param name="promptRangeId"></param>
             <param name="expectedResults"></param>
             <returns></returns>
         </member>
@@ -873,11 +906,6 @@
             Note
             </summary>
         </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson">
-            <summary>
-            期望结果 - Json 类型为List &lt; string &gt;
-            </summary>
-        </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.EvalAvgScore">
             <summary>
             评估参数, 平均分
@@ -972,11 +1000,6 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.IsShare">
             <summary>
             是否分享
-            </summary>
-        </member>
-        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.ExpectedResultsJson">
-            <summary>
-            期望结果 - Json 类型为List &lt; string &gt;
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.EvalAvgScore">

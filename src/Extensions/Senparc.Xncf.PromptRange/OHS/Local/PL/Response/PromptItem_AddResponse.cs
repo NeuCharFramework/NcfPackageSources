@@ -63,11 +63,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public bool IsDraft { get; set; }
         public bool IsShare { get; set; }
 
-        /// <summary>
-        /// 期望结果 - Json 类型为List &lt; string &gt;
-        /// </summary>
-        public string ExpectedResultsJson { get; set; }
-
         public List<PromptResultDto> PromptResultList { get; set; } = new();
 
         /// <summary>
@@ -86,7 +81,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore,
+            string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore,
             bool isDraft, bool isShare, string nickName)
         {
             Id = promptItemId;
@@ -100,7 +95,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             Note = note;
-            ExpectedResultsJson = expectedResultsJson;
             Prefix = prefix;
             Suffix = suffix;
             VariableDictJson = variableDictJson;
@@ -113,14 +107,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public PromptItem_AddResponse(PromptItem item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
             item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
-            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore,
+             item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore,
             item.IsDraft, item.IsShare, item.NickName)
         {
         }
 
         public PromptItem_AddResponse(PromptItemDto dto) : this(dto.Id, dto.Content, dto.FullVersion, dto.ModelId,
             dto.MaxToken, dto.Temperature, dto.TopP, dto.FrequencyPenalty, dto.PresencePenalty, dto.StopSequences, dto.Note,
-            dto.ExpectedResultsJson, dto.Prefix, dto.Suffix, dto.VariableDictJson, dto.EvalAvgScore, dto.EvalMaxScore,
+             dto.Prefix, dto.Suffix, dto.VariableDictJson, dto.EvalAvgScore, dto.EvalMaxScore,
             dto.IsDraft, dto.IsShare, dto.NickName)
         {
         }

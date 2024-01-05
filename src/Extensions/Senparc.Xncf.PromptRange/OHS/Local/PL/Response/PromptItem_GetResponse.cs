@@ -68,11 +68,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public List<PromptResult> PromptResultList { get; set; } = new();
 
         /// <summary>
-        /// 期望结果 - Json 类型为List &lt; string &gt;
-        /// </summary>
-        public string ExpectedResultsJson { get; private set; }
-
-        /// <summary>
         /// 评估参数, 平均分
         /// </summary>
         public int EvalAvgScore { get; private set; }
@@ -103,7 +98,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         public PromptItem_GetResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string expectedResultsJson, string prefix, string suffix, string variableDictJson, int evalAvgScore = -1, int evalMaxScore = -1)
+           string prefix, string suffix, string variableDictJson, int evalAvgScore = -1, int evalMaxScore = -1)
         {
             Id = promptItemId;
             PromptContent = promptContent;
@@ -116,7 +111,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
             PresencePenalty = presencePenalty;
             StopSequences = stopSequences;
             Note = note;
-            ExpectedResultsJson = expectedResultsJson;
             Prefix = prefix;
             Suffix = suffix;
             VariableDictJson = variableDictJson;
@@ -126,7 +120,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         public PromptItem_GetResponse(PromptItemDto item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
             item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
-            item.ExpectedResultsJson, item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
+            item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
         {
         }
     }
