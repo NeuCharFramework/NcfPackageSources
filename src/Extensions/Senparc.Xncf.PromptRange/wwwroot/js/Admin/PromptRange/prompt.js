@@ -353,7 +353,13 @@ var app = new Vue({
         },
         copyInfo(){
           // 找到promptOpt里面的promptid
-            const promptItem = this.promptOpt.find(item => item.promptid === this.promptid)
+            if (!this.promptid){
+                this.$message.info('请选择靶道后再复制信息！')
+                return
+            }
+
+            const promptItem = this.promptOpt.find(item => item.id === this.promptid)
+           
             const fullVersion = promptItem.fullVersion
             // 把结果复制到剪切板
             const input = document.createElement('input')
