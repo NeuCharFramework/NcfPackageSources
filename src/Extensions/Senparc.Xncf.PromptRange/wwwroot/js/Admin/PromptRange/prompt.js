@@ -557,6 +557,7 @@ var app = new Vue({
                 series: []
             };
             let _series = [],_scatterSeries = []
+            const that=this
             this.chartData?.seriesData?.forEach(item => {
                 if (item) {
                     _series.push({
@@ -567,14 +568,16 @@ var app = new Vue({
                             opacity: 0.7
                         },
                         label:{
+                            position: 'top',
                             show:true,
-                            formatter: (params)=> {
+                            formatter: function (params) {
                                 // console.log('params',params,this.promptid)
-                                 // fullVersion 
-                                const promptItem = this.promptOpt.find(item => item.id == this.promptid)
+                                 // fullVersion
+                                const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem.fullVersion || ''
-                                console.log('****',fullVersion,'|',params.data[3].fullVersion,params.data[3].fullVersion == fullVersion)
-                                return params.data[3].fullVersion === fullVersion ? '当前' : '';  // 将 label 内容固定为 ""
+                                console.log('fullVersion',fullVersion,params.data[3].fullVersion)
+                                console.log('params.data[3].fullVersion === fullVersion',params.data[3].fullVersion === fullVersion)
+                                return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
                             },
                             textStyle:{
                                 color: '#000',
@@ -1767,27 +1770,6 @@ var app = new Vue({
                 copyResultData.tacticsStr = vArr[2] || ''
                 this.promptDetail = copyResultData
                 if (overwrite) {
-                    if (copyResultData && copyResultData.expectedResultsJson) {
-                        let _expectedResultsJson = JSON.parse(copyResultData.expectedResultsJson)
-                        this.aiScoreForm = {
-                            resultList: _expectedResultsJson.map((item, index) => {
-                                return {
-                                    id: index + 1,
-                                    label: `预期结果${index + 1}`,
-                                    value: item
-                                }
-                            })
-                        }
-                    } else {
-                        // 如果没有预期结果就重置
-                        this.aiScoreForm = {
-                            resultList: [{
-                                id: 1,
-                                label: '预期结果1',
-                                value: ''
-                            }]
-                        }
-                    }
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
                     // 重新获取图表
