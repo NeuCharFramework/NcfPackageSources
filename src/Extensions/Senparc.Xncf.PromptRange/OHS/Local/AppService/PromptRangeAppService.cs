@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
@@ -51,7 +52,27 @@ public class PromptRangeAppService : AppServiceBase
         );
     }
 
+    /// <summary>
+    /// 获取靶场列表详情（添加时间倒序）
+    /// </summary>
+    /// <returns></returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public async Task<AppResponseBase<List<PromptRangeDto>>> GetListAsync()
+    {
+        return await this.GetResponseAsync<AppResponseBase<List<PromptRangeDto>>, List<PromptRangeDto>>(
+            async (response, logger) =>
+            {
+                return await _promptRangeService.GetListAsync();
+            });
+    }
+
+    /// <summary>
+    /// 修改自定义靶场代号
+    /// </summary>
+    /// <param name="rangeId"></param>
+    /// <param name="alias"></param>
+    /// <returns></returns>
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public async Task<AppResponseBase<PromptRangeDto>> ChangeAliasAsync(int rangeId, string alias)
     {
         return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(

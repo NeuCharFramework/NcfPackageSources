@@ -84,6 +84,22 @@
             <param name="promptItemId"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
+            <summary>
+            构造 SenparcAiSetting
+            </summary>
+            <param name="aiModel"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
+            <summary>
+            构造 SenparcAiSetting, 在两个地方使用
+            </summary>
+            <param name="llModel"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.UpdateEvalScoreAsync(System.Int32)">
             <summary>
             更新promptItem的平均分和最高分
@@ -757,13 +773,6 @@
             <param name="id">主键 ID </param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetByVersion(System.String)">
-            <summary>
-            根据 完整版号 获取 PromptItem 所有信息
-            </summary>
-            <param name="fullVersion">完整版号</param>
-            <returns></returns>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetTacticTree(System.String)">
             <summary>
             获取版本树
@@ -792,6 +801,20 @@
             获取靶场列表详情（添加时间倒序）
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.GetListAsync">
+            <summary>
+            获取靶场列表详情（添加时间倒序）
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.ChangeAliasAsync(System.Int32,System.String)">
+            <summary>
+            修改自定义靶场代号
+            </summary>
+            <param name="rangeId"></param>
+            <param name="alias"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.HumanScore(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_HumanScoreRequest)">

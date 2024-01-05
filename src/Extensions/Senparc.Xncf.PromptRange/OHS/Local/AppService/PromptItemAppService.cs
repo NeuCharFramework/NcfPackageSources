@@ -102,7 +102,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// 列出所有的promptItem的RangeName
         /// </summary>
         /// <returns></returns>
-        [ApiBind]
+        // [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>> GetRangeNameList()
         {
             return await
