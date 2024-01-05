@@ -1777,6 +1777,18 @@ var app = new Vue({
 
                     }
                     this.promptParamForm = _promptParamForm
+                    
+                    //ai 期望结果里面增加接口返回内容
+                    if(res.data.data.expectedResultsJson) {
+                        const expectedResultsJson = JSON.parse(res.data.data.expectedResultsJson)
+                        this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
+                            return {
+                                id: index + 1,
+                                label: `预期结果${index + 1}`,
+                                value: item
+                            }
+                        })
+                    }
                 }
 
 
