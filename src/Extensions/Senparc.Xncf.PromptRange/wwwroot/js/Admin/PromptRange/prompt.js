@@ -849,6 +849,8 @@ var app = new Vue({
                         }
                     })
 
+                    // 要提交this.promptField
+                    _postData['rangeId'] = this.promptField
                     let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
                     // console.log('testHandel res ', res.data)
                     this.tacticalFormSubmitLoading = false
@@ -1271,7 +1273,8 @@ var app = new Vue({
                 }
             })
             console.log('testHandel _postData:', _postData)
-
+            // 要提交this.promptField
+            _postData['rangeId'] = this.promptField
             return await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
                 this.targetShootLoading = false
                 if (res.data.success) {
@@ -1711,7 +1714,7 @@ var app = new Vue({
                             return {
                                 ...item,
                                 label: item.alias+'（'+item.rangeName+'）',
-                                value: item.rangeName,
+                                value: item.id,
                                 disabled: false
                             }
                         })
