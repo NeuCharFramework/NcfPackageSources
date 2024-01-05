@@ -47,7 +47,7 @@
                     <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                     <div class="titleContent d-flex justify-content-between  align-center w-100">
                         <span>选择靶道</span>
-                        <i class="el-icon-document-copy" style="font-size: 1.3rem" @@click="copyInfo"></i>
+                        <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                     </div>
                 </div>
                 <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid',promptid)">
