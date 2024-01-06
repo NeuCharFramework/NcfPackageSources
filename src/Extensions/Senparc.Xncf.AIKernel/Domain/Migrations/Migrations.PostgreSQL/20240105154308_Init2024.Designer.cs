@@ -12,8 +12,8 @@ using Senparc.Xncf.AIKernel.Models;
 namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.PostgreSQL
 {
     [DbContext(typeof(AIKernelSenparcEntities_PostgreSQL))]
-    [Migration("20240104085909_Init")]
-    partial class Init
+    [Migration("20240105154308_Init2024")]
+    partial class Init2024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
