@@ -17,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI;
 using Senparc.AI.Kernel;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+using Humanizer;
+using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -342,12 +344,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // [t2, 版号, 平均分]
             foreach (var (tac, itemList) in itemGroupByT)
             {
-                List<Statistic_TodayTacticResponse.Point> points = (
-                        from t in itemList
-                        let zScore = isAvg ? t.EvalAvgScore : t.EvalMaxScore
-                        select new Statistic_TodayTacticResponse.Point($"T{tac}", t.FullVersion, zScore, t)
-                    )
-                    .ToList();
+                List<Statistic_TodayTacticResponse.Point> points = new List<Statistic_TodayTacticResponse.Point>();
+
+                var i = 0;
+                foreach (var t in itemList)
+                {
+                    var zScore = isAvg ? t.EvalAvgScore : t.EvalMaxScore;
+                    points.Add(new Statistic_TodayTacticResponse.Point($"T{tac}", (++i).ToString(), zScore, t));
+                }
+                //(
+                //        from t in itemList
+                //        let zScore = isAvg ? t.EvalAvgScore : t.EvalMaxScore
+                //        select new Statistic_TodayTacticResponse.Point($"T{tac}", t.FullVersion, zScore, t)
+                //    )
+                //    .ToList();
 
                 resp.DataPoints.Add(points);
             }
@@ -453,7 +463,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptItemDto> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        public async Task<SenparcAI_GetByVersionResponse> GetBestPromptAsync(string rangeName, bool isAvg = true)
         {
             // validate rangeName
             var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
@@ -465,7 +475,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
                 OrderingType.Descending);
 
-            return await this.TransEntityToDtoAsync(promptItem);
+            var dto = await this.TransEntityToDtoAsync(promptItem);
+            var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
+                 throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
+
+
+            dto.AIModelDto = new AIModelDto(aiModel)
+            {
+                ApiKey = aiModel.ApiKey,
+                OrganizationId = aiModel.OrganizationId
+            };
+            return new SenparcAI_GetByVersionResponse(BuildSenparcAiSetting(dto.AIModelDto), dto);
         }
 
         [ItemNotNull]

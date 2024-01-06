@@ -784,14 +784,6 @@
             <param name="expectedResults"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetBestPromptAsync(System.String,System.Boolean)">
-            <summary>
-            根据靶场名（自动生成）获取靶场里最好的promptItem
-            </summary>
-            <param name="rangeName"></param>
-            <param name="isAvg"></param>
-            <returns></returns>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">
             <summary>
             获取靶场列表详情（添加时间倒序）
