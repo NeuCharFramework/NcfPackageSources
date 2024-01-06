@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.4.0.8-beta2</Version>
+    <Version>0.4.1-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -28,6 +28,7 @@
 		v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
 		v0.3.0 重构 PromptRange 数据库和逻辑
 		v0.3.10 引用 Senparc.Xncf.AIKernel
+		v0.4.0 完成 PromptRange 基本功能
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

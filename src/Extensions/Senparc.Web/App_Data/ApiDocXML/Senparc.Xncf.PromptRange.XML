@@ -45,6 +45,18 @@
             <param name="promptItemId"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetWithVersionAsync(System.String,System.Boolean)">
+            <summary>
+            获取某个版本的 PromptItem 和模型信息，支持：
+            <para>精准搜索，如：2024.01.06.3-T1-A2</para>
+            <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
+            <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+            </summary>
+            <param name="fullVersion"></param>
+            <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
             <summary>
             构造 SenparcAiSetting
