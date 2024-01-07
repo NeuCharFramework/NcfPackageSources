@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
+using Senparc.Ncf.XncfBase.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,27 +54,11 @@ namespace Senparc.Ncf.XncfBase.Database
 
         private readonly TXncfDatabaseRegister _register;
 
-        private static string GetXncfVersion<TXncfDatabaseRegister>()
-            where TXncfDatabaseRegister : class, IXncfDatabase, new()
-        {
-            try
-            {
-                var register = System.Activator.CreateInstance<TXncfDatabaseRegister>() as TXncfDatabaseRegister;
-                if (register is IXncfRegister xncfRegister)
-                {
-                    return $" / XNCF {xncfRegister.Name} {xncfRegister.Version}";
-                }
-                return "Dev";
-            }
-            catch
-            {
-                return "Dev / Not IXncfRegister";
-            }
-        }
+
 
 
         protected SenparcDesignTimeDbContextFactoryBase(string rootDirectoryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
-            : base(GetXncfVersion<TXncfDatabaseRegister>(), rootDirectoryPath, databaseName, note)
+            : base(StartupHelper.GetXncfVersion<TXncfDatabaseRegister>(), rootDirectoryPath, databaseName, note)
         {
             _register = System.Activator.CreateInstance<TXncfDatabaseRegister>();
             //var databaseRegister = _register as IXncfRegister;
@@ -168,7 +153,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.OutputEncoding = Encoding.GetEncoding("GB2312");
 
             SiteConfig.SenparcCoreSetting.DatabaseName = databaseName;
-            CO2NET.Config.RootDirectoryPath= rootDirectoryPath;
+            CO2NET.Config.RootDirectoryPath = rootDirectoryPath;
             //XncfDatabaseData = xncfDatabaseData;
             this._ncfVersion = ncfVersion;
             this._note = note;

@@ -87,7 +87,7 @@ namespace Senparc.Ncf.XncfBase
                     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                     SetLog(sb, " === Multiple databases detected ===");
                     SetLog(sb, "| Register\t\t\t| Full Name\t\t| Database Type");
-                    SetLog(sb, "|---------------------|-----------------------|------------------------");
+                    SetLog(sb, "|---------------------------------|-----------------------|------------------------");
 
                     foreach (var a in assemblies)
                     {

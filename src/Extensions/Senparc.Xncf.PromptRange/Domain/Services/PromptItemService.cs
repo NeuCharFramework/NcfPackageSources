@@ -409,13 +409,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             {
                 //模糊查询
                 // validate rangeName
-                var rangeName = fullVersion.Substring(0, fullVersion.LastIndexOf('-'));
+                var rangeName = fullVersion.Substring(0, fullVersion.IndexOf('-'));
                 var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
                         throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
 
                 var seh = new SenparcExpressionHelper<PromptItem>();
                 seh.ValueCompare
-                    .AndAlso(true, z => z.RangeId == promptRange.Id)//靶场编号
+                    .AndAlso(true, z => z.RangeName == promptRange.RangeName)//靶场编号
                     .AndAlso(isAvg, z => z.EvalAvgScore >= 0)//平均分
                     .AndAlso(!isAvg, z => z.EvalMaxScore >= 0);//最高分
 
