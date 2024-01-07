@@ -19,6 +19,7 @@ using Senparc.AI.Kernel;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Humanizer;
 using Senparc.Xncf.AIKernel.Models;
+using Senparc.Ncf.Utility;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -385,21 +386,78 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return await this.TransEntityToDtoAsync(promptItem);
         }
 
-        public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion)
+        /// <summary>
+        /// 获取某个版本的 PromptItem 和模型信息，支持：
+        /// <para>精准搜索，如：2024.01.06.3-T1-A2</para>
+        /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
+        /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+        /// </summary>
+        /// <param name="fullVersion"></param>
+        /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion, bool isAvg = true)
         {
-            var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
-                       throw new NcfExceptionBase($"找不到{fullVersion}对应的promptItem");
-
-            var dto = await this.TransEntityToDtoAsync(item); // this.Mapper.Map<PromptItemDto>(item);
-
-            var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
-                          throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
-
-            dto.AIModelDto = new AIModelDto(aiModel)
+            PromptItem promptItem;
+            if (fullVersion.Contains("-T") && fullVersion.Contains("-A"))
             {
-                ApiKey = aiModel.ApiKey,
-                OrganizationId = aiModel.OrganizationId
-            };
+                //精准查询
+                promptItem = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
+                       throw new NcfExceptionBase($"找不到 {fullVersion} 对应的 PromptItem");
+            }
+            else
+            {
+                //模糊查询
+
+                var versionSet = fullVersion.Split(new[] { "-T" }, StringSplitOptions.None);
+
+                // validate rangeName
+                var rangeName = versionSet[0];
+                var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
+                        throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
+
+                var seh = new SenparcExpressionHelper<PromptItem>();
+                seh.ValueCompare
+                    .AndAlso(true, z => z.RangeName == promptRange.RangeName)//靶场编号
+                    .AndAlso(isAvg, z => z.EvalAvgScore >= 0)//平均分
+                    .AndAlso(!isAvg, z => z.EvalMaxScore >= 0);//最高分
+
+                if (fullVersion.Contains("-T"))
+                {
+                    //按照靶道进行模糊搜索
+                    var tactic = versionSet[1];
+                    seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);
+                }
+                else
+                {
+                    //按照靶场进行模糊搜索
+                    //不需要再增加条件
+                }
+
+                //生成最终的查询条件表达式
+                var where = seh.BuildWhereExpression();
+
+                //从某个靶道进行模糊搜索
+                promptItem = await this.GetObjectAsync(where,
+                                    p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
+                                    OrderingType.Descending);
+            }
+
+            if (promptItem == null)
+            {
+                throw new Exception("找不到匹配条件的 PromptItem");
+            }
+
+            var dto = await this.TransEntityToDtoAsync(promptItem); // this.Mapper.Map<PromptItemDto>(item);
+
+            //var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
+            //              throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
+
+            //dto.AIModelDto = new AIModelDto(aiModel)
+            //{
+            //    ApiKey = aiModel.ApiKey,
+            //    OrganizationId = aiModel.OrganizationId
+            //};
 
             return new SenparcAI_GetByVersionResponse(BuildSenparcAiSetting(dto.AIModelDto), dto);
         }
@@ -463,30 +521,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<SenparcAI_GetByVersionResponse> GetBestPromptAsync(string rangeName, bool isAvg = true)
-        {
-            // validate rangeName
-            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
-                              throw new NcfExceptionBase($"找不到{rangeName}对应的靶场");
 
-
-            var promptItem = await this.GetObjectAsync(
-                p => p.RangeName == rangeName && (isAvg ? p.EvalAvgScore : p.EvalMaxScore) >= 0,
-                p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
-                OrderingType.Descending);
-
-            var dto = await this.TransEntityToDtoAsync(promptItem);
-            var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
-                 throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
-
-
-            dto.AIModelDto = new AIModelDto(aiModel)
-            {
-                ApiKey = aiModel.ApiKey,
-                OrganizationId = aiModel.OrganizationId
-            };
-            return new SenparcAI_GetByVersionResponse(BuildSenparcAiSetting(dto.AIModelDto), dto);
-        }
 
         [ItemNotNull]
         private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needModel = true, bool needRange = true)
