@@ -408,8 +408,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             else
             {
                 //模糊查询
+
+                var versionSet = fullVersion.Split(new[] { "-T" }, StringSplitOptions.None);
+
                 // validate rangeName
-                var rangeName = fullVersion.Substring(0, fullVersion.IndexOf('-'));
+                var rangeName = versionSet[0];
                 var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
                         throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
 
@@ -422,7 +425,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 if (fullVersion.Contains("-T"))
                 {
                     //按照靶道进行模糊搜索
-                    var tactic = fullVersion.Substring(fullVersion.LastIndexOf('-') + 1);
+                    var tactic = versionSet[1];
                     seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);
                 }
                 else
@@ -438,6 +441,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 promptItem = await this.GetObjectAsync(where,
                                     p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
                                     OrderingType.Descending);
+            }
+
+            if (promptItem == null)
+            {
+                throw new Exception("找不到匹配条件的 PromptItem");
             }
 
             var dto = await this.TransEntityToDtoAsync(promptItem); // this.Mapper.Map<PromptItemDto>(item);
