@@ -172,11 +172,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
+                    // 获取promptItem
                     PromptItemDto promptItem = await _promptItemService.GetAsync(id);
 
-                    List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
-
+                    // 转换为 response
                     var resp = new PromptItem_GetResponse(promptItem);
+
+                    // 获取所有对应的结果
+                    var resultList = await _promptResultService.GetFullListAsync(res => res.PromptItemId == promptItem.Id);
                     resp.PromptResultList.AddRange(resultList);
 
                     return resp;
