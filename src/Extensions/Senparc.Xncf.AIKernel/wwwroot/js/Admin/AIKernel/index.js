@@ -139,9 +139,12 @@ var app=new Vue({
                             type: res.data.success ? 'success' : 'error',
                             message: res.data.success ? '添加成功!' : '添加失败'
                         });
-                        this.getDataList()
-                        this.clearAddForm()
-                        this.addFormDialogVisible = false;
+                        if (res.data.success){
+                            this.getDataList()
+                            this.clearAddForm()
+                            this.addFormDialogVisible = false;
+                        }
+                      
                     })
                 } else {
                     return false;
@@ -196,11 +199,13 @@ var app=new Vue({
                     }).then(res => {
                         this.$message({
                             type: res.data.success ? 'success' : 'error',
-                            message: res.data.success ? '添加成功!' : '添加失败'
+                            message: res.data.success ? '编辑成功!' : '编辑失败'
                         });
-                        this.clearEditForm()
-                        this.getDataList()
-                        this.editFormDialogVisible = false;
+                        if(res.data.success){
+                            this.clearEditForm()
+                            this.getDataList()
+                            this.editFormDialogVisible = false;
+                        }
                     })
                 } else {
                     return false;
