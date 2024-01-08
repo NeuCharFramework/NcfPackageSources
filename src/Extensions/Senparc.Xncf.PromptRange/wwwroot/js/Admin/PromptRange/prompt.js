@@ -10,6 +10,7 @@ var app = new Vue({
             promptFieldOpt: [], // 靶场列表
             promptOpt: [], // prompt列表
             modelOpt: [], // 模型列表
+            waitRefreshModel: false, // 是否等待刷新模型列表
             promptid: '',// 选择靶场
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
@@ -1601,6 +1602,17 @@ var app = new Vue({
 
         },
 
+        async refreshModelOpt() {
+            this.waitRefreshModel=true
+            await this.getModelOptData().then(()=>{
+                this.waitRefreshModel=false
+                // 提示刷新完成
+                this.$message({
+                    message: '刷新完成！',
+                    type: 'success'
+                })
+            })
+        },
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
             let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
