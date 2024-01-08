@@ -48,10 +48,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     // 新增promptItem
-                    var promptItemDto = await _promptItemService.AddPromptItemAsync(request);
+                    var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
                     // ?? throw new NcfExceptionBase("新增失败");
 
-                    var promptItemResponseDto = new PromptItem_AddResponse(promptItemDto);
+                    var promptItemResponseDto = new PromptItem_AddResponse(savedPromptItem);
 
                     // 是否立即生成结果
                     if (request.IsDraft)
@@ -64,11 +64,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
-                    await _promptResultService.UpdateEvalScoreAsync(promptItemDto.Id);
+                    await _promptResultService.UpdateEvalScoreAsync(savedPromptItem.Id);
 
                     return promptItemResponseDto;
                 }

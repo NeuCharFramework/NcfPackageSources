@@ -58,7 +58,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         public int? Id { get; set; }
 
-        public int RangeId { get; set; }
+        [Required] public int RangeId { get; set; }
 
         public string Note { get; set; }
 
