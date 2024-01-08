@@ -703,6 +703,7 @@ var app = new Vue({
                             this.resetPageData()
                         })
                     }).catch(() => {
+                      
                         this.resetPageData()
                     });
                     return
@@ -773,7 +774,10 @@ var app = new Vue({
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
             // 获取靶道列表
-            await this.getPromptOptData()
+            await this.getPromptOptData().then(() => {
+                // promptid is the last one of promptOpt
+                this.promptid = this.promptOpt[this.promptOpt.length-1].id
+            })
             // 获取分数趋势图表数据
             await this.getScoringTrendData()
         },
@@ -1696,8 +1700,8 @@ var app = new Vue({
                     if (res.data.success) {
                         // 重新获取靶场列表
                         await this.getFieldList().then(()=> {
-                            this.resetPageData()
                             that.promptField = res.data.data.id
+                            this.resetPageData()
                         })
                         // 提示添加成功
                         this.$message({
