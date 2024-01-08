@@ -67,6 +67,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         public List<PromptResult> PromptResultList { get; set; } = new();
 
+        #region 打分相关
+
         /// <summary>
         /// 评估参数, 平均分
         /// </summary>
@@ -76,6 +78,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// 评估参数
         /// </summary>
         public int EvalMaxScore { get; private set; }
+
+        /// <summary>
+        /// 期望结果Json
+        /// </summary>
+        public string ExpectedResultsJson { get; set; }
+
+        #endregion
+
 
         #region Prompt请求参数
 
@@ -98,7 +108,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         public PromptItem_GetResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-           string prefix, string suffix, string variableDictJson, int evalAvgScore = -1, int evalMaxScore = -1)
+            string prefix, string suffix, string variableDictJson, int evalAvgScore = -1, int evalMaxScore = -1, string expectedResultsJson = null)
         {
             Id = promptItemId;
             PromptContent = promptContent;
@@ -116,11 +126,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
             VariableDictJson = variableDictJson;
             EvalAvgScore = evalAvgScore;
             EvalMaxScore = evalMaxScore;
+            ExpectedResultsJson = expectedResultsJson;
         }
 
         public PromptItem_GetResponse(PromptItemDto item) : this(item.Id, item.Content, item.FullVersion, item.ModelId,
             item.MaxToken, item.Temperature, item.TopP, item.FrequencyPenalty, item.PresencePenalty, item.StopSequences, item.Note,
-            item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore)
+            item.Prefix, item.Suffix, item.VariableDictJson, item.EvalAvgScore, item.EvalMaxScore, item.ExpectedResultsJson)
         {
         }
     }

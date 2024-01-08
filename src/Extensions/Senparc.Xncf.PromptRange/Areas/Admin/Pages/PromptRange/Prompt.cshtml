@@ -72,7 +72,10 @@
                 <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">选择模型</div>
             </div>
-            <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
+            <div class="d-flex" style="gap:5px">
+                <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">刷新</el-button>
+                <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
+            </div>
         </div>
         <div style="padding-right: 5px">
             <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
@@ -275,7 +278,7 @@
                     <span>{{promptDetail.promptStr||'--'}}</span>
                 </div>
                 <div class="titleRow_scoreBox">
-                    <span>战术:</span>
+                    <span>瞄准:</span>
                     <span>{{promptDetail.tacticsStr||'--'}}</span>
                 </div>
         </div>

@@ -189,7 +189,8 @@ public class PromptItem : EntityBase<int>
     #region ctor 构造函数
 
     public PromptItem(PromptItemDto dto) : this(dto.RangeId, dto.Content, dto.ModelId, dto.TopP, dto.Temperature, dto.MaxToken,
-        dto.FrequencyPenalty, dto.PresencePenalty, dto.StopSequences, dto.RangeName, dto.Tactic, dto.Aiming, dto.ParentTac, dto.Note, dto.IsDraft,
+        dto.FrequencyPenalty, dto.PresencePenalty, dto.StopSequences, dto.RangeName, dto.Tactic, dto.Aiming, dto.ParentTac, dto.Note,
+        dto.IsDraft, dto.ExpectedResultsJson,
         dto.Prefix, dto.Suffix, dto.VariableDictJson)
     {
         Id = dto.Id;
@@ -203,7 +204,7 @@ public class PromptItem : EntityBase<int>
     public PromptItem(int rangeId, string content,
         int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
         string rangeName, string tactic, int aiming, string parentTac,
-        string note, bool isDraft,
+        string note, bool isDraft,string expectedResultsJson,
         string prefix, string suffix, string variableDictJson)
     {
         RangeId = rangeId;
@@ -221,6 +222,7 @@ public class PromptItem : EntityBase<int>
         ParentTac = parentTac;
         Note = note;
         IsDraft = isDraft;
+        ExpectedResultsJson = expectedResultsJson;
         Prefix = prefix;
         Suffix = suffix;
         VariableDictJson = variableDictJson;
@@ -230,8 +232,8 @@ public class PromptItem : EntityBase<int>
 
     public PromptItem(int rangeId, string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :
         this(rangeId, request.Content, request.ModelId, request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty,
-            request.PresencePenalty, request.StopSequences, rangeName, tactic, aiming, parentTac, request.Note, request.IsDraft, request.Prefix,
-            request.Suffix, request.VariableDictJson)
+            request.PresencePenalty, request.StopSequences, rangeName, tactic, aiming, parentTac, request.Note, request.IsDraft, request.ExpectedResultsJson,
+            request.Prefix, request.Suffix, request.VariableDictJson)
     {
     }
 
