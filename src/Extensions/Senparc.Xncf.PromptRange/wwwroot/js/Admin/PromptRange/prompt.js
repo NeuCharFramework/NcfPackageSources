@@ -555,12 +555,8 @@ var app = new Vue({
                             position: 'top',
                             show:true,
                             formatter: function (params) {
-                                // console.log('params',params,this.promptid)
-                                 // fullVersion
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem?promptItem.fullVersion:''
-                                console.log('fullVersion',fullVersion,params.data[3].fullVersion)
-                                console.log('params.data[3].fullVersion === fullVersion',params.data[3].fullVersion === fullVersion)
                                 return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
                             },
                             textStyle:{
@@ -1787,20 +1783,24 @@ var app = new Vue({
                 copyResultData.promptFieldStr = vArr[0] || ''
                 copyResultData.promptStr = vArr[1] || ''
                 copyResultData.tacticsStr = vArr[2] || ''
+                this.promptDetail = copyResultData
                 //如果获取到的结果没有，则延续以往的expectedJson.
                 if (!copyResultData.expectedResultsJson) {
                     const expectedResultsJson = this.promptDetail.expectedResultsJson
-                    this.promptDetail = {
-                        ...copyResultData,
-                        expectedResultsJson
-                    }
-                    this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
-                        return {
-                            id: index + 1,
-                            label: `预期结果${index + 1}`,
-                            value: item
+                    if (expectedResultsJson) {
+                        this.promptDetail = {
+                            ...copyResultData,
+                            expectedResultsJson
                         }
-                    })
+                        this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
+                            return {
+                                id: index + 1,
+                                label: `预期结果${index + 1}`,
+                                value: item
+                            }
+                        })
+                    }
+
                 }
                 if (overwrite) {
                     // 重新获取输出列表
