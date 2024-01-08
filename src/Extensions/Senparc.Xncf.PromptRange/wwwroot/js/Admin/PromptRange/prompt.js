@@ -691,14 +691,6 @@ var app = new Vue({
             // 靶道变化时，重置打靶按钮
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
-            // 重置 ai 评分标准
-            this.aiScoreForm = {
-                resultList: [{
-                    id: 1,
-                    label: '预期结果1',
-                    value: ''
-                }]
-            }
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -1795,7 +1787,21 @@ var app = new Vue({
                 copyResultData.promptFieldStr = vArr[0] || ''
                 copyResultData.promptStr = vArr[1] || ''
                 copyResultData.tacticsStr = vArr[2] || ''
-                this.promptDetail = copyResultData
+                //如果获取到的结果没有，则延续以往的expectedJson.
+                if (!copyResultData.expectedResultsJson) {
+                    const expectedResultsJson = this.promptDetail.expectedResultsJson
+                    this.promptDetail = {
+                        ...copyResultData,
+                        expectedResultsJson
+                    }
+                    this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
+                        return {
+                            id: index + 1,
+                            label: `预期结果${index + 1}`,
+                            value: item
+                        }
+                    })
+                }
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
