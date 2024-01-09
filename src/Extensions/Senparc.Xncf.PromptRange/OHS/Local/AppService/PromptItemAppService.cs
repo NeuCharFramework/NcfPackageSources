@@ -48,10 +48,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     // 新增promptItem
-                    var promptItemDto = await _promptItemService.AddPromptItemAsync(request);
+                    var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
                     // ?? throw new NcfExceptionBase("新增失败");
 
-                    var promptItemResponseDto = new PromptItem_AddResponse(promptItemDto);
+                    var promptItemResponseDto = new PromptItem_AddResponse(savedPromptItem);
 
                     // 是否立即生成结果
                     if (request.IsDraft)
@@ -64,11 +64,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
-                    await _promptResultService.UpdateEvalScoreAsync(promptItemDto.Id);
+                    await _promptResultService.UpdateEvalScoreAsync(savedPromptItem.Id);
 
                     return promptItemResponseDto;
                 }
@@ -172,11 +172,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
+                    // 获取promptItem
                     PromptItemDto promptItem = await _promptItemService.GetAsync(id);
 
-                    List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
-
+                    // 转换为 response
                     var resp = new PromptItem_GetResponse(promptItem);
+
+                    // 获取所有对应的结果
+                    var resultList = await _promptResultService.GetFullListAsync(res => res.PromptItemId == promptItem.Id);
                     resp.PromptResultList.AddRange(resultList);
 
                     return resp;
