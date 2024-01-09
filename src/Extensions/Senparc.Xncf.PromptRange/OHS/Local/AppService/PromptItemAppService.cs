@@ -8,9 +8,14 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
@@ -48,10 +53,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     // 新增promptItem
-                    var promptItemDto = await _promptItemService.AddPromptItemAsync(request);
+                    var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
                     // ?? throw new NcfExceptionBase("新增失败");
 
-                    var promptItemResponseDto = new PromptItem_AddResponse(promptItemDto);
+                    var promptItemResponseDto = new PromptItem_AddResponse(savedPromptItem);
 
                     // 是否立即生成结果
                     if (request.IsDraft)
@@ -64,11 +69,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(promptItemDto);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
-                    await _promptResultService.UpdateEvalScoreAsync(promptItemDto.Id);
+                    await _promptResultService.UpdateEvalScoreAsync(savedPromptItem.Id);
 
                     return promptItemResponseDto;
                 }
@@ -172,11 +177,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
+                    // 获取promptItem
                     PromptItemDto promptItem = await _promptItemService.GetAsync(id);
 
-                    List<PromptResult> resultList = await _promptResultService.GetFullListAsync(result => result.PromptItemId == promptItem.Id);
-
+                    // 转换为 response
                     var resp = new PromptItem_GetResponse(promptItem);
+
+                    // 获取所有对应的结果
+                    var resultList = await _promptResultService.GetFullListAsync(res => res.PromptItemId == promptItem.Id);
                     resp.PromptResultList.AddRange(resultList);
 
                     return resp;
@@ -276,17 +284,103 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
         }
 
-        ///// <summary>
-        ///// 根据靶场名（自动生成）获取靶场里最好的promptItem
-        ///// </summary>
-        ///// <param name="rangeName"></param>
-        ///// <param name="isAvg"></param>
-        ///// <returns></returns>
-        //[ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        //public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
-        //{
-        //    return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-        //        async (response, logger) => { return await _promptItemService.GetBestPromptAsync(rangeName, isAvg); });
-        //}
+        // /// <summary>
+        // /// 根据靶场名（自动生成）获取靶场里最好的promptItem
+        // /// </summary>
+        // /// <param name="rangeName"></param>
+        // /// <param name="isAvg"></param>
+        // /// <returns></returns>
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        // {
+        //     return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+        //         async (response, logger) => { return await _promptItemService.GetBestPromptAsync(rangeName, isAvg); });
+        // }
+
+        /// <summary>
+        /// 上传plugin接口
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> UploadPluginsAsync(IFormFile file)
+        {
+            // todo 如何获取上传文件 -> 用IFormFile
+            // todo 如何校验文件（目前文件格式有哪些？文件类型有哪些？文件名规则？） 
+            //      可以参考Senparc.ai项目里的plugin文件
+            // todo 如何解析文件
+            // todo 如何保存文件到表，应该是要新增的
+            // todo 如何返回结果
+            // todo 给出什么返回比较合适
+            return await this.GetResponseAsync<StringAppResponse, string>(
+                async (resp, logger) =>
+                {
+                    #region validate and get file
+
+                    if (file == null || file.Length == 0)
+                        throw new NcfExceptionBase("文件未找到");
+
+                    if (!file.FileName.EndsWith(".zip"))
+                    {
+                        throw new NcfExceptionBase("文件格式错误");
+                    }
+
+                    #endregion
+
+                    var path = Path.Combine(
+                        Directory.GetCurrentDirectory(), "wwwroot",
+                        file.FileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    using (var zip = ZipFile.OpenRead(path))
+                    {
+                        foreach (var entry in zip.Entries)
+                        {
+                            // Check if the entry is a directory and contains exactly two files
+                            if (entry.FullName.EndsWith("/") && zip.Entries.Count(e => Path.GetDirectoryName(e.FullName) == entry.FullName) == 2)
+                            {
+                                // Check if the files have the correct names
+                                if (zip.Entries.Any(e =>
+                                        Path.GetDirectoryName(e.FullName) == entry.FullName && (e.Name == "file1.txt" || e.Name == "file2.txt")))
+                                {
+                                    // Process the files
+                                    foreach (var fileEntry in zip.Entries.Where(e => Path.GetDirectoryName(e.FullName) == entry.FullName))
+                                    {
+                                        using (var fileStream = fileEntry.Open())
+                                        {
+                                            // Read and process the file data
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return "";
+                });
+        }
+
+        public async Task<StringAppResponse> ExportPluginsAsync(int rangeId)
+        {
+            // todo 如何定位所需文件  ->  靶道信息
+            // todo 如何校验文件     ->  有多个T怎么办
+            // todo 如何根据数据写文件 -> 参考已有 主要映射到两个文件中
+            // todo 如何写文件到磁盘   -> 目录为 System.IO.Directory.GetCurrentDirectory() + App_Data/Files/Plugins下
+
+            // todo 用户如何获取
+            // todo 给出什么返回比较合适
+            return await this.GetResponseAsync<StringAppResponse, string>(
+                async (resp, logger) =>
+                {
+                    // 根据靶场名获取prompt，
+                    await _promptItemService.ExportPluginsAsync(rangeId);
+
+                    return "ok";
+                });
+        }
     }
 }
