@@ -103,7 +103,7 @@ public class PromptItem : EntityBase<int>
     ///         为   Tx              这里的x为分支号，str,允许1.1.1。。。
     ///      Aiming   为   Ax              这里的x为打靶次数，int
     /// </summary>
-    [Required]
+    [Required, MaxLength(50)]
     public string FullVersion
     {
         get { return $"{RangeName}-T{Tactic}-A{Aiming}"; }

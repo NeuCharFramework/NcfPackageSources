@@ -281,7 +281,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-                async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
+                async (response, logger) =>
+                {
+                    return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
+                });
         }
 
         // /// <summary>
@@ -364,10 +367,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// 导出靶场为 plugin
+        /// </summary>
+        /// <param name="rangeId"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> ExportPluginsAsync(int rangeId)
         {
-            // todo 如何定位所需文件  ->  靶道信息
-            // todo 如何校验文件     ->  有多个T怎么办
+            // todo 如何校验文件     ->  有多个T怎么办   ->   用 bestPrompt 的逻辑
             // todo 如何根据数据写文件 -> 参考已有 主要映射到两个文件中
             // todo 如何写文件到磁盘   -> 目录为 System.IO.Directory.GetCurrentDirectory() + App_Data/Files/Plugins下
 
@@ -376,9 +384,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (resp, logger) =>
                 {
-                    // 根据靶场名获取prompt，
                     await _promptItemService.ExportPluginsAsync(rangeId);
 
+                    return "ok";
+                });
+        }
+        
+        /// <summary>
+        /// 导出指定版本的靶道为 plugin
+        /// </summary>
+        /// <param name="itemVersion"></param>
+        /// <returns></returns>
+        public async Task<StringAppResponse> ExportPluginsAsync(string itemVersion)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(
+                async (resp, logger) =>
+                {
+                    await _promptItemService.ExportPluginsAsync(itemVersion);
+                    
                     return "ok";
                 });
         }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Senparc.Ncf.Core.Enums;
@@ -19,6 +20,8 @@ using Senparc.AI;
 using Senparc.AI.Kernel;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Humanizer;
+using Newtonsoft.Json;
+using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Ncf.Utility;
 
@@ -171,6 +174,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             #endregion
+
+            // 保存之前验证一下版号是否存在
+            var existPromptItem = await base.GetObjectAsync(p => p.FullVersion == toSavePromptItem.FullVersion);
+            if (existPromptItem != null)
+            {
+                throw new NcfExceptionBase("版号生成错误，请重新打靶");
+            }
 
             await base.SaveObjectAsync(toSavePromptItem);
 
@@ -325,7 +335,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptItemDto>(promptItem);
         }
 
-        public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
+        public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg = true)
         {
             var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
                              throw new Exception("未找到prompt");
@@ -333,10 +343,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 获取同一个靶道下的所有打过分的item
             List<PromptItemDto> promptItems = (await this.GetFullListAsync(
-                    p => p.RangeName == promptItem.RangeName && (isAvg ? p.EvalAvgScore >= 0 : p.EvalMaxScore >= 0),
+                    p => p.RangeId == promptItem.RangeId && (isAvg ? p.EvalAvgScore >= 0 : p.EvalMaxScore >= 0),
                     p => p.Id,
                     OrderingType.Ascending)
-                ).Select(p => this.Mapper.Map<PromptItemDto>(p)).ToList();
+                )
+                .Select(p => this.Mapper.Map<PromptItemDto>(p))
+                .ToList();
+
+            // 根据 Tactic 的第一位, 将 list 转为 Dictionary<string,List<PromptItem>>
             var itemGroupByT = promptItems.GroupBy(p => p.Tactic.Substring(0, 1))
                 .ToDictionary(p => p.Key, p => p.ToList());
 
@@ -580,49 +594,156 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptItemDto;
         }
 
-        public async Task ExportPluginsAsync(int rangeId, bool isAvg = true)
+        public async Task<string> ExportPluginsAsync(string fullVersion)
+        {
+            var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
+                       throw new NcfExceptionBase($"未找到{fullVersion}对应的提示词靶道");
+            await this.ExportPluginWithItemAsync(item);
+
+            return "ok";
+        }
+
+        public async Task<string> ExportPluginsAsync(int rangeId, bool isAvg = true)
         {
             // 根据靶场名，获取靶场
             var promptRange = await _promptRangeService.GetAsync(rangeId);
 
-
-            #region 根据靶场别名，生成文件夹
-            // 有别名就用别名，没有就用靶场名
-
-            // 先获取根目录
-            var curDirt = System.IO.Directory.GetCurrentDirectory();
-            await Console.Out.WriteLineAsync(curDirt);
-
-            // 生成文件夹
-            var path = Path.Combine(curDirt, "plugins", promptRange.Alias ?? promptRange.RangeName);
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            #endregion
+            // 获取输出的靶场的文件夹路径
+            var rangePath = await this.GetRangePathAsync(promptRange);
 
             // 根据靶场名，获取靶道
             var promptItemList = await this.GetFullListAsync(p => p.RangeName == promptRange.RangeName);
 
-            //用版号作为key, 映射字典
-            var itemMapByVersion = promptItemList.ToDictionary(p => p.FullVersion, p => p);
+            // //用版号作为key, 映射字典
+            // var itemMapByVersion = promptItemList.ToDictionary(p => p.FullVersion, p => p);
 
             // 提取出 T 的第一位，并分组
             Dictionary<string, List<PromptItem>> itemGroupByT = promptItemList.GroupBy(p => p.Tactic.Substring(0, 1))
                 .ToDictionary(p => p.Key, p => p.ToList());
 
+            // 按照 t1, t2 构建
             foreach (var (tac, itemList) in itemGroupByT)
             {
                 // 找出最佳item
                 var bestItem = itemList.MaxBy(p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore));
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                await ExportPluginWithItemAsync(bestItem, rangePath);
+            }
+
+            return "ok";
+        }
+
+        public async Task ExportPluginWithItemAsync(PromptItem bestItem, string rangePath = null)
+        {
+            var range = await _promptRangeService.GetAsync(bestItem.RangeId);
+
+            rangePath ??= await this.GetRangePathAsync(range);
+
+            #region 根据模板构造 Root 对象
+
+            var data = new Root()
+            {
+                Schema = 1,
+                Description = "Generated by Senparc.Xncf.PromptRange",
+                ExecutionSettings = new ExecutionSettings()
                 {
-                    // write stream to file
-                    // stream.Write(Path.Combine(path, fileName), )
+                    Default = new Default()
+                    {
+                        MaxTokens = bestItem.MaxToken,
+                        Temperature = bestItem.Temperature,
+                        TopP = bestItem.TopP,
+                        PresencePenalty = bestItem.PresencePenalty,
+                        FrequencyPenalty = bestItem.FrequencyPenalty,
+                        StopSequences = (bestItem.StopSequences ?? "[]").GetObject<List<string>>()
+                    }
+                }
+            };
+
+            #endregion
+
+            //  当前 plugin 文件夹目录，靶道名/别名
+            var curPluginPath = Path.Combine(rangePath, bestItem.NickName ?? bestItem.FullVersion);
+            if (!Directory.Exists(curPluginPath))
+            {
+                Directory.CreateDirectory(curPluginPath);
+            }
+
+            // 完整的JSON文件路径
+            // string jsonFullPath = Path.Combine(curPluginPath, "config.json");
+
+            await using (var jsonFs = new FileStream(
+                             Path.Combine(curPluginPath, "config.json"),
+                             FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+            {
+                jsonFs.Seek(0, SeekOrigin.Begin);
+                jsonFs.SetLength(0); // 清空文件内容
+                await using (var jsonSw = new StreamWriter(jsonFs, Encoding.UTF8))
+                {
+                    // 写入并且保持格式
+                    await jsonSw.WriteLineAsync(JsonConvert.SerializeObject(data, Formatting.Indented));
+                }
+            }
+
+            // 同理，构造 skprompt.txt 文件，内容为content
+            await using (var txtFs = new FileStream(
+                             Path.Combine(curPluginPath, "skprompt.txt"),
+                             FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+            {
+                txtFs.Seek(0, SeekOrigin.Begin);
+                txtFs.SetLength(0); // 清空文件内容
+                await using (var jsonSw = new StreamWriter(txtFs, Encoding.UTF8))
+                {
+                    await jsonSw.WriteLineAsync(bestItem.Content);
                 }
             }
         }
+
+        private async Task<string> GetRangePathAsync(PromptRangeDto range)
+        {
+            #region 根据靶场别名，生成文件夹
+
+            // 有别名就用别名，没有就用靶场名
+
+            // 先获取根目录
+            var curDir = Directory.GetCurrentDirectory();
+            await Console.Out.WriteLineAsync(curDir);
+            var filePathPrefix = Path.Combine(curDir, "App_Data", "Files");
+            // 生成文件夹
+            var rangePath = Path.Combine(filePathPrefix, "ExportedPlugins", range.Alias ?? range.RangeName);
+            if (!Directory.Exists(rangePath))
+            {
+                Directory.CreateDirectory(rangePath);
+            }
+
+            #endregion
+
+            return rangePath;
+        }
+
+        #region Inner Class
+
+        class ExecutionSettings
+        {
+            public Default Default { get; set; }
+        }
+
+        class Default
+        {
+            public int MaxTokens { get; set; }
+            public double Temperature { get; set; }
+            public double TopP { get; set; }
+            public double PresencePenalty { get; set; }
+            public double FrequencyPenalty { get; set; }
+            public List<string> StopSequences { get; set; }
+        }
+
+        class Root
+        {
+            public int Schema { get; set; }
+            public string Description { get; set; }
+            public ExecutionSettings ExecutionSettings { get; set; }
+        }
+
+        #endregion
     }
 }
