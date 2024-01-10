@@ -10,6 +10,7 @@ var app = new Vue({
             promptFieldOpt: [], // 靶场列表
             promptOpt: [], // prompt列表
             modelOpt: [], // 模型列表
+            waitRefreshModel: false, // 是否等待刷新模型列表
             promptid: '',// 选择靶场
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
@@ -555,12 +556,8 @@ var app = new Vue({
                             position: 'top',
                             show:true,
                             formatter: function (params) {
-                                // console.log('params',params,this.promptid)
-                                 // fullVersion
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem?promptItem.fullVersion:''
-                                console.log('fullVersion',fullVersion,params.data[3].fullVersion)
-                                console.log('params.data[3].fullVersion === fullVersion',params.data[3].fullVersion === fullVersion)
                                 return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
                             },
                             textStyle:{
@@ -691,14 +688,6 @@ var app = new Vue({
             // 靶道变化时，重置打靶按钮
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
-            // 重置 ai 评分标准
-            this.aiScoreForm = {
-                resultList: [{
-                    id: 1,
-                    label: '预期结果1',
-                    value: ''
-                }]
-            }
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
                 // 如果靶场变化 靶道
@@ -714,6 +703,7 @@ var app = new Vue({
                             this.resetPageData()
                         })
                     }).catch(() => {
+                      
                         this.resetPageData()
                     });
                     return
@@ -784,7 +774,10 @@ var app = new Vue({
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
             // 获取靶道列表
-            await this.getPromptOptData()
+            await this.getPromptOptData().then(() => {
+                // promptid is the last one of promptOpt
+                this.promptid = this.promptOpt[this.promptOpt.length-1].id
+            })
             // 获取分数趋势图表数据
             await this.getScoringTrendData()
         },
@@ -1613,6 +1606,17 @@ var app = new Vue({
 
         },
 
+        async refreshModelOpt() {
+            this.waitRefreshModel=true
+            await this.getModelOptData().then(()=>{
+                this.waitRefreshModel=false
+                // 提示刷新完成
+                this.$message({
+                    message: '刷新完成！',
+                    type: 'success'
+                })
+            })
+        },
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
             let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
@@ -1696,8 +1700,8 @@ var app = new Vue({
                     if (res.data.success) {
                         // 重新获取靶场列表
                         await this.getFieldList().then(()=> {
-                            this.resetPageData()
                             that.promptField = res.data.data.id
+                            this.resetPageData()
                         })
                         // 提示添加成功
                         this.$message({
@@ -1796,6 +1800,24 @@ var app = new Vue({
                 copyResultData.promptStr = vArr[1] || ''
                 copyResultData.tacticsStr = vArr[2] || ''
                 this.promptDetail = copyResultData
+                //如果获取到的结果没有，则延续以往的expectedJson.
+                if (!copyResultData.expectedResultsJson) {
+                    const expectedResultsJson = this.promptDetail.expectedResultsJson
+                    if (expectedResultsJson) {
+                        this.promptDetail = {
+                            ...copyResultData,
+                            expectedResultsJson
+                        }
+                        this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
+                            return {
+                                id: index + 1,
+                                label: `预期结果${index + 1}`,
+                                value: item
+                            }
+                        })
+                    }
+
+                }
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)

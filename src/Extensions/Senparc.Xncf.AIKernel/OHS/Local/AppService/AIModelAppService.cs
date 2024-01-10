@@ -113,30 +113,30 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         /// <summary>
         /// 新建一个AIModel
         /// </summary>
-        /// <param name="orEditRequest"></param>
+        /// <param name="createRequest"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<AIModelDto>> CreateAsync(AIModel_CreateOrEditRequest orEditRequest)
+        public async Task<AppResponseBase<AIModelDto>> CreateAsync(AIModel_CreateOrEditRequest createRequest)
         {
             return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(
                 async (response, logger) =>
                 {
-                    #region Validate
+                    // #region Validate
+                    //
+                    // var count = await _aIModelService.GetCountAsync(
+                    //     z => z.DeploymentName == createRequest.DeploymentName
+                    // );
+                    // if (count > 0)
+                    // {
+                    //     //response.ErrorMessage = "AIModel已存在";
+                    //     //response.Success = false;
+                    //     //return null;
+                    //     throw new NcfExceptionBase("AIModel已存在");
+                    // }
+                    //
+                    // #endregion
 
-                    var count = await _aIModelService.GetCountAsync(
-                        z => z.DeploymentName == orEditRequest.DeploymentName
-                    );
-                    if (count > 0)
-                    {
-                        //response.ErrorMessage = "AIModel已存在";
-                        //response.Success = false;
-                        //return null;
-                        throw new NcfExceptionBase("AIModel已存在");
-                    }
-
-                    #endregion
-
-                    return await _aIModelService.AddAsync(orEditRequest);
+                    return await _aIModelService.AddAsync(createRequest);
                 });
         }
 
