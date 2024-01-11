@@ -476,21 +476,21 @@
             PromptItemVersion 
             </summary>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.ManualScoring(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.ManualScoring(System.Decimal)">
             <summary>
             更新手动评分
             </summary>
             <param name="score"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScoring(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScoring(System.Decimal)">
             <summary>
             更新自动机器评分
             </summary>
             <param name="score"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.FinalScoring(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.FinalScoring(System.Decimal)">
             <summary>
             更新最终得分
             </summary>
@@ -693,6 +693,18 @@
             是否公开
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.UpdateModelParam(System.Single,System.Single,System.Int32,System.Single,System.Single,System.String)">
+            <summary>
+            更新使用的模型参数
+            </summary>
+            <param name="topP"></param>
+            <param name="temperature"></param>
+            <param name="maxToken"></param>
+            <param name="frequencyPenalty"></param>
+            <param name="presencePenalty"></param>
+            <param name="stopSequences"></param>
+            <returns></returns>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptRange.Alias">
             <summary>
             靶场代号（用户自定义）
@@ -812,14 +824,21 @@
             <summary>
             上传plugin接口
             </summary>
-            <param name="file"></param>
+            <param name="zipFile"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Int32)">
             <summary>
-            导出靶场/靶道为plugin
+            导出靶场为 plugin
             </summary>
             <param name="rangeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.String)">
+            <summary>
+            导出指定版本的靶道为 plugin
+            </summary>
+            <param name="itemVersion"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">

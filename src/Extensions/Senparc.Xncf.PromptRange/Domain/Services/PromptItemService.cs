@@ -1,9 +1,10 @@
-using Senparc.Ncf.Repository;
+﻿using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,9 @@ using Senparc.AI;
 using Senparc.AI.Kernel;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Humanizer;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Ncf.Utility;
@@ -296,9 +299,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <returns></returns>
         public async Task<PromptItem_HistoryScoreResponse> GetHistoryScoreAsync(int promptItemId)
         {
-            List<string> versionHistoryList = new List<string>();
-            List<int> avgScoreHistoryList = new List<int>();
-            List<int> maxScoreHistoryList = new List<int>();
+            var versionHistoryList = new List<string>();
+            var avgScoreHistoryList = new List<decimal>();
+            var maxScoreHistoryList = new List<decimal>();
 
             var curItem = await this.GetAsync(promptItemId);
 
@@ -730,10 +733,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         class Default
         {
             public int MaxTokens { get; set; }
-            public double Temperature { get; set; }
-            public double TopP { get; set; }
-            public double PresencePenalty { get; set; }
-            public double FrequencyPenalty { get; set; }
+            public float Temperature { get; set; }
+            public float TopP { get; set; }
+            public float PresencePenalty { get; set; }
+            public float FrequencyPenalty { get; set; }
             public List<string> StopSequences { get; set; }
         }
 
@@ -745,5 +748,138 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         #endregion
+
+        public async Task UploadPluginsAsync(IFormFile uploadedFile)
+        {
+            #region 验证文件
+
+            if (uploadedFile == null || uploadedFile.Length == 0)
+                throw new NcfExceptionBase("文件未找到");
+            // 限制文件上传的大小为 50M
+            if (uploadedFile.Length > 1024 * 1024 * 50)
+            {
+                throw new NcfExceptionBase("文件大小超过限制（50 M）");
+            }
+
+            if (!uploadedFile.FileName.EndsWith(".zip"))
+            {
+                throw new NcfExceptionBase("文件格式错误");
+            }
+
+            #endregion
+
+            #region 保存文件
+
+            var toSaveDir = Path.Combine(
+                Directory.GetCurrentDirectory(), "App_Data", "Files", "toImportFileTemp");
+            if (!Directory.Exists(toSaveDir))
+            {
+                Directory.CreateDirectory(toSaveDir);
+            }
+
+            // 文件保存路径
+            var toSaveFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
+
+            using (var stream = new FileStream(toSaveFilePath, FileMode.Create))
+            {
+                await uploadedFile.CopyToAsync(stream);
+            }
+
+            #endregion
+
+            // 先创建靶场
+            var rangeAlias = uploadedFile.FileName.Split(".")[0];
+            var promptRange = await _promptRangeService.AddAsync(rangeAlias);
+
+            // 读取 zip 文件
+            using ZipArchive zip = ZipFile.OpenRead(toSaveFilePath);
+            // todo 可以选择先解压
+            // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
+
+            // 解压文件
+            // var unzippedFilePath = Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0], "");
+            // if (!Directory.Exists(unzippedFilePath))
+            // {
+            //     Directory.CreateDirectory(unzippedFilePath);
+            // }
+
+            // ZipFile.ExtractToDirectory(toSaveFilePath, unzippedFilePath, Encoding.UTF8, true);
+            // ZipFile.ExtractToDirectory(zipFile.OpenReadStream(), unzippedFilePath, Encoding.UTF8, true);
+
+            // todo 开始读取
+            Dictionary<string, PromptItem> zipIdxDict = new();
+            for (var i = 0; i < zip.Entries.Count; i++)
+            {
+                var curFile = zip.Entries[i];
+                // var curFilePath = Path.Combine(extractPath, entry.FullName);
+                if (curFile.Name == "") // 是目录
+                {
+                    var promptItem = new PromptItem(promptRange.Id, Path.GetDirectoryName(curFile.FullName));
+
+                    zipIdxDict[curFile.FullName] = promptItem;
+                }
+                else
+                {
+                    var directoryName = Path.GetDirectoryName(curFile.FullName);
+                    if (directoryName.Contains("/"))
+                    {
+                        throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+                    }
+
+                    var promptItem = zipIdxDict[directoryName];
+                    if (curFile.Name == "config.json") // 更新配置文件
+                    {
+                        // 读取所有的文件为一个 string
+                        await using Stream stream = curFile.Open();
+                        using StreamReader reader = new StreamReader(stream);
+                        
+                        string text = await reader.ReadToEndAsync();
+                        var executionSettings = text.GetObject<ExecutionSettings>();
+                        promptItem.UpdateModelParam(
+                            topP: executionSettings.Default.TopP,
+                            maxToken: executionSettings.Default.MaxTokens,
+                            temperature: executionSettings.Default.Temperature,
+                            presencePenalty: executionSettings.Default.PresencePenalty,
+                            frequencyPenalty: executionSettings.Default.FrequencyPenalty,
+                            stopSequences: executionSettings.Default.StopSequences.ToJson(true)
+                        );
+                        
+                    }else if (curFile.Name == "skprompt.txt" )
+                    {
+                        // 读取所有的文件为一个 string
+                        await using Stream stream = curFile.Open();
+                        using StreamReader reader = new StreamReader(stream);
+                        
+                        string text = await reader.ReadToEndAsync();
+                        
+                        // todo 提取 prompt 请求参数
+                    }
+                }
+            }
+
+
+            // const string zipFilePath = @"D:\Senparc\PromptRange\NCF\src\back-end\Senparc.Web\App_Data\Files\ImportedPlugins\测试版号逻辑.zip";
+
+
+            // var extractPath =
+            //     toSaveDir; // @"D:\Senparc\PromptRange\NCF\src\back-end\Senparc.Web\App_Data\Files\ImportedPlugins\" + zipFileName[0];
+            // // 解压到指定目录
+            // foreach (var entry in zip.Entries)
+            // {
+            //     string fullPath = Path.Combine(extractPath, entry.FullName);
+            //     if (entry.Name == "")
+            //     {
+            //         // 创建目录
+            //         Directory.CreateDirectory(fullPath);
+            //     }
+            //     else
+            //     {
+            //         // 确保目标目录存在
+            //         var dirtName = Path.GetDirectoryName(fullPath)!;
+            //         Directory.CreateDirectory(dirtName);
+            //         entry.ExtractToFile(fullPath);
+            //     }
+            // }}
+        }
     }
 }

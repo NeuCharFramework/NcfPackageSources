@@ -27,12 +27,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// <summary>
         /// 评估参数, 平均分
         /// </summary>
-        public int EvalAvgScore { get; set; }
+        public decimal EvalAvgScore { get; set; }
 
         /// <summary>
         /// 评估参数
         /// </summary>
-        public int EvalMaxScore { get; set; }
+        public decimal EvalMaxScore { get; set; }
 
         /// <summary>
         /// 是否是草稿

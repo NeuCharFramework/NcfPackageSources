@@ -1,27 +1,19 @@
-using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
-using Senparc.Ncf.Repository;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Ncf.Core.Models;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
@@ -281,10 +273,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-                async (response, logger) =>
-                {
-                    return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults);
-                });
+                async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
         }
 
         // /// <summary>
@@ -303,68 +292,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <summary>
         /// 上传plugin接口
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="zipFile"></param>
         /// <returns></returns>
-        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> UploadPluginsAsync(IFormFile file)
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> UploadPluginsAsync(IFormFile zipFile)
         {
-            // todo 如何获取上传文件 -> 用IFormFile
-            // todo 如何校验文件（目前文件格式有哪些？文件类型有哪些？文件名规则？） 
-            //      可以参考Senparc.ai项目里的plugin文件
-            // todo 如何解析文件
-            // todo 如何保存文件到表，应该是要新增的
-            // todo 如何返回结果
-            // todo 给出什么返回比较合适
-            return await this.GetResponseAsync<StringAppResponse, string>(
-                async (resp, logger) =>
-                {
-                    #region validate and get file
-
-                    if (file == null || file.Length == 0)
-                        throw new NcfExceptionBase("文件未找到");
-
-                    if (!file.FileName.EndsWith(".zip"))
-                    {
-                        throw new NcfExceptionBase("文件格式错误");
-                    }
-
-                    #endregion
-
-                    var path = Path.Combine(
-                        Directory.GetCurrentDirectory(), "wwwroot",
-                        file.FileName);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    using (var zip = ZipFile.OpenRead(path))
-                    {
-                        foreach (var entry in zip.Entries)
-                        {
-                            // Check if the entry is a directory and contains exactly two files
-                            if (entry.FullName.EndsWith("/") && zip.Entries.Count(e => Path.GetDirectoryName(e.FullName) == entry.FullName) == 2)
-                            {
-                                // Check if the files have the correct names
-                                if (zip.Entries.Any(e =>
-                                        Path.GetDirectoryName(e.FullName) == entry.FullName && (e.Name == "file1.txt" || e.Name == "file2.txt")))
-                                {
-                                    // Process the files
-                                    foreach (var fileEntry in zip.Entries.Where(e => Path.GetDirectoryName(e.FullName) == entry.FullName))
-                                    {
-                                        using (var fileStream = fileEntry.Open())
-                                        {
-                                            // Read and process the file data
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return "";
-                });
+            // todo 移动到 obsidian 中
+            return await this.GetResponseAsync<StringAppResponse, string>(async (resp, logger) =>
+            {
+                await _promptItemService.UploadPluginsAsync(zipFile);
+                
+                return "";
+            });
         }
 
         /// <summary>
@@ -389,7 +328,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return "ok";
                 });
         }
-        
+
         /// <summary>
         /// 导出指定版本的靶道为 plugin
         /// </summary>
@@ -401,7 +340,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (resp, logger) =>
                 {
                     await _promptItemService.ExportPluginsAsync(itemVersion);
-                    
+
                     return "ok";
                 });
         }

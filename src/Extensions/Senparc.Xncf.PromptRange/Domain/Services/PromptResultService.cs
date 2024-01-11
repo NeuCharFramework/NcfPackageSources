@@ -388,10 +388,10 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
                 return false;
             }
 
-            double avg = promptResults.Average(r => r.FinalScore);
-            promptItem.UpdateEvalAvgScore((int)avg);
+            decimal avg = promptResults.Average(r => r.FinalScore);
+            promptItem.UpdateEvalAvgScore(avg);
 
-            int max = promptResults.Max(r => r.FinalScore);
+            decimal max = promptResults.Max(r => r.FinalScore);
             promptItem.UpdateEvalMaxScore(max);
 
             await _promptItemService.SaveObjectAsync(promptItem);

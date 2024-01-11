@@ -35,17 +35,17 @@ namespace Senparc.Xncf.PromptRange.Models
         /// <summary>
         /// 机器人打分，0-10分
         /// </summary>
-        public int RobotScore { get; private set; } = -1;
+        public decimal RobotScore { get; private set; } = -1;
 
         /// <summary>
         /// 人类打分，0-10分
         /// </summary>
-        public int HumanScore { get; private set; } = -1;
+        public decimal HumanScore { get; private set; } = -1;
 
         /// <summary>
         /// 最终得分
         /// </summary>
-        public int FinalScore { get; private set; } = -1;
+        public decimal FinalScore { get; private set; } = -1;
 
         #endregion
 
@@ -125,7 +125,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        public PromptResult ManualScoring(int score)
+        public PromptResult ManualScoring(decimal score)
         {
             HumanScore = score;
 
@@ -137,7 +137,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        public PromptResult RobotScoring(int score)
+        public PromptResult RobotScoring(decimal score)
         {
             RobotScore = score;
 
@@ -149,7 +149,7 @@ namespace Senparc.Xncf.PromptRange.Models
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        public PromptResult FinalScoring(int score)
+        public PromptResult FinalScoring(decimal score)
         {
             FinalScore = score;
 
