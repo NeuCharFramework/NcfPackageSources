@@ -188,8 +188,21 @@ public class PromptItem : EntityBase<int>
 
     #region ctor 构造函数
 
-    public PromptItem(int rangeId, string nickName)
+    /// <summary>
+    /// 导入时使用
+    /// </summary>
+    /// <param name="promptRange"></param>
+    /// <param name="nickName"></param>
+    /// <param name="tactic"></param>
+    public PromptItem(PromptRangeDto promptRange, string nickName, int tactic)
     {
+        RangeId = promptRange.Id;
+        RangeName = promptRange.RangeName;
+        Tactic = tactic.ToString();
+        ParentTac = "";
+        Aiming = 1;
+        IsDraft = true;
+        NickName = nickName;
     }
 
     public PromptItem(PromptItemDto dto) : this(dto.RangeId, dto.Content, dto.ModelId, dto.TopP, dto.Temperature, dto.MaxToken,

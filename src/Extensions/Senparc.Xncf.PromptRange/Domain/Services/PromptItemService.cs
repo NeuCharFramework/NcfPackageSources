@@ -17,16 +17,12 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
-using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI;
 using Senparc.AI.Kernel;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
-using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
-using Senparc.Xncf.AIKernel.Models;
 using Senparc.Ncf.Utility;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -728,7 +724,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         class ExecutionSettings
         {
-            public Default Default { get; set; }
+            [JsonProperty] public Default Default { get; set; }
         }
 
         class Default
@@ -809,25 +805,33 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // todo 开始读取
             Dictionary<string, PromptItem> zipIdxDict = new();
+            int tacticCnt = 0;
             foreach (var curFile in zip.Entries)
             {
                 // var curFilePath = Path.Combine(extractPath, entry.FullName);
+                var curDirName = Path.GetDirectoryName(curFile.FullName)!;
+                if (curDirName.Contains('/') || curDirName.Contains('\\'))
+                {
+                    throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+                }
+
                 if (curFile.Name == "") // 是目录
                 {
-                    var promptItem = new PromptItem(promptRange.Id, Path.GetDirectoryName(curFile.FullName));
+                   
+                    var promptItem = new PromptItem( promptRange, curDirName, ++tacticCnt );
 
-                    zipIdxDict[curFile.FullName] = promptItem;
+                    zipIdxDict[curDirName] = promptItem;
                 }
                 else
                 {
-                    var directoryName = Path.GetDirectoryName(curFile.FullName)!;
-                    if (directoryName.Contains('/') || directoryName.Contains('\\'))
-                    {
-                        throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
-                    }
+                    // var directoryName = curDirName!;
+                    // if (directoryName.Contains('/') || directoryName.Contains('\\'))
+                    // {
+                    //     throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+                    // }
 
                     // 从缓存中读取
-                    var promptItem = zipIdxDict[directoryName];
+                    var promptItem = zipIdxDict[curDirName];
 
                     // 根据不同文件名，更新不同的字段
                     if (curFile.Name == "config.json") // 更新配置文件
@@ -837,14 +841,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         using StreamReader reader = new StreamReader(stream);
 
                         string text = await reader.ReadToEndAsync();
-                        var executionSettings = text.GetObject<ExecutionSettings>();
+
+
+                        var executionSettings = text.GetObject<Root>().ExecutionSettings!;
+                        
                         promptItem.UpdateModelParam(
                             topP: executionSettings.Default.TopP,
                             maxToken: executionSettings.Default.MaxTokens,
                             temperature: executionSettings.Default.Temperature,
                             presencePenalty: executionSettings.Default.PresencePenalty,
                             frequencyPenalty: executionSettings.Default.FrequencyPenalty,
-                            stopSequences: executionSettings.Default.StopSequences.ToJson(true)
+                            stopSequences: executionSettings.Default.StopSequences.ToJson()
                         );
                     }
                     else if (curFile.Name == "skprompt.txt")
@@ -883,7 +890,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     }
                 }
             }
-            
+
             // 保存
             await this.SaveObjectListAsync(zipIdxDict.Values.ToList());
 

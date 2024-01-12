@@ -693,6 +693,14 @@
             是否公开
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto,System.String,System.Int32)">
+            <summary>
+            导入时使用
+            </summary>
+            <param name="promptRange"></param>
+            <param name="nickName"></param>
+            <param name="tactic"></param>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.PromptItem.UpdateModelParam(System.Single,System.Single,System.Int32,System.Single,System.Single,System.String)">
             <summary>
             更新使用的模型参数
