@@ -89,6 +89,29 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginsAsync(System.Int32,System.Boolean)">
+            <summary>
+            根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
+            </summary>
+            <param name="rangeId"></param>
+            <param name="isAvg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginWithItemAsync(Senparc.Xncf.PromptRange.PromptItem,System.String)">
+            <summary>
+            导出指定的单个靶道，返回文件夹路径
+            </summary>
+            <param name="item"></param>
+            <param name="rangePath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetRangePathAsync(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto)">
+            <summary>
+            根据靶场，生成文件夹，并返回文件夹路径
+            </summary>
+            <param name="range"></param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
             <summary>
             构造 SenparcAiSetting, 在两个地方使用

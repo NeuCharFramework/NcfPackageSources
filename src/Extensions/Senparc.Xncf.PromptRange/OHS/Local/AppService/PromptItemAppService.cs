@@ -6,13 +6,18 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using ContentType = Azure.Core.ContentType;
 
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -297,11 +302,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> UploadPluginsAsync(IFormFile zipFile)
         {
-            // todo 移动到 obsidian 中
             return await this.GetResponseAsync<StringAppResponse, string>(async (resp, logger) =>
             {
                 await _promptItemService.UploadPluginsAsync(zipFile);
-                
+
                 return "";
             });
         }
@@ -311,22 +315,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <param name="rangeId"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<StringAppResponse> ExportPluginsAsync(int rangeId)
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<FileContentResult> ExportPluginsAsync(int rangeId)
         {
-            // todo 如何校验文件     ->  有多个T怎么办   ->   用 bestPrompt 的逻辑
-            // todo 如何根据数据写文件 -> 参考已有 主要映射到两个文件中
-            // todo 如何写文件到磁盘   -> 目录为 System.IO.Directory.GetCurrentDirectory() + App_Data/Files/Plugins下
+            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId);
 
-            // todo 用户如何获取
-            // todo 给出什么返回比较合适
-            return await this.GetResponseAsync<StringAppResponse, string>(
-                async (resp, logger) =>
-                {
-                    await _promptItemService.ExportPluginsAsync(rangeId);
-
-                    return "ok";
-                });
+            return await BuildZipStream(rangePath);
         }
 
         /// <summary>
@@ -334,15 +328,39 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <param name="itemVersion"></param>
         /// <returns></returns>
-        public async Task<StringAppResponse> ExportPluginsAsync(string itemVersion)
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<FileContentResult> ExportPluginsAsync(string itemVersion)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(
-                async (resp, logger) =>
-                {
-                    await _promptItemService.ExportPluginsAsync(itemVersion);
+            var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
+            return await BuildZipStream(rangePath);
+        }
 
-                    return "ok";
-                });
+        private static async Task<FileContentResult> BuildZipStream(string rangePath)
+        {
+            // rangePath
+            var filePath = Path.Combine(
+                Directory.GetParent(rangePath)!.FullName,
+                $"{DateTimeOffset.Now.ToUnixTimeSeconds()}_ExportedPlugins.zip");
+
+            ZipFile.CreateFromDirectory(
+                rangePath,
+                filePath);
+
+            byte[] buffer;
+            await using var fileStream = new FileStream(filePath, FileMode.Open);
+            {
+                buffer = new byte[fileStream.Length];
+                var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
+            }
+            
+            Directory.Delete(rangePath, true);
+            
+            var res = new FileContentResult(buffer, "application/octet-stream")
+            {
+                FileDownloadName = "ExportedPlugins.zip"
+            };
+            
+            return res;
         }
     }
 }

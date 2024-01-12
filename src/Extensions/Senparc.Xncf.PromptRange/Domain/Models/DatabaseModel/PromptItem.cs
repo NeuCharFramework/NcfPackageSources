@@ -324,7 +324,7 @@ public class PromptItem : EntityBase<int>
         MaxToken = maxToken;
         FrequencyPenalty = frequencyPenalty;
         PresencePenalty = presencePenalty;
-        StopSequences = stopSequences;
+        StopSequences = stopSequences == "[]" ? null : stopSequences;
 
         return this;
     }

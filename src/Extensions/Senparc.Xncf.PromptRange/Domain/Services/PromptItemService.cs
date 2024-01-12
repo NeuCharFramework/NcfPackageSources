@@ -20,9 +20,11 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.AI;
 using Senparc.AI.Kernel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Utility;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -561,14 +563,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (needModel)
             {
-                var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId) ??
-                              throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
-
-                promptItemDto.AIModelDto = new AIModelDto(aiModel)
+                var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId);
+                // ?? throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
+                if (aiModel == null)
                 {
-                    ApiKey = aiModel.ApiKey,
-                    OrganizationId = aiModel.OrganizationId
-                };
+                    SenparcTrace.SendCustomLog("NotFoundException", $"找不到{promptItem.ModelId}对应的AIModel");
+                }
+                else
+                {
+                    promptItemDto.AIModelDto = new AIModelDto(aiModel)
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        OrganizationId = aiModel.OrganizationId
+                    };
+                }
             }
 
             #endregion
@@ -598,11 +606,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
                        throw new NcfExceptionBase($"未找到{fullVersion}对应的提示词靶道");
-            await this.ExportPluginWithItemAsync(item);
+            var rangePath = await this.ExportPluginWithItemAsync(item);
 
-            return "ok";
+            return rangePath;
         }
 
+        /// <summary>
+        /// 根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
+        /// </summary>
+        /// <param name="rangeId"></param>
+        /// <param name="isAvg"></param>
+        /// <returns></returns>
         public async Task<string> ExportPluginsAsync(int rangeId, bool isAvg = true)
         {
             // 根据靶场名，获取靶场
@@ -625,17 +639,23 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             foreach (var (tac, itemList) in itemGroupByT)
             {
                 // 找出最佳item
-                var bestItem = itemList.MaxBy(p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore));
+                var bestItem = itemList.MaxBy(p => isAvg ? p.EvalAvgScore : p.EvalMaxScore);
 
                 await ExportPluginWithItemAsync(bestItem, rangePath);
             }
 
-            return "ok";
+            return rangePath;
         }
 
-        public async Task ExportPluginWithItemAsync(PromptItem bestItem, string rangePath = null)
+        /// <summary>
+        /// 导出指定的单个靶道，返回文件夹路径
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="rangePath"></param>
+        /// <returns></returns>
+        public async Task<string> ExportPluginWithItemAsync(PromptItem item, string rangePath = null)
         {
-            var range = await _promptRangeService.GetAsync(bestItem.RangeId);
+            var range = await _promptRangeService.GetAsync(item.RangeId);
 
             rangePath ??= await this.GetRangePathAsync(range);
 
@@ -649,12 +669,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 {
                     Default = new Default()
                     {
-                        MaxTokens = bestItem.MaxToken,
-                        Temperature = bestItem.Temperature,
-                        TopP = bestItem.TopP,
-                        PresencePenalty = bestItem.PresencePenalty,
-                        FrequencyPenalty = bestItem.FrequencyPenalty,
-                        StopSequences = (bestItem.StopSequences ?? "[]").GetObject<List<string>>()
+                        MaxTokens = item.MaxToken,
+                        Temperature = item.Temperature,
+                        TopP = item.TopP,
+                        PresencePenalty = item.PresencePenalty,
+                        FrequencyPenalty = item.FrequencyPenalty,
+                        StopSequences = (item.StopSequences ?? "[]").GetObject<List<string>>()
                     }
                 }
             };
@@ -662,7 +682,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #endregion
 
             //  当前 plugin 文件夹目录，靶道名/别名
-            var curPluginPath = Path.Combine(rangePath, bestItem.NickName ?? bestItem.FullVersion);
+            var curPluginPath = Path.Combine(rangePath, item.NickName ?? item.FullVersion);
             if (!Directory.Exists(curPluginPath))
             {
                 Directory.CreateDirectory(curPluginPath);
@@ -693,11 +713,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 txtFs.SetLength(0); // 清空文件内容
                 await using (var jsonSw = new StreamWriter(txtFs, Encoding.UTF8))
                 {
-                    await jsonSw.WriteLineAsync(bestItem.Content);
+                    await jsonSw.WriteLineAsync(item.Content);
                 }
             }
+
+            return rangePath;
         }
 
+        /// <summary>
+        /// 根据靶场，生成文件夹，并返回文件夹路径
+        /// </summary>
+        /// <param name="range"></param>
+        /// <returns></returns>
         private async Task<string> GetRangePathAsync(PromptRangeDto range)
         {
             #region 根据靶场别名，生成文件夹
@@ -767,8 +794,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #region 保存文件
 
-            var toSaveDir = Path.Combine(
-                Directory.GetCurrentDirectory(), "App_Data", "Files", "toImportFileTemp");
+            var toSaveDir = Path.Combine(Directory.GetCurrentDirectory(), "App_Data", "Files", "toImportFileTemp");
             if (!Directory.Exists(toSaveDir))
             {
                 Directory.CreateDirectory(toSaveDir);
@@ -792,7 +818,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             using var zip = ZipFile.OpenRead(toSaveFilePath);
 
             #region 可以选择先解压
-            
+
             // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
 
             // 解压文件
@@ -821,8 +847,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                 if (curFile.Name == "") // 是目录
                 {
-                   
-                    var promptItem = new PromptItem( promptRange, curDirName, ++tacticCnt );
+                    var promptItem = new PromptItem(promptRange, curDirName, ++tacticCnt);
 
                     zipIdxDict[curDirName] = promptItem;
                 }
@@ -848,7 +873,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
                         var executionSettings = text.GetObject<Root>().ExecutionSettings!;
-                        
+
                         promptItem.UpdateModelParam(
                             topP: executionSettings.Default.TopP,
                             maxToken: executionSettings.Default.MaxTokens,
