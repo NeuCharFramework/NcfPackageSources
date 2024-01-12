@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Senparc.Ncf.Core.Enums;
@@ -808,9 +809,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // todo 开始读取
             Dictionary<string, PromptItem> zipIdxDict = new();
-            for (var i = 0; i < zip.Entries.Count; i++)
+            foreach (var curFile in zip.Entries)
             {
-                var curFile = zip.Entries[i];
                 // var curFilePath = Path.Combine(extractPath, entry.FullName);
                 if (curFile.Name == "") // 是目录
                 {
@@ -820,19 +820,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
                 else
                 {
-                    var directoryName = Path.GetDirectoryName(curFile.FullName);
-                    if (directoryName.Contains("/"))
+                    var directoryName = Path.GetDirectoryName(curFile.FullName)!;
+                    if (directoryName.Contains('/') || directoryName.Contains('\\'))
                     {
                         throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
                     }
 
+                    // 从缓存中读取
                     var promptItem = zipIdxDict[directoryName];
+
+                    // 根据不同文件名，更新不同的字段
                     if (curFile.Name == "config.json") // 更新配置文件
                     {
                         // 读取所有的文件为一个 string
                         await using Stream stream = curFile.Open();
                         using StreamReader reader = new StreamReader(stream);
-                        
+
                         string text = await reader.ReadToEndAsync();
                         var executionSettings = text.GetObject<ExecutionSettings>();
                         promptItem.UpdateModelParam(
@@ -843,19 +846,46 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             frequencyPenalty: executionSettings.Default.FrequencyPenalty,
                             stopSequences: executionSettings.Default.StopSequences.ToJson(true)
                         );
-                        
-                    }else if (curFile.Name == "skprompt.txt" )
+                    }
+                    else if (curFile.Name == "skprompt.txt")
                     {
                         // 读取所有的文件为一个 string
                         await using Stream stream = curFile.Open();
                         using StreamReader reader = new StreamReader(stream);
-                        
-                        string text = await reader.ReadToEndAsync();
-                        
-                        // todo 提取 prompt 请求参数
+
+                        string skPrompt = await reader.ReadToEndAsync();
+
+                        promptItem.UpdateContent(skPrompt);
+
+                        // 提取 prompt 请求参数
+                        var pattern = @"\{\{\$(.*?)\}\}";
+
+                        // 没有参数
+                        if (!Regex.IsMatch(skPrompt, pattern))
+                        {
+                            continue;
+                        }
+
+                        MatchCollection matches = Regex.Matches(skPrompt, pattern);
+                        Dictionary<string, string> varDict = new();
+                        foreach (Match match in matches)
+                        {
+                            string varKey = match.Groups[1].Value;
+                            varDict[varKey] = "";
+                        }
+
+                        promptItem.UpdateVariablesJson(varDict.ToJson());
+                    }
+                    else
+                    {
+                        continue;
+                        throw new NcfExceptionBase($"{curFile.FullName}不符合上传要求");
                     }
                 }
             }
+            
+            // 保存
+            await this.SaveObjectListAsync(zipIdxDict.Values.ToList());
 
 
             // const string zipFilePath = @"D:\Senparc\PromptRange\NCF\src\back-end\Senparc.Web\App_Data\Files\ImportedPlugins\测试版号逻辑.zip";

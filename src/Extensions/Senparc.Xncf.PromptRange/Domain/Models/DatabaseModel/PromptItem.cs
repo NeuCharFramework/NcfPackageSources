@@ -315,5 +315,18 @@ public class PromptItem : EntityBase<int>
 
         return this;
     }
-    
+
+    public PromptItem UpdateVariablesJson(string variablesJson)
+    {
+        VariableDictJson = variablesJson;
+
+        return this;
+    }
+
+    public PromptItem UpdateContent(string skPrompt)
+    {
+        Content = skPrompt;
+
+        return this;
+    }
 }
