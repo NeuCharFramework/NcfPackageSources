@@ -45,8 +45,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             //StringAppResponse 是 AppResponseBase<string> 的快捷写法
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
                 response.StateCode = 100;
+                throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
             },
             exceptionHandler: (ex, response, logger) =>
             {

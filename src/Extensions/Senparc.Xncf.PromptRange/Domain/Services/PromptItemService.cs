@@ -789,8 +789,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptRange = await _promptRangeService.AddAsync(rangeAlias);
 
             // 读取 zip 文件
-            using ZipArchive zip = ZipFile.OpenRead(toSaveFilePath);
-            // todo 可以选择先解压
+            using var zip = ZipFile.OpenRead(toSaveFilePath);
+
+            #region 可以选择先解压
+            
             // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
 
             // 解压文件
@@ -803,7 +805,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // ZipFile.ExtractToDirectory(toSaveFilePath, unzippedFilePath, Encoding.UTF8, true);
             // ZipFile.ExtractToDirectory(zipFile.OpenReadStream(), unzippedFilePath, Encoding.UTF8, true);
 
-            // todo 开始读取
+            #endregion
+
+            // 开始读取
             Dictionary<string, PromptItem> zipIdxDict = new();
             int tacticCnt = 0;
             foreach (var curFile in zip.Entries)
@@ -893,30 +897,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 保存
             await this.SaveObjectListAsync(zipIdxDict.Values.ToList());
-
-
-            // const string zipFilePath = @"D:\Senparc\PromptRange\NCF\src\back-end\Senparc.Web\App_Data\Files\ImportedPlugins\测试版号逻辑.zip";
-
-
-            // var extractPath =
-            //     toSaveDir; // @"D:\Senparc\PromptRange\NCF\src\back-end\Senparc.Web\App_Data\Files\ImportedPlugins\" + zipFileName[0];
-            // // 解压到指定目录
-            // foreach (var entry in zip.Entries)
-            // {
-            //     string fullPath = Path.Combine(extractPath, entry.FullName);
-            //     if (entry.Name == "")
-            //     {
-            //         // 创建目录
-            //         Directory.CreateDirectory(fullPath);
-            //     }
-            //     else
-            //     {
-            //         // 确保目标目录存在
-            //         var dirtName = Path.GetDirectoryName(fullPath)!;
-            //         Directory.CreateDirectory(dirtName);
-            //         entry.ExtractToFile(fullPath);
-            //     }
-            // }}
         }
     }
 }

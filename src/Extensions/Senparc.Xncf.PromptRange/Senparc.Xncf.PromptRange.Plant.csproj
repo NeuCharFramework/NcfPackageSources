@@ -26,81 +26,70 @@
             v0.2.0 完成数据库和基本测试功能
             v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
             v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
-			v0.3.0 重构 PromptRange 数据库和逻辑
-</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
-    <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
-    <BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">objForNcf\</BaseIntermediateOutputPath>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
-  <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <RestoreSources>
-            $(RestoreSources);D:\Senparc\Senparc.AI\BuildOutPut;
-        </RestoreSources>
-    </PropertyGroup>-->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
-    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-    <EmbeddedResource Include="wwwroot\**\*" />
-    <Compile Remove="objForNcf\**" />
-    <Compile Remove="obj\**" />
-    <Content Remove="objForNcf\**" />
-    <Content Remove="obj\**" />
-    <EmbeddedResource Remove="objForNcf\**" />
-    <EmbeddedResource Remove="obj\**" />
-    <None Remove="objForNcf\**" />
-    <None Remove="obj\**" />
-    <Content Remove="wwwroot\css\Admin\PromptRange\index.css" />
-    <Content Remove="wwwroot\css\Admin\PromptRange\model.css" />
-    <Content Remove="wwwroot\css\Admin\PromptRange\prompt.css" />
-    <Content Remove="wwwroot\js\Admin\PromptRange\index.js" />
-    <Content Remove="wwwroot\js\Admin\PromptRange\model.js" />
-    <Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />-->
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
-    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
-    <Folder Include="Domain\PromptPlugins\" />
-    <Folder Include="Domain\Migrations\" />
-    <Folder Include="wwwroot\image\Admin\PromptRange\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.13.1.1-beta1" />
-    <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.7-beta1" />
-    <PackageReference Include="Senparc.Xncf.AIKernel" Version="0.1.0.16" />
-    <PackageReference Include="Senparc.Xncf.SystemCore" Version="0.5.2.1-beta1" />
-    <PackageReference Include="Senparc.Xncf.SystemManager" Version="0.5.1.2-beta1" />
-    <PackageReference Include="Senparc.Xncf.Tenant" Version="0.5.1.4-beta1" />
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.8.0.1" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
-    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Migrations\Migrations.SqlServer\" />
-    <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
-    <Folder Include="Domain\PromptPlugins\" />
-    <Folder Include="Domain\Migrations\" />
-    <Folder Include="wwwroot\image\Admin\PromptRange\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.13.1.1-beta1" />
-    <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.7-beta1" />
-    <PackageReference Include="Senparc.Xncf.AIKernel" Version="0.1.1.6" />
-    <PackageReference Include="Senparc.Xncf.SystemCore" Version="0.5.2.1-beta1" />
-    <PackageReference Include="Senparc.Xncf.SystemManager" Version="0.5.1.2-beta1" />
-    <PackageReference Include="Senparc.Xncf.Tenant" Version="0.5.1.4-beta1" />
-  </ItemGroup>
+            v0.3.0 重构 PromptRange 数据库和逻辑
+        </PackageReleaseNotes>
+        <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+        <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
+        <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
+        <BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">objForNcf\</BaseIntermediateOutputPath>
+        <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    </PropertyGroup>
+    <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+          <RestoreSources>
+              $(RestoreSources);D:\Senparc\Senparc.AI\BuildOutPut;
+          </RestoreSources>
+      </PropertyGroup>-->
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\..\BuildOutPut</OutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+        <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath=""/>
+        <EmbeddedResource Include="wwwroot\**\*"/>
+        <Compile Remove="objForNcf\**"/>
+        <Compile Remove="obj\**"/>
+        <Content Remove="objForNcf\**"/>
+        <Content Remove="obj\**"/>
+        <EmbeddedResource Remove="objForNcf\**"/>
+        <EmbeddedResource Remove="obj\**"/>
+        <None Remove="objForNcf\**"/>
+        <None Remove="obj\**"/>
+        <Content Remove="wwwroot\css\Admin\PromptRange\index.css"/>
+        <Content Remove="wwwroot\css\Admin\PromptRange\model.css"/>
+        <Content Remove="wwwroot\css\Admin\PromptRange\prompt.css"/>
+        <Content Remove="wwwroot\js\Admin\PromptRange\index.js"/>
+        <Content Remove="wwwroot\js\Admin\PromptRange\model.js"/>
+        <Content Remove="wwwroot\js\admin\promptrange\prompt.js"/>
+        <!--<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />-->
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0"/>
+        <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+            <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
+        <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
+        <!-- 为解决 VS 2019 v16.8 的一个错误，需要添加下方引用 -->
+        <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Domain\Models\DatabaseModel\Mapping\"/>
+        <Folder Include="Domain\PromptPlugins\"/>
+        <Folder Include="Domain\Migrations\"/>
+        <Folder Include="wwwroot\image\Admin\PromptRange\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Domain\Migrations\Migrations.SqlServer\"/>
+        <Folder Include="Domain\Models\DatabaseModel\Mapping\"/>
+        <Folder Include="Domain\PromptPlugins\"/>
+        <Folder Include="Domain\Migrations\"/>
+        <Folder Include="wwwroot\image\Admin\PromptRange\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.13.1.1-beta1"/>
+        <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.7-beta1"/>
+        <PackageReference Include="Senparc.Xncf.AIKernel" Version="0.1.1.6"/>
+        <PackageReference Include="Senparc.Xncf.SystemCore" Version="0.5.2.1-beta1"/>
+        <PackageReference Include="Senparc.Xncf.SystemManager" Version="0.5.1.2-beta1"/>
+        <PackageReference Include="Senparc.Xncf.Tenant" Version="0.5.1.4-beta1"/>
+        <PackageReference Include="Senparc.AI.Kernel" Version="0.8.0.1"/>
+    </ItemGroup>
 </Project>
