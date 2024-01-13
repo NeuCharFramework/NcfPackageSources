@@ -32,8 +32,8 @@
                         <div class="titleContent">选择靶场</div>
                     </div>
                     <div>
-                                <el-button type="primary" size="mini" @@click="expectedPluginVisible = true">导出plugins</el-button>
-                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">导入plugins</el-button>
+                                <el-button type="primary" size="mini" @@click="expectedPluginVisible = true">导出 plugins</el-button>
+                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">导入 plugins</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
                     </div>
                     
@@ -123,8 +123,9 @@
                 <div class="titleContent">模型参数</div>
             </div>
             <div class="titleRow_rightBox">
-                <el-button size="mini" @@click="resetConfigurineParam">重置</el-button>
-                <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewShow=!parameterViewShow"></i>
+                        @* parameterViewShow=!parameterViewShow *@
+                <el-button size="mini" @@click="resetConfigurineParam(true)">重置</el-button>
+                        <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewToggle"></i>
             </div>
         </div>
         <div class="paramBox_contentBox" :class="{'paramBox_contentBoxCollapse':parameterViewShow}">
@@ -167,7 +168,7 @@
             </div>
             <div class="promptContentBox">
                 <el-input v-model="content" type="textarea"
-                          :rows="10"
+                                  :rows="contentTextareaRows"
                           resize="none"
                           placeholder="请输入内容"
                           class="promptInput" @@change="promptChangeHandel($event,'content')">
@@ -509,14 +510,14 @@
     </div>
 </el-dialog>
 @* 导入plugin *@
-<el-dialog title="导入 plugin文件夹" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
+<el-dialog title="导入 plugin 文件夹" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
         <div class="">
             @* 提示 *@
             <div class="tipsRow">
-                可直接上传 OpenAI/Semantic Kernel 标准的plugin文件夹，自动生成靶场。（需选择选择整个plugin文件夹）
+                可直接上传 OpenAI / Semantic Kernel 标准的 plugin 文件夹，自动生成靶场。（需选择选择整个 plugin 文件夹）
             </div>
             @* 拖拽区域  class="d-flex align-center justify-content-center" *@
-            <div class="el-upload-dragger" v-bind:class="{'is-dragover':uploadPluginDropHover}" @@drop="enentPluginDrop" @@dragover="pluginDropOverHandler" @@dragenter="pluginDropEnterHandler" @@dragleave="pluginDropLeaveHandler">
+            <div v-if="uploadPluginDropAreaVisible" class="el-upload-dragger" v-bind:class="{'is-dragover':uploadPluginDropHover}" @@drop="enentPluginDrop" @@dragover="pluginDropOverHandler" @@dragenter="pluginDropEnterHandler" @@dragleave="pluginDropLeaveHandler">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
                     将文件夹拖到此处，或<em @@click="enentPluginInput">点击上传</em>
@@ -539,7 +540,7 @@
         </div>
     </el-dialog>
  @* 导出plugin *@
-<el-dialog title="导出 plugin文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
+<el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
             <el-form-item label="靶场" prop="rangeId" label-width="130px">
                 <el-select v-model="expectedPluginFoem.rangeId" placeholder="请选择靶场" class="selectRow">
