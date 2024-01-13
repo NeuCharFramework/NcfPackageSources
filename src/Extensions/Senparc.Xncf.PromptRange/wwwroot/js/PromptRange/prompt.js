@@ -224,10 +224,23 @@ var app = new Vue({
                 ],
                 aiResultVal: [
                     {required: true, message: '请输入期望结果', trigger: 'blur'}
-                ]
+                ],
+                rangeId: [
+                    { required: true, message: '请选择需要导出的靶场', trigger: 'change' }
+                ],
             },
             versionData: [],
-            promptDetail: {}
+            promptDetail: {},
+            uploadPluginVisible: false, // Plugin 上传dialog 显隐
+            uploadPluginDropAreaVisible: true,// 上传区域显隐
+            uploadPluginDropHover: false,// 拖拽文件 Hover
+            uploadPluginData: [], // Plugin 文件夹的文件列表
+            jsZip: null, // 压缩实例
+            expectedPluginVisible: false, // Plugin 导出dialog 显隐
+            expectedPluginFoem: {
+                rangeId:''
+            },
+
         };
     },
     computed: {
@@ -258,6 +271,7 @@ var app = new Vue({
             this.getFieldList()
             // 获取模型列表
             this.getModelOptData()
+            
         },100)
         // 获取分数趋势图
         // this.getScoringTrendData()
@@ -271,13 +285,244 @@ var app = new Vue({
             }
         });
         resizeObserver.observe(viewElem);
-
     },
     beforeDestroy() {
         // 销毁之前移除事件监听器
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // 靶道 名称
+        promptNameField(item) {
+            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
+            this.$prompt('请输入新的靶道名称', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputErrorMessage: '靶道名称不能为空',
+            }).then(async ({ value }) => {
+                this.btnEditHandle({ id: item.id, nickName: value })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+
+        },
+        // 导入 plugins dialog close 回调
+        uploadPluginCloseDialog() {
+            // 清空fileData
+            this.uploadPluginDropAreaVisible = true
+            this.uploadPluginData = []
+            this.jsZip = null
+        },
+        // 导入 plugins 在拖动区来回拖拽时
+        pluginDropOverHandler(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.uploadPluginDropHover = true;
+        },
+        // 导入 plugins 第一次进入拖动区时
+        pluginDropEnterHandler(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.uploadPluginDropHover = true;
+        },
+        // 导入 plugins 拖后放
+        pluginDropLeaveHandler(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.uploadPluginDropHover = false;
+        },
+        // 导入 plugins 拖拽 选择文件夹
+        enentPluginDrop(e) {
+            this.uploadPluginDropHover = false
+            let items = e.dataTransfer.items;
+            if (!items) return
+            this.uploadPluginDropAreaVisible = false
+            this.jsZip = new JSZip();
+            for (let i = 0; i <= items.length - 1; i++) {
+                let item = items[i];
+                if (item.kind === "file") {
+                    // FileSystemFileEntry 或 FileSystemDirectoryEntry 对象
+                    let entry = item.webkitGetAsEntry();
+                    // 递归地获取entry下包含的所有File
+                    this.getFileFromEntryRecursively(entry);
+                }
+            }
+            
+            // console.log('Drop',items);
+            e.stopPropagation();
+            e.preventDefault(); 
+        },
+        // 拖拽上传 获取文件
+        getFileFromEntryRecursively(entry) {
+            //let _this = this
+            if (entry.isFile) {
+                // 文件
+                entry.file(
+                    file => {
+                        //console.log('Drop file', { file, path: _path });
+                        // 想要保留拖拽的层级结构的话，只能从 entry 中获取
+                        // 取path是为了获取上传的文件夹一级的名称
+                        let _path = entry.fullPath
+                        if (entry.fullPath.startsWith('/')) {
+                            _path = entry.fullPath.slice(1)
+                        }
+                        this.forEachZip(file, _path); 
+                        // 文件列表
+                        this.uploadPluginData.push({ name: file.name, path: _path })
+                    },
+                    e => { console.log(e); }
+                );
+            } else {
+                // 文件夹
+                let reader = entry.createReader();
+                reader.readEntries(
+                    entries => {
+                        entries.forEach(entry => this.getFileFromEntryRecursively(entry));
+                    },
+                    e => { console.log(e); }
+                );
+            }
+        },
+        // 导入 plugins 点击 选择文件夹
+        enentPluginInput() {
+            let input = document.createElement("input");
+            input.type = "file";
+            input.setAttribute("allowdirs", "true");
+            input.setAttribute("directory", "true");
+            input.setAttribute("webkitdirectory", "true"); //设置了webkitdirectory就可以选择文件夹进行上传了
+            input.multiple = false;
+            document.querySelector("body").appendChild(input);
+            input.click();
+            let _this = this;
+            input.onchange = async function (e) {
+                let files = e.target["files"];
+                //console.log('input',file)
+                if (!files) return
+                _this.uploadPluginDropAreaVisible = false
+                _this.jsZip = new JSZip();
+                // 处理文件夹里的所有子文件
+                for (let i = 0; i <= files.length - 1; i++) {
+                    _this.uploadPluginData.push({ name: files[i].name, path: files[i].webkitRelativePath })
+                    // 取path是为了获取上传的文件夹一级的名称
+                    _this.forEachZip(files[i], files[i].webkitRelativePath); 
+                   
+                }
+                
+                document.querySelector("body").removeChild(input);
+            };
+        },
+        // 将上传的文件添加到压缩包中
+        forEachZip(file, path) {
+            //console.log('forEachZip files：', file, path)
+            // 归类处理文件到指定的文件夹
+            let _path = path
+            let _index = path.indexOf('/')
+            if (_index > -1) {
+                _path = _path.slice(_index + 1)
+            }
+            this.jsZip.file(`${_path}`, file);
+        },
+        // 导入 plugins 上传按钮
+        submitUploadPlugins() {
+            let _fileData = JSON.parse(JSON.stringify(this.uploadPluginData))
+            if (_fileData.length === 0) {
+                this.$message.warning('请选择文件夹')
+                return
+            }
+            if (this.isPageLoading) return
+            this.isPageLoading = true
+            let name = _fileData[0].path.split('/')[0] || 'plugin'
+            // 生成压缩文件
+            this.jsZip.generateAsync({ type: "blob" }).then((content) => {
+                //将blob类型的再转为file类型用于上传
+                let zipFile = new File([content], `${name}.zip`, {
+                    type: "application/zip",
+                });
+                //做个大小限制
+                //let isLt2M = zipFile.size / 1024 / 1024 < 80;
+                //if (!isLt2M) {
+                //    this.fileList = [];
+                //    this.$message({
+                //        message: "上传文件大小不能超过 80MB!",
+                //        type: "warning",
+                //    });
+                //    return false;
+                //} else {
+                //    let filedata = new FormData();
+                //    // filedata.append("file", zipFile);
+                //    filedata.append("zipFile", zipFile);
+                //    this.folderHandlesubmit(filedata); //上传事件，filedata已经是压缩好的文件了
+                //    //saveAs(content, `${name}.zip`); //下载用，可以下载下来文件查看上传的是否正确
+                //}
+                let filedata = new FormData();
+                // filedata.append("file", zipFile);
+                filedata.append("zipFile", zipFile);
+                this.folderHandlesubmit(filedata); //上传事件，filedata已经是压缩好的文件了
+                //saveAs(content, `${name}.zip`); //下载用，可以下载下来文件查看上传的是否正确
+            }).catch(() => {
+                this.isPageLoading = false
+            })
+        },
+        // 上传 Plugins api
+        folderHandlesubmit(formData) {
+            //ajax上传formData
+            servicePR.request({
+                url: '/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UploadPluginsAsync',
+                method: 'POST',
+                //headers: {
+                //    'Content-Type': 'multipart/form-data'
+                //},
+                data: formData
+            }).then((res) => {
+                this.isPageLoading = false
+                //console.log(res)
+                if (res.data.success) {
+                    this.uploadPluginVisible = false
+                    app.$message.success('上传成功')
+                }
+            }).catch(() => {
+                this.isPageLoading = false
+            })
+        },
+        // 导出 plugins dialog close 回调
+        expectedPluginCloseDialog() {
+            this.expectedPluginFoem = {
+                rangeId: ''
+            }
+            this.$refs.expectedPluginFoem.resetFields();
+        },
+        // 导出 plugins 确认
+        btnExpectedPlugins() {
+            this.$refs.expectedPluginFoem.validate(async (valid) => {
+                if (valid) {
+                    this.isPageLoading = true
+                    servicePR.request({
+                        url: "/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.ExportPluginsAsync",
+                        method: 'get',
+                        responseType: 'blob',
+                        params: this.expectedPluginFoem
+                    }).then((res) => {
+                        this.isPageLoading = false
+                        this.expectedPluginVisible = false
+                        const blob = new Blob([res.data], { type: 'application/zip' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'plugins.zip'; // 设置下载的文件名，可以根据需要修改
+                        a.click(); // 触发点击事件开始下载
+                        // 下载完成后删除 <a> 标签
+                        URL.revokeObjectURL(url); // 释放 URL 对象
+                        a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
+                    }).catch(() => {
+                        this.isPageLoading = false
+                    })
+                } else {
+                    return false;
+                }
+            });
+        },
         // ai 评分删除
         deleteAiScoreBtn(index) {
             this.aiScoreForm.resultList.splice(index, 1)
@@ -637,7 +882,7 @@ var app = new Vue({
             if (this.promptid) {
                 //console.log('获取评分趋势 图表数据', this.isAvg)
                 /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
-                let res = await service.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
+                let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
                     let _dataPoints = res?.data?.data?.dataPoints || []
                     let _xData = [], _yData = [], _seriesData = []
@@ -776,7 +1021,12 @@ var app = new Vue({
             // 获取靶道列表
             await this.getPromptOptData().then(() => {
                 // promptid is the last one of promptOpt
-                this.promptid = this.promptOpt[this.promptOpt.length-1].id
+                if (this.promptOpt && this.promptOpt.length > 0) {
+                    this.promptid = this.promptOpt[this.promptOpt.length - 1].id
+                // 获取详情
+                this.getPromptetail(this.promptid, true)
+                }
+                
             })
             // 获取分数趋势图表数据
             await this.getScoringTrendData()
@@ -843,7 +1093,7 @@ var app = new Vue({
 
                     // 要提交this.promptField
                     _postData['rangeId'] = this.promptField
-                    let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+                    let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
                     // console.log('testHandel res ', res.data)
                     this.tacticalFormSubmitLoading = false
                     if (res.data.success) {
@@ -927,7 +1177,7 @@ var app = new Vue({
             let _find= this.promptFieldOpt.find(item => item.value === this.promptField)
             const name = _find ? _find.rangeName : ''
             
-            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${name}`)
+            let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${name}`)
             if (res.data.success) {
                 //console.log('获取版本记录数据', res.data.data.rootNodeList)
                 let _listData = res?.data?.data?.rootNodeList || []
@@ -1030,7 +1280,7 @@ var app = new Vue({
 
         // 获取输出列表
         async getOutputList(promptId) {
-            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${promptId}`)
+            let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${promptId}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
                 let {promptResults = [], promptItem = {}} = res.data.data || {}
@@ -1085,7 +1335,7 @@ var app = new Vue({
             //console.log('manualScorVal', this.promptSelectVal, this.manualScorVal)
             if (item.scoreType === '1') {
                 let _list = item.alResultList.map(item => item.value)
-                let res = await service.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.RobotScore?isRefresh=true&promptResultId=${item.id}`, _list)
+                let res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.RobotScore?isRefresh=true&promptResultId=${item.id}`, _list)
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
                     // 从新获取靶场列表
@@ -1097,7 +1347,7 @@ var app = new Vue({
                 }
             }
             if (item.scoreType === '2') {
-                let res = await service.post('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.HumanScore', {
+                let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.HumanScore', {
                     promptResultId: item.id,
                     humanScore: item.scoreVal
                 })
@@ -1271,7 +1521,7 @@ var app = new Vue({
             console.log('testHandel _postData:', _postData)
             // 要提交this.promptField
             _postData['rangeId'] = this.promptField
-            return await service.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
+            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
                 this.targetShootLoading = false
                 if (res.data.success) {
                     this.pageChange = false
@@ -1381,7 +1631,7 @@ var app = new Vue({
         async rapidFireHandel() {
             const promptItemId = this.promptid
             const numsOfResults = 1
-            return await service.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
+            return await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
                 if (!res.data.success){
@@ -1545,7 +1795,7 @@ var app = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await service.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', {data: [item.id]})
+                await servicePR.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', {data: [item.id]})
                     .then(res => {
                         //reload model list
                         // 重置模型列表
@@ -1590,7 +1840,7 @@ var app = new Vue({
                 if (valid) {
                     console.log('promptParamSubmit:', this.promptParamForm)
                     //this.promptParamFormLoading = true
-                    //const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
+                    //const res = await servicePR.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', this.modelForm)
                     //if (res.data.success) {
                     //    this.promptParamFormLoading = false
                     //    let { prefix = '', suffix = '', variableList = [] } = this.promptParamForm
@@ -1619,7 +1869,7 @@ var app = new Vue({
         },
         // 配置 获取模型 下拉列表数据
         async getModelOptData() {
-            let res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
+            let res = await servicePR.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',{})
             //console.log('getModelOptData:', res)
             if (res.data.success) {
                 //console.log('getModelOptData:', res.data)
@@ -1652,7 +1902,7 @@ var app = new Vue({
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
                     this.modelFormSubmitLoading = true
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add',
+                    const res = await servicePR.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add',
                         {
                             ...this.modelForm,
                             modelType:parseInt(this.modelForm.modelType)
@@ -1695,7 +1945,7 @@ var app = new Vue({
                 if (valid) {
                     this.fieldFormVisible = false
                     // post 接口 /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
-                    const res = await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync?alias='
+                    const res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync?alias='
                         +that.fieldForm.alias, {})
                     if (res.data.success) {
                         // 重新获取靶场列表
@@ -1719,7 +1969,7 @@ var app = new Vue({
         },
         // 配置 获取靶场 下拉列表数据
         async getFieldList() {
-            await service.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync',{})
+            await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync',{})
                 .then(res => {
                     if (res.data.success) {
                         this.promptFieldOpt = res.data.data.map(item => {
@@ -1740,7 +1990,7 @@ var app = new Vue({
                 cancelButtonText: '取消',
                 inputErrorMessage: '靶场名称不能为空',
             }).then(async ({ value }) => {
-                const res = await service.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
+                const res = await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
                     params:{
                         rangeId: item.id,
                         alias: value
@@ -1762,7 +2012,7 @@ var app = new Vue({
             // find rangeName by id
             let _find= this.promptFieldOpt.find(item => item.value === this.promptField)
             const name = _find ? _find.rangeName : ''
-            let res = await service
+            let res = await servicePR
                 .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName', {
                     params: {
                         rangeName: name
@@ -1776,7 +2026,7 @@ var app = new Vue({
                     const max = scoreFormatter(item.evalMaxScore)
                     return {
                         ...item,
-                        label: `版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
+                        label: `名称：${item.nickName ||  '未设置'} | 版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
                         value: item.id,
                         disabled: false
                     }
@@ -1789,7 +2039,7 @@ var app = new Vue({
         },
         // 获取 prompt 详情
         async getPromptetail(id, overwrite) {
-            let res = await service.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
+            let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
                 //console.log('getPromptetail:', res.data)
@@ -1884,7 +2134,7 @@ var app = new Vue({
         },
         // 删除 prompt 
         async btnDeleteHandle(id) {
-            const res = await service.request({
+            const res = await servicePR.request({
                 method: 'delete',
                 url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Del?id=${id}`,
                 //data: {id:item.id} // 将 ID 列表作为请求体数据发送
@@ -1926,20 +2176,22 @@ var app = new Vue({
                 alert(_msg)
             }
         },
-        // 修改 prompt 
+        // 修改 prompt 别名
         async btnEditHandle(item) {
-            const res = await service.request({
+            const res = await servicePR.request({
                 method: 'post',
                 url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Modify`,
                 data: {
                     id: item.id,
-                    name: item.name
+                    nickName: item.nickName,
+                    //note: item.note 
                 }
             });
             if (res.data.success) {
                 //重新获取 prompt列表
+                this.getPromptOptData()
             } else {
-                alert("error")
+                alert("修改失败")
             }
         },
 
@@ -1992,7 +2244,7 @@ var app = new Vue({
                 if (valid) {
                     this.aiScoreFormSubmitLoading = true
                     let _list = this.aiScoreForm.resultList.map(item => item.value)
-                    const res = await service.request({
+                    const res = await servicePR.request({
                         method: 'post',
                         url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UpdateExpectedResults`,
                         params: {

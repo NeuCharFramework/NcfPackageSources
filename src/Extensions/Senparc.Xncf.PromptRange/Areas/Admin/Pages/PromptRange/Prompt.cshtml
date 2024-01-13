@@ -6,7 +6,7 @@
 }
 
 @section Style {
-    <link href="~/css/Admin/PromptRange/prompt.css" rel="stylesheet"/>
+    <link href="~/css/PromptRange/prompt.css" rel="stylesheet"/>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 }
 
@@ -15,6 +15,7 @@
     <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
     <el-breadcrumb-item>Prompt</el-breadcrumb-item>
 }
+
 
 <div class="promptPage">
 @*左侧 输入测试 *@
@@ -27,12 +28,17 @@
             <div class="w-100">
                 <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
                     <div class="d-flex align-center">
-                        <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
+                        <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                         <div class="titleContent">选择靶场</div>
                     </div>
-                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
+                    <div>
+                                <el-button type="primary" size="mini" @@click="expectedPluginVisible = true">导出plugins</el-button>
+                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">导入plugins</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
+                    </div>
+                    
                 </div>
-                <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField',promptField)">
+                <el-select v-model="promptField" placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                     <el-option v-for="item in promptFieldOpt"
                                v-key="item.id"
                                :label="item.label"
@@ -48,18 +54,22 @@
 
             <div class="w-100">
                 <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
-                    <img src="~/image/Admin/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
+                    <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
                     <div class="titleContent d-flex justify-content-between  align-center w-100">
                         <span>选择靶道</span>
                         <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                     </div>
                 </div>
-                <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid',promptid)">
+                <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                     <el-option v-for="item in promptOpt"
                                v-key="item.id"
                                :label="item.label"
                                :value="item.value"
                                :disabled="item.disabled">
+                                <div class="d-flex justify-content-between align-center" style="gap:20px">
+                                    <span>{{ item.label }}</span>
+                                    <el-button type="primary" size="mini" @@click="promptNameField(item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
+                                </div>
                     </el-option>
                 </el-select>
             </div>
@@ -69,7 +79,7 @@
     <div class="configurineAreaItem modelBox" style="width: 50%;">
         <div class="titleRow" style="padding: 5px">
             <div class="titleRow_leftBox">
-                <img src="~/image/Admin/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
+                <img src="~/image/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">选择模型</div>
             </div>
             <div class="d-flex" style="gap:5px">
@@ -147,7 +157,7 @@
         <div class="configurineAreaItem leftItemBox">
             <div class="titleRow">
                 <div class="titleRow_leftBox">
-                    <img src="~/image/Admin/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon"/>
+                    <img src="~/image/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon"/>
                     <div class="titleContent">输入Prompt</div>
                 </div>
                 <div class="titleRow_rightBox">
@@ -284,7 +294,7 @@
         </div>
         <div class="titleRow">
             <div class="titleRow_leftBox">
-                <img src="~/image/Admin/PromptRange/prompt_output.svg" alt="" class="imgIcon"/>
+                <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon"/>
                 <div class="titleContent">输出</div>
             </div>
             <div class="titleRow_scoreBox">
@@ -308,11 +318,11 @@
                 </div>
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
-                        <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon"/>
+                        <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
                         <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
                     </div>
                     <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
-                        <img src="~/image/Admin/PromptRange/prompt_score.svg" class="imgIcon"/>
+                        <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
                         <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
                     </div>
                 </div>
@@ -354,7 +364,7 @@
     <div class="boxCard analysisArea">
         <div class="titleRow">
             <div class="titleRow_leftBox">
-                <img src="~/image/Admin/PromptRange/prompt_chart.svg" alt="" class="imgIcon"/>
+                <img src="~/image/PromptRange/prompt_chart.svg" alt="" class="imgIcon"/>
                     <div class="titleContent">
                         分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个数构成的折线" effect="dark" placement="top">
                             <i class="el-icon-warning-outline" style="color:#f00"></i>
@@ -378,7 +388,7 @@
     <div class="versionDrawerArea">
         <div class="versionDrawerArea_titleRow">
             <span>版本记录</span>
-            <img src="~/image/Admin/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false"/>
+            <img src="~/image/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false"/>
         </div>
 
         <el-input v-model="versionSearchVal" size="mini" placeholder="请输入名称" class="versionDrawerArea_inputRow">
@@ -408,7 +418,7 @@
                             @* <div class="operateItem" @@click="versionRecordViewNotes(data)">查看备注</div> *@
                             <div class="operateItem" @@click="versionRecordDelete(data)">删除</div>
                         </div>
-                        <img slot="reference" src="~/image/Admin/PromptRange/prompt_moreDot.svg" class="treeMoreIcon"/>
+                        <img slot="reference" src="~/image/PromptRange/prompt_moreDot.svg" class="treeMoreIcon"/>
                     </el-popover>
                 </div>
             </el-tree>
@@ -498,7 +508,57 @@
         @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button> *@
     </div>
 </el-dialog>
+@* 导入plugin *@
+<el-dialog title="导入 plugin文件夹" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
+        <div class="">
+            @* 提示 *@
+            <div class="tipsRow">
+                可直接上传 OpenAI/Semantic Kernel 标准的plugin文件夹，自动生成靶场。（需选择选择整个plugin文件夹）
+            </div>
+            @* 拖拽区域  class="d-flex align-center justify-content-center" *@
+            <div class="el-upload-dragger" v-bind:class="{'is-dragover':uploadPluginDropHover}" @@drop="enentPluginDrop" @@dragover="pluginDropOverHandler" @@dragenter="pluginDropEnterHandler" @@dragleave="pluginDropLeaveHandler">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                    将文件夹拖到此处，或<em @@click="enentPluginInput">点击上传</em>
+                </div>
+            </div>
+            @* 选择的文件夹中的文件列表 *@
+            <div v-else>
+                <el-button type="primary" size="mini" @@click="uploadPluginCloseDialog">重新上传</el-button>
+                <el-table :data="uploadPluginData"
+                          max-height="300"
+                          style="width: 100%">
+                    <el-table-column prop="name" label="文件名" width="200"></el-table-column>
+                    <el-table-column prop="path" label="文件路径"></el-table-column>
+                </el-table>
+            </div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="uploadPluginVisible = false">取 消</el-button>
+            <el-button type="primary" @@click="submitUploadPlugins">上 传</el-button>
+        </div>
+    </el-dialog>
+ @* 导出plugin *@
+<el-dialog title="导出 plugin文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
+        <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
+            <el-form-item label="靶场" prop="rangeId" label-width="130px">
+                <el-select v-model="expectedPluginFoem.rangeId" placeholder="请选择靶场" class="selectRow">
+                    <el-option v-for="item in promptFieldOpt"
+                               v-key="item.id"
+                               :label="item.label"
+                               :value="item.value"
+                               :disabled="item.disabled">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="expectedPluginVisible = false">取 消</el-button>
+            <el-button type="primary" @@click="btnExpectedPlugins">确 认</el-button>
+        </div>
+    </el-dialog>
 </div>
+
 
 <div v-if="isPageLoading" class="promptLoaderBox">
     <div class="loading">
@@ -510,8 +570,11 @@
 </div>
 
 @section scripts {
-    @* <script src="~/lib/echarts/dist/echarts.js"></script> *@
-    <script src="~/js/Admin/echarts/echarts.min.js"></script>
-    <script src="~/js/Admin/echarts/echarts-gl.min.js"></script>
-    <script src="~/js/Admin/PromptRange/prompt.js"></script>
+    <script src="~/js/PromptRange/lib/axios.min.js"></script>
+    <script src="~/js/PromptRange/lib/jszip.min.js"></script>
+    <script src="~/js/PromptRange/lib/fileSave.min.js"></script>
+    <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
+    <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
+    <script src="~/js/PromptRange/axios.js"></script>
+    <script src="~/js/PromptRange/prompt.js"></script>
 }

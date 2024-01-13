@@ -1,10 +1,27 @@
-﻿.imgIcon {
+﻿.tipsRow{
+    margin-bottom:10px;
+    font-size:12px;
+   color:red;
+   text-align:left;
+   
+}
+.el-upload-dragger{
+    width:100%;
+    min-width:360px;
+}
+.tipsRow::before {
+    content: '*';
+    font-size: 12px;
+    color: red;
+}
+
+.imgIcon {
     flex-shrink: 0;
     width: 14px;
     height: 14px;
 }
 
-.d-flex{
+.d-flex {
     display: flex;
 }
 
@@ -26,6 +43,10 @@
 }
 .justify-content-between{
     justify-content: space-between;
+}
+
+.justify-content-center {
+    justify-content: center;
 }
 
 .align-flex-end{
