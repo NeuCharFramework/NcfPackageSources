@@ -82,7 +82,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            var handler = new SemanticAiHandler(new SemanticKernelHelper(aiSettings));
+            var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
                     // todo 替换为真实用户名，可能需要从NeuChar获取？
@@ -302,8 +302,7 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
 ********************************************************************************
 ";
 
-            var skHelper = new SemanticKernelHelper(aiSettings);
-            var handler = new SemanticAiHandler(skHelper);
+            var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
                     .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)

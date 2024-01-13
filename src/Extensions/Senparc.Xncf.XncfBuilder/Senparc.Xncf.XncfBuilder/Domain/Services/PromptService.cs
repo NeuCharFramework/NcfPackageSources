@@ -22,7 +22,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         public PromptService(/*IAiHandler aiHandler*/)
         {
             //this._aiHandler = (SemanticAiHandler)aiHandler;
-            this._aiHandler = new SemanticAiHandler();
+            this._aiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
             ReBuildKernel();
         }
 
