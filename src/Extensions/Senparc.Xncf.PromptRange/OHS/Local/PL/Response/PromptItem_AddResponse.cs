@@ -73,12 +73,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         /// <summary>
         /// 评估参数, 平均分
         /// </summary>
-        public int EvalAvgScore { get; set; }
+        public decimal EvalAvgScore { get; set; }
 
         /// <summary>
         /// 评估参数
         /// </summary>
-        public int EvalMaxScore { get; set; }
+        public decimal EvalMaxScore { get; set; }
 
         public string Prefix { get; set; }
         public string Suffix { get; set; }
@@ -86,7 +86,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public PromptItem_AddResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string prefix, string suffix, string variableDictJson, int evalAvgScore, int evalMaxScore,
+            string prefix, string suffix, string variableDictJson, decimal evalAvgScore, decimal evalMaxScore,
             bool isDraft, bool isShare, string nickName, int rangeId)
         {
             Id = promptItemId;

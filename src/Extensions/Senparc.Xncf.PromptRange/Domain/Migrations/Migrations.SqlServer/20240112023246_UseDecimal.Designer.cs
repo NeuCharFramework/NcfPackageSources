@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.PromptRange.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
 {
     [DbContext(typeof(PromptRangeSenparcEntities_SqlServer))]
-    partial class PromptRangeSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20240112023246_UseDecimal")]
+    partial class UseDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

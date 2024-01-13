@@ -1,22 +1,24 @@
-using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
-using Senparc.Ncf.Repository;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Ncf.Core.Models;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using ContentType = Azure.Core.ContentType;
+
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
@@ -279,17 +281,86 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
         }
 
-        ///// <summary>
-        ///// 根据靶场名（自动生成）获取靶场里最好的promptItem
-        ///// </summary>
-        ///// <param name="rangeName"></param>
-        ///// <param name="isAvg"></param>
-        ///// <returns></returns>
-        //[ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        //public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
-        //{
-        //    return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-        //        async (response, logger) => { return await _promptItemService.GetBestPromptAsync(rangeName, isAvg); });
-        //}
+        // /// <summary>
+        // /// 根据靶场名（自动生成）获取靶场里最好的promptItem
+        // /// </summary>
+        // /// <param name="rangeName"></param>
+        // /// <param name="isAvg"></param>
+        // /// <returns></returns>
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
+        // {
+        //     return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+        //         async (response, logger) => { return await _promptItemService.GetBestPromptAsync(rangeName, isAvg); });
+        // }
+
+        /// <summary>
+        /// 上传plugin接口
+        /// </summary>
+        /// <param name="zipFile"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> UploadPluginsAsync(IFormFile zipFile)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (resp, logger) =>
+            {
+                await _promptItemService.UploadPluginsAsync(zipFile);
+
+                return "";
+            });
+        }
+
+        /// <summary>
+        /// 导出靶场为 plugin
+        /// </summary>
+        /// <param name="rangeId"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<FileContentResult> ExportPluginsAsync(int rangeId)
+        {
+            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId);
+
+            return await BuildZipStream(rangePath);
+        }
+
+        /// <summary>
+        /// 导出指定版本的靶道为 plugin
+        /// </summary>
+        /// <param name="itemVersion"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<FileContentResult> ExportPluginsAsync(string itemVersion)
+        {
+            var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
+            return await BuildZipStream(rangePath);
+        }
+
+        private static async Task<FileContentResult> BuildZipStream(string rangePath)
+        {
+            // rangePath
+            var filePath = Path.Combine(
+                Directory.GetParent(rangePath)!.FullName,
+                $"{DateTimeOffset.Now.ToUnixTimeSeconds()}_ExportedPlugins.zip");
+
+            ZipFile.CreateFromDirectory(
+                rangePath,
+                filePath);
+
+            byte[] buffer;
+            await using var fileStream = new FileStream(filePath, FileMode.Open);
+            {
+                buffer = new byte[fileStream.Length];
+                var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
+            }
+            
+            Directory.Delete(rangePath, true);
+            
+            var res = new FileContentResult(buffer, "application/octet-stream")
+            {
+                FileDownloadName = "ExportedPlugins.zip"
+            };
+            
+            return res;
+        }
     }
 }

@@ -49,12 +49,12 @@ namespace Senparc.Xncf.AIKernel
             {
                 case InstallOrUpdate.Install:
                     //新安装
-            #region 初始化数据库数据
+                    #region 初始化数据库数据
                     //var colorService = serviceProvider.GetService<ColorAppService>();
                     //var colorResult = await colorService.GetOrInitColorAsync();
 
                     //TODO: 自动拉取 NeuChar 免费用量进行配置和载入 Seed 数据
-            #endregion
+                    #endregion
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -83,21 +83,20 @@ namespace Senparc.Xncf.AIKernel
         }
         #endregion
 
-        private static SenparcAiSetting SenparcAiSetting { get; set; }
-
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
-            SenparcAiSetting ??= new SenparcAiSetting();
-            configuration.GetSection("SenparcAiSetting").Bind(SenparcAiSetting);
+            var senparcAiSetting = new SenparcAiSetting();
+
+            services.AddSenparcAI(configuration);
 
             return base.AddXncfModule(services, configuration, env);
         }
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            registerService.UseSenparcAI(SenparcAiSetting);
+            registerService.UseSenparcAI();
 
             app.UseStaticFiles(new StaticFileOptions
             {

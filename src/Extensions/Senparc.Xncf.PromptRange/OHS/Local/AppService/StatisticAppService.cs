@@ -20,12 +20,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly IMapper _mapper;
 
         public StatisticAppService(
-            LlModelService llModelService,
+            // LlModelService llModelService,
             PromptItemService promptItemService,
             IServiceProvider serviceProvider,
             IMapper mapper) : base(serviceProvider)
         {
-            _llModelService = llModelService;
+            // _llModelService = llModelService;
             _promptItemService = promptItemService;
             _mapper = mapper;
         }
@@ -46,13 +46,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             var response = await this.GetResponseAsync<AppResponseBase<Statistics_TodayTacticResponse>, Statistics_TodayTacticResponse>(
                 async (resp, logger) =>
                 {
-                    int cnt = await _promptItemService.GetCountAsync(p => p.RangeName.StartsWith(today));
+                    int cnt = await _promptItemService.GetCountAsync(
+                        p => p.RangeName.StartsWith(today)
+                    );
 
                     return new Statistics_TodayTacticResponse(cnt);
                 });
             return response;
         }
-        
+
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScoreAsync(int promptItemId)
         {
@@ -60,21 +62,21 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     logger.SaveLogs($"传入ID为{promptItemId}");
-                    
+
                     return await _promptItemService.GetHistoryScoreAsync(promptItemId);
                 });
         }
-        
-        
+
+
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg)
         {
             return await this.GetResponseAsync<AppResponseBase<Statistic_TodayTacticResponse>, Statistic_TodayTacticResponse>(
                 async (response, logger) =>
                 {
-                    logger.SaveLogs($"查询三维折现图，传入ID为{promptItemId}");
-                    
-                    return await _promptItemService.GetLineChartDataAsync(promptItemId,isAvg);
+                    logger.SaveLogs($"查询三维折线图，传入ID为{promptItemId}");
+
+                    return await _promptItemService.GetLineChartDataAsync(promptItemId, isAvg);
                 });
         }
     }

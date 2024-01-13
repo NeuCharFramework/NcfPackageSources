@@ -16,6 +16,18 @@
         <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
             <summary>
             全局常量配置
@@ -57,6 +69,18 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetBestPromptAsync(System.String,System.Boolean)">
+            <summary>
+            获取某个版本的 PromptItem 和模型信息，支持：
+            <para>精准搜索，如：2024.01.06.3-T1-A2</para>
+            <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
+            <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+            </summary>
+            <param name="fullVersion"></param>
+            <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
             <summary>
             构造 SenparcAiSetting
@@ -64,6 +88,29 @@
             <param name="aiModel"></param>
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginsAsync(System.Int32,System.Boolean)">
+            <summary>
+            根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
+            </summary>
+            <param name="rangeId"></param>
+            <param name="isAvg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginWithItemAsync(Senparc.Xncf.PromptRange.PromptItem,System.String)">
+            <summary>
+            导出指定的单个靶道，返回文件夹路径
+            </summary>
+            <param name="item"></param>
+            <param name="rangePath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetRangePathAsync(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto)">
+            <summary>
+            根据靶场，生成文件夹，并返回文件夹路径
+            </summary>
+            <param name="range"></param>
+            <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
             <summary>
@@ -464,21 +511,21 @@
             PromptItemVersion 
             </summary>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.ManualScoring(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.ManualScoring(System.Decimal)">
             <summary>
             更新手动评分
             </summary>
             <param name="score"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScoring(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.RobotScoring(System.Decimal)">
             <summary>
             更新自动机器评分
             </summary>
             <param name="score"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.FinalScoring(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.Models.PromptResult.FinalScoring(System.Decimal)">
             <summary>
             更新最终得分
             </summary>
@@ -681,6 +728,26 @@
             是否公开
             </summary>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.#ctor(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto,System.String,System.Int32)">
+            <summary>
+            导入时使用
+            </summary>
+            <param name="promptRange"></param>
+            <param name="nickName"></param>
+            <param name="tactic"></param>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.PromptItem.UpdateModelParam(System.Single,System.Single,System.Int32,System.Single,System.Single,System.String)">
+            <summary>
+            更新使用的模型参数
+            </summary>
+            <param name="topP"></param>
+            <param name="temperature"></param>
+            <param name="maxToken"></param>
+            <param name="frequencyPenalty"></param>
+            <param name="presencePenalty"></param>
+            <param name="stopSequences"></param>
+            <returns></returns>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.PromptRange.Alias">
             <summary>
             靶场代号（用户自定义）
@@ -794,6 +861,27 @@
             </summary>
             <param name="promptItemId"></param>
             <param name="expectedResults"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UploadPluginsAsync(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            上传plugin接口
+            </summary>
+            <param name="zipFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Int32)">
+            <summary>
+            导出靶场为 plugin
+            </summary>
+            <param name="rangeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.String)">
+            <summary>
+            导出指定版本的靶道为 plugin
+            </summary>
+            <param name="itemVersion"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">

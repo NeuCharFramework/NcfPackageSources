@@ -77,13 +77,13 @@ public class PromptItem : EntityBase<int>
     /// 评估参数, 平均分
     /// </summary>
     [MaxLength(3)]
-    public int EvalAvgScore { get; private set; } = -1;
+    public decimal EvalAvgScore { get; private set; } = -1;
 
     /// <summary>
     /// 评估参数
     /// </summary>
     [MaxLength(3)]
-    public int EvalMaxScore { get; private set; } = -1;
+    public decimal EvalMaxScore { get; private set; } = -1;
 
     /// <summary>
     /// 期望结果Json
@@ -103,7 +103,7 @@ public class PromptItem : EntityBase<int>
     ///         为   Tx              这里的x为分支号，str,允许1.1.1。。。
     ///      Aiming   为   Ax              这里的x为打靶次数，int
     /// </summary>
-    [Required]
+    [Required, MaxLength(50)]
     public string FullVersion
     {
         get { return $"{RangeName}-T{Tactic}-A{Aiming}"; }
@@ -188,6 +188,23 @@ public class PromptItem : EntityBase<int>
 
     #region ctor 构造函数
 
+    /// <summary>
+    /// 导入时使用
+    /// </summary>
+    /// <param name="promptRange"></param>
+    /// <param name="nickName"></param>
+    /// <param name="tactic"></param>
+    public PromptItem(PromptRangeDto promptRange, string nickName, int tactic)
+    {
+        RangeId = promptRange.Id;
+        RangeName = promptRange.RangeName;
+        Tactic = tactic.ToString();
+        ParentTac = "";
+        Aiming = 1;
+        IsDraft = true;
+        NickName = nickName;
+    }
+
     public PromptItem(PromptItemDto dto) : this(dto.RangeId, dto.Content, dto.ModelId, dto.TopP, dto.Temperature, dto.MaxToken,
         dto.FrequencyPenalty, dto.PresencePenalty, dto.StopSequences, dto.RangeName, dto.Tactic, dto.Aiming, dto.ParentTac, dto.Note,
         dto.IsDraft, dto.ExpectedResultsJson,
@@ -204,7 +221,7 @@ public class PromptItem : EntityBase<int>
     public PromptItem(int rangeId, string content,
         int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
         string rangeName, string tactic, int aiming, string parentTac,
-        string note, bool isDraft,string expectedResultsJson,
+        string note, bool isDraft, string expectedResultsJson,
         string prefix, string suffix, string variableDictJson)
     {
         RangeId = rangeId;
@@ -232,7 +249,8 @@ public class PromptItem : EntityBase<int>
 
     public PromptItem(int rangeId, string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :
         this(rangeId, request.Content, request.ModelId, request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty,
-            request.PresencePenalty, request.StopSequences, rangeName, tactic, aiming, parentTac, request.Note, request.IsDraft, request.ExpectedResultsJson,
+            request.PresencePenalty, request.StopSequences, rangeName, tactic, aiming, parentTac, request.Note, request.IsDraft,
+            request.ExpectedResultsJson,
             request.Prefix, request.Suffix, request.VariableDictJson)
     {
     }
@@ -245,7 +263,7 @@ public class PromptItem : EntityBase<int>
 
         return this;
     }
-    
+
     public PromptItem ShareSwitch(bool show)
     {
         this.IsShare = show;
@@ -260,14 +278,14 @@ public class PromptItem : EntityBase<int>
         return this;
     }
 
-    public PromptItem UpdateEvalAvgScore(int score)
+    public PromptItem UpdateEvalAvgScore(decimal score)
     {
         this.EvalAvgScore = score;
 
         return this;
     }
 
-    public PromptItem UpdateEvalMaxScore(int score)
+    public PromptItem UpdateEvalMaxScore(decimal score)
     {
         this.EvalMaxScore = score;
 
@@ -284,6 +302,43 @@ public class PromptItem : EntityBase<int>
     public PromptItem DraftSwitch(bool isDraft)
     {
         this.IsDraft = isDraft;
+
+        return this;
+    }
+
+    /// <summary>
+    /// 更新使用的模型参数
+    /// </summary>
+    /// <param name="topP"></param>
+    /// <param name="temperature"></param>
+    /// <param name="maxToken"></param>
+    /// <param name="frequencyPenalty"></param>
+    /// <param name="presencePenalty"></param>
+    /// <param name="stopSequences"></param>
+    /// <returns></returns>
+    public PromptItem UpdateModelParam(float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
+        string stopSequences)
+    {
+        TopP = topP;
+        Temperature = temperature;
+        MaxToken = maxToken;
+        FrequencyPenalty = frequencyPenalty;
+        PresencePenalty = presencePenalty;
+        StopSequences = stopSequences == "[]" ? null : stopSequences;
+
+        return this;
+    }
+
+    public PromptItem UpdateVariablesJson(string variablesJson)
+    {
+        VariableDictJson = variablesJson;
+
+        return this;
+    }
+
+    public PromptItem UpdateContent(string skPrompt)
+    {
+        Content = skPrompt;
 
         return this;
     }
