@@ -240,7 +240,7 @@ var app = new Vue({
             expectedPluginFoem: {
                 rangeId:''
             },
-
+            contentTextareaRows:14, //prompt 输入框的行数
         };
     },
     computed: {
@@ -291,6 +291,18 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        parameterViewToggle() {
+            if (this.parameterViewShow) {
+                this.contentTextareaRows = 14
+                this.parameterViewShow = false
+                
+            } else {
+                this.parameterViewShow = true
+                setTimeout(() => {
+                    this.contentTextareaRows = 21
+                },300)
+            }
+        },
         // 靶道 名称
         promptNameField(item) {
             //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
@@ -481,6 +493,14 @@ var app = new Vue({
                 if (res.data.success) {
                     this.uploadPluginVisible = false
                     app.$message.success('上传成功')
+                    // 更新靶场数据
+                    this.getFieldList().then(() => {
+                        if (this.promptFieldOpt && this.promptFieldOpt.length > 0) {
+                            this.promptField = this.promptFieldOpt[this.promptFieldOpt.length - 1].id
+                            // 重置页面数据
+                            this.resetPageData()
+                        }
+                    })
                 }
             }).catch(() => {
                 this.isPageLoading = false
@@ -1004,7 +1024,7 @@ var app = new Vue({
             this.promptid = '' // 靶道
             this.modelid = '' // 模型
             // 参数设置 视图配置列表
-            this.resetConfigurineParam()
+            this.resetConfigurineParam(false)
             // 输入Prompt 重置
             this.resetInputPrompt()
             this.outputList = []
@@ -1677,9 +1697,11 @@ var app = new Vue({
         },
 
         // 配置 重置参数
-        resetConfigurineParam() {
+        resetConfigurineParam(isPageChange) {
             // todo 判断是否 记录 页面变化记录
-            this.pageChange = true
+            if (isPageChange) {
+                this.pageChange = true
+            }
             //console.log('配置参数 重置:', this.parameterViewList)
             // 参数设置 视图配置列表
             this.parameterViewList = [
@@ -2145,7 +2167,7 @@ var app = new Vue({
                     this.promptid = '' // 靶道
                     this.modelid = '' // 模型
                     // 参数设置 视图配置列表
-                    this.resetConfigurineParam()
+                    this.resetConfigurineParam(false)
                     // 输入Prompt 重置
                     this.resetInputPrompt()
                     this.outputList = []
