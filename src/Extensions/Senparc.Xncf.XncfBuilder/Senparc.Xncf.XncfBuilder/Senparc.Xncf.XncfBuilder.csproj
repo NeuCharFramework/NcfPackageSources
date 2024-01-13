@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.20.2.1-beta2</Version>
+    <Version>0.21.0-beta2</Version>
     <LangVersion>9.0</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -18,23 +18,24 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
-			v0.8.127 使用 .NET Core 命令行创建模板，取代原有的 T4 模板
-			v0.13.3 添加 Oracle 数据库 Migration 支持
-			v0.13.4.1 添加 Oracle 数据库迁移代码
-			v0.13.6 更新 XncfBuilder，适配 .NET 7.0 CLI
-			v0.13.9 数据库 migration 命令中的路径添加引号，防止路径中出现空格
-			v0.13.10 XNCF Builder 自动记录上次填写的内容，并且首次自动探索 .sln 文件
-			V0.14.0 移除对 netstandard2.1 的编译，保留 netcoreapp3.1;net6.0
-			v0.15.0 集成 Senparc.Xncf.PromptRange 项目，使用 AI 自动生成项目
-			v0.16.0 优化 AI 生成过程，添加对 EntityClass、EntityDtoClass、SenparcEntities 的独立生成过程
-			v0.16.2.1024 升级至 1024 特别版，支持 2023.10.24 特别版 Senparc.Xncf.PromptRange
-			v0.17.0 优化 Add-Migration，支持自动选择 XNCF 项目
-			v0.17.1 优化 Add-Migration，支持自动扫描 *SenparcEntities.cs 文件
-			v0.18.0 优化 Add-Migration，可自动更新 Register.cs 版本号
-			v0.19.0 优化项目引用
-			v0.20.0 更新项目引用，支持 .NET 8.0
-</PackageReleaseNotes>
+		v0.1 创世
+		v0.8.127 使用 .NET Core 命令行创建模板，取代原有的 T4 模板
+		v0.13.3 添加 Oracle 数据库 Migration 支持
+		v0.13.4.1 添加 Oracle 数据库迁移代码
+		v0.13.6 更新 XncfBuilder，适配 .NET 7.0 CLI
+		v0.13.9 数据库 migration 命令中的路径添加引号，防止路径中出现空格
+		v0.13.10 XNCF Builder 自动记录上次填写的内容，并且首次自动探索 .sln 文件
+		V0.14.0 移除对 netstandard2.1 的编译，保留 netcoreapp3.1;net6.0
+		v0.15.0 集成 Senparc.Xncf.PromptRange 项目，使用 AI 自动生成项目
+		v0.16.0 优化 AI 生成过程，添加对 EntityClass、EntityDtoClass、SenparcEntities 的独立生成过程
+		v0.16.2.1024 升级至 1024 特别版，支持 2023.10.24 特别版 Senparc.Xncf.PromptRange
+		v0.17.0 优化 Add-Migration，支持自动选择 XNCF 项目
+		v0.17.1 优化 Add-Migration，支持自动扫描 *SenparcEntities.cs 文件
+		v0.18.0 优化 Add-Migration，可自动更新 Register.cs 版本号
+		v0.19.0 优化项目引用
+		v0.20.0 更新项目引用，支持 .NET 8.0
+		v0.21.0 集成 Senparc.Xncf.AIKernel，可以选择已配置的 AI 模型生成代码
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -67,7 +68,7 @@
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.9.1" />
+    <ProjectReference Include="..\..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
     <!--<ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />-->
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>

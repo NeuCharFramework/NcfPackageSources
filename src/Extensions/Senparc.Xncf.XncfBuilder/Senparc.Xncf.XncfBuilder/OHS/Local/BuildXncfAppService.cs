@@ -1,8 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.VersionManager;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
@@ -19,13 +23,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     public class BuildXncfAppService : AppServiceBase
     {
 
-        public BuildXncfAppService(IServiceProvider serviceProvider) : base(serviceProvider)
+        public BuildXncfAppService(IServiceProvider serviceProvider, AIModelService aIModelService) : base(serviceProvider)
         {
+            this._aIModelService = aIModelService;
         }
 
         #region 生成 XNCF 项目
 
         private string _outPutBaseDir;
+        private readonly AIModelService _aIModelService;
 
         /// <summary>
         /// 执行模板生成
@@ -325,9 +331,24 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var @namespace = Path.GetFileName(projectPath);
 
+                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
+                var aiModelSelected = request.AIModel.SelectedValues.First();
+                if (aiModelSelected != "Default")
+                {
+                    int.TryParse(aiModelSelected, out int aiModelId);
+                    var aiModel = _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+                    if (aiModel == null)
+                    {
+                        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
+                    }
+
+                    var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+                    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
+                }
+
                 #region 生成实体
 
-                var entityResult = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityClass, input, null, projectPath, @namespace);
+                var entityResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityClass, input, null, projectPath, @namespace);
                 logger.Append("生成实体：");
                 logger.Append(entityResult.Result);
 
@@ -335,7 +356,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 生成实体 DTO
 
-                var entityDtoResult = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.EntityDtoClass, input, null, projectPath, @namespace);
+                var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, input, null, projectPath, @namespace);
                 logger.Append("生成实体 DTO：");
                 logger.Append(entityResult.Result);
 
@@ -343,7 +364,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 更新 SenparcEntities
 
-                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(Domain.PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, @namespace);
+                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, @namespace);
                 logger.Append("更新 SenparcEntities：");
                 logger.Append(entityResult.Result);
 
