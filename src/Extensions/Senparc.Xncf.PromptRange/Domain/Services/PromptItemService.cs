@@ -496,7 +496,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-
         [ItemNotNull]
         private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needModel = true, bool needRange = true)
         {
@@ -574,17 +573,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // //用版号作为key, 映射字典
             // var itemMapByVersion = promptItemList.ToDictionary(p => p.FullVersion, p => p);
 
-            // 提取出 T 的第一位，并分组
-            Dictionary<string, List<PromptItem>> itemGroupByT = promptItemList.GroupBy(p => p.Tactic.Substring(0, 1))
-                .ToDictionary(p => p.Key, p => p.ToList());
+            // // 提取出 T 的第一位，并分组
+            // Dictionary<string, List<PromptItem>> itemGroupByT = promptItemList.GroupBy(p => p.Tactic.Substring(0, 1))
+            //     .ToDictionary(p => p.Key, p => p.ToList());
 
-            // 按照 t1, t2 构建
-            foreach (var (tac, itemList) in itemGroupByT)
+            // 每个靶道都需要导出
+            foreach (var item in promptItemList)
             {
-                // 找出最佳item
-                var bestItem = itemList.MaxBy(p => isAvg ? p.EvalAvgScore : p.EvalMaxScore);
+                // // 找出最佳item
+                // var bestItem = itemList.MaxBy(p => isAvg ? p.EvalAvgScore : p.EvalMaxScore);
 
-                await ExportPluginWithItemAsync(bestItem, rangePath);
+                await ExportPluginWithItemAsync(item, rangePath);
             }
 
             return rangePath;
@@ -628,6 +627,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var curPluginPath = Path.Combine(rangePath, item.NickName ?? item.FullVersion);
             if (!Directory.Exists(curPluginPath))
             {
+                Directory.CreateDirectory(curPluginPath);
+            }
+            else
+            {
+                // 如果别名已经存在，就增加一个尾缀
+                curPluginPath += $"_{DateTime.Now:yyyyMMddHHmmss}";
                 Directory.CreateDirectory(curPluginPath);
             }
 

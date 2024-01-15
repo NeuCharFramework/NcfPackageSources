@@ -357,7 +357,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
-                FileDownloadName = "ExportedPlugins.zip"
+                FileDownloadName = $"{Path.GetFileName(rangePath)}.zip"
             };
             
             return res;
