@@ -426,7 +426,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //    OrganizationId = aiModel.OrganizationId
             //};
 
-            return new SenparcAI_GetByVersionResponse(BuildSenparcAiSetting(dto.AIModelDto), dto);
+            return new SenparcAI_GetByVersionResponse(_aiModelService.BuildSenparcAiSetting(dto.AIModelDto), dto);
         }
 
 
@@ -495,63 +495,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptItem;
         }
 
-        /// <summary>
-        /// 构造 SenparcAiSetting
-        /// </summary>
-        /// <param name="aiModel"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
-        private SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel)
-        {
-            var aiSettings = new SenparcAiSetting
-            {
-                AiPlatform = aiModel.AiPlatform
-            };
-
-            switch (aiSettings.AiPlatform)
-            {
-                case AiPlatform.NeuCharAI:
-                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
-                    {
-                        ApiKey = aiModel.ApiKey,
-                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = aiModel.Endpoint
-                    };
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint
-                    };
-                    break;
-                case AiPlatform.AzureOpenAI:
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint
-                    };
-                    break;
-                case AiPlatform.HuggingFace:
-                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
-                    {
-                        Endpoint = aiModel.Endpoint
-                    };
-                    break;
-                case AiPlatform.OpenAI:
-                    aiSettings.OpenAIKeys = new OpenAIKeys()
-                    {
-                        ApiKey = aiModel.ApiKey,
-                        OrganizationId = aiModel.OrganizationId
-                    };
-                    break;
-                default:
-                    throw new NcfExceptionBase($"暂时不支持{aiSettings.AiPlatform}类型");
-            }
-
-
-            return aiSettings;
-        }
 
 
         [ItemNotNull]

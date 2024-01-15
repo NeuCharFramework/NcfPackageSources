@@ -23,12 +23,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         {
             //this._aiHandler = (SemanticAiHandler)aiHandler;
             this._aiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
-            ReBuildKernel();
+            //ReBuildKernel();
         }
 
-        public IWantToRun ReBuildKernel(string userId = null, string modelName = null)
+        public IWantToRun ReBuildKernel(ISenparcAiSetting senparcAiSetting, string userId = null, string modelName = null)
         {
-            IWantToRun = this._aiHandler.IWantTo()
+            senparcAiSetting ??= Senparc.AI.Config.SenparcAiSetting;
+            IWantToRun = this._aiHandler.IWantTo(senparcAiSetting)
                            .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelName ?? _modelName)
                            .BuildKernel();
             return IWantToRun;
@@ -37,6 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <summary>
         /// 根据 Plugin 的 Prompt 获取结果
         /// </summary>
+        /// <param name="senparcAiSetting">模型配置</param>
         /// <param name="input">用户输入</param>
         /// <param name="context">上下文参数</param>
         /// <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
@@ -45,13 +47,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// </param>
         /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
+        public async Task<string> GetPromptResultAsync(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
             //var modelName = "text-davinci-003";//默认使用模型
 
-            var iWantToRun = IWantToRun ?? ReBuildKernel();
+            var iWantToRun = IWantToRun ?? ReBuildKernel(senparcAiSetting);
 
             List<KernelFunction> allFunctionPiple = new List<KernelFunction>();
 
