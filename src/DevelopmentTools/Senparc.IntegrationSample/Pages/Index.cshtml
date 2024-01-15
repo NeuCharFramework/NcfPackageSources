@@ -1,6 +1,10 @@
 ﻿@page
 @using Senparc.Ncf.Core.Models
 @using Senparc.Ncf.XncfBase
+@using Senparc.CO2NET.Extensions;
+@using Senparc.Ncf.XncfBase.FunctionRenders
+@using Senparc.Ncf.XncfBase.Functions
+
 @model IndexModel
 @{
     ViewData["Title"] = "测试页";
@@ -16,14 +20,28 @@
     <p>
         <h3>XNCF 检查</h3>
         <table>
-            <thead> <tr><th>名称（Uid）</th><th>版本</th><th>数据库支持</th><th>线程支持</th><th>注册优先级</th></tr></thead>
+            <thead> <tr><th>名称（Uid）</th><th>注册优先级</th><th>版本</th><th>数据库支持</th><th>线程支持</th><th>Function 支持</th></tr></thead>
             <tbody>
-                @foreach (var item in Model.XncfRegisterList)
+                @foreach (var registerInfo in Model.XncfRegisterList)
                 {
+                    var item = registerInfo.XncfRegister;
                     <tr>
                         <td>
                             @item.MenuName / @item.Name
                             <br>（@item.Uid）
+                        </td>
+                        <td>
+                            @{
+                                var orderAttr = item.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute;
+                                if (orderAttr == null)
+                                {
+                                    <text>默认</text>
+                                }
+                                else
+                                {
+                                    <text>@orderAttr.Order</text>
+                                }
+                            }
                         </td>
                         <td>v@(item.Version)</td>
                         <td>
@@ -57,16 +75,65 @@
                             </p>
                         </td>
                         <td>
-                            @{
-                                var orderAttr = item.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute;
-                                if (orderAttr == null)
-                                {
-                                    <text>默认</text>
-                                }
-                                else
-                                {
-                                    <text>@orderAttr.Order</text>
-                                }
+                            @foreach (var function in registerInfo.RegisterFunctionInfoList)
+                            {
+                                <p><srtong>@function.Name</srtong></p>
+                                <p><srtong>@function.Description</srtong></p>
+                                <p>
+                                    参数：
+                                </p>
+
+                                <table>
+                                    <thead><tr><th>参数名称</th><th>类型</th><th>显示标题</th><th>说明</th></tr></thead>
+                                    <tbody>
+                                        @foreach (var paraInfo in function.FunctionParameterInfoList)
+                                        {
+                                            <tr>
+                                                <td>@paraInfo.Name</td>
+                                                <td>
+                                                    @paraInfo.SystemType
+                                                    @if (paraInfo.IsRequired)
+                                                    {
+                                                        <span>（必须）</span>
+                                                    }
+                                                    @if (paraInfo.ParameterType != ParameterType.Text)
+                                                    {
+                                                        <p>列表类型：paraInfo.ParameterType</p>
+                                                        <p>
+                                                            选项：
+                                                            <table>
+                                                                <thead>
+                                                                    <tr><td>显示名称</td><td>值</td><td>说明</td></tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    @foreach (var selection in paraInfo.SelectionList.Items)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@selection.Text</td>
+                                                                            <td>
+                                                                                @selection.Value
+                                                                                @if (selection.DefaultSelected)
+                                                                                {
+                                                                                    <span>（默认）</span>
+                                                                                }
+                                                                            </td>
+                                                                            <td>@selection.Note</td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </p>
+                                                    }
+                                                </td>
+                                                <td>@paraInfo.Title</td>
+                                                <td>@paraInfo.Description</td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+
                             }
                         </td>
                     </tr>
