@@ -20,8 +20,8 @@
         text-decoration: underline;
     }
 
-    .modal-dialog{
-        max-width:80%;
+    .modal-dialog {
+        max-width: 80%;
     }
 </style>
 
@@ -99,12 +99,12 @@
                     <td class="text-left text-wrap" style="white-space: normal;">
                         @if (registerInfo.RegisterFunctionInfoList.Count() > 0)
                         {
-                            <span class="expand-btn" data-toggle="modal" data-target="#functionModal">展开</span>
-                            <div class="modal fade" id="functionModal" tabindex="-1" role="dialog" aria-labelledby="functionModalLabel" aria-hidden="true">
+                            <span class="expand-btn" data-toggle="modal" data-target="#functionModal_@(item.Uid)">展开</span>
+                            <div class="modal fade" id="functionModal_@(item.Uid)" tabindex="-1" role="dialog" aria-labelledby="functionModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="functionModalLabel">Function 支持</h5>
+                                            <h5 class="modal-title" id="functionModalLabel">@item.Name 的 Function 透视</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -143,21 +143,43 @@
 
                                                                     @if (paraInfo.ParameterType != ParameterType.Text)
                                                                     {
-                                                                        <ol class="pl-5 text-wrap">
-                                                                            @foreach (var selection in paraInfo.SelectionList.Items)
-                                                                            {
-                                                                                <li class="text-wrap">
-                                                                                    <span>显示名称：@selection.Text</span><br />
-                                                                                    <span>值：@selection.Value</span>
-                                                                                    @if (selection.DefaultSelected)
-                                                                                    {
-                                                                                        <span>（默认）</span>
-                                                                                    }
-                                                                                    <br />
-                                                                                    <span class="text-wrap">说明：@selection.Note</span>
-                                                                                </li>
-                                                                            }
-                                                                        </ol>
+
+                                                                        @*                                                                         <ol class="pl-5 text-wrap">
+                                                    @foreach (var selection in paraInfo.SelectionList.Items)
+                                                    {
+                                                    <li class="text-wrap">
+                                                    <span>显示名称：@selection.Text</span><br />
+                                                    <span>值：@selection.Value</span>
+                                                    @if (selection.DefaultSelected)
+                                                    {
+                                                    <span>（默认）</span>
+                                                    }
+                                                    <br />
+                                                    <span class="text-wrap">说明：@selection.Note</span>
+                                                    </li>
+                                                    }
+                                                    </ol>
+                                                    *@                                                                                                                                             <table class="table table-bordered table-sm">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>显示名称</th>
+                                                                                    <th>值</th>
+                                                                                    <th>默认</th>
+                                                                                    <th>说明</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var selection in paraInfo.SelectionList.Items)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td>@selection.Text</td>
+                                                                                        <td>@selection.Value</td>
+                                                                                        <td>@(selection.DefaultSelected ? "是" : "否")</td>
+                                                                                        <td>@selection.Note</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
                                                                     }
                                                                 </td>
                                                             </tr>
