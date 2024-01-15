@@ -205,9 +205,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
             var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
             var aiModels = await aiModelAppService.GetListAsync(new AIKernel.OHS.Local.PL.AIModel_GetListRequest() { Show = true });
-            foreach (var item in aiModels.Data)
+
+            if (aiModels.Data!=null)
             {
-                AIModel.Items.Add(new SelectionItem(item.Id.ToString(), item.DeploymentName, item.Note));
+                foreach (var item in aiModels.Data)
+                {
+                    AIModel.Items.Add(new SelectionItem(item.Id.ToString(), item.DeploymentName, item.Note));
+                }
+
             }
 
             await base.LoadData(serviceProvider);
