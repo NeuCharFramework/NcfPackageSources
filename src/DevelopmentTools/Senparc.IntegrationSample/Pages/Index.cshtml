@@ -17,128 +17,116 @@
         <a href="https://github.com/NeuCharFramework/NCF/">点击这里</a> 查看可直接安装使用的 NCF 模板项目！
     </p>
     <hr />
-    <p>
-        <h3>XNCF 检查</h3>
-        <table>
-            <thead> <tr><th>名称（Uid）</th><th>注册优先级</th><th>版本</th><th>数据库支持</th><th>线程支持</th><th>Function 支持</th></tr></thead>
-            <tbody>
-                @foreach (var registerInfo in Model.XncfRegisterList)
-                {
-                    var item = registerInfo.XncfRegister;
-                    <tr>
-                        <td>
-                            @item.MenuName / @item.Name
-                            <br>（@item.Uid）
-                        </td>
-                        <td>
-                            @{
-                                var orderAttr = item.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute;
-                                if (orderAttr == null)
-                                {
-                                    <text>默认</text>
-                                }
-                                else
-                                {
-                                    <text>@orderAttr.Order</text>
-                                }
-                            }
-                        </td>
-                        <td>v@(item.Version)</td>
-                        <td>
-                            @if (item is IXncfDatabase db)
+    <h3>XNCF 检查</h3>
+    <table class="table table-striped table-hover #table-responsive table-sm" style="word-break: normal;">
+        <thead> <tr><th>名称（Uid）</th><th>注册优先级</th><th>版本</th><th>数据库支持</th><th>线程支持</th><th>Function 支持</th></tr></thead>
+        <tbody>
+            @foreach (var registerInfo in Model.XncfRegisterList)
+            {
+                var item = registerInfo.XncfRegister;
+                <tr>
+                    <td>
+                        @item.MenuName / @item.Name
+                        <br>（@item.Uid）
+                    </td>
+                    <td>
+                        @{
+                            var orderAttr = item.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute;
+                            if (orderAttr == null)
                             {
-                                @* var multipleDatabasePool = MultipleDatabasePool.Instance;
-                        var dbType = multipleDatabasePool.GetXncfDbContextType(db.GetType()); *@
-                                var dbType = db.TryGetXncfDatabaseDbContextType;
-                                var parentType = dbType.BaseType;
-                                <span title="当前使用数据库：@dbType.Name">@parentType.Name</span>
+                                <text>默认</text>
                             }
                             else
                             {
-                                <test>不支持</test>
+                                <text>@orderAttr.Order</text>
                             }
-                        </td>
-                        <td>
-                            <p>
-                                @if (item.RegisteredThreadInfo.Count() == 0)
-                                {
-                                    <text>不支持</text>
-                                }
-                                else
-                                {
-                                    foreach (var thread in item.RegisteredThreadInfo)
-                                    {
-                                        <text>@thread.Key.Name / @thread.Value.ThreadState</text>
-                                        <br />
-                                    }
-                                }
-                            </p>
-                        </td>
-                        <td>
-                            @foreach (var function in registerInfo.RegisterFunctionInfoList)
+                        }
+                    </td>
+                    <td>v@(item.Version)</td>
+                    <td>
+                        @if (item is IXncfDatabase db)
+                        {
+                            @* var multipleDatabasePool = MultipleDatabasePool.Instance;
+                    var dbType = multipleDatabasePool.GetXncfDbContextType(db.GetType()); *@
+                            var dbType = db.TryGetXncfDatabaseDbContextType;
+                            var parentType = dbType.BaseType;
+                            <span title="当前使用数据库：@dbType.Name">@parentType.Name</span>
+                        }
+                        else
+                        {
+                            <test>不支持</test>
+                        }
+                    </td>
+                    <td>
+                        <p>
+                            @if (item.RegisteredThreadInfo.Count() == 0)
                             {
-                                <p><srtong>@function.Name</srtong></p>
-                                <p><srtong>@function.Description</srtong></p>
-                                <p>
-                                    参数：
-                                </p>
-
-                                <table>
-                                    <thead><tr><th>参数名称</th><th>类型</th><th>显示标题</th><th>说明</th></tr></thead>
-                                    <tbody>
-                                        @foreach (var paraInfo in function.FunctionParameterInfoList)
-                                        {
-                                            <tr>
-                                                <td>@paraInfo.Name</td>
-                                                <td>
-                                                    @paraInfo.SystemType
-                                                    @if (paraInfo.IsRequired)
-                                                    {
-                                                        <span>（必须）</span>
-                                                    }
-                                                    @if (paraInfo.ParameterType != ParameterType.Text)
-                                                    {
-                                                        <p>列表类型：paraInfo.ParameterType</p>
-                                                        <p>
-                                                            选项：
-                                                            <table>
-                                                                <thead>
-                                                                    <tr><td>显示名称</td><td>值</td><td>说明</td></tr>
-                                                                </thead>
-                                                                <tbody>
-
-                                                                    @foreach (var selection in paraInfo.SelectionList.Items)
-                                                                    {
-                                                                        <tr>
-                                                                            <td>@selection.Text</td>
-                                                                            <td>
-                                                                                @selection.Value
-                                                                                @if (selection.DefaultSelected)
-                                                                                {
-                                                                                    <span>（默认）</span>
-                                                                                }
-                                                                            </td>
-                                                                            <td>@selection.Note</td>
-                                                                        </tr>
-                                                                    }
-                                                                </tbody>
-                                                            </table>
-                                                        </p>
-                                                    }
-                                                </td>
-                                                <td>@paraInfo.Title</td>
-                                                <td>@paraInfo.Description</td>
-                                            </tr>
-                                        }
-
-                                    </tbody>
-                                </table>
-
+                                <text>不支持</text>
                             }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </p>
+                            else
+                            {
+                                foreach (var thread in item.RegisteredThreadInfo)
+                                {
+                                    <text>@thread.Key.Name / @thread.Value.ThreadState</text>
+                                    <br />
+                                }
+                            }
+                        </p>
+                    </td>
+                    <td class="text-left">
+                        @foreach (var function in registerInfo.RegisterFunctionInfoList)
+                        {
+                            <p><srtong>名称：@function.Name</srtong></p>
+                            <p><srtong>说明：@function.Description</srtong></p>
+                            <p>
+                                参数：
+                            </p>
+
+                            <ul>
+                                @foreach (var paraInfo in function.FunctionParameterInfoList)
+                                {
+                                    <li>
+                                        参数名称：@paraInfo.Name<br />
+                                        类型：@paraInfo.SystemType
+                                        @if (paraInfo.IsRequired)
+                                        {
+                                            <span>（必须）</span>
+                                        }
+                                        <br />
+                                        显示标题：@paraInfo.Title<br />
+                                        说明：@paraInfo.Description<br />
+                                        @if (paraInfo.ParameterType != ParameterType.Text)
+                                        {
+                                            <p>列表类型：@paraInfo.ParameterType</p>
+                                            <p>选项：</p>
+                                            <ol class="pl-5">
+                                                @foreach (var selection in paraInfo.SelectionList.Items)
+                                                {
+                                                    <li>
+                                                        <span>显示名称：@selection.Text</span><br />
+                                                        <span>值：@selection.Value</span>
+                                                        @if (selection.DefaultSelected)
+                                                        {
+                                                            <span>（默认）</span>
+                                                        }
+                                                        <br />
+                                                        <span>说明：@selection.Note</span>
+                                                    </li>
+                                                }
+                                            </ol>
+
+                                        }
+                                        <br />
+
+
+                                    </li>
+                                }
+
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

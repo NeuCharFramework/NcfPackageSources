@@ -56,10 +56,14 @@ namespace Senparc.IntegrationSample.Pages
                 registerItem.XncfRegister = item;
                 registerItem.RegisterFunctionInfoList = new List<XncfRegisterItem.RegisterFunctionInfo>();
 
-                FunctionRenderBag? rightFunctionBag = null;
+                XncfRegisterList.Add(registerItem);
+
                 if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(item.GetType(), out var functionGroup))
                 {
-
+                    if (functionGroup == null)
+                    {
+                        continue;
+                    }
                     //var funClass = _serviceProvider.GetService(funtionBag.MethodInfo.DeclaringType) as IAppService;
                     //var funMethod = funClass.GetType().GetMethod()
 
