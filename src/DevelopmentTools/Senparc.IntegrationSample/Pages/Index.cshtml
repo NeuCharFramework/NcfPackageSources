@@ -143,23 +143,7 @@
 
                                                                     @if (paraInfo.ParameterType != ParameterType.Text)
                                                                     {
-
-                                                                        @*                                                                         <ol class="pl-5 text-wrap">
-                                                    @foreach (var selection in paraInfo.SelectionList.Items)
-                                                    {
-                                                    <li class="text-wrap">
-                                                    <span>显示名称：@selection.Text</span><br />
-                                                    <span>值：@selection.Value</span>
-                                                    @if (selection.DefaultSelected)
-                                                    {
-                                                    <span>（默认）</span>
-                                                    }
-                                                    <br />
-                                                    <span class="text-wrap">说明：@selection.Note</span>
-                                                    </li>
-                                                    }
-                                                    </ol>
-                                                    *@                                                                                                                                             <table class="table table-bordered table-sm">
+                                                                        <table class="table table-bordered table-sm">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>显示名称</th>
@@ -187,6 +171,9 @@
                                                     </tbody>
                                                 </table>
                                             }
+
+
+
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
