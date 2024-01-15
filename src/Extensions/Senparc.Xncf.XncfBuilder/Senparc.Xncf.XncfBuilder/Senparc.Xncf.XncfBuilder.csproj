@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.21.0-beta2</Version>
+    <Version>0.21.0.1-beta2</Version>
     <LangVersion>9.0</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -72,9 +72,9 @@
     <!--<ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />-->
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
+  </ItemGroup>-->
   <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.90" />

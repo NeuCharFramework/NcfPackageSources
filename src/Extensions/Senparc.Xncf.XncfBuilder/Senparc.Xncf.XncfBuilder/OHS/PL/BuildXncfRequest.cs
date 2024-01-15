@@ -193,7 +193,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Description("AI 模型||请选择生成代码所使用的 AI 模型")]
         public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new SelectionItem[] {
-                 new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",false)
+                 new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
         });
 
 
