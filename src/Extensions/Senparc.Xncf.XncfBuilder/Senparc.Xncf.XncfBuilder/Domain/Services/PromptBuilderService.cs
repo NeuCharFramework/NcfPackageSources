@@ -36,7 +36,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="projectPath"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        public async Task<(string Result, string ResponseText, SenparcAiArguments Context)> RunPromptAsync(PromptBuildType buildType, string input, SenparcAiArguments context = null, string projectPath = null, string @namespace = null)
+        public async Task<(string Result, string ResponseText, SenparcAiArguments Context)> RunPromptAsync(ISenparcAiSetting senparcAiSetting, PromptBuildType buildType, string input, SenparcAiArguments context = null, string projectPath = null, string @namespace = null)
         {
             StringBuilder sb = new StringBuilder();
             context ??= new SenparcAiArguments();
@@ -74,7 +74,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         context.KernelArguments["input"] = input;
                         context.KernelArguments["namespace"] = @namespace;
 
-                        var promptResult = await _promptService.GetPromptResultAsync(input, context, plugins);
+                        var promptResult = await _promptService.GetPromptResultAsync(senparcAiSetting, input, context, plugins);
 
                         responseText = promptResult;
 
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                             KernelFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
 
-                            var createFileResult = await _promptService.GetPromptResultAsync("", fileContext, null, functionPiple);
+                            var createFileResult = await _promptService.GetPromptResultAsync(senparcAiSetting, "", fileContext, null, functionPiple);
 
                             sb.AppendLine();
                             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -128,7 +128,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         fileContext.KernelArguments["projectPath"] = projectPath;
                         fileContext.KernelArguments["entityName"] = input;// fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync("", fileContext, null, updateFunctionPiple);
+                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync(senparcAiSetting, "", fileContext, null, updateFunctionPiple);
                         responseText = updateSenparcEntitiesResult;
 
                         sb.AppendLine();

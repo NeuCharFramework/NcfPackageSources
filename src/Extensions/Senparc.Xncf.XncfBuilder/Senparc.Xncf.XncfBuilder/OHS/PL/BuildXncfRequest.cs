@@ -4,6 +4,8 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -189,13 +191,26 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  new SelectionItem("CreateAppService","创建 AppService","创建和实体匹配的 Service",false)
             });
 
-        public override Task LoadData(IServiceProvider serviceProvider)
+        [Description("AI 模型||请选择生成代码所使用的 AI 模型")]
+        public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new SelectionItem[] {
+                 new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+        });
+
+
+        public override async Task LoadData(IServiceProvider serviceProvider)
         {
             //扫描当前解决方案包含的所有领域项目
             var newItems = FunctionHelper.LoadXncfProjects(true);
             newItems.ForEach(z => InjectDomain.Items.Add(z));
 
-            return base.LoadData(serviceProvider);
+            var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
+            var aiModels = await aiModelAppService.GetListAsync(new AIKernel.OHS.Local.PL.AIModel_GetListRequest() { Show = true });
+            foreach (var item in aiModels.Data)
+            {
+                AIModel.Items.Add(new SelectionItem(item.Id.ToString(), item.DeploymentName, item.Note));
+            }
+
+            await base.LoadData(serviceProvider);
         }
     }
 

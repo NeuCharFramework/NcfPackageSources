@@ -24,6 +24,7 @@ using Senparc.Xncf.AIKernel.Models;
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
     //[BackendJwtAuthorize]
+    //TODO: 需要权限验证
     public class AIModelAppService : AppServiceBase
     {
         private readonly AIModelService _aIModelService;

@@ -81,14 +81,6 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
-            <summary>
-            构造 SenparcAiSetting
-            </summary>
-            <param name="aiModel"></param>
-            <returns></returns>
-            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
-        </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginsAsync(System.Int32,System.Boolean)">
             <summary>
             根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
