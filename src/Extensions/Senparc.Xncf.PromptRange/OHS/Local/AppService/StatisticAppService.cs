@@ -69,7 +69,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg)
+        public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg=true)
         {
             return await this.GetResponseAsync<AppResponseBase<Statistic_TodayTacticResponse>, Statistic_TodayTacticResponse>(
                 async (response, logger) =>

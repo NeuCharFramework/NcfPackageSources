@@ -337,7 +337,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptItemDto>(promptItem);
         }
 
-        public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg = true)
+        public async Task<Statistic_TodayTacticResponse> GetLineChartDataAsync(int promptItemId, bool isAvg)
         {
             var promptItem = await this.GetObjectAsync(p => p.Id == promptItemId) ??
                              throw new Exception("未找到prompt");
