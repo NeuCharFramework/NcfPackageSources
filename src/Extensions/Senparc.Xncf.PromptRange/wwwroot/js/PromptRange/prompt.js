@@ -148,7 +148,7 @@ var app = new Vue({
             aiScoreForm: {
                 resultList: [{
                     id: 1,
-                    label: '预期结果1',
+                    label: '预期结果',
                     value: ''
                 }]
             },
@@ -300,6 +300,14 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // 备注失去焦点 保存
+        promptRemarkSave() {
+            let { id} = this.promptDetail
+            this.btnEditHandle({
+                id,
+                note: this.remarks
+            },true)
+        },
         parameterViewToggle() {
             if (this.parameterViewShow) {
                 this.contentTextareaRows = 14
@@ -327,7 +335,339 @@ var app = new Vue({
                     message: '已取消操作'
                 });
             });
+        },
+        // 战术选择 dialog 提交
+        tacticalFormSubmitBtn() {
+            this.$refs.tacticalForm.validate(async (valid) => {
+                if (valid) {
+                    this.tacticalFormSubmitLoading = true
+                    let _postData = {
+                        //promptid: this.promptid,// 选择靶场
+                        modelid: this.modelid,// 选择模型
+                        content: this.content,// prompt 输入内容
+                        note: this.remarks, // prompt 输入的备注
+                        numsOfResults: 1,
+                        isDraft: this.sendBtnText === '保存草稿',
+                        suffix: this.promptParamForm.suffix,
+                        prefix: this.promptParamForm.prefix
+                    }
+                    // ai评分标准
+                    if (this.aiScoreForm.resultList.length > 0) {
+                        let _list = this.aiScoreForm.resultList.map(item => item.value)
+                        _list = _list.filter(item => item)
+                        if (_list.length > 0) {
+                            _postData.expectedResultsJson = JSON.stringify(_list)
+                        }
 
+                    }
+                    if (this.promptParamForm.variableList.length > 0) {
+                        _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
+                    }
+                    if (this.promptid) {
+                        _postData.id = this.promptid
+                        //创建顶级战术，创建平行战术，创建子战术，重新瞄准
+                        if (this.tacticalForm.tactics === '创建新战术') {
+                            _postData.isNewTactic = true // prompt 新建分支
+                        }
+                        if (this.tacticalForm.tactics === '创建子战术') {
+                            _postData.isNewSubTactic = true // prompt 新建子分支
+                        }
+                        if (this.tacticalForm.tactics === '重新瞄准') {
+                            _postData.isNewAiming = true // prompt 内容变化
+                        }
+                    }
+                    // id: null, // 
+                    this.parameterViewList.forEach(item => {
+                        // todo 单独处理
+                        if (item.formField === 'stopSequences') {
+                            _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
+                        } else if (item.formField === 'maxToken') {
+                            _postData[item.formField] = item.value ? Number(item.value) : 0
+                        } else {
+                            _postData[item.formField] = item.value
+                        }
+                    })
+
+                    // 要提交this.promptField
+                    _postData['rangeId'] = this.promptField
+                    let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+                    // console.log('testHandel res ', res.data)
+                    this.tacticalFormSubmitLoading = false
+                    if (res.data.success) {
+                        this.pageChange = false
+                        // 关闭dialog
+                        this.tacticalFormVisible = false
+                        let {
+                            promptResultList = [],
+                            fullVersion = '',
+                            id,
+                            evalAvgScore = -1,
+                            evalMaxScore = -1
+                        } = res.data.data || {}
+
+                        // 拷贝数据
+                        let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                        delete copyResultData.promptResultList
+                        let vArr = copyResultData.fullVersion.split('-')
+                        copyResultData.promptFieldStr = vArr[0] || ''
+                        copyResultData.promptStr = vArr[1] || ''
+                        copyResultData.tacticsStr = vArr[2] || ''
+                        this.promptDetail = copyResultData
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
+                        // 平均分 
+                        this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
+                        // 最高分
+                        this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
+                        // 输出列表
+                        this.outputList = promptResultList.map(item => {
+                            if (item) {
+                                item.promptId = id
+                                item.version = fullVersion
+                                item.scoreType = '1' // 1 ai、2手动 
+                                item.isScoreView = false // 是否显示评分视图
+                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                                item.scoreVal = 0 // 手动评分
+                                // ai评分预期结果
+                                item.alResultList = [{
+                                    id: 1,
+                                    label: '预期结果1',
+                                    value: ''
+                                }, {
+                                    id: 2,
+                                    label: '预期结果2',
+                                    value: ''
+                                }, {
+                                    id: 3,
+                                    label: '预期结果3',
+                                    value: ''
+                                }]
+                            }
+                            return item
+                        })
+                        //console.log('选择正确的靶场')
+                        //提交数据后，选择正确的靶场和靶道
+                        this.getFieldList().then(() => {
+                            this.getPromptOptData(id)
+                            // 获取分数趋势图表数据
+                            this.getScoringTrendData()
+                        })
+
+                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                            this.dealRapicFireHandel(this.numsOfResults - 1, id)
+                        }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        });
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+        /*
+        * 打靶 事件
+        * isDraft 是否保存草稿
+        */
+        async targetShootHandel(isDraft = false) {
+            if (!this.modelid) {
+                this.$message({
+                    message: '请选择模型！',
+                    type: 'warning'
+                })
+                return
+            }
+            if (!isDraft && !this.content) {
+                this.$message({
+                    message: '请输入内容！',
+                    type: 'warning'
+                })
+                return
+            }
+            // 弹窗逻辑1，有promptid，就要弹窗
+            if (this.promptid) {
+                this.tacticalFormVisible = true
+                return
+            }
+            // 弹窗逻辑2，只要保存草稿就弹
+            if (this.sendBtnText === '保存草稿') {
+                this.tacticalFormVisible = true
+                return
+            }
+
+
+            this.targetShootLoading = true
+            let _postData = {
+                //promptid: this.promptid,// 选择靶场
+                modelid: this.modelid,// 选择模型
+                content: this.content,// prompt 输入内容
+                note: this.remarks, // prompt 输入的备注,
+                numsOfResults: 1,
+                //numsOfResults: isDraft?this.numsOfResults:1,
+                isDraft: isDraft,
+                suffix: this.promptParamForm.suffix,
+                prefix: this.promptParamForm.prefix,
+
+            }
+            // ai评分标准
+            if (this.aiScoreForm.resultList.length > 0) {
+                let _list = this.aiScoreForm.resultList.map(item => item.value)
+                _list = _list.filter(item => item)
+                if (_list.length > 0) {
+                    _postData.expectedResultsJson = JSON.stringify(_list)
+                }
+            }
+            // 请求参数
+            if (this.promptParamForm.variableList.length > 0) {
+                _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
+            }
+
+            this.parameterViewList.forEach(item => {
+                // todo 单独处理
+                if (item.formField === 'stopSequences') {
+                    _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
+                } else if (item.formField === 'maxToken') {
+                    _postData[item.formField] = item.value ? Number(item.value) : 0
+                } else {
+                    _postData[item.formField] = item.value
+                }
+            })
+            // 要提交this.promptField
+            _postData['rangeId'] = this.promptField
+            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
+                this.targetShootLoading = false
+                if (res.data.success) {
+                    this.pageChange = false
+                    if (isDraft) {
+                        // 提示保存成功
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        })
+                    }
+                    let {
+                        promptResultList = [],
+                        fullVersion = '',
+                        id,
+                        evalAvgScore = -1,
+                        evalMaxScore = -1
+                    } = res.data.data || {}
+                    // 拷贝数据
+                    let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                    delete copyResultData.promptResultList
+                    let vArr = copyResultData.fullVersion.split('-')
+                    copyResultData.promptFieldStr = vArr[0] || ''
+                    copyResultData.promptStr = vArr[1] || ''
+                    copyResultData.tacticsStr = vArr[2] || ''
+                    this.promptDetail = copyResultData
+                    this.sendBtns = [
+                        {
+                            text: '连发'
+                        },
+                        {
+                            text: '保存草稿'
+                        }
+                    ]
+                    this.sendBtnText = '连发'
+                    // 平均分 
+                    this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
+                    // 最高分
+                    this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
+                    // 输出列表
+                    this.outputList = promptResultList.map(item => {
+                        if (item) {
+                            item.promptId = id
+                            item.version = fullVersion
+                            item.scoreType = '1' // 1 ai、2手动 
+                            item.isScoreView = false // 是否显示评分视图
+                            //时间 格式化  addTime
+                            item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                            // 手动评分
+                            item.scoreVal = 0
+                            // ai评分预期结果
+                            item.alResultList = [{
+                                id: 1,
+                                label: '预期结果1',
+                                value: ''
+                            }, {
+                                id: 2,
+                                label: '预期结果2',
+                                value: ''
+                            }, {
+                                id: 3,
+                                label: '预期结果3',
+                                value: ''
+                            }]
+                        }
+                        return item
+                    })
+                    //提交数据后，选择正确的靶场和靶道
+                    this.getFieldList().then(() => {
+
+                        this.getPromptOptData(id)
+                        // 获取分数趋势图表数据
+                        this.getScoringTrendData()
+                    })
+
+                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                        //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                        this.dealRapicFireHandel(this.numsOfResults - 1, id)
+                    }
+
+                } else {
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
+                }
+            }).catch(err => {
+                this.targetShootLoading = false
+            })
+            // console.log('testHandel res ', res.data)
+
+        },
+
+        /*
+         * 连发 事件
+         */
+        async dealRapicFireHandel(howmany, id) {
+            if (!this.promptid) {
+                this.$message({
+                    message: '请选择一个靶道！',
+                    type: 'warning'
+                })
+                return
+            }
+            if (!this.modelid) {
+                this.$message({
+                    message: '请选择一个模型！',
+                    type: 'warning'
+                })
+                return
+            }
+            this.targetShootLoading = true
+            this.dodgersLoading = true
+            let promises = [];
+            for (let i = 0; i < howmany; i++) {
+                promises.push(this.rapidFireHandel(id));
+            }
+            await Promise.all(promises)
+            // 从新获取靶场列表
+            this.getPromptOptData()
+            this.targetShootLoading = false
+            this.dodgersLoading = false
         },
         // 导入 plugins dialog close 回调
         uploadPluginCloseDialog() {
@@ -589,7 +929,20 @@ var app = new Vue({
         },
         // ai 评分删除
         deleteAiScoreBtn(index) {
-            this.aiScoreForm.resultList.splice(index, 1)
+            //console.log('删除', index)
+            this.$confirm('此操作将删除该期望结果, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.aiScoreForm.resultList.splice(index, 1)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+            
         },
         // 新增靶场
         addPromptField() {
@@ -607,7 +960,7 @@ var app = new Vue({
         // 打靶按钮 点击 触发对应类型事件
         clickSendBtn() {
             const command = this.sendBtnText
-            console.log('点击了' + command)
+            //console.log('点击了' + command)
             if (command === '打靶') {
                 this.targetShootHandel()
             } else if (command === '保存草稿') {
@@ -618,7 +971,7 @@ var app = new Vue({
         },
         // beforeunload 事件处理函数
         beforeunloadHandler(e) {
-            console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
+            //console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
             // 如果数据没有变动，则不需要提示用户保存
             if (this.pageChange) {
                 // 显示自定义对话框
@@ -999,7 +1352,7 @@ var app = new Vue({
             //}
             //this.chartInstance.setOption(_setOption);
         },
-        // 靶道选择变化
+        // 靶场|靶道|模型 选择变化
         promptChangeHandel(val, itemKey, oldVal) {
             // 靶道变化时，重置打靶按钮
             this.sendBtnText = '打靶'
@@ -1054,12 +1407,30 @@ var app = new Vue({
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
                         this.pageChange = false
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
                     });
                 } else {
                     // 靶道
                     this.getPromptetail(val, true)
                     // 重置 页面变化记录
                     this.pageChange = false
+                    this.sendBtns = [
+                        {
+                            text: '连发'
+                        },
+                        {
+                            text: '保存草稿'
+                        }
+                    ]
+                    this.sendBtnText = '连发'
                 }
 
             } else {
@@ -1067,6 +1438,15 @@ var app = new Vue({
                 //if (itemKey === 'modelid'){}
                 // 页面变化记录
                 this.pageChange = true
+                this.sendBtns = [
+                    {
+                        text: '打靶'
+                    },
+                    {
+                        text: '保存草稿'
+                    }
+                ]
+                this.sendBtnText = '打靶'
             }
 
         },
@@ -1093,16 +1473,34 @@ var app = new Vue({
             // ai评分标准 重置
             this.aiScoreForm = {
                 resultList: []
-            }
-            this.sendBtnText = '打靶'
+            }            
             this.numsOfResults = 1
             // 获取靶道列表
             await this.getPromptOptData().then(() => {
                 // promptid is the last one of promptOpt
                 if (this.promptOpt && this.promptOpt.length > 0) {
                     this.promptid = this.promptOpt[this.promptOpt.length - 1].id
-                // 获取详情
-                this.getPromptetail(this.promptid, true)
+                    this.sendBtns = [
+                        {
+                            text: '连发'
+                        },
+                        {
+                            text: '保存草稿'
+                        }
+                    ]
+                    this.sendBtnText = '连发'
+                    // 获取详情
+                    this.getPromptetail(this.promptid, true)
+                } else {
+                    this.sendBtns = [
+                        {
+                            text: '打靶'
+                        },
+                        {
+                            text: '保存草稿'
+                        }
+                    ]
+                    this.sendBtnText = '打靶'
                 }
                 
             })
@@ -1117,136 +1515,6 @@ var app = new Vue({
                 tactics: '重新瞄准'
             }
             this.$refs.tacticalForm.resetFields();
-        },
-        // 战术选择 dialog 提交
-        tacticalFormSubmitBtn() {
-            this.$refs.tacticalForm.validate(async (valid) => {
-                if (valid) {
-                    this.tacticalFormSubmitLoading = true
-                    let _postData = {
-                        //promptid: this.promptid,// 选择靶场
-                        modelid: this.modelid,// 选择模型
-                        content: this.content,// prompt 输入内容
-                        note: this.remarks, // prompt 输入的备注
-                        numsOfResults: 1,
-                        isDraft: this.sendBtnText === '保存草稿',
-                        suffix: this.promptParamForm.suffix,
-                        prefix: this.promptParamForm.prefix
-                    }
-                    // ai评分标准
-                    if (this.aiScoreForm.resultList.length > 0) {
-                        let _list = this.aiScoreForm.resultList.map(item => item.value)
-                        _list = _list.filter(item => item)
-                        if (_list.length > 0) {
-                            _postData.expectedResultsJson = JSON.stringify(_list)
-                        }
-
-                    }
-                    if (this.promptParamForm.variableList.length > 0) {
-                        _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
-                    }
-                    if (this.promptid) {
-                        _postData.id = this.promptid
-                        if (this.tacticalForm.tactics === '创建新战术') {
-                            _postData.isNewTactic = true // prompt 新建分支
-                        }
-                        if (this.tacticalForm.tactics === '新增子战术') {
-                            _postData.isNewSubTactic = true // prompt 新建子分支
-                        }
-                        if (this.tacticalForm.tactics === '重新瞄准') {
-                            _postData.isNewAiming = true // prompt 内容变化
-                        }
-                    }
-                    // id: null, // 
-                    this.parameterViewList.forEach(item => {
-                        // todo 单独处理
-                        if (item.formField === 'stopSequences') {
-                            _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
-                        } else if (item.formField === 'maxToken') {
-                            _postData[item.formField] = item.value ? Number(item.value) : 0
-                        } else {
-                            _postData[item.formField] = item.value
-                        }
-                    })
-
-                    // 要提交this.promptField
-                    _postData['rangeId'] = this.promptField
-                    let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
-                    // console.log('testHandel res ', res.data)
-                    this.tacticalFormSubmitLoading = false
-                    if (res.data.success) {
-                        this.pageChange = false
-                        // 关闭dialog
-                        this.tacticalFormVisible = false
-                        let {
-                            promptResultList = [],
-                            fullVersion = '',
-                            id,
-                            evalAvgScore = -1,
-                            evalMaxScore = -1
-                        } = res.data.data || {}
-
-                        // 拷贝数据
-                        let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                        delete copyResultData.promptResultList
-                        let vArr = copyResultData.fullVersion.split('-') 
-                        copyResultData.promptFieldStr = vArr[0] || ''
-                        copyResultData.promptStr = vArr[1] || ''
-                        copyResultData.tacticsStr = vArr[2] || ''
-                        this.promptDetail = copyResultData
-                        // 平均分 
-                        this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
-                        // 最高分
-                        this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
-                        // 输出列表
-                        this.outputList = promptResultList.map(item => {
-                            if (item) {
-                                item.promptId = id
-                                item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-                                item.scoreVal = 0 // 手动评分
-                                // ai评分预期结果
-                                item.alResultList = [{
-                                    id: 1,
-                                    label: '预期结果1',
-                                    value: ''
-                                }, {
-                                    id: 2,
-                                    label: '预期结果2',
-                                    value: ''
-                                }, {
-                                    id: 3,
-                                    label: '预期结果3',
-                                    value: ''
-                                }]
-                            }
-                            return item
-                        })
-                        //console.log('选择正确的靶场')
-                        //提交数据后，选择正确的靶场和靶道
-                        this.getFieldList().then(() => {
-                            this.getPromptOptData(id)
-                            // 获取分数趋势图表数据
-                            this.getScoringTrendData()
-                        })
-                  
-                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                            this.dealRapicFireHandel(this.numsOfResults - 1,id)
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        });
-                    }
-                } else {
-                    return false;
-                }
-            });
         },
         checkUseRed(item,which){
             if(item.finalScore===-1||item.finalScore==='-1') return '';   
@@ -1392,7 +1660,7 @@ var app = new Vue({
                             item.alResultList = _expectedResultsJson.map((item, index) => {
                                 return {
                                     id: index + 1,
-                                    label: `预期结果${index + 1}`,
+                                    label: `预期结果`,
                                     value: item
                                 }
                             })
@@ -1525,7 +1793,7 @@ var app = new Vue({
             let _len = this.outputList[index].alResultList.length
             this.outputList[index].alResultList.push({
                 id: _len + 1,
-                label: `预期结果${_len + 1}`,
+                label: `预期结果`,
                 value: ''
             })
         },
@@ -1542,204 +1810,6 @@ var app = new Vue({
                 res[item.name] = item.value
             })
             return JSON.stringify(res)
-        },
-        /*
-        * 打靶 事件
-        * isDraft 是否保存草稿
-        */
-        async targetShootHandel(isDraft = false) {
-            if (!this.modelid) {
-                this.$message({
-                    message: '请选择模型！',
-                    type: 'warning'
-                })
-                return
-            }
-            if (!isDraft && !this.content) {
-                this.$message({
-                    message: '请输入内容！',
-                    type: 'warning'
-                })
-                return
-            }
-            // 弹窗逻辑1，有promptid，就要弹窗
-            if (this.promptid){
-                this.tacticalFormVisible = true
-                return
-            }
-            // 弹窗逻辑2，只要保存草稿就弹
-            if (this.sendBtnText === '保存草稿'){
-                this.tacticalFormVisible = true
-                return
-            }
-
-
-            this.targetShootLoading = true
-            let _postData = {
-                //promptid: this.promptid,// 选择靶场
-                modelid: this.modelid,// 选择模型
-                content: this.content,// prompt 输入内容
-                note: this.remarks, // prompt 输入的备注,
-                numsOfResults: 1,
-                //numsOfResults: isDraft?this.numsOfResults:1,
-                isDraft: isDraft,
-                suffix: this.promptParamForm.suffix,
-                prefix: this.promptParamForm.prefix,
-
-            }
-            // ai评分标准
-            if (this.aiScoreForm.resultList.length > 0) {
-                let _list = this.aiScoreForm.resultList.map(item => item.value)
-                _list = _list.filter(item => item)
-                if (_list.length > 0) {
-                    _postData.expectedResultsJson = JSON.stringify(_list)
-                }
-            }
-            // 请求参数
-            if (this.promptParamForm.variableList.length > 0) {
-                _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
-            }
-
-            if (this.promptid) {
-                _postData.id = this.promptid
-                if (this.tacticalForm.tactics === '创建新战术') {
-                    _postData.isNewTactic = true // prompt 新建分支
-                }
-                if (this.tacticalForm.tactics === '新增子战术') {
-                    _postData.isNewSubTactic = true // prompt 新建子分支
-                }
-                if (this.tacticalForm.tactics === '重新瞄准') {
-                    _postData.isNewAiming = true // prompt 内容变化
-                }
-            }
-// id: null, // 
-            this.parameterViewList.forEach(item => {
-                // todo 单独处理
-                if (item.formField === 'stopSequences') {
-                    _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
-                } else if (item.formField === 'maxToken') {
-                    _postData[item.formField] = item.value ? Number(item.value) : 0
-                } else {
-                    _postData[item.formField] = item.value
-                }
-            })
-            console.log('testHandel _postData:', _postData)
-            // 要提交this.promptField
-            _postData['rangeId'] = this.promptField
-            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
-                this.targetShootLoading = false
-                if (res.data.success) {
-                    this.pageChange = false
-                    if (isDraft) {
-                        // 提示保存成功
-                        this.$message({
-                            message: '保存成功！',
-                            type: 'success'
-                        })
-                    }
-                    let {
-                        promptResultList = [],
-                        fullVersion = '',
-                        id,
-                        evalAvgScore = -1,
-                        evalMaxScore = -1
-                    } = res.data.data || {}
-                    // 拷贝数据
-                    let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                    delete copyResultData.promptResultList
-                    let vArr = copyResultData.fullVersion.split('-')
-                    copyResultData.promptFieldStr = vArr[0] || ''
-                    copyResultData.promptStr = vArr[1] || ''
-                    copyResultData.tacticsStr = vArr[2] || ''
-                    this.promptDetail = copyResultData
-                    // 平均分 
-                    this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
-                    // 最高分
-                    this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
-                    // 输出列表
-                    this.outputList = promptResultList.map(item => {
-                        if (item) {
-                            item.promptId = id
-                            item.version = fullVersion
-                            item.scoreType = '1' // 1 ai、2手动 
-                            item.isScoreView = false // 是否显示评分视图
-                            //时间 格式化  addTime
-                            item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-                            // 手动评分
-                            item.scoreVal = 0
-                            // ai评分预期结果
-                            item.alResultList = [{
-                                id: 1,
-                                label: '预期结果1',
-                                value: ''
-                            }, {
-                                id: 2,
-                                label: '预期结果2',
-                                value: ''
-                            }, {
-                                id: 3,
-                                label: '预期结果3',
-                                value: ''
-                            }]
-                        }
-                        return item
-                    })
-                    //提交数据后，选择正确的靶场和靶道
-                    this.getFieldList().then(() => {
-                
-                        this.getPromptOptData(id)
-                        // 获取分数趋势图表数据
-                        this.getScoringTrendData()
-                    })
-                    
-                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                        //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                        this.dealRapicFireHandel(this.numsOfResults - 1,id)
-                    }
-
-                } else {
-                    app.$message({
-                        message: res.data.errorMessage || res.data.data || 'Error',
-                        type: 'error',
-                        duration: 5 * 1000
-                    });
-                }
-            }).catch(err => {
-                this.targetShootLoading = false
-            })
-            // console.log('testHandel res ', res.data)
-
-        },
-
-        /*
-         * 连发 事件
-         */
-        async dealRapicFireHandel(howmany,id) {
-            if (!this.promptid) {
-                this.$message({
-                    message: '请选择一个靶道！',
-                    type: 'warning'
-                })
-                return
-            }
-            if (!this.modelid) {
-                this.$message({
-                    message: '请选择一个模型！',
-                    type: 'warning'
-                })
-                return
-            }
-            this.targetShootLoading = true
-            this.dodgersLoading = true
-            let promises = [];
-            for (let i = 0; i < howmany; i++) {
-                promises.push(this.rapidFireHandel(id));
-            }
-            await Promise.all(promises)
-            // 从新获取靶场列表
-            this.getPromptOptData()
-            this.targetShootLoading = false
-            this.dodgersLoading = false
         },
         async rapidFireHandel(id) {
             const promptItemId = id || this.promptid
@@ -1799,6 +1869,15 @@ app.$message({
             // todo 判断是否 记录 页面变化记录
             if (isPageChange) {
                 this.pageChange = true
+                this.sendBtns = [
+                    {
+                        text: '打靶'
+                    },
+                    {
+                        text: '保存草稿'
+                    }
+                ]
+                this.sendBtnText = '打靶'
             }
             //console.log('配置参数 重置:', this.parameterViewList)
             // 参数设置 视图配置列表
@@ -1875,6 +1954,15 @@ app.$message({
         parameterInputHandle(val, item) {
             // 页面变化记录
             this.pageChange = true
+            this.sendBtns = [
+                {
+                    text: '打靶'
+                },
+                {
+                    text: '保存草稿'
+                }
+            ]
+            this.sendBtnText = '打靶'
             let {sliderMax, sliderMin, sliderStep, isStr, isSlider, formField} = item
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
@@ -2236,14 +2324,10 @@ app.$message({
                     let expectedResultsJson = this.promptDetail.expectedResultsJson
                     if (expectedResultsJson) {
                         let _expectedResultsJson = JSON.parse(expectedResultsJson)
-                        this.promptDetail = {
-                            ...copyResultData,
-                            expectedResultsJson: _expectedResultsJson
-                        }
                         this.aiScoreForm.resultList = _expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: `预期结果${index + 1}`,
+                                label: `预期结果`,
                                 value: item
                             }
                         })
@@ -2308,7 +2392,7 @@ app.$message({
                         this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: `预期结果${index + 1}`,
+                                label: `预期结果`,
                                 value: item
                             }
                         })
@@ -2372,19 +2456,26 @@ app.$message({
             }
         },
         // 修改 prompt 别名
-        async btnEditHandle(item) {
+        async btnEditHandle(item, isSave) {
+            
+            if (!item) return
             const res = await servicePR.request({
                 method: 'post',
                 url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Modify`,
-                data: {
-                    id: item.id,
-                    nickName: item.nickName,
-                    //note: item.note 
-                }
+                data: item
             });
             if (res.data.success) {
-                //重新获取 prompt列表
+                if (isSave) {
+                    // 提示保存成功
+this.$message({
+                        message: '保存成功！',
+                        type: 'success'
+                    })
+                } else {
+// 重新获取 prompt列表
                 this.getPromptOptData()
+                }
+                
             } else {
                 app.$message({
                     message: res.data.errorMessage || res.data.data || 'Error',
@@ -2399,7 +2490,7 @@ app.$message({
             let _len = this.aiScoreForm.resultList.length
             this.aiScoreForm.resultList.push({
                 id: _len + 1,
-                label: `预期结果${_len + 1}`,
+                label: `预期结果`,
                 value: ''
             })
         },
@@ -2414,7 +2505,7 @@ app.$message({
                     resultList: _expectedResultsJson.map((item, index) => {
                         return {
                             id: index + 1,
-                            label: `预期结果${index + 1}`,
+                            label: `预期结果`,
                             value: item
                         }
                     })
@@ -2436,6 +2527,28 @@ app.$message({
         // 关闭ai评分设置 dialog
         aiScoreFormCloseDialog() {
             this.$refs.aiScoreForm.resetFields();
+        },
+        aiScoreFormClose() {
+            this.aiScoreFormVisible = false
+            // 判断 this.aiScoreForm.resultList 对比详情 this.promptDetail.expectedResultsJson 是否有改动
+            let _list = this.aiScoreForm.resultList
+            let _listVal = _list.filter(item => item.value)
+            let _expectedResultsJson = this.promptDetail.expectedResultsJson
+            if (_listVal.length > 0 && _expectedResultsJson) {
+                let _expectedResultsJson = _listVal.map(item => item.value)
+                if (JSON.stringify(_expectedResultsJson) !== _expectedResultsJson) {
+                    this.pageChange = true
+                    this.sendBtns = [
+                        {
+                            text: '打靶'
+                        },
+                        {
+                            text: '保存草稿'
+                        }
+                    ]
+                    this.sendBtnText = '打靶'
+                }
+            }
         },
         // dialog ai评分设置 提交按钮
         aiScoreFormSubmitBtn() {

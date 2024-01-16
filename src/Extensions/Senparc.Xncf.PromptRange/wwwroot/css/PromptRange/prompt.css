@@ -5,6 +5,14 @@
    text-align:left;
    
 }
+.deleteIcon {
+    /*position: absolute;
+                right: 0;
+                top: 34%;
+                transform: translateY(-50%);*/
+    color: red;
+    cursor: pointer;
+}
 .el-upload-dragger{
     width:100%;
     min-width:360px;
@@ -605,14 +613,6 @@
             box-sizing: border-box;
         }
 
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .deleteIcon {
-                /*position: absolute;
-                right: 0;
-                top: 34%;
-                transform: translateY(-50%);*/
-                color:red;
-                cursor: pointer;
-            }
 
         .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
             margin-top:10px;
@@ -853,6 +853,7 @@
     font-style: normal;
     font-weight: 400;
     cursor: pointer;
+    z-index: 1000;
 }
 
     .promptPage > .versionBtn:hover {
