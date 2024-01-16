@@ -23,7 +23,24 @@
     .modal-dialog {
         max-width: 80%;
     }
+
+    .sticky-menu {
+        position: sticky;
+        top: 0;
+    }
 </style>
+
+<script>
+    window.addEventListener('scroll', function () {
+        var menu = document.querySelector('.sticky-menu');
+        var offsetTop = menu.offsetTop;
+        if (window.pageYOffset >= offsetTop) {
+            menu.classList.add('fixed');
+        } else {
+            menu.classList.remove('fixed');
+        }
+    });
+</script>
 
 <div class="text-center">
     <h1 class="display-4">NeuCharFramework</h1>
@@ -109,71 +126,109 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body">
-                                            @foreach (var function in registerInfo.RegisterFunctionInfoList)
-                                            {
-                                                <p><strong>名称：@function.Name</strong></p>
-                                                <p><strong>说明：@function.Description</strong></p>
-                                                <p>
-                                                    参数：
-                                                </p>
-
-                                                <table class="table table-bordered table-sm">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>参数名称</th>
-                                                            <th>类型</th>
-                                                            <th>是否必须</th>
-                                                            <th>显示标题</th>
-                                                            <th>说明</th>
-                                                            <th>列表类型/选项</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var paraInfo in function.FunctionParameterInfoList)
-                                                        {
-                                                            <tr>
-                                                                <td>@paraInfo.Name</td>
-                                                                <td>@paraInfo.SystemType</td>
-                                                                <td>@(paraInfo.IsRequired ? "是" : "否")</td>
-                                                                <td>@paraInfo.Title</td>
-                                                                <td>@paraInfo.Description</td>
-                                                                <td>
-                                                                    @(paraInfo.ParameterType != ParameterType.Text ? paraInfo.ParameterType.ToString() : "")
-
-                                                                    @if (paraInfo.ParameterType != ParameterType.Text)
-                                                                    {
-                                                                        <table class="table table-bordered table-sm">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>显示名称</th>
-                                                                                    <th>值</th>
-                                                                                    <th>默认</th>
-                                                                                    <th>说明</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                @foreach (var selection in paraInfo.SelectionList.Items)
-                                                                                {
-                                                                                    <tr>
-                                                                                        <td>@selection.Text</td>
-                                                                                        <td>@selection.Value</td>
-                                                                                        <td>@(selection.DefaultSelected ? "是" : "否")</td>
-                                                                                        <td>@selection.Note</td>
-                                                                                    </tr>
-                                                                                }
-                                                                            </tbody>
-                                                                        </table>
-                                                                    }
-                                                                </td>
-                                                            </tr>
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                        <style>
+                                            .sticky-menu {
+                                                position: sticky;
+                                                top: 0;
                                             }
+                                        </style>
 
+                                        <script>
+                                            window.addEventListener('scroll', function () {
+                                                var menu = document.querySelector('.sticky-menu');
+                                                var offsetTop = menu.offsetTop;
+                                                if (window.pageYOffset >= offsetTop) {
+                                                    menu.classList.add('fixed');
+                                                } else {
+                                                    menu.classList.remove('fixed');
+                                                }
+                                            });
+                                        </script>
 
-
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <ul class="nav flex-column sticky-menu">
+                                                        @foreach (var function in registerInfo.RegisterFunctionInfoList)
+                                                        {
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="#function_@(function.Name)">@(function.Name)</a>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    @foreach (var function in registerInfo.RegisterFunctionInfoList)
+                                                    {
+                                                        <div id="function_@(function.Name)">
+                                                            <h4>@function.Name</h4>
+                                                            <p><strong>说明：@function.Description</strong></p>
+                                                            <p>
+                                                                参数：
+                                                                @if (function.FunctionParameterInfoList.Count == 0)
+                                                                {
+                                                                    <span>不支持</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <table class="table table-bordered table-sm">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>参数名称</th>
+                                                                                <th>类型</th>
+                                                                                <th>是否必须</th>
+                                                                                <th>显示标题</th>
+                                                                                <th>说明</th>
+                                                                                <th>列表类型/选项</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var paraInfo in function.FunctionParameterInfoList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@paraInfo.Name</td>
+                                                                                    <td>@paraInfo.SystemType</td>
+                                                                                    <td>@(paraInfo.IsRequired ? "是" : "否")</td>
+                                                                                    <td>@paraInfo.Title</td>
+                                                                                    <td>@paraInfo.Description</td>
+                                                                                    <td>
+                                                                                        @(paraInfo.ParameterType != ParameterType.Text ? paraInfo.ParameterType.ToString() : "")
+                                                                                        @if (paraInfo.ParameterType != ParameterType.Text)
+                                                                                        {
+                                                                                            <table class="table table-bordered table-sm">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th>显示名称</th>
+                                                                                                        <th>值</th>
+                                                                                                        <th>默认</th>
+                                                                                                        <th>说明</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    @foreach (var selection in paraInfo.SelectionList.Items)
+                                                                                                    {
+                                                                                                        <tr>
+                                                                                                            <td>@selection.Text</td>
+                                                                                                            <td>@selection.Value</td>
+                                                                                                            <td>@(selection.DefaultSelected ? "是" : "否")</td>
+                                                                                                            <td>@selection.Note</td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        }
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                }
+                                                            </p>
+                                                            <hr />
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
