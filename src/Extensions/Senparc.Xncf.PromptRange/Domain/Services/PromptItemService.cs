@@ -132,7 +132,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         request: request
                     );
                     // 关联复制预期结果过来
-                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
+                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
                 }
                 else if (request.IsNewSubTactic)
                 {
@@ -151,7 +151,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         request: request
                     );
                     // 关联复制预期结果过来
-                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
+                    toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
                 }
                 else
                 {
@@ -170,7 +170,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             request: request
                         );
                         // 关联复制预期结果过来
-                        toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson);
+                        toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
                     }
                 }
             }
