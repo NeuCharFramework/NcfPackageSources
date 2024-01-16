@@ -55,7 +55,7 @@ servicePR.interceptors.response.use(
                 }
                 if (!response.config.customAlert){
                     app.$message({
-                        message: response.data.msg||response.data.exception|| 'Error',
+                        message: response.data.errorMessage || response.data.data || 'Error',
                         type: 'error',
                         duration: 5 * 1000
                     });
@@ -64,7 +64,7 @@ servicePR.interceptors.response.use(
             }
         } else {
             app.$message({
-                message: response.msg || 'Error',
+                message: response.data.errorMessage || response.data.data || 'Error',
                 type: 'error',
                 duration: 5 * 1000
             });

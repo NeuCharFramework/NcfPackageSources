@@ -81,12 +81,12 @@
             <returns></returns>
             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginsAsync(System.Int32,System.Boolean)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginsAsync(System.Int32,System.Collections.Generic.List{System.Int32})">
             <summary>
             根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
             </summary>
             <param name="rangeId"></param>
-            <param name="isAvg"></param>
+            <param name="ids"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginWithItemAsync(Senparc.Xncf.PromptRange.PromptItem,System.String)">
@@ -862,11 +862,12 @@
             <param name="zipFile"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Int32,System.Collections.Generic.List{System.Int32})">
             <summary>
             导出靶场为 plugin
             </summary>
             <param name="rangeId"></param>
+            <param name="ids"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.String)">
@@ -895,6 +896,13 @@
             </summary>
             <param name="rangeId"></param>
             <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.DeleteAsync(System.Int32)">
+            <summary>
+            根据　ID 删除靶场
+            </summary>
+            <param name="rangeId"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.HumanScore(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_HumanScoreRequest)">
@@ -1073,6 +1081,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.EvalMaxScore">
             <summary>
             评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson">
+            <summary>
+            期望结果Json
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.Statistic_TodayTacticResponse.DataPoints">

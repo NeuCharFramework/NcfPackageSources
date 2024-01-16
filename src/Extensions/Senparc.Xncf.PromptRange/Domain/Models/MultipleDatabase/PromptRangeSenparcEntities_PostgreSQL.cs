@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
@@ -13,11 +12,12 @@ namespace Senparc.Xncf.PromptRange.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
     public class PromptRangeSenparcEntities_PostgreSQL : PromptRangeSenparcEntities
     {
-        public PromptRangeSenparcEntities_PostgreSQL(DbContextOptions<PromptRangeSenparcEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
+        public PromptRangeSenparcEntities_PostgreSQL(DbContextOptions<PromptRangeSenparcEntities_PostgreSQL> dbContextOptions) : base(
+            dbContextOptions)
         {
         }
     }
-    
+
 
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
@@ -34,7 +34,6 @@ namespace Senparc.Xncf.PromptRange.Models
 
         public SenparcDbContextFactory_PostgreSQL() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
-
         }
     }
 }

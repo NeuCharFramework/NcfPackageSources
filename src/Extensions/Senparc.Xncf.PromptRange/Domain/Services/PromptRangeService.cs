@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -82,5 +83,17 @@ public class PromptRangeService : ServiceBase<PromptRange>
     private PromptRangeDto TransEntityToDto(PromptRange promptRange)
     {
         return this.Mapper.Map<PromptRangeDto>(promptRange);
+    }
+
+    public async Task<bool> DeleteAsync(int rangeId)
+    {
+        await base.DeleteObjectAsync(p => p.Id == rangeId);
+
+        // todo 关联删除
+        var promptItemService = _serviceProvider.GetService<PromptItemService>();
+
+        await promptItemService.DeleteAllAsync(p => p.RangeId == rangeId);
+
+        return true;
     }
 }

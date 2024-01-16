@@ -232,13 +232,36 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                var result = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
-                             throw new Exception("未找到prompt");
+                var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
+                           throw new Exception($"未找到id为{request.Id}的prompt");
+                // 根据 request 中的字段，对应修改
+                if (!string.IsNullOrWhiteSpace(request.NickName))
+                {
+                    item.ModifyNickName(request.NickName);
+                }
 
-                result.ModifyNickName(request.NickName);
-                result.ModifyNote(request.Note);
+                if (!string.IsNullOrWhiteSpace(request.Note))
+                {
+                    item.ModifyNote(request.Note);
+                }
 
-                await _promptItemService.SaveObjectAsync(result);
+                await _promptItemService.SaveObjectAsync(item);
+
+                return "ok";
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> UpdateDraftAsync(int promptItemId, PromptItemDto dto)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var item = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId && p.IsDraft == true) ??
+                           throw new Exception("未找到prompt");
+
+                item.UpdateDraft(dto);
+
+                await _promptItemService.SaveObjectAsync(item);
 
                 return "ok";
             });
@@ -255,14 +278,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                var result = await _promptItemService.GetObjectAsync(p => p.Id == id) ??
-                             throw new Exception("未找到prompt");
+                var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == id) ??
+                                 throw new Exception("未找到prompt");
+                List<PromptItem> toDeleteItemList = await _promptItemService.GetFullListAsync(p => p.ParentTac == promptItem.Tactic);
+                toDeleteItemList.Add(promptItem);
 
-                await _promptItemService.DeleteObjectAsync(result);
 
+                await _promptItemService.DeleteAllAsync(toDeleteItemList);
                 // todo 关联删除所有子战术
 
-                await _promptResultService.BatchDeleteWithItemId(id);
+                var toDeleteIdList = toDeleteItemList.Select(p => p.Id).ToList();
+                await _promptResultService.BatchDeleteWithItemId(toDeleteIdList);
 
                 return "ok";
             });
@@ -314,21 +340,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// 导出靶场为 plugin
         /// </summary>
         /// <param name="rangeId"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<FileContentResult> ExportPluginsAsync(int rangeId)
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<FileContentResult> ExportPluginsAsync(int rangeId, List<int> ids = null)
         {
-            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId);
+            ids ??= new();
+            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId, ids);
 
             return await BuildZipStream(rangePath);
         }
+
 
         /// <summary>
         /// 导出指定版本的靶道为 plugin
         /// </summary>
         /// <param name="itemVersion"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<FileContentResult> ExportPluginsAsync(string itemVersion)
         {
             var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
@@ -352,14 +381,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 buffer = new byte[fileStream.Length];
                 var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
             }
-            
+
             Directory.Delete(rangePath, true);
-            
+
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
-                FileDownloadName = "ExportedPlugins.zip"
+                FileDownloadName = $"{Path.GetFileName(rangePath)}.zip"
             };
-            
+
             return res;
         }
     }

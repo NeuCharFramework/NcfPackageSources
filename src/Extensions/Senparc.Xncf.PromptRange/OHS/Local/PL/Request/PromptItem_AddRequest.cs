@@ -51,12 +51,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         [Required]
         public int NumsOfResults { get; set; }
 
+        [Required] public bool IsTopTactic { get; set; } = false;
         [Required] public bool IsNewTactic { get; set; } = false;
         [Required] public bool IsNewSubTactic { get; set; } = false;
 
         [Required] public bool IsNewAiming { get; set; } = false;
 
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         [Required] public int RangeId { get; set; }
 

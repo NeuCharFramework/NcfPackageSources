@@ -257,11 +257,18 @@ public class PromptItem : EntityBase<int>
 
     #endregion
 
-    public PromptItem UpdateExpectedResultsJson(string expectedResultsJson)
+    public PromptItem UpdateExpectedResultsJson(string expectedResultsJson, bool overwrite = true)
     {
-        this.ExpectedResultsJson = expectedResultsJson;
+        if (!overwrite && !string.IsNullOrEmpty(this.ExpectedResultsJson))
+        {
+            return this;
+        }
+        else
+        {
+            this.ExpectedResultsJson = expectedResultsJson;
 
-        return this;
+            return this;
+        }
     }
 
     public PromptItem ShareSwitch(bool show)
@@ -339,6 +346,32 @@ public class PromptItem : EntityBase<int>
     public PromptItem UpdateContent(string skPrompt)
     {
         Content = skPrompt;
+
+        return this;
+    }
+
+    public PromptItem UpdateDraft(PromptItemDto dto)
+    {
+        RangeId = dto.RangeId;
+        RangeName = dto.RangeName;
+
+        Content = dto.Content;
+
+        ModelId = dto.ModelId;
+        TopP = dto.TopP;
+        Temperature = dto.Temperature;
+        MaxToken = dto.MaxToken;
+        FrequencyPenalty = dto.FrequencyPenalty;
+        PresencePenalty = dto.PresencePenalty;
+        StopSequences = dto.StopSequences;
+
+        Note = dto.Note;
+
+        ExpectedResultsJson = dto.ExpectedResultsJson;
+
+        Prefix = dto.Prefix;
+        Suffix = dto.Suffix;
+        VariableDictJson = dto.VariableDictJson;
 
         return this;
     }

@@ -8,7 +8,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
     public class TacticTree_GetResponse
     {
         public List<TreeNode<PromptItem_GetIdAndNameResponse>> RootNodeList { get; set; }
-        
+
         public DateTime QueryTime { get; set; }
 
         public TacticTree_GetResponse(List<TreeNode<PromptItem_GetIdAndNameResponse>> rootNodeList)

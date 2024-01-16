@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
@@ -34,7 +33,6 @@ namespace Senparc.Xncf.PromptRange.Models
 
         public SenparcDbContextFactory_Sqlite() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
-
         }
     }
 }

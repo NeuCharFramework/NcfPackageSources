@@ -21,16 +21,20 @@ namespace Senparc.Xncf.PromptRange.Models
             {
                 if (_rootDirectoryPath == null)
                 {
-                    var projectPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}", AppContext.BaseDirectory);//项目根目录
+                    var projectPath =
+                        Path.GetFullPath($"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}",
+                            AppContext.BaseDirectory); //项目根目录
 
-                    var webPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Senparc.Web",/*找到 Web目录，以获取统一的数据库连接字符串配置*/
-                                                   projectPath);
+                    var webPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Senparc.Web", /*找到 Web目录，以获取统一的数据库连接字符串配置*/
+                        projectPath);
                     if (Directory.Exists(webPath))
                     {
-                        _rootDirectoryPath = webPath;//优先使用Web统一配置
+                        _rootDirectoryPath = webPath; //优先使用Web统一配置
                     }
+
                     _rootDirectoryPath = projectPath;
                 }
+
                 return _rootDirectoryPath;
             }
         }

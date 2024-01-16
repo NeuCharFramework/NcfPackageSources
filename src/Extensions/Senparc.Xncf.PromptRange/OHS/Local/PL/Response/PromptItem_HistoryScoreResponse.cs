@@ -7,7 +7,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public List<string> XList { get; set; }
 
         public List<decimal> YList { get; set; }
-        
+
         public List<decimal> ZList { get; set; }
 
         public PromptItem_HistoryScoreResponse(List<decimal> zList)
