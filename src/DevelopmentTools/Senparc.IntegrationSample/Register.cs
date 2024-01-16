@@ -16,9 +16,17 @@ namespace Senparc.IntegrationSample
     /// </summary>
     public static class Register
     {
+        public static DateTime StartTime { get; }
+
+        static Register()
+        {
+            StartTime = System.DateTime.Now;
+        }
+
         public static void AddNcf<TDatabaseConfiguration>(this WebApplicationBuilder builder)
             where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
+
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine<TDatabaseConfiguration>();
             Console.WriteLine("============ logMsg =============");
@@ -73,5 +81,16 @@ namespace Senparc.IntegrationSample
             var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*默认值，不启用*/;
             return useRedis;
         }
+
+        /// <summary>
+        /// 输出启动成功标志
+        /// </summary>
+        /// <param name="app"></param>
+        public static void ShowSuccessTip(this WebApplication app)
+        {
+            //输出启动成功标志
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t启动工作准备就绪\r\n\t\t用时：{SystemTime.NowDiff(StartTime).TotalSeconds} s");
+        }
+
     }
 }

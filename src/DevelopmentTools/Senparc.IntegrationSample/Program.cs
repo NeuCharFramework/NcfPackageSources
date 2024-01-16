@@ -28,9 +28,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapRazorPages();
-//    endpoints.MapControllers();
-//});
+
+app.ShowSuccessTip();
+
 app.Run();
