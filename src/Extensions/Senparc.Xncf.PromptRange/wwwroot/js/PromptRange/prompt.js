@@ -89,6 +89,7 @@ var app = new Vue({
             promptLeftShow: false, // prompt左侧区域整体 显隐
             parameterViewShow: false, // 模型参数设置 显隐 false是默认显示 trun是隐藏
             targetShootLoading: false, // 打靶loading
+            dodgersLoading: false, // 连发loading
             // 配置 输入 ---end
             // prompt请求参数 ---start
             promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
@@ -228,6 +229,9 @@ var app = new Vue({
                 rangeId: [
                     { required: true, message: '请选择需要导出的靶场', trigger: 'change' }
                 ],
+                promptIdList: [
+                    { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
+                ]
             },
             versionData: [],
             promptDetail: {},
@@ -250,7 +254,7 @@ var app = new Vue({
     },
     computed: {
         isPageLoading() {
-            let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading
+            let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading || this.dodgersLoading
             return result
         },
     },
@@ -1726,6 +1730,7 @@ var app = new Vue({
                 return
             }
             this.targetShootLoading = true
+            this.dodgersLoading = true
             let promises = [];
             for (let i = 0; i < howmany; i++) {
                 promises.push(this.rapidFireHandel(id));
@@ -1734,6 +1739,7 @@ var app = new Vue({
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
+            this.dodgersLoading = false
         },
         async rapidFireHandel(id) {
             const promptItemId = id || this.promptid
@@ -2197,11 +2203,12 @@ app.$message({
 //console.log('getModelOptData:', res)
                 
                     this.promptOpt = _promptOpt
+                    if (id) {
+                        this.promptid = id
+                    }
                 
                 }
-                if (id) {
-                    this.promptid = id
-                }
+                
 
             } else {
                 app.$message({
@@ -2226,13 +2233,14 @@ app.$message({
                 this.promptDetail = copyResultData
                 //如果获取到的结果没有，则延续以往的expectedJson.
                 if (copyResultData.expectedResultsJson) {
-                    const expectedResultsJson = this.promptDetail.expectedResultsJson
+                    let expectedResultsJson = this.promptDetail.expectedResultsJson
                     if (expectedResultsJson) {
+                        let _expectedResultsJson = JSON.parse(expectedResultsJson)
                         this.promptDetail = {
                             ...copyResultData,
-                            expectedResultsJson
+                            expectedResultsJson: _expectedResultsJson
                         }
-                        this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
+                        this.aiScoreForm.resultList = _expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
                                 label: `预期结果${index + 1}`,
