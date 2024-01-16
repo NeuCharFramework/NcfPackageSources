@@ -278,14 +278,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                var result = await _promptItemService.GetObjectAsync(p => p.Id == id) ??
-                             throw new Exception("未找到prompt");
+                var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == id) ??
+                                 throw new Exception("未找到prompt");
+                List<PromptItem> toDeleteItemList = await _promptItemService.GetFullListAsync(p => p.ParentTac == promptItem.Tactic);
+                toDeleteItemList.Add(promptItem);
 
-                await _promptItemService.DeleteObjectAsync(result);
 
+                await _promptItemService.DeleteAllAsync(toDeleteItemList);
                 // todo 关联删除所有子战术
 
-                await _promptResultService.BatchDeleteWithItemId(id);
+                var toDeleteIdList = toDeleteItemList.Select(p => p.Id).ToList();
+                await _promptResultService.BatchDeleteWithItemId(toDeleteIdList);
 
                 return "ok";
             });

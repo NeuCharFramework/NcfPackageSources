@@ -898,6 +898,13 @@
             <param name="alias"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.DeleteAsync(System.Int32)">
+            <summary>
+            根据　ID 删除靶场
+            </summary>
+            <param name="rangeId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.HumanScore(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_HumanScoreRequest)">
             <summary>
             手动打分

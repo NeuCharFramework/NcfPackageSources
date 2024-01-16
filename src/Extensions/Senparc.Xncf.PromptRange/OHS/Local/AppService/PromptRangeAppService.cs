@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
-using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -60,7 +59,9 @@ public class PromptRangeAppService : AppServiceBase
     public async Task<AppResponseBase<List<PromptRangeDto>>> GetListAsync()
     {
         return await this.GetResponseAsync<AppResponseBase<List<PromptRangeDto>>, List<PromptRangeDto>>(
-            async (response, logger) => { return await _promptRangeService.GetListAsync(); });
+            async (response, logger) =>
+                await _promptRangeService.GetListAsync()
+        );
     }
 
     /// <summary>
@@ -75,6 +76,28 @@ public class PromptRangeAppService : AppServiceBase
         return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
             async (response, logger) =>
                 await _promptRangeService.ChangeAliasAsync(rangeId, alias)
+        );
+    }
+
+    /// <summary>
+    /// 根据　ID 删除靶场
+    /// </summary>
+    /// <param name="rangeId"></param>
+    /// <returns></returns>
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
+    public async Task<StringAppResponse> DeleteAsync(int rangeId)
+    {
+        return await this.GetResponseAsync<StringAppResponse, string>(
+            async (response, logger) =>
+            {
+                var status = await _promptRangeService.DeleteAsync(rangeId);
+                if (status)
+                {
+                    return "ok";
+                }
+
+                throw new NcfExceptionBase("删除失败");
+            }
         );
     }
 }
