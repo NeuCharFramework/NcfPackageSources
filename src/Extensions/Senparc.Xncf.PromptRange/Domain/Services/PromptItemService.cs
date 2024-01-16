@@ -114,8 +114,9 @@ public class PromptItemService : ServiceBase<PromptItem>
                     p.FullVersion.EndsWith("A1")
                 );
 
-                var maxTactic = fullList.Select(p => int.Parse(p.Tactic))
-                    .Max();
+                var maxTactic = fullList.Count == 0
+                    ? 0
+                    : fullList.Select(p => int.Parse(p.Tactic)).Max();
                 toSavePromptItem = new PromptItem(
                     rangeId: basePrompt.RangeId,
                     rangeName: rangeName,
@@ -136,9 +137,11 @@ public class PromptItemService : ServiceBase<PromptItem>
                     p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                 );
 
-                var maxTactic = fullList.Select(p => p.Tactic.Substring((parentTac == "" ? "" : parentTac + ".").Length))
-                    .Select(int.Parse)
-                    .Max();
+                var maxTactic = fullList.Count == 0
+                    ? 0
+                    : fullList.Select(p => p.Tactic.Substring((parentTac == "" ? "" : parentTac + ".").Length))
+                        .Select(int.Parse)
+                        .Max();
 
                 var tactic = (parentTac == "" ? "" : parentTac + ".") + $"{maxTactic + 1}";
 
@@ -163,9 +166,11 @@ public class PromptItemService : ServiceBase<PromptItem>
                          && p.FullVersion.EndsWith("A1")
                 );
 
-                var maxTactic = fullList.Select(p => p.Tactic.Substring((parentTac + ".").Length))
-                    .Select(int.Parse)
-                    .Max();
+                var maxTactic = fullList.Count == 0
+                    ? 0
+                    : fullList.Select(p => p.Tactic.Substring((parentTac + ".").Length))
+                        .Select(int.Parse)
+                        .Max();
 
                 toSavePromptItem = new PromptItem(
                     rangeId: basePrompt.RangeId,
@@ -184,7 +189,8 @@ public class PromptItemService : ServiceBase<PromptItem>
                     // p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A')))
                     p.FullVersion.StartsWith($"{basePrompt.RangeName}-T{basePrompt.Tactic}-A")
                 );
-                var maxAiming = fullList.Select(p => p.Aiming).Max();
+
+                var maxAiming = fullList.Count == 0 ? 0 : fullList.Select(p => p.Aiming).Max();
                 toSavePromptItem = new PromptItem(
                     rangeId: basePrompt.RangeId,
                     rangeName: rangeName,
