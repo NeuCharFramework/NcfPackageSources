@@ -16,10 +16,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public IWantToRun IWantToRun { get; set; }
 
-        private string _userId = "XncfBuilder";//区分用户
-        private string _modelName = "text-davinci-003";//默认使用模型
+        private string _userId = "XncfBuilder"; //区分用户
+        private string _modelName = "text-davinci-003"; //默认使用模型
 
-        public PromptService(/*IAiHandler aiHandler*/)
+        public PromptService( /*IAiHandler aiHandler*/)
         {
             //this._aiHandler = (SemanticAiHandler)aiHandler;
             this._aiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
@@ -29,8 +29,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public IWantToRun ReBuildKernel(string userId = null, string modelName = null)
         {
             IWantToRun = this._aiHandler.IWantTo()
-                           .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelName ?? _modelName)
-                           .BuildKernel();
+                .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelName ?? _modelName)
+                .BuildKernel();
             return IWantToRun;
         }
 
@@ -45,7 +45,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </param>
         /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
+        public async Task<string> GetPromptResultAsync(string input, SenparcAiArguments context = null,
+            Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户

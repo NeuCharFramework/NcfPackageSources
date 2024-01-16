@@ -33,7 +33,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            PromptItemService promptItemService, PromptRangeService promptRangeService) : base(repo,
+            PromptItemService promptItemService, 
+            PromptRangeService promptRangeService) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;

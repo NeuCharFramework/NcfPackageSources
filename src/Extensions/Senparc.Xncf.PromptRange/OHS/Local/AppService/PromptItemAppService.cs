@@ -232,13 +232,36 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                var result = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
-                             throw new Exception("未找到prompt");
+                var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
+                           throw new Exception($"未找到id为{request.Id}的prompt");
+                // 根据 request 中的字段，对应修改
+                if (!string.IsNullOrWhiteSpace(request.NickName))
+                {
+                    item.ModifyNickName(request.NickName);
+                }
 
-                result.ModifyNickName(request.NickName);
-                result.ModifyNote(request.Note);
+                if (!string.IsNullOrWhiteSpace(request.Note))
+                {
+                    item.ModifyNote(request.Note);
+                }
 
-                await _promptItemService.SaveObjectAsync(result);
+                await _promptItemService.SaveObjectAsync(item);
+
+                return "ok";
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> UpdateDraftAsync(int promptItemId, PromptItemDto dto)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var item = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId && p.IsDraft == true) ??
+                           throw new Exception("未找到prompt");
+
+                item.UpdateDraft(dto);
+
+                await _promptItemService.SaveObjectAsync(item);
 
                 return "ok";
             });

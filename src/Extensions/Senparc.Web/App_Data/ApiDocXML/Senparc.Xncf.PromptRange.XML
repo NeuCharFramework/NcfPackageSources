@@ -1076,6 +1076,11 @@
             评估参数
             </summary>
         </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson">
+            <summary>
+            期望结果Json
+            </summary>
+        </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.Statistic_TodayTacticResponse.DataPoints">
             <summary>
             x,y,z

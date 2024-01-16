@@ -349,4 +349,30 @@ public class PromptItem : EntityBase<int>
 
         return this;
     }
+
+    public PromptItem UpdateDraft(PromptItemDto dto)
+    {
+        RangeId = dto.RangeId;
+        RangeName = dto.RangeName;
+
+        Content = dto.Content;
+
+        ModelId = dto.ModelId;
+        TopP = dto.TopP;
+        Temperature = dto.Temperature;
+        MaxToken = dto.MaxToken;
+        FrequencyPenalty = dto.FrequencyPenalty;
+        PresencePenalty = dto.PresencePenalty;
+        StopSequences = dto.StopSequences;
+
+        Note = dto.Note;
+
+        ExpectedResultsJson = dto.ExpectedResultsJson;
+
+        Prefix = dto.Prefix;
+        Suffix = dto.Suffix;
+        VariableDictJson = dto.VariableDictJson;
+
+        return this;
+    }
 }
