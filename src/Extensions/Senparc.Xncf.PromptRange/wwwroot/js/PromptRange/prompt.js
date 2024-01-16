@@ -413,6 +413,7 @@ var app = new Vue({
                         copyResultData.promptStr = vArr[1] || ''
                         copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
+                        this.numsOfResults = 1
                         this.sendBtns = [
                             {
                                 text: '连发'
@@ -571,6 +572,7 @@ var app = new Vue({
                     copyResultData.promptStr = vArr[1] || ''
                     copyResultData.tacticsStr = vArr[2] || ''
                     this.promptDetail = copyResultData
+                    this.numsOfResults = 1
                     this.sendBtns = [
                         {
                             text: '连发'
@@ -2538,6 +2540,7 @@ this.$message({
                 let _expectedResultsJson = _listVal.map(item => item.value)
                 if (JSON.stringify(_expectedResultsJson) !== _expectedResultsJson) {
                     this.pageChange = true
+                    this.numsOfResults = 1
                     this.sendBtns = [
                         {
                             text: '打靶'
