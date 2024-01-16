@@ -2399,7 +2399,7 @@ app.$message({
         aiScoreFormOpenDialog() {
             let _list = this.aiScoreForm.resultList
             let _listVal = _list.filter(item => item.value)
-            console.log('_listVal:', _list, _listVal, this.promptDetail)
+            //console.log('_listVal:', _list, _listVal, this.promptDetail)
             if (_list.length === 1 && _listVal.length ===0&&this.promptDetail && this.promptDetail.expectedResultsJson) {
                 let _expectedResultsJson = JSON.parse(this.promptDetail.expectedResultsJson)
                 this.aiScoreForm = {
