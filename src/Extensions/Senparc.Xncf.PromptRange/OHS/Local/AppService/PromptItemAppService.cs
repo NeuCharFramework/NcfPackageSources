@@ -316,7 +316,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="rangeId"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<FileContentResult> ExportPluginsAsync(int rangeId, List<int> ids = null)
         {
             ids ??= new();

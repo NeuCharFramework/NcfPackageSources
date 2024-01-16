@@ -543,7 +543,7 @@
 <el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
             <el-form-item label="靶场" prop="rangeId" label-width="130px">
-                <el-select v-model="expectedPluginFoem.rangeId" placeholder="请选择靶场" class="selectRow">
+                <el-select v-model="expectedPluginFoem.rangeId" placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
                     <el-option v-for="item in promptFieldOpt"
                                v-key="item.id"
                                :label="item.label"
@@ -551,6 +551,22 @@
                                :disabled="item.disabled">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="靶道" prop="promptIdList" label-width="130px">
+                <el-select v-model="expectedPluginFoem.promptIdList" :disabled="!expectedPluginFoem.rangeId"
+                           multiple
+                           collapse-tags
+                           placeholder="请选择靶道" class="selectRow" @@change="handleCheckedChange">
+                    <el-option v-for="item in expectedPluginFieldList"
+                               v-key="item.id"
+                               :label="item.label"
+                               :value="item.value"
+                               :disabled="item.disabled">
+                    </el-option>
+                </el-select>
+               <div>
+                    全选： <el-checkbox :disabled="!expectedPluginFoem.rangeId" :indeterminate="isIndeterminate" v-model="checkAll" @@change="handleCheckAllChange">全选</el-checkbox>
+               </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

@@ -238,9 +238,14 @@ var app = new Vue({
             jsZip: null, // 压缩实例
             expectedPluginVisible: false, // Plugin 导出dialog 显隐
             expectedPluginFoem: {
-                rangeId:''
+                rangeId: '', // 靶场id
+                promptIdList:[] //  靶道idList
             },
-            contentTextareaRows:14, //prompt 输入框的行数
+            // 靶道列表
+            expectedPluginFieldList: [],
+            contentTextareaRows: 14, //prompt 输入框的行数
+            isIndeterminate: true, // 全选靶道
+            checkAll: false, // 全选靶道
         };
     },
     computed: {
@@ -501,6 +506,12 @@ var app = new Vue({
                             this.resetPageData()
                         }
                     })
+                } else {
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
                 }
             }).catch(() => {
                 this.isPageLoading = false
@@ -509,20 +520,49 @@ var app = new Vue({
         // 导出 plugins dialog close 回调
         expectedPluginCloseDialog() {
             this.expectedPluginFoem = {
-                rangeId: ''
+                rangeId: '', // 靶场id
+                promptIdList:[] //  靶道idList
             }
+            this.expectedPluginFieldList = []
+            this.checkAll = false // 全选靶道
+            this.isIndeterminate = true // 全选靶道
             this.$refs.expectedPluginFoem.resetFields();
+        },
+        // 导出 plugins 选择靶场 change
+        expectedPluginPromptFieldChange(val) {
+            // 切换靶场时 重新获取expectedPluginFieldList 并  默认全选选择的靶道promptIdList
+            this.expectedPluginFieldList = []
+            this.expectedPluginFoem.promptIdList = []
+            // 获取靶道列表
+            this.getPromptOptData(val, true)
+        },
+        handleCheckedChange(value) {
+            let checkedCount = value.length;
+            this.checkAll = checkedCount === this.expectedPluginFieldList.length;
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.expectedPluginFieldList.length;
+        },
+        // 全选靶道 change
+        handleCheckAllChange(val) {
+            this.expectedPluginFoem.promptIdList = val ? this.expectedPluginFieldList.map(item => item.id) : []
+            this.isIndeterminate = false // 全选靶道
         },
         // 导出 plugins 确认
         btnExpectedPlugins() {
             this.$refs.expectedPluginFoem.validate(async (valid) => {
                 if (valid) {
                     this.isPageLoading = true
+                    let _zipname = this.promptFieldOpt.find(item => item.id === this.expectedPluginFoem.rangeId).alias || 'plugins'
                     servicePR.request({
                         url: "/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.ExportPluginsAsync",
-                        method: 'get',
+                        method: 'post',
                         responseType: 'blob',
-                        params: this.expectedPluginFoem
+                        headers: {
+                           'Content-Type' :'application/json'
+                        },
+                        params: {
+                            rangeId: this.expectedPluginFoem.rangeId
+                        },
+                        data: JSON.stringify(this.expectedPluginFoem.promptIdList)
                     }).then((res) => {
                         this.isPageLoading = false
                         this.expectedPluginVisible = false
@@ -530,7 +570,7 @@ var app = new Vue({
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'plugins.zip'; // 设置下载的文件名，可以根据需要修改
+                        a.download = `${_zipname}.zip`; // 设置下载的文件名，可以根据需要修改
                         a.click(); // 触发点击事件开始下载
                         // 下载完成后删除 <a> 标签
                         URL.revokeObjectURL(url); // 释放 URL 对象
@@ -933,11 +973,18 @@ var app = new Vue({
                         }),
                         seriesData: _seriesData
                     }
+                } else {
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
                 }
-            }
+                // 初始化图表 接口调用成功
+                this.chartInitialization()
+            } 
 
-            // 初始化图表 接口调用成功
-            this.chartInitialization()
+            
             //let _setOption = {
             //    xAxis: {
             //        data: this.chartData.xData || []
@@ -996,6 +1043,9 @@ var app = new Vue({
                     }).catch(() => {
                         // 重新获取靶道列表
                         //this.getFieldList()
+                        this.aiScoreForm = {
+                            resultList: []
+                        }
                         // 靶道
                         this.getPromptetail(val, true)
                         // 重置 页面变化记录
@@ -1035,6 +1085,10 @@ var app = new Vue({
                 prefix: '',
                 suffix: '',
                 variableList: []
+            }
+            // ai评分标准 重置
+            this.aiScoreForm = {
+                resultList: []
             }
             this.sendBtnText = '打靶'
             this.numsOfResults = 1
@@ -1176,10 +1230,15 @@ var app = new Vue({
                   
                         if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                             //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                            this.dealRapicFireHandel(this.numsOfResults - 1)
+                            this.dealRapicFireHandel(this.numsOfResults - 1,id)
                         }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        });
                     }
-
                 } else {
                     return false;
                 }
@@ -1203,6 +1262,12 @@ var app = new Vue({
                 let _listData = res?.data?.data?.rootNodeList || []
                 /*console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))*/
                 this.versionTreeData = this.treeArrayFormat(_listData)
+            } else {
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                });
             }
         },
         //树形数据格式化  参数data:要格式化的数据,child为要格式化数据的子数组值名
@@ -1348,6 +1413,12 @@ var app = new Vue({
                 })
 
 
+            } else {
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                });
             }
         },
         // 输出 保存评分
@@ -1364,6 +1435,12 @@ var app = new Vue({
                     this.getOutputList(item.promptId)
                     // 重新获取图表
                     this.getScoringTrendData()
+                } else {
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
                 }
             }
             if (item.scoreType === '2') {
@@ -1380,7 +1457,11 @@ var app = new Vue({
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
-                    alert('error!');
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
                 }
             }
 
@@ -1609,9 +1690,15 @@ var app = new Vue({
                     
                     if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
                         //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                        this.dealRapicFireHandel(this.numsOfResults - 1)
+                        this.dealRapicFireHandel(this.numsOfResults - 1,id)
                     }
 
+                } else {
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
                 }
             }).catch(err => {
                 this.targetShootLoading = false
@@ -1623,7 +1710,7 @@ var app = new Vue({
         /*
          * 连发 事件
          */
-        async dealRapicFireHandel(howmany) {
+        async dealRapicFireHandel(howmany,id) {
             if (!this.promptid) {
                 this.$message({
                     message: '请选择一个靶道！',
@@ -1641,20 +1728,25 @@ var app = new Vue({
             this.targetShootLoading = true
             let promises = [];
             for (let i = 0; i < howmany; i++) {
-                promises.push(this.rapidFireHandel());
+                promises.push(this.rapidFireHandel(id));
             }
             await Promise.all(promises)
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
         },
-        async rapidFireHandel() {
-            const promptItemId = this.promptid
+        async rapidFireHandel(id) {
+            const promptItemId = id || this.promptid
             const numsOfResults = 1
             return await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
                 {params: {promptItemId, numsOfResults}}).then(res => {
                 //console.log('testHandel res ', res.data)
-                if (!res.data.success){
+                    if (!res.data.success) {
+app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
                     return 
                 }
                 this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
@@ -1820,15 +1912,22 @@ var app = new Vue({
                 await servicePR.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', {data: [item.id]})
                     .then(res => {
                         //reload model list
-                        // 重置模型列表
-                        this.modelid = ''
-                        this.getModelOptData()
-                        this.$message({
-                            type: res.data.success ? 'success' : 'error',
-                            message: res.data.success ? '删除成功' : '删除失败'
-                        });
+                        if (res.data.success) {
+                            app.$message({
+                                message: res.data.errorMessage || res.data.data || 'Error',
+                                type: 'error',
+                                duration: 5 * 1000
+                            });
+                        } else {
+                            // 重置模型列表
+                            this.modelid = ''
+                            this.getModelOptData()
+                            this.$message({
+                                type: res.data.success ? 'success' : 'error',
+                                message: res.data.success ? '删除成功' : '删除失败'
+                            });
+                        }
                     })
-
             })
         },
 
@@ -1904,6 +2003,12 @@ var app = new Vue({
                         disabled: false
                     }
                 })
+            } else {
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
             }
         },
         // 新增模型 dialog 关闭
@@ -1944,6 +2049,11 @@ var app = new Vue({
                         // 关闭dialog
                         this.modelFormVisible = false
                     } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
                         this.modelFormSubmitLoading = false
                     }
                 } else {
@@ -1971,7 +2081,7 @@ var app = new Vue({
                         +that.fieldForm.alias, {})
                     if (res.data.success) {
                         // 重新获取靶场列表
-                        await this.getFieldList().then(()=> {
+                        await this.getFieldList().then(() => {
                             that.promptField = res.data.data.id
                             this.resetPageData()
                         })
@@ -1982,6 +2092,12 @@ var app = new Vue({
                         })
                         // 关闭dialog
                         this.fieldFormVisible = false
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
                     }
                     
                 } else {
@@ -1997,10 +2113,16 @@ var app = new Vue({
                         this.promptFieldOpt = res.data.data.map(item => {
                             return {
                                 ...item,
-                                label: item.alias+'（'+item.rangeName+'）',
+                                label: item.alias + '（' + item.rangeName + '）',
                                 value: item.id,
                                 disabled: false
                             }
+                        })
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
                         })
                     }
                 })
@@ -2020,6 +2142,12 @@ var app = new Vue({
                 })
                 if (res.data.success) {
                     this.getFieldList()
+                } else {
+                    app.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    })
                 }
             }).catch(() => {
                 this.$message({
@@ -2030,9 +2158,13 @@ var app = new Vue({
             
         },
         // 获取靶道 下拉列表数据
-        async getPromptOptData(id) {
+        async getPromptOptData(id, isExpected) {
             // find rangeName by id
-            let _find= this.promptFieldOpt.find(item => item.value === this.promptField)
+            let _find = this.promptFieldOpt.find(item => item.value === this.promptField)
+            if (isExpected) {
+                _find = this.promptFieldOpt.find(item => item.value === this.expectedPluginFoem.rangeId )
+            }
+            
             const name = _find ? _find.rangeName : ''
             let res = await servicePR
                 .get('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetIdAndName', {
@@ -2041,22 +2173,42 @@ var app = new Vue({
                     }
                 })
             if (res.data.success) {
-                //console.log('getModelOptData:', res)
                 let _optList = res.data.data || []
-                this.promptOpt = _optList.map(item => {
+                let _promptIdList = []
+                let _promptOpt = _optList.map(item => {
                     const avg = scoreFormatter(item.evalAvgScore)
                     const max = scoreFormatter(item.evalMaxScore)
+                    _promptIdList.push(item.id)
                     return {
                         ...item,
-                        label: `名称：${item.nickName ||  '未设置'} | 版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
+                        label: `名称：${item.nickName || '未设置'} | 版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
                         value: item.id,
                         disabled: false
                     }
                 })
+                if (isExpected) {
+                    // 设置 默认 全选
+                    this.expectedPluginFieldList = _promptOpt
+                    this.expectedPluginFoem.promptIdList = _promptIdList
+                    this.checkAll = true // 全选靶道
+                    this.isIndeterminate =  false // 全选靶道
+                        
+                } else {
+//console.log('getModelOptData:', res)
+                
+                    this.promptOpt = _promptOpt
+                
+                }
                 if (id) {
                     this.promptid = id
                 }
 
+            } else {
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
             }
         },
         // 获取 prompt 详情
@@ -2073,7 +2225,7 @@ var app = new Vue({
                 copyResultData.tacticsStr = vArr[2] || ''
                 this.promptDetail = copyResultData
                 //如果获取到的结果没有，则延续以往的expectedJson.
-                if (!copyResultData.expectedResultsJson) {
+                if (copyResultData.expectedResultsJson) {
                     const expectedResultsJson = this.promptDetail.expectedResultsJson
                     if (expectedResultsJson) {
                         this.promptDetail = {
@@ -2089,6 +2241,10 @@ var app = new Vue({
                         })
                     }
 
+                } else {
+                    this.aiScoreForm = {
+                        resultList: []
+                    }
                 }
                 if (overwrite) {
                     // 重新获取输出列表
@@ -2137,9 +2293,9 @@ var app = new Vue({
 
                     }
                     this.promptParamForm = _promptParamForm
-                    
+
                     //ai 期望结果里面增加接口返回内容
-                    if(res.data.data.expectedResultsJson) {
+                    if (res.data.data.expectedResultsJson) {
                         const expectedResultsJson = JSON.parse(res.data.data.expectedResultsJson)
                         this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
                             return {
@@ -2152,6 +2308,12 @@ var app = new Vue({
                 }
 
 
+            } else {
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
             }
         },
         // 删除 prompt 
@@ -2194,8 +2356,11 @@ var app = new Vue({
                     message: '删除成功!'
                 });
             } else {
-                let _msg = res?.data?.errorMessage || 'error'
-                alert(_msg)
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
             }
         },
         // 修改 prompt 别名
@@ -2213,7 +2378,11 @@ var app = new Vue({
                 //重新获取 prompt列表
                 this.getPromptOptData()
             } else {
-                alert("修改失败")
+                app.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
             }
         },
 
@@ -2280,6 +2449,12 @@ var app = new Vue({
                         this.getPromptetail(this.promptid, false)
                         // 关闭dialog
                         this.aiScoreFormVisible = false
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
                     }
                 } else {
                     return false;
