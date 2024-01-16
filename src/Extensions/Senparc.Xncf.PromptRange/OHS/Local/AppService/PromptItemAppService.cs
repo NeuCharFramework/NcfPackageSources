@@ -314,21 +314,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// 导出靶场为 plugin
         /// </summary>
         /// <param name="rangeId"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<FileContentResult> ExportPluginsAsync(int rangeId)
+        public async Task<FileContentResult> ExportPluginsAsync(int rangeId, List<int> ids = null)
         {
-            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId);
+            ids ??= new();
+            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId, ids);
 
             return await BuildZipStream(rangePath);
         }
+
 
         /// <summary>
         /// 导出指定版本的靶道为 plugin
         /// </summary>
         /// <param name="itemVersion"></param>
         /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<FileContentResult> ExportPluginsAsync(string itemVersion)
         {
             var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
@@ -352,14 +355,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 buffer = new byte[fileStream.Length];
                 var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
             }
-            
+
             Directory.Delete(rangePath, true);
-            
+
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
                 FileDownloadName = $"{Path.GetFileName(rangePath)}.zip"
             };
-            
+
             return res;
         }
     }

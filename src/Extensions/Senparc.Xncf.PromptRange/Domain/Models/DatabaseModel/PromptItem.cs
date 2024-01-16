@@ -257,11 +257,18 @@ public class PromptItem : EntityBase<int>
 
     #endregion
 
-    public PromptItem UpdateExpectedResultsJson(string expectedResultsJson)
+    public PromptItem UpdateExpectedResultsJson(string expectedResultsJson, bool overwrite = true)
     {
-        this.ExpectedResultsJson = expectedResultsJson;
+        if (!overwrite && !string.IsNullOrEmpty(this.ExpectedResultsJson))
+        {
+            return this;
+        }
+        else
+        {
+            this.ExpectedResultsJson = expectedResultsJson;
 
-        return this;
+            return this;
+        }
     }
 
     public PromptItem ShareSwitch(bool show)

@@ -557,9 +557,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// 根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
         /// </summary>
         /// <param name="rangeId"></param>
-        /// <param name="isAvg"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
-        public async Task<string> ExportPluginsAsync(int rangeId, bool isAvg = true)
+        public async Task<string> ExportPluginsAsync(int rangeId, [NotNull] List<int> ids)
         {
             // 根据靶场名，获取靶场
             var promptRange = await _promptRangeService.GetAsync(rangeId);
@@ -568,7 +568,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var rangePath = await this.GetRangePathAsync(promptRange);
 
             // 根据靶场名，获取靶道
-            var promptItemList = await this.GetFullListAsync(p => p.RangeName == promptRange.RangeName);
+            var promptItemList = await this.GetFullListAsync(
+                p => p.RangeName == promptRange.RangeName 
+                && (ids == null || ids.Contains(p.Id))
+                );
 
             // //用版号作为key, 映射字典
             // var itemMapByVersion = promptItemList.ToDictionary(p => p.FullVersion, p => p);
