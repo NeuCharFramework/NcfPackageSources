@@ -97,7 +97,7 @@
             <param name="rangePath"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetRangePathAsync(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto)">
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetRangePath(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto)">
             <summary>
             根据靶场，生成文件夹，并返回文件夹路径
             </summary>
@@ -867,13 +867,6 @@
             导出靶场为 plugin
             </summary>
             <param name="request"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.String)">
-            <summary>
-            导出指定版本的靶道为 plugin
-            </summary>
-            <param name="itemVersion"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">

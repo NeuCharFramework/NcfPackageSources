@@ -592,15 +592,15 @@ public class PromptItemService : ServiceBase<PromptItem>
 
     public async Task<string> ExportPluginsAsync([NotNull] IEnumerable<int> rangeIds, [CanBeNull] List<int> ids)
     {
-        var rangeFilePaths = rangeIds.Select(rangeId =>
+        var rangeFilePaths = new List<string>();
+        foreach (var rangeId in rangeIds)
         {
-            var pluginFilePath = this.ExportPluginsAsync(rangeId, ids);
-            return pluginFilePath.Result;
-        });
+            var pluginFilePath = await this.ExportPluginsAsync(rangeId, ids);
+            rangeFilePaths.Add(pluginFilePath);
+        }
 
         // 根据 rangeFilePaths， 找出他们公共父文件夹的路径
-        var commonParentPath = Path.GetDirectoryName(
-            this.FindCommonParentPath(rangeFilePaths));
+        var commonParentPath = this.FindCommonParentPath(rangeFilePaths);
 
         return commonParentPath;
     }
@@ -608,8 +608,10 @@ public class PromptItemService : ServiceBase<PromptItem>
     private string FindCommonParentPath(IEnumerable<string> paths)
     {
         var splitPaths = paths.Select(p => p.Split(Path.DirectorySeparatorChar)).ToList();
+        var minLen = splitPaths.Min(sp => sp.Length);
+
         var commonPath = new List<string>();
-        for (int i = 0; i < splitPaths.Min(sp => sp.Length); i++)
+        for (var i = 0; i < minLen; i++)
         {
             var dir = splitPaths[0][i];
             if (splitPaths.All(sp => sp[i] == dir))
@@ -622,7 +624,7 @@ public class PromptItemService : ServiceBase<PromptItem>
             }
         }
 
-        return string.Join(Path.DirectorySeparatorChar.ToString(), commonPath);
+        return Path.Combine(commonPath.ToArray());
     }
 
     /// <summary>
@@ -637,7 +639,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         var promptRange = await _promptRangeService.GetAsync(rangeId);
 
         // 获取输出的靶场的文件夹路径
-        var rangePath = await this.GetRangePathAsync(promptRange);
+        var rangePath = this.GetRangePath(promptRange);
 
         // 根据靶场名，获取靶道
         var promptItemList = await this.GetFullListAsync(
@@ -674,7 +676,7 @@ public class PromptItemService : ServiceBase<PromptItem>
     {
         var range = await _promptRangeService.GetAsync(item.RangeId);
 
-        rangePath ??= await this.GetRangePathAsync(range);
+        rangePath ??= this.GetRangePath(range);
 
         #region 根据模板构造 Root 对象
 
@@ -748,7 +750,7 @@ public class PromptItemService : ServiceBase<PromptItem>
     /// </summary>
     /// <param name="range"></param>
     /// <returns></returns>
-    private async Task<string> GetRangePathAsync(PromptRangeDto range)
+    private string GetRangePath(PromptRangeDto range)
     {
         #region 根据靶场别名，生成文件夹
 
@@ -756,14 +758,19 @@ public class PromptItemService : ServiceBase<PromptItem>
 
         // 先获取根目录
         var curDir = Directory.GetCurrentDirectory();
-        await Console.Out.WriteLineAsync(curDir);
+
         var filePathPrefix = Path.Combine(curDir, "App_Data", "Files");
+
+
         // 生成文件夹
-        var rangePath = Path.Combine(filePathPrefix, "ExportedPlugins", $"{range.Alias ?? range.RangeName}_{range.RangeName}");
-        if (!Directory.Exists(rangePath))
+        var rangePath = Path.Combine(filePathPrefix, "ExportedPluginsTemp", $"{range.Alias ?? range.RangeName}_{range.RangeName}");
+
+        if (Directory.Exists(rangePath))
         {
-            Directory.CreateDirectory(rangePath);
+            // 如果存在，就先清理指定文件夹
+            Directory.Delete(rangePath, true);
         }
+        Directory.CreateDirectory(rangePath);
 
         #endregion
 

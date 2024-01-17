@@ -349,47 +349,48 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             // ids ??= new();
             var rangePath = await _promptItemService.ExportPluginsAsync(request.RangeIds, request.Ids);
 
-            return await BuildZipStream(rangePath);
+            return await BuildZipStreamAsync(rangePath);
         }
 
 
-        /// <summary>
-        /// 导出指定版本的靶道为 plugin
-        /// </summary>
-        /// <param name="itemVersion"></param>
-        /// <returns></returns>
-        // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<FileContentResult> ExportPluginsAsync(string itemVersion)
-        {
-            var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
-            return await BuildZipStream(rangePath);
-        }
-
-        private static async Task<FileContentResult> BuildZipStream(string dirPath)
+        // /// <summary>
+        // /// 导出指定版本的靶道为 plugin
+        // /// </summary>
+        // /// <param name="itemVersion"></param>
+        // /// <returns></returns>
+        // // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        // public async Task<FileContentResult> ExportPluginsAsync(string itemVersion)
+        // {
+        //     var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
+        //     return await BuildZipStream(rangePath);
+        // }
+        
+        private static async Task<FileContentResult> BuildZipStreamAsync(string dirPath)
         {
             // rangePath
             var filePath = Path.Combine(
                 Directory.GetParent(dirPath)!.FullName,
-                $"{DateTimeOffset.Now.ToUnixTimeSeconds()}_ExportedPlugins.zip");
-
+                $"{DateTimeOffset.Now.ToLocalTime():yyyyMMddHHmmss}_ExportedPlugins.zip");
+        
             ZipFile.CreateFromDirectory(
                 dirPath,
                 filePath);
-
+        
             byte[] buffer;
             await using var fileStream = new FileStream(filePath, FileMode.Open);
             {
                 buffer = new byte[fileStream.Length];
                 var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
             }
-
+        
+            // 清理临时文件夹
             Directory.Delete(dirPath, true);
-
+        
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
-                FileDownloadName = $"plugins.zip"
+                FileDownloadName = "plugins.zip"
             };
-
+        
             return res;
         }
     }
