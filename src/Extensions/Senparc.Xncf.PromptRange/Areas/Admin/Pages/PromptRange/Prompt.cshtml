@@ -32,7 +32,7 @@
                         <div class="titleContent">选择靶场</div>
                     </div>
                     <div>
-                                <el-button type="primary" size="mini" @@click="expectedPluginVisible = true">导出 plugins</el-button>
+                                <el-button type="primary" size="mini" @@click="expectedPluginOpen">导出 plugins</el-button>
                                 <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">导入 plugins</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
                     </div>
@@ -46,7 +46,11 @@
                                :disabled="item.disabled">
                         <div class="d-flex justify-content-between align-center">
                             <span>{{ item.label }}</span>
-                            <el-button type="primary" size="mini" @@click="renameField(item)">重命名靶场</el-button>
+                            <div>
+                                        
+                                        <el-button type="primary" size="mini" @@click="renameField($event,item)">重命名靶场</el-button>
+                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">删除</el-button>
+                            </div>
                         </div>
                     </el-option>
                 </el-select>
@@ -68,7 +72,11 @@
                                :disabled="item.disabled">
                                 <div class="d-flex justify-content-between align-center" style="gap:20px">
                                     <span>{{ item.label }}</span>
-                                    <el-button type="primary" size="mini" @@click="promptNameField(item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
+                                    <div>
+                                        
+                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
+                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">删除</el-button>
+                                    </div>
                                 </div>
                     </el-option>
                 </el-select>
@@ -431,13 +439,49 @@
 </el-drawer>
 @*战术选择 dialog*@
 <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
-    <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left">
+        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
         <el-form-item label="战术" prop="tactics">
             <el-radio-group v-model="tacticalForm.tactics">
-                    <el-radio label="创建顶级战术"></el-radio>
-                    <el-radio label="创建平行战术"></el-radio>
-                    <el-radio label="创建子战术"></el-radio>
-                <el-radio label="重新瞄准"></el-radio>
+                    <el-radio label="创建顶级战术">
+                        <div>创建顶级战术</div>
+                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
+                            <span>示例：</span>
+                            <div>
+                                <div>T1</div>
+                                <div>T2 (new)</div>
+                            </div>
+                        </div>
+                    </el-radio>
+                    <el-radio label="创建平行战术">
+                        <div>创建平行战术</div>
+                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
+                            <span>示例：</span>
+                            <div class="d-c-startr-start-nowrap">
+                                <div>T1.2.3</div>
+                                <div>T1.2.4 (new)</div>
+                            </div>
+                        </div>
+                    </el-radio>
+                    <el-radio label="创建子战术">
+                        <div>创建子战术</div>
+                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
+                            <span>示例：</span>
+                            <div class="d-c-startr-start-nowrap">
+                                <div>T1.2.3</div>
+                                <div>T1.2.3.1 (new)</div>
+                            </div>
+                        </div>
+                    </el-radio>
+                <el-radio label="重新瞄准">
+                        <div>重新瞄准</div>
+                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
+                            <span>示例：</span>
+                            <div class="d-c-startr-start-nowrap">
+                                <div>T1.2.3-A1</div>
+                                <div>T1.2.3-A2 (new)</div>
+                            </div>
+                        </div>
+                </el-radio>
             </el-radio-group>
         </el-form-item>
     </el-form>
@@ -551,8 +595,9 @@
  @* 导出plugin *@
 <el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
-            <el-form-item label="靶场" prop="rangeId" label-width="130px">
-                <el-select v-model="expectedPluginFoem.rangeId" placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
+@*             <el-form-item label="靶场" prop="rangeId" label-width="130px">
+                <el-select v-model="expectedPluginFoem.rangeId" multiple
+                           collapse-tags placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
                     <el-option v-for="item in promptFieldOpt"
                                v-key="item.id"
                                :label="item.label"
@@ -560,9 +605,9 @@
                                :disabled="item.disabled">
                     </el-option>
                 </el-select>
-            </el-form-item>
-            <el-form-item label="靶道" prop="promptIdList" label-width="130px">
-                <el-select v-model="expectedPluginFoem.promptIdList" :disabled="!expectedPluginFoem.rangeId"
+            </el-form-item> *@
+            <el-form-item label="靶场和靶道" prop="checkList" label-width="130px">
+                @* <el-select v-model="expectedPluginFoem.promptIdList" :disabled="!expectedPluginFoem.rangeId"
                            multiple
                            collapse-tags
                            placeholder="请选择靶道" class="selectRow" @@change="handleCheckedChange">
@@ -575,8 +620,14 @@
                 </el-select>
                <div>
                     全选： <el-checkbox :disabled="!expectedPluginFoem.rangeId" :indeterminate="isIndeterminate" v-model="checkAll" @@change="handleCheckAllChange">全选</el-checkbox>
-               </div>
+               </div> *@
+                @* 默认展开 :default-expanded-keys="[2, 3]" *@
+                <div class="expectedPluginTreeBox">
+                    <el-tree ref="expectedPluginTree" :data="expectedPluginFieldList" show-checkbox node-key="idkey" :props="defaultProps" @@check-change="treeCheckChange">
+                    </el-tree>
+                </div>
             </el-form-item>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @@click="expectedPluginVisible = false">取 消</el-button>
