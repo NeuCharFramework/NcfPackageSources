@@ -1293,10 +1293,11 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
                     this.promptid = promptItem.id
                     // 获取靶道详情
                     this.getPromptetail(promptItem.id, true)
+                    this.chartInstance.resize()
                     // 获取输出列表和平均分
                     //this.getOutputList()
                     // 获取分数趋势图表数据
-                    this.getScoringTrendData()
+                    // this.getScoringTrendData()
                 }
             })
              //监听图表鼠标移入事件 mouseover globalout
@@ -1435,7 +1436,7 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
-                            this.getPromptetail(val, true)
+                            this.getPromptetail(val, true,true)
                         })
                         // 重置 页面变化记录
                         this.pageChange = false
@@ -1474,7 +1475,7 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
                         }
                         
                         // 获取靶道详情
-                        this.getPromptetail(val, true)
+                        this.getPromptetail(val, true, true)
                         
                     });
                 } else {
@@ -1507,7 +1508,7 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
                         this.sendBtnText = '连发'
                     }
                     // 靶道
-                    this.getPromptetail(val, true)
+                    this.getPromptetail(val, true, true)
                 }
 
             } else {
@@ -1581,7 +1582,7 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
                     }
                     
                     // 获取详情
-                    this.getPromptetail(this.promptid, true)
+                    this.getPromptetail(this.promptid, true, true)
                 } else {
                     this.sendBtns = [
                         {
@@ -1684,7 +1685,7 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
             // 设置霸道选中
             this.promptid = itemData.id
             // 获取靶道详情
-            this.getPromptetail(itemData.id, true)
+            this.getPromptetail(itemData.id, true, true)
             // 获取输出列表和平均分
             //this.getOutputList()
             // 获取分数趋势图表数据
@@ -2398,7 +2399,7 @@ app.$message({
             }
         },
         // 获取 prompt 详情
-        async getPromptetail(id, overwrite) {
+        async getPromptetail(id, overwrite,isChart) {
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
@@ -2432,8 +2433,11 @@ app.$message({
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
-                    // 重新获取图表
-                    this.getScoringTrendData()
+                    if (isChart) {
+                        // 重新获取图表
+                        this.getScoringTrendData()
+                    }
+                    
 
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
