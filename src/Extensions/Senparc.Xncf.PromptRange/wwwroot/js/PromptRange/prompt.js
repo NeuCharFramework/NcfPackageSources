@@ -366,6 +366,9 @@ var app = new Vue({
                     if (this.promptid) {
                         _postData.id = this.promptid
                         //创建顶级战术，创建平行战术，创建子战术，重新瞄准
+                        if (this.tacticalForm.tactics === '创建顶级战术') {
+                            _postData.isTopTactic = true // prompt 新建分支
+                        }
                         if (this.tacticalForm.tactics === '创建平行战术') {
                             _postData.isNewTactic = true // prompt 新建分支
                         }
@@ -495,18 +498,11 @@ var app = new Vue({
                 })
                 return
             }
-            // 弹窗逻辑1，有promptid，就要弹窗
-            if (this.promptid) {
+            // 弹窗逻辑1，有promptid且不是保存草稿，就要弹窗
+            if (this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
-            // 弹窗逻辑2，只要保存草稿就弹
-            if (this.sendBtnText === '保存草稿') {
-                this.tacticalFormVisible = true
-                return
-            }
-
-
             this.targetShootLoading = true
             let _postData = {
                 //promptid: this.promptid,// 选择靶场
@@ -545,7 +541,29 @@ var app = new Vue({
             })
             // 要提交this.promptField
             _postData['rangeId'] = this.promptField
-            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
+
+            if (isDraft && this.promptid) {
+                return await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UpdateDraftAsync?promptItemId=${this.promptid}`, _postData).then(res => {
+                    this.targetShootLoading = false
+                    if (res.data.success) {
+                        this.pageChange = false
+                        // 提示保存成功
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        })
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        });
+                    }
+                }).catch(err => {
+                    this.targetShootLoading = false
+                })
+            } else {
+return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
                 this.targetShootLoading = false
                 if (res.data.success) {
                     this.pageChange = false
@@ -555,6 +573,25 @@ var app = new Vue({
                             message: '保存成功！',
                             type: 'success'
                         })
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
                     }
                     let {
                         promptResultList = [],
@@ -571,15 +608,6 @@ var app = new Vue({
                     copyResultData.promptStr = vArr[1] || ''
                     copyResultData.tacticsStr = vArr[2] || ''
                     this.promptDetail = copyResultData
-                    this.sendBtns = [
-                        {
-                            text: '连发'
-                        },
-                        {
-                            text: '保存草稿'
-                        }
-                    ]
-                    this.sendBtnText = '连发'
                     // 平均分 
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
                     // 最高分
@@ -635,6 +663,11 @@ var app = new Vue({
             }).catch(err => {
                 this.targetShootLoading = false
             })
+            }
+
+            
+
+            
             // console.log('testHandel res ', res.data)
 
         },

@@ -88,7 +88,7 @@
             </div>
         </div>
         <div style="padding-right: 5px">
-            <el-select v-model="modelid" placeholder="请选择模型" :disabled="sendBtnText==='连发'" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
+                    <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
                 <el-option v-for="item in modelOpt"
                            v-key="item.id"
                            :label="item.label"
