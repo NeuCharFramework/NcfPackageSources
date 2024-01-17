@@ -57,7 +57,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 
         [Required] public bool IsNewAiming { get; set; } = false;
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required] public int RangeId { get; set; }
 

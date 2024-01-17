@@ -257,7 +257,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId && p.IsDraft == true) ??
-                           throw new Exception("未找到prompt");
+                           throw new Exception($"未找到 ID　为{promptItemId}prompt草稿");
 
                 item.UpdateDraft(dto);
 

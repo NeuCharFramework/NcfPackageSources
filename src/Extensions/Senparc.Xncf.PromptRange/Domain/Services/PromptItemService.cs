@@ -99,7 +99,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         {
             // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
             // var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
-            var basePrompt = await this.GetAsync(request.Id!);
+            var basePrompt = await this.GetAsync(request.Id.Value );
             // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
 
             string rangeName = basePrompt.RangeName;
