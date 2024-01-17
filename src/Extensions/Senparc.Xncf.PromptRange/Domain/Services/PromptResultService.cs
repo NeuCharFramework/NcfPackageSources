@@ -33,7 +33,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            PromptItemService promptItemService, PromptRangeService promptRangeService) : base(repo,
+            PromptItemService promptItemService,
+            PromptRangeService promptRangeService) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;
@@ -352,15 +353,18 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
             throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
         }
 
-        public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)
+        public async Task<Boolean> BatchDeleteWithItemId(List<int> ids)
         {
-            try
+            foreach (var id in ids)
             {
-                await this.DeleteAllAsync(res => res.PromptItemId == promptItemId);
-            }
-            catch (Exception e)
-            {
-                throw new NcfExceptionBase($"删除{promptItemId}对应的结果失败, msg: {e.Message}");
+                try
+                {
+                    await this.DeleteAllAsync(res => res.PromptItemId == id);
+                }
+                catch (Exception e)
+                {
+                    throw new NcfExceptionBase($"删除{id}对应的结果失败, msg: {e.Message}");
+                }
             }
 
             return true;

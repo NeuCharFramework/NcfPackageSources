@@ -61,7 +61,7 @@ public class PromptRange : EntityBase<int>
     //
     //     return this;
     // }
-    
+
     public PromptRange ChangeAlias(string alias)
     {
         this.Alias = alias;

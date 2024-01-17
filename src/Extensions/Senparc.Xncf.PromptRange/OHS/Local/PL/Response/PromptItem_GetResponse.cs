@@ -58,12 +58,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// </summary>
         public string Note { get; set; }
 
-        public new DateTime LastRunTime { get;  set; } = DateTime.Now;
+        public new DateTime LastRunTime { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 是否分享
         /// </summary>
-        public bool IsShare { get;  set; } = false;
+        public bool IsShare { get; set; } = false;
 
         public List<PromptResult> PromptResultList { get; set; } = new();
 
@@ -72,12 +72,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// <summary>
         /// 评估参数, 平均分
         /// </summary>
-        public decimal EvalAvgScore { get;  set; }
+        public decimal EvalAvgScore { get; set; }
 
         /// <summary>
         /// 评估参数
         /// </summary>
-        public decimal EvalMaxScore { get;  set; }
+        public decimal EvalMaxScore { get; set; }
 
         /// <summary>
         /// 期望结果Json
@@ -108,7 +108,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 
         public PromptItem_GetResponse(int promptItemId, string promptContent, string fullVersion, int modelId,
             int maxToken, float temperature, float topP, float frequencyPenalty, float presencePenalty, string stopSequences, string note,
-            string prefix, string suffix, string variableDictJson, decimal evalAvgScore = -1, decimal evalMaxScore = -1, string expectedResultsJson = null)
+            string prefix, string suffix, string variableDictJson, decimal evalAvgScore = -1, decimal evalMaxScore = -1,
+            string expectedResultsJson = null)
         {
             Id = promptItemId;
             PromptContent = promptContent;

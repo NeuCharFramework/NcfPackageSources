@@ -19,9 +19,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<LlModelDto> GetLlmModelById(int llmId)
         {
-            var model = await base.GetObjectAsync(n => n.Id == llmId) ?? 
+            var model = await base.GetObjectAsync(n => n.Id == llmId) ??
                         throw new NcfExceptionBase($"找不到{llmId}对应的模型");
-            
+
             return this.Mapper.Map<LlModelDto>(model);
         }
 
@@ -64,9 +64,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         throw new NcfExceptionBase("未找到该模型");
 
             model.Update(request.Alias, request.Show, request.DeploymentName);
-            
+
             await this.SaveObjectAsync(model);
-            
+
             return this.Mapper.Map<LlModelDto>(model);
         }
     }

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Alias { get; set; }
-        
+
         public string DeploymentName { get; set; }
         public bool Show { get; set; }
     }

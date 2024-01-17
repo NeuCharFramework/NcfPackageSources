@@ -7,7 +7,5 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public List<int> PromptResultId { get; set; }
 
         public List<string> ExpectedResultList { get; set; }
-        
-        
     }
 }

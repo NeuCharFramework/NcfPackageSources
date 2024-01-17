@@ -898,6 +898,13 @@
             <param name="alias"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.DeleteAsync(System.Int32)">
+            <summary>
+            根据　ID 删除靶场
+            </summary>
+            <param name="rangeId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.HumanScore(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_HumanScoreRequest)">
             <summary>
             手动打分
@@ -1074,6 +1081,11 @@
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.EvalMaxScore">
             <summary>
             评估参数
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson">
+            <summary>
+            期望结果Json
             </summary>
         </member>
         <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.Statistic_TodayTacticResponse.DataPoints">
