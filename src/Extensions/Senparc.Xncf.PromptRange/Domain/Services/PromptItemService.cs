@@ -590,7 +590,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         return rangePath;
     }
 
-    public async Task<string> ExportPluginsAsync([NotNull] List<int> rangeIds, [CanBeNull] List<int> ids)
+    public async Task<string> ExportPluginsAsync([NotNull] IEnumerable<int> rangeIds, [CanBeNull] List<int> ids)
     {
         var rangeFilePaths = rangeIds.Select(rangeId =>
         {
@@ -824,9 +824,9 @@ public class PromptItemService : ServiceBase<PromptItem>
         }
 
         // 文件保存路径
-        var toSaveFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
+        var zipFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
 
-        using (var stream = new FileStream(toSaveFilePath, FileMode.Create))
+        using (var stream = new FileStream(zipFilePath, FileMode.Create))
         {
             await uploadedFile.CopyToAsync(stream);
         }
@@ -838,9 +838,9 @@ public class PromptItemService : ServiceBase<PromptItem>
         var promptRange = await _promptRangeService.AddAsync(rangeAlias);
 
         // 读取 zip 文件
-        using var zip = ZipFile.OpenRead(toSaveFilePath);
+        using var zip = ZipFile.OpenRead(zipFilePath);
 
-        #region 可以选择先解压
+        // #region 可以选择先解压
 
         // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
 
@@ -854,7 +854,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         // ZipFile.ExtractToDirectory(toSaveFilePath, unzippedFilePath, Encoding.UTF8, true);
         // ZipFile.ExtractToDirectory(zipFile.OpenReadStream(), unzippedFilePath, Encoding.UTF8, true);
 
-        #endregion
+        // #endregion
 
         // 开始读取
         Dictionary<string, PromptItem> zipIdxDict = new();

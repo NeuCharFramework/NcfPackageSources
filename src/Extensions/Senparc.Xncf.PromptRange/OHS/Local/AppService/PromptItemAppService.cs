@@ -341,15 +341,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <summary>
         /// 导出靶场为 plugin
         /// </summary>
-        /// <param name="rangeIds"></param>
-        /// <param name="ids"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<FileContentResult> ExportPluginsAsync(List<int> rangeIds, List<int> ids = null)
+        public async Task<FileContentResult> ExportPluginsAsync(PromptItem_ExportRequest request)
         {
-            rangeIds ??= new();
             // ids ??= new();
-            var rangePath = await _promptItemService.ExportPluginsAsync(rangeIds, ids);
+            var rangePath = await _promptItemService.ExportPluginsAsync(request.RangeIds, request.Ids);
 
             return await BuildZipStream(rangePath);
         }
@@ -389,7 +387,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
-                FileDownloadName = $"{Path.GetFileName(dirPath)}.zip"
+                FileDownloadName = $"plugins.zip"
             };
 
             return res;

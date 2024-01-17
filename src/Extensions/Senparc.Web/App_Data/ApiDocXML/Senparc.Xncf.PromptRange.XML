@@ -862,12 +862,11 @@
             <param name="zipFile"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Int32})">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_ExportRequest)">
             <summary>
             导出靶场为 plugin
             </summary>
-            <param name="rangeId"></param>
-            <param name="ids"></param>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.String)">
