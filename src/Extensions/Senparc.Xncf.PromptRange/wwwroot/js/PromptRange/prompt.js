@@ -366,7 +366,7 @@ var app = new Vue({
                     if (this.promptid) {
                         _postData.id = this.promptid
                         //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                        if (this.tacticalForm.tactics === '创建新战术') {
+                        if (this.tacticalForm.tactics === '创建平行战术') {
                             _postData.isNewTactic = true // prompt 新建分支
                         }
                         if (this.tacticalForm.tactics === '创建子战术') {
@@ -413,7 +413,6 @@ var app = new Vue({
                         copyResultData.promptStr = vArr[1] || ''
                         copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
-                        this.numsOfResults = 1
                         this.sendBtns = [
                             {
                                 text: '连发'
@@ -572,7 +571,6 @@ var app = new Vue({
                     copyResultData.promptStr = vArr[1] || ''
                     copyResultData.tacticsStr = vArr[2] || ''
                     this.promptDetail = copyResultData
-                    this.numsOfResults = 1
                     this.sendBtns = [
                         {
                             text: '连发'
@@ -1357,7 +1355,6 @@ var app = new Vue({
         // 靶场|靶道|模型 选择变化
         promptChangeHandel(val, itemKey, oldVal) {
             // 靶道变化时，重置打靶按钮
-            this.sendBtnText = '打靶'
             this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
@@ -1381,7 +1378,6 @@ var app = new Vue({
                 }
                 // 重置页面数据
                 this.resetPageData()
-
             } else if (itemKey === 'promptid') {
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿
@@ -1400,15 +1396,60 @@ var app = new Vue({
                         // 重新获取靶道列表
                         //this.getFieldList()
                     }).catch(() => {
-                        // 重新获取靶道列表
-                        //this.getFieldList()
+                        // 重置 页面变化记录
+                        this.pageChange = false
+                        // val 在 promptOpt 中的位置
+                        let _fitem = this.promptOpt.find(item => item.value === val)
+                        if (_fitem.isDraft) {
+                            this.sendBtns = [
+                                {
+                                    text: '打靶'
+                                },
+                                {
+                                    text: '保存草稿'
+                                }
+                            ]
+                            this.sendBtnText = '打靶'
+                        } else {
+                            this.sendBtns = [
+                                {
+                                    text: '连发'
+                                },
+                                {
+                                    text: '保存草稿'
+                                }
+                            ]
+                            this.sendBtnText = '连发'
+                        }
+                        
+                        // 清空ai评分标准
                         this.aiScoreForm = {
                             resultList: []
                         }
-                        // 靶道
+                        
+                        // 获取靶道详情
                         this.getPromptetail(val, true)
-                        // 重置 页面变化记录
-                        this.pageChange = false
+                        
+                    });
+                } else {
+                    // 重置 页面变化记录
+                    this.pageChange = false
+                    // 清空ai评分标准
+                    this.aiScoreForm = {
+                        resultList: []
+                    }
+                    let _fitem = this.promptOpt.find(item => item.value === val)
+                    if (_fitem.isDraft) {
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
                         this.sendBtns = [
                             {
                                 text: '连发'
@@ -1418,21 +1459,9 @@ var app = new Vue({
                             }
                         ]
                         this.sendBtnText = '连发'
-                    });
-                } else {
+                    }
                     // 靶道
                     this.getPromptetail(val, true)
-                    // 重置 页面变化记录
-                    this.pageChange = false
-                    this.sendBtns = [
-                        {
-                            text: '连发'
-                        },
-                        {
-                            text: '保存草稿'
-                        }
-                    ]
-                    this.sendBtnText = '连发'
                 }
 
             } else {
@@ -1481,16 +1510,30 @@ var app = new Vue({
             await this.getPromptOptData().then(() => {
                 // promptid is the last one of promptOpt
                 if (this.promptOpt && this.promptOpt.length > 0) {
-                    this.promptid = this.promptOpt[this.promptOpt.length - 1].id
-                    this.sendBtns = [
-                        {
-                            text: '连发'
-                        },
-                        {
-                            text: '保存草稿'
-                        }
-                    ]
-                    this.sendBtnText = '连发'
+                    let _el = this.promptOpt[this.promptOpt.length - 1]
+                    this.promptid = _el.id
+                    if (_el.isDraft) {
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
+                    }
+                    
                     // 获取详情
                     this.getPromptetail(this.promptid, true)
                 } else {
