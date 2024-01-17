@@ -483,7 +483,7 @@ var app = new Vue({
         * 打靶 事件
         * isDraft 是否保存草稿
         */
-        async targetShootHandel(isDraft = false) {
+        async targetShootHandel(isDraft = false,isSaveDirect) {
             if (!this.modelid) {
                 this.$message({
                     message: '请选择模型！',
@@ -503,6 +503,19 @@ var app = new Vue({
                 this.tacticalFormVisible = true
                 return
             }
+            // 弹窗逻辑2，有promptid且不是保存草稿，就要弹窗
+            let _isPromptDraft = false
+            let _findPrompt = this.promptOpt.find(item => item.value == this.promptid)
+            if (isDraft && _findPrompt) {
+                _isPromptDraft = _findPrompt.isDraft
+            }
+            
+            if (isDraft && !_isPromptDraft && this.promptOpt.length !== 0) {
+                this.tacticalFormVisible = true
+                return
+            }
+
+
             this.targetShootLoading = true
             let _postData = {
                 //promptid: this.promptid,// 选择靶场
@@ -541,8 +554,8 @@ var app = new Vue({
             })
             // 要提交this.promptField
             _postData['rangeId'] = this.promptField
-
-            if (isDraft && this.promptid) {
+            
+            if (isDraft && _isPromptDraft) {
                 return await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UpdateDraftAsync?promptItemId=${this.promptid}`, _postData).then(res => {
                     this.targetShootLoading = false
                     if (res.data.success) {
