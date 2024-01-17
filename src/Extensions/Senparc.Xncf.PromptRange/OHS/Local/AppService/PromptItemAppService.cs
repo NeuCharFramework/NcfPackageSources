@@ -274,7 +274,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
-        public async Task<StringAppResponse> Del(int id)
+        public async Task<StringAppResponse> DeleteAsync(int id)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
@@ -285,8 +285,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
                 await _promptItemService.DeleteAllAsync(toDeleteItemList);
-                // todo 关联删除所有子战术
 
+                // 关联删除所有子战术
                 var toDeleteIdList = toDeleteItemList.Select(p => p.Id).ToList();
                 await _promptResultService.BatchDeleteWithItemId(toDeleteIdList);
 
@@ -304,7 +304,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
             return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
-                async (response, logger) => { return await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults); });
+                async (response, logger) =>
+                    await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults)
+            );
         }
 
         // /// <summary>
@@ -339,14 +341,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <summary>
         /// 导出靶场为 plugin
         /// </summary>
-        /// <param name="rangeId"></param>
+        /// <param name="rangeIds"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<FileContentResult> ExportPluginsAsync(int rangeId, List<int> ids = null)
+        public async Task<FileContentResult> ExportPluginsAsync(List<int> rangeIds, List<int> ids = null)
         {
-            ids ??= new();
-            var rangePath = await _promptItemService.ExportPluginsAsync(rangeId, ids);
+            rangeIds ??= new();
+            // ids ??= new();
+            var rangePath = await _promptItemService.ExportPluginsAsync(rangeIds, ids);
 
             return await BuildZipStream(rangePath);
         }
@@ -364,15 +367,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await BuildZipStream(rangePath);
         }
 
-        private static async Task<FileContentResult> BuildZipStream(string rangePath)
+        private static async Task<FileContentResult> BuildZipStream(string dirPath)
         {
             // rangePath
             var filePath = Path.Combine(
-                Directory.GetParent(rangePath)!.FullName,
+                Directory.GetParent(dirPath)!.FullName,
                 $"{DateTimeOffset.Now.ToUnixTimeSeconds()}_ExportedPlugins.zip");
 
             ZipFile.CreateFromDirectory(
-                rangePath,
+                dirPath,
                 filePath);
 
             byte[] buffer;
@@ -382,11 +385,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
             }
 
-            Directory.Delete(rangePath, true);
+            Directory.Delete(dirPath, true);
 
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
-                FileDownloadName = $"{Path.GetFileName(rangePath)}.zip"
+                FileDownloadName = $"{Path.GetFileName(dirPath)}.zip"
             };
 
             return res;

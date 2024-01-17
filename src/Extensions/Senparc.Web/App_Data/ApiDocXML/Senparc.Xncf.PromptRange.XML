@@ -839,7 +839,7 @@
             <param name="rangeName">靶场名称</param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Del(System.Int32)">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.DeleteAsync(System.Int32)">
             <summary>
             根据主键 ID　删除 PromptItem 所有信息
             </summary>
@@ -862,7 +862,7 @@
             <param name="zipFile"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Int32,System.Collections.Generic.List{System.Int32})">
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Int32})">
             <summary>
             导出靶场为 plugin
             </summary>

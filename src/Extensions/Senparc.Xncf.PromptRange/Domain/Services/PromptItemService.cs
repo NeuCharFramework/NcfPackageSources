@@ -99,7 +99,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         {
             // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
             // var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
-            var basePrompt = await this.GetAsync(request.Id.Value );
+            var basePrompt = await this.GetAsync(request.Id.Value);
             // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
 
             string rangeName = basePrompt.RangeName;
@@ -590,13 +590,48 @@ public class PromptItemService : ServiceBase<PromptItem>
         return rangePath;
     }
 
+    public async Task<string> ExportPluginsAsync([NotNull] List<int> rangeIds, [CanBeNull] List<int> ids)
+    {
+        var rangeFilePaths = rangeIds.Select(rangeId =>
+        {
+            var pluginFilePath = this.ExportPluginsAsync(rangeId, ids);
+            return pluginFilePath.Result;
+        });
+
+        // 根据 rangeFilePaths， 找出他们公共父文件夹的路径
+        var commonParentPath = Path.GetDirectoryName(
+            this.FindCommonParentPath(rangeFilePaths));
+
+        return commonParentPath;
+    }
+
+    private string FindCommonParentPath(IEnumerable<string> paths)
+    {
+        var splitPaths = paths.Select(p => p.Split(Path.DirectorySeparatorChar)).ToList();
+        var commonPath = new List<string>();
+        for (int i = 0; i < splitPaths.Min(sp => sp.Length); i++)
+        {
+            var dir = splitPaths[0][i];
+            if (splitPaths.All(sp => sp[i] == dir))
+            {
+                commonPath.Add(dir);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return string.Join(Path.DirectorySeparatorChar.ToString(), commonPath);
+    }
+
     /// <summary>
     /// 根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
     /// </summary>
     /// <param name="rangeId"></param>
     /// <param name="ids"></param>
     /// <returns></returns>
-    public async Task<string> ExportPluginsAsync(int rangeId, [NotNull] List<int> ids)
+    public async Task<string> ExportPluginsAsync(int rangeId, [CanBeNull] List<int> ids)
     {
         // 根据靶场名，获取靶场
         var promptRange = await _promptRangeService.GetAsync(rangeId);
@@ -724,7 +759,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         await Console.Out.WriteLineAsync(curDir);
         var filePathPrefix = Path.Combine(curDir, "App_Data", "Files");
         // 生成文件夹
-        var rangePath = Path.Combine(filePathPrefix, "ExportedPlugins", range.Alias ?? range.RangeName);
+        var rangePath = Path.Combine(filePathPrefix, "ExportedPlugins", $"{range.Alias ?? range.RangeName}_{range.RangeName}");
         if (!Directory.Exists(rangePath))
         {
             Directory.CreateDirectory(rangePath);
