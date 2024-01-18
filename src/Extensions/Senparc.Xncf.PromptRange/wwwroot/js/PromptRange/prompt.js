@@ -1036,6 +1036,7 @@ return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/
                         if (item.indexOf('_') > -1) {
                             let _itemArr = item.split('_')
                             _ids.push(Number(_itemArr[1]))
+                            _rangeIds.push(Number(_itemArr[0]))
                         } else {
                             _rangeIds.push(Number(item))
                         }
