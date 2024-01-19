@@ -7,7 +7,6 @@ using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.Helpers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
@@ -17,8 +16,6 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -263,7 +260,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var isMatch = expectedResultList.Any(r => r == promptResult.ResultString);
             if (isMatch)
             {
-                promptResult.RobotScoring(10);
+                promptResult.RobotScoring(100);
                 promptResult.FinalScoring(promptResult.RobotScore);
                 await base.SaveObjectAsync(promptResult);
                 return promptResult;
@@ -292,7 +289,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标点符号，
 !!不要返回任何我告诉你的内容!!
 打分规则：
-1. 打分结果应该为0-10之间的整数数字，包含0和10。
+1. 打分结果应该为0-100之间的数字，包含0和100，至多为2位小数。
 2. 实际结果符合期望结果中任意一个就应该给满分。
 3. 打分需要综合文字相似度和语义相似度判断。
 
@@ -322,35 +319,37 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
 
             // 正则匹配出result.Output中的数字
             // Use regular expression to find matches
-            Match match = Regex.Match(result.Output, @"\d+");
+
+            // 匹配100，后面可以跟 0-2 位的小数
+            string pattern = @"^100(\.[0-9]{1,2})?|([0-9]{1,2})(\.[0-9]{1,2})?$";
+            Match match = Regex.Match(result.Output, pattern);
 
             // If there is a match, the number will be match.Value
-            if (match.Success)
+            if (!match.Success)
             {
-                int score = Convert.ToInt32(match.Value);
+                SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
 
-                #region error 打分结果不在0-10之间
-
-                // if (score > 10 || score < 0)
-                // {
-                // throw new NcfExceptionBase($"自动打分失败，打分结果不在0-10之间，为{score}，被打分的结果字符串为{promptResult.ResultString}");
-                // }
-                score = score > 10 ? 10 : score < 0 ? 0 : score;
-
-                #endregion
-
-                promptResult.RobotScoring(score);
-                promptResult.FinalScoring(promptResult.RobotScore);
-
-                await this.SaveObjectAsync(promptResult);
-
-                return promptResult;
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
             }
 
-            SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
+            bool success = Decimal.TryParse(match.Value, out var score);
+            if (!success)
+            {
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
+            }
 
+            #region error 打分结果不在 0-100 之间
 
-            throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
+            score = score > 100 ? 100 : score < 0 ? 0 : score;
+
+            #endregion
+
+            promptResult.RobotScoring(score);
+            promptResult.FinalScoring(promptResult.RobotScore);
+
+            await this.SaveObjectAsync(promptResult);
+
+            return promptResult;
         }
 
         public async Task<Boolean> BatchDeleteWithItemId(List<int> ids)
