@@ -7,7 +7,6 @@ using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.Helpers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
@@ -17,8 +16,6 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -33,7 +30,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
-            PromptItemService promptItemService, PromptRangeService promptRangeService) : base(repo,
+            PromptItemService promptItemService,
+            PromptRangeService promptRangeService) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;
@@ -73,8 +71,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             };
 
             // 需要在变量前添加$
-            const string completionPrompt = @"请根据提示输出对应内容：
-{{$input}}";
+            //            string completionPrompt = $@"请根据提示输出对应内容:
+            //{promptItem.Content}";
+            string completionPrompt = $@"{promptItem.Content}";
 
             // 从数据库中获取模型信息
             var model = promptItem.AIModelDto;
@@ -91,7 +90,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
-            aiArguments["input"] = promptItem.Content;
+            //aiArguments["input"] = promptItem.Content;
 
             #region 用户自定义参数
 
@@ -238,6 +237,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, List<string> expectedResultList)
         {
+            // 需要在变量前添加$
+            const int MAX_SCORE = 10;
+            const string MAX_SOCRE_STR = "10";
+
+
             // get promptResult by id
             var promptResult = await this.GetObjectAsync(z => z.Id == promptResultId)
                                ?? throw new NcfExceptionBase("找不到对应的promptResult");
@@ -259,10 +263,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // check if matching expected results
             // if matched,score 10 by default save promptResult and return
-            var isMatch = expectedResultList.Any(r => r == promptResult.ResultString);
+            var isMatch = expectedResultList.Any(r => r == promptResult.ResultString || (r.StartsWith("=") && r.Substring(1, r.Length - 1) == promptResult.ResultString));
             if (isMatch)
             {
-                promptResult.RobotScoring(10);
+                promptResult.RobotScoring(MAX_SCORE);
                 promptResult.FinalScoring(promptResult.RobotScore);
                 await base.SaveObjectAsync(promptResult);
                 return promptResult;
@@ -285,22 +289,29 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 // PresencePenalty = 0,
             };
 
-            // 需要在变量前添加$
-            const string scorePrompt = @"
-你是一个语言专家，你的工作是根据以下给定的期望结果和实际结果,对实际结果进行打分。
-IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标点符号，
+            const string scorePrompt = $@"[背景]
+你是一个语言专家，你的工作是根据以下给定的[期望结果],对[实际结果]进行打分。
+[期望结果]将以 JSON 的数组形式提供，数组中包含了若干个期望结果的描述。
+
+[打分规则]
+1. 将[实际结果]与[期望结果]中的每一项进行比较，并返回最高分。
+2. 当某一项获得最高分（{MAX_SOCRE_STR}）的时候，停止对剩余规则的判断，直接返回 {MAX_SOCRE_STR} 分。
+3. 当[实际结果]完全等于[期望结果]数组的中任意一项时，就给满分（{MAX_SOCRE_STR}）。
+4. 根据[期望结果]中每一项的描述内容来判定[实际结果]的准确性，判断依据为：
+  2.1. 综合文字相似度、语义相似度和所描述的匹配度判断
+  2.2. 打分结果应该为0-10之间的数字，包含 0 和 {MAX_SOCRE_STR}，至多为 2 位小数。
+5. 当[期望结果]中的字符串以""=""符号开头时，[实际结果]必须与之完全相等才能得满分（{MAX_SOCRE_STR} 分），否则最多得 5 分。
+
+IMPORTANT: 返回的结果必须为0-10的数字，且不包含任何标点符号。
 !!不要返回任何我告诉你的内容!!
-打分规则：
-1. 打分结果应该为0-10之间的整数数字，包含0和10。
-2. 实际结果符合期望结果中任意一个就应该给满分。
-3. 打分需要综合文字相似度和语义相似度判断。
 
-期望结果以JSON形式提供，可能包含若干个期望结果,以下为：{{$expectedResult}}
+[期望结果]
+{{{{$expectedResult}}}}
 
-实际结果是一个字符串，以下为：{{$actualResult}}
+[实际结果]
+{{{{$actualResult}}}}
 
-********************************************************************************
-";
+打分结果：";
 
             var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
@@ -321,46 +332,54 @@ IMPORTANT: 返回的结果必须为0-10的整数数字，且不包含任何标�
 
             // 正则匹配出result.Output中的数字
             // Use regular expression to find matches
-            Match match = Regex.Match(result.Output, @"\d+");
+
+            // 匹配 MAX_SCORE，后面可以跟 0-2 位的小数
+            string pattern = "^(10(\\.0{1,2})?|[1-9](\\.\\d{1,2})?|0(\\.\\d{1,2})?)$";
+            //@"^100(\.[0-9]{1,2})?|([0-9]{1,2})(\.[0-9]{1,2})?$";
+            //"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?|0(\.\d{1,2})?)$"
+            //^(10(\.0{1,2})?|[1-9](\.\d{1,2})?|0(\.\d{1,2})?)$
+            Match match = Regex.Match(result.Output, pattern);
 
             // If there is a match, the number will be match.Value
-            if (match.Success)
+            if (!match.Success)
             {
-                int score = Convert.ToInt32(match.Value);
+                SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
 
-                #region error 打分结果不在0-10之间
-
-                // if (score > 10 || score < 0)
-                // {
-                // throw new NcfExceptionBase($"自动打分失败，打分结果不在0-10之间，为{score}，被打分的结果字符串为{promptResult.ResultString}");
-                // }
-                score = score > 10 ? 10 : score < 0 ? 0 : score;
-
-                #endregion
-
-                promptResult.RobotScoring(score);
-                promptResult.FinalScoring(promptResult.RobotScore);
-
-                await this.SaveObjectAsync(promptResult);
-
-                return promptResult;
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
             }
 
-            SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
+            bool success = Decimal.TryParse(match.Value, out var score);
+            if (!success)
+            {
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
+            }
 
+            #region error 打分结果不在 0-MAX_SCORE 之间
 
-            throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
+            score = score > MAX_SCORE ? MAX_SCORE : (score < 0 ? 0 : score);
+
+            #endregion
+
+            promptResult.RobotScoring(score);
+            promptResult.FinalScoring(promptResult.RobotScore);
+
+            await this.SaveObjectAsync(promptResult);
+
+            return promptResult;
         }
 
-        public async Task<Boolean> BatchDeleteWithItemId(int promptItemId)
+        public async Task<Boolean> BatchDeleteWithItemId(List<int> ids)
         {
-            try
+            foreach (var id in ids)
             {
-                await this.DeleteAllAsync(res => res.PromptItemId == promptItemId);
-            }
-            catch (Exception e)
-            {
-                throw new NcfExceptionBase($"删除{promptItemId}对应的结果失败, msg: {e.Message}");
+                try
+                {
+                    await this.DeleteAllAsync(res => res.PromptItemId == id);
+                }
+                catch (Exception e)
+                {
+                    throw new NcfExceptionBase($"删除{id}对应的结果失败, msg: {e.Message}");
+                }
             }
 
             return true;
