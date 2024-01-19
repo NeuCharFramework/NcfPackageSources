@@ -99,7 +99,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         {
             // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
             // var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
-            var basePrompt = await this.GetAsync(request.Id!);
+            var basePrompt = await this.GetAsync(request.Id.Value);
             // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
 
             string rangeName = basePrompt.RangeName;
@@ -114,8 +114,9 @@ public class PromptItemService : ServiceBase<PromptItem>
                     p.FullVersion.EndsWith("A1")
                 );
 
-                var maxTactic = fullList.Select(p => int.Parse(p.Tactic))
-                    .Max();
+                var maxTactic = fullList.Count == 0
+                    ? 0
+                    : fullList.Select(p => int.Parse(p.Tactic)).Max();
                 toSavePromptItem = new PromptItem(
                     rangeId: basePrompt.RangeId,
                     rangeName: rangeName,
@@ -136,9 +137,11 @@ public class PromptItemService : ServiceBase<PromptItem>
                     p.ParentTac == parentTac && p.FullVersion.EndsWith("A1")
                 );
 
-                var maxTactic = fullList.Select(p => p.Tactic.Substring((parentTac == "" ? "" : parentTac + ".").Length))
-                    .Select(int.Parse)
-                    .Max();
+                var maxTactic = fullList.Count == 0
+                    ? 0
+                    : fullList.Select(p => p.Tactic.Substring((parentTac == "" ? "" : parentTac + ".").Length))
+                        .Select(int.Parse)
+                        .Max();
 
                 var tactic = (parentTac == "" ? "" : parentTac + ".") + $"{maxTactic + 1}";
 
@@ -163,9 +166,11 @@ public class PromptItemService : ServiceBase<PromptItem>
                          && p.FullVersion.EndsWith("A1")
                 );
 
-                var maxTactic = fullList.Select(p => p.Tactic.Substring((parentTac + ".").Length))
-                    .Select(int.Parse)
-                    .Max();
+                var maxTactic = fullList.Count == 0
+                    ? 0
+                    : fullList.Select(p => p.Tactic.Substring((parentTac + ".").Length))
+                        .Select(int.Parse)
+                        .Max();
 
                 toSavePromptItem = new PromptItem(
                     rangeId: basePrompt.RangeId,
@@ -184,7 +189,8 @@ public class PromptItemService : ServiceBase<PromptItem>
                     // p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A')))
                     p.FullVersion.StartsWith($"{basePrompt.RangeName}-T{basePrompt.Tactic}-A")
                 );
-                var maxAiming = fullList.Select(p => p.Aiming).Max();
+
+                var maxAiming = fullList.Count == 0 ? 0 : fullList.Select(p => p.Aiming).Max();
                 toSavePromptItem = new PromptItem(
                     rangeId: basePrompt.RangeId,
                     rangeName: rangeName,
@@ -584,19 +590,56 @@ public class PromptItemService : ServiceBase<PromptItem>
         return rangePath;
     }
 
+    public async Task<string> ExportPluginsAsync([NotNull] IEnumerable<int> rangeIds, [CanBeNull] List<int> ids)
+    {
+        var rangeFilePaths = new List<string>();
+        foreach (var rangeId in rangeIds)
+        {
+            var pluginFilePath = await this.ExportPluginsAsync(rangeId, ids);
+            rangeFilePaths.Add(pluginFilePath);
+        }
+
+        // 根据 rangeFilePaths， 找出他们公共父文件夹的路径
+        var commonParentPath = this.FindCommonParentPath(rangeFilePaths);
+
+        return commonParentPath;
+    }
+
+    private string FindCommonParentPath(IEnumerable<string> paths)
+    {
+        var splitPaths = paths.Select(p => p.Split(Path.DirectorySeparatorChar)).ToList();
+        var minLen = splitPaths.Min(sp => sp.Length);
+
+        var commonPath = new List<string>();
+        for (var i = 0; i < minLen; i++)
+        {
+            var dir = splitPaths[0][i];
+            if (splitPaths.All(sp => sp[i] == dir))
+            {
+                commonPath.Add(dir);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return Path.Combine(commonPath.ToArray());
+    }
+
     /// <summary>
     /// 根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
     /// </summary>
     /// <param name="rangeId"></param>
     /// <param name="ids"></param>
     /// <returns></returns>
-    public async Task<string> ExportPluginsAsync(int rangeId, [NotNull] List<int> ids)
+    public async Task<string> ExportPluginsAsync(int rangeId, [CanBeNull] List<int> ids)
     {
         // 根据靶场名，获取靶场
         var promptRange = await _promptRangeService.GetAsync(rangeId);
 
         // 获取输出的靶场的文件夹路径
-        var rangePath = await this.GetRangePathAsync(promptRange);
+        var rangePath = this.GetRangePath(promptRange);
 
         // 根据靶场名，获取靶道
         var promptItemList = await this.GetFullListAsync(
@@ -633,7 +676,7 @@ public class PromptItemService : ServiceBase<PromptItem>
     {
         var range = await _promptRangeService.GetAsync(item.RangeId);
 
-        rangePath ??= await this.GetRangePathAsync(range);
+        rangePath ??= this.GetRangePath(range);
 
         #region 根据模板构造 Root 对象
 
@@ -707,7 +750,7 @@ public class PromptItemService : ServiceBase<PromptItem>
     /// </summary>
     /// <param name="range"></param>
     /// <returns></returns>
-    private async Task<string> GetRangePathAsync(PromptRangeDto range)
+    private string GetRangePath(PromptRangeDto range)
     {
         #region 根据靶场别名，生成文件夹
 
@@ -715,14 +758,19 @@ public class PromptItemService : ServiceBase<PromptItem>
 
         // 先获取根目录
         var curDir = Directory.GetCurrentDirectory();
-        await Console.Out.WriteLineAsync(curDir);
+
         var filePathPrefix = Path.Combine(curDir, "App_Data", "Files");
+
+
         // 生成文件夹
-        var rangePath = Path.Combine(filePathPrefix, "ExportedPlugins", range.Alias ?? range.RangeName);
-        if (!Directory.Exists(rangePath))
+        var rangePath = Path.Combine(filePathPrefix, "ExportedPluginsTemp", $"{range.Alias ?? range.RangeName}_{range.RangeName}");
+
+        if (Directory.Exists(rangePath))
         {
-            Directory.CreateDirectory(rangePath);
+            // 如果存在，就先清理指定文件夹
+            Directory.Delete(rangePath, true);
         }
+        Directory.CreateDirectory(rangePath);
 
         #endregion
 
@@ -783,9 +831,9 @@ public class PromptItemService : ServiceBase<PromptItem>
         }
 
         // 文件保存路径
-        var toSaveFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
+        var zipFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
 
-        using (var stream = new FileStream(toSaveFilePath, FileMode.Create))
+        using (var stream = new FileStream(zipFilePath, FileMode.Create))
         {
             await uploadedFile.CopyToAsync(stream);
         }
@@ -797,9 +845,9 @@ public class PromptItemService : ServiceBase<PromptItem>
         var promptRange = await _promptRangeService.AddAsync(rangeAlias);
 
         // 读取 zip 文件
-        using var zip = ZipFile.OpenRead(toSaveFilePath);
+        using var zip = ZipFile.OpenRead(zipFilePath);
 
-        #region 可以选择先解压
+        // #region 可以选择先解压
 
         // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
 
@@ -813,7 +861,7 @@ public class PromptItemService : ServiceBase<PromptItem>
         // ZipFile.ExtractToDirectory(toSaveFilePath, unzippedFilePath, Encoding.UTF8, true);
         // ZipFile.ExtractToDirectory(zipFile.OpenReadStream(), unzippedFilePath, Encoding.UTF8, true);
 
-        #endregion
+        // #endregion
 
         // 开始读取
         Dictionary<string, PromptItem> zipIdxDict = new();

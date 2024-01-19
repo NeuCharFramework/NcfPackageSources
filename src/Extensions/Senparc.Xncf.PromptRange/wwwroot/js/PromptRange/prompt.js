@@ -226,12 +226,15 @@ var app = new Vue({
                 aiResultVal: [
                     {required: true, message: '请输入期望结果', trigger: 'blur'}
                 ],
-                rangeId: [
-                    { required: true, message: '请选择需要导出的靶场', trigger: 'change' }
+                rangeIdList: [
+                    { type: 'array', required: true, message: '请至少选择一个靶场', trigger: 'change' }
                 ],
                 promptIdList: [
                     { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
-                ]
+                ],
+                checkList: [
+                    { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
+                ],
             },
             versionData: [],
             promptDetail: {},
@@ -241,15 +244,16 @@ var app = new Vue({
             uploadPluginData: [], // Plugin 文件夹的文件列表
             jsZip: null, // 压缩实例
             expectedPluginVisible: false, // Plugin 导出dialog 显隐
+            // 导出 Plugin 选择数据
             expectedPluginFoem: {
-                rangeId: '', // 靶场id
-                promptIdList:[] //  靶道idList
+                checkList: [], // 选择的数据 tree 
             },
-            // 靶道列表
             expectedPluginFieldList: [],
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
             contentTextareaRows: 14, //prompt 输入框的行数
-            isIndeterminate: true, // 全选靶道
-            checkAll: false, // 全选靶道
         };
     },
     computed: {
@@ -300,6 +304,57 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        // 靶场删除
+        fieldDeleteHandel(e, id) {
+            // 阻止事件冒泡
+            e.stopPropagation();
+            // 弹出提示框
+            this.$confirm('此操作将永久删除该靶场下的所有内容', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                let res = await servicePR.delete(`/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.DeleteAsync?rangeId=${id}`)
+                if (res.data.success) {
+                    this.$message.success('删除成功')
+                    let _isReset = id == this.promptField
+                    // 重新获取靶场列表
+                    this.getFieldList().then(() => {
+                        if (_isReset) {
+                            this.promptField = ''
+                            // 重置页面数据
+                            this.resetPageData()
+                        }
+                    })
+                } else {
+                    this.$message.error(res.data.errorMessage || res.data.data || 'Error')
+                }
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+            
+        },
+        // 删除靶道
+        promptDeleteHandel(e, id) {
+            // 阻止事件冒泡
+            e.stopPropagation();
+            // 弹出提示框
+            this.$confirm('此操作将永久删除该靶道', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                this.btnDeleteHandle(id)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
         // 备注失去焦点 保存
         promptRemarkSave() {
             let { id} = this.promptDetail
@@ -321,7 +376,9 @@ var app = new Vue({
             }
         },
         // 靶道 名称
-        promptNameField(item) {
+        promptNameField(e, item) {
+            // 阻止事件冒泡
+            e.stopPropagation();
             //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
             this.$prompt('请输入新的靶道名称', '提示', {
                 confirmButtonText: '确定',
@@ -366,7 +423,10 @@ var app = new Vue({
                     if (this.promptid) {
                         _postData.id = this.promptid
                         //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                        if (this.tacticalForm.tactics === '创建新战术') {
+                        if (this.tacticalForm.tactics === '创建顶级战术') {
+                            _postData.isTopTactic = true // prompt 新建分支
+                        }
+                        if (this.tacticalForm.tactics === '创建平行战术') {
                             _postData.isNewTactic = true // prompt 新建分支
                         }
                         if (this.tacticalForm.tactics === '创建子战术') {
@@ -413,7 +473,6 @@ var app = new Vue({
                         copyResultData.promptStr = vArr[1] || ''
                         copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
-                        this.numsOfResults = 1
                         this.sendBtns = [
                             {
                                 text: '连发'
@@ -481,7 +540,7 @@ var app = new Vue({
         * 打靶 事件
         * isDraft 是否保存草稿
         */
-        async targetShootHandel(isDraft = false) {
+        async targetShootHandel(isDraft = false,isSaveDirect) {
             if (!this.modelid) {
                 this.$message({
                     message: '请选择模型！',
@@ -496,13 +555,19 @@ var app = new Vue({
                 })
                 return
             }
-            // 弹窗逻辑1，有promptid，就要弹窗
-            if (this.promptid) {
+            // 弹窗逻辑1，有promptid且不是保存草稿，就要弹窗
+            if (this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
-            // 弹窗逻辑2，只要保存草稿就弹
-            if (this.sendBtnText === '保存草稿') {
+            // 弹窗逻辑2，有promptid且不是保存草稿，就要弹窗
+            let _isPromptDraft = false
+            let _findPrompt = this.promptOpt.find(item => item.value == this.promptid)
+            if (isDraft && _findPrompt) {
+                _isPromptDraft = _findPrompt.isDraft
+            }
+            
+            if (isDraft && !_isPromptDraft && this.promptOpt.length !== 0) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -546,7 +611,29 @@ var app = new Vue({
             })
             // 要提交this.promptField
             _postData['rangeId'] = this.promptField
-            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
+            
+            if (isDraft && _isPromptDraft) {
+                return await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UpdateDraftAsync?promptItemId=${this.promptid}`, _postData).then(res => {
+                    this.targetShootLoading = false
+                    if (res.data.success) {
+                        this.pageChange = false
+                        // 提示保存成功
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        })
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        });
+                    }
+                }).catch(err => {
+                    this.targetShootLoading = false
+                })
+            } else {
+return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData).then(res => {
                 this.targetShootLoading = false
                 if (res.data.success) {
                     this.pageChange = false
@@ -556,6 +643,25 @@ var app = new Vue({
                             message: '保存成功！',
                             type: 'success'
                         })
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
                     }
                     let {
                         promptResultList = [],
@@ -572,16 +678,6 @@ var app = new Vue({
                     copyResultData.promptStr = vArr[1] || ''
                     copyResultData.tacticsStr = vArr[2] || ''
                     this.promptDetail = copyResultData
-                    this.numsOfResults = 1
-                    this.sendBtns = [
-                        {
-                            text: '连发'
-                        },
-                        {
-                            text: '保存草稿'
-                        }
-                    ]
-                    this.sendBtnText = '连发'
                     // 平均分 
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
                     // 最高分
@@ -637,6 +733,11 @@ var app = new Vue({
             }).catch(err => {
                 this.targetShootLoading = false
             })
+            }
+
+            
+
+            
             // console.log('testHandel res ', res.data)
 
         },
@@ -866,38 +967,84 @@ var app = new Vue({
         // 导出 plugins dialog close 回调
         expectedPluginCloseDialog() {
             this.expectedPluginFoem = {
-                rangeId: '', // 靶场id
-                promptIdList:[] //  靶道idList
+                checkList: []
             }
-            this.expectedPluginFieldList = []
-            this.checkAll = false // 全选靶道
-            this.isIndeterminate = true // 全选靶道
+            this.expectedPluginFieldList = [] // tree数据列表
             this.$refs.expectedPluginFoem.resetFields();
         },
-        // 导出 plugins 选择靶场 change
-        expectedPluginPromptFieldChange(val) {
-            // 切换靶场时 重新获取expectedPluginFieldList 并  默认全选选择的靶道promptIdList
-            this.expectedPluginFieldList = []
-            this.expectedPluginFoem.promptIdList = []
-            // 获取靶道列表
-            this.getPromptOptData(val, true)
+        // 导出 plugins dialog open
+        async expectedPluginOpen() {
+            // 获取树形数据 靶场列表
+            let _valList = this.promptFieldOpt
+            let promises = [];
+            for (let i = 0; i < _valList.length; i++) {
+                // 获取靶道列表
+                promises.push(this.getPromptOptData(_valList[i].id, true));
+            }
+            this.expectedPluginVisible = true
+            await Promise.all(promises)
+            // 设置默认选中
+            this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
         },
-        handleCheckedChange(value) {
-            let checkedCount = value.length;
-            this.checkAll = checkedCount === this.expectedPluginFieldList.length;
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.expectedPluginFieldList.length;
-        },
-        // 全选靶道 change
-        handleCheckAllChange(val) {
-            this.expectedPluginFoem.promptIdList = val ? this.expectedPluginFieldList.map(item => item.id) : []
-            this.isIndeterminate = false // 全选靶道
+        // 导出 plugins dialog tree 选中变化
+        treeCheckChange(data, currentCheck, childrenCheck ) {
+            //console.log('treeCheckChange', data, currentCheck, childrenCheck)
+            if (currentCheck) {
+                // 选中 判断是否有值有的话就不添加
+                if (this.expectedPluginFoem.checkList.indexOf(data.idkey) === -1) {
+                    this.expectedPluginFoem.checkList.push(data.idkey)
+                    // 判断是否有子节点 有的话就添加
+                    if (data.children.length > 0) {
+                        data.children.forEach(item => {
+                            if (this.expectedPluginFoem.checkList.indexOf(item.idkey) === -1) {
+                                this.expectedPluginFoem.checkList.push(item.idkey)
+                            }
+                        })
+                    }
+                }
+            } else {
+                // 取消选中
+                let _index = this.expectedPluginFoem.checkList.indexOf(data.idkey)
+                if (_index > -1) {
+                    this.expectedPluginFoem.checkList.splice(_index, 1)
+                }
+                // 判断是否有子节点 有的话就删除
+                if (data.children.length > 0) {
+                    data.children.forEach(item => {
+                        let _index = this.expectedPluginFoem.checkList.indexOf(item.idkey)
+                        if (_index > -1) {
+                            this.expectedPluginFoem.checkList.splice(_index, 1)
+                        }
+                    })
+                }
+            }
+            
         },
         // 导出 plugins 确认
         btnExpectedPlugins() {
             this.$refs.expectedPluginFoem.validate(async (valid) => {
                 if (valid) {
+                    //console.log('导出 plugins 确认', this.expectedPluginFoem.checkList)
+                    //return
                     this.isPageLoading = true
-                    let _zipname = this.promptFieldOpt.find(item => item.id === this.expectedPluginFoem.rangeId).alias || 'plugins'
+// 导出 plugins
+                    let _zipname = 'plugins'
+                    let _rangeIds = []
+                    let _ids = []
+                    this.expectedPluginFoem.checkList.forEach(item => {
+                        // 判断是否包含 - 如果包含就是靶道 否则就是靶场
+                        if (item.indexOf('_') > -1) {
+                            let _itemArr = item.split('_')
+                            _ids.push(Number(_itemArr[1]))
+                            _rangeIds.push(Number(_itemArr[0]))
+                        } else {
+                            _rangeIds.push(Number(item))
+                        }
+                    })
+                    // _rangeIds 和 _ids 去重
+                    _rangeIds = [...new Set(_rangeIds)]
+_ids = [...new Set(_ids)]
+
                     servicePR.request({
                         url: "/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.ExportPluginsAsync",
                         method: 'post',
@@ -905,10 +1052,10 @@ var app = new Vue({
                         headers: {
                            'Content-Type' :'application/json'
                         },
-                        params: {
-                            rangeId: this.expectedPluginFoem.rangeId
-                        },
-                        data: JSON.stringify(this.expectedPluginFoem.promptIdList)
+                        data: {
+                            rangeIds: _rangeIds,//靶场
+                            ids: _ids//靶道
+                        }
                     }).then((res) => {
                         this.isPageLoading = false
                         this.expectedPluginVisible = false
@@ -1249,10 +1396,11 @@ var app = new Vue({
                     this.promptid = promptItem.id
                     // 获取靶道详情
                     this.getPromptetail(promptItem.id, true)
+                    this.chartInstance.resize()
                     // 获取输出列表和平均分
                     //this.getOutputList()
                     // 获取分数趋势图表数据
-                    this.getScoringTrendData()
+                    // this.getScoringTrendData()
                 }
             })
              //监听图表鼠标移入事件 mouseover globalout
@@ -1357,7 +1505,6 @@ var app = new Vue({
         // 靶场|靶道|模型 选择变化
         promptChangeHandel(val, itemKey, oldVal) {
             // 靶道变化时，重置打靶按钮
-            this.sendBtnText = '打靶'
             this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
@@ -1381,7 +1528,6 @@ var app = new Vue({
                 }
                 // 重置页面数据
                 this.resetPageData()
-
             } else if (itemKey === 'promptid') {
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿
@@ -1393,22 +1539,67 @@ var app = new Vue({
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
-                            this.getPromptetail(val, true)
+                            this.getPromptetail(val, true,true)
                         })
                         // 重置 页面变化记录
                         this.pageChange = false
                         // 重新获取靶道列表
                         //this.getFieldList()
                     }).catch(() => {
-                        // 重新获取靶道列表
-                        //this.getFieldList()
+                        // 重置 页面变化记录
+                        this.pageChange = false
+                        // val 在 promptOpt 中的位置
+                        let _fitem = this.promptOpt.find(item => item.value === val)
+                        if (_fitem.isDraft) {
+                            this.sendBtns = [
+                                {
+                                    text: '打靶'
+                                },
+                                {
+                                    text: '保存草稿'
+                                }
+                            ]
+                            this.sendBtnText = '打靶'
+                        } else {
+                            this.sendBtns = [
+                                {
+                                    text: '连发'
+                                },
+                                {
+                                    text: '保存草稿'
+                                }
+                            ]
+                            this.sendBtnText = '连发'
+                        }
+                        
+                        // 清空ai评分标准
                         this.aiScoreForm = {
                             resultList: []
                         }
-                        // 靶道
-                        this.getPromptetail(val, true)
-                        // 重置 页面变化记录
-                        this.pageChange = false
+                        
+                        // 获取靶道详情
+                        this.getPromptetail(val, true, true)
+                        
+                    });
+                } else {
+                    // 重置 页面变化记录
+                    this.pageChange = false
+                    // 清空ai评分标准
+                    this.aiScoreForm = {
+                        resultList: []
+                    }
+                    let _fitem = this.promptOpt.find(item => item.value === val)
+                    if (_fitem.isDraft) {
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
                         this.sendBtns = [
                             {
                                 text: '连发'
@@ -1418,21 +1609,9 @@ var app = new Vue({
                             }
                         ]
                         this.sendBtnText = '连发'
-                    });
-                } else {
+                    }
                     // 靶道
-                    this.getPromptetail(val, true)
-                    // 重置 页面变化记录
-                    this.pageChange = false
-                    this.sendBtns = [
-                        {
-                            text: '连发'
-                        },
-                        {
-                            text: '保存草稿'
-                        }
-                    ]
-                    this.sendBtnText = '连发'
+                    this.getPromptetail(val, true, true)
                 }
 
             } else {
@@ -1477,22 +1656,37 @@ var app = new Vue({
                 resultList: []
             }            
             this.numsOfResults = 1
-            // 获取靶道列表
+            if (this.promptField) {
+// 获取靶道列表
             await this.getPromptOptData().then(() => {
                 // promptid is the last one of promptOpt
                 if (this.promptOpt && this.promptOpt.length > 0) {
-                    this.promptid = this.promptOpt[this.promptOpt.length - 1].id
-                    this.sendBtns = [
-                        {
-                            text: '连发'
-                        },
-                        {
-                            text: '保存草稿'
-                        }
-                    ]
-                    this.sendBtnText = '连发'
+                    let _el = this.promptOpt[this.promptOpt.length - 1]
+                    this.promptid = _el.id
+                    if (_el.isDraft) {
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
+                    }
+                    
                     // 获取详情
-                    this.getPromptetail(this.promptid, true)
+                    this.getPromptetail(this.promptid, true, true)
                 } else {
                     this.sendBtns = [
                         {
@@ -1508,6 +1702,8 @@ var app = new Vue({
             })
             // 获取分数趋势图表数据
             await this.getScoringTrendData()
+            }
+            
         },
 
         // 战术选择 关闭弹出
@@ -1595,7 +1791,7 @@ var app = new Vue({
             // 设置霸道选中
             this.promptid = itemData.id
             // 获取靶道详情
-            this.getPromptetail(itemData.id, true)
+            this.getPromptetail(itemData.id, true, true)
             // 获取输出列表和平均分
             //this.getOutputList()
             // 获取分数趋势图表数据
@@ -1621,7 +1817,7 @@ var app = new Vue({
             //    type: 'warning'
             //}).then(() => {
             //    // 对接接口 删除
-            //    this.btnDeleteHandle(itemData.id)
+            //    this.btnDeleteHandle(itemData.id,true)
 
             //}).catch(() => {
             //    this.$message({
@@ -2203,7 +2399,7 @@ app.$message({
         },
         // 配置 获取靶场 下拉列表数据
         async getFieldList() {
-            await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync',{})
+            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync', {})
                 .then(res => {
                     if (res.data.success) {
                         this.promptFieldOpt = res.data.data.map(item => {
@@ -2223,7 +2419,8 @@ app.$message({
                     }
                 })
         },
-        renameField(item){
+        renameField(e, item) {
+e.stopPropagation()
           //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
             this.$prompt('请输入新的靶场名称', '提示', {
                 confirmButtonText: '确定',
@@ -2258,7 +2455,7 @@ app.$message({
             // find rangeName by id
             let _find = this.promptFieldOpt.find(item => item.value === this.promptField)
             if (isExpected) {
-                _find = this.promptFieldOpt.find(item => item.value === this.expectedPluginFoem.rangeId )
+                _find = this.promptFieldOpt.find(item => item.value === id )
             }
             
             const name = _find ? _find.rangeName : ''
@@ -2270,28 +2467,37 @@ app.$message({
                 })
             if (res.data.success) {
                 let _optList = res.data.data || []
-                let _promptIdList = []
+                //let _promptIdList = []
                 let _promptOpt = _optList.map(item => {
                     const avg = scoreFormatter(item.evalAvgScore)
                     const max = scoreFormatter(item.evalMaxScore)
-                    _promptIdList.push(item.id)
+                    //_promptIdList.push(item.id)
                     return {
                         ...item,
                         label: `名称：${item.nickName || '未设置'} | 版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
                         value: item.id,
-                        disabled: false
+                        disabled: false,
                     }
                 })
                 if (isExpected) {
-                    // 设置 默认 全选
-                    this.expectedPluginFieldList = _promptOpt
-                    this.expectedPluginFoem.promptIdList = _promptIdList
-                    this.checkAll = true // 全选靶道
-                    this.isIndeterminate =  false // 全选靶道
+                    this.expectedPluginFoem.checkList.push(`${_find.value}`)
+                    // 导出 树形数据 
+                    this.expectedPluginFieldList.push({
+                        id: _find.id,
+                        label: _find.label, // 靶场名称
+                        idkey: `${_find.value}`, // 靶场id
+                        children: _promptOpt.map(item => {
+                            this.expectedPluginFoem.checkList.push(`${_find.value}_${item.id}`)
+                            return {
+                                id: item.id,
+                                label: item.label, // 靶场名称
+                                idkey: `${_find.value}_${item.id}`, // 靶场id
+                            }
+                        }),
+                    })
                         
                 } else {
 //console.log('getModelOptData:', res)
-                
                     this.promptOpt = _promptOpt
                     if (id) {
                         this.promptid = id
@@ -2309,7 +2515,7 @@ app.$message({
             }
         },
         // 获取 prompt 详情
-        async getPromptetail(id, overwrite) {
+        async getPromptetail(id, overwrite,isChart) {
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
@@ -2343,8 +2549,11 @@ app.$message({
                 if (overwrite) {
                     // 重新获取输出列表
                     this.getOutputList(this.promptDetail.id)
-                    // 重新获取图表
-                    this.getScoringTrendData()
+                    if (isChart) {
+                        // 重新获取图表
+                        this.getScoringTrendData()
+                    }
+                    
 
                     // 参数覆盖
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
@@ -2411,38 +2620,25 @@ app.$message({
             }
         },
         // 删除 prompt 
-        async btnDeleteHandle(id) {
+        async btnDeleteHandle(id,versionRecord) {
             const res = await servicePR.request({
                 method: 'delete',
-                url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Del?id=${id}`,
-                //data: {id:item.id} // 将 ID 列表作为请求体数据发送
+                url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.DeleteAsync?id=${id}`,
             });
             if (res.data.success) {
                 // 重新获取 靶道列表 如果删除的是当前选中的靶道，就重重置靶道选中值并重置模型、参数、输入内容、备注、输出列表、平均分、图表、ai评分预期结果
                 if (id === this.promptid) {
-                    this.promptid = '' // 靶道
-                    this.modelid = '' // 模型
-                    // 参数设置 视图配置列表
-                    this.resetConfigurineParam(false)
-                    // 输入Prompt 重置
-                    this.resetInputPrompt()
-                    this.outputList = []
-                    this.outputAverageDeci = -1
-                    this.outputMaxDeci = -1
-                    // 获取分数趋势图表数据
-                    this.getScoringTrendData()
-                    this.promptDetail = {}
-                    this.promptParamForm = {
-                        prefix: '',
-                        suffix: '',
-                        variableList: []
-                    }
-
+                    this.resetPageData()
+                } else {
+                    // 重新获取prompt列表
+                    await this.getPromptOptData(this.promptid)
                 }
-                // 重新获取prompt列表
-                await this.getPromptOptData(this.promptid)
-                // 重新获取版本记录
-                await this.getVersionRecordData()
+                
+                if (versionRecord) {
+                    // 重新获取版本记录
+                    await this.getVersionRecordData()
+                }
+                
 
                 // 删除成功
                 this.$message({
@@ -2591,4 +2787,12 @@ this.$message({
 
 function scoreFormatter(score) {
     return score === -1 ? '--' : score
+}
+
+function getUuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0,
+            v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
 }

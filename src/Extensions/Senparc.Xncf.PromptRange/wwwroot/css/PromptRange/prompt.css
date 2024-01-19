@@ -5,6 +5,40 @@
    text-align:left;
    
 }
+.expectedPluginTreeBox{
+    width:100%;
+    max-height:60vh;
+    overflow:hidden;
+    overflow-y:auto;
+}
+.tacticalFormBox .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px 0px;
+}
+    .tacticalFormBox .el-radio-group .el-radio {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+.d-f-startr-start-nowrap {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.d-c-startr-start-nowrap {
+    display: flex;
+    flex-direction:column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap:5px;
+}
 .deleteIcon {
     /*position: absolute;
                 right: 0;
@@ -38,6 +72,7 @@
 }
 
 .titleContent {
+    white-space: nowrap;
     box-sizing: border-box;
     color: #333;
     font-size: 14px;
