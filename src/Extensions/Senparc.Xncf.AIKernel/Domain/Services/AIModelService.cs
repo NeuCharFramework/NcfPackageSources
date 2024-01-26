@@ -52,7 +52,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
 
             #endregion
-            
+
             aiModel.Update(request);
 
             await this.SaveObjectAsync(aiModel);
@@ -110,6 +110,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = aiModel.ApiKey,
                         OrganizationId = aiModel.OrganizationId
+                    };
+                    break;
+                case AiPlatform.FastAPI:
+                    aiSettings.FastAPIKeys = new FastAPIKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        Endpoint = aiModel.Endpoint,
+                        //OrganizationId = aiModel.OrganizationId
                     };
                     break;
                 default:

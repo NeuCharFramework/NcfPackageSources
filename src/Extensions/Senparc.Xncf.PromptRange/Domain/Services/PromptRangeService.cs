@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -50,22 +51,32 @@ public class PromptRangeService : ServiceBase<PromptRange>
 
     public async Task<PromptRangeDto> AddAsync(string alias)
     {
-        var today = SystemTime.Now;
-        var todayStr = today.ToString("yyyy.MM.dd");
+        try
+        {
+            var today = SystemTime.Now;
+            var todayStr = today.ToString("yyyy.MM.dd");
 
-        List<PromptRange> todayRangeList = await this.GetFullListAsync(
-            p => p.RangeName.StartsWith($"{todayStr}."),
-            p => p.Id,
-            OrderingType.Descending
-        );
+            List<PromptRange> todayRangeList = await this.GetFullListAsync(
+                p => p.RangeName.StartsWith($"{todayStr}."),
+                p => p.Id,
+                OrderingType.Descending
+            );
 
-        var promptRange = new PromptRange($"{todayStr}.{todayRangeList.Count + 1}");
+            var promptRange = new PromptRange($"{todayStr}.{todayRangeList.Count + 1}");
 
-        promptRange.ChangeAlias(alias);
+            promptRange.ChangeAlias(alias);
 
-        await this.SaveObjectAsync(promptRange);
+            await this.SaveObjectAsync(promptRange);
 
-        return this.TransEntityToDto(promptRange);
+            return this.TransEntityToDto(promptRange);
+        }
+        catch (Exception ex)
+        {
+            SenparcTrace.BaseExceptionLog(ex);
+            await Console.Out.WriteLineAsync(ex.ToString());
+            throw;
+        }
+       
     }
 
     public async Task<PromptRangeDto> ChangeAliasAsync(int rangeId, string alias)
