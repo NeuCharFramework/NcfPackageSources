@@ -85,6 +85,7 @@
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
                     <el-option label="HuggingFace" value="32"></el-option>
+                    <el-option label="FastAPI" value="128"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="模型名称" prop="deploymentName">
@@ -131,6 +132,7 @@
                 @*  OpenAI = 8, *@
                 @*  AzureOpenAI = 16, *@
                 @*  HuggingFace = 32 *@
+                @*  FastAPI = 128 *@
                 @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
                 @* use el-select *@
                 <el-select v-model="editForm.aiPlatform" placeholder="请选择">
@@ -138,6 +140,7 @@
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
                     <el-option label="HuggingFace" value="32"></el-option>
+                    <el-option label="FastAPI" value="128"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="模型名称" prop="deploymentName">
@@ -148,10 +151,10 @@
                 <el-input v-model="editForm.apiVersion"></el-input>
             </el-form-item>
             @* ,[ApiKey] *@
-            <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'" prop="apiKey">
+            <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'" prop="apiKey">
                 <el-input v-model="editForm.apiKey" type="password" placeholder="********"></el-input>
             </el-form-item>
-            <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'" prop="endpoint">
+            <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'" prop="endpoint">
                 <el-input v-model="editForm.endpoint"></el-input>
             </el-form-item>
             <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">

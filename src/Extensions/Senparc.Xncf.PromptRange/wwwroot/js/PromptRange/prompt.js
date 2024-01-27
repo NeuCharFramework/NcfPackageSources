@@ -181,6 +181,10 @@ var app = new Vue({
                 value: '32',
                 label: 'HuggingFace',
                 disabled: false
+            }, {
+                value: '128',
+                label: 'FastAPI',
+                disabled: false
             }],
             // 表单校验规则
             rules: {
@@ -600,8 +604,21 @@ var app = new Vue({
             }
 
             this.parameterViewList.forEach(item => {
+                console.log('item' + item);
                 // todo 单独处理
                 if (item.formField === 'stopSequences') {
+                    //console.log("item.formField === 'stopSequences'");
+                    //if (item.value) {
+                    //    let obj = JSON.parse(_postData[item.formField]);
+                    //    let valuesArray = Object.values(obj);
+                    //    var displayValue = valuesArray.join(' , ');
+                    //    console.log('displayValue:'+displayValue);
+
+                    //    _postData[item.formField] = displayValue;
+                    //}
+                    //else {
+                    //    _postData[item.formField] = '';
+                    //}
                     _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
                 } else if (item.formField === 'maxToken') {
                     _postData[item.formField] = item.value ? Number(item.value) : 0

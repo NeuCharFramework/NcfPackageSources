@@ -336,9 +336,11 @@ public class PromptItem : EntityBase<int>
         return this;
     }
 
-    public PromptItem UpdateVariablesJson(string variablesJson)
+    public PromptItem UpdateVariablesJson(string variablesJson,string prefix, string suffix)
     {
         VariableDictJson = variablesJson;
+        Prefix = prefix;
+        Suffix = suffix;
 
         return this;
     }

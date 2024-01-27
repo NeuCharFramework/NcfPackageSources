@@ -16,6 +16,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -216,6 +217,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         OrganizationId = llModel.OrganizationId
+                    };
+                    break;
+                case AiPlatform.FastAPI:
+                    aiSettings.FastAPIKeys = new FastAPIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        Endpoint = llModel.Endpoint,
+                        //OrganizationId = aiModel.OrganizationId
                     };
                     break;
                 default:
