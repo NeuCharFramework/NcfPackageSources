@@ -1219,8 +1219,8 @@ _ids = [...new Set(_ids)]
                         let _html = `<div style="text-align: left;font-size:10px;">
     <p>靶场：${_data?.rangeName || ''}</p>
     <p>版本：${_data?.fullVersion || ''}</p>
-<p>平均分：${_data?.evalAvgScore || ''}</p>
-<p>最高分：${_data?.evalMaxScore || ''}</p>
+<p>平均分：${_data?.evalAvgScore.toFixed(1) || ''}</p>
+<p>最高分：${_data?.evalMaxScore.toFixed(1) || ''}</p>
 <p>时间：${this.formatDate(_data?.addTime) || ''}</p>
 </div>`
                         return _html
@@ -1272,9 +1272,9 @@ _ids = [...new Set(_ids)]
                     axisLabel: {
                         show: true,//是否显示刻度  (刻度上的数字，或者类目)
                         interval: 0,//坐标轴刻度标签的显示间隔，在类目轴中有效。
-                        //formatter: function (v) {
-                        //    // return;
-                        //},
+                        formatter: function (v) {
+                            return typeof v ==='number'?v.toFixed(1):v
+                        },
                         textStyle: {
                             color: '#32b8be',//刻度标签样式
                             //color: function (value, index) {
@@ -1455,6 +1455,9 @@ _ids = [...new Set(_ids)]
             //     //this.chartInstance.setOption(chartOption);
             //     chartInstance.setOption({ series: _series });
             // })
+        },
+        formatTooltip(val){
+          return val.toFixed(1)  
         },
         // 输出 获取评分趋势 图表数据
         async getScoringTrendData() {
