@@ -2543,6 +2543,9 @@ e.stopPropagation()
                 copyResultData.promptFieldStr = vArr[0] || ''
                 copyResultData.promptStr = vArr[1] || ''
                 copyResultData.tacticsStr = vArr[2] || ''
+                if (copyResultData.stopSequences) {
+                    copyResultData.stopSequences=JSON.parse(copyResultData.stopSequences).join(',')
+                }
                 this.promptDetail = copyResultData
                 //如果获取到的结果没有，则延续以往的expectedJson.
                 if (copyResultData.expectedResultsJson) {
