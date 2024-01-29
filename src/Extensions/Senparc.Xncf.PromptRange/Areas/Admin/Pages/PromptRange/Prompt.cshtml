@@ -311,11 +311,11 @@
             </div>
             <div class="titleRow_scoreBox">
                 <span>平均分:</span>
-                <span>{{outputAverageDeci>-1?outputAverageDeci:'--'}}</span>
+                <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
             </div>
             <div class="titleRow_scoreBox">
                 <span>最高分:</span>
-                <span>{{outputMaxDeci>-1?outputMaxDeci:'--'}}</span>
+                <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
             </div>
         </div>
         <div class="outputArea_contentBox" id="resultBox">
@@ -331,11 +331,11 @@
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                         <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore : '--'}}</span>
+                        <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}</span>
                     </div>
                     <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                         <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore : '--'}}</span>
+                        <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
                     </div>
                 </div>
                 <div v-if="item.isScoreView" class="scoreRow">

@@ -2806,7 +2806,7 @@ this.$message({
 
 
 function scoreFormatter(score) {
-    return score === -1 ? '--' : score
+    return score === -1 ? '--' : score.toFixed(1)
 }
 
 function getUuid() {
