@@ -258,37 +258,37 @@ namespace Senparc.Ncf.Service
 
             IEnumerable<SysRole> sysRoles = new List<SysRole>()
             {
-                new SysRole() { Id = tenantId+"1", RoleCode = "administrator", RoleName = "超级管理员", Enabled = true }
+                new SysRole() { Id = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, RoleName = "超级管理员", Enabled = true }
             };
 
 
             IEnumerable<SysRolePermission> sysPermissions = new List<SysRolePermission>()
             {
-                new SysRolePermission() { PermissionId = tenantId+"1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.1.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.1.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.1.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.1.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.1.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true } ,
-                new SysRolePermission() { PermissionId = tenantId+"1.1.6", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true } ,
-                new SysRolePermission() { PermissionId = tenantId+"1.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.2.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.2.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.2.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.2.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.2.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.2.6", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"1.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true },
-                new SysRolePermission() { PermissionId = tenantId+"2.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = "administrator", IsMenu = true }
+                new SysRolePermission() { PermissionId = tenantId+"1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.1.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.1.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.1.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.1.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.1.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true } ,
+                new SysRolePermission() { PermissionId = tenantId+"1.1.6", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true } ,
+                new SysRolePermission() { PermissionId = tenantId+"1.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.2.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.2.2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.2.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.2.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.2.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.2.6", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.3", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.4", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"1.5", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"2", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true },
+                new SysRolePermission() { PermissionId = tenantId+"2.1", ResourceCode = string.Empty, RoleId = tenantId+"1", RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, IsMenu = true }
             };
 
             IEnumerable<SysRoleAdminUserInfo> sysRoleAdminUserInfos = new List<SysRoleAdminUserInfo>()
             {
-                new SysRoleAdminUserInfo() { RoleCode = "administrator", RoleId =tenantId+ "1", AccountId = 1 }
+                new SysRoleAdminUserInfo() { RoleCode = Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, RoleId =tenantId+ "1", AccountId = 1 }
             };
 
             try

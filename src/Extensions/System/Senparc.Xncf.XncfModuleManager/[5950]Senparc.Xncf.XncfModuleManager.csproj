@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.5.3.4-beta1</Version>
+    <Version>0.6.0-beta1</Version>
     <AssemblyName>Senparc.Xncf.XncfModuleManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfModuleManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -22,7 +22,8 @@
 		v0.3.3.1 添加 Oracle 数据库迁移代码
 		v0.5.2 更改菜单名称：XNCF 模块管理 &gt; XNCF 模块管理核心
 		v0.5.3 fix bug：模块菜单名更新后，无法更新到数据库中的菜单信息
-</PackageReleaseNotes>
+		v0.6.0 解决模块安装后直接授权菜单问题
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
