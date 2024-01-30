@@ -25,16 +25,18 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 
         //TODO: 更多 AI 参数
 
-
+        [Required]
+        [MaxLength(1000)]
         [Description("提示词||")]
         public string Prompt { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            List<ModelItem> settings = new();
-
-            //从 appsettings.json 读取
-            settings.Add(new("Default", Senparc.AI.Config.SenparcAiSetting, "appsettings.json"));
+            List<ModelItem> settings =
+            [
+                //从 appsettings.json 读取
+                new("Default", Senparc.AI.Config.SenparcAiSetting, "appsettings.json"),
+            ];
 
             if (Senparc.AI.Config.SenparcAiSetting is SenparcAiSetting aiSetting)
             {
@@ -58,7 +60,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             {
                 var value = z.ModelAlias;
                 var text = z.DisplayText;
-                Model.Items.Add(new SelectionItem(value, text, $"来自：{z.From}", false));
+                Model.Items.Add(new SelectionItem(value, text, $"来自：{z.From}", false) { BindData = z.SenparcAiSetting });
             });
 
             await base.LoadData(serviceProvider);

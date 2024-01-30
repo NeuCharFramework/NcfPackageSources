@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Senparc.AI.Exceptions;
 using Senparc.AI.Kernel;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
@@ -24,17 +26,24 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
+                await request.LoadData(ServiceProvider);//加载数据
+
                 var msg = new StringBuilder();
 
                 var selectedItems = request.Model.Items.Where(z => request.Model.SelectedValues.Contains(z.Value));
 
+                if (selectedItems.Count() == 0)
+                {
+                    throw new SenparcAiException("请至少选择一个模型！");
+                }
+
                 foreach (var selectedItem in selectedItems)
                 {
-                    msg.AppendLine($"正在测试模型：{selectedItem.Text}（{selectedItem.Value}）");
+                    msg.AppendLine($"正在测试模型：{selectedItem.Value}");
                     try
                     {
                         var aiResult = await _aIModelService.RunModelsync(selectedItem.BindData as SenparcAiSetting, request.Prompt);
-                        msg.AppendLine($"模型测试成功：{aiResult}");
+                        msg.AppendLine($"模型测试成功，返回信息：{aiResult.Output}");
                     }
                     catch (Exception ex)
                     {
@@ -43,8 +52,9 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     msg.AppendLine("--------------------------");
                 }
 
-                response.Data = msg.ToString();
-                return response.Data;
+                response.Data = msg.ToString().Replace("\r", "<br />").Replace("\n", "");
+                logger.Append($"测试完成，返回信息：\r\n{msg.ToString()}");
+                return null;
             });
         }
     }

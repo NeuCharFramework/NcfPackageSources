@@ -14,6 +14,7 @@ using Senparc.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.AI.Entities;
+using Senparc.AI.Exceptions;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
@@ -139,6 +140,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <returns></returns>
         public async Task<SenparcKernelAiResult> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string modelName = "gpt-4-32k")
         {
+            if (senparcAiSetting == null)
+            {
+                throw new SenparcAiException("SenparcAiSetting 不能为空");
+            }
+
             var parameter = new PromptConfigParameter()
             {
                 MaxTokens = 2000,
