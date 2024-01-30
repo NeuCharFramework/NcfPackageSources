@@ -25,6 +25,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
     public class XncfModuleServiceExtension : XncfModuleService
     {
         private readonly Lazy<SysMenuService> _sysMenuService;
+        private readonly Lazy<SysRoleService> _sysRoleService;
 
         /// <summary>
         /// 获取模块起始触发 URL
@@ -36,9 +37,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             return $"/Admin/XncfModule/Start/?uid={register.Uid}";
         }
 
-        public XncfModuleServiceExtension(IRepositoryBase<XncfModule> repo, Lazy<SysMenuService> sysMenuService, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public XncfModuleServiceExtension(IRepositoryBase<XncfModule> repo, Lazy<SysMenuService> sysMenuService, Lazy<SysRoleService> sysRoleService, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             _sysMenuService = sysMenuService;
+            this._sysRoleService = sysRoleService;
         }
 
         /// <summary>
@@ -139,12 +141,18 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             if (installOrUpdate == InstallOrUpdate.Install)
             {
                 //更新菜单信息
+
+                //获取管理员组的 RoleId
+                var administratorRoleCode = Senparc.Ncf.Service.Config.SYSROLE_ADMINISTRATOR_ROLE_CODE;
+                var sysRole = await _sysRoleService.Value.GetObjectAsync(z => z.RoleCode == administratorRoleCode);
+
                 SysPermissionDto sysPermissionDto = new SysPermissionDto()
                 {
                     IsMenu = true,
                     ResourceCode = sysMemu.ResourceCode,
-                    RoleId = "1-1",
-                    RoleCode = "administrator",
+                    //RoleId = "1-1",
+                    RoleId = sysRole?.Id ?? "1",
+                    RoleCode = sysRole?.RoleCode ?? administratorRoleCode,
                     PermissionId = sysMemu.Id
                 };
                 //SenparcEntities db = _serviceProvider.GetService<SenparcEntities>();
