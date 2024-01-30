@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -144,7 +145,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
 
-        public async Task<PromptResult> ManualScoreAsync(int id, int score)
+        public async Task<PromptResult> ManualScoreAsync(int id, decimal score)
         {
             #region validate
 

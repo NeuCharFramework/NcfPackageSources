@@ -5,6 +5,6 @@
         // public int PromptItemId { get; set; }
 
         public int PromptResultId { get; set; }
-        public int HumanScore { get; set; }
+        public decimal HumanScore { get; set; }
     }
 }

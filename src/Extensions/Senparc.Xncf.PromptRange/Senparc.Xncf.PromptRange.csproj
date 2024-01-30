@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.4.6.17-preview1</Version>
+    <Version>0.4.7-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -30,7 +30,8 @@
 		v0.3.10 引用 Senparc.Xncf.AIKernel
 		v0.4.0 完成 PromptRange 基本功能
 		v0.4.2 优化 PromptRange 模糊查询
-</PackageReleaseNotes>
+		v0.4.7 支持手动打分精确到小数点后 1 位
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
