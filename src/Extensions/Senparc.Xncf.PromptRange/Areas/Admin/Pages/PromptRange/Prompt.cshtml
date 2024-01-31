@@ -359,7 +359,9 @@
                             <span>0.0</span>
                             <span>10.0</span>
                         </div>
-                        <el-slider v-model="item.scoreVal" :min="0" :max="10" :step="0.1" :format-tooltip="formatTooltip"></el-slider>
+                        <el-slider v-model="item.scoreVal" ref="humanSlider" :min="0" :max="10" :step="0.1" :format-tooltip="formatTooltip">
+                            
+                        </el-slider>
                         @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
                         <div class="manualOperation">
                             <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
