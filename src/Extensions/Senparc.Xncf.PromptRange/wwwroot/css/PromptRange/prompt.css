@@ -5,6 +5,16 @@
    text-align:left;
    
 }
+
+.my-slider{
+    .my-slider__tooltip {
+        text-align: left;
+        .my-slider__tooltip-wrapper {
+            transform: translateX(-50%);
+            top: -50%;
+        }
+    }
+}
 .expectedPluginTreeBox{
     width:100%;
     max-height:60vh;

@@ -308,6 +308,14 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        style(val) {
+            const length = 10,
+                progress = val - 0,
+                left = progress / length * 100
+            return {
+                paddingLeft: `${left}%`,
+            }
+        },
         // 靶场删除
         fieldDeleteHandel(e, id) {
             // 阻止事件冒泡
