@@ -388,11 +388,14 @@
                 <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
             </div>
         </div>
-        <div id="promptPage_scoreChart" class="echartsBox">
-            <div v-if="chartData.length===0" class="emptyDataArea">
+        <div id="promptPage_scoreChart" key="myCharts" v-if="promptid&&promptid!==''&&chartData.length!==0" class="echartsBox">
+        </div>
+        <div  v-else class="echartsBox">
+            <div class="emptyDataArea">
                 暂无数据
             </div>
         </div>
+        
 
     </div>
 </div>
