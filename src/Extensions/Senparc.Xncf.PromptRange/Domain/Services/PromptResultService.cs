@@ -282,6 +282,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 return promptResult;
             }
 
+            //TODO：添加不等号规则
+
 
             // 获取模型
             var model = promptItem.AIModelDto;

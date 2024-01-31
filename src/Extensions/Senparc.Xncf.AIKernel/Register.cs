@@ -19,6 +19,7 @@ using Microsoft.Extensions.FileProviders;
 using Senparc.AI.Kernel;
 using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
+using Senparc.AI.Interfaces;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -87,9 +88,8 @@ namespace Senparc.Xncf.AIKernel
         {
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
-            var senparcAiSetting = new SenparcAiSetting();
-
             services.AddSenparcAI(configuration);
+            services.AddScoped<SemanticAiHandler>();
 
             return base.AddXncfModule(services, configuration, env);
         }

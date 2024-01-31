@@ -51,12 +51,12 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 机器人打分，0-100分
         /// </summary>
-        public int RobotScore { get; set; }
+        public decimal RobotScore { get; set; }
 
         /// <summary>
         /// 人类打分，0-100分
         /// </summary>
-        public int HumanScore { get; set; }
+        public decimal HumanScore { get; set; }
 
         /// <summary>
         /// 最终得分

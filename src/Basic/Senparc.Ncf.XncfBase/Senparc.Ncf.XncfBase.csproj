@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.14.1.8-beta1</Version>
+    <Version>0.15.0-beta1.2</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -33,6 +33,7 @@
 			v0.13.0 添加 FunctionHelper.LoadXncfProjects() 方法
 			v0.13.1 添加 FunctionHelper.GetSenparcEntitiesFilePath() 方法
 			v0.13.2 添加 VersionHelper，统一处理版本
+			v0.15.0 SelectionItem 支持 BindData 属性
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

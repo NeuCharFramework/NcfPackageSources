@@ -11,6 +11,10 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
 using Senparc.AI.Kernel;
 using Senparc.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.Entities;
+using Senparc.AI.Exceptions;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
@@ -126,6 +130,36 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
 
             return aiSettings;
+        }
+
+        /// <summary>
+        /// 运行模型
+        /// </summary>
+        /// <param name="senparcAiSetting"></param>
+        /// <param name="prompt"></param>
+        /// <returns></returns>
+        public async Task<SenparcKernelAiResult> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string modelName = "gpt-4-32k")
+        {
+            if (senparcAiSetting == null)
+            {
+                throw new SenparcAiException("SenparcAiSetting 不能为空");
+            }
+
+            var parameter = new PromptConfigParameter()
+            {
+                MaxTokens = 2000,
+                Temperature = 0.7,
+                TopP = 0.5,
+            };
+
+            var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
+            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey",
+               modelName: modelName, senparcAiSetting: senparcAiSetting);
+            var iWantToRun = chatConfig.iWantToRun;
+
+            var request = iWantToRun.CreateRequest(prompt);
+            var aiResult = await iWantToRun.RunAsync(request);
+            return aiResult;
         }
 
     }

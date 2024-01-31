@@ -87,6 +87,8 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// </summary>
         public string Note { get; set; }
 
+        public object BindData  { get; set; }
+
         public SelectionItem() { }
 
         public SelectionItem(string value, string text, string note = "", bool defaultSelected = false)
