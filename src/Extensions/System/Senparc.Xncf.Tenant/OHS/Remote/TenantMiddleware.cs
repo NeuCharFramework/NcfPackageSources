@@ -26,21 +26,6 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
         {
             try
             {
-                var enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
-
-                if (!AlertedTenantState)
-                {
-                    await Console.Out.WriteLineAsync($"多租户状态：{(enableMultiTenant ? "开启" : "关闭")} 租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}");
-                    AlertedTenantState = true;
-                }
-
-                //判断是否启用了租户
-                if (!enableMultiTenant)
-                {
-                    //不使用租户，跳过
-                    await _next(context);
-                }
-
                 //判断是否需要使用数据库
                 if (!SiteConfig.DatabaseXncfLoaded)
                 {
@@ -48,9 +33,21 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                     await _next(context);
                 }
 
-                var serviceProvider = context.RequestServices;
-                var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
-                var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
+                var enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
+
+                if (!AlertedTenantState)
+                {
+                    await Console.Out.WriteLineAsync($"多租户状态：{(enableMultiTenant ? "开启" : "关闭")}  /  租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}");
+                    AlertedTenantState = true;
+                }
+
+                //判断是否启用了租户
+                if (enableMultiTenant)
+                {
+                    var serviceProvider = context.RequestServices;
+                    var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
+                    var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
+                }
             }
             catch (NcfUninstallException unInstallEx)
             {
