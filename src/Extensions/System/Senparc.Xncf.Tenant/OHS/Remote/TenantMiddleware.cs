@@ -15,6 +15,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
     public class TenantMiddleware
     {
         private readonly RequestDelegate _next;
+        private static bool AlertedTenantState = false;
 
         public TenantMiddleware(RequestDelegate next)
         {
@@ -25,6 +26,21 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
         {
             try
             {
+                var enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
+
+                if (!AlertedTenantState)
+                {
+                    await Console.Out.WriteLineAsync($"多租户状态：{(enableMultiTenant ? "开启" : "关闭")} 租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}");
+                    AlertedTenantState = true;
+                }
+
+                //判断是否启用了租户
+                if (!enableMultiTenant)
+                {
+                    //不使用租户，跳过
+                    await _next(context);
+                }
+
                 //判断是否需要使用数据库
                 if (!SiteConfig.DatabaseXncfLoaded)
                 {
