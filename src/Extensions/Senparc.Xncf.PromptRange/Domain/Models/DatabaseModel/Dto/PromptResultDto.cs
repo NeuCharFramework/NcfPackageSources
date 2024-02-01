@@ -61,7 +61,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 最终得分
         /// </summary>
-        public int FinalScore { get; set; }
+        public decimal FinalScore { get; set; }
 
 
         /// <summary>
