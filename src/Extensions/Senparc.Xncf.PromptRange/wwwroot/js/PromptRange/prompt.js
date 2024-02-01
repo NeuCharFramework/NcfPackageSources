@@ -207,7 +207,7 @@ var app = new Vue({
                     {required: true, message: '请选择模型类型', trigger: 'change'}
                 ],
                 alias: [
-                    {required: true, message: '请输入模型别名', trigger: 'blur'}
+                    {required: true, message: '请输入别名', trigger: 'blur'}
                 ],
                 deploymentName: [
                     {required: true, message: '请输入模型名称', trigger: 'blur'}
@@ -308,6 +308,14 @@ var app = new Vue({
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        style(val) {
+            const length = 10,
+                progress = val - 0,
+                left = progress / length * 100
+            return {
+                paddingLeft: `${left}%`,
+            }
+        },
         // 靶场删除
         fieldDeleteHandel(e, id) {
             // 阻止事件冒泡
@@ -1216,7 +1224,15 @@ _ids = [...new Set(_ids)]
                     formatter: (params) => {
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
+                        //find alias name by rangeName
+                        let alias= '未设置'
+                        that.promptFieldOpt.forEach(item => {
+                            if (item.rangeName === _data?.rangeName) {
+                                alias = item.alias
+                            }
+                        })
                         let _html = `<div style="text-align: left;font-size:10px;">
+<p>自定义名称：${alias}</p>
     <p>靶场：${_data?.rangeName || ''}</p>
     <p>版本：${_data?.fullVersion || ''}</p>
 <p>平均分：${_data?.evalAvgScore.toFixed(1) || ''}</p>

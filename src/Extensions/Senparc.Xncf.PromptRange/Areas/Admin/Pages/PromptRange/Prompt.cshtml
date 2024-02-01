@@ -359,7 +359,23 @@
                             <span>0.0</span>
                             <span>10.0</span>
                         </div>
-                        <el-slider v-model="item.scoreVal" :min="0" :max="10" :step="0.1" :format-tooltip="formatTooltip"></el-slider>
+                        <div class="my-slider">
+                            <div class="my-slider__tooltip" :style="style(item.scoreVal)">
+                                <el-tag
+                                    class="my-slider__tooltip-wrapper"
+                                    size="mini"
+                                    effect="plain"
+                                    type="info"
+                                >
+                                    {{ formatTooltip(item.scoreVal) }}
+                                </el-tag>
+                            </div>
+                            <el-slider
+                                v-model="item.scoreVal"
+                                :show-tooltip="false"
+                                :min="0" :max="10" :step="0.1"
+                            ></el-slider>
+                        </div>
                         @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
                         <div class="manualOperation">
                             <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
@@ -386,11 +402,14 @@
                 <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
             </div>
         </div>
-        <div id="promptPage_scoreChart" class="echartsBox">
-            <div v-if="chartData.length===0" class="emptyDataArea">
+        <div id="promptPage_scoreChart" key="myCharts" v-if="promptid&&promptid!==''&&chartData.length!==0" class="echartsBox">
+        </div>
+        <div  v-else class="echartsBox">
+            <div class="emptyDataArea">
                 暂无数据
             </div>
         </div>
+        
 
     </div>
 </div>
