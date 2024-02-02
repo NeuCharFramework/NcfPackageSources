@@ -43,7 +43,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                 if (!AlertedTenantState)
                 {
                     await Console.Out.WriteLineAsync(SetLog($"自检完成，多租户引擎激活"));
-                    await Console.Out.WriteLineAsync($"当前多租户状态：{(enableMultiTenant ? "开启" : "关闭")}  /  租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}");
+                    await Console.Out.WriteLineAsync(SetLog($"当前多租户状态：{(enableMultiTenant ? "开启" : "关闭")}  /  租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}"));
                     AlertedTenantState = true;
                 }
 
