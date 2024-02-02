@@ -67,10 +67,11 @@ namespace Senparc.Ncf.Database
         /// </summary>
         /// <param name="multiDbContextAttr"></param>
         /// <param name="xncfDatabaseDbContextType">实现了 IXncfDatabase 接口的类型</param>
+        /// <param name="logColumnWidth">输出日志表格的宽度</param>
         /// <returns></returns>
-        public string TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
+        public string TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType, int[] logColumnWidth)
         {
-            var msg = $"| {multiDbContextAttr.XncfDatabaseRegisterType.FullName}\t| {xncfDatabaseDbContextType.Name}\t| {multiDbContextAttr.MultipleDatabaseType}";
+            var msg = $"| {multiDbContextAttr.XncfDatabaseRegisterType.FullName.PadRight(logColumnWidth[0])}| {xncfDatabaseDbContextType.Name.PadRight(logColumnWidth[1])}| {multiDbContextAttr.MultipleDatabaseType.ToString().PadRight(logColumnWidth[2])}";
 
             //查看是否已经包含 MultipleDatabaseType 
             if (!this.ContainsKey(multiDbContextAttr.MultipleDatabaseType))

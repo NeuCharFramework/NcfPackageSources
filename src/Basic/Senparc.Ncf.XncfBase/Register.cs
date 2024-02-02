@@ -57,9 +57,9 @@ namespace Senparc.Ncf.XncfBase
             XncfAutoConfigurationMappingAttribute
         }
 
-        private static void SetLog(StringBuilder sb, string log)
+        private static void SetLog(StringBuilder sb, string log, bool addTime = true)
         {
-            var msg = $"[{SystemTime.Now}] {log}";
+            var msg = addTime ? $"[{SystemTime.Now}] {log}" : $"\t{log}";
             sb.AppendLine(msg);
             //Debug.WriteLine(msg);
             //Console.WriteLine(msg);
@@ -85,9 +85,13 @@ namespace Senparc.Ncf.XncfBase
                 {
                     //遍历所有程序集
                     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    int columnWidth1 = 42;
+                    int columnWidth2 = 45;
+                    int columnWidth3 = 15;
+
                     SetLog(sb, " === Multiple databases detected ===");
-                    SetLog(sb, "| Register\t\t\t| Full Name\t\t| Database Type");
-                    SetLog(sb, "|---------------------------------|-----------------------|------------------------");
+                    SetLog(sb, $"| {"Register".PadRight(columnWidth1)}| {"Full Name".PadRight(columnWidth2)}| {"Database Type".PadRight(columnWidth3)}", false);
+                    SetLog(sb, $"|-{new String('-', columnWidth1)}|-{new String('-', columnWidth2)}|-{new String('-', columnWidth3)}", false);
 
                     foreach (var a in assemblies)
                     {
@@ -137,8 +141,8 @@ namespace Senparc.Ncf.XncfBase
 
                                 //添加配置
                                 var multipleDatabasePool = MultipleDatabasePool.Instance;
-                                var result = multipleDatabasePool.TryAdd(multiDbContextAttr, t);
-                                SetLog(sb, result);
+                                var result = multipleDatabasePool.TryAdd(multiDbContextAttr, t, new[] { columnWidth1, columnWidth2, columnWidth3 });
+                                SetLog(sb, result, false);
                             }
 
                             //配置 FunctionRender
@@ -173,7 +177,7 @@ namespace Senparc.Ncf.XncfBase
                         }
                     }
 
-                    SetLog(sb, "-----------------------------------------------------------------------------------");
+                    SetLog(sb, $"{new String('-', columnWidth1 + columnWidth2 + columnWidth3 + 6)}", false);
                     SetLog(sb, "");
                 }
                 catch (Exception ex)
