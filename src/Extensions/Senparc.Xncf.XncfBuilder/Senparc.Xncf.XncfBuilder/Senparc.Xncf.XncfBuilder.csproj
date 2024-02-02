@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.21.2.1-beta2</Version>
+    <Version>0.21.3-beta2</Version>
     <LangVersion>9.0</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -35,7 +35,7 @@
 		v0.19.0 优化项目引用
 		v0.20.0 更新项目引用，支持 .NET 8.0
 		v0.21.0 集成 Senparc.Xncf.AIKernel，可以选择已配置的 AI 模型生成代码
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
