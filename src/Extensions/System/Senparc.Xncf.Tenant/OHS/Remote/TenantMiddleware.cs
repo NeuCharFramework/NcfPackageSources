@@ -17,6 +17,11 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
         private readonly RequestDelegate _next;
         private static bool AlertedTenantState = false;
 
+        private string SetLog(string msg)
+        {
+            return  $"[{SystemTime.Now}] {msg}";
+        }
+
         public TenantMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -37,7 +42,8 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
 
                 if (!AlertedTenantState)
                 {
-                    await Console.Out.WriteLineAsync($"多租户状态：{(enableMultiTenant ? "开启" : "关闭")}  /  租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}");
+                    await Console.Out.WriteLineAsync(SetLog($"自检完成，多租户引擎激活"));
+                    await Console.Out.WriteLineAsync($"当前多租户状态：{(enableMultiTenant ? "开启" : "关闭")}  /  租户识别规则：{SiteConfig.SenparcCoreSetting.TenantRule}");
                     AlertedTenantState = true;
                 }
 

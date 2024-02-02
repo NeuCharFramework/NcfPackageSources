@@ -37,7 +37,7 @@
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
     <BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">objForNcf\</BaseIntermediateOutputPath>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <!--<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>-->
   </PropertyGroup>
   <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <RestoreSources>
