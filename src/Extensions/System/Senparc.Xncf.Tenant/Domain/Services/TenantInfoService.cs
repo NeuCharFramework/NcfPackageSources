@@ -66,10 +66,16 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             {
                 tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
             }
-            catch
+            catch (Exception ex)
             {
+                if (!Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+                {
+                    //数据库读取失败，且多租户未启用
+                    throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
+                }
+
                 //数据库错误，通常为系统未安装
-                throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装");
+                throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
             }
 
             //Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");

@@ -37,7 +37,7 @@ namespace Senparc.Ncf.Core.Cache
 {ex.Message}
 {ex.StackTrace}
 ";
-                new NcfUninstallException(msg);
+                new NcfUninstallException(msg, null);
             }
 
             FullSystemConfig fullSystemConfig;
@@ -80,7 +80,7 @@ namespace Senparc.Ncf.Core.Cache
 
                 //尝试安装
 
-                throw new NcfUninstallException($"NCF 系统未初始化，请先执行 {hostName}/Install 进行数据初始化");
+                throw new NcfUninstallException($"NCF 系统未初始化，请先执行 {hostName}/Install 进行数据初始化", null);
             }
 
 

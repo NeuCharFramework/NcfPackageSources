@@ -57,7 +57,9 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
             }
             catch (NcfUninstallException unInstallEx)
             {
-                Console.WriteLine("\t NcfUninstallException from TenantMiddleware");
+                //await Console.Out.WriteLineAsync(unInstallEx.ToString());
+                //await Console.Out.WriteLineAsync(unInstallEx.StackTrace?.ToString());
+                Console.WriteLine($"\t NcfUninstallException from TenantMiddleware - {unInstallEx.Message}");
                 context.Items["NcfUninstallException"] = true;
             }
             catch (Exception ex)
