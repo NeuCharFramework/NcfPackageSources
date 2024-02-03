@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.5.2-beta1</Version>
+    <Version>0.5.3-beta1</Version>
     <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -44,7 +44,7 @@
   <ItemGroup>
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

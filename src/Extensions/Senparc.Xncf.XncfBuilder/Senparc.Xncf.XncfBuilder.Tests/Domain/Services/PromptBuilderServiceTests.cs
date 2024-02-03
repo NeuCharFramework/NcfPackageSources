@@ -37,12 +37,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             #region Entity 生成
 
-            var entityResult = await _service.RunPromptAsync(PromptBuildType.EntityClass, input, null, projectPath, "Senparc.Xncf.UnitTestProject");
+            var setting = Senparc.AI.Config.SenparcAiSetting;
+            var entityResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityClass, input, null, projectPath, "Senparc.Xncf.UnitTestProject");
 
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
             await Console.Out.WriteLineAsync(entityResult.Result);
 
-            var promptGroupFilePath = Path.Combine(projectPath,"Domain","Models","DatabaseModel", $"{entityName}.cs");
+            var promptGroupFilePath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"{entityName}.cs");
             Assert.IsTrue(File.Exists(promptGroupFilePath));
 
             var promptGroupFileContent = File.ReadAllText(promptGroupFilePath);
@@ -56,8 +57,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             var entityCode = entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
 
-            var entityDtoResult = await _service.RunPromptAsync(PromptBuildType.EntityDtoClass, entityCode, null, projectPath, "Senparc.Xncf.UnitTestProject");
-            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain","Models", "DatabaseModel", $"Dto/{entityName}Dto.cs")));
+            var entityDtoResult = await _service.RunPromptAsync(setting,PromptBuildType.EntityDtoClass, entityCode, null, projectPath, "Senparc.Xncf.UnitTestProject");
+            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{entityName}Dto.cs")));
 
             await Console.Out.WriteLineAsync(entityDtoResult.Result);
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
@@ -68,7 +69,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             #region UpdateSenparcEntities
 
-            var updateSenparcEntitiesResult = await _service.RunPromptAsync(PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
+            var updateSenparcEntitiesResult = await _service.RunPromptAsync(setting,PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
 
             var senparcEntitiesFile = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
             Assert.IsTrue(File.Exists(senparcEntitiesFile));

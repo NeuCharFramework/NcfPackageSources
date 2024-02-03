@@ -82,12 +82,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 构建生成AI设置
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
+            //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
+            ConfigModel configModel = model.DeploymentName.ToUpper().Contains("GPT") ? ConfigModel.Chat : ConfigModel.TextCompletion;
+
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
                     // todo 替换为真实用户名，可能需要从NeuChar获取？
-                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)
+                    .ConfigModel(configModel, "Test")
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;
@@ -190,13 +193,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = llModel.Endpoint
+                        NeuCharEndpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.DeploymentName,
+                            TextCompletion = llModel.DeploymentName,
+                        }
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
                         AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint
+                        AzureEndpoint = llModel.Endpoint,
+                        DeploymentName = llModel.DeploymentName,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.DeploymentName,
+                            TextCompletion = llModel.DeploymentName,
+                        }
                     };
                     break;
                 case AiPlatform.AzureOpenAI:
@@ -204,7 +218,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint
+                        AzureEndpoint = llModel.Endpoint,
+                        DeploymentName = llModel.DeploymentName,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.DeploymentName,
+                            TextCompletion = llModel.DeploymentName,
+                        }
                     };
                     break;
                 case AiPlatform.HuggingFace:
@@ -217,7 +237,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     aiSettings.OpenAIKeys = new OpenAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        OrganizationId = llModel.OrganizationId
+                        OrganizationId = llModel.OrganizationId,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.DeploymentName,
+                            TextCompletion = llModel.DeploymentName,
+                        }
                     };
                     break;
                 case AiPlatform.FastAPI:
@@ -226,6 +251,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         ApiKey = llModel.ApiKey,
                         Endpoint = llModel.Endpoint,
                         //OrganizationId = aiModel.OrganizationId
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.DeploymentName,
+                            TextCompletion = llModel.DeploymentName,
+                        }
                     };
                     break;
                 default:
@@ -328,7 +358,7 @@ IMPORTANT: 返回的结果必须为0-10的数字，且不包含任何标点符�
             var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
-                    .ConfigModel(ConfigModel.TextCompletion, "Test", model.DeploymentName, aiSettings)
+                    .ConfigModel(ConfigModel.TextCompletion, "Test")
                     .BuildKernel()
                     .CreateFunctionFromPrompt(scorePrompt, promptParameter)
                     .iWantToRun;

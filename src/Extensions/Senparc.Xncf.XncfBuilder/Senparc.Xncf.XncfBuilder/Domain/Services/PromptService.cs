@@ -17,7 +17,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         public IWantToRun IWantToRun { get; set; }
 
         private string _userId = "XncfBuilder";//区分用户
-        private string _modelName = "text-davinci-003";//默认使用模型
+        //private string _modelName = "text-davinci-003";//默认使用模型
 
         public PromptService(/*IAiHandler aiHandler*/)
         {
@@ -30,7 +30,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         {
             senparcAiSetting ??= Senparc.AI.Config.SenparcAiSetting;
             IWantToRun = this._aiHandler.IWantTo(senparcAiSetting)
-                           .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelName ?? _modelName)
+                           .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId)
                            .BuildKernel();
             return IWantToRun;
         }
