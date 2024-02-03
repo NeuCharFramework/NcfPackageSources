@@ -89,6 +89,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
         {
 #if (Database || Sample)
             services.AddScoped<ColorAppService>();
+            
+            services.AddAutoMapper(z =>
+            {
+                z.CreateMap<Color, ColorDto>().ReverseMap();
+            });
 #endif
             return base.AddXncfModule(services, configuration, env);
         }
