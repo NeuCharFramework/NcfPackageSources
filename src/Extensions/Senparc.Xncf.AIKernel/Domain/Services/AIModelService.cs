@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.AI.Entities;
 using Senparc.AI.Exceptions;
+using Senparc.AI.Entities.Keys;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
@@ -152,9 +153,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 TopP = 0.5,
             };
 
+            ModelName modelNameObj = null;
+            if (modelNameObj != null)
+            {
+                modelNameObj.Chat = modelName;
+            }
+
             var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
             var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey",
-               modelName: modelName, senparcAiSetting: senparcAiSetting);
+               modelName: modelNameObj, senparcAiSetting: senparcAiSetting);
             var iWantToRun = chatConfig.iWantToRun;
 
             var request = iWantToRun.CreateRequest(prompt);

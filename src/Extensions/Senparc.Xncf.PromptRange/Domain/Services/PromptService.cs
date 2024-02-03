@@ -1,5 +1,7 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.SemanticKernel;
 using Senparc.AI;
+using Senparc.AI.Entities.Keys;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Entities;
@@ -28,8 +30,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public IWantToRun ReBuildKernel(string userId = null, string modelName = null)
         {
+            ModelName modelNameObj = null;
+            if (modelNameObj != null)
+            {
+                modelNameObj.TextCompletion = modelName;
+            }
             IWantToRun = this._aiHandler.IWantTo()
-                .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelName ?? _modelName)
+                .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelNameObj)
                 .BuildKernel();
             return IWantToRun;
         }
