@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Senparc.AI;
 using Senparc.AI.Entities;
+using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
@@ -56,6 +57,27 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 .ToList();
 
             return dtoList;
+        }
+
+        /// <summary>
+        /// 根据配置获取模型参数
+        /// </summary>
+        /// <param name="promptItem"></param>
+        /// <returns></returns>
+        public PromptConfigParameter GetPromptConfigParameterFromAiSetting(PromptItemDto promptItem)
+        {
+            //定义 AI 接口调用参数和 Token 限制等
+            var promptParameter = new PromptConfigParameter()
+            {
+                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
+                Temperature = promptItem.Temperature,
+                TopP = promptItem.TopP,
+                FrequencyPenalty = promptItem.FrequencyPenalty,
+                PresencePenalty = promptItem.PresencePenalty,
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+            };
+
+            return promptParameter;
         }
 
 
