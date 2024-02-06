@@ -59,28 +59,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-        /// <summary>
-        /// 根据配置获取模型参数
-        /// </summary>
-        /// <param name="promptItem"></param>
-        /// <returns></returns>
-        public PromptConfigParameter GetPromptConfigParameterFromAiSetting(PromptItemDto promptItem)
-        {
-            //定义 AI 接口调用参数和 Token 限制等
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
-                Temperature = promptItem.Temperature,
-                TopP = promptItem.TopP,
-                FrequencyPenalty = promptItem.FrequencyPenalty,
-                PresencePenalty = promptItem.PresencePenalty,
-                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
-            };
-
-            return promptParameter;
-        }
-
-
+   
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             //定义 AI 接口调用参数和 Token 限制等

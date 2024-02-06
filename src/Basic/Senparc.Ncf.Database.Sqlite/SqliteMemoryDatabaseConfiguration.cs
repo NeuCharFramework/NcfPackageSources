@@ -19,12 +19,12 @@ namespace Senparc.Ncf.Database.Sqlite
     {
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Sqlite;
 
-        private static DbConnection CreateInMemoryDatabase(string connStr)
-        {
-            var connection = new SqliteConnection(connStr);
-            connection.Open();
-            return connection;
-        }
+        //private static DbConnection CreateInMemoryDatabase(string connStr)
+        //{
+        //    var connection = new SqliteConnection(connStr);
+        //    connection.Open();
+        //    return connection;
+        //}
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
@@ -32,9 +32,9 @@ namespace Senparc.Ncf.Database.Sqlite
                 //其他更多配置
 
                 //执行 UseSqlite（必须）
-                optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
+                //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
-                //optionsBuilder.UseSqlite(connectionString, actionBase);
+                optionsBuilder.UseSqlite(connectionString, actionBase);
             };
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
@@ -45,7 +45,9 @@ namespace Senparc.Ncf.Database.Sqlite
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            (dbConnection as SqliteConnection).BackupDatabase(new SqliteConnection("data source=" + backupFilePath));
+            dbConnection.Open();
+            (dbConnection as SqliteConnection).BackupDatabase(new SqliteConnection("data source='" + backupFilePath + "'"));
+            dbConnection.Close();
             return null;
         }
 
