@@ -139,7 +139,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string modelName = "gpt-4-32k")
+        public async Task<SenparcKernelAiResult> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt)
         {
             if (senparcAiSetting == null)
             {
@@ -153,15 +153,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 TopP = 0.5,
             };
 
-            ModelName modelNameObj = null;
-            if (modelNameObj != null)
-            {
-                modelNameObj.Chat = modelName;
-            }
-
             var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey",
-               modelName: modelNameObj, senparcAiSetting: senparcAiSetting);
+            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey", maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
             var iWantToRun = chatConfig.iWantToRun;
 
             var request = iWantToRun.CreateRequest(prompt);
