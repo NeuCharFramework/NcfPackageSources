@@ -1,5 +1,6 @@
 ﻿using System;
 using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -41,6 +42,8 @@ namespace Senparc.Ncf.Core.Cache
             var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
 
             cache.RemoveFromCache(cacheKey);
+
+            Console.WriteLine("Cache:" + cache.Get(cacheKey)?.ToJson(true));
         }
     }
 }
