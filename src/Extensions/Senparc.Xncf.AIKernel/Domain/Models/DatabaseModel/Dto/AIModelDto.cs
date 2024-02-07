@@ -18,9 +18,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         public string Alias { get; set; }
 
         /// <summary>
-        /// 名称（必须）
+        /// 部署名称
         /// </summary>
         public string DeploymentName { get; set; }
+
+        /// <summary>
+        /// 模型名称（必须）
+        /// </summary>
+        public string ModelId { get; set; }
 
         /// <summary>
         /// Endpoint（必须）
@@ -31,6 +36,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
+        /// <summary>
+        /// 模型类型
+        /// </summary>
+        public ConfigModelType ConfigModelType { get; set; }
 
 
         /// <summary>
@@ -84,9 +93,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         {
             Id = aIModel.Id;
             Alias = aIModel.Alias;
+            ModelId = aIModel.ModelId;
             DeploymentName = aIModel.DeploymentName;
             Endpoint = aIModel.Endpoint;
             AiPlatform = aIModel.AiPlatform;
+            ConfigModelType = aIModel.ConfigModelType;
             OrganizationId = aIModel.OrganizationId;
             ApiKey = aIModel.ApiKey;
             ApiVersion = aIModel.ApiVersion;

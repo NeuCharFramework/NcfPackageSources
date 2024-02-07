@@ -87,7 +87,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = aiModel.ApiKey,
                         NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = aiModel.Endpoint
+                        NeuCharEndpoint = aiModel.Endpoint,
+                         //ModelName=new ModelName() { 
+                          
+                         //}
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {

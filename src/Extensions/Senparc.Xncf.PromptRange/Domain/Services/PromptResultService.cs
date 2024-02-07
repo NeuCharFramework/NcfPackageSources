@@ -74,7 +74,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             };
 
             // 需要在变量前添加$
-            //            string completionPrompt = $@"请根据提示输出对应内容:
+            //string completionPrompt = $@"请根据提示输出对应内容:
             //{promptItem.Content}";
             string completionPrompt = $@"{promptItem.Content}";
 
@@ -84,7 +84,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel = model.DeploymentName.ToUpper().Contains("GPT") ? ConfigModel.Chat : ConfigModel.TextCompletion;
+            ConfigModel configModel = model.DeploymentName.ToUpper().Contains("GPT") 
+                                        ? ConfigModel.Chat 
+                                        : ConfigModel.TextCompletion;
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
