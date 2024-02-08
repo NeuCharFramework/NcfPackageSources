@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Senparc.AI;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
+using Senparc.Xncf.AIKernel.Domain.Models;
 
 namespace Senparc.Xncf.AIKernel.Models
 {
@@ -22,11 +23,19 @@ namespace Senparc.Xncf.AIKernel.Models
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
+
         /// <summary>
         /// 模型名称（必须）
         /// </summary>
         [Required, MaxLength(100)]
+        public string ModelId { get; private set; }
+
+        /// <summary>
+        /// 部署名称
+        /// </summary>
+        [MaxLength(150)]
         public string DeploymentName { get; private set; }
+
 
         /// <summary>
         /// Endpoint（可选）
@@ -39,6 +48,12 @@ namespace Senparc.Xncf.AIKernel.Models
         /// </summary>
         [Required]
         public AiPlatform AiPlatform { get; private set; }
+
+        /// <summary>
+        /// 模型类别
+        /// </summary>
+        [Required]
+        public ConfigModelType ConfigModelType { get; private set; }
 
         /// <summary>
         /// OrganizationId（可选）
@@ -84,7 +99,7 @@ namespace Senparc.Xncf.AIKernel.Models
 
 
         public AIModel(string deploymentName, string endpoint, AiPlatform aiPlatform, string organizationId, string apiKey,
-            string apiVersion, string note, int maxToken, string alias)
+            string apiVersion, string note, int maxToken, string alias, string modelId, ConfigModelType configModelType)
         {
             DeploymentName = deploymentName;
             Endpoint = endpoint;
@@ -97,6 +112,8 @@ namespace Senparc.Xncf.AIKernel.Models
             Alias = alias;
             Show = true;
             IsShared = false;
+            ModelId = modelId;
+            ConfigModelType = configModelType;
         }
 
         // public AIModel(AIModelDto llmModelDto)
@@ -121,7 +138,7 @@ namespace Senparc.Xncf.AIKernel.Models
 
         public AIModel(AIModel_CreateOrEditRequest orEditRequest) : this(orEditRequest.DeploymentName, orEditRequest.Endpoint,
             orEditRequest.AiPlatform, orEditRequest.OrganizationId, orEditRequest.ApiKey, orEditRequest.ApiVersion, orEditRequest.Note,
-            orEditRequest.MaxToken, orEditRequest.Alias)
+            orEditRequest.MaxToken, orEditRequest.Alias, orEditRequest.ModelId,orEditRequest.ConfigModelType)
         {
         }
 
@@ -133,6 +150,7 @@ namespace Senparc.Xncf.AIKernel.Models
 
         public AIModel Update(AIModel_CreateOrEditRequest request)
         {
+            ModelId = request.ModelId;
             DeploymentName = request.DeploymentName;
             Endpoint = request.Endpoint;
             AiPlatform = request.AiPlatform;

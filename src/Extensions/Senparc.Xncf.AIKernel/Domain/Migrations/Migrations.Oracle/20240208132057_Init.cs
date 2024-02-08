@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
 {
     /// <inheritdoc />
-    public partial class Init2024 : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,9 +18,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     Alias = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
-                    DeploymentName = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
+                    ModelId = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
+                    DeploymentName = table.Column<string>(type: "NVARCHAR2(150)", maxLength: 150, nullable: true),
                     Endpoint = table.Column<string>(type: "NVARCHAR2(250)", maxLength: 250, nullable: true),
                     AiPlatform = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    ConfigModelType = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     OrganizationId = table.Column<string>(type: "NVARCHAR2(200)", maxLength: 200, nullable: true),
                     ApiKey = table.Column<string>(type: "NVARCHAR2(200)", maxLength: 200, nullable: true),
                     ApiVersion = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: true),

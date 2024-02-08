@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.3.3-beta2</Version>
+    <Version>0.3.6-beta2</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -31,7 +31,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.13.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.14.0" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
@@ -56,7 +56,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
-    <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -64,6 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
+    <Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
+    <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
+    <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
+    <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>

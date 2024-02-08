@@ -23,7 +23,8 @@
     <el-table :data="tableData" v-loading="tableLoading" border>
         @* alias *@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
-        <el-table-column prop="deploymentName" label="模型名称" width="auto"></el-table-column>
+        <el-table-column prop="modelId" label="模型名称" width="auto"></el-table-column>
+        <el-table-column prop="deploymentName" label="部署名称" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
         <el-table-column prop="aiPlatform" label="平台" width="auto">
             <template slot-scope="scope">
@@ -32,6 +33,18 @@
                 <span v-else-if="scope.row.aiPlatform===16">AzureOpenAI</span>
                 <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
                 <span v-else type="danger">未知</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="configModelType" label="模型类型" width="auto">
+            <template slot-scope="scope">
+                <span v-if="scope.row.configModelType===1">TextCompletion</span>
+                <span v-else-if="scope.row.configModelType===2">Chat</span>
+                <span v-else-if="scope.row.configModelType===3">TextEmbedding</span>
+                <span v-else-if="scope.row.configModelType===4">ImageToText</span>
+                <span v-else-if="scope.row.configModelType===5">TextToImage</span>
+                <span v-else-if="scope.row.configModelType===6">TextToSpeech</span>
+                <span v-else-if="scope.row.configModelType===7">SpeechToText</span>
+                <span v-else-if="scope.row.configModelType===8">SpeechRecognition</span>
             </template>
         </el-table-column>
         @* apiKey: only show options of copy *@
@@ -88,7 +101,22 @@
                     <el-option label="FastAPI" value="128"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" prop="deploymentName">
+            <el-form-item label="模型类型" prop="configModelType">
+                <el-select v-model="addForm.configModelType" placeholder="请选择">
+                    <el-option label="TextCompletion" value="1"></el-option>
+                    <el-option label="Chat" value="2"></el-option>
+                    <el-option label="TextEmbedding" value="3"></el-option>
+                    <el-option label="TextToImage" value="4"></el-option>
+                    <el-option label="ImageToText" value="5"></el-option>
+                    <el-option label="TextToSpeech" value="6"></el-option>
+                    <el-option label="SpeechToText" value="7"></el-option>
+                    <el-option label="SpeechRecognition" value="8"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="模型名称" prop="modelId">
+                <el-input v-model="addForm.modelId"></el-input>
+            </el-form-item>
+            <el-form-item label="部署名称" prop="deploymentName">
                 <el-input v-model="addForm.deploymentName"></el-input>
             </el-form-item>
             @* ,[ApiVersion] *@
@@ -143,7 +171,24 @@
                     <el-option label="FastAPI" value="128"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" prop="deploymentName">
+
+            <el-form-item label="模型类型" prop="configModelType">
+                <el-select v-model="addForm.configModelType" placeholder="请选择">
+                    <el-option label="TextCompletion" value="1"></el-option>
+                    <el-option label="Chat" value="2"></el-option>
+                    <el-option label="TextEmbedding" value="3"></el-option>
+                    <el-option label="TextToImage" value="4"></el-option>
+                    <el-option label="ImageToText" value="5"></el-option>
+                    <el-option label="TextToSpeech" value="6"></el-option>
+                    <el-option label="SpeechToText" value="7"></el-option>
+                    <el-option label="SpeechRecognition" value="8"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="模型名称" prop="modelId">
+                <el-input v-model="editForm.modelId"></el-input>
+            </el-form-item>
+            <el-form-item label="部署名称" prop="deploymentName">
                 <el-input v-model="editForm.deploymentName"></el-input>
             </el-form-item>
             @* ,[ApiVersion] *@

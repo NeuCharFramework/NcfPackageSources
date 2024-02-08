@@ -59,7 +59,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-   
+
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             //定义 AI 接口调用参数和 Token 限制等
@@ -74,7 +74,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             };
 
             // 需要在变量前添加$
-            //            string completionPrompt = $@"请根据提示输出对应内容:
+            //string completionPrompt = $@"请根据提示输出对应内容:
             //{promptItem.Content}";
             string completionPrompt = $@"{promptItem.Content}";
 
@@ -84,14 +84,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel = model.DeploymentName.ToUpper().Contains("GPT") ? ConfigModel.Chat : ConfigModel.TextCompletion;
+            ConfigModel configModel = model.ConfigModelType == AIKernel.Domain.Models.ConfigModelType.Chat
+                                        ? ConfigModel.Chat
+                                        : ConfigModel.TextCompletion;
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
                     // todo 替换为真实用户名，可能需要从NeuChar获取？
-                    .ConfigModel(configModel, "Test")
+                    .ConfigModel(configModel, "SenparcGenerateResult")
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;
@@ -197,8 +199,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         NeuCharEndpoint = llModel.Endpoint,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
@@ -209,8 +214,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         DeploymentName = llModel.DeploymentName,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
@@ -223,15 +231,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         DeploymentName = llModel.DeploymentName,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = llModel.Endpoint
+                        Endpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
                     };
                     break;
                 case AiPlatform.OpenAI:
@@ -241,8 +260,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         OrganizationId = llModel.OrganizationId,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
@@ -254,8 +276,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         //OrganizationId = aiModel.OrganizationId
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;

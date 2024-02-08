@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Senparc.AI;
+using Senparc.Xncf.AIKernel.Domain.Models;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 {
@@ -91,6 +92,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string Alias { get; set; }
 
         /// <summary>
+        /// 模型名称
+        /// </summary>
+        public string ModelId { get; set; }
+
+        /// <summary>
         /// 部署名称
         /// </summary>
         public string DeploymentName { get; set; }
@@ -106,9 +112,14 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
+        /// 模型类型
+        /// </summary>
+        public ConfigModelType ConfigModelType { get; set; }
+
+        /// <summary>
         /// 组织ID
         /// </summary>
-        public string OrganizationId { get; set; }= "";
+        public string OrganizationId { get; set; } = "";
 
         /// <summary>
         /// API密钥
@@ -129,7 +140,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// 最大令牌
         /// </summary>
         public int MaxToken { get; set; }
-        
+
         /// <summary>
         /// 是否显示
         /// </summary>
