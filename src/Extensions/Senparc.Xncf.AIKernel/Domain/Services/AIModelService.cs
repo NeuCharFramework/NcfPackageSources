@@ -80,6 +80,35 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 AiPlatform = aiModel.AiPlatform
             };
 
+            Func<ModelName> GetModelName = () =>
+            {
+                ModelName modelName = new();
+                switch (aiModel.ConfigModelType)
+                {
+                    case Models.ConfigModelType.TextCompletion:
+                        modelName.TextCompletion = aiModel.ModelId;
+                        break;
+                    case Models.ConfigModelType.Chat:
+                        modelName.Chat = aiModel.ModelId;
+                        break;
+                    case Models.ConfigModelType.TextEmbedding:
+                        modelName.Embedding = aiModel.ModelId;
+                        break;
+                    case Models.ConfigModelType.TextToImage:
+                        modelName.TextToImage = aiModel.ModelId;
+                        break;
+                    case Models.ConfigModelType.ImageToText:
+                    case Models.ConfigModelType.TextToSpeech:
+                    case Models.ConfigModelType.SpeechToText:
+                    case Models.ConfigModelType.SpeechRecognition:
+                    default:
+                        throw new Exception($"尚未支持：{aiModel.ConfigModelType} 模型在 BuildSenparcAiSetting 中的处理");
+                }
+                return modelName;
+            };
+
+            var modelName = GetModelName();
+
             switch (aiSettings.AiPlatform)
             {
                 case AiPlatform.NeuCharAI:
@@ -88,15 +117,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         ApiKey = aiModel.ApiKey,
                         NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
                         NeuCharEndpoint = aiModel.Endpoint,
-                         //ModelName=new ModelName() { 
-                          
-                         //}
+                        ModelName = modelName,
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
                         AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint
+                        AzureEndpoint = aiModel.Endpoint,
+                        ModelName = modelName,
+                        DeploymentName = aiModel.DeploymentName
                     };
                     break;
                 case AiPlatform.AzureOpenAI:
@@ -104,20 +133,24 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = aiModel.ApiKey,
                         AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint
+                        AzureEndpoint = aiModel.Endpoint,
+                        ModelName = modelName,
+                        DeploymentName = aiModel.DeploymentName
                     };
                     break;
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = aiModel.Endpoint
+                        Endpoint = aiModel.Endpoint,
+                        ModelName = modelName,
                     };
                     break;
                 case AiPlatform.OpenAI:
                     aiSettings.OpenAIKeys = new OpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        OrganizationId = aiModel.OrganizationId
+                        OrganizationId = aiModel.OrganizationId,
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.FastAPI:
