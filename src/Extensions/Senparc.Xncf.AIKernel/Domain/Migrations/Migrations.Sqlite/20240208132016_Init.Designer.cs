@@ -11,8 +11,8 @@ using Senparc.Xncf.AIKernel.Models;
 namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
 {
     [DbContext(typeof(AIKernelSenparcEntities_Sqlite))]
-    [Migration("20240207165524_Add_ModelId_And_ConfigModelType")]
-    partial class Add_ModelId_And_ConfigModelType
+    [Migration("20240208132016_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

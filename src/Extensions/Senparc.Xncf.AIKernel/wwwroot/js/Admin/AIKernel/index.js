@@ -11,9 +11,11 @@ var app=new Vue({
             addFormDialogVisible: false,
             addForm:{
                 alias: "",
+                "modelId": "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
+                "configModelType": '1',
                 "organizationId": "",
                 "apiKey": "",
                 "apiVersion": "",
@@ -24,9 +26,11 @@ var app=new Vue({
             editFormDialogVisible: false,
             editForm:{
                 alias: "",
+                "modelId": "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
+                "configModelType": '1',
                 "organizationId": "",
                 "apiKey": "",
                 "apiVersion": "",
@@ -40,10 +44,16 @@ var app=new Vue({
                     {required: true, message: '请输入别名', trigger: 'change'}
                 ],
                 aiPlatform: [
-                    {required: true, message: '请选择模型类型', trigger: 'change'}
+                    {required: true, message: '请选择平台类型', trigger: 'change'}
+                ],
+                configModelType: [
+                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                ],
+                modelId: [
+                    { required: true, message: '请输入模型名称', trigger: 'blur' }
                 ],
                 deploymentName: [
-                    {required: true, message: '请输入模型名称', trigger: 'blur'}
+                    { required: true, message: '请输入模型部署名称', trigger: 'blur' }
                 ],
                 apiVersion: [
                     {required: true, message: '请输入API Version', trigger: 'blur'}
@@ -63,10 +73,16 @@ var app=new Vue({
                     {required: true, message: '请输入别名', trigger: 'change'}
                 ],
                 aiPlatform: [
-                    {required: true, message: '请选择模型类型', trigger: 'change'}
+                    {required: true, message: '请选择平台类型', trigger: 'change'}
+                ],
+                configModelType: [
+                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                ],
+                modelId: [
+                    {required: true, message: '请输入模型名称', trigger: 'blur'}
                 ],
                 deploymentName: [
-                    {required: true, message: '请输入模型名称', trigger: 'blur'}
+                    { required: true, message: '请输入模型部署名称', trigger: 'blur' }
                 ],
                 apiVersion: [
                     {required: true, message: '请输入API Version', trigger: 'blur'}
@@ -130,6 +146,7 @@ var app=new Vue({
             this.$refs.addForm.validate(async (valid) => {
                 if (valid) {
                     this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
+                    this.addForm.configModelType = parseInt(this.addForm.configModelType)
                     this.addForm.maxToken = parseInt(this.addForm.maxToken)
                     await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync', {
                             ...this.addForm
@@ -154,9 +171,11 @@ var app=new Vue({
         clearAddForm(){
             this.addForm={
                 "alias": "",
+                "modelId": "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
+                "configModelType": '1',
                 "organizationId": "",
                 "apiKey": "",
                 "apiVersion": "",
@@ -168,9 +187,11 @@ var app=new Vue({
         clearEditForm(){
             this.editForm={
                 "alias": "",
+                "modelId": "",
                 "deploymentName": "",
                 "endpoint": "",
                 "aiPlatform": '4',
+                "configModelType": '1',
                 "organizationId": "",
                 "apiKey": "",
                 "apiVersion": "",
@@ -183,6 +204,7 @@ var app=new Vue({
             this.$refs.editForm.validate(async (valid) => {
                 if (valid) {
                     this.editForm.aiPlatform = parseInt(this.editForm.aiPlatform)
+                    this.editForm.configModelType = parseInt(this.editForm.configModelType)
                     this.editForm.maxToken = parseInt(this.editForm.maxToken)
                     // clear empty value
                     for (const key in this.editForm) {
@@ -219,7 +241,8 @@ var app=new Vue({
             this.editFormDialogVisible = true;
             this.editForm = {
                 ...row,
-                aiPlatform:row.aiPlatform.toString()
+                aiPlatform: row.aiPlatform.toString(),
+                configModelType: row.configModelType.toString()
             };
         },
         deleteModel(row){

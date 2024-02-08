@@ -84,7 +84,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel = model.ModelId.ToUpper().Contains("GPT")
+            ConfigModel configModel = model.ConfigModelType == AIKernel.Domain.Models.ConfigModelType.Chat
                                         ? ConfigModel.Chat
                                         : ConfigModel.TextCompletion;
 
@@ -93,7 +93,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var iWantToRun =
                 handler.IWantTo(aiSettings)
                     // todo 替换为真实用户名，可能需要从NeuChar获取？
-                    .ConfigModel(configModel, "Test")
+                    .ConfigModel(configModel, "SenparcGenerateResult")
                     .BuildKernel()
                     .CreateFunctionFromPrompt(completionPrompt, promptParameter)
                     .iWantToRun;

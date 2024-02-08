@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
 {
     /// <inheritdoc />
-    public partial class Add_ModelId_And_ConfigModelType : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
