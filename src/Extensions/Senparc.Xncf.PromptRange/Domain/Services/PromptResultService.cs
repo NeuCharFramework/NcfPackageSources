@@ -59,7 +59,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-   
+
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
             //定义 AI 接口调用参数和 Token 限制等
@@ -84,8 +84,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel = model.DeploymentName.ToUpper().Contains("GPT") 
-                                        ? ConfigModel.Chat 
+            ConfigModel configModel = model.ModelId.ToUpper().Contains("GPT")
+                                        ? ConfigModel.Chat
                                         : ConfigModel.TextCompletion;
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
@@ -199,8 +199,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         NeuCharEndpoint = llModel.Endpoint,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
@@ -211,8 +214,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         DeploymentName = llModel.DeploymentName,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
@@ -225,15 +231,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         DeploymentName = llModel.DeploymentName,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = llModel.Endpoint
+                        Endpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
                     };
                     break;
                 case AiPlatform.OpenAI:
@@ -243,8 +260,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         OrganizationId = llModel.OrganizationId,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
@@ -256,8 +276,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         //OrganizationId = aiModel.OrganizationId
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
-                            Chat = llModel.DeploymentName,
-                            TextCompletion = llModel.DeploymentName,
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
                         }
                     };
                     break;
