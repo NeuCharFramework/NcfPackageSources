@@ -84,9 +84,29 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel = model.ConfigModelType == AIKernel.Domain.Models.ConfigModelType.Chat
-                                        ? ConfigModel.Chat
-                                        : ConfigModel.TextCompletion;
+            ConfigModel configModel;
+
+            switch (model.ConfigModelType)
+            {
+                case AIKernel.Domain.Models.ConfigModelType.TextCompletion:
+                    configModel = ConfigModel.TextCompletion;
+                    break;
+                case AIKernel.Domain.Models.ConfigModelType.Chat:
+                    configModel = ConfigModel.Chat;
+                    break;
+                case AIKernel.Domain.Models.ConfigModelType.TextToImage:
+                    configModel = ConfigModel.TextToImage;
+                    //TODO: Image 需要不一样的触发机制
+                    break;
+                case AIKernel.Domain.Models.ConfigModelType.TextEmbedding:
+                case AIKernel.Domain.Models.ConfigModelType.ImageToText:
+                case AIKernel.Domain.Models.ConfigModelType.TextToSpeech:
+                case AIKernel.Domain.Models.ConfigModelType.SpeechToText:
+                case AIKernel.Domain.Models.ConfigModelType.SpeechRecognition:
+                default:
+                    configModel =  ConfigModel.TextCompletion;
+                    break;
+            }
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
