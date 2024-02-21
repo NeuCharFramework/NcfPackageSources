@@ -89,6 +89,7 @@ namespace Senparc.Xncf.AIKernel
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
             services.AddSenparcAI(configuration);
+            services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             services.AddScoped<SemanticAiHandler>();
 
             return base.AddXncfModule(services, configuration, env);
