@@ -380,26 +380,6 @@ steps:
   condition: succeededOrFailed()
 
 - task: NuGetCommand@2
-  displayName: 'Senparc.Xncf.XncfBuilder- Symbol'
-  inputs:
-    command: push
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.*.snupkg;'
-    nuGetFeedType: external
-    publishFeedCredentials: 'nuget-jeffrey-full-key'
-  continueOnError: true
-  condition: succeededOrFailed()
-
-- task: NuGetCommand@2
-  displayName: Senparc.Ncf.Database -v0
-  inputs:
-    command: push
-    packagesToPush: '**/Senparc.Ncf.Database.0.*.nupkg'
-    nuGetFeedType: external
-    publishFeedCredentials: 'nuget-jeffrey-full-key'
-  continueOnError: true
-  condition: succeededOrFailed()
-
-- task: NuGetCommand@2
   displayName: 'Senparc.Ncf.Database -v0 - Symbol'
   inputs:
     command: push
@@ -647,6 +627,28 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Xncf.XncfBuilder- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.XncfBuilder.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database -v0
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.0.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.AIKernel
