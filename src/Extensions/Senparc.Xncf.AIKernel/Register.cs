@@ -24,6 +24,7 @@ using Senparc.AI.Interfaces;
 namespace Senparc.Xncf.AIKernel
 {
     [XncfRegister]
+    [XncfOrder(5899)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
@@ -64,7 +65,6 @@ namespace Senparc.Xncf.AIKernel
                     throw new ArgumentOutOfRangeException();
             }
         }
-
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
