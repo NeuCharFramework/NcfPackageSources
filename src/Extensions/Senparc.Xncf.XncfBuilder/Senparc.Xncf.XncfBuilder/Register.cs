@@ -19,6 +19,7 @@ using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 namespace Senparc.Xncf.XncfBuilder
 {
     [XncfRegister]
+    [XncfOrder(5896)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口

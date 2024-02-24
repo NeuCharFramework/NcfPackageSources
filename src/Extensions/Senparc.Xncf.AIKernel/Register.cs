@@ -24,6 +24,7 @@ using Senparc.AI.Interfaces;
 namespace Senparc.Xncf.AIKernel
 {
     [XncfRegister]
+    [XncfOrder(5899)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
@@ -65,7 +66,6 @@ namespace Senparc.Xncf.AIKernel
             }
         }
 
-
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region 删除数据库（演示）
@@ -90,6 +90,7 @@ namespace Senparc.Xncf.AIKernel
 
             services.AddSenparcAI(configuration);
             services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
+            Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<SemanticAiHandler>();
 
             return base.AddXncfModule(services, configuration, env);

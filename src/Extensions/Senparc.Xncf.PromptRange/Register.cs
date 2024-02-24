@@ -22,6 +22,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.PromptRange
 {
     [XncfRegister]
+    [XncfOrder(5897)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
