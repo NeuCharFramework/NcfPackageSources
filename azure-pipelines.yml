@@ -23,21 +23,21 @@ steps:
 #     version: '3.1.x'
 #     packageType: 'sdk'
 
-- task: UseDotNet@2
-  displayName: 'Use .NET SDK 6'
-  inputs:
-    version: '6.x'
-    packageType: 'sdk'
-    performMultiLevelLookup: true
-    includePreviewVersions: true
+# - task: UseDotNet@2
+#   displayName: 'Use .NET SDK 6'
+#   inputs:
+#     version: '6.x'
+#     packageType: 'sdk'
+#     performMultiLevelLookup: true
+#     includePreviewVersions: true
 
-- task: UseDotNet@2
-  displayName: 'Use .NET SDK 8'
-  inputs:
-    version: '8.x'
-    packageType: 'sdk'
-    performMultiLevelLookup: true
-    includePreviewVersions: true
+# - task: UseDotNet@2
+#   displayName: 'Use .NET SDK 8'
+#   inputs:
+#     version: '8.x'
+#     packageType: 'sdk'
+#     performMultiLevelLookup: true
+#     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet --list-sdks '
