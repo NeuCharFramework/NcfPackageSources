@@ -157,20 +157,24 @@ namespace Senparc.Ncf.Core.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType));
+            var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType)).ToList();
            
-            Console.WriteLine($"\t SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name} ({types.Count()} types)");
+            Console.WriteLine($"SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name} ({types.Count()} types)");
 
             //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
-            foreach (var entityType in types)
+            for (int i = 0; i < types.Count; i++)
             {
-                Console.WriteLine($"\t\t entity type: {entityType.Name}");
+                var entityType = types[i];
+                Console.WriteLine($"\t {i}. entity type: {entityType.Name}");
                 SetGlobalQueryMethodInfo
                         .MakeGenericMethod(entityType.ClrType)
                         .Invoke(this, new object[] { modelBuilder });
             }
 
+            Console.WriteLine();
+
             base.OnModelCreating(modelBuilder);
+
         }
 
         /// <summary>

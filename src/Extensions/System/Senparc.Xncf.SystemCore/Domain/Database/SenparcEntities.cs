@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using log4net.Util;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
@@ -49,7 +50,8 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             var dt1 = SystemTime.Now;
             Senparc.Ncf.XncfBase.Register.ApplyAllAutoConfigurationMapping(modelBuilder);
             SenparcTrace.SendCustomLog("SenparcEntities 数据库实体注入", $"耗时：{SystemTime.DiffTotalMS(dt1)}ms");
-            Console.WriteLine("SenparcEntities 数据库实体注入", $"耗时：{SystemTime.DiffTotalMS(dt1)}ms");
+            Console.WriteLine($"SenparcEntities 数据库实体注入，耗时：{SystemTime.DiffTotalMS(dt1)}ms");
+            Console.WriteLine();
             #endregion
 
             //基类中的系统表处理

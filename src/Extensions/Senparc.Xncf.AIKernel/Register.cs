@@ -24,7 +24,7 @@ using Senparc.AI.Interfaces;
 namespace Senparc.Xncf.AIKernel
 {
     [XncfRegister]
-    [XncfOrder(5899)]
+    //[XncfOrder(5899)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
@@ -88,9 +88,13 @@ namespace Senparc.Xncf.AIKernel
         {
             //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
 
+            var type = this.TryGetXncfDatabaseDbContextType;
+            Console.WriteLine("=========Type=====");
+            Console.WriteLine(type.FullName);
+
             services.AddSenparcAI(configuration);
-            services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
-            Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
+            //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
+            //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<SemanticAiHandler>();
 
             return base.AddXncfModule(services, configuration, env);
@@ -108,12 +112,4 @@ namespace Senparc.Xncf.AIKernel
         }
     }
 }
-
-
-
-
-
-
-
-
 
