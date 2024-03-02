@@ -85,22 +85,22 @@ namespace Senparc.Xncf.AreasBase
             //Razor启用运行时编译，多个项目不需要手动编译。
             if (env.IsDevelopment())
             {
-                builder.AddRazorRuntimeCompilation(options =>
-                {
-                    //自动索引所有需要使用 RazorRuntimeCompilation 的模块
-                    foreach (var razorRegister in XncfRegisterManager.RegisterList.Where(z => z is IXncfRazorRuntimeCompilation))
-                    {
-                        try
-                        {
-                            var libraryPath = ((IXncfRazorRuntimeCompilation)razorRegister).LibraryPath;
-                            options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
-                        }
-                        catch (Exception ex)
-                        {
-                            SenparcTrace.BaseExceptionLog(ex);
-                        }
-                    }
-                });
+                //builder.AddRazorRuntimeCompilation(options =>
+                //{
+                //    //自动索引所有需要使用 RazorRuntimeCompilation 的模块
+                //    foreach (var razorRegister in XncfRegisterManager.RegisterList.Where(z => z is IXncfRazorRuntimeCompilation))
+                //    {
+                //        try
+                //        {
+                //            var libraryPath = ((IXncfRazorRuntimeCompilation)razorRegister).LibraryPath;
+                //            options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            SenparcTrace.BaseExceptionLog(ex);
+                //        }
+                //    }
+                //});
             }
 #endif
             return base.AddXncfModule(services, configuration, env);

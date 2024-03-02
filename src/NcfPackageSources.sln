@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31512.422
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basic", "Basic", "{20618121-91AE-4EFE-9899-ABCB0ADACE86}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Basic", "01 Basic", "{20618121-91AE-4EFE-9899-ABCB0ADACE86}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Mvc.UI", "Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj", "{353775C5-4979-48FF-B4C6-90C54D923AB7}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.SMS", "Basic\Se
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FEF3CC72-9596-49E1-A910-990F607E9E76}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{BBF132A7-018B-417A-9F56-396FB9CF391D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 Extensions", "02 Extensions", "{BBF132A7-018B-417A-9F56-396FB9CF391D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.XncfBase", "Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj", "{A151364D-A8F3-49CF-8A0E-8CBE9833225D}"
 EndProject
@@ -78,7 +78,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.FileExtension",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.ImageUtility", "Base\Unpublished\Senparc.Ncf.ImageUtility\Senparc.Ncf.ImageUtility.csproj", "{0BF37A1B-7D06-442D-8E36-68AF2546FA3C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unpublished", "Unpublished", "{3328552C-7377-45DB-8EE8-B4D9D0184266}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Unpublished", "03 Unpublished", "{3328552C-7377-45DB-8EE8-B4D9D0184266}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SystemXncfs", "_SystemXncfs", "{97BBCB28-782F-43D5-A604-0376298AF256}"
 	ProjectSection(SolutionItems) = preProject
@@ -95,7 +95,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5960]Senparc.Xncf.SystemPe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5980]Senparc.Xncf.SystemCore", "Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj", "{6BB6D7C5-DC0A-4A57-BA61-F310A2D37A42}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevelopmentTools", "DevelopmentTools", "{2BBB19E7-0703-405F-9101-59D811377ABD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 DevelopmentTools", "04 DevelopmentTools", "{2BBB19E7-0703-405F-9101-59D811377ABD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.IntegrationSample", "DevelopmentTools\Senparc.IntegrationSample\Senparc.IntegrationSample.csproj", "{19E42C61-9663-4245-A977-A10F64C57A90}"
 EndProject
