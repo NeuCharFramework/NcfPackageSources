@@ -4,6 +4,7 @@ using Senparc.Ncf.Database.SqlServer;
 using Senparc.IntegrationSample;
 using Senparc.Xncf.DatabaseToolkit.Domain.Services;
 using Senparc.Xncf.SystemCore.Domain.Database;
+using Senparc.CO2NET.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ if (app.Environment.IsDevelopment())
 
 //Use NCF（必须）
 app.UseNcf();
+var col = Senparc.Ncf.Core.Models.EntitySetKeys.GetAllEntitySetInfo();
+Console.WriteLine("================================EntitySetKeys:");
+Console.WriteLine(col.Where(z => z.Key.FullName.Contains("AI")).ToJson(true));
 
 app.UseStaticFiles();
 

@@ -70,16 +70,24 @@ namespace Senparc.IntegrationSample.Pages
                     //遍历某个 Register 下所有的方法      TODO：未来可添加分组
                     foreach (var funtionBag in functionGroup.Values)
                     {
-                        var result = await FunctionHelper.GetFunctionParameterInfoAsync(this._serviceProvider, funtionBag, true);
-
-                        registerItem.RegisterFunctionInfoList.Add(new()
+                        try
                         {
-                            Key = funtionBag.Key,
-                            Name = funtionBag.FunctionRenderAttribute.Name,
-                            Description = funtionBag.FunctionRenderAttribute.Description,
-                            FunctionRenderBag = funtionBag,
-                            FunctionParameterInfoList = result
-                        });
+                            var result = await FunctionHelper.GetFunctionParameterInfoAsync(this._serviceProvider, funtionBag, true);
+
+                            registerItem.RegisterFunctionInfoList.Add(new()
+                            {
+                                Key = funtionBag.Key,
+                                Name = funtionBag.FunctionRenderAttribute.Name,
+                                Description = funtionBag.FunctionRenderAttribute.Description,
+                                FunctionRenderBag = funtionBag,
+                                FunctionParameterInfoList = result
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            await Console.Out.WriteLineAsync("funtionBag 获取出错，可能模块未安装");
+                        }
+                        
                     }
                 }
             }

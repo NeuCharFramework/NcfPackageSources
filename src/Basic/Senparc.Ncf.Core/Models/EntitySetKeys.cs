@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using Senparc.CO2NET.Exceptions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Exceptions;
@@ -25,8 +27,9 @@ namespace Senparc.Ncf.Core.Models
         /// 加载制定 DbContext 中的 SetKey
         /// </summary>
         /// <param name="tryLoadDbContextType"></param>
+        /// <param name="forceLoad">尝试强制载入，如果之前已经载入，则删除后重新载入</param>
         /// <returns></returns>
-        public static EntitySetKeysDictionary TryLoadSetInfo(Type tryLoadDbContextType)
+        public static EntitySetKeysDictionary TryLoadSetInfo(Type tryLoadDbContextType, bool forceLoad = false)
         {
             lock (EntitySetKeys.DbContextStoreLock)
             {
@@ -35,12 +38,25 @@ namespace Senparc.Ncf.Core.Models
                     throw new ArgumentException($"{nameof(tryLoadDbContextType)}不是 DbContext 的子类！", nameof(tryLoadDbContextType));
                 }
 
-                if (EntitySetKeys.DbContextStore.Contains(tryLoadDbContextType))
+                var removeSuccess = true;
+                if (!forceLoad)
                 {
-                    return AllKeys;
+                    if (EntitySetKeys.DbContextStore.Contains(tryLoadDbContextType))
+                    {
+                        return AllKeys;//已经载入过了，直接返回现有对象，不再加载
+                    }
+                }
+                else
+                {
+                    //强制载入
+                    removeSuccess = EntitySetKeys.DbContextStore.TryTake(out tryLoadDbContextType);
+                    SenparcTrace.BaseExceptionLog(new BaseException($"EntitySetKeys.DbContextStore.TryTake 失败，tryLoadDbContextType 类型：{tryLoadDbContextType.FullName}"));
                 }
 
-                EntitySetKeys.DbContextStore.Add(tryLoadDbContextType);
+                if (removeSuccess)
+                {
+                    EntitySetKeys.DbContextStore.Add(tryLoadDbContextType);
+                }
 
                 //初始化的时候从ORM中自动读取实体集名称及实体类别名称
                 var clientProperties = tryLoadDbContextType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
@@ -60,14 +76,16 @@ namespace Senparc.Ncf.Core.Models
                             {
                                 AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
                             }
-                            else if(!AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
+                            else if (!AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
                             {
                                 AllKeys[dbSetType].SenparcEntityTypes.Add(tryLoadDbContextType);//给这个 dbSetType 添加一个新的 DbContext 关联类型
                             }
                         }
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                        Console.WriteLine($"{nameof(EntitySetKeys)}.TryLoadSetInfo() 发生异常：");
+                        Console.WriteLine(ex);
                     }
                 }
             }
