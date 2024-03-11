@@ -53,7 +53,7 @@ namespace Senparc.Ncf.XncfBase
         enum ScanTypeKind
         {
             IXncfRegister,
-            IXncfFunction,
+            //IXncfFunction,
             XncfAutoConfigurationMappingAttribute
         }
 

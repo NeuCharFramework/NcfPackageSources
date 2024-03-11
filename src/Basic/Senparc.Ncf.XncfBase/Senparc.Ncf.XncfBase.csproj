@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.15.3.1-beta1</Version>
+    <Version>0.15.4-beta1</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -19,22 +19,23 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
-			v0.2.100 完成基础架构，功能跑通
-			v0.3.100 优化 Function 返回值
-			v0.3.303 提供 IXncfThread 接口
-			v0.3.305 添加 XncfAutoConfigurationMapping 特性
-			v0.3.501 添加 Register.IsRegistered 方法
-			v0.7 升级 Function 为 FunctionRender
-			v0.9.1.6 优化 DDD 分层，忽略系统表的删除 History 操作
-			v0.11.3.1 重新开启线程 XncfThread
-			v0.11.8 添加 ServiceBase 子类的自动依赖注入注册
-			v0.11.9 添加 IServiceDataBase 类型自动注册
-			v0.13.0 添加 FunctionHelper.LoadXncfProjects() 方法
-			v0.13.1 添加 FunctionHelper.GetSenparcEntitiesFilePath() 方法
-			v0.13.2 添加 VersionHelper，统一处理版本
-			v0.15.0 SelectionItem 支持 BindData 属性
-</PackageReleaseNotes>
+		v0.1 创世
+		v0.2.100 完成基础架构，功能跑通
+		v0.3.100 优化 Function 返回值
+		v0.3.303 提供 IXncfThread 接口
+		v0.3.305 添加 XncfAutoConfigurationMapping 特性
+		v0.3.501 添加 Register.IsRegistered 方法
+		v0.7 升级 Function 为 FunctionRender
+		v0.9.1.6 优化 DDD 分层，忽略系统表的删除 History 操作
+		v0.11.3.1 重新开启线程 XncfThread
+		v0.11.8 添加 ServiceBase 子类的自动依赖注入注册
+		v0.11.9 添加 IServiceDataBase 类型自动注册
+		v0.13.0 添加 FunctionHelper.LoadXncfProjects() 方法
+		v0.13.1 添加 FunctionHelper.GetSenparcEntitiesFilePath() 方法
+		v0.13.2 添加 VersionHelper，统一处理版本
+		v0.15.0 SelectionItem 支持 BindData 属性
+		v0.15.4 删除 ScanTypeKind.IFunction 枚举
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

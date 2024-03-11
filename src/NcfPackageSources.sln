@@ -60,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.DatabasePlant.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.MySql.Backcup", "Basic\Senparc.Ncf.Database.MySql.Backup\Senparc.Ncf.Database.MySql.Backcup.csproj", "{548A1BB0-88DE-45D4-95DF-2538A9592823}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XncfBuilder", "XncfBuilder", "{3C473DB5-6DAD-4BDE-B7AD-773DAB17582E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-3 XncfBuilder", "02-3 XncfBuilder", "{3C473DB5-6DAD-4BDE-B7AD-773DAB17582E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.Sqlite", "Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj", "{CD0C1BF6-2E3D-439F-B17D-8A7C678C9483}"
 EndProject
@@ -80,7 +80,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.ImageUtility", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Unpublished", "03 Unpublished", "{3328552C-7377-45DB-8EE8-B4D9D0184266}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SystemXncfs", "_SystemXncfs", "{97BBCB28-782F-43D5-A604-0376298AF256}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-1 SystemXncfs", "02-1 SystemXncfs", "{97BBCB28-782F-43D5-A604-0376298AF256}"
 	ProjectSection(SolutionItems) = preProject
 		Extensions\System\readme.md = Extensions\System\readme.md
 	EndProjectSection
@@ -115,7 +115,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.PromptRange", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.PromptRange.Tests", "Extensions\Senparc.Xncf.PromptRange.Tests\Senparc.Xncf.PromptRange.Tests.csproj", "{1328935B-885B-494D-AFF0-0FEEE18612A7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{235C1B17-5281-48F8-B891-8F84A9CBC34F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-2 AI", "02-2 AI", "{235C1B17-5281-48F8-B891-8F84A9CBC34F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.AIKernel", "Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj", "{02370F66-CC8C-4646-8EA2-9AFD72B2588E}"
 EndProject

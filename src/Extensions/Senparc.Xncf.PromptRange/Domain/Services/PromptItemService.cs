@@ -475,13 +475,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         PromptItem promptItem;
         if (fullVersion.Contains("-T") && fullVersion.Contains("-A"))
         {
-            //精准查询
+            //精准查询，如：2024.01.06.3-T1-A2
             promptItem = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
                          throw new NcfExceptionBase($"找不到 {fullVersion} 对应的 PromptItem");
         }
         else
         {
-            //模糊查询
+            //模糊查询，如：2024.01.06.3-T1，或者 2024.01.06.3
 
             var versionSet = fullVersion.Split(new[] { "-T" }, StringSplitOptions.None);
 
