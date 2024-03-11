@@ -119,6 +119,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-2 AI", "02-2 AI", "{235C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.AIKernel", "Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj", "{02370F66-CC8C-4646-8EA2-9AFD72B2588E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.AIAgentsHub", "Extensions\Senparc.Xncf.AIAgentsHub\Senparc.Xncf.AIAgentsHub.csproj", "{78E25094-BDA7-4057-B862-E7AA05F45C36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -618,6 +620,18 @@ Global
 		{02370F66-CC8C-4646-8EA2-9AFD72B2588E}.TemplateRelease|Any CPU.Build.0 = TemplateRelease|Any CPU
 		{02370F66-CC8C-4646-8EA2-9AFD72B2588E}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{02370F66-CC8C-4646-8EA2-9AFD72B2588E}.Test|Any CPU.Build.0 = Test|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Debug-Dapr|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Debug-Dapr|Any CPU.Build.0 = Debug|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.NcfDebugForPromptRange|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.NcfDebugForPromptRange|Any CPU.Build.0 = Debug|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.TemplateRelease|Any CPU.ActiveCfg = TemplateRelease|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.TemplateRelease|Any CPU.Build.0 = TemplateRelease|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{78E25094-BDA7-4057-B862-E7AA05F45C36}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -672,6 +686,7 @@ Global
 		{1328935B-885B-494D-AFF0-0FEEE18612A7} = {235C1B17-5281-48F8-B891-8F84A9CBC34F}
 		{235C1B17-5281-48F8-B891-8F84A9CBC34F} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 		{02370F66-CC8C-4646-8EA2-9AFD72B2588E} = {235C1B17-5281-48F8-B891-8F84A9CBC34F}
+		{78E25094-BDA7-4057-B862-E7AA05F45C36} = {235C1B17-5281-48F8-B891-8F84A9CBC34F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}
