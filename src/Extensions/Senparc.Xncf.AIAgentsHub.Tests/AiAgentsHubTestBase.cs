@@ -14,17 +14,40 @@ using Senparc.Ncf.Core.Tests;
 using Senparc.Ncf.Database.Sqlite;
 using Senparc.Xncf.AreasBase;
 using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.AIAgentsHub.Domain.Services;
+using Senparc.CO2NET.RegisterServices;
+using Microsoft.Extensions.Configuration;
+using Moq;
+using Senparc.Xncf.AIAgentsHub.Tests.InstallServices;
+using Senparc.Ncf.Core.Config;
+using System.Configuration;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.AIAgentsHub.Tests
 {
-    public class AiAgentsHubTestBase:TestBase
+    public class AiAgentsHubTestBase
     {
+        //public IServiceCollection ServiceCollection { get; set; }
+        //public IConfiguration Configuration { get; set; }
+
+        //public IHostEnvironment Env { get; set; }
+
+        protected IRegisterService registerService;
+        //protected SenparcSetting _senparcSetting;
+        protected IServiceProvider _serviceProvider;
+
+        private WebApplicationBuilder builder;
+
+
         public AiAgentsHubTestBase()
         {
-            var builder = WebApplication.CreateBuilder();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            builder = WebApplication.CreateBuilder();
 
             //添加（注册） Ncf 服务（必须）
             builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
+            builder.Services.AddMemoryCache();//使用内存缓存
 
             var app = builder.Build();
 
@@ -33,12 +56,22 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
                 app.UseDeveloperExceptionPage();
             }
 
+            this._serviceProvider = app.Services;
+
             //Use NCF（必须）
-            app.UseNcf();
+            registerService = app.UseNcf();
 
-            //判断安装
+            //初始化安装
+            var installService = this._serviceProvider.GetService<InstallerService>();
+            var installOptionsServier = this._serviceProvider.GetService<InstallOptionsService>();
+            InstallRequestDto installRequestDto = new()
+            {
+                AdminUserName = "Test",
+                SystemName = "UnitTest",
+                DbConnectionString = installOptionsServier.GetDbConnectionString()
+            };
 
-
+            installService.InstallAsync(installRequestDto, this._serviceProvider).GetAwaiter();
         }
     }
 
@@ -49,6 +82,17 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
         public static void AddNcf<TDatabaseConfiguration>(this WebApplicationBuilder builder)
           where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
+            var services = builder.Services;
+            SenparcDI.GlobalServiceCollection = services;
+
+
+            services.AddMemoryCache();//使用内存缓存
+
+            services.AddScoped<InstallOptionsService>();
+            services.AddScoped<InstallerService>();
+
+            services.AddScoped<ColorService>();
+
 
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine<TDatabaseConfiguration>();
@@ -57,19 +101,40 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             Console.WriteLine("============ logMsg END =============");
         }
 
-        public static void UseNcf(this WebApplication app)
+        public static IRegisterService UseNcf(this WebApplication app)
         {
+            //注册
+            //var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
+            //mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
+            //var env = mockEnv.Object;
+
             var env = app.Environment;
-            var senparcSetting = app.Services.GetService<IOptions<SenparcSetting>>();
-            var senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
+
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddJsonFile("appsettings.json", false, false);
+            Console.WriteLine("完成 appsettings.json 添加");
+
+            var config = configBuilder.Build();
+            Console.WriteLine("完成 ServiceCollection 和 ConfigurationBuilder 初始化");
+
+            //更多绑定操作参见：https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2
+            var senparcSetting = new SenparcSetting();
+            config.GetSection("SenparcSetting").Bind(senparcSetting);
+
+            var senparcCoreSetting = new SenparcCoreSetting();
+            config.GetSection("SenparcCoreSetting").Bind(senparcCoreSetting);
+
+            Console.WriteLine("SenparcCoreSetting：");
+            Console.WriteLine(senparcCoreSetting.ToJson(true));
+
             // 启动 CO2NET 全局注册，必须！
             // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
             var registerService = app
                 //全局注册
-                .UseSenparcGlobal(env, senparcSetting.Value, globalRegister =>
+                .UseSenparcGlobal(env, senparcSetting, globalRegister =>
                 {
                     //配置全局使用Redis缓存（按需，独立）
-                    if (UseRedis(senparcSetting.Value, out var redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+                    if (UseRedis(senparcSetting, out var redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
                     {
                         /* 说明：
                          * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
@@ -91,6 +156,8 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             //XncfModules（必须）
             app.UseXncfModules(registerService);
+
+            return registerService;
         }
 
         /// <summary>

@@ -1,14 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.Core.Tests;
-using Senparc.Xncf.AIAgentsHub.Domain.Services;
 using Senparc.Xncf.AIAgentsHub.Tests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AIAgentsHub.Domain.Services.Tests
 {
@@ -19,7 +11,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services.Tests
 
         public ColorServiceTests()
         {
-
+            _colorService = base._serviceProvider.GetService<ColorService>();
         }
 
         [TestMethod()]
