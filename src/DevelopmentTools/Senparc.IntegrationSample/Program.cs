@@ -19,9 +19,9 @@ if (app.Environment.IsDevelopment())
 
 //Use NCF（必须）
 app.UseNcf();
-var col = Senparc.Ncf.Core.Models.EntitySetKeys.GetAllEntitySetInfo();
-Console.WriteLine("================================EntitySetKeys:");
-Console.WriteLine(col.Where(z => z.Key.FullName.Contains("AI")).ToJson(true));
+//var col = Senparc.Ncf.Core.Models.EntitySetKeys.GetAllEntitySetInfo();
+//Console.WriteLine("================================EntitySetKeys:");
+//Console.WriteLine(col.Where(z => z.Key.FullName.Contains("AI")).ToJson(true));
 
 app.UseStaticFiles();
 

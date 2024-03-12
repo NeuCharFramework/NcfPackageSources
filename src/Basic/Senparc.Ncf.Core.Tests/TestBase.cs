@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json.Bson;
 using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using System;
@@ -13,13 +14,14 @@ namespace Senparc.Ncf.Core.Tests
     [TestClass]
     public class TestBase
     {
-        public IServiceCollection ServiceCollection { get; }
+        public IServiceCollection ServiceCollection { get; set; }
         public IConfiguration Configuration { get; set; }
 
         public IHostEnvironment Env { get; set; }
 
         protected IRegisterService registerService;
         protected SenparcSetting _senparcSetting;
+        protected IServiceProvider _serviceProvider;
 
         public TestBase()
         {
@@ -28,6 +30,17 @@ namespace Senparc.Ncf.Core.Tests
             ServiceCollection = new ServiceCollection();
             RegisterServiceCollection();
             RegisterServiceStart();
+        }
+
+
+        public void BuildServiceProvider(IServiceCollection services = null)
+        {
+            if (services != null)
+            {
+                this.ServiceCollection = services;
+            }
+            this._serviceProvider = this.ServiceCollection.BuildServiceProvider();
+
         }
 
         /// <summary>
@@ -46,6 +59,8 @@ namespace Senparc.Ncf.Core.Tests
 
             serviceCollection.AddSenparcGlobalServices(config);
             serviceCollection.AddMemoryCache();//Ê¹ÓÃÄÚ´æ»º´æ
+
+            BuildServiceProvider();
 
         }
 
