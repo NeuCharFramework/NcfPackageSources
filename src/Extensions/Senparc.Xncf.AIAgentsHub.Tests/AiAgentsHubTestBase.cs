@@ -126,6 +126,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             Console.WriteLine("SenparcCoreSetting：");
             Console.WriteLine(senparcCoreSetting.ToJson(true));
+            Console.WriteLine();
 
             // 启动 CO2NET 全局注册，必须！
             // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
@@ -155,7 +156,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
 
             //XncfModules（必须）
-            app.UseXncfModules(registerService);
+            app.UseXncfModules(registerService, senparcCoreSetting);
 
             return registerService;
         }
