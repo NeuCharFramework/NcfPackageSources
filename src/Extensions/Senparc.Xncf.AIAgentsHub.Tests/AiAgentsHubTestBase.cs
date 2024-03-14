@@ -27,6 +27,7 @@ using Senparc.Ncf.Database.SqlServer;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.SystemManager.Domain.Service;
 
 namespace Senparc.Xncf.AIAgentsHub.Tests
 {
@@ -49,6 +50,11 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             builder = WebApplication.CreateBuilder();
+
+            {
+                var initRegister = new Senparc.Xncf.XncfModuleManager.Register();
+            }
+
 
             //添加（注册） Ncf 服务（必须）
             //builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
@@ -84,8 +90,13 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             PagedList<XncfModule> xncfModules = xncfModuleService.GetObjectListAsync(1, 999, (XncfModule z) => true, (XncfModule z) => z.AddTime, OrderingType.Descending).GetAwaiter().GetResult();
             List<CreateOrUpdate_XncfModuleDto> xncfModuleDtos = xncfModules.Select((XncfModule z) => xncfModuleService.Mapper.Map<CreateOrUpdate_XncfModuleDto>(z)).ToList();
 
-          var installResult =  Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, this._serviceProvider).GetAwaiter().GetResult();
+            var installResult = Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, this._serviceProvider).GetAwaiter().GetResult();
             Console.WriteLine(installResult);
+
+            //输出调试信息
+            var allKeys = Senparc.Ncf.Core.Models.EntitySetKeys.GetAllEntitySetInfo();
+            Console.WriteLine("All Keys:\r\n" + allKeys.ToJson(true));
+
 
             //安装模块
             var register = new Register();
@@ -113,8 +124,9 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             services.AddScoped<Senparc.Ncf.Repository.RepositoryBase<Color>>();
             services.AddScoped<INcfDbData, NcfClientDbData>();
 
-            services.AddScoped<ColorService>();
+            services.AddScoped<SystemConfigService>();
 
+            services.AddScoped<ColorService>();
 
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine<TDatabaseConfiguration>();

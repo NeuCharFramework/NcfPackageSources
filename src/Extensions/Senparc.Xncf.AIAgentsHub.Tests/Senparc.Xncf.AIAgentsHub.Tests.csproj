@@ -33,9 +33,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--<ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />-->
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Tests\Senparc.Ncf.Core.Tests.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AIAgentsHub\Senparc.Xncf.AIAgentsHub.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
