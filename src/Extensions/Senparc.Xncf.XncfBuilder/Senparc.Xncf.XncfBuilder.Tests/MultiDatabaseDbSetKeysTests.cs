@@ -26,7 +26,6 @@ namespace Senparc.Xncf.XncfBuilder.Tests
         [TestMethod]
         public void RunTest()
         {
-
             Console.WriteLine("XncfRegisterManager.RegisterList: " + XncfRegisterManager.RegisterList.Count);
             Assert.IsTrue(Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList.Count > 0);
             Console.WriteLine(XncfRegisterManager.RegisterList.Count);

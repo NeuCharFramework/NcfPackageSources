@@ -23,6 +23,11 @@ namespace Senparc.Ncf.Core.Tests
         protected SenparcSetting _senparcSetting;
         protected IServiceProvider _serviceProvider;
 
+        protected virtual void ActionInServiceCollection()
+        {
+
+        }
+
         public TestBase()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -60,8 +65,9 @@ namespace Senparc.Ncf.Core.Tests
             serviceCollection.AddSenparcGlobalServices(config);
             serviceCollection.AddMemoryCache();//Ê¹ÓÃÄÚ´æ»º´æ
 
-            BuildServiceProvider();
+            ActionInServiceCollection();
 
+            BuildServiceProvider();
         }
 
         /// <summary>
