@@ -78,7 +78,6 @@ namespace Senparc.Xncf.AIAgentsHub
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-s
 
             services.AddAutoMapper(z =>
             {

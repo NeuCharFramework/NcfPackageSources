@@ -11,7 +11,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services.Tests
 
         public ColorServiceTests()
         {
-            _colorService = base._serviceProvider.GetService<ColorService>();
+            _colorService = base._serviceProvider.GetRequiredService<ColorService>();
         }
 
         [TestMethod()]

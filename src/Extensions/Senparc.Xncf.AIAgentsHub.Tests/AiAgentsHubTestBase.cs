@@ -22,6 +22,11 @@ using Senparc.Xncf.AIAgentsHub.Tests.InstallServices;
 using Senparc.Ncf.Core.Config;
 using System.Configuration;
 using Senparc.CO2NET.Extensions;
+using Senparc.Xncf.SystemCore.Domain.Database;
+using Senparc.Ncf.Database.SqlServer;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Service;
 
 namespace Senparc.Xncf.AIAgentsHub.Tests
 {
@@ -46,7 +51,8 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             builder = WebApplication.CreateBuilder();
 
             //添加（注册） Ncf 服务（必须）
-            builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
+            //builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
+            builder.AddNcf<SQLServerDatabaseConfiguration>();
             builder.Services.AddMemoryCache();//使用内存缓存
 
             var app = builder.Build();
@@ -62,16 +68,30 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             registerService = app.UseNcf();
 
             //初始化安装
-            var installService = this._serviceProvider.GetService<InstallerService>();
-            var installOptionsServier = this._serviceProvider.GetService<InstallOptionsService>();
+            var installService = this._serviceProvider.GetRequiredService<InstallerService>();
+            var installOptionsService = this._serviceProvider.GetRequiredService<InstallOptionsService>();
             InstallRequestDto installRequestDto = new()
             {
                 AdminUserName = "Test",
                 SystemName = "UnitTest",
-                DbConnectionString = installOptionsServier.GetDbConnectionString()
+                DbConnectionString = installOptionsService.GetDbConnectionString()
             };
 
             installService.InstallAsync(installRequestDto, this._serviceProvider).GetAwaiter();
+
+            var xncfModuleService = this._serviceProvider.GetRequiredService<XncfModuleService>();
+
+            PagedList<XncfModule> xncfModules = xncfModuleService.GetObjectListAsync(1, 999, (XncfModule z) => true, (XncfModule z) => z.AddTime, OrderingType.Descending).GetAwaiter().GetResult();
+            List<CreateOrUpdate_XncfModuleDto> xncfModuleDtos = xncfModules.Select((XncfModule z) => xncfModuleService.Mapper.Map<CreateOrUpdate_XncfModuleDto>(z)).ToList();
+
+          var installResult =  Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, this._serviceProvider).GetAwaiter().GetResult();
+            Console.WriteLine(installResult);
+
+            //安装模块
+            var register = new Register();
+
+            //安装
+            register.InstallOrUpdateAsync(this._serviceProvider, Ncf.Core.Enums.InstallOrUpdate.Install).GetAwaiter();
         }
     }
 
@@ -90,6 +110,8 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             services.AddScoped<InstallOptionsService>();
             services.AddScoped<InstallerService>();
+            services.AddScoped<Senparc.Ncf.Repository.RepositoryBase<Color>>();
+            services.AddScoped<INcfDbData, NcfClientDbData>();
 
             services.AddScoped<ColorService>();
 
