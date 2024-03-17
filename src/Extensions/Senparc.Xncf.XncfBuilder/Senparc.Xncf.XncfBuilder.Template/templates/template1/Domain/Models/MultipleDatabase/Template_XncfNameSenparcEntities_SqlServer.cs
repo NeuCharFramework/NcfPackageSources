@@ -7,6 +7,7 @@ using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
+using Microsoft.AspNetCore.Builder;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Models
 {
