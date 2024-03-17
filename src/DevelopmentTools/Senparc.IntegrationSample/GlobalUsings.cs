@@ -2,6 +2,8 @@ global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.Extensions.Hosting;
 global using Senparc.Ncf.Database;
+global using Senparc.CO2NET.Helpers;
+global using Senparc.CO2NET.Extensions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

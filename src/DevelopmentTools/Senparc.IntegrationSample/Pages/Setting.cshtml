@@ -1,0 +1,11 @@
+﻿@page
+@model Senparc.IntegrationSample.Pages.SettingModel
+@{
+    ViewData["Title"] = "系统配置";
+}
+
+<h2>SenparcCoreSetting 系统配置</h2>
+<p>@Model.SenparcCoreSetting.ToJson(true)</p>
+
+<h2>当前数据库配置</h2>
+<p>@Senparc.Ncf.Core.Models.DatabaseConfigurationFactory.Instance.Current.GetType().FullName</p>

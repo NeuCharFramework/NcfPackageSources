@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Exceptions;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.AssembleScan;
+using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
@@ -100,22 +104,54 @@ namespace Senparc.Xncf.AreasBase
         /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
         /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
         /// <returns></returns>
-        public static string StartWebEngine<TDatabaseConfiguration>(this WebApplicationBuilder builder,
+        public static string StartWebEngine/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder,
         Action<RazorPagesOptions>? addRazorPagesConfig = null,
         Action<IAreaRegister> eachRegsiterAction = null)
-        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        //where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             var services = builder.Services;
 
-            //添加数据库
-            builder.Services.AddDatabase<TDatabaseConfiguration>();
+            var startEngineLog = services.StartEngine(builder.Configuration, builder.Environment);
+
+            //判断 TDatabaseConfiguration 是 BySettingDatabaseConfiguration类型
+
+            ////添加数据库
+            //var instance = new TDatabaseConfiguration();
+            //if (instance is BySettingDatabaseConfiguration)
+            //{
+            //    Console.WriteLine(SiteConfig.SenparcCoreSetting.ToJson(true));
+                
+            //    var dbType = SiteConfig.SenparcCoreSetting.DatabaseType;//此时还没有设置完成
+
+
+
+            //    if (dbType == null)
+            //    {
+            //        throw new NcfDatabaseException($"当程序指定了 {instance.GetType().Name} 后，请在 appsettings.json 中的 {nameof(SiteConfig.SenparcCoreSetting.DatabaseType)} 指定数据库类型！", instance.GetType());
+            //    }
+
+            //    var dbTypeStr = dbType.ToString();
+            //    try
+            //    {
+            //        Type dbConfigrationType = Type.GetType($"Senparc.Ncf.Database.{dbTypeStr}.{dbType}DatabaseConfiguration");
+            //        builder.Services.AddDatabase(dbConfigrationType);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new NcfDatabaseException($"appsettings.json 中的 {nameof(SiteConfig.SenparcCoreSetting.DatabaseType)} 指定数据库类型错误：{SiteConfig.SenparcCoreSetting.DatabaseType}", instance.GetType(), inner: ex);
+            //    }
+            //}
+            //else
+            //{
+            //    builder.Services.AddDatabase<TDatabaseConfiguration>();
+            //}
 
             //添加 RazorPage 和 Area
             var mvcBuilder = services.AddRazorPages(addRazorPagesConfig)
                             //注册所有 Ncf 的 Area 模块（必须）
                             .AddNcfAreas(builder.Environment, eachRegsiterAction);
 
-            return services.StartEngine(builder.Configuration, builder.Environment);
+            return startEngineLog;
         }
 #endif
     }

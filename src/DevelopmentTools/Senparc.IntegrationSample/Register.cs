@@ -8,6 +8,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
 using System;
+using Senparc.Ncf.Database;
 
 namespace Senparc.IntegrationSample
 {
@@ -23,22 +24,26 @@ namespace Senparc.IntegrationSample
             StartTime = System.DateTime.Now;
         }
 
-        public static void AddNcf<TDatabaseConfiguration>(this WebApplicationBuilder builder)
-            where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        public static void AddNcf/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder)
+            //where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
-
             //激活 Xncf 扩展引擎（必须）
-            var logMsg = builder.StartWebEngine<TDatabaseConfiguration>();
+            var logMsg = builder.StartWebEngine/*<TDatabaseConfiguration>*/();
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");
         }
 
-        public static void UseNcf(this WebApplication app)
+        public static void UseNcf<TDatabaseConfiguration>(this WebApplication app)
+            where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             var env = app.Environment;
             var senparcSetting = app.Services.GetService<IOptions<SenparcSetting>>();
             var senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
+            Console.WriteLine("11111:"+senparcCoreSetting.ToJson(true));
+
+           app.UseNcfDatabase(typeof(TDatabaseConfiguration));
+
             // 启动 CO2NET 全局注册，必须！
             // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
             var registerService = app
@@ -64,7 +69,6 @@ namespace Senparc.IntegrationSample
                     }
                     //如果这里不进行Redis缓存启用，则目前还是默认使用内存缓存 
                 });
-
 
             //XncfModules（必须）
             app.UseXncfModules(registerService);

@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
@@ -416,6 +417,20 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
+        public static IApplicationBuilder UseXncfModules<TDatabaseConfiguration>(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
+        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        {
+            return UseXncfModules<TDatabaseConfiguration>(app, registerService, senparcCoreSetting, autoRunInstall);
+        }
+
+
+        /// <summary>
+        /// 通常在 Startup.cs 中的 Configure() 方法中执行
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="registerService">CO2NET 注册对象</param>
+        /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
+        /// <returns></returns>
         public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
         {
             if (senparcCoreSetting == null)
@@ -423,6 +438,8 @@ namespace Senparc.Ncf.XncfBase
                 using (var scope = app.ApplicationServices.CreateAsyncScope())
                 {
                     senparcCoreSetting = scope.ServiceProvider.GetService<IOptions<SenparcCoreSetting>>()?.Value;
+
+                    Console.WriteLine("SenparcCoreSetting:" + senparcCoreSetting.ToJson(true));
                 }
             }
 
