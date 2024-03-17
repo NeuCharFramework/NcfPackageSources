@@ -6,6 +6,7 @@ using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.PromptRange.Models
 {
@@ -26,10 +27,10 @@ namespace Senparc.Xncf.PromptRange.Models
     /// </summary>
     public class SenparcDbContextFactory_PostgreSQL : SenparcDesignTimeDbContextFactoryBase<PromptRangeSenparcEntities_PostgreSQL, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_PostgreSQL() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

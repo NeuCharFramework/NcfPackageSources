@@ -6,6 +6,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.AIKernel.Models
 {
@@ -25,10 +26,10 @@ namespace Senparc.Xncf.AIKernel.Models
     /// </summary>
     public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<AIKernelSenparcEntities_SqlServer, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SqlServer() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

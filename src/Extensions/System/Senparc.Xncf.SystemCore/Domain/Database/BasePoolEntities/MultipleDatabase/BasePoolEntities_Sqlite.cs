@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -28,10 +29,10 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
     /// </summary> 
     public class SenparcDbContextFactory_SQLite : SenparcDesignTimeDbContextFactoryBase<BasePoolEntities_Sqlite, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SQLite()

@@ -18,12 +18,12 @@ namespace Senparc.Xncf.PromptRange.Tests
 
         public XncfBuilderTestBase() : base()
         {
-            var senparcAiSetting = new Senparc.AI.Kernel.SenparcAiSetting();
-            base.Configuration.GetSection("SenparcAiSetting").Bind(senparcAiSetting);
+            //var senparcAiSetting = new Senparc.AI.Kernel.SenparcAiSetting();
+            //base.Configuration.GetSection("SenparcAiSetting").Bind(senparcAiSetting);
 
-            base.registerService.UseSenparcAI(senparcAiSetting);
+            base.registerService.UseSenparcAI(/*senparcAiSetting*/);
 
-            base.ServiceCollection.AddScoped<PromptService>();
+            base.ServiceCollection.AddScoped<XncfBuilder.Domain.Services.PromptService>();
             base.ServiceCollection.AddScoped<PromptBuilderService>();
 
             base.ServiceCollection.AddScoped<IAiHandler, SemanticAiHandler>();

@@ -9,7 +9,7 @@ using Senparc.CO2NET.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 //添加（注册） Ncf 服务（必须）
-builder.AddNcf<BySettingDatabaseConfiguration>();
+builder.AddNcf/*<BySettingDatabaseConfiguration>*/();
 
 var app = builder.Build();
 

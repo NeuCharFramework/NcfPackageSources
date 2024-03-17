@@ -6,6 +6,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.Menu.Models
 {
@@ -25,10 +26,10 @@ namespace Senparc.Xncf.Menu.Models
     /// </summary>
     public class SenparcDbContextFactory_Oracle : SenparcDesignTimeDbContextFactoryBase<MenuSenparcEntities_Oracle, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_Oracle() : base(SenparcDbContextFactoryConfig.RootDictionaryPath)

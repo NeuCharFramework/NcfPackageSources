@@ -7,6 +7,7 @@ using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 using Senparc.Xncf.AIAgentsHub.Models.DatabaseModel;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.AIAgentsHub.Models
 {
@@ -26,10 +27,10 @@ namespace Senparc.Xncf.AIAgentsHub.Models
     /// </summary>
     public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<AIAgentsHubSenparcEntities_Sqlite, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_Sqlite() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

@@ -26,10 +26,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
     /// </summary>
     public class SenparcDbContextFactory_Oracle : SenparcDesignTimeDbContextFactoryBase<Template_XncfNameSenparcEntities_Oracle, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_Oracle() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

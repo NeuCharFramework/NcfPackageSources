@@ -25,10 +25,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
     /// </summary>
     public class SenparcDbContextFactory_MySql : SenparcDesignTimeDbContextFactoryBase<Template_XncfNameSenparcEntities_MySql, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

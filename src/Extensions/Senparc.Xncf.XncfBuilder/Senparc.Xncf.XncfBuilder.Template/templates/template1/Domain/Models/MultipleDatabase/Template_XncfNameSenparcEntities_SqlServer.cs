@@ -26,10 +26,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
     /// </summary>
     public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<Template_XncfNameSenparcEntities_SqlServer, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SqlServer() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

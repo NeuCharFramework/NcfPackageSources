@@ -16,7 +16,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests
         public MultiDatabaseDbSetKeysTests()
         {
             Console.WriteLine(typeof(Senparc.Xncf.XncfBuilder.Register).FullName);
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { });
+            Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { }, app => { });
 
             var env = base.ServiceCollection.BuildServiceProvider().GetService<IHostEnvironment>();
             var result = Senparc.Ncf.XncfBase.Register.StartEngine(base.ServiceCollection, base.Configuration, env);

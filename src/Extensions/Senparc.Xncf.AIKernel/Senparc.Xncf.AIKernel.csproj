@@ -32,7 +32,7 @@
 		<OutputPath>..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.14.0" />
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.14.1" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -99,6 +100,7 @@ namespace Senparc.Ncf.XncfBase.Database
             where TDbContext : DbContext
     {
         protected virtual Action<IServiceCollection> ServicesAction { get; }
+        protected virtual Action<IApplicationBuilder> AppAction { get; }
 
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
@@ -158,7 +160,7 @@ namespace Senparc.Ncf.XncfBase.Database
             this._ncfVersion = ncfVersion;
             this._note = note;
 
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction);
+            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction, AppAction);
         }
 
 
