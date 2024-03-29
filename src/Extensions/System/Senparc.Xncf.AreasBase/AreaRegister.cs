@@ -89,7 +89,7 @@ namespace Senparc.Xncf.AreasBase
             //注册所有 Ncf 的 Area 模块（必须）
             .AddNcfAreas(env, eachRegsiterAction);
             Console.WriteLine("临时：StartWebEngine");
-            return services.StartEngine(configuration, env);
+            return services.StartNcfEngine(configuration, env);
         }
 
 #if NET8_0_OR_GREATER
@@ -111,7 +111,7 @@ namespace Senparc.Xncf.AreasBase
         {
             var services = builder.Services;
 
-            var startEngineLog = services.StartEngine(builder.Configuration, builder.Environment);
+            var startEngineLog = services.StartNcfEngine(builder.Configuration, builder.Environment);
 
             //判断 TDatabaseConfiguration 是 BySettingDatabaseConfiguration类型
 

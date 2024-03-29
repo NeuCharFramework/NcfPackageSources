@@ -27,6 +27,9 @@ namespace Senparc.IntegrationSample
         public static void AddNcf/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder)
             //where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
+
+            //builder.Services.Configure<SenparcCoreSetting>(builder.Configuration.GetSection("SenparcCoreSetting"));
+
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine/*<TDatabaseConfiguration>*/();
             Console.WriteLine("============ logMsg =============");
@@ -42,7 +45,6 @@ namespace Senparc.IntegrationSample
             var senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
             Console.WriteLine("11111:"+senparcCoreSetting.ToJson(true));
 
-           app.UseNcfDatabase(typeof(TDatabaseConfiguration));
 
             // 启动 CO2NET 全局注册，必须！
             // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
@@ -72,6 +74,15 @@ namespace Senparc.IntegrationSample
 
             //XncfModules（必须）
             app.UseXncfModules(registerService);
+
+            Console.WriteLine("----------完成UseXncfModules");
+            Console.WriteLine( Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.ToJson());
+
+            var str = typeof(Senparc.Ncf.Database.Sqlite.SqliteDatabaseConfiguration);
+
+            //必须在 UseXncfModules 之后
+            app.UseNcfDatabase(typeof(TDatabaseConfiguration));
+
         }
 
         /// <summary>

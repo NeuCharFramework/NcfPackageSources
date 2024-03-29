@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />

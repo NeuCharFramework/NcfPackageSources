@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,11 +68,22 @@ namespace Senparc.Ncf.XncfBase
             //Console.WriteLine(msg);
         }
 
+
         /// <summary>
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
+        [Obsolete("请使用 StartNcfEngine()")]
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        {
+            return StartNcfEngine(services, configuration, env);
+        }
+
+        /// <summary>
+        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        /// </summary>
+        /// <returns></returns>
+        public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
@@ -85,7 +98,7 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     //遍历所有程序集
-                    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
                     int columnWidth1 = 42;
                     int columnWidth2 = 45;
                     int columnWidth3 = 15;
@@ -93,6 +106,52 @@ namespace Senparc.Ncf.XncfBase
                     SetLog(sb, " === Multiple databases detected ===");
                     SetLog(sb, $"| {"Register".PadRight(columnWidth1)}| {"Full Name".PadRight(columnWidth2)}| {"Database Type".PadRight(columnWidth3)}", false);
                     SetLog(sb, $"|-{new String('-', columnWidth1)}|-{new String('-', columnWidth2)}|-{new String('-', columnWidth3)}", false);
+
+                    #region 补全未被引用的程序集
+                    var dynamicLoadAllDlls = true;
+                    if (dynamicLoadAllDlls)
+                    {
+                        // 使用 AppDomain 或环境变量来动态获取路径
+                        string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
+                        // 如果需要，也可以考虑使用环境变量
+                        // string directoryPath = Environment.GetEnvironmentVariable("MY_APP_PATH");
+
+                        // 其余的步骤与之前相同，遍历和尝试加载 DLL
+                        var loadedAssemblies = assemblies.Select(a => a.GetName().Name).ToList();
+
+                        foreach (var filePath in Directory.GetFiles(directoryPath, "*.dll"))
+                        {
+                            try
+                            {
+                                var fileName = Path.GetFileName(filePath);
+                                if (fileName.StartsWith("Senparc.Xncf.", StringComparison.OrdinalIgnoreCase) &&
+                                    //TODO：暂时排除可能导致出错的项目，后期需要恢复
+                                    !fileName.Contains("Database") &&
+                                    !fileName.Contains("AI")
+                                    )
+                                {
+                                    var assemblyName = Path.GetFileNameWithoutExtension(fileName);
+                                    if (!loadedAssemblies.Contains(assemblyName))
+                                    {
+                                        Assembly assembly = Assembly.LoadFrom(filePath);
+                                        assemblies.Add(assembly);
+                                        Console.WriteLine($"Dynamic Loaded: {assembly.FullName}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"Already loaded: {assemblyName}");
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error loading assembly from {filePath}: {ex.Message}");
+                            }
+                        }
+                    }
+
+
+                    #endregion
 
                     foreach (var a in assemblies)
                     {
@@ -330,20 +389,20 @@ namespace Senparc.Ncf.XncfBase
             return sb.ToString();
         }
 
-#if NET8_0_OR_GREATER
-        /// <summary>
-        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
-        /// </summary>
-        /// <returns></returns>
-        public static string StartEngine<TDatabaseConfiguration>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
-        where TDatabaseConfiguration : IDatabaseConfiguration, new()
-        {
-            //添加数据库
-            services.AddDatabase<TDatabaseConfiguration>();
-            //调用 StartEngine() 方法，完成全局必要的注册
-            return StartEngine(services, configuration, env);
-        }
-#endif
+        //#if NET8_0_OR_GREATER
+        //        /// <summary>
+        //        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        //        /// </summary>
+        //        /// <returns></returns>
+        //        public static string StartEngine<TDatabaseConfiguration>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        //        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        //        {
+        //            //添加数据库
+        //            services.AddDatabase<TDatabaseConfiguration>();
+        //            //调用 StartEngine() 方法，完成全局必要的注册
+        //            return StartEngine(services, configuration, env);
+        //        }
+        //#endif
 
         /// <summary>
         /// 扫描并安装（自动安装，无需手动）
