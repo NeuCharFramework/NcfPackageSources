@@ -1,14 +1,10 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;
-using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
-using System;
-using Senparc.Ncf.Database;
 
 namespace Senparc.IntegrationSample
 {
@@ -25,7 +21,7 @@ namespace Senparc.IntegrationSample
         }
 
         public static void AddNcf/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder)
-            //where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        //where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
 
             //builder.Services.Configure<SenparcCoreSetting>(builder.Configuration.GetSection("SenparcCoreSetting"));
@@ -43,7 +39,7 @@ namespace Senparc.IntegrationSample
             var env = app.Environment;
             var senparcSetting = app.Services.GetService<IOptions<SenparcSetting>>();
             var senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
-            Console.WriteLine("11111:"+senparcCoreSetting.ToJson(true));
+            Console.WriteLine("11111:" + senparcCoreSetting.ToJson(true));
 
 
             // 启动 CO2NET 全局注册，必须！
@@ -76,7 +72,7 @@ namespace Senparc.IntegrationSample
             app.UseXncfModules(registerService);
 
             Console.WriteLine("----------完成UseXncfModules");
-            Console.WriteLine( Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.ToJson());
+            Console.WriteLine(Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.ToJson());
 
             var str = typeof(Senparc.Ncf.Database.Sqlite.SqliteDatabaseConfiguration);
 

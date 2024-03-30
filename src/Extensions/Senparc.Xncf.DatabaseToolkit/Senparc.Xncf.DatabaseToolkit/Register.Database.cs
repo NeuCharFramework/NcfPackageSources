@@ -5,6 +5,8 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.DatabaseToolkit.Domain.Services;
+using Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService;
 using System;
 using static Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService.DatabaseConfigAppService;
 
@@ -24,6 +26,9 @@ namespace Senparc.Xncf.DatabaseToolkit
             {
                 profile.CreateMap<SetConfigFunctionAppRequest, DbConfig>();
             });
+
+            //services.AddScoped<DatabaseBackupAppService>();
+            //services.AddScoped<DbConfigQueryService>();
         }
 
         public void OnModelCreating(ModelBuilder modelBuilder)

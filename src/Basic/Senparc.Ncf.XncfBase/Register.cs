@@ -109,6 +109,7 @@ namespace Senparc.Ncf.XncfBase
 
                     #region 补全未被引用的程序集
                     var dynamicLoadAllDlls = true;
+
                     if (dynamicLoadAllDlls)
                     {
                         // 使用 AppDomain 或环境变量来动态获取路径
@@ -124,10 +125,10 @@ namespace Senparc.Ncf.XncfBase
                             try
                             {
                                 var fileName = Path.GetFileName(filePath);
-                                if (fileName.StartsWith("Senparc.Xncf.", StringComparison.OrdinalIgnoreCase) &&
+                                if (fileName.StartsWith("Senparc.Xncf.", StringComparison.OrdinalIgnoreCase) //&&
                                     //TODO：暂时排除可能导致出错的项目，后期需要恢复
-                                    !fileName.Contains("Database") &&
-                                    !fileName.Contains("AI")
+                                    //!fileName.Contains("Database") &&
+                                    //!fileName.Contains("AI")
                                     )
                                 {
                                     var assemblyName = Path.GetFileNameWithoutExtension(fileName);
@@ -229,6 +230,7 @@ namespace Senparc.Ncf.XncfBase
 
                             //配置 ServiceBase
                             if (t.IsSubclassOf(typeof(ServiceBase<>))
+                                || t.IsSubclassOf(typeof(AppServiceBase))
                                 //|| t.IsInstanceOfType(typeof(IServiceDataBase))
                                 )
                             {

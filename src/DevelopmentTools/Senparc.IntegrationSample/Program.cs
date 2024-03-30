@@ -2,9 +2,7 @@
 using Senparc.Ncf.Database.SqlServer;
 
 using Senparc.IntegrationSample;
-using Senparc.Xncf.DatabaseToolkit.Domain.Services;
-using Senparc.Xncf.SystemCore.Domain.Database;
-using Senparc.CO2NET.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

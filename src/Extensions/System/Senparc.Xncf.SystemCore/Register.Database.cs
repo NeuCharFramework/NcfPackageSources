@@ -42,7 +42,7 @@ namespace Senparc.Xncf.SystemCore
              */
             #endregion
 
-            var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
+            //var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
             /* 
              *     非常重要！！
@@ -77,11 +77,10 @@ namespace Senparc.Xncf.SystemCore
             };
             services.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
 
-            services.AddScoped(typeof(INcfClientDbData), typeof(NcfClientDbData));
-            services.AddScoped(typeof(INcfDbData), typeof(NcfClientDbData));
+            services.AddScoped<INcfClientDbData, NcfClientDbData>();
+            services.AddScoped<INcfDbData, NcfClientDbData>();
 
             //预加载 EntitySetKey
-            //EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntities));
             EntitySetKeys.TryLoadSetInfo(typeof(BasePoolEntities));
         }
 
