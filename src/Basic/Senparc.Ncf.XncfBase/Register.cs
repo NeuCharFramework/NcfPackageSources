@@ -340,6 +340,11 @@ namespace Senparc.Ncf.XncfBase
 
                 }
             }
+
+            //标记所有 AddXncfModule 方法已经执行完成
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllAddXncfModuleApplied = true;
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllDatabaseXncfLoaded = true;
+
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
 
             return sb.ToString();
@@ -507,8 +512,16 @@ namespace Senparc.Ncf.XncfBase
                     {
                         SenparcTrace.BaseExceptionLog(ex);
                     }
+
+                    //任意一个 ThreadXncf 已经载入
+                    Ncf.Core.Config.SiteConfig.NcfCoreState.AnyThreadXncfLoaded = true;
                 }
             }
+
+            //所有 ThreadXncf 已经载入
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded = true;
+            //所有 UseXncfModule 已经执行完成
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllUseXncfModuleApplied = true;
 
             //自动运行安装
 

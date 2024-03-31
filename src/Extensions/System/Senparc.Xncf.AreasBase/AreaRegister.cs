@@ -68,7 +68,12 @@ namespace Senparc.Xncf.AreasBase
                     Console.WriteLine(message);
                     SenparcTrace.SendCustomLog(title, message);
                 }
-            }, false);
+            }, true);
+
+            //所有 AuthorizeConfig 方法已经执行完成
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllAuthorizeConfigApplied = true;
+
+
             return builder;
         }
 
