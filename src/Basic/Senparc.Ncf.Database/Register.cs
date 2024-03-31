@@ -105,7 +105,7 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 使用指定数据库
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="app"></param>
         /// <param name="assemblyName">DatabaseConfiguration 程序集名称</param>
         /// <param name="nameSpace">DatabaseConfiguration 命名空间</param>
         /// <param name="className">DatabaseConfiguration 类名</param>
@@ -121,7 +121,7 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 使用指定数据库
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="app"></param>
         /// <param name="databaseConfigurationType"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, Type databaseConfigurationType)
@@ -135,8 +135,6 @@ namespace Senparc.Ncf.Database
             //判断是否为默认数据库配置（使用 appsettings.json 文件）
             if (databaseConfigurationType == typeof(BySettingDatabaseConfiguration))
             {
-                Console.WriteLine(SiteConfig.SenparcCoreSetting.ToJson(true));
-
                 var dbType = SiteConfig.SenparcCoreSetting.DatabaseType;//此时还没有设置完成
 
                 if (dbType == null)
@@ -173,21 +171,13 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 使用指定数据库
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="databaseConfigurationType"></param>
+        /// <param name="app"></param>
         /// <returns></returns>
-        //public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, Type databaseConfigurationType)
         public static IApplicationBuilder UseNcfDatabase<TDatabaseConfiguration>(this IApplicationBuilder app)
         where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             //添加数据库
-            //var instance = new TDatabaseConfiguration();
-
             app.UseNcfDatabase(typeof(TDatabaseConfiguration));
-
-            //var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, true) as IDatabaseConfiguration;
-
-            //DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
             return app;
         }
 

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 
 using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
@@ -37,19 +38,15 @@ namespace Senparc.IntegrationSample
             where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             var env = app.Environment;
-            var senparcSetting = app.Services.GetService<IOptions<SenparcSetting>>();
-            var senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
-            Console.WriteLine("11111:" + senparcCoreSetting.ToJson(true));
-
 
             // 启动 CO2NET 全局注册，必须！
             // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
             var registerService = app
                 //全局注册
-                .UseSenparcGlobal(env, senparcSetting.Value, globalRegister =>
+                .UseSenparcGlobal(env, null, globalRegister =>
                 {
                     //配置全局使用Redis缓存（按需，独立）
-                    if (UseRedis(senparcSetting.Value, out var redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+                    if (UseRedis(null, out var redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
                     {
                         /* 说明：
                          * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
@@ -71,11 +68,6 @@ namespace Senparc.IntegrationSample
             //XncfModules（必须）
             app.UseXncfModules(registerService);
 
-            Console.WriteLine("----------完成UseXncfModules");
-            Console.WriteLine(Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.ToJson());
-
-            var str = typeof(Senparc.Ncf.Database.Sqlite.SqliteDatabaseConfiguration);
-
             //必须在 UseXncfModules 之后
             app.UseNcfDatabase(typeof(TDatabaseConfiguration));
 
@@ -86,8 +78,9 @@ namespace Senparc.IntegrationSample
         /// </summary>
         /// <param name="senparcSetting"></param>
         /// <returns></returns>
-        internal static bool UseRedis(SenparcSetting senparcSetting, out string redisConfigurationStr)
+        internal static bool UseRedis(SenparcSetting? senparcSetting, out string redisConfigurationStr)
         {
+            senparcSetting ??= Senparc.CO2NET.Config.SenparcSetting;
             redisConfigurationStr = senparcSetting.Cache_Redis_Configuration;
             var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*默认值，不启用*/;
             return useRedis;

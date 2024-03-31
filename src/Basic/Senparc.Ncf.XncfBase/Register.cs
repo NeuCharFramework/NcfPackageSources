@@ -458,8 +458,6 @@ namespace Senparc.Ncf.XncfBase
                 using (var scope = app.ApplicationServices.CreateAsyncScope())
                 {
                     senparcCoreSetting = scope.ServiceProvider.GetService<IOptions<SenparcCoreSetting>>()?.Value;
-
-                    Console.WriteLine("SenparcCoreSetting:" + senparcCoreSetting.ToJson(true));
                 }
             }
 

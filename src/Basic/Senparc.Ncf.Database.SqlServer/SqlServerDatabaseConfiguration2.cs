@@ -15,9 +15,9 @@ namespace Senparc.Ncf.Database.SqlServer
     /// <summary>
     /// SQL Server 数据库配置
     /// </summary>
-    public class SQLServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
+    public class SqlServerDatabaseConfiguration2 : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
-        public SQLServerDatabaseConfiguration() { }
+        public SqlServerDatabaseConfiguration2() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SqlServer;
 

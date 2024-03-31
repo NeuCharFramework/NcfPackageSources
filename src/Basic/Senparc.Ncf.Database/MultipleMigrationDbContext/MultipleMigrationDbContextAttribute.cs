@@ -19,7 +19,7 @@ namespace Senparc.Ncf.Database
         /// </summary>
         /// <param name="multipleDatabaseType">MultipleDatabaseType 数据库类型</param>
         /// <param name="xncfDatabaseRegisterType">XncfDatabase 注册类类型</param>
-        /// <param name="runtimeDbContextType">当运行时使用的统一数据库上下文类型</param>
+        // /// <param name="runtimeDbContextType">当运行时使用的统一数据库上下文类型</param>
         public MultipleMigrationDbContextAttribute(MultipleDatabaseType multipleDatabaseType,
             Type xncfDatabaseRegisterType/*, Type runtimeDbContextType*/)
         {
