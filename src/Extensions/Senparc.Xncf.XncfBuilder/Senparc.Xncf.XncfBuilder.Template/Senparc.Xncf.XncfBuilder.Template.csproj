@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.7.0</PackageVersion>
+    <PackageVersion>0.8.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -36,6 +36,7 @@
 			v0.5.0 完善版本号，按照语义化版本规范（semver）进行命名
 			v0.6.0 更新项目引用，支持 .NET 8.0
 			v0.7.0 使用新的多数据库配置版本
+			v0.8.0 支持新版本多数据库模板
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
