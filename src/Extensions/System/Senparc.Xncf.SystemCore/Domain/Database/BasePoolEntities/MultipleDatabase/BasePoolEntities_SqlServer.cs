@@ -32,7 +32,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SqlServer()
