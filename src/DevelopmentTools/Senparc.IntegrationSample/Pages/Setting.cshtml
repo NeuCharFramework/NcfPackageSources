@@ -1,0 +1,21 @@
+﻿@page
+@model Senparc.IntegrationSample.Pages.SettingModel
+@{
+    ViewData["Title"] = "系统配置";
+}
+
+<h2>SenparcCoreSetting 系统配置</h2>
+<p>@Model.SenparcCoreSetting.ToJson(true)</p>
+
+<h2>当前数据库配置</h2>
+<p>@Senparc.Ncf.Core.Models.DatabaseConfigurationFactory.Instance.Current.GetType().FullName</p>
+
+<h2>模块载入状态监测</h2>
+<p>所有 AddXncfModule 已应用：@(Model.NcfCoreState.AllAddXncfModuleApplied ? "是" : "否")</p>
+<p>任意 DatabaseXncf Register 已应用：@(Model.NcfCoreState.AynDatabaseXncfLoaded ? "是" : "否")</p>
+<p>所有 DatabaseXncf Register 已应用：@(Model.NcfCoreState.AllDatabaseXncfLoaded ? "是" : "否")</p>
+<p>任意 AddXncfDatabaseModule 已应用：@(Model.NcfCoreState.AnyAddXncfDatabaseModuleApplied ? "是" : "否")</p>
+<p>所有 AuthorizeConfig 已应用：@(Model.NcfCoreState.AllAuthorizeConfigApplied ? "是" : "否")</p>
+<p>所有 UseXncfModule 已应用：@(Model.NcfCoreState.AllUseXncfModuleApplied ? "是" : "否")</p>
+<p>任意 ThreadXncf Register 已应用（在 UseXncfModule 之后执行） ：@(Model.NcfCoreState.AnyThreadXncfLoaded ? "是" : "否")</p>
+<p>所有 ThreadXncf Register 已应用（在 UseXncfModule 之后执行） ：@(Model.NcfCoreState.AllThreadXncfLoaded ? "是" : "否")</p>

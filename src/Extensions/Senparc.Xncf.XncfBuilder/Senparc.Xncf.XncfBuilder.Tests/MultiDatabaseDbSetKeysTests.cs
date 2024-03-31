@@ -16,17 +16,16 @@ namespace Senparc.Xncf.XncfBuilder.Tests
         public MultiDatabaseDbSetKeysTests()
         {
             Console.WriteLine(typeof(Senparc.Xncf.XncfBuilder.Register).FullName);
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { });
+            Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { }, app => { });
 
             var env = base.ServiceCollection.BuildServiceProvider().GetService<IHostEnvironment>();
-            var result = Senparc.Ncf.XncfBase.Register.StartEngine(base.ServiceCollection, base.Configuration, env);
+            var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(base.ServiceCollection, base.Configuration, env);
             //Senparc.Ncf.XncfBase.Register.UseXncfModules()
         }
 
         [TestMethod]
         public void RunTest()
         {
-
             Console.WriteLine("XncfRegisterManager.RegisterList: " + XncfRegisterManager.RegisterList.Count);
             Assert.IsTrue(Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList.Count > 0);
             Console.WriteLine(XncfRegisterManager.RegisterList.Count);

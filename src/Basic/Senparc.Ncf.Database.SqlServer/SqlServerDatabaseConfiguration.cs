@@ -15,9 +15,9 @@ namespace Senparc.Ncf.Database.SqlServer
     /// <summary>
     /// SQL Server 数据库配置
     /// </summary>
-    public class SQLServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
+    public class SqlServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
-        public SQLServerDatabaseConfiguration() { }
+        public SqlServerDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SqlServer;
 
@@ -39,6 +39,8 @@ namespace Senparc.Ncf.Database.SqlServer
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             return $@"Backup Database {dbConnection.Database} To disk='{backupFilePath}'";
+
+            //TODO: with DIFFERENTIAL
         }
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)

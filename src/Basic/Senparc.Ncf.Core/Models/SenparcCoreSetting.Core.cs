@@ -7,7 +7,7 @@ namespace Senparc.Ncf.Core.Models
     /// <summary>
     /// 全局可调整配置的设置
     /// </summary>
-    public partial class SenparcCoreSetting
+    public partial record class SenparcCoreSetting
     {
         /// <summary>
         /// 网站是否开启 Debug 标记
@@ -22,6 +22,12 @@ namespace Senparc.Ncf.Core.Models
         /// 对应：AppData/Database/SenparcConfig.config 中，所需要使用的数据库连接的 &lt;SenparcConfig&gt; 节点的 Name
         /// </summary>
         public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// 通过配置指定数据库类型。必须因为 MultipleDatabaseType 枚举类型，请注意大小写。
+        /// </summary>
+        public MultipleDatabaseType? DatabaseType { get; set; }
+
         /// <summary>
         /// 缓存类型
         /// </summary>

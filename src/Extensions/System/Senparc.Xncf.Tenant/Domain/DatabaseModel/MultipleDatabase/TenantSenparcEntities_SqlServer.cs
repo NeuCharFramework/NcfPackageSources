@@ -7,6 +7,7 @@ using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 using Senparc.Xncf.Tenant.Domain.DatabaseModel;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.Tanent.Domain.DatabaseModel
 {
@@ -26,10 +27,10 @@ namespace Senparc.Xncf.Tanent.Domain.DatabaseModel
     /// </summary>
     public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<TenantSenparcEntities_SqlServer, Senparc.Xncf.Tenant.Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SQLServerDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SqlServer() : base(SenparcDbContextFactoryConfig.RootDictionaryPath)

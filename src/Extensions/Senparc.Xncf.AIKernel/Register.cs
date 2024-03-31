@@ -86,12 +86,6 @@ namespace Senparc.Xncf.AIKernel
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //services.AddScoped<IAiHandler>(s => new SemanticAiHandler());
-
-            var type = this.TryGetXncfDatabaseDbContextType;
-            Console.WriteLine("=========Type=====");
-            Console.WriteLine(type.FullName);
-
             services.AddSenparcAI(configuration);
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");

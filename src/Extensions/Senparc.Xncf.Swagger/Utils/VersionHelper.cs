@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Senparc.Ncf.Core.AssembleScan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace Senparc.Xncf.Swagger.Utils
         public static List<string> GetApiVersions()
         {
             var versions = new List<ApiVersion>();
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
+
+            AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
                 //类上的ApiVersion
                 try
@@ -53,8 +54,9 @@ namespace Senparc.Xncf.Swagger.Utils
                 catch (Exception)
                 {
                 }
-             
-            }
+
+            },true);
+
             return versions.Distinct().Select(s => $"v{s.MajorVersion}.{s.MinorVersion}".Trim('.')).OrderBy(o => o).ToList();
         }
     }

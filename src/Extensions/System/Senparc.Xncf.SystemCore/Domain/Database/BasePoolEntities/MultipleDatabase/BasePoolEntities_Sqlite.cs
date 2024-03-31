@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -28,10 +29,10 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
     /// </summary> 
     public class SenparcDbContextFactory_SQLite : SenparcDesignTimeDbContextFactoryBase<BasePoolEntities_Sqlite, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_SQLite()
@@ -40,7 +41,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
                  /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
                  Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\..\\Senparc.Web"))
         {
-            Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.DatabaseName = "Local";//默认配置
+            //Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.DatabaseName = "Local";//默认配置
         }
     }
 }

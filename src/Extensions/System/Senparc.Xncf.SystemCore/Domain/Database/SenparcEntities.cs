@@ -1,15 +1,8 @@
-﻿using log4net.Util;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.CO2NET;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.MultiTenant;
-using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase;
-using System;
 
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
@@ -37,7 +30,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             Console.WriteLine("============= SenparcEntities 动态加载 Start =============");
             foreach (var databaseRegister in XncfRegisterManager.XncfDatabaseList)
             {
-                Console.WriteLine("SenparcEntities 动态加载："+databaseRegister.GetType().Name+" | DbContextType:"+ databaseRegister.TryGetXncfDatabaseDbContextType.Name);
+                Console.WriteLine("SenparcEntities 动态加载：" + databaseRegister.GetType().Name + " | DbContextType:" + databaseRegister.TryGetXncfDatabaseDbContextType.Name);
                 databaseRegister.OnModelCreating(modelBuilder);
             }
             Console.WriteLine("============= SenparcEntities 动态加载 End =============");

@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Exceptions;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.AssembleScan;
+using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
@@ -64,7 +68,12 @@ namespace Senparc.Xncf.AreasBase
                     Console.WriteLine(message);
                     SenparcTrace.SendCustomLog(title, message);
                 }
-            }, false);
+            }, true);
+
+            //所有 AuthorizeConfig 方法已经执行完成
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllAuthorizeConfigApplied = true;
+
+
             return builder;
         }
 
@@ -85,7 +94,7 @@ namespace Senparc.Xncf.AreasBase
             //注册所有 Ncf 的 Area 模块（必须）
             .AddNcfAreas(env, eachRegsiterAction);
             Console.WriteLine("临时：StartWebEngine");
-            return services.StartEngine(configuration, env);
+            return services.StartNcfEngine(configuration, env);
         }
 
 #if NET8_0_OR_GREATER
@@ -100,22 +109,21 @@ namespace Senparc.Xncf.AreasBase
         /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
         /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
         /// <returns></returns>
-        public static string StartWebEngine<TDatabaseConfiguration>(this WebApplicationBuilder builder,
+        public static string StartWebEngine/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder,
         Action<RazorPagesOptions>? addRazorPagesConfig = null,
         Action<IAreaRegister> eachRegsiterAction = null)
-        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        //where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             var services = builder.Services;
 
-            //添加数据库
-            builder.Services.AddDatabase<TDatabaseConfiguration>();
+            var startEngineLog = services.StartNcfEngine(builder.Configuration, builder.Environment);
 
             //添加 RazorPage 和 Area
             var mvcBuilder = services.AddRazorPages(addRazorPagesConfig)
                             //注册所有 Ncf 的 Area 模块（必须）
                             .AddNcfAreas(builder.Environment, eachRegsiterAction);
 
-            return services.StartEngine(builder.Configuration, builder.Environment);
+            return startEngineLog;
         }
 #endif
     }

@@ -1,6 +1,7 @@
 ﻿using Senparc.CO2NET.Trace;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -31,6 +32,7 @@ namespace Senparc.Ncf.Core.AssembleScan
             }
         }
 
+
         /// <summary>
         /// 执行扫描
         /// </summary>
@@ -43,9 +45,12 @@ namespace Senparc.Ncf.Core.AssembleScan
                 //查找所有扩展缓存B
                 var scanTypesCount = 0;
 
-                var assembiles = AppDomain.CurrentDomain.GetAssemblies();
+                var assemblies = GetAssembiles(dynamicLoadAllDlls: true);
                 var toScanItems = ScanAssamblesActions.Where(z => z.ScanFinished == false).ToList();
-                foreach (var assembly in assembiles)
+
+                //搜索所有未被引用的项目
+
+                foreach (var assembly in assemblies)
                 {
                     try
                     {
@@ -65,9 +70,89 @@ namespace Senparc.Ncf.Core.AssembleScan
 
                 var dt2 = SystemTime.Now;
                 SenparcTrace.SendCustomLog("ScanAssambles", $"RegisterAllAreas 用时：{(dt2 - dt1).TotalMilliseconds}ms");
+            }
 
-                return;
+
+        }
+
+        #region 获取程序集
+
+
+        private static List<Assembly> AllAssemblies = null;
+        private static object AllAssembliesLock = new object();
+
+        /// <summary>
+        /// 获取程序集
+        /// </summary>
+        /// <param name="dynamicLoadAllDlls">是否从 dll 目录加载未被程序引用的其他程序集，默认为 true</param>
+        /// <param name="useCachedData">是否使用已缓存的数据，默认为true</param>
+        /// <param name="forceUpdateCache">强制重新获取并更新缓存，此时会忽略 <paramref name="useCachedData"/> 的设置</param>
+        public static List<Assembly> GetAssembiles(bool dynamicLoadAllDlls = true, bool useCachedData = true, bool forceUpdateCache = true)
+        {
+            lock (AllAssembliesLock)
+            {
+                if (!forceUpdateCache && useCachedData && AllAssemblies != null)
+                {
+                    return AllAssemblies;
+                }
+
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+
+                #region 补全未被引用的程序集
+
+                if (dynamicLoadAllDlls)
+                {
+                    // 使用 AppDomain 或环境变量来动态获取路径
+                    string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
+                    // 如果需要，也可以考虑使用环境变量
+                    // string directoryPath = Environment.GetEnvironmentVariable("MY_APP_PATH");
+
+                    // 其余的步骤与之前相同，遍历和尝试加载 DLL
+                    var loadedAssemblies = assemblies.Select(a => a.GetName().Name).ToList();
+
+                    foreach (var filePath in Directory.GetFiles(directoryPath, "*.dll"))
+                    {
+                        try
+                        {
+                            var fileName = Path.GetFileName(filePath);
+                            if (fileName.Contains(".Xncf.", StringComparison.OrdinalIgnoreCase)
+                                )
+                            {
+                                var assemblyName = Path.GetFileNameWithoutExtension(fileName);
+                                if (!loadedAssemblies.Contains(assemblyName))
+                                {
+                                    Assembly assembly = Assembly.LoadFrom(filePath);
+                                    assemblies.Add(assembly);
+                                    Console.WriteLine($"Dynamic Loaded: {assembly.FullName}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Already loaded: {assemblyName}");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error loading assembly from {filePath}: {ex.Message}");
+                        }
+                    }
+                }
+
+
+                #endregion
+
+                //更新缓存
+                if (forceUpdateCache
+                    || AllAssemblies == null
+                    || assemblies.Count() > AllAssemblies.Count())
+                {
+                    AllAssemblies = assemblies;
+                }
+
+                return assemblies;
             }
         }
+
+        #endregion
     }
 }

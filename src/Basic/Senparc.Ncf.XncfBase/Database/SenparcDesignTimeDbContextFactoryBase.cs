@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -99,6 +100,7 @@ namespace Senparc.Ncf.XncfBase.Database
             where TDbContext : DbContext
     {
         protected virtual Action<IServiceCollection> ServicesAction { get; }
+        protected virtual Action<IApplicationBuilder> AppAction { get; }
 
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
@@ -158,7 +160,7 @@ namespace Senparc.Ncf.XncfBase.Database
             this._ncfVersion = ncfVersion;
             this._note = note;
 
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction);
+            Senparc.Ncf.Core.Register.TryRegisterMiniCore(ServicesAction, AppAction);
         }
 
 
@@ -209,7 +211,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine("");
             Console.WriteLine("=======  Start XNCF Engine  =======");
             var dt1 = DateTime.Now;
-            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartEngine(serviceCollection, config, env);//TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
+            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartNcfEngine(serviceCollection, config, env);//TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
             if (!startEngineRresult.IsNullOrEmpty())
             {
                 Console.Write(startEngineRresult);
