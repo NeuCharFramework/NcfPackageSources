@@ -7,7 +7,7 @@ namespace Senparc.Ncf.Core.Config
     /// <summary>
     /// NCF 系统状态
     /// </summary>
-    public class NcfCoreState
+    public record class NcfCoreState
     {
         #region 单例
 

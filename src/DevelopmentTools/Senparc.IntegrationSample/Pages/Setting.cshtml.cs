@@ -8,9 +8,14 @@ namespace Senparc.IntegrationSample.Pages
     public class SettingModel : PageModel
     {
         public SenparcCoreSetting SenparcCoreSetting { get; set; }
+
+        public NcfCoreState NcfCoreState { get; set; }
+
         public void OnGet()
         {
             SenparcCoreSetting = SiteConfig.SenparcCoreSetting with { };
+
+            NcfCoreState = SiteConfig.NcfCoreState with { };
         }
     }
 }
