@@ -58,7 +58,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
 
             //添加（注册） Ncf 服务（必须）
             //builder.AddNcf<SqliteMemoryDatabaseConfiguration>();
-            builder.AddNcf<SqlServerDatabaseConfiguration2>();
+            builder.AddNcf<SqlServerDatabaseConfiguration>();
             builder.Services.AddMemoryCache();//使用内存缓存
 
             var app = builder.Build();
