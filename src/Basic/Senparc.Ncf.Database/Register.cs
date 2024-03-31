@@ -161,7 +161,7 @@ namespace Senparc.Ncf.Database
                 }
             }
 
-            var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, BindingFlags.IgnoreCase) as IDatabaseConfiguration;
+            var databaseConfiguration = (IDatabaseConfiguration)Activator.CreateInstance(databaseConfigurationType);
 
             DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
             return app;
