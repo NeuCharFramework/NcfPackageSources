@@ -88,7 +88,7 @@ namespace Senparc.Ncf.Database
         /// 使用指定数据库
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="databaseConfiguration"></param>
+        /// <param name="databaseConfiguration">可用的 DatabaseConfiguration，非 <see cref="BySettingDatabaseConfiguration"/></param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, IDatabaseConfiguration databaseConfiguration)
         {
@@ -157,7 +157,7 @@ namespace Senparc.Ncf.Database
                 }
                 catch (Exception ex)
                 {
-                    throw new NcfDatabaseException($"appsettings.json 中的 {nameof(SiteConfig.SenparcCoreSetting.DatabaseType)} 指定数据库类型错误：{SiteConfig.SenparcCoreSetting.DatabaseType}", databaseConfigurationType, inner: ex);
+                    throw new NcfDatabaseException($"appsettings.json 中的 {nameof(SiteConfig.SenparcCoreSetting.DatabaseType)} 指定数据库类型错误：{SiteConfig.SenparcCoreSetting.DatabaseType}。内部错误信息：{ex.Message}", databaseConfigurationType, inner: ex);
                 }
             }
 

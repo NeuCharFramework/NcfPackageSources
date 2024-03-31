@@ -39,6 +39,8 @@ namespace Senparc.Ncf.Database.SqlServer
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             return $@"Backup Database {dbConnection.Database} To disk='{backupFilePath}'";
+
+            //TODO: with DIFFERENTIAL
         }
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
