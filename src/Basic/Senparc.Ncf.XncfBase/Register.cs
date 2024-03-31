@@ -18,6 +18,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
@@ -98,7 +99,8 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     //遍历所有程序集
-                    var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+                    var assemblies = AssembleScanHelper.GetAssembiles(true);
+
                     int columnWidth1 = 42;
                     int columnWidth2 = 45;
                     int columnWidth3 = 15;
@@ -106,60 +108,12 @@ namespace Senparc.Ncf.XncfBase
                     SetLog(sb, " === Multiple databases detected ===");
                     SetLog(sb, $"| {"Register".PadRight(columnWidth1)}| {"Full Name".PadRight(columnWidth2)}| {"Database Type".PadRight(columnWidth3)}", false);
                     SetLog(sb, $"|-{new String('-', columnWidth1)}|-{new String('-', columnWidth2)}|-{new String('-', columnWidth3)}", false);
-
-                    #region 补全未被引用的程序集
-                    var dynamicLoadAllDlls = true;
-
-                    if (dynamicLoadAllDlls)
-                    {
-                        // 使用 AppDomain 或环境变量来动态获取路径
-                        string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
-                        // 如果需要，也可以考虑使用环境变量
-                        // string directoryPath = Environment.GetEnvironmentVariable("MY_APP_PATH");
-
-                        // 其余的步骤与之前相同，遍历和尝试加载 DLL
-                        var loadedAssemblies = assemblies.Select(a => a.GetName().Name).ToList();
-
-                        foreach (var filePath in Directory.GetFiles(directoryPath, "*.dll"))
-                        {
-                            try
-                            {
-                                var fileName = Path.GetFileName(filePath);
-                                if (fileName.StartsWith("Senparc.Xncf.", StringComparison.OrdinalIgnoreCase) //&&
-                                    //TODO：暂时排除可能导致出错的项目，后期需要恢复
-                                    //!fileName.Contains("Database") &&
-                                    //!fileName.Contains("AI")
-                                    )
-                                {
-                                    var assemblyName = Path.GetFileNameWithoutExtension(fileName);
-                                    if (!loadedAssemblies.Contains(assemblyName))
-                                    {
-                                        Assembly assembly = Assembly.LoadFrom(filePath);
-                                        assemblies.Add(assembly);
-                                        Console.WriteLine($"Dynamic Loaded: {assembly.FullName}");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"Already loaded: {assemblyName}");
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error loading assembly from {filePath}: {ex.Message}");
-                            }
-                        }
-                    }
-
-
-                    #endregion
-
-                    foreach (var a in assemblies)
+                    AssembleScanHelper.AddAssembleScanItem(a =>
                     {
                         //Console.WriteLine("FullName:" + a.FullName);
                         if (a.FullName.StartsWith("AutoMapper."))
                         {
-                            continue;//忽略 AutoMapper
+                            return;//忽略 AutoMapper
                         }
 
                         scanTypesCount++;
@@ -237,7 +191,7 @@ namespace Senparc.Ncf.XncfBase
                                 services.AddScoped(t);
                             }
                         }
-                    }
+                    }, true);
 
                     SetLog(sb, $"{new String('-', columnWidth1 + columnWidth2 + columnWidth3 + 6)}", false);
                     SetLog(sb, "");

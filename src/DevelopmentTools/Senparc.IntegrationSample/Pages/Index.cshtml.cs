@@ -50,15 +50,15 @@ namespace Senparc.IntegrationSample.Pages
                                      .OrderByDescending(z => (z.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute)?.Order)
                                      .ToList();
 
-            foreach (var item in xncfRegisterList)
+            foreach (var register in xncfRegisterList)
             {
                 XncfRegisterItem registerItem = new();
-                registerItem.XncfRegister = item;
+                registerItem.XncfRegister = register;
                 registerItem.RegisterFunctionInfoList = new List<XncfRegisterItem.RegisterFunctionInfo>();
 
                 XncfRegisterList.Add(registerItem);
 
-                if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(item.GetType(), out var functionGroup))
+                if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup))
                 {
                     if (functionGroup == null)
                     {
@@ -85,7 +85,7 @@ namespace Senparc.IntegrationSample.Pages
                         }
                         catch (Exception ex)
                         {
-                            await Console.Out.WriteLineAsync("funtionBag 获取出错，可能模块未安装");
+                            await Console.Out.WriteLineAsync($"funtionBag 获取出错，可能模块未安装，模块：{register.Name}");
                         }
                         
                     }
