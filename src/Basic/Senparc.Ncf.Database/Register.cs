@@ -147,13 +147,13 @@ namespace Senparc.Ncf.Database
                 var dbTypeStr = dbType.ToString();
                 try
                 {
-                    var typeAssemblyName =$"Senparc.Ncf.Database.{dbTypeStr}";
+                    var typeAssemblyName = $"Senparc.Ncf.Database.{dbTypeStr}";
                     var fullTypeName = $"{typeAssemblyName}.{dbType}DatabaseConfiguration, {typeAssemblyName}";
                     databaseConfigurationType = Type.GetType(fullTypeName);
-                    
-                    if (databaseConfigurationType==null)
+
+                    if (databaseConfigurationType == null)
                     {
-                        throw new NcfDatabaseException($"找不到 {dbTypeStr} 配置对应的数据库配置类：{fullTypeName}",null);
+                        throw new NcfDatabaseException($"找不到 {dbTypeStr} 配置对应的数据库配置类：{fullTypeName}", null);
                     }
                     //app.UseNcfDatabase(newDbConfigrationType);
                 }
@@ -163,7 +163,7 @@ namespace Senparc.Ncf.Database
                 }
             }
 
-            var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, true) as IDatabaseConfiguration;
+            var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, BindingFlags.IgnoreCase) as IDatabaseConfiguration;
 
             DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
             return app;
