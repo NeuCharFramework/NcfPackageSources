@@ -258,7 +258,6 @@ namespace Senparc.Ncf.XncfBase
         {
             if (this is IXncfDatabase databaseRegister)
             {
-
                 //遍历所有Register中的数据库进行注册
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
@@ -318,6 +317,13 @@ namespace Senparc.Ncf.XncfBase
 
                         //注册当前数据库的对象（必须）
                         EntitySetKeys.TryLoadSetInfo(dbContextType);
+
+                        //任意一个 IxncfDatabase 的Register已经执行完成
+                        if (!Ncf.Core.Config.SiteConfig.NcfCoreState.AynDatabaseXncfLoaded)
+                        {
+                            Ncf.Core.Config.SiteConfig.NcfCoreState.AynDatabaseXncfLoaded = true;
+                        }
+
                     }
                 }
                 else
@@ -329,7 +335,14 @@ namespace Senparc.Ncf.XncfBase
 
                 //添加数据库相关注册过程
                 databaseRegister.AddXncfDatabaseModule(services);
+
+                if (!Ncf.Core.Config.SiteConfig.NcfCoreState.AnyAddXncfDatabaseModuleApplied)
+                {
+                    //任意一个 AddXncfDatabaseModule 方法已经执行完成
+                    Ncf.Core.Config.SiteConfig.NcfCoreState.AnyAddXncfDatabaseModuleApplied = true;
+                }
             }
+
             return services;
         }
 

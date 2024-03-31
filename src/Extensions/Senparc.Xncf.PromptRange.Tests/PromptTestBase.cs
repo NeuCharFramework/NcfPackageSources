@@ -1,9 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Senparc.AI;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using System;
@@ -15,12 +14,20 @@ namespace Senparc.Xncf.PromptRange.Tests
     {
         protected IServiceProvider _serviceProvder;
 
-        public PromptTestBase() : base()
+        protected override void ActionInServiceCollection()
         {
             var senparcAiSetting = new Senparc.AI.Kernel.SenparcAiSetting();
             base.Configuration.GetSection("SenparcAiSetting").Bind(senparcAiSetting);
+            base.ServiceCollection.AddSenparcAI(base.Configuration, senparcAiSetting);
 
-            base.registerService.UseSenparcAI(senparcAiSetting);
+            base.ActionInServiceCollection();
+        }
+
+        public PromptTestBase() : base()
+        {
+
+
+            base.registerService.UseSenparcAI();
 
             base.ServiceCollection.AddScoped<PromptService>();
             base.ServiceCollection.AddScoped<IAiHandler, SemanticAiHandler>();
@@ -34,6 +41,7 @@ namespace Senparc.Xncf.PromptRange.Tests
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
             Assert.IsNotNull(senparcAiSetting);
             Assert.AreEqual(true, senparcAiSetting.IsDebug);
+            Console.WriteLine(senparcAiSetting.ToJson(true));
         }
     }
 }

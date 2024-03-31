@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -29,10 +30,10 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     /// </summary>
     public class SenparcDbContextFactory_PostgreSQL : SenparcDesignTimeDbContextFactoryBase<XncfBuilderSenparcEntities_PostgreSQL, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_PostgreSQL()

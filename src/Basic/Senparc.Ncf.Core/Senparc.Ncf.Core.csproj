@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-    <Version>0.14.4.13-beta1</Version>
+    <LangVersion>10.0</LangVersion>
+    <Version>0.15.0.2-preview1</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,15 +18,15 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
-		v0.1.1 完善自动部署模块 Xncf
-		v0.3.101 丰富 XncfModule 的数据库属性
-		v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
-		v0.9.4.4 完善出错日志输出
-		v0.11.5.2 完善系统启动自检信息输出
-		v0.11.6 添加 SenparcCoreSetting.PasswordSaltToken 参数
-		v0.14.0 支持根据运行环境，自动启用 SenparcConfig.Development.config
-		v0.14.1 ConvertXmlToEntity 中加入 TimeOnly 和 DateOnly 类型
+			v0.1 创世
+			v0.1.1 完善自动部署模块 Xncf
+			v0.3.101 丰富 XncfModule 的数据库属性
+			v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
+			v0.9.4.4 完善出错日志输出
+			v0.11.5.2 完善系统启动自检信息输出
+			v0.11.6 添加 SenparcCoreSetting.PasswordSaltToken 参数
+			v0.14.0 支持根据运行环境，自动启用 SenparcConfig.Development.config
+			v0.14.1 ConvertXmlToEntity 中加入 TimeOnly 和 DateOnly 类型
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -54,7 +55,7 @@
   <ItemGroup>
     <!--<PackageReference Include="AutoMapper" Version="7.0.1" />-->
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Senparc.CO2NET" Version="2.4.0" />
+    <PackageReference Include="Senparc.CO2NET" Version="2.4.0.1" />
     <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="1.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

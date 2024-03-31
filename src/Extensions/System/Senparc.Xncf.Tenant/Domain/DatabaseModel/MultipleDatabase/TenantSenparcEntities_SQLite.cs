@@ -7,6 +7,7 @@ using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
 using Senparc.Xncf.Tenant.Domain.DatabaseModel;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.Tanent.Domain.DatabaseModel
 {
@@ -26,10 +27,10 @@ namespace Senparc.Xncf.Tanent.Domain.DatabaseModel
     /// </summary>
     public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<TenantSenparcEntities_Sqlite, Senparc.Xncf.Tenant.Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_Sqlite() : base(SenparcDbContextFactoryConfig.RootDictionaryPath)

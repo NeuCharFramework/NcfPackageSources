@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +60,10 @@ namespace Senparc.Xncf.Swagger
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
                 var docXmlPath = ApiDocXmlPathFunc?.Invoke(webEnv);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
-                var builder = services.AddMvcCore().AddApiExplorer().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                var builder = services
+                    .AddMvcCore(options =>
+                    options.OutputFormatters.RemoveType<XmlSerializerOutputFormatter>()
+                ).AddApiExplorer();
                 services.AddAndInitDynamicApi(builder, options =>
                 {
                     options.DocXmlPath = docXmlPath;

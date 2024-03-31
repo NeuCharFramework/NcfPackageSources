@@ -6,6 +6,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Builder;
 
 namespace Senparc.Xncf.SystemPermission.Models
 {
@@ -24,10 +25,10 @@ namespace Senparc.Xncf.SystemPermission.Models
     /// </summary>
     public class SenparcDbContextFactory_MySql : SenparcDesignTimeDbContextFactoryBase<SystemPermissionSenparcEntities_MySql, Register>
     {
-        protected override Action<IServiceCollection> ServicesAction => services =>
+        protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            services.AddDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDictionaryPath)

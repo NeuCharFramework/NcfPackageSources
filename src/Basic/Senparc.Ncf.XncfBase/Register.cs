@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +14,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
@@ -65,11 +69,22 @@ namespace Senparc.Ncf.XncfBase
             //Console.WriteLine(msg);
         }
 
+
         /// <summary>
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
+        [Obsolete("请使用 StartNcfEngine()")]
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        {
+            return StartNcfEngine(services, configuration, env);
+        }
+
+        /// <summary>
+        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        /// </summary>
+        /// <returns></returns>
+        public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
@@ -84,7 +99,8 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     //遍历所有程序集
-                    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                    var assemblies = AssembleScanHelper.GetAssembiles(true);
+
                     int columnWidth1 = 42;
                     int columnWidth2 = 45;
                     int columnWidth3 = 15;
@@ -92,13 +108,12 @@ namespace Senparc.Ncf.XncfBase
                     SetLog(sb, " === Multiple databases detected ===");
                     SetLog(sb, $"| {"Register".PadRight(columnWidth1)}| {"Full Name".PadRight(columnWidth2)}| {"Database Type".PadRight(columnWidth3)}", false);
                     SetLog(sb, $"|-{new String('-', columnWidth1)}|-{new String('-', columnWidth2)}|-{new String('-', columnWidth3)}", false);
-
-                    foreach (var a in assemblies)
+                    AssembleScanHelper.AddAssembleScanItem(a =>
                     {
                         //Console.WriteLine("FullName:" + a.FullName);
                         if (a.FullName.StartsWith("AutoMapper."))
                         {
-                            continue;//忽略 AutoMapper
+                            return;//忽略 AutoMapper
                         }
 
                         scanTypesCount++;
@@ -169,13 +184,14 @@ namespace Senparc.Ncf.XncfBase
 
                             //配置 ServiceBase
                             if (t.IsSubclassOf(typeof(ServiceBase<>))
+                                || t.IsSubclassOf(typeof(AppServiceBase))
                                 //|| t.IsInstanceOfType(typeof(IServiceDataBase))
                                 )
                             {
                                 services.AddScoped(t);
                             }
                         }
-                    }
+                    }, true);
 
                     SetLog(sb, $"{new String('-', columnWidth1 + columnWidth2 + columnWidth3 + 6)}", false);
                     SetLog(sb, "");
@@ -324,25 +340,30 @@ namespace Senparc.Ncf.XncfBase
 
                 }
             }
+
+            //标记所有 AddXncfModule 方法已经执行完成
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllAddXncfModuleApplied = true;
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllDatabaseXncfLoaded = true;
+
             SetLog(sb, $"Finish services.AddXncfModule(): Total of {scanTypesCount} assemblies were scanned.");
 
             return sb.ToString();
         }
 
-#if NET8_0_OR_GREATER
-        /// <summary>
-        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
-        /// </summary>
-        /// <returns></returns>
-        public static string StartEngine<TDatabaseConfiguration>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
-        where TDatabaseConfiguration : IDatabaseConfiguration, new()
-        {
-            //添加数据库
-            services.AddDatabase<TDatabaseConfiguration>();
-            //调用 StartEngine() 方法，完成全局必要的注册
-            return StartEngine(services, configuration, env);
-        }
-#endif
+        //#if NET8_0_OR_GREATER
+        //        /// <summary>
+        //        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        //        /// </summary>
+        //        /// <returns></returns>
+        //        public static string StartEngine<TDatabaseConfiguration>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        //        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        //        {
+        //            //添加数据库
+        //            services.AddDatabase<TDatabaseConfiguration>();
+        //            //调用 StartEngine() 方法，完成全局必要的注册
+        //            return StartEngine(services, configuration, env);
+        //        }
+        //#endif
 
         /// <summary>
         /// 扫描并安装（自动安装，无需手动）
@@ -416,6 +437,20 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
+        public static IApplicationBuilder UseXncfModules<TDatabaseConfiguration>(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
+        where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        {
+            return UseXncfModules<TDatabaseConfiguration>(app, registerService, senparcCoreSetting, autoRunInstall);
+        }
+
+
+        /// <summary>
+        /// 通常在 Startup.cs 中的 Configure() 方法中执行
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="registerService">CO2NET 注册对象</param>
+        /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
+        /// <returns></returns>
         public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
         {
             if (senparcCoreSetting == null)
@@ -475,8 +510,16 @@ namespace Senparc.Ncf.XncfBase
                     {
                         SenparcTrace.BaseExceptionLog(ex);
                     }
+
+                    //任意一个 ThreadXncf 已经载入
+                    Ncf.Core.Config.SiteConfig.NcfCoreState.AnyThreadXncfLoaded = true;
                 }
             }
+
+            //所有 ThreadXncf 已经载入
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded = true;
+            //所有 UseXncfModule 已经执行完成
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllUseXncfModuleApplied = true;
 
             //自动运行安装
 

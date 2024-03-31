@@ -1,4 +1,7 @@
 ﻿using log4net;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder.Internal;
+using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
@@ -74,7 +77,7 @@ namespace Senparc.Ncf.Core
         /// 以最小化的过程进行自动注册，适用于缺少环境的单元测试、Code First 命令等。请勿在生产环境中使用此命令！
         /// <para>如果已经注册过，则返回 null</para>
         /// </summary>
-        public static IRegisterService TryRegisterMiniCore(Action<IServiceCollection> servicesAction = null)
+        public static IRegisterService TryRegisterMiniCore(Action<IServiceCollection> servicesAction = null, Action<IApplicationBuilder> appAction = null)
         {
             //初始化项目
             if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
@@ -90,6 +93,11 @@ namespace Senparc.Ncf.Core
                 //允许从外部添加对 services 的注册操作
                 var services = RegisterServiceCollection();
                 servicesAction?.Invoke(services);
+
+                //允许从外部添加对 app 的注册操作
+                var serviceProvider = services.BuildServiceProvider();
+                IApplicationBuilder app = new ApplicationBuilder(serviceProvider);
+                appAction?.Invoke(app);
 
                 return RegisterServiceStart();
             }
