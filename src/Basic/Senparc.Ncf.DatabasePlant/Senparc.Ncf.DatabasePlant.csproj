@@ -21,7 +21,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
+			v0.1.0 创世
 			v0.11.3 添加 Oracle 库引用：Senparc.Ncf.Database.Oracle
 			v0.13.5 完成 .NET 8.0 当前所有数据库 EF Core 的集成
 </PackageReleaseNotes>

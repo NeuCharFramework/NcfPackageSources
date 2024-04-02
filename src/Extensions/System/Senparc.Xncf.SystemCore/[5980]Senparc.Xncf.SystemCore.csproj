@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
+		v0.1.0 创世
 		v0.3.3.1 添加 Oracle 数据库迁移代码
 		v0.5.2 更新输出日志
 </PackageReleaseNotes>

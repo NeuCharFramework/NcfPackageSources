@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
+		v0.1.0 创世
 		v0.2.2 添加 services.AddMultiTenant(); 等注册过程到此模块
 		v0.3.3.1 添加 Oracle 数据库迁移代码
 		v0.6.0 完善租户启用过滤机制

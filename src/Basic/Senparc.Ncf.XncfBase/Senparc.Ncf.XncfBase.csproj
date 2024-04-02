@@ -19,7 +19,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
+		v0.1.0 创世
 		v0.2.100 完成基础架构，功能跑通
 		v0.3.100 优化 Function 返回值
 		v0.3.303 提供 IXncfThread 接口

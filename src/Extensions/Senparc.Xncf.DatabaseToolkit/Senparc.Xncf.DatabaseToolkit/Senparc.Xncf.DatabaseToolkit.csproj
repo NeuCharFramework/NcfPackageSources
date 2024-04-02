@@ -20,7 +20,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
+			v0.1.0 创世
 			v0.1.101 添加 Migrate 数据库功能
 			v0.1.102 添加备份数据库功能
 			v0.1.103 添加检查数据库功能

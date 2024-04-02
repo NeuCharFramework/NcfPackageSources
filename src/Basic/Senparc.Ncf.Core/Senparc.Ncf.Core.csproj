@@ -18,7 +18,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
+			v0.1.0 创世
 			v0.1.1 完善自动部署模块 Xncf
 			v0.3.101 丰富 XncfModule 的数据库属性
 			v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
