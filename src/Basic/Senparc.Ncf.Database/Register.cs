@@ -87,7 +87,7 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 使用指定数据库
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="app"></param>
         /// <param name="databaseConfiguration">可用的 DatabaseConfiguration，非 <see cref="BySettingDatabaseConfiguration"/></param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, IDatabaseConfiguration databaseConfiguration)

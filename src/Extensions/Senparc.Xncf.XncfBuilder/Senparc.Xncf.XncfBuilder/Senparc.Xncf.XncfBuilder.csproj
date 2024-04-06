@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.22.0.2-preview1</Version>
+    <Version>0.22.1-preview1</Version>
     <LangVersion>9.0</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -18,7 +18,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
+		v0.1.0 创世
 		v0.8.127 使用 .NET Core 命令行创建模板，取代原有的 T4 模板
 		v0.13.3 添加 Oracle 数据库 Migration 支持
 		v0.13.4.1 添加 Oracle 数据库迁移代码

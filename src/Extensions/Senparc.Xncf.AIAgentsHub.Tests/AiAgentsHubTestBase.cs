@@ -129,7 +129,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             services.AddScoped<ColorService>();
 
             //激活 Xncf 扩展引擎（必须）
-            var logMsg = builder.StartWebEngine/*<TDatabaseConfiguration>*/();
+            var logMsg = builder.StartWebEngine(null);
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");

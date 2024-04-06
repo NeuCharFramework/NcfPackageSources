@@ -127,7 +127,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AIAgentsHub", "AIAgentsHub"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.AIAgentsHub.Tests", "Extensions\Senparc.Xncf.AIAgentsHub.Tests\Senparc.Xncf.AIAgentsHub.Tests.csproj", "{C0E8312B-F06C-4C64-B18D-374C2FDB20D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Ncf.DatabaseTests", "Basic\Senparc.Ncf.DatabaseTests\Senparc.Ncf.DatabaseTests.csproj", "{B28DCBE3-60BF-47E2-93F9-A45074F498E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.DatabaseTests", "Basic\Senparc.Ncf.DatabaseTests\Senparc.Ncf.DatabaseTests.csproj", "{B28DCBE3-60BF-47E2-93F9-A45074F498E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3FCD2F49-CC9B-4A33-B3D7-66769A77F0B0}"
 EndProject

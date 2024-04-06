@@ -21,14 +21,10 @@ namespace Senparc.IntegrationSample
             StartTime = System.DateTime.Now;
         }
 
-        public static void AddNcf/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder)
-        //where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        public static void AddNcf(this WebApplicationBuilder builder)
         {
-
-            //builder.Services.Configure<SenparcCoreSetting>(builder.Configuration.GetSection("SenparcCoreSetting"));
-
             //激活 Xncf 扩展引擎（必须）
-            var logMsg = builder.StartWebEngine/*<TDatabaseConfiguration>*/();
+            var logMsg = builder.StartWebEngine(null);
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");

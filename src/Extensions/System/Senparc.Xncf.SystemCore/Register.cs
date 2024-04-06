@@ -114,11 +114,11 @@ namespace Senparc.Xncf.SystemCore
 
             services.Configure<SenparcCoreSetting>(configuration.GetSection("SenparcCoreSetting"));
 
-            //自动依赖注入扫描
-            services.ScanAssamblesForAutoDI();
-            //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
-            AssembleScanHelper.RunScan();
-            //services.AddSingleton<Core.Cache.RedisProvider.IRedisProvider, Core.Cache.RedisProvider.StackExchangeRedisProvider>();
+            ////自动依赖注入扫描
+            //services.ScanAssamblesForAutoDI();
+            ////已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
+            //AssembleScanHelper.RunScan();
+            ////services.AddSingleton<Core.Cache.RedisProvider.IRedisProvider, Core.Cache.RedisProvider.StackExchangeRedisProvider>();
 
             services.AddHttpContextAccessor();
             services.AddTransient<IActionContextAccessor, ActionContextAccessor>();

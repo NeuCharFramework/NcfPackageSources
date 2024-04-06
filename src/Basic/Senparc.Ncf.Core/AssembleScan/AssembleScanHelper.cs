@@ -1,4 +1,5 @@
 ﻿using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,13 +23,14 @@ namespace Senparc.Ncf.Core.AssembleScan
         /// </summary>
         /// <param name="action">扫描过程</param>
         /// <param name="runScanNow">是否立即扫描</param>
-        public static void AddAssembleScanItem(Action<Assembly> action, bool runScanNow)
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        public static void AddAssembleScanItem(Action<Assembly> action, bool runScanNow, string[] dllFilePatterns = null)
         {
             ScanAssamblesActions.Add(new AssembleScanItem(action));
 
             if (runScanNow)
             {
-                RunScan();//立即扫描
+                RunScan(dllFilePatterns);//立即扫描
             }
         }
 
@@ -36,7 +38,8 @@ namespace Senparc.Ncf.Core.AssembleScan
         /// <summary>
         /// 执行扫描
         /// </summary>
-        public static void RunScan()
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        public static void RunScan(string[] dllFilePatterns)
         {
             var dt1 = SystemTime.Now;
 
@@ -45,7 +48,7 @@ namespace Senparc.Ncf.Core.AssembleScan
                 //查找所有扩展缓存B
                 var scanTypesCount = 0;
 
-                var assemblies = GetAssembiles(dynamicLoadAllDlls: true);
+                var assemblies = GetAssembiles(dynamicLoadAllDlls: true, dllFilePatterns: dllFilePatterns);
                 var toScanItems = ScanAssamblesActions.Where(z => z.ScanFinished == false).ToList();
 
                 //搜索所有未被引用的项目
@@ -87,7 +90,8 @@ namespace Senparc.Ncf.Core.AssembleScan
         /// <param name="dynamicLoadAllDlls">是否从 dll 目录加载未被程序引用的其他程序集，默认为 true</param>
         /// <param name="useCachedData">是否使用已缓存的数据，默认为true</param>
         /// <param name="forceUpdateCache">强制重新获取并更新缓存，此时会忽略 <paramref name="useCachedData"/> 的设置</param>
-        public static List<Assembly> GetAssembiles(bool dynamicLoadAllDlls = true, bool useCachedData = true, bool forceUpdateCache = true)
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        public static List<Assembly> GetAssembiles(bool dynamicLoadAllDlls = true, bool useCachedData = true, bool forceUpdateCache = true, string[] dllFilePatterns = null)
         {
             lock (AllAssembliesLock)
             {
@@ -115,8 +119,14 @@ namespace Senparc.Ncf.Core.AssembleScan
                         try
                         {
                             var fileName = Path.GetFileName(filePath);
-                            if (fileName.Contains(".Xncf.", StringComparison.OrdinalIgnoreCase)
-                                )
+
+                            List<string> fileNamePatternList = new List<string>() { ".Xncf." };
+                            if (dllFilePatterns != null)
+                            {
+                                fileNamePatternList.AddRange(dllFilePatterns);
+                            }
+
+                            if (fileNamePatternList.Any(z => fileName.Contains(z, StringComparison.OrdinalIgnoreCase)))
                             {
                                 var assemblyName = Path.GetFileNameWithoutExtension(fileName);
                                 if (!loadedAssemblies.Contains(assemblyName))
@@ -147,6 +157,11 @@ namespace Senparc.Ncf.Core.AssembleScan
                     || assemblies.Count() > AllAssemblies.Count())
                 {
                     AllAssemblies = assemblies;
+                }
+
+                if (SiteConfig.NcfCoreState.DllFilePatterns == null)
+                {
+                    SiteConfig.NcfCoreState.DllFilePatterns = dllFilePatterns?.ToList();
                 }
 
                 return assemblies;

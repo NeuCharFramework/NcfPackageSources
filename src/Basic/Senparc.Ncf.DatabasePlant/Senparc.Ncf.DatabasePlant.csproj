@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-    <Version>0.14.0.4-preview1</Version>
+    <Version>0.14.1-preview1</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -21,7 +21,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
+			v0.1.0 创世
 			v0.11.3 添加 Oracle 库引用：Senparc.Ncf.Database.Oracle
 			v0.13.5 完成 .NET 8.0 当前所有数据库 EF Core 的集成
 </PackageReleaseNotes>
