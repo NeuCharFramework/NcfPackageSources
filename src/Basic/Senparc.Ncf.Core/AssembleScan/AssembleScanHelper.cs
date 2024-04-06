@@ -1,4 +1,5 @@
 ﻿using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -156,6 +157,11 @@ namespace Senparc.Ncf.Core.AssembleScan
                     || assemblies.Count() > AllAssemblies.Count())
                 {
                     AllAssemblies = assemblies;
+                }
+
+                if (SiteConfig.NcfCoreState.DllFilePatterns == null)
+                {
+                    SiteConfig.NcfCoreState.DllFilePatterns = dllFilePatterns?.ToList();
                 }
 
                 return assemblies;

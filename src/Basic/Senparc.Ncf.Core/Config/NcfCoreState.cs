@@ -68,5 +68,10 @@ namespace Senparc.Ncf.Core.Config
         ///  XNCF 模块的 AddXncfDatabaseModule 方法已经载入（任意一个）
         /// </summary>
         public bool AnyAddXncfDatabaseModuleApplied { get; set; }
+
+        /// <summary>
+        /// 被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面
+        /// </summary>
+        public List<string> DllFilePatterns { get; set; }
     }
 }
