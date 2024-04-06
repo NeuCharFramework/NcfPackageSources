@@ -11,6 +11,7 @@ using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.DI;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Senparc.Ncf.Core
 {
@@ -25,7 +26,7 @@ namespace Senparc.Ncf.Core
         public static IServiceCollection ScanAssamblesForAutoDI(this IServiceCollection services)
         {
             //遍历所有程序集进行注册
-            AssembleScanHelper.AddAssembleScanItem(assembly =>
+            Action<Assembly> action = assembly =>
             {
                 var areaRegisterTypes = assembly.GetTypes() //.GetExportedTypes()
                                .Where(z => !z.IsAbstract && !z.IsInterface && z.GetInterface(nameof(IAutoDI)) != null)
@@ -66,7 +67,9 @@ namespace Senparc.Ncf.Core
                         SenparcTrace.BaseExceptionLog(ex);
                     }
                 }
-            }, false);
+            };
+
+            AssembleScanHelper.AddAssembleScanItem(action, true);
 
             return services;
         }

@@ -211,7 +211,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine("");
             Console.WriteLine("=======  Start XNCF Engine  =======");
             var dt1 = DateTime.Now;
-            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartNcfEngine(serviceCollection, config, env);//TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
+            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartNcfEngine(serviceCollection, config, env, null);//TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
             if (!startEngineRresult.IsNullOrEmpty())
             {
                 Console.Write(startEngineRresult);

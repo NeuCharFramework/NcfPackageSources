@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.16.0.2-preview1</Version>
+    <Version>0.16.1-preview1</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>

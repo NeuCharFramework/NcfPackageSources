@@ -85,8 +85,10 @@ namespace Senparc.Xncf.AreasBase
         /// <param name="env"></param>
         /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
         /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
         /// <returns></returns>
         public static string StartWebEngine(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env,
+            string[] dllFilePatterns,
             Action<RazorPagesOptions>? addRazorPagesConfig = null,
             Action<IAreaRegister> eachRegsiterAction = null)
         {
@@ -94,7 +96,7 @@ namespace Senparc.Xncf.AreasBase
             //注册所有 Ncf 的 Area 模块（必须）
             .AddNcfAreas(env, eachRegsiterAction);
             Console.WriteLine("临时：StartWebEngine");
-            return services.StartNcfEngine(configuration, env);
+            return services.StartNcfEngine(configuration, env, dllFilePatterns);
         }
 
 #if NET8_0_OR_GREATER
@@ -108,15 +110,16 @@ namespace Senparc.Xncf.AreasBase
         /// <param name="env"></param>
         /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
         /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
         /// <returns></returns>
-        public static string StartWebEngine/*<TDatabaseConfiguration>*/(this WebApplicationBuilder builder,
-        Action<RazorPagesOptions>? addRazorPagesConfig = null,
-        Action<IAreaRegister> eachRegsiterAction = null)
-        //where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        public static string StartWebEngine(this WebApplicationBuilder builder,
+                string[] dllFilePatterns,
+                Action<RazorPagesOptions>? addRazorPagesConfig = null,
+                Action<IAreaRegister> eachRegsiterAction = null)
         {
             var services = builder.Services;
 
-            var startEngineLog = services.StartNcfEngine(builder.Configuration, builder.Environment);
+            var startEngineLog = services.StartNcfEngine(builder.Configuration, builder.Environment, dllFilePatterns);
 
             //添加 RazorPage 和 Area
             var mvcBuilder = services.AddRazorPages(addRazorPagesConfig)

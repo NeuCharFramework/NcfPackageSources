@@ -17,6 +17,7 @@ using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.AssembleScan;
 using Senparc.Ncf.Core.Config;
@@ -74,17 +75,21 @@ namespace Senparc.Ncf.XncfBase
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
         /// <returns></returns>
-        [Obsolete("请使用 StartNcfEngine()")]
+        [Obsolete("请使用 StartNcfEngine()", true)]
         public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            return StartNcfEngine(services, configuration, env);
+            return StartNcfEngine(services, configuration, env, null);
         }
 
         /// <summary>
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
         /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <param name="env"></param>
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
         /// <returns></returns>
-        public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env, string[] dllFilePatterns)
         {
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
@@ -99,7 +104,7 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     //遍历所有程序集
-                    var assemblies = AssembleScanHelper.GetAssembiles(true);
+                    var assemblies = AssembleScanHelper.GetAssembiles(true, dllFilePatterns: dllFilePatterns);
 
                     int columnWidth1 = 42;
                     int columnWidth2 = 45;
@@ -301,6 +306,12 @@ namespace Senparc.Ncf.XncfBase
 
             //多租户
             services.AddScoped<RequestTenantInfo>();
+
+            services.ScanAssamblesForAutoDI();
+            //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
+            AssembleScanHelper.RunScan(dllFilePatterns);
+            //services.AddSingleton<Core.Cache.RedisProvider.IRedisProvider, Core.Cache.RedisProvider.StackExchangeRedisProvider>();
+
 
             #region 支持 AutoMapper
 
