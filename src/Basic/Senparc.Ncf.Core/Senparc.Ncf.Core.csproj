@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
-    <Version>0.15.1-preview1</Version>
+    <Version>0.16.1-preview1</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -58,7 +58,6 @@
     <PackageReference Include="Senparc.CO2NET" Version="2.4.0.1" />
     <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="1.2.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
