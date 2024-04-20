@@ -32,7 +32,6 @@ namespace Senparc.Ncf.Database.Oracle
             _useOracleSQLCompatibility = useOracleSQLCompatibility;
         }
 
-#if !NETSTANDARD
         private static OracleSQLCompatibility _oracleSQLCompatibility = OracleSQLCompatibility.DatabaseVersion19;
 
 
@@ -46,9 +45,6 @@ namespace Senparc.Ncf.Database.Oracle
             _oracleSQLCompatibility = oracleSQLCompatibility;
         }
 
-
-#endif
-
         public OracleDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Oracle;
@@ -59,14 +55,14 @@ namespace Senparc.Ncf.Database.Oracle
 
             //This method accepts either a value of "11" or "12" (default). By default, generated SQL is compatible with database version 12 and higher. Customers using Oracle Database version 11.2 should set UseOracleSQLCompatibility("11").
             //https://docs.oracle.com/en/database/oracle/oracle-data-access-components/19.3/odpnt/EFCoreAPI.html#GUID-66247629-2670-44AA-AC55-849C367852AF
-#if NETSTANDARD
-            if (!_useOracleSQLCompatibility.IsNullOrEmpty())
-            {
-                typedBuilder.UseOracleSQLCompatibility(_useOracleSQLCompatibility);
-            }
-#else
+//#if NETSTANDARD
+//            if (!_useOracleSQLCompatibility.IsNullOrEmpty())
+//            {
+//                typedBuilder.UseOracleSQLCompatibility(_useOracleSQLCompatibility);
+//            }
+//#else
             typedBuilder.UseOracleSQLCompatibility(_oracleSQLCompatibility);
-#endif
+//#endif
         };
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
