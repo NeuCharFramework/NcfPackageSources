@@ -56,8 +56,6 @@ namespace Senparc.Ncf.XncfBase.Database
         private readonly TXncfDatabaseRegister _register;
 
 
-
-
         protected SenparcDesignTimeDbContextFactoryBase(string rootDirectoryPath, string databaseName = "Local", string note = null, string dbMigrationAssemblyName = null)
             : base(StartupHelper.GetXncfVersion<TXncfDatabaseRegister>(), rootDirectoryPath, databaseName, note)
         {

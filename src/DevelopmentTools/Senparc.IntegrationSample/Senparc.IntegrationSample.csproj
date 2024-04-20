@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<!--<TargetFramework>net8.0</TargetFramework>-->
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

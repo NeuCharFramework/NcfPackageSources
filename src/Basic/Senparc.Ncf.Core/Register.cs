@@ -1,7 +1,5 @@
 ﻿using log4net;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Builder.Internal;
-using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
@@ -88,6 +86,7 @@ namespace Senparc.Ncf.Core
                 try
                 {
                     var repository = LogManager.CreateRepository("NETCoreRepository");//读取Log配置文件
+                    Console.WriteLine("[TryRegisterMiniCore] NETCoreRepository 注册完成");
                 }
                 catch
                 {
@@ -95,12 +94,20 @@ namespace Senparc.Ncf.Core
                 }
                 //允许从外部添加对 services 的注册操作
                 var services = RegisterServiceCollection();
+
+                Console.WriteLine("[TryRegisterMiniCore] RegisterServiceCollection() 完成");
+
                 servicesAction?.Invoke(services);
+                Console.WriteLine("[TryRegisterMiniCore] servicesAction?.Invoke(services) 完成");
 
                 //允许从外部添加对 app 的注册操作
                 var serviceProvider = services.BuildServiceProvider();
+                Console.WriteLine("[TryRegisterMiniCore] services.BuildServiceProvider() 完成");
+
                 IApplicationBuilder app = new ApplicationBuilder(serviceProvider);
                 appAction?.Invoke(app);
+                Console.WriteLine("[TryRegisterMiniCore] appAction?.Invoke(app) 完成");
+
 
                 return RegisterServiceStart();
             }
@@ -131,6 +138,8 @@ namespace Senparc.Ncf.Core
         /// </summary>
         private static IRegisterService RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
+            Console.WriteLine("[TryRegisterMiniCore] RegisterServiceStart() 开始");
+
             //注册
             var senparcSetting = CreateSenparcSetting();
             return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { }, autoScanExtensionCacheStrategies);
