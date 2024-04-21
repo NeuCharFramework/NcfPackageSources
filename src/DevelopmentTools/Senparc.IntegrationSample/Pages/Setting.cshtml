@@ -20,12 +20,19 @@
 <p>任意 ThreadXncf Register 已应用（在 UseXncfModule 之后执行） ：@(Model.NcfCoreState.AnyThreadXncfLoaded ? "是" : "否")</p>
 <p>所有 ThreadXncf Register 已应用（在 UseXncfModule 之后执行） ：@(Model.NcfCoreState.AllThreadXncfLoaded ? "是" : "否")</p>
 <p>DLL 自定义附加 Patter（DllFilePatterns） ：
-    <ol>
-        @foreach (var item in Model.NcfCoreState.DllFilePatterns)
-        { 
-        <li>@item</li>
-        }
-    </ol>
+    @if(Model.NcfCoreState.DllFilePatterns == null)
+    {
+        <span>未设置</span>
+    }
+    else
+    {
+        <ol>
+            @foreach (var item in Model.NcfCoreState.DllFilePatterns)
+            {
+                <li>@item</li>
+            }
+        </ol>
+    }
 </p>
 <p>
     所有加载程序集：

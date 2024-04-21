@@ -33,42 +33,66 @@ namespace Senparc.Xncf.AreasBase
         /// <returns></returns>
         public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, /*Microsoft.Extensions.Hosting.IHostEnvironment*/IWebHostEnvironment env, Action<IAreaRegister> eachRegsiterAction = null)
         {
-            AssembleScanHelper.AddAssembleScanItem(assembly =>
+            //Console.WriteLine("XncfRegisterManager:"+ XncfRegisterManager.RegisterList.Select(z=>z.Name).ToJson(true));
+            var areaRegisters = XncfRegisterManager.RegisterList.Where(z => z is IAreaRegister).ToArray();
+
+            foreach (var register in areaRegisters)
             {
-                try
-                {
-                    var areaRegisterTypes = assembly.GetTypes()
-                                .Where(z => z.GetInterface(nameof(IAreaRegister)) != null)
-                                .ToArray();
-                    foreach (var registerType in areaRegisterTypes)
-                    {
-                        Console.WriteLine("areaRegisterTypes:" + registerType.FullName);
-                        var register = Activator.CreateInstance(registerType, true) as IAreaRegister;
-                        if (register != null)
-                        {
-                            Console.WriteLine("areaRegisterTypes run AuthorizeConfig:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
+                var areaRegister = register as IAreaRegister;
 
-                            register.AuthorizeConfig(builder, env);//进行注册
+                Console.WriteLine("[IAreaRegister] " + register.Name);
+                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
 
-                            Console.WriteLine("areaRegisterTypes run AuthorizeConfig finished:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
+                areaRegister.AuthorizeConfig(builder, env);//进行注册
 
-                            eachRegsiterAction?.Invoke(register);//执行额外的操作
-                        }
-                        else
-                        {
-                            SenparcTrace.BaseExceptionLog(new BaseException($"{registerType.Name} 类型没有实现接口 IAreaRegister！"));
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var title = "AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName;
-                    var message = ex.ToString();
-                    Console.WriteLine(title);
-                    Console.WriteLine(message);
-                    SenparcTrace.SendCustomLog(title, message);
-                }
-            }, true);
+                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig finished:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
+
+                eachRegsiterAction?.Invoke(areaRegister);//执行额外的操作
+            }
+
+            //已经不需要重新扫描
+            //AssembleScanHelper.AddAssembleScanItem(assembly =>
+            //{
+            //    try
+            //    {
+            //        //进行过滤
+            //        if (assembly.FullName.StartsWith("Microsoft.Data.SqlClient"))
+            //        {
+            //            return;
+            //        }
+
+            //        var areaRegisterTypes = assembly.GetTypes()
+            //                    .Where(z => z.GetInterface(nameof(IAreaRegister)) != null)
+            //                    .ToArray();
+            //        foreach (var registerType in areaRegisterTypes)
+            //        {
+            //            Console.WriteLine("[areaRegisterTypes] " + registerType.FullName);
+            //            var register = Activator.CreateInstance(registerType, true) as IAreaRegister;
+            //            if (register != null)
+            //            {
+            //                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
+
+            //                register.AuthorizeConfig(builder, env);//进行注册
+
+            //                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig finished:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
+
+            //                eachRegsiterAction?.Invoke(register);//执行额外的操作
+            //            }
+            //            else
+            //            {
+            //                SenparcTrace.BaseExceptionLog(new BaseException($"{registerType.Name} 类型没有实现接口 IAreaRegister！"));
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var title = "AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName;
+            //        var message = ex.ToString();
+            //        Console.WriteLine(title);
+            //        Console.WriteLine(message);
+            //        SenparcTrace.SendCustomLog(title, message);
+            //    }
+            //}, true);
 
             //所有 AuthorizeConfig 方法已经执行完成
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllAuthorizeConfigApplied = true;
@@ -99,7 +123,6 @@ namespace Senparc.Xncf.AreasBase
             return services.StartNcfEngine(configuration, env, dllFilePatterns);
         }
 
-#if NET8_0_OR_GREATER
 
         /// <summary>
         /// 启动带 Web 功能的 NCF 引擎（如不需要使用 Web，如 RazorPage，可以直接使用 <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>）
@@ -128,6 +151,5 @@ namespace Senparc.Xncf.AreasBase
 
             return startEngineLog;
         }
-#endif
     }
 }

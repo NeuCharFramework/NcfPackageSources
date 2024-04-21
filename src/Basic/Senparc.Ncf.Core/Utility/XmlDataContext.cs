@@ -136,14 +136,12 @@ namespace Senparc.Ncf.Core.Utility
                     case "DateTime":
                         prop.SetValue(result, DateTime.Parse(value), null);
                         break;
-#if NET8_0_OR_GREATER
                     case "TimeOnly":
                         prop.SetValue(result, TimeOnly.Parse(value), null);
                         break;
                     case "DateOnly":
                         prop.SetValue(result, DateOnly.Parse(value), null);
                         break;
-#endif
                     case "Int32":
                         prop.SetValue(result, int.Parse(value), null);
                         break;
