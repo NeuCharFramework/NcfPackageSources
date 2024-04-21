@@ -41,11 +41,11 @@ namespace Senparc.Xncf.AreasBase
                 var areaRegister = register as IAreaRegister;
 
                 Console.WriteLine("[IAreaRegister] " + register.Name);
-                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
+                Console.WriteLine("[IAreaRegister] run AuthorizeConfig:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
 
                 areaRegister.AuthorizeConfig(builder, env);//进行注册
 
-                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig finished:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
+                Console.WriteLine("[IAreaRegister] run AuthorizeConfig finished:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
 
                 eachRegsiterAction?.Invoke(areaRegister);//执行额外的操作
             }
