@@ -130,8 +130,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.CreateNoWindow = true;
                 //强制设置编码，避免乱码
-                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-                p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+                //p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                //p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+                p.StartInfo.StandardOutputEncoding = Encoding.GetEncoding("GBK");
+                p.StartInfo.StandardErrorEncoding = Encoding.GetEncoding("GBK");
 
                 p.Start();
                 return p;

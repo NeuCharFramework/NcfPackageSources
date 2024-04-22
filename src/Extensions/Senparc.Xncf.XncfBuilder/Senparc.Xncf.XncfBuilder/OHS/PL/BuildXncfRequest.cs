@@ -90,7 +90,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  new SelectionItem("function","配置“函数”功能","是否需要使用函数模块（Function）",false),
                  new SelectionItem("database","配置“数据库”功能","是否需要使用数据库模块（Database），将配置空数据库",false),
                  new SelectionItem("webapi","配置“WebApi”功能","是否需要使用WebApi模块（WebApi）",false),
-                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web），如果选择，将忽略 .NET Standard 2.1配置，强制使用 .NET 8.0",false),
+                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web）",false),
             });
 
         [Description("安装 Sample||")]
