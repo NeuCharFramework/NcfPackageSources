@@ -39,6 +39,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
+            var oldEncodding = Console.OutputEncoding;
+            var newEncoddig = Encoding.GetEncoding("GBK");
+            Console.OutputEncoding = newEncoddig;
+
             Console.WriteLine("开始创建 XNCF 项目");
 
             string projectName = GetProjectName(request);
@@ -132,8 +136,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //强制设置编码，避免乱码
                 //p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
                 //p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                p.StartInfo.StandardOutputEncoding = Encoding.GetEncoding("GBK");
-                p.StartInfo.StandardErrorEncoding = Encoding.GetEncoding("GBK");
+                p.StartInfo.StandardOutputEncoding = newEncoddig;
+                p.StartInfo.StandardErrorEncoding = newEncoddig;
 
                 p.Start();
                 return p;
@@ -233,6 +237,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             {
                 strOutput = e.Message;
             }
+
+            Console.OutputEncoding = oldEncodding;
 
 
             return strOutput;
