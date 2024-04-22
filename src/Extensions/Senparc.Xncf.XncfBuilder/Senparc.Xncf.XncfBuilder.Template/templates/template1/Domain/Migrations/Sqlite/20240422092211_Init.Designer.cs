@@ -6,17 +6,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Migrations.Migrations.Sqlite
+#nullable disable
+
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Sqlite
 {
-    [DbContext(typeof(Template_XncfNameSenparcEntities))]
-    [Migration("20210108155659_AddTenantId")]
-    partial class AddTenantId
+    [DbContext(typeof(Template_XncfNameTemplate_OrgNameEntities_Sqlite))]
+    [Migration("20240422092211_Init")]
+    partial class Init
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
             modelBuilder.Entity("Template_OrgName.Xncf.Template_XncfName.Color", b =>
                 {

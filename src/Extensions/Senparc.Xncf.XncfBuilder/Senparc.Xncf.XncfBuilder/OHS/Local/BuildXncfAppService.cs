@@ -40,7 +40,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
             var oldEncodding = Console.OutputEncoding;
-            var newEncoddig = Encoding.GetEncoding("GBK");
+            var newEncoddig = Encoding.Default; //Encoding.GetEncoding("GBK");
             Console.OutputEncoding = newEncoddig;
 
             Console.WriteLine("开始创建 XNCF 项目");
