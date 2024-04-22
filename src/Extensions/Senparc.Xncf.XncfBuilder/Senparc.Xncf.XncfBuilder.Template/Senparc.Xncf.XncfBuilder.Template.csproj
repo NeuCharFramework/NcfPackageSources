@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.8.0</PackageVersion>
+    <PackageVersion>0.9.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -37,6 +37,7 @@
 			v0.6.0 更新项目引用，支持 .NET 8.0
 			v0.7.0 使用新的多数据库配置版本
 			v0.8.0 支持新版本多数据库模板
+			v0.9.0 支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -62,15 +63,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="readme.md" />
+    <None Remove="templates\template1\ACL\readme.md" />
+    <None Remove="templates\template1\Domain\readme.md" />
+    <None Remove="templates\template1\OHS\Local\readme.md" />
+    <None Remove="templates\template1\OHS\readme.md" />
+    <None Remove="templates\template1\OHS\Remote\readme.md" />
     <None Remove="templates\template1\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="templates\template1\OHS\Remote\" />
-    <Folder Include="templates\template1\ACL\" />
   </ItemGroup>
 </Project>
