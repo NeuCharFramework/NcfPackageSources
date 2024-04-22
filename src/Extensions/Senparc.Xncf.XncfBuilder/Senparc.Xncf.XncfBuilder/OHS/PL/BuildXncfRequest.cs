@@ -40,10 +40,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
         public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5.0-8.0）",true),
+                 //new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5.0-8.0）",true),
                  //new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
-                 new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
-                 new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
+                 //new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
+                 //new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
                  new SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
             });
 
