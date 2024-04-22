@@ -146,7 +146,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
                     if (currentDir != null)
                     {
-                        SlnFilePath = Path.Combine(currentDir, Directory.GetFiles(currentDir, "*.sln").FirstOrDefault());
+                        var fileNames = Directory.GetFiles(currentDir, "*.sln").OrderBy(z => z.Length).ThenBy(z => z);
+                        SlnFilePath = Path.Combine(currentDir, fileNames.FirstOrDefault());
                     }
 
                     #endregion

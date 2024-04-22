@@ -129,6 +129,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.CreateNoWindow = true;
+                //强制设置编码，避免乱码
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+
                 p.Start();
                 return p;
             };
