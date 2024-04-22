@@ -40,10 +40,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
         public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5.0-8.0）",true),
+                 //new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5.0-8.0）",true),
                  //new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
-                 new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
-                 new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
+                 //new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
+                 //new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
                  new SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
             });
 
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  new SelectionItem("function","配置“函数”功能","是否需要使用函数模块（Function）",false),
                  new SelectionItem("database","配置“数据库”功能","是否需要使用数据库模块（Database），将配置空数据库",false),
                  new SelectionItem("webapi","配置“WebApi”功能","是否需要使用WebApi模块（WebApi）",false),
-                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web），如果选择，将忽略 .NET Standard 2.1配置，强制使用 .NET 8.0",false),
+                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web）",false),
             });
 
         [Description("安装 Sample||")]
@@ -146,7 +146,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
                     if (currentDir != null)
                     {
-                        SlnFilePath = Path.Combine(currentDir, Directory.GetFiles(currentDir, "*.sln").FirstOrDefault());
+                        var fileNames = Directory.GetFiles(currentDir, "*.sln").OrderBy(z => z.Length).ThenBy(z => z);
+                        SlnFilePath = Path.Combine(currentDir, fileNames.FirstOrDefault());
                     }
 
                     #endregion

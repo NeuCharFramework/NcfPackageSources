@@ -39,6 +39,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
+            var oldEncodding = Console.OutputEncoding;
+            var newEncoddig = Encoding.Default; //Encoding.GetEncoding("GBK");
+            Console.OutputEncoding = newEncoddig;
+
             Console.WriteLine("开始创建 XNCF 项目");
 
             string projectName = GetProjectName(request);
@@ -102,11 +106,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             var frameworkVersion = request.OtherFrameworkVersion.IsNullOrEmpty()
                                         ? request.FrameworkVersion.SelectedValues.First()
                                         : request.OtherFrameworkVersion;
-            if (isUseWeb && frameworkVersion == "netstandard2.1")
-            {
-                //需要使用网页，强制修正为支持 Host 的目标框架
-                frameworkVersion = "net8.0";
-            }
+
+            //if (isUseWeb && frameworkVersion == "netstandard2.1")
+            //{
+            //    //需要使用网页，强制修正为支持 Host 的目标框架
+            //    frameworkVersion = "net8.0";
+            //}
 
             var targetFramework = $" --TargetFramework {frameworkVersion}";
 
@@ -128,6 +133,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.CreateNoWindow = true;
+                //强制设置编码，避免乱码
+                //p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                //p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+                p.StartInfo.StandardOutputEncoding = newEncoddig;
+                p.StartInfo.StandardErrorEncoding = newEncoddig;
+
                 p.Start();
                 return p;
             };
@@ -226,6 +237,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             {
                 strOutput = e.Message;
             }
+
+            Console.OutputEncoding = oldEncodding;
 
 
             return strOutput;

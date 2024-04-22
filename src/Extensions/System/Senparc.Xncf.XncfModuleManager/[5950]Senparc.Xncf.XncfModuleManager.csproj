@@ -61,6 +61,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
   </ItemGroup>
   <ItemGroup>

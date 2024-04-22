@@ -29,10 +29,6 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Web)' == 'true' or '$(Sample)' == 'true'">
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Sample)' == 'true' or '$(Database)' == 'true' ">
     <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.13.6-beta1" />
@@ -46,10 +42,6 @@
     <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- 为解决 VS 2019 v16.8 的一个bug，编译遇到错误： error : rzc discover exited with code -2147450750，则需要添加下方引用 -->
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>
   <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
