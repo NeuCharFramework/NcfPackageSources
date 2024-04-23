@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Sqlite
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Sqlite
 {
     /// <inheritdoc />
     public partial class Init : Migration

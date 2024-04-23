@@ -30,6 +30,6 @@
 		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
 		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
-		<ProjectReference Include="..\Senparc.InterationSample.AreaTests\Senparc.InterationSample.AreaTests.csproj" />
+		<ProjectReference Include="..\Senparc.IntegrationSample.AreaTests\Senparc.IntegrationSample.AreaTests.csproj" />
 	</ItemGroup>
 </Project>

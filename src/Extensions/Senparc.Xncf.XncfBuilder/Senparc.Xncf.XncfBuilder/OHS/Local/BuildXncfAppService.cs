@@ -121,7 +121,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
                 $"dotnet new XNCF -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
                 $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
-                $"dotnet sln {request.SlnFilePath} add ./{projectName}/{projectName}.csproj --solution-folder XncfModules"
+                $"dotnet sln \"{request.SlnFilePath}\" add \"./{projectName}/{projectName}.csproj\" --solution-folder XncfModules"
             };
 
             Func<Process> GetNewProcess = () =>

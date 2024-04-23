@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <PackageType>Template</PackageType>
-    <PackageVersion>0.9.0</PackageVersion>
-    <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
-    <Title>XNCF Template</Title>
-    <Authors>JeffreySu</Authors>
-    <Owners>JeffreySu</Owners>
-    <Description>Templates to use when creating an XNCF module for NCF project.</Description>
-    <PackageTags>NeuCharFramework;NCF;XNCF;template;dotnet-new;templates</PackageTags>
-    <IncludeContentInPack>true</IncludeContentInPack>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <ContentTargetFolders>content</ContentTargetFolders>
-    <!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
-    <NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
-    <NoDefaultExcludes>true</NoDefaultExcludes>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageType>Template</PackageType>
+		<PackageVersion>0.10.0</PackageVersion>
+		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
+		<Title>XNCF Template</Title>
+		<Authors>JeffreySu</Authors>
+		<Owners>JeffreySu</Owners>
+		<Description>Templates to use when creating an XNCF module for NCF project.</Description>
+		<PackageTags>NeuCharFramework;NCF;XNCF;template;dotnet-new;templates</PackageTags>
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<ContentTargetFolders>content</ContentTargetFolders>
+		<!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
+		<NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
+		<NoDefaultExcludes>true</NoDefaultExcludes>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
 			v0.1.0 创世
 			v0.1.7 删除无用的日志文件
 			v0.2.3 添加 UseWebApi 选项
@@ -37,45 +37,48 @@
 			v0.6.0 更新项目引用，支持 .NET 8.0
 			v0.7.0 使用新的多数据库配置版本
 			v0.8.0 支持新版本多数据库模板
-			v0.9.0 支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件
-</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
-    <OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
-    <Compile Remove="**\*" />
-    <Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="readme.md" />
-    <None Remove="templates\template1\ACL\readme.md" />
-    <None Remove="templates\template1\Domain\readme.md" />
-    <None Remove="templates\template1\OHS\Local\readme.md" />
-    <None Remove="templates\template1\OHS\readme.md" />
-    <None Remove="templates\template1\OHS\Remote\readme.md" />
-    <None Remove="templates\template1\readme.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="readme.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
-  </ItemGroup>
+			v0.9.0
+			1、支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件；
+			2、重新更新 SQLite 的 Migration 模板
+			v0.10.0 重新生成数据库 Migration
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
+		<OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
+		<OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
+		<Compile Remove="**\*" />
+		<Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="readme.md" />
+		<None Remove="templates\template1\ACL\readme.md" />
+		<None Remove="templates\template1\Domain\readme.md" />
+		<None Remove="templates\template1\OHS\Local\readme.md" />
+		<None Remove="templates\template1\OHS\readme.md" />
+		<None Remove="templates\template1\OHS\Remote\readme.md" />
+		<None Remove="templates\template1\readme.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="readme.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+	</ItemGroup>
 </Project>
