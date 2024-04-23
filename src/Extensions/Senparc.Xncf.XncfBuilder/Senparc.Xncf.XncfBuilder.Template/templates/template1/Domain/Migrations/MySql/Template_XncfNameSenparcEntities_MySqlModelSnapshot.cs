@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template_OrgName.Xncf.Template_XncfName.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Deomain.Migrations.Migrations.MySql
+#nullable disable
+
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.MySql
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_MySql))]
     partial class Template_XncfNameSenparcEntities_MySqlModelSnapshot : ModelSnapshot
@@ -14,8 +16,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Deomain.Migrations.Migrations.
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Template_OrgName.Xncf.Template_XncfName.Color", b =>
                 {
@@ -27,11 +29,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Deomain.Migrations.Migrations.
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("AdditionNote")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<int>("Blue")
                         .HasColumnType("int");
@@ -50,7 +52,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Deomain.Migrations.Migrations.
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");

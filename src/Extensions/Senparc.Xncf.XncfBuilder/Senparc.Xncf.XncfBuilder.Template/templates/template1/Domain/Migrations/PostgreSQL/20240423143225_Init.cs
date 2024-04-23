@@ -6,8 +6,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.PostgreSQL
 {
+    /// <inheritdoc />
     public partial class Init : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -29,14 +31,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.PostgreSQL
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SenparcDemo_Template_XncfName_Color", x => x.Id);
+                    table.PrimaryKey("PK_Template_OrgName_Template_XncfName_Color", x => x.Id);
                 });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SenparcDemo_Template_XncfName_Color");
+                name: "Template_OrgName_Template_XncfName_Color");
         }
     }
 }

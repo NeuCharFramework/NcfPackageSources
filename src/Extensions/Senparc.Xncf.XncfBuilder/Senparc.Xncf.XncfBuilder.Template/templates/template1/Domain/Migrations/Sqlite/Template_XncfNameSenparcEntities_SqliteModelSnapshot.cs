@@ -7,10 +7,10 @@ using Template_OrgName.Xncf.Template_XncfName.Models;
 
 #nullable disable
 
-namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Sqlite
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(Template_XncfNameSenparcEntities_Sqlite))]
-    partial class Template_XncfNameTemplate_OrgNameEntities_SqliteModelSnapshot : ModelSnapshot
+    partial class Template_XncfNameSenparcEntities_SqliteModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
