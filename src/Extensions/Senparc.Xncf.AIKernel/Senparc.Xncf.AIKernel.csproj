@@ -18,12 +18,13 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.1.3 升级 Senparc.AI，提供多模型配
-			v0.2.0 升级 Senparc.AI，添加 FastAPI 模式
-			v0.3.0 添加 Function 方式的 AI模型调用
-			v0.3.3 升级 Senparc.AI，优化模型调用，支持流式输出
-</PackageReleaseNotes>
+		v0.1.0 创世
+		v0.1.3 升级 Senparc.AI，提供多模型配
+		v0.2.0 升级 Senparc.AI，添加 FastAPI 模式
+		v0.3.0 添加 Function 方式的 AI模型调用
+		v0.3.3 升级 Senparc.AI，优化模型调用，支持流式输出
+		v0.5.2 升级 Senparc.AI，支持新格式模型配置
+	</PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

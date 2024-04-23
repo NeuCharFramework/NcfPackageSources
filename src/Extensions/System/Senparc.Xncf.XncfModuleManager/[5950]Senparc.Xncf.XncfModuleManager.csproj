@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.8.1-preview1</Version>
+    <Version>0.8.1.1-preview1</Version>
     <AssemblyName>Senparc.Xncf.XncfModuleManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfModuleManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -23,7 +23,8 @@
 		v0.5.2 更改菜单名称：XNCF 模块管理 &gt; XNCF 模块管理核心
 		v0.5.3 fix bug：模块菜单名更新后，无法更新到数据库中的菜单信息
 		v0.6.0 解决模块安装后直接授权菜单问题
-</PackageReleaseNotes>
+		v0.8.0 添加 XncfStateAppService
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -63,8 +64,5 @@
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="OHS\Local\AppService\" />
   </ItemGroup>
 </Project>

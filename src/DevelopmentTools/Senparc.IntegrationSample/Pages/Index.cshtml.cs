@@ -72,7 +72,7 @@ namespace Senparc.IntegrationSample.Pages
                     {
                         try
                         {
-                            var result = await FunctionHelper.GetFunctionParameterInfoAsync(this._serviceProvider, funtionBag, true);
+                            var functionParameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(this._serviceProvider, funtionBag, true);
 
                             registerItem.RegisterFunctionInfoList.Add(new()
                             {
@@ -80,7 +80,7 @@ namespace Senparc.IntegrationSample.Pages
                                 Name = funtionBag.FunctionRenderAttribute.Name,
                                 Description = funtionBag.FunctionRenderAttribute.Description,
                                 FunctionRenderBag = funtionBag,
-                                FunctionParameterInfoList = result
+                                FunctionParameterInfoList = functionParameterInfos
                             });
                         }
                         catch (Exception ex)
