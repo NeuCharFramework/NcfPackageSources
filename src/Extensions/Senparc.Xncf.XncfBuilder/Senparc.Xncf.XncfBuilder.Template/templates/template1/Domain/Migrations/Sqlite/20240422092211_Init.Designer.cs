@@ -10,7 +10,7 @@ using Template_OrgName.Xncf.Template_XncfName.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Migrations.Migrations.Sqlite
 {
-    [DbContext(typeof(Template_XncfNameTemplate_OrgNameEntities_Sqlite))]
+    [DbContext(typeof(Template_XncfNameSenparcEntities_Sqlite))]
     [Migration("20240422092211_Init")]
     partial class Init
     {
