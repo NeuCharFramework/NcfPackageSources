@@ -24,7 +24,7 @@ namespace Senparc.IntegrationSample
         public static void AddNcf(this WebApplicationBuilder builder)
         {
             //激活 Xncf 扩展引擎（必须）
-            var logMsg = builder.StartWebEngine(new[] { "Senparc.InterationSample.AreaTests" });
+            var logMsg = builder.StartWebEngine(new[] { "Senparc.IntegrationSample.AreaTests" });
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");
