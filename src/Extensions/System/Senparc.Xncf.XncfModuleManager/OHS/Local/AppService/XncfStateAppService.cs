@@ -36,7 +36,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
 
                 if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup))
                 {
-                    if (functionGroup == null)
+                    if (functionGroup == null || functionGroup.Count == 0)
                     {
                         response.Data += logger.Append("当前模块没有注册任何 Function。\r\n");
                         return response.Data;
@@ -44,7 +44,9 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
 
                     foreach (var function in functionGroup)
                     {
-                        response.Data += logger.Append($"[Function: {function.Key}]\r\n");
+                        response.Data += logger.Append($"[Function: {function.Value.Key}]\r\n");
+                        response.Data += logger.Append($"[内部方法: {function.Key}]\r\n");
+
                         //response.Data = logger.Append($"名称：{function.Value.FunctionRenderAttribute.Name}\r\n");
 
                         var functionParameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(base.ServiceProvider, function.Value, true);
@@ -52,11 +54,15 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
                         foreach (var functionBag in functionParameterInfos)
                         {
                             response.Data += logger.Append($"参数：{functionBag.Name}（{functionBag.Description}）\r\n");
-                            response.Data += logger.Append($"类型：{functionBag.ParameterType}");
+                            response.Data += logger.Append($"类型：{functionBag.ParameterType}\r\n\r\n");
                         }
                     }
                 }
-                return response.Data;
+                else
+                {
+                    response.Data += logger.Append("当前模块没有注册任何 Function。\r\n");
+                }
+                return response.Data.Replace("\r\n", "<br />");
             });
         }
     }
