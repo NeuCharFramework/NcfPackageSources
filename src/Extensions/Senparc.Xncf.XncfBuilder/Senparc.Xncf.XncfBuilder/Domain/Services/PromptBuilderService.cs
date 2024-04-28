@@ -153,7 +153,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
             }
 
-
             return (Result: sb.ToString(), ResponseText: responseText, Context: context);
         }
     }

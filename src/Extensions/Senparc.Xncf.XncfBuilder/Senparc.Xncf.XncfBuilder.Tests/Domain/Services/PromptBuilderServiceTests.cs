@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.AI.Entities;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Annotations;
 using Senparc.Xncf.PromptRange.Tests;
@@ -21,6 +22,24 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
         public PromptBuilderServiceTest()
         {
+            var promptParameter = new PromptConfigParameter()
+            {
+                MaxTokens = 2000,
+                Temperature = 0.7,
+                TopP = 0.5,
+            };
+
+            var functionPrompt = @"{{$input}}";
+
+            //准备运行
+            var userId = "JeffreySu";//区分用户
+            var iWantToRun =
+                 _semanticAiHandler.IWantTo()
+                        .ConfigModel(ConfigModel.TextCompletion, userId)
+                        .BuildKernel()
+                        .CreateFunctionFromPrompt(functionPrompt, promptParameter).iWantToRun;
+
+            //使用默认配置
             _service = base._serviceProvder.GetRequiredService<PromptBuilderService>();
         }
 
@@ -57,7 +76,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             var entityCode = entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
 
-            var entityDtoResult = await _service.RunPromptAsync(setting,PromptBuildType.EntityDtoClass, entityCode, null, projectPath, "Senparc.Xncf.UnitTestProject");
+            var entityDtoResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityDtoClass, entityCode, null, projectPath, "Senparc.Xncf.UnitTestProject");
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{entityName}Dto.cs")));
 
             await Console.Out.WriteLineAsync(entityDtoResult.Result);
@@ -69,7 +88,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             #region UpdateSenparcEntities
 
-            var updateSenparcEntitiesResult = await _service.RunPromptAsync(setting,PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
+            var updateSenparcEntitiesResult = await _service.RunPromptAsync(setting, PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
 
             var senparcEntitiesFile = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
@@ -78,9 +97,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}es {{ get; set; }}") || newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}s {{ get; set; }}"));
 
             #endregion
-
-
-
         }
 
     }

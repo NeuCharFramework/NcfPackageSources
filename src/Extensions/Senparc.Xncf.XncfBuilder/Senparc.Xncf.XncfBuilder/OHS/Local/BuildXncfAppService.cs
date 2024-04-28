@@ -332,15 +332,23 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
+                logger.Append("11");
+
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+                logger.Append("22");
 
                 var input = request.Requirement;
+                logger.Append("33");
 
                 var projectPath = request.InjectDomain.SelectedValues.FirstOrDefault();
+                logger.Append("44");
+
                 if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
                 {
                     throw new Exception("没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！");
                 }
+
+                logger.Append("1");
 
                 var @namespace = Path.GetFileName(projectPath);
 
@@ -358,12 +366,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
                     aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
                 }
+                logger.Append("2");
 
                 #region 生成实体
 
                 var entityResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityClass, input, null, projectPath, @namespace);
                 logger.Append("生成实体：");
                 logger.Append(entityResult.Result);
+                logger.Append("3");
 
                 #endregion
 

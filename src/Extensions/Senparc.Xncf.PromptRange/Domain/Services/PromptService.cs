@@ -15,29 +15,25 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
     public class PromptService /*: ServiceDataBase*/
     {
         private readonly SemanticAiHandler _aiHandler;
+        private readonly ISenparcAiSetting _senparcAiSetting;
 
         public IWantToRun IWantToRun { get; set; }
 
         private string _userId = "XncfBuilder"; //区分用户
-        private string _modelName = "text-davinci-003"; //默认使用模型
 
-        public PromptService( /*IAiHandler aiHandler*/)
+        public PromptService(ISenparcAiSetting senparcAiSetting = null)
         {
-            //this._aiHandler = (SemanticAiHandler)aiHandler;
-            this._aiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
-            ReBuildKernel();
+            this._senparcAiSetting = senparcAiSetting ?? Senparc.AI.Config.SenparcAiSetting;
+            this._aiHandler = new SemanticAiHandler(this._senparcAiSetting);
+            ReBuildKernel(this._senparcAiSetting);
         }
 
-        public IWantToRun ReBuildKernel(string userId = null, string modelName = null)
+        public IWantToRun ReBuildKernel(ISenparcAiSetting senparcAiSetting = null, string userId = null, string modelName = null)
         {
-            ModelName modelNameObj = null;
-            if (modelNameObj != null)
-            {
-                modelNameObj.TextCompletion = modelName;
-            }
-            IWantToRun = this._aiHandler.IWantTo()
-                .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId, modelNameObj)
-                .BuildKernel();
+            senparcAiSetting ??= Senparc.AI.Config.SenparcAiSetting;
+            IWantToRun = this._aiHandler.IWantTo(senparcAiSetting)
+                           .ConfigModel(ConfigModel.TextCompletion, userId ?? _userId)
+                           .BuildKernel();
             return IWantToRun;
         }
 
@@ -52,25 +48,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </param>
         /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(string input, SenparcAiArguments context = null,
-            Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
+        public async Task<string> GetPromptResultAsync(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
             //var modelName = "text-davinci-003";//默认使用模型
 
-            var iWantToRun = IWantToRun ?? ReBuildKernel();
+            var iWantToRun = IWantToRun ?? ReBuildKernel(senparcAiSetting);
 
             List<KernelFunction> allFunctionPiple = new List<KernelFunction>();
 
             if (plugins?.Count > 0)
             {
                 var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                foreach (var plubName in plugins)
-                {
-                    var pluginResults = iWantToRun.ImportPluginFromDirectory(pluginDir, plubName.Key);
 
-                    foreach (var functionName in plubName.Value)
+                foreach (var pluginName in plugins)
+                {
+                    var finalDir = Path.Combine(pluginDir, pluginName.Key);
+                    var pluginResults = iWantToRun.ImportPluginFromPromptDirectory(finalDir, pluginName.Key);
+
+                    foreach (var functionName in pluginName.Value)
                     {
                         allFunctionPiple.Add(pluginResults.skillList[functionName]);
                     }
