@@ -28,7 +28,7 @@ namespace Senparc.Xncf.PromptRange.Tests
 
             base.ServiceCollection.AddSenparcAI(base.Configuration, _senparcAiSetting);
 
-            base.ServiceCollection.AddScoped<XncfBuilder.Domain.Services.PromptService>();
+            base.ServiceCollection.AddScoped<PromptService>();
             base.ServiceCollection.AddScoped<PromptBuilderService>();
 
             base.ServiceCollection.AddScoped<IAiHandler, SemanticAiHandler>();

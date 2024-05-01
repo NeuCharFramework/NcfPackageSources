@@ -22,24 +22,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
         public PromptBuilderServiceTest()
         {
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = 2000,
-                Temperature = 0.7,
-                TopP = 0.5,
-            };
+            //说明：skprompt 的 maxToken 在文件中配置
+            //var promptParameter = new PromptConfigParameter()
+            //{
+            //    MaxTokens = 2000,
+            //    Temperature = 0.7,
+            //    TopP = 0.5,
+            //};
 
-            var functionPrompt = @"{{$input}}";
-
-            //准备运行
-            var userId = "JeffreySu";//区分用户
-            var iWantToRun =
-                 _semanticAiHandler.IWantTo()
-                        .ConfigModel(ConfigModel.TextCompletion, userId)
-                        .BuildKernel()
-                        .CreateFunctionFromPrompt(functionPrompt, promptParameter).iWantToRun;
-
-            //使用默认配置
             _service = base._serviceProvder.GetRequiredService<PromptBuilderService>();
         }
 
