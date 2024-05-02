@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
+using Senparc.AI.Entities;
 using Senparc.AI.Entities.Keys;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
@@ -55,6 +56,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //var modelName = "text-davinci-003";//默认使用模型
 
             var iWantToRun = IWantToRun ?? ReBuildKernel(senparcAiSetting);
+
+            //TODO:外部传入配置
+            var promptParameter = new PromptConfigParameter()
+            {
+                MaxTokens = 6000,
+                Temperature = 0.2,
+                TopP = 0.2,
+            };
+            iWantToRun.SetPromptConfigParameter(promptParameter);
 
             List<KernelFunction> allFunctionPiple = new List<KernelFunction>();
 

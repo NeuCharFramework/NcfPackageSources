@@ -1,23 +1,20 @@
-using Senparc.CO2NET;
-using Senparc.CO2NET.WebApi;
-using Senparc.Ncf.Core.AppServices;
-using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
-using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Senparc.CO2NET;
+using Senparc.CO2NET.WebApi;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
-using ContentType = Azure.Core.ContentType;
 
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -84,7 +81,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="rangeName">靶场名称（必须）</param>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([NotNull] string rangeName)
+        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(string rangeName)
         {
             return await
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>, List<PromptItem_GetIdAndNameResponse>>(
@@ -104,7 +101,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <param name="rangeId">靶场 ID（必须）</param>
         /// <returns></returns>
-        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName([NotNull] int rangeId)
+        public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(int rangeId)
         {
             return await
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>, List<PromptItem_GetIdAndNameResponse>>(
@@ -216,7 +213,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <param name="rangeName">靶场名称</param>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree([NotNull] string rangeName)
+        public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
         {
             return await this.GetResponseAsync<AppResponseBase<TacticTree_GetResponse>, TacticTree_GetResponse>(
                 async (resp, logger) =>
@@ -364,33 +361,33 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         //     var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
         //     return await BuildZipStream(rangePath);
         // }
-        
+
         private static async Task<FileContentResult> BuildZipStreamAsync(string dirPath)
         {
             // rangePath
             var filePath = Path.Combine(
                 Directory.GetParent(dirPath)!.FullName,
                 $"{DateTimeOffset.Now.ToLocalTime():yyyyMMddHHmmss}_ExportedPlugins.zip");
-        
+
             ZipFile.CreateFromDirectory(
                 dirPath,
                 filePath);
-        
+
             byte[] buffer;
             await using var fileStream = new FileStream(filePath, FileMode.Open);
             {
                 buffer = new byte[fileStream.Length];
                 var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
             }
-        
+
             // 清理临时文件夹
             Directory.Delete(dirPath, true);
-        
+
             var res = new FileContentResult(buffer, "application/octet-stream")
             {
                 FileDownloadName = "plugins.zip"
             };
-        
+
             return res;
         }
     }

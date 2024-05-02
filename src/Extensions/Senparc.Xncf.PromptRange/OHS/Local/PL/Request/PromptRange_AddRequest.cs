@@ -1,4 +1,4 @@
-﻿using Json.Schema.Generation;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
