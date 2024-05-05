@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.AI.Entities;
 using Senparc.CO2NET.Helpers;
@@ -45,7 +46,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);//重建目录
 
             #region Entity 生成
-
+            
             var setting = Senparc.AI.Config.SenparcAiSetting;
             var entityResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityClass, input, null, projectPath, "Senparc.Xncf.UnitTestProject");
 

@@ -101,7 +101,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                             //添加保存文件的 Plugin
                             var filePlugin = new FilePlugin(_promptService.IWantToRun);
-                            var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
+                            //var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
+                            var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("XncfBuilderPlugin");
 
                             KernelFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
 
@@ -121,7 +122,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         #region 更新 SenparcEntities
                         //添加保存文件的 Plugin
                         var filePlugin = new FilePlugin(_promptService.IWantToRun);
-                        var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
+                        //var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
+                        var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("XncfBuilderPlugin");
 
                         var updateFunctionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
 

@@ -76,8 +76,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     //    };
 
                     var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                    var finalDir = Path.Combine(pluginDir, "UpdateSenparcEntities");
-                    var skills = _iWantToRun.ImportPluginFromPromptDirectory(finalDir, "XncfBuilderPlugin");
+                    //var finalDir = Path.Combine(pluginDir, "UpdateSenparcEntities");
+                    var skills = _iWantToRun.ImportPluginFromPromptDirectory(pluginDir, "XncfBuilderPlugin");
 
                     //运行
                     var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
