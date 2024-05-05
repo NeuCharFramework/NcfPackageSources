@@ -79,6 +79,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder.Tests\Senparc.Xncf.XncfBuilder.Tests.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
   </ItemGroup>
 </Project>

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Senparc.AI.Kernel.Handlers;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services
 {
@@ -75,7 +76,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         context.KernelArguments["input"] = input;
                         context.KernelArguments["namespace"] = @namespace;
 
-                        var promptResult = await _promptService.GetPromptResultAsync(senparcAiSetting, input, context, plugins);
+                        var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+
+                        var promptResult = await _promptService.GetPromptResultAsync(senparcAiSetting, input, context, plugins, pluginDir);
 
                         responseText = promptResult;
 
@@ -101,12 +104,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                             //添加保存文件的 Plugin
                             var filePlugin = new FilePlugin(_promptService.IWantToRun);
-                            //var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
-                            var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("XncfBuilderPlugin");
+                            var kernelPlugin = _promptService.IWantToRun.ImportPluginFromObject(filePlugin, "FilePlugin").kernelPlugin;
 
-                            KernelFunction[] functionPiple = new[] { skills[nameof(filePlugin.CreateFile)] };
+                            KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(filePlugin.CreateFile)] };
 
-                            var createFileResult = await _promptService.GetPromptResultAsync(senparcAiSetting, "", fileContext, null, functionPiple);
+                            var createFileResult = await _promptService.GetPromptResultAsync(senparcAiSetting, "", fileContext, null, null, functionPiple);
 
                             sb.AppendLine();
                             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -123,15 +125,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         //添加保存文件的 Plugin
                         var filePlugin = new FilePlugin(_promptService.IWantToRun);
                         //var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
-                        var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("XncfBuilderPlugin");
+                        var kernelPlugin = _promptService.IWantToRun.ImportPluginFromObject(filePlugin, "FilePlugin").kernelPlugin;
 
-                        var updateFunctionPiple = new[] { skills[nameof(filePlugin.UpdateSenparcEntities)] };
+                        var updateFunctionPiple = new[] { kernelPlugin[nameof(filePlugin.UpdateSenparcEntities)] };
 
                         var fileContext = context;
                         fileContext.KernelArguments["projectPath"] = projectPath;
                         fileContext.KernelArguments["entityName"] = input;// fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync(senparcAiSetting, "", fileContext, null, updateFunctionPiple);
+                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync(senparcAiSetting, "", fileContext, null, null, updateFunctionPiple);
                         responseText = updateSenparcEntitiesResult;
 
                         sb.AppendLine();

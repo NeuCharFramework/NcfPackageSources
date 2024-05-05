@@ -80,7 +80,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     var skills = _iWantToRun.ImportPluginFromPromptDirectory(pluginDir, "XncfBuilderPlugin");
 
                     //运行
-                    var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
+                    var request = _iWantToRun.CreateRequest(true, skills.kernelPlugin["UpdateSenparcEntities"]);
 
                     request.TempAiArguments = new AI.Kernel.Entities.SenparcAiArguments();
                     request.SetTempContext("Code", fileContent);

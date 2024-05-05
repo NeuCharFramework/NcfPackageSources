@@ -41,6 +41,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <summary>
         /// 根据 Plugin 的 Prompt 获取结果
         /// </summary>
+        /// <param name="senparcAiSetting"></param>
         /// <param name="input">用户输入</param>
         /// <param name="context">上下文参数</param>
         /// <param name="plugins">所有需要引用的 Skill（Plugin） 的清单
@@ -49,7 +50,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </param>
         /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, params KernelFunction[] functionPiple)
+        public async Task<string> GetPromptResultAsync(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, string pluginDir = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
@@ -57,20 +58,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             var iWantToRun = IWantToRun ?? ReBuildKernel(senparcAiSetting);
 
-            //TODO:外部传入配置
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = 6000,
-                Temperature = 0.2,
-                TopP = 0.2,
-            };
-            iWantToRun.SetPromptConfigParameter(promptParameter);
+            ////TODO:外部传入配置
+            //var promptParameter = new PromptConfigParameter()
+            //{
+            //    MaxTokens = 6000,
+            //    Temperature = 0.2,
+            //    TopP = 0.2,
+            //};
+            //iWantToRun.SetPromptConfigParameter(promptParameter);
 
             List<KernelFunction> allFunctionPiple = new List<KernelFunction>();
 
             if (plugins?.Count > 0)
             {
-                var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+                //TODO: 默认从数据库查找
+
+                pluginDir ??= Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
 
                 foreach (var pluginName in plugins)
                 {
@@ -79,7 +82,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     foreach (var functionName in pluginName.Value)
                     {
-                        allFunctionPiple.Add(pluginResults.skillList[functionName]);
+                        allFunctionPiple.Add(pluginResults.kernelPlugin[functionName]);
                     }
                 }
             }
