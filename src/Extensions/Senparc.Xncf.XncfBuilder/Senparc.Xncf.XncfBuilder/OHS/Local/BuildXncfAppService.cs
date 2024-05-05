@@ -16,7 +16,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Senparc.CO2NET.Helpers;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
@@ -350,7 +352,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 logger.Append("1");
 
-                var @namespace = Path.GetFileName(projectPath);
+                var @namespace = Path.GetFileName(projectPath) + ".Models.DatabaseModel";
 
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
                 var aiModelSelected = request.AIModel.SelectedValues.First();
@@ -370,7 +372,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 生成实体
 
-                var entityResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityClass, input, null, projectPath, @namespace);
+                var entityResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityClass, input, null, null, projectPath, @namespace);
                 logger.Append("生成实体：");
                 logger.Append(entityResult.Result);
                 logger.Append("3");
@@ -379,7 +381,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 生成实体 DTO
 
-                var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, input, null, projectPath, @namespace);
+                //从 promptGroupFileContent 分析获得类名
+                var fileContent = File.ReadAllText(@"");
+                //var entityResultObj = entityResult.ResponseText.GetObject<dynamic>();
+                var className = new Regex(@"public class (\w+)").Match(fileContent).Groups[1].Value;
+
+                var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
                 logger.Append("生成实体 DTO：");
                 logger.Append(entityResult.Result);
 
@@ -387,7 +394,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 更新 SenparcEntities
 
-                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, @namespace);
+                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, input, className, entityResult.Context, projectPath, @namespace);
                 logger.Append("更新 SenparcEntities：");
                 logger.Append(entityResult.Result);
 

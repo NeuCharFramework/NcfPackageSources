@@ -9,6 +9,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
@@ -37,18 +38,29 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
         [TestMethod()]
         public async Task RunPromptTest()
         {
-            var entityName = "MyClass";
+            var entityName = "MyTestClass";
 
             var input = $"这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：{entityName}，用于管理一组相关联的 Prompt，并统一配置其参数。生成的属性中需要包含常规的 LLM 被调用时的所需的参数，尽可能完整，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等；除此以外，属性还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等常规实体类应该有的参数。";
 
             var projectPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "XncfBuilderTest");
 
-            CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);//重建目录
+            try
+            {
+                File.Delete(projectPath);//删除目录，全部重新生成
+            }
+            catch { }
+            finally
+            {
+                CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);//重建目录
+            }
+
+
+            var @namespace = "Senparc.Xncf.UnitTestProject.Models.DatabaseModel";
 
             #region Entity 生成
-            
+
             var setting = Senparc.AI.Config.SenparcAiSetting;
-            var entityResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityClass, input, null, projectPath, "Senparc.Xncf.UnitTestProject");
+            var entityResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityClass, input, entityName, null, projectPath, @namespace);
 
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
             await Console.Out.WriteLineAsync(entityResult.Result);
@@ -63,12 +75,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             await Console.Out.WriteLineAsync("\n===========\n");
 
+            //从 promptGroupFileContent 分析获得类名
+            var className = new Regex(@"public class (\w+)").Match(promptGroupFileContent).Groups[1].Value;
+
             #region Entity DTO 生成
 
-            var entityCode = entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
+            var entityCode = promptGroupFileContent;// entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
 
-            var entityDtoResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityDtoClass, entityCode, null, projectPath, "Senparc.Xncf.UnitTestProject");
-            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{entityName}Dto.cs")));
+            var entityDtoResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityDtoClass, entityCode, className, null, projectPath, @namespace);
+            Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{className}Dto.cs")));
 
             await Console.Out.WriteLineAsync(entityDtoResult.Result);
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
@@ -79,13 +94,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             #region UpdateSenparcEntities
 
-            var updateSenparcEntitiesResult = await _service.RunPromptAsync(setting, PromptBuildType.UpdateSenparcEntities, input, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
+            var updateSenparcEntitiesResult = await _service.RunPromptAsync(setting, PromptBuildType.UpdateSenparcEntities, input, className, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
 
             var senparcEntitiesFile = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
 
             var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
-            Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}es {{ get; set; }}") || newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}s {{ get; set; }}"));
+            Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{className}> {className}es {{ get; set; }}") || newSenparcEntitiesContent.Contains($"public DbSet<{className}> {className}s {{ get; set; }}"));
 
             #endregion
         }

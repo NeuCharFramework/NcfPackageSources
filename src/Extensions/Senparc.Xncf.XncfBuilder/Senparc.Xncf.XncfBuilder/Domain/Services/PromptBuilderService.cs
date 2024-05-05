@@ -38,7 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <param name="projectPath"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        public async Task<(string Result, string ResponseText, SenparcAiArguments Context)> RunPromptAsync(ISenparcAiSetting senparcAiSetting, PromptBuildType buildType, string input, SenparcAiArguments context = null, string projectPath = null, string @namespace = null)
+        public async Task<(string Result, string ResponseText, SenparcAiArguments Context)> RunPromptAsync(ISenparcAiSetting senparcAiSetting, PromptBuildType buildType, string input, string className = null, SenparcAiArguments context = null, string projectPath = null, string @namespace = null)
         {
             StringBuilder sb = new StringBuilder();
             context ??= new SenparcAiArguments();
@@ -66,6 +66,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         else
                         {
                             plugins["XncfBuilderPlugin"].Add("GenerateEntityDtoClass");
+                            context.KernelArguments["className"] = className;
                         }
 
                         if (!projectPath.IsNullOrEmpty())
@@ -113,7 +114,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                             sb.AppendLine();
                             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
                             sb.AppendLine(createFileResult);
-                            await Console.Out.WriteLineAsync(createFileResult);
+                            await Console.Out.WriteLineAsync("创建文件 createFileResult:" + createFileResult);
 
                             #endregion
                         }
