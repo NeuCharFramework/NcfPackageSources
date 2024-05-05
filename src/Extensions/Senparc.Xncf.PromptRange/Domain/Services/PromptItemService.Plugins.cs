@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Senparc.CO2NET.Extensions;
@@ -27,7 +26,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return rangePath;
         }
 
-        public async Task<string> ExportPluginsAsync([NotNull] IEnumerable<int> rangeIds, [CanBeNull] List<int> ids)
+        public async Task<string> ExportPluginsAsync(IEnumerable<int> rangeIds, List<int> ids)
         {
             var rangeFilePaths = new List<string>();
             foreach (var rangeId in rangeIds)
@@ -70,7 +69,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="rangeId"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public async Task<string> ExportPluginsAsync(int rangeId, [CanBeNull] List<int> ids)
+        public async Task<string> ExportPluginsAsync(int rangeId, List<int> ids)
         {
             // 根据靶场名，获取靶场
             var promptRange = await _promptRangeService.GetAsync(rangeId);

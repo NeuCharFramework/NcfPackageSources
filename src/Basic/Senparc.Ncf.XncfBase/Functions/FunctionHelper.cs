@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,7 +113,8 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// （扫描当前解决方案包含的所有领域项目）
         /// </summary>
         /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
-        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false)
+        /// <param name="additionalProjects">除了标准的 XNCF 以外额外的项目</param>
+        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false,params string[] additionalProjects)
         {
             var selectList = new List<SelectionItem>();
 
@@ -134,7 +136,19 @@ namespace Senparc.Ncf.XncfBase.Functions
 
                 //第一步：查找 XNCF
 
-                var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", SearchOption.AllDirectories);
+                var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", SearchOption.AllDirectories).ToList();
+
+                if (additionalProjects != null && additionalProjects.Length > 0)
+                {
+                    foreach (var proj in additionalProjects)
+                    {
+                        var addProjectFolders = Directory.GetDirectories(currentDir, proj, SearchOption.AllDirectories);
+                        if (addProjectFolders.Count()>0)
+                        {
+                            projectFolders.AddRange(addProjectFolders);
+                        }
+                    }
+                }
 
                 foreach (var projectFolder in projectFolders)
                 {

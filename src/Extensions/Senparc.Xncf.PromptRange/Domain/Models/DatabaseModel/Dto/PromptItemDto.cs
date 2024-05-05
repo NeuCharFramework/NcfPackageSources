@@ -3,7 +3,6 @@ using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 
@@ -61,7 +60,6 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 停止序列（JSON 数组） 
         /// </summary>
-        [CanBeNull]
         public string StopSequences { get; set; }
 
         #endregion

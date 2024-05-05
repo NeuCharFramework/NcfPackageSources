@@ -5,7 +5,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.PromptRange;
@@ -66,7 +65,6 @@ public class PromptItem : EntityBase<int>
     /// <summary>
     /// 停止序列（JSON 数组）
     /// </summary>
-    [CanBeNull]
     public string StopSequences { get; private set; }
 
     #endregion

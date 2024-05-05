@@ -11,13 +11,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityDtoClass\config.json" />
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityDtoClass\skprompt.txt" />
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\config.json" />
+	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\skprompt.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\skprompt.txt">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityDtoClass\config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -27,11 +34,9 @@
 	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\UpdateSenparcEntities\skprompt.txt">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="XncfBuilderTest\Domain\Models\DatabaseModel\PromptRangeSenparcEntities.cs">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -39,6 +44,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />

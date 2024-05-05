@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.5.2-preview1</Version>
+    <Version>0.5.3-preview1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -24,7 +24,7 @@
 		v0.3.0 添加 Function 方式的 AI模型调用
 		v0.3.3 升级 Senparc.AI，优化模型调用，支持流式输出
 		v0.5.2 升级 Senparc.AI，支持新格式模型配置
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -33,7 +33,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.15.2" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.15.4.5" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>

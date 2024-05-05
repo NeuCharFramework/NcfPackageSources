@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Senparc.AI.Entities;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
@@ -278,7 +277,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     //     return await this.GenerateVersionTree(promptItem);
     // }
 
-    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync([NotNull] PromptItem promptItem)
+    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(PromptItem promptItem)
     {
         return await this.GenerateTacticTreeAsync(promptItem.RangeName);
         // // 获取同一个靶道下的所有
@@ -526,8 +525,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
 
-    [ItemNotNull]
-    private async Task<PromptItemDto> TransEntityToDtoAsync([NotNull] PromptItem promptItem, bool needModel = true, bool needRange = true)
+    private async Task<PromptItemDto> TransEntityToDtoAsync(PromptItem promptItem, bool needModel = true, bool needRange = true)
     {
         var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
 

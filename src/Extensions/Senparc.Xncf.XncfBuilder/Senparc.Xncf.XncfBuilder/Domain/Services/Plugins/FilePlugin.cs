@@ -4,6 +4,7 @@ using Senparc.CO2NET.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         }
 
         [KernelFunction("CreateFile"), Description("创建实体类")]
-        public async Task<string> CreateFile(
+        public async Task<(List<string> filePaths, string log)> CreateFile(
              [Description("文件路径")]
             string fileBasePath,
              [Description("通过 AI 生成的文件内容")]
@@ -28,6 +29,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         {
             var log = new StringBuilder();
             var result = fileGenerateResult.GetObject<FileGenerateResult[]>();
+            var filePaths = new List<string>();
             foreach (var fileInfo in result)
             {
                 var fullPathFileName = Path.GetFullPath(Path.Combine(fileBasePath, fileInfo.FileName));
@@ -43,10 +45,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     }
                 }
 
+                filePaths.Add(fullPathFileName);
                 log.AppendLine($"已保存文件：{fullPathFileName}");
             }
 
-            return log.ToString();
+            return (filePaths, log.ToString());
         }
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
@@ -76,10 +79,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     //    };
 
                     var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                    var skills = _iWantToRun.ImportPluginFromDirectory(pluginDir, "XncfBuilderPlugin");
+                    //var finalDir = Path.Combine(pluginDir, "UpdateSenparcEntities");
+                    var skills = _iWantToRun.ImportPluginFromPromptDirectory(pluginDir, "XncfBuilderPlugin");
 
                     //运行
-                    var request = _iWantToRun.CreateRequest(true, skills.skillList["UpdateSenparcEntities"]);
+                    var request = _iWantToRun.CreateRequest(true, skills.kernelPlugin["UpdateSenparcEntities"]);
 
                     request.TempAiArguments = new AI.Kernel.Entities.SenparcAiArguments();
                     request.SetTempContext("Code", fileContent);

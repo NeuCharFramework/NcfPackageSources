@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using JetBrains.Annotations;
 using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.PromptRange;
@@ -14,14 +13,14 @@ public class PromptRange : EntityBase<int>
     /// 靶场代号（用户自定义）
     /// </summary>
     [MaxLength(50)]
-    [CanBeNull]
+    //[CanBeNull]
     public string Alias { get; private set; }
 
     /// <summary>
     /// 靶场名称（来自版号生成）
     /// </summary>
     [Required, MaxLength(20)]
-    [NotNull]
+    //[NotNull]
     public string RangeName { get; private set; }
 
     // /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response

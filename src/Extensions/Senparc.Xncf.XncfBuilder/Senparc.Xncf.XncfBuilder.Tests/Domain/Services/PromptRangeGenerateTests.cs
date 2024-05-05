@@ -20,7 +20,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
     public class PromptRangeGenerateTests : XncfBuilderTestBase
     {
         protected PromptBuilderService _service;
-        private string _projectPath = Path.Combine("Y:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
+        private string _projectPath = Path.Combine("X:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
 
         /// <summary>
         /// 创建实体
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
             CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);
 
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
-            var result = await _service.RunPromptAsync(senparcAiSetting, PromptBuildType.EntityClass, input, null, _projectPath);
+            var result = await _service.RunPromptAsync(senparcAiSetting, PromptBuildType.EntityClass, input, entityName, null, _projectPath);
 
             Assert.IsTrue(result.Result.Contains("保存文件"));
             await Console.Out.WriteLineAsync(result.Result);

@@ -68,7 +68,6 @@ namespace Senparc.Xncf.XncfBuilder
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
-            services.AddScoped<PromptService>();
 
             // Senparc.Xncf.AIKernel 模块
             services.AddScoped<AIModelService>();

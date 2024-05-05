@@ -89,7 +89,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                     }
 
                     //添加当前解决方案的项目选项
-                    var projectList = FunctionHelper.LoadXncfProjects(false);
+                    var projectList = FunctionHelper.LoadXncfProjects(false,"Senparc.Areas.Admin");
                     projectList.ForEach(z => ProjectPath.Items.Add(z));
                 }
             }
