@@ -34,7 +34,7 @@ namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
                 { "XncfBuilderPlugin",new() { "GenerateEntityClass" } }
             };
 
-            var result = await _service.GetPromptResultAsync(null, prompt, null, plugins);
+            var result = await _service.GetPromptResultAsync<string>(null, prompt, null, plugins);
 
             Assert.IsNotNull(result);
             await Console.Out.WriteLineAsync(result);
@@ -61,7 +61,7 @@ namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
                 { "XncfBuilderPlugin",new() { "GenerateEntityClass" } }
             };
 
-            var result = await _service.GetPromptResultAsync(null, prompt, null, plugins);
+            var result = await _service.GetPromptResultAsync<string>(null, prompt, null, plugins);
 
 
             Assert.IsNotNull(result);

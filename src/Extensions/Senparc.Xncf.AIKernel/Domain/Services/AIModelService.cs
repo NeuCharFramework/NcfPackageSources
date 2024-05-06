@@ -175,7 +175,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt)
         {
             if (senparcAiSetting == null)
             {

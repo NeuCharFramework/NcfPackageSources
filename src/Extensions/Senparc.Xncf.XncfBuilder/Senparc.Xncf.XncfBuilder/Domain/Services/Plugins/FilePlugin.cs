@@ -12,6 +12,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 {
     public class FilePlugin
     {
+        public class FileSaveResult
+        {
+            public Dictionary<string, string> FileContents { get; set; } = new Dictionary<string, string>();
+            public string Log { get; set; }
+        }
+
         private readonly IWantToRun _iWantToRun;
 
         public FilePlugin(IWantToRun iWantToRun)
@@ -20,17 +26,18 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         }
 
         [KernelFunction("CreateFile"), Description("创建实体类")]
-        public async Task<(List<string> filePaths, string log)> CreateFile(
+        public async Task<FileSaveResult> CreateFile(
              [Description("文件路径")]
             string fileBasePath,
              [Description("通过 AI 生成的文件内容")]
             string fileGenerateResult
          )
         {
+            var result = new FileSaveResult();
             var log = new StringBuilder();
-            var result = fileGenerateResult.GetObject<FileGenerateResult[]>();
+            var renerateResult = fileGenerateResult.GetObject<FileGenerateResult[]>();
             var filePaths = new List<string>();
-            foreach (var fileInfo in result)
+            foreach (var fileInfo in renerateResult)
             {
                 var fullPathFileName = Path.GetFullPath(Path.Combine(fileBasePath, fileInfo.FileName));
 
@@ -45,15 +52,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     }
                 }
 
-                filePaths.Add(fullPathFileName);
-                log.AppendLine($"已保存文件：{fullPathFileName}");
+                var logMsg = $"已保存文件：{fullPathFileName}";
+                log.AppendLine(logMsg);
+
+                result.Log += logMsg + "\r\n";
+                result.FileContents[fullPathFileName] = fileInfo.EntityCode;
             }
 
-            return (filePaths, log.ToString());
+            return result;
         }
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
-
 
         [KernelFunction("UpdateSenparcEntities"), Description("读取数据库上下文")]
         public async Task<string> UpdateSenparcEntities(

@@ -20,7 +20,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
     [TestClass()]
     public class PromptBuilderServiceTest : XncfBuilderTestBase
     {
-        protected PromptBuilderService _service;
+        protected PromptBuilderService _promptBuilderService;
 
         public PromptBuilderServiceTest()
         {
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             //    TopP = 0.5,
             //};
 
-            _service = base._serviceProvder.GetRequiredService<PromptBuilderService>();
+            _promptBuilderService = base._serviceProvder.GetRequiredService<PromptBuilderService>();
         }
 
         [TestMethod()]
@@ -60,15 +60,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             #region Entity 生成
 
             var setting = Senparc.AI.Config.SenparcAiSetting;
-            var entityResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityClass, input, entityName, null, projectPath, @namespace);
+            var entityResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.EntityClass, input, entityName, null, projectPath, @namespace);
 
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
             await Console.Out.WriteLineAsync(entityResult.Result);
 
             var promptGroupFilePath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"{entityName}.cs");
+
             Assert.IsTrue(File.Exists(promptGroupFilePath));
 
             var promptGroupFileContent = File.ReadAllText(promptGroupFilePath);
+
             Assert.IsTrue(promptGroupFileContent.Contains($"public class {entityName}"));
 
             #endregion
@@ -82,7 +84,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             var entityCode = promptGroupFileContent;// entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
 
-            var entityDtoResult = await _service.RunPromptAsync(setting, PromptBuildType.EntityDtoClass, entityCode, className, null, projectPath, @namespace);
+            var entityDtoResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.EntityDtoClass, entityCode, className, null, projectPath, @namespace);
+
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{className}Dto.cs")));
 
             await Console.Out.WriteLineAsync(entityDtoResult.Result);
@@ -94,7 +97,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             #region UpdateSenparcEntities
 
-            var updateSenparcEntitiesResult = await _service.RunPromptAsync(setting, PromptBuildType.UpdateSenparcEntities, input, className, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
+            var updateSenparcEntitiesResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.UpdateSenparcEntities, input, className, entityResult.Context, projectPath, "Senparc.Xncf.UnitTestProject");
 
             var senparcEntitiesFile = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
