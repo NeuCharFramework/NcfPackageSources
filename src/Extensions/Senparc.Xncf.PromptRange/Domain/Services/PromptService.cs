@@ -50,7 +50,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </param>
         /// <param name="functionPiple">functionPiple</param>
         /// <returns></returns>
-        public async Task<string> GetPromptResultAsync(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, string pluginDir = null, params KernelFunction[] functionPiple)
+        public async Task<T> GetPromptResultAsync<T>(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, string pluginDir = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
@@ -102,7 +102,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 ? iWantToRun.CreateRequest(input, true, allFunctionPiple.ToArray())
                 : iWantToRun.CreateRequest(context.KernelArguments, true, allFunctionPiple.ToArray());
             //请求
-            var result = await iWantToRun.RunAsync(request);
+            var result = await iWantToRun.RunAsync<T>(request);
             return result.Output;
         }
     }
