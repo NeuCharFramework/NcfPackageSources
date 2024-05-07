@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Senparc.AI.Kernel.Handlers;
 using System.Linq;
+using Npgsql.Internal;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services
 {
@@ -86,6 +87,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         var promptResult = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, input, context, plugins, pluginDir);
 
+                        if (buildType == PromptBuildType.EntityDtoClass)
+                        {
+                            //可能会生成转义后的注释
+                            promptResult = promptResult.Replace("&lt;summary&gt;", "<summary>").Replace("&lt;/summary&gt;", "</summary>");
+                        }
+
                         responseText = promptResult;
 
                         sb.AppendLine(promptResult);
@@ -128,6 +135,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
                 case PromptBuildType.UpdateSenparcEntities:
                     {
+                        #region 获取单词复数
+
+                        var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
+                        context.KernelArguments["input"] = className;
+                        plugins["XncfBuilderPlugin"] = new List<string>() { "Pluralize" };
+                        var pluralEntityName = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, null, context, plugins, pluginDir);
+
+                        pluralEntityName = pluralEntityName.Trim();
+
+                        #endregion
+
                         #region 更新 SenparcEntities
                         //添加保存文件的 Plugin
                         var filePlugin = new FilePlugin(_promptService.IWantToRun);
@@ -139,6 +157,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         var fileContext = context;
                         fileContext.KernelArguments["projectPath"] = projectPath;
                         fileContext.KernelArguments["entityName"] = className;// fileGenerateResult[0].FileName.Split('.')[0]; ;
+                        fileContext.KernelArguments["pluralEntityName"] = pluralEntityName;// fileGenerateResult[0].FileName.Split('.')[0]; ;
 
                         var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, updateFunctionPiple);
                         responseText = updateSenparcEntitiesResult.Log;
