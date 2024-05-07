@@ -20,6 +20,7 @@ using Senparc.AI.Kernel;
 using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
 using Senparc.AI.Interfaces;
+using Senparc.Xncf.AIKernel.AutoMapperProfiles;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -90,6 +91,11 @@ namespace Senparc.Xncf.AIKernel
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<SemanticAiHandler>();
+
+            services.AddAutoMapper(config =>
+            {
+                config.AddProfile<AIKernelAutoMapperProfile>();
+            });
 
             return base.AddXncfModule(services, configuration, env);
         }

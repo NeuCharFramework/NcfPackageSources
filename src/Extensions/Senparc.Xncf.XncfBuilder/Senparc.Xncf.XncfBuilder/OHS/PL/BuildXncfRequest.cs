@@ -194,7 +194,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Description("AI 模型||请选择生成代码所使用的 AI 模型")]
         public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem> {
-                 new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+                 //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
         });
 
 
@@ -203,6 +203,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             //扫描当前解决方案包含的所有领域项目
             var newItems = FunctionHelper.LoadXncfProjects(true, "Senparc.Areas.Admin");
             newItems.ForEach(z => InjectDomain.Items.Add(z));
+
+            var defaultSetting = Senparc.AI.Config.SenparcAiSetting;
+            AIModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：{defaultSetting.Endpoint}）", "通过系统默认配置的固定 AI 模型信息",true));
 
             var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
             var aiModels = await aiModelAppService.GetListAsync(new AIKernel.OHS.Local.PL.AIModel_GetListRequest() { Show = true });

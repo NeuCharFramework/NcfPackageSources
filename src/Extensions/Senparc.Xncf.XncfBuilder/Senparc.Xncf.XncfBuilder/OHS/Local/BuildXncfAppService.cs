@@ -359,14 +359,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 if (aiModelSelected != "Default")
                 {
                     int.TryParse(aiModelSelected, out int aiModelId);
-                    var aiModel = _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
                     if (aiModel == null)
                     {
                         throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
                     }
+                    logger.Append("1.1");
 
                     var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+                    logger.Append("1.2");
+
                     aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
+
+                    logger.Append("1.3");
                 }
                 logger.Append("2");
 

@@ -72,19 +72,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public bool IsShared { get; set; } = false;
 
-
         /// <summary>
         /// 是否展示
         /// </summary>
         public bool Show { get;  set; }
         
-        
-        public DateTime AddTime { get; set; }
-
-        public DateTime LastUpdateTime { get; set; }
-
-        public int TenantId { get; set; }
-
         public AIModelDto()
         {
         }

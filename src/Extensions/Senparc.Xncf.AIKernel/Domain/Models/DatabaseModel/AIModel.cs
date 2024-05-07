@@ -166,14 +166,14 @@ namespace Senparc.Xncf.AIKernel.Models
             return this;
         }
 
-        public string GetModelId()
-        {
-            if (string.IsNullOrWhiteSpace(this.DeploymentName))
-            {
-                return "text-davinci-003";
-            }
+        //public string GetModelId()
+        //{
+        //    if (string.IsNullOrWhiteSpace(this.DeploymentName))
+        //    {
+        //        return "text-davinci-003";
+        //    }
 
-            return this.DeploymentName.Contains("azure") ? this.DeploymentName.Substring("azure-".Length) : this.DeploymentName;
-        }
+        //    return this.DeploymentName.Contains("azure") ? this.DeploymentName.Substring("azure-".Length) : this.DeploymentName;
+        //}
     }
 }
