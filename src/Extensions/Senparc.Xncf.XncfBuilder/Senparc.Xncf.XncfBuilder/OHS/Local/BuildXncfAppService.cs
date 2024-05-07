@@ -334,23 +334,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                logger.Append("11");
-
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
-                logger.Append("22");
 
                 var input = request.Requirement;
-                logger.Append("33");
 
                 var projectPath = request.InjectDomain.SelectedValues.FirstOrDefault();
-                logger.Append("44");
 
                 if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
                 {
                     throw new Exception("没有发现任何可用的 XNCF 项目，请确保你正在一个标准的 NCF 开发环境中！");
                 }
-
-                logger.Append("1");
 
                 var @namespace = Path.GetFileName(projectPath) + ".Models.DatabaseModel";
 
@@ -359,44 +352,45 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 if (aiModelSelected != "Default")
                 {
                     int.TryParse(aiModelSelected, out int aiModelId);
-                    var aiModel = _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
                     if (aiModel == null)
                     {
                         throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
                     }
 
                     var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+
                     aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
                 }
-                logger.Append("2");
 
                 #region 生成实体
 
                 var entityResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityClass, input, null, null, projectPath, @namespace);
                 logger.Append("生成实体：");
-                logger.Append(entityResult.Result);
-                logger.Append("3");
+                logger.Append(entityResult.Log);
 
                 #endregion
 
                 #region 生成实体 DTO
 
+                var fileInfo = entityResult.FileResult.FileContents.First();
+
                 //从 promptGroupFileContent 分析获得类名
-                var fileContent = File.ReadAllText(@"");
+                var fileContent = fileInfo.Value; //File.ReadAllText(fileInfo.Key);
                 //var entityResultObj = entityResult.ResponseText.GetObject<dynamic>();
                 var className = new Regex(@"public class (\w+)").Match(fileContent).Groups[1].Value;
 
                 var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
                 logger.Append("生成实体 DTO：");
-                logger.Append(entityResult.Result);
+                logger.Append(entityResult.Log);
 
                 #endregion
 
                 #region 更新 SenparcEntities
 
-                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, input, className, entityResult.Context, projectPath, @namespace);
+                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, className, className, entityResult.Context, projectPath, @namespace);
                 logger.Append("更新 SenparcEntities：");
-                logger.Append(entityResult.Result);
+                logger.Append(entityResult.Log);
 
                 #endregion
 

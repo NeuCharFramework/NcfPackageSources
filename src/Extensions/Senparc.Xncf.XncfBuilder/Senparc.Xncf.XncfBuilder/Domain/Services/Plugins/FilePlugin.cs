@@ -1,6 +1,7 @@
 ﻿using Microsoft.SemanticKernel;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -25,7 +26,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             this._iWantToRun = iWantToRun;
         }
 
-        [KernelFunction("CreateFile"), Description("创建实体类")]
+        [KernelFunction, Description("创建实体类")]
         public async Task<FileSaveResult> CreateFile(
              [Description("文件路径")]
             string fileBasePath,
@@ -64,53 +65,62 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
 
-        [KernelFunction("UpdateSenparcEntities"), Description("读取数据库上下文")]
-        public async Task<string> UpdateSenparcEntities(
+        [KernelFunction, Description("读取数据库上下文")]
+        public async Task<FileSaveResult> UpdateSenparcEntities(
             [Description("项目路径")]
             string projectPath,
             [Description("新实体的名字")]
-            string entityName
+            string entityName,
+            [Description("新实体的名字的复数")]
+            string pluralEntityName
             )
         {
+            var result = new FileSaveResult();
 
             var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");
             var databaseFile = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs")[0];
 
-            string fileContent = await File.ReadAllTextAsync(databaseFile);
+            string tempFile = Path.GetTempFileName();
 
-            using (var fs = new FileStream(databaseFile, FileMode.Open))
+            string targetComment = "//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
+            string insertStr = $"        public DbSet<{entityName}> {pluralEntityName} {{ get; set; }}";
+            bool inserted = false;
+
+            using (StreamReader reader = new StreamReader(databaseFile))
             {
-                using (var sw = new StreamWriter(fs))
+                using (StreamWriter writer = new StreamWriter(tempFile))
                 {
-                    //运行 plugin
-                    //var plugins = new Dictionary<string, List<string>>() {
-                    //        {"XncfBuilderPlugin",new(){ "UpdateSenparcEntities" } }
-                    //    };
-
-                    var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
-                    //var finalDir = Path.Combine(pluginDir, "UpdateSenparcEntities");
-                    var skills = _iWantToRun.ImportPluginFromPromptDirectory(pluginDir, "XncfBuilderPlugin");
-
-                    //运行
-                    var request = _iWantToRun.CreateRequest(true, skills.kernelPlugin["UpdateSenparcEntities"]);
-
-                    request.TempAiArguments = new AI.Kernel.Entities.SenparcAiArguments();
-                    request.SetTempContext("Code", fileContent);
-                    request.SetTempContext("EntityName", entityName);
-
-                    var result = await _iWantToRun.RunAsync(request);
-
-                    var newFileContent = result.Output;
-
-                    await sw.WriteAsync(newFileContent);
-                    await sw.FlushAsync();
-
-                    return $"已更新文件：{databaseFile}";
+                    string line;
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        if (!inserted && line.Contains(targetComment))
+                        {
+                            await writer.WriteLineAsync(insertStr);
+                            await writer.WriteLineAsync("");
+                            inserted = true;
+                        }
+                        await writer.WriteLineAsync(line);
+                    }
                 }
             }
 
+            if (inserted)
+            {
+                File.Delete(databaseFile);
+                File.Move(tempFile, databaseFile);
+                Console.WriteLine("插入成功！");
+            }
+            else
+            {
+                File.Delete(tempFile);
+                Console.WriteLine("目标注释未找到，未插入内容。");
+            }
+
+            result.Log += $"已更新文件：{databaseFile}";
+            result.FileContents[databaseFile] = await File.ReadAllTextAsync(databaseFile);
+
+            return result;
+
         }
-
-
     }
 }

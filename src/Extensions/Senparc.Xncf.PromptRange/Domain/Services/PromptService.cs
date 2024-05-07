@@ -7,6 +7,7 @@ using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Entities;
 using Senparc.AI.Kernel.Handlers;
+using Senparc.CO2NET.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -94,7 +95,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (context != null)
             {
-                context.KernelArguments["input"] = input;
+                if (!input.IsNullOrEmpty())
+                {
+                    context.KernelArguments["input"] = input;
+                }
             }
 
             //构建请求对象

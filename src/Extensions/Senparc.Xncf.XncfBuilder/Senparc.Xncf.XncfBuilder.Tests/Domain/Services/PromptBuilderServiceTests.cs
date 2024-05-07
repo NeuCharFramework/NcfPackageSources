@@ -9,6 +9,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -38,9 +39,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
         [TestMethod()]
         public async Task RunPromptTest()
         {
-            var entityName = "MyTestClass";
+            //var entityName = "MyTestClass";
 
-            var input = $"这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：{entityName}，用于管理一组相关联的 Prompt，并统一配置其参数。生成的属性中需要包含常规的 LLM 被调用时的所需的参数，尽可能完整，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等；除此以外，属性还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等常规实体类应该有的参数。";
+            var input = $"创建一个类用作一个单独的领域模型，这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，用于管理一组相关联的 Prompt，并统一配置其参数。生成的属性中需要包含常规的 LLM 被调用时的所需的参数，尽可能完整，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等；除此以外，属性还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等常规实体类应该有的参数。";
 
             var projectPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "XncfBuilderTest");
 
@@ -60,10 +61,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             #region Entity 生成
 
             var setting = Senparc.AI.Config.SenparcAiSetting;
-            var entityResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.EntityClass, input, entityName, null, projectPath, @namespace);
+            var entityResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.EntityClass, input, null, null, projectPath, @namespace);
+
+            var entityName = new Regex(@"public class (\w+)").Match(entityResult.FileResult.FileContents.First().Value).Groups[1].Value;
 
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
-            await Console.Out.WriteLineAsync(entityResult.Result);
+            await Console.Out.WriteLineAsync(entityResult.Log);
 
             var promptGroupFilePath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"{entityName}.cs");
 
@@ -88,7 +91,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{className}Dto.cs")));
 
-            await Console.Out.WriteLineAsync(entityDtoResult.Result);
+            await Console.Out.WriteLineAsync(entityDtoResult.Log);
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
 
             #endregion
@@ -103,7 +106,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
 
             var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
-            Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{className}> {className}es {{ get; set; }}") || newSenparcEntitiesContent.Contains($"public DbSet<{className}> {className}s {{ get; set; }}"));
+            Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{className}> "));
 
             #endregion
         }
