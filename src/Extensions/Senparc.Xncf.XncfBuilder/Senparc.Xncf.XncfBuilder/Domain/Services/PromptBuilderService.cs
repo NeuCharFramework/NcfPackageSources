@@ -138,15 +138,16 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         var fileContext = context;
                         fileContext.KernelArguments["projectPath"] = projectPath;
-                        fileContext.KernelArguments["entityName"] = input;// fileGenerateResult[0].FileName.Split('.')[0]; ;
+                        fileContext.KernelArguments["entityName"] = className;// fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, "", fileContext, null, null, updateFunctionPiple);
-                        responseText = updateSenparcEntitiesResult;
+                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, updateFunctionPiple);
+                        responseText = updateSenparcEntitiesResult.Log;
+                        fileResult = updateSenparcEntitiesResult;
 
                         sb.AppendLine();
                         sb.AppendLine($"[{SystemTime.Now.ToString()}]");
-                        sb.AppendLine(updateSenparcEntitiesResult);
-                        await Console.Out.WriteLineAsync(updateSenparcEntitiesResult);
+                        sb.AppendLine(responseText);
+                        await Console.Out.WriteLineAsync(responseText);
 
                         #endregion
                     }

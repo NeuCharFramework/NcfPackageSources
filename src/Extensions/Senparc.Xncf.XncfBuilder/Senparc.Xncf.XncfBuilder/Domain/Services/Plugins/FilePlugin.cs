@@ -25,7 +25,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             this._iWantToRun = iWantToRun;
         }
 
-        [KernelFunction("CreateFile"), Description("创建实体类")]
+        [KernelFunction, Description("创建实体类")]
         public async Task<FileSaveResult> CreateFile(
              [Description("文件路径")]
             string fileBasePath,
@@ -64,14 +64,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
 
-        [KernelFunction("UpdateSenparcEntities"), Description("读取数据库上下文")]
-        public async Task<string> UpdateSenparcEntities(
+        [KernelFunction, Description("读取数据库上下文")]
+        public async Task<FileSaveResult> UpdateSenparcEntities(
             [Description("项目路径")]
             string projectPath,
             [Description("新实体的名字")]
             string entityName
             )
         {
+            var result = new FileSaveResult();
 
             var databaseModelPath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel");
             var databaseFile = Directory.GetFiles(databaseModelPath, "*SenparcEntities.cs")[0];
@@ -98,14 +99,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     request.SetTempContext("Code", fileContent);
                     request.SetTempContext("EntityName", entityName);
 
-                    var result = await _iWantToRun.RunAsync(request);
+                    var aiResult = await _iWantToRun.RunAsync(request);
 
-                    var newFileContent = result.Output;
+                    var newFileContent = aiResult.Output;
 
                     await sw.WriteAsync(newFileContent);
                     await sw.FlushAsync();
 
-                    return $"已更新文件：{databaseFile}";
+                    result.Log += $"已更新文件：{databaseFile}";
+                    result.FileContents[databaseFile] =newFileContent;
+
+                    return result;
                 }
             }
 

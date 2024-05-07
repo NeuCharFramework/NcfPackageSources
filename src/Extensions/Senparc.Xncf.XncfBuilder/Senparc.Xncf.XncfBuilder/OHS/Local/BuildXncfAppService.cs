@@ -388,7 +388,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 更新 SenparcEntities
 
-                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, input, className, entityResult.Context, projectPath, @namespace);
+                var updateSenparcEntitiesResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.UpdateSenparcEntities, className, className, entityResult.Context, projectPath, @namespace);
                 logger.Append("更新 SenparcEntities：");
                 logger.Append(entityResult.Log);
 
