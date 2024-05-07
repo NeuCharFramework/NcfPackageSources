@@ -90,7 +90,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         if (buildType == PromptBuildType.EntityDtoClass)
                         {
                             //可能会生成转义后的注释
-                            promptResult = promptResult.Replace("&lt;summary&gt;", "<summary>").Replace("&lt;/summary&gt;", "</summary>");
+                            promptResult = promptResult.Replace("&lt;","<").Replace("&gt;", ">");
                         }
 
                         responseText = promptResult;

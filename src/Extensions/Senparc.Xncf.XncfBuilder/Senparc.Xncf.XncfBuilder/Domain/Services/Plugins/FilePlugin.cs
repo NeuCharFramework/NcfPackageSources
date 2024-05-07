@@ -82,7 +82,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
             string tempFile = Path.GetTempFileName();
 
-            string targetComment = "//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
+            string targetComment = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
             string insertStr = $"        public DbSet<{entityName}> {pluralEntityName} {{ get; set; }}";
             bool inserted = false;
 
