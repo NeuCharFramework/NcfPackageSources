@@ -34,16 +34,20 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         /// <summary>
         /// 运行提示内容
         /// </summary>
+        /// <param name="senparcAiSetting"></param>
         /// <param name="buildType"></param>
         /// <param name="input"></param>
+        /// <param name="className"></param>
+        /// <param name="context"></param>
         /// <param name="projectPath"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        public async Task<(string Result, string ResponseText, SenparcAiArguments Context)> RunPromptAsync(ISenparcAiSetting senparcAiSetting, PromptBuildType buildType, string input, string className = null, SenparcAiArguments context = null, string projectPath = null, string @namespace = null)
+        public async Task<(FilePlugin.FileSaveResult FileResult, string Log, string ResponseText, SenparcAiArguments Context)> RunPromptAsync(ISenparcAiSetting senparcAiSetting, PromptBuildType buildType, string input, string className = null, SenparcAiArguments context = null, string projectPath = null, string @namespace = null)
         {
             StringBuilder sb = new StringBuilder();
             context ??= new SenparcAiArguments();
             string responseText = string.Empty;
+            FilePlugin.FileSaveResult fileResult = null;
 
             sb.AppendLine();
             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -111,6 +115,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                             KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(filePlugin.CreateFile)] };
 
                             var createFileResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, functionPiple);
+                            fileResult = createFileResult;
 
                             sb.AppendLine();
                             sb.AppendLine($"[{SystemTime.Now.ToString()}]");
@@ -160,7 +165,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
             }
 
-            return (Result: sb.ToString(), ResponseText: responseText, Context: context);
+            return (FileResult: fileResult, Log: sb.ToString(), ResponseText: responseText, Context: context);
         }
     }
 }

@@ -63,7 +63,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             var entityResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.EntityClass, input, entityName, null, projectPath, @namespace);
 
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
-            await Console.Out.WriteLineAsync(entityResult.Result);
+            await Console.Out.WriteLineAsync(entityResult.Log);
 
             var promptGroupFilePath = Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"{entityName}.cs");
 
@@ -88,7 +88,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 
             Assert.IsTrue(File.Exists(Path.Combine(projectPath, "Domain", "Models", "DatabaseModel", $"Dto/{className}Dto.cs")));
 
-            await Console.Out.WriteLineAsync(entityDtoResult.Result);
+            await Console.Out.WriteLineAsync(entityDtoResult.Log);
             await Console.Out.WriteLineAsync("Run Entity Class Prompt Result");
 
             #endregion

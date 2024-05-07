@@ -34,8 +34,8 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
             var result = await _service.RunPromptAsync(senparcAiSetting, PromptBuildType.EntityClass, input, entityName, null, _projectPath);
 
-            Assert.IsTrue(result.Result.Contains("保存文件"));
-            await Console.Out.WriteLineAsync(result.Result);
+            Assert.IsTrue(result.Log.Contains("保存文件"));
+            await Console.Out.WriteLineAsync(result.Log);
 
             var promptGroupFilePath = Path.Combine(_projectPath, $"{entityName}.cs");
             Assert.IsTrue(File.Exists(promptGroupFilePath));
