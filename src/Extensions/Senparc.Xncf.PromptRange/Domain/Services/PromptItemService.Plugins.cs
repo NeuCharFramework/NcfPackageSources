@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
+using Senparc.CO2NET.Helpers.Serializers;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -105,12 +106,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <summary>
         /// 导出指定的单个靶道，返回文件夹路径
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="promptItem"></param>
         /// <param name="rangePath"></param>
         /// <returns></returns>
-        public async Task<string> ExportPluginWithItemAsync(PromptItem item, string rangePath = null)
+        public async Task<string> ExportPluginWithItemAsync(PromptItem promptItem, string rangePath = null)
         {
-            var range = await _promptRangeService.GetAsync(item.RangeId);
+            var range = await _promptRangeService.GetAsync(promptItem.RangeId);
 
             rangePath ??= this.GetRangePath(range);
 
@@ -124,20 +125,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 {
                     Default = new Default()
                     {
-                        max_tokens = item.MaxToken,
-                        temperature = item.Temperature,
-                        top_p = item.TopP,
-                        presence_penalty = item.PresencePenalty,
-                        frequency_penalty = item.FrequencyPenalty,
-                        stop_sequences = (item.StopSequences ?? "[]").GetObject<List<string>>()
+                        max_tokens = promptItem.MaxToken,
+                        temperature = promptItem.Temperature,
+                        top_p = promptItem.TopP,
+                        presence_penalty = promptItem.PresencePenalty,
+                        frequency_penalty = promptItem.FrequencyPenalty,
+                        stop_sequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>()
                     }
-                }
+                },
+                input_variables = new List<InputVariable>()
             };
+
+            //添加输入对象
+            if (!promptItem.VariableDictJson.IsNullOrEmpty())
+            {
+                Dictionary<string, string> variablesDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(promptItem.VariableDictJson);
+                foreach (var item in variablesDictionary)
+                {
+                    data.input_variables.Add(new InputVariable()
+                    {
+                        Name = item.Key,
+                        Description = item.Key,
+                        Default = ""
+                    });
+                }
+            }
 
             #endregion
 
             //  当前 plugin 文件夹目录，靶道名/别名
-            var curPluginPath = Path.Combine(rangePath, item.NickName ?? item.FullVersion);
+            var curPluginPath = Path.Combine(rangePath, promptItem.NickName ?? promptItem.FullVersion);
             if (!Directory.Exists(curPluginPath))
             {
                 Directory.CreateDirectory(curPluginPath);
@@ -174,7 +191,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 txtFs.SetLength(0); // 清空文件内容
                 await using (var jsonSw = new StreamWriter(txtFs, Encoding.UTF8))
                 {
-                    await jsonSw.WriteLineAsync(item.Content);
+                    await jsonSw.WriteLineAsync(promptItem.Content);
                 }
             }
 
@@ -235,6 +252,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             public int schema { get; set; }
             public string description { get; set; }
             public ExecutionSettings execution_settings { get; set; }
+
+            public List<InputVariable> input_variables { get; set; }
+        }
+
+        class InputVariable
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Default { get; set; }
         }
 
         #endregion
@@ -321,8 +347,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                         string text = await reader.ReadToEndAsync();
 
-
-                        var executionSettings = text.GetObject<Root>().execution_settings!;
+                        var rootConfig = text.GetObject<Root>();
+                        var executionSettings = rootConfig.execution_settings!;
+                        var variableDictJson = rootConfig.input_variables != null && rootConfig.input_variables.Count > 0 
+                            ? rootConfig.input_variables.ToDictionary(z => z.Name, z => "").ToJson() 
+                            : null;
 
                         promptItem.UpdateModelParam(
                             topP: executionSettings.Default.top_p,
@@ -330,7 +359,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             temperature: executionSettings.Default.temperature,
                             presencePenalty: executionSettings.Default.presence_penalty,
                             frequencyPenalty: executionSettings.Default.frequency_penalty,
-                            stopSequences: executionSettings.Default.stop_sequences.ToJson()
+                            stopSequences: executionSettings.Default.stop_sequences.ToJson(),
+                            variableDictJson: variableDictJson
                         );
                     }
 
