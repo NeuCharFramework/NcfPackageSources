@@ -320,9 +320,10 @@ public class PromptItem : EntityBase<int>
     /// <param name="frequencyPenalty"></param>
     /// <param name="presencePenalty"></param>
     /// <param name="stopSequences"></param>
+    /// <param name="variableDictJson"></param>
     /// <returns></returns>
     public PromptItem UpdateModelParam(float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-        string stopSequences)
+        string stopSequences,string variableDictJson)
     {
         TopP = topP;
         Temperature = temperature;
@@ -330,6 +331,8 @@ public class PromptItem : EntityBase<int>
         FrequencyPenalty = frequencyPenalty;
         PresencePenalty = presencePenalty;
         StopSequences = stopSequences == "[]" ? null : stopSequences;
+
+        VariableDictJson = variableDictJson;
 
         return this;
     }
