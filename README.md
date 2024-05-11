@@ -8,9 +8,17 @@
 |  Extensions  | [![Build Status](https://mysenparc.visualstudio.com/NCF-and-PackageResources/_apis/build/status/NeuCharFramework.NcfPackageSources?branchName=master)](https://mysenparc.visualstudio.com/NCF-and-PackageResources/_build/latest?definitionId=48&branchName=master)
 
 
-## 说明
+## 项目介绍
+
 本项目为 [NCF（NeuCharFramework）](https://github.com/NeuCharFramework/NCF) 模板官方包的核心基础库源码。
 
+当您使用 [NCF](https://github.com/NeuCharFramework/NCF) 模板开发项目时，核心基础库将为您提供一系列基础能力的支撑，通常情况下您无需关心这些库的具体实现，只需要引用即可。
+
+当您需要了解、修改或调试相关基础库时，您可以通过本项目获取源码。
+
+[NCF](https://github.com/NeuCharFramework/NCF) 文档地址：[https://www.ncf.pub/docs/](https://www.ncf.pub/docs/)。
+
+## 文件夹说明
 
 |    文件夹     |    说明         |
 |--------------|-----------------|
