@@ -85,12 +85,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
 
-                        var promptResult = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, input, context, plugins, pluginDir);
+                        var promptResult = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, input, context, plugins, null);
 
                         if (buildType == PromptBuildType.EntityDtoClass)
                         {
                             //可能会生成转义后的注释
-                            promptResult = promptResult.Replace("&lt;","<").Replace("&gt;", ">");
+                            promptResult = promptResult.Replace("&lt;", "<").Replace("&gt;", ">");
                         }
 
                         responseText = promptResult;
@@ -121,7 +121,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                             KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(filePlugin.CreateFile)] };
 
-                            var createFileResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, functionPiple);
+                            var createFileResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, null, null, functionPiple);
                             fileResult = createFileResult;
 
                             sb.AppendLine();
@@ -140,7 +140,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
                         context.KernelArguments["input"] = className;
                         plugins["XncfBuilderPlugin"] = new List<string>() { "Pluralize" };
-                        var pluralEntityName = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, null, context, plugins, pluginDir);
+                        var pluralEntityName = await _promptService.GetPromptResultAsync<string>(senparcAiSetting, null, context, plugins, null);
 
                         pluralEntityName = pluralEntityName.Trim();
 
@@ -159,7 +159,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         fileContext.KernelArguments["entityName"] = className;// fileGenerateResult[0].FileName.Split('.')[0]; ;
                         fileContext.KernelArguments["pluralEntityName"] = pluralEntityName;// fileGenerateResult[0].FileName.Split('.')[0]; ;
 
-                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, updateFunctionPiple);
+                        var updateSenparcEntitiesResult = await _promptService.GetPromptResultAsync<FilePlugin.FileSaveResult>(senparcAiSetting, "", fileContext, null, null, null, null, updateFunctionPiple);
                         responseText = updateSenparcEntitiesResult.Log;
                         fileResult = updateSenparcEntitiesResult;
 

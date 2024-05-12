@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.PromptRange;
@@ -66,6 +67,22 @@ public class PromptRange : EntityBase<int>
         this.Alias = alias;
 
         return this;
+    }
+
+    /// <summary>
+    /// 当存在 <see cref="Alias"/> 时返回此属性，否则使用 <see cref="RangeName"/>
+    /// </summary>
+    /// <returns></returns>
+    public string GetAvailableName()
+    {
+        if (!this.Alias.IsNullOrEmpty())
+        {
+            return this.Alias;
+        }
+        else
+        {
+            return this.RangeName;
+        }
     }
 
     #endregion

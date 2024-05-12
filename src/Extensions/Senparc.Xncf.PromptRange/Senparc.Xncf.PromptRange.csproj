@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.6.4.1-preview1</Version>
+    <Version>0.6.4.12-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -53,12 +53,16 @@
     <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
     <EmbeddedResource Include="wwwroot\**\*" />
+    <Compile Remove="Domain\PromptPlugins\**" />
     <Compile Remove="objForNcf\**" />
     <Compile Remove="obj\**" />
+    <Content Remove="Domain\PromptPlugins\**" />
     <Content Remove="objForNcf\**" />
     <Content Remove="obj\**" />
+    <EmbeddedResource Remove="Domain\PromptPlugins\**" />
     <EmbeddedResource Remove="objForNcf\**" />
     <EmbeddedResource Remove="obj\**" />
+    <None Remove="Domain\PromptPlugins\**" />
     <None Remove="objForNcf\**" />
     <None Remove="obj\**" />
     <Content Remove="wwwroot\css\Admin\PromptRange\index.css" />
@@ -76,7 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Models\DatabaseModel\Mapping\" />
-    <Folder Include="Domain\PromptPlugins\" />
     <Folder Include="Domain\Migrations\" />
     <Folder Include="wwwroot\image\Admin\PromptRange\" />
   </ItemGroup>
