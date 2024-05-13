@@ -6,8 +6,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
+using Microsoft.SemanticKernel;
+using Newtonsoft.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Senparc.Xncf.PromptRange;
+namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 /// <summary>
 /// PromptItem
@@ -34,7 +39,8 @@ public class PromptItem : EntityBase<int>
 
     #region 模型参数
 
-    [Required] public int ModelId { get; private set; }
+    [Required] 
+    public int ModelId { get; private set; }
 
     /// <summary>
     /// TopP
@@ -377,5 +383,47 @@ public class PromptItem : EntityBase<int>
         VariableDictJson = dto.VariableDictJson;
 
         return this;
+    }
+
+    /// <summary>
+    /// 从 <see cref="VariableDictJson"/> 获取 <see cref="InputVariable"/> 对象
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<InputVariable> GetInputValiableObject()
+    {
+        var inputVariable = new List<InputVariable>();
+        if (this.VariableDictJson.IsNullOrEmpty())
+        {
+            return inputVariable;
+        }
+
+        Dictionary<string, string> variablesDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(this.VariableDictJson);
+        foreach (var item in variablesDictionary)
+        {
+            inputVariable.Add(new InputVariable()
+            {
+                Name = item.Key,
+                Description = item.Key,
+                Default = ""
+            });
+        }
+
+        return inputVariable;
+    }
+
+    /// <summary>
+    /// 当存在 <see cref="NickName"/> 时返回此属性，否则使用 <see cref="FullVersion"/>
+    /// </summary>
+    /// <returns></returns>
+    public string GetAvailableName()
+    {
+        if (!this.NickName.IsNullOrEmpty())
+        {
+            return this.NickName;
+        }
+        else
+        {
+            return this.FullVersion;
+        }
     }
 }

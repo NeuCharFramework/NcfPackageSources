@@ -10,6 +10,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;

@@ -7,11 +7,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.SemanticKernel;
 using Newtonsoft.Json;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Helpers.Serializers;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -133,23 +135,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         stop_sequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>()
                     }
                 },
-                input_variables = new List<InputVariable>()
+                input_variables = new List<PromptInputVariable>()
             };
 
             //添加输入对象
-            if (!promptItem.VariableDictJson.IsNullOrEmpty())
-            {
-                Dictionary<string, string> variablesDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(promptItem.VariableDictJson);
-                foreach (var item in variablesDictionary)
-                {
-                    data.input_variables.Add(new InputVariable()
-                    {
-                        Name = item.Key,
-                        Description = item.Key,
-                        Default = ""
-                    });
-                }
-            }
+            var inputVarialbes = promptItem.GetInputValiableObject();
+            data.input_variables.AddRange(inputVarialbes.Select(z => new PromptInputVariable(z)));
 
             #endregion
 
@@ -253,14 +244,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             public string description { get; set; }
             public ExecutionSettings execution_settings { get; set; }
 
-            public List<InputVariable> input_variables { get; set; }
+            public List<PromptInputVariable> input_variables { get; set; }
         }
 
-        class InputVariable
+        class PromptInputVariable
         {
             public string Name { get; set; }
             public string Description { get; set; }
             public string Default { get; set; }
+
+            public PromptInputVariable(InputVariable inputVariable)
+            {
+                Name = inputVariable.Name;
+                Description = inputVariable.Description;
+                Default = inputVariable.Default?.ToString();
+                //TODO: 添加更多
+            }
         }
 
         #endregion
@@ -349,8 +348,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                         var rootConfig = text.GetObject<Root>();
                         var executionSettings = rootConfig.execution_settings!;
-                        var variableDictJson = rootConfig.input_variables != null && rootConfig.input_variables.Count > 0 
-                            ? rootConfig.input_variables.ToDictionary(z => z.Name, z => "").ToJson() 
+                        var variableDictJson = rootConfig.input_variables != null && rootConfig.input_variables.Count > 0
+                            ? rootConfig.input_variables.ToDictionary(z => z.Name, z => "").ToJson()
                             : null;
 
                         promptItem.UpdateModelParam(

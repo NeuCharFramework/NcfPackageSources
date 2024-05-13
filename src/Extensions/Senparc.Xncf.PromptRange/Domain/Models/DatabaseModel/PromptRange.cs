@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 
-namespace Senparc.Xncf.PromptRange;
+namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 [Table(Register.DATABASE_PREFIX + nameof(PromptRange))] /*必须添加前缀，防止全系统中发生冲突*/
 [Serializable]
@@ -32,9 +33,12 @@ public class PromptRange : EntityBase<int>
 
     #region CTOR
 
-    public PromptRange(string rangeName)
+    public PromptRange(string rangeName, string alias)
     {
         RangeName = rangeName;
+        Alias = alias;
+        AddTime = SystemTime.Now.DateTime;
+        LastUpdateTime = SystemTime.Now.DateTime;
     }
 
     // public PromptRange(string alias, string rangeName, string expectedResultsJson)
@@ -66,6 +70,22 @@ public class PromptRange : EntityBase<int>
         this.Alias = alias;
 
         return this;
+    }
+
+    /// <summary>
+    /// 当存在 <see cref="Alias"/> 时返回此属性，否则使用 <see cref="RangeName"/>
+    /// </summary>
+    /// <returns></returns>
+    public string GetAvailableName()
+    {
+        if (!this.Alias.IsNullOrEmpty())
+        {
+            return this.Alias;
+        }
+        else
+        {
+            return this.RangeName;
+        }
     }
 
     #endregion

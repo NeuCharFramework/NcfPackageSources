@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {

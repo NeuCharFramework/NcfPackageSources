@@ -9,7 +9,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
-namespace Senparc.Xncf.PromptRange.Models
+namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
     /// LlmModel 数据库实体

@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel;
 using Microsoft.AspNetCore.Builder;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.Models
 {

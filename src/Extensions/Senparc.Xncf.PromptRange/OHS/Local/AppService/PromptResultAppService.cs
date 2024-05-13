@@ -41,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(
                 async (response, logger) =>
                 {
-                    PromptResult result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
+                    var result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
 
                     // 更新绑定的 item 的分数
                     await _promptResultService.UpdateEvalScoreAsync(result.PromptItemId);

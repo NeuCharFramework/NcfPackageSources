@@ -1,4 +1,5 @@
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {

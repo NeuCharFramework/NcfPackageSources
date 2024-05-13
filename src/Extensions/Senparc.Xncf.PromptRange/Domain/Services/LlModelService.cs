@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Senparc.AI;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {

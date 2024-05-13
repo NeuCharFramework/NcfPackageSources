@@ -1,4 +1,5 @@
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {

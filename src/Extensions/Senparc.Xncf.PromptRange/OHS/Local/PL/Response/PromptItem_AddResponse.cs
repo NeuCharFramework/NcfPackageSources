@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 

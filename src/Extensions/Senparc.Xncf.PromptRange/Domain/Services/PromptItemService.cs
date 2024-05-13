@@ -12,6 +12,7 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
