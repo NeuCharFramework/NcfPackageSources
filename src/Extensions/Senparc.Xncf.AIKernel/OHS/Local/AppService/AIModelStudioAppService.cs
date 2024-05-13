@@ -21,41 +21,41 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             this._aIModelService = aIModelService;
         }
 
-        [FunctionRender("测试 AI 模型", "测试已经设置的模型", typeof(Register))]
-        public async Task<StringAppResponse> RunModelAsync(AIModelStudioRequest_RunModelAsync request)
-        {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
-            {
-                await request.LoadData(ServiceProvider);//加载数据
+        //[FunctionRender("测试 AI 模型", "测试已经设置的模型", typeof(Register))]
+        //public async Task<StringAppResponse> RunModelAsync(AIModelStudioRequest_RunModelAsync request)
+        //{
+        //    return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+        //    {
+        //        await request.LoadData(ServiceProvider);//加载数据
 
-                var msg = new StringBuilder();
+        //        var msg = new StringBuilder();
 
-                var selectedItems = request.Model.Items.Where(z => request.Model.SelectedValues.Contains(z.Value));
+        //        var selectedItems = request.Model.Items.Where(z => request.Model.SelectedValues.Contains(z.Value));
 
-                if (selectedItems.Count() == 0)
-                {
-                    throw new SenparcAiException("请至少选择一个模型！");
-                }
+        //        if (selectedItems.Count() == 0)
+        //        {
+        //            throw new SenparcAiException("请至少选择一个模型！");
+        //        }
 
-                foreach (var selectedItem in selectedItems)
-                {
-                    msg.AppendLine($"正在测试模型：{selectedItem.Value}");
-                    try
-                    {
-                        var aiResult = await _aIModelService.RunModelsync(selectedItem.BindData as SenparcAiSetting, request.Prompt);
-                        msg.AppendLine($"模型测试成功，返回信息：{aiResult.Output}");
-                    }
-                    catch (Exception ex)
-                    {
-                        msg.AppendLine($"模型测试失败：{ex.Message}");
-                    }
-                    msg.AppendLine("--------------------------");
-                }
+        //        foreach (var selectedItem in selectedItems)
+        //        {
+        //            msg.AppendLine($"正在测试模型：{selectedItem.Value}");
+        //            try
+        //            {
+        //                var aiResult = await _aIModelService.RunModelsync(selectedItem.BindData as SenparcAiSetting, request.Prompt);
+        //                msg.AppendLine($"模型测试成功，返回信息：{aiResult.Output}");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                msg.AppendLine($"模型测试失败：{ex.Message}");
+        //            }
+        //            msg.AppendLine("--------------------------");
+        //        }
 
-                response.Data = msg.ToString().Replace("\r", "<br />").Replace("\n", "");
-                logger.Append($"测试完成，返回信息：\r\n{msg.ToString()}");
-                return null;
-            });
-        }
+        //        response.Data = msg.ToString().Replace("\r", "<br />").Replace("\n", "");
+        //        logger.Append($"测试完成，返回信息：\r\n{msg.ToString()}");
+        //        return null;
+        //    });
+        //}
     }
 }
