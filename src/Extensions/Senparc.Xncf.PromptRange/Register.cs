@@ -18,6 +18,7 @@ using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -109,7 +110,7 @@ namespace Senparc.Xncf.PromptRange
 
             services.AddAutoMapper(z =>
             {
-                z.CreateMap<PromptRange, PromptRangeDto>().ReverseMap();
+                z.CreateMap<Domain.Models.DatabaseModel.PromptRange, PromptRangeDto>().ReverseMap();
                 z.CreateMap<PromptItem, PromptItemDto>().ReverseMap();
                 z.CreateMap<PromptResult, PromptResultDto>().ReverseMap();
                 // z.CreateMap<LlModel, LlModelDto>().ReverseMap();

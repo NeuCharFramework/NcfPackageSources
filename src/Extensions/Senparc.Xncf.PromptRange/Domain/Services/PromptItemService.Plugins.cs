@@ -13,6 +13,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Helpers.Serializers;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services

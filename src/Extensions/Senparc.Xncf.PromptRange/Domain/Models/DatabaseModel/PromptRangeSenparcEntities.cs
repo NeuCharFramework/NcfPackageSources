@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.XncfBase.Database;
 
-namespace Senparc.Xncf.PromptRange.Models
+namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     public class PromptRangeSenparcEntities : XncfDatabaseDbContext
     {

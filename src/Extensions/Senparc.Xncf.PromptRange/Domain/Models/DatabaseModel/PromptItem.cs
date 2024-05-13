@@ -12,7 +12,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections.Generic;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Senparc.Xncf.PromptRange;
+namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 /// <summary>
 /// PromptItem

@@ -19,6 +19,7 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 

@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Senparc.Xncf.PromptRange.Models
+namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
     /// PromptResult 数据库实体

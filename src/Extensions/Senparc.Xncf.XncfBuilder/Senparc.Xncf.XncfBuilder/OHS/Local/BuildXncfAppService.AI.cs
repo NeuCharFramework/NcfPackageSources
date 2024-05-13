@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
@@ -30,6 +31,36 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+                var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
+
+                #region PromptRange 是否已经初始化
+                if (request.UseDatabasePrompt.SelectedValues.FirstOrDefault() == "1")
+                {
+                    var promptRangeRegister = new Xncf.PromptRange.Register();
+                    var promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
+
+                    if (promptRangeModule == null)
+                    {
+                        //开始安装模块（创建数据库相关表）
+                        await promptRangeRegister.InstallOrUpdateAsync(ServiceProvider, Ncf.Core.Enums.InstallOrUpdate.Install);
+
+                        await this._xncfModuleServiceExtension.InstallModuleAsync(promptRangeRegister.Uid);
+
+                        promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
+                    }
+
+                    if (promptRangeModule.State != Ncf.Core.Enums.XncfModules_State.开放)
+                    {
+                        promptRangeModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);
+                        await _xncfModuleService.SaveObjectAsync(promptRangeModule);
+                    }
+
+                    //检查是否已经初始化
+                    var promptRangeInitResult = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", false, aiModelSelected);
+                    logger.Append("PromptRange 初始化：" + promptRangeInitResult);
+                }
+                #endregion
+
 
                 var input = request.Requirement;
 
@@ -43,7 +74,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 var @namespace = Path.GetFileName(projectPath) + ".Models.DatabaseModel";
 
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var aiModelSelected = request.AIModel.SelectedValues.First();
                 if (aiModelSelected != "Default")
                 {
                     int.TryParse(aiModelSelected, out int aiModelId);
@@ -98,7 +128,22 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         //初始化 PromptRange 方法（需要先确保已经安装）
 
 
+        [FunctionRender("初始化 Prompt", "初始化所有 AI 代码生成需要的 Prompt", typeof(Register))]
+        public async Task<StringAppResponse> InitPrompt(BuildXncf_InitPromptRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var needOverride = request.Override.SelectedValues.Contains("1");
+                var aiModel = request.AIModel.SelectedValues.FirstOrDefault();
 
+                var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
+                var log = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", needOverride, aiModel);
+                logger.Append(log);
 
+                logger.SaveLogs("InitPrompt");
+
+                return log;
+            });
+        }
     }
 }
