@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
@@ -28,6 +29,9 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
+            try
+            {
+
             List<ModelItem> settings =
             [
                 //从 appsettings.json 读取
@@ -60,6 +64,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             });
 
             await base.LoadData(serviceProvider);
+
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+            }
         }
 
         class ModelItem
