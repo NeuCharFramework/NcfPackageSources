@@ -39,7 +39,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         [FunctionRender("Add-Migration 命令", "可视化完成多数据库的 add-migration 命令，使用 Code First 更新数据库。注意：根据计算机配置和数据库情况，执行过程可能在30-60秒不等，请耐心等待。", typeof(Register))]
-        public async Task<StringAppResponse> Migration(DatabaseMigrations_MigrationRequest request)
+        public async Task<StringAppResponse> AddMigration(DatabaseMigrations_MigrationRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
@@ -59,7 +59,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 //进入项目目录
                 var projectPath = request.GetProjectPath(request);
-                commandTexts.Add(@$"cd {projectPath}");
+                commandTexts.Add(@$"cd ""{projectPath}""");
 
                 //执行迁移
                 foreach (var dbType in request.DatabaseTypes.SelectedValues)
@@ -80,9 +80,21 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         dbContextName += dbTypeSuffix;
                     }
 
+                    Func<string, string> removeFileName = path =>
+                    {
+                        if (path.EndsWith(".csproj"))
+                        {
+                            return Path.GetDirectoryName(path);
+                        }
+                        else
+                        {
+                            return path;
+                        }
+                    };
+
                     //把 request.DatabasePlantPath 中独立存在的 \ 替换为 \\
-                    var databasePlantPath = request.DatabasePlantPath.Replace("\\", "\\\\");
-                    var migrationDirFinal = migrationDir.Replace("\\", "\\\\");
+                    var databasePlantPath = removeFileName(request.DatabasePlantPath.Replace("\\", "\\\\"));
+                    var migrationDirFinal = removeFileName(migrationDir.Replace("\\", "\\\\"));
 
                     var migrationsCmd = $"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{databasePlantPath}\" -o \"{migrationDirFinal}\"{outputVerbose}";
 
