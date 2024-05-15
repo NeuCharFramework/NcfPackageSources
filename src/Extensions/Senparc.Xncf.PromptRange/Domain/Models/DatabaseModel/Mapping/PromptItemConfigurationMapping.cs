@@ -7,30 +7,23 @@ using Microsoft.EntityFrameworkCore;
 using System.Xml;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.XncfBase.Attributes;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Senparc.Ncf.Database.Sqlite;
+using System.Reflection.Emit;
 
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
 {
-    internal class PromptPromptItemConfigurationMapping : ConfigurationMappingWithIdBase<PromptItem, int>
+    [XncfAutoConfigurationMapping]
+    public class PromptPromptItemConfigurationMapping : ConfigurationMappingWithIdBase<PromptItem, int>
     {
         public override void Configure(EntityTypeBuilder<PromptItem> builder)
         {
-            //if (builder..ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
-            //{
-            //    modelBuilder.Entity<MyTableEntity>(b =>
-            //    {
-            //        b.Property(e => e.OneDecimalProperty).HasConversion<double>();
-            //        b.Property(e => e.AnotherDecimalProperty).HasConversion<double>();
-            //    });
-            //}
-
-            //builder.Property(e => e.EvalAvgScore)
-            //       .HasConversion<decimal>()
-            //       .HasColumnType("NUMERIC");
-
-            //builder.Property(e => e.EvalMaxScore)
-            //       .HasConversion<decimal>()
-            //       .HasColumnType("NUMERIC");
-
+            if (Senparc.Ncf.Core.Models.DatabaseConfigurationFactory.Instance.Current is SqliteDatabaseConfiguration)
+            {
+                builder.Property(e => e.EvalAvgScore).HasConversion<double>();
+                builder.Property(e => e.EvalMaxScore).HasConversion<double>();
+            }
 
             base.Configure(builder);
         }
