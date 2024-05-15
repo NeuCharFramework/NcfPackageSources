@@ -9,9 +9,41 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.OHS.Local.AppService;
+using Senparc.AI.Exceptions;
+using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
+    public static class BuildXncfRequestHelper
+    {
+        public static async Task LoadAiModelData(IServiceProvider serviceProvider, SelectionList aiModel)
+        {
+            var defaultSetting = Senparc.AI.Config.SenparcAiSetting;
+            try
+            {
+                aiModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：{defaultSetting.Endpoint}）", "通过系统默认配置的固定 AI 模型信息", true));
+            }
+            catch (SenparcAiException ex)
+            {
+                //Endpoint 可能未配置
+
+                aiModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：未检测到，如需选择此选项，请先在 appsettings.json 中完成模型配置", "通过系统默认配置的固定 AI 模型信息", true));
+            }
+
+            var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
+            var aiModels = await aiModelAppService.GetListAsync(new AIKernel.OHS.Local.PL.AIModel_GetListRequest() { Show = true });
+
+            if (aiModels.Data != null)
+            {
+                foreach (var item in aiModels.Data)
+                {
+                    aiModel.Items.Add(new SelectionItem(item.Id.ToString(), $"{item.DeploymentName}({item.ModelId}) - {item.Endpoint}", item.Note));
+                }
+            }
+        }
+    }
+
+
     public class BuildXncf_CreateDatabaseEntityRequest : FunctionAppRequestBase
     {
         [Required]
@@ -49,19 +81,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             var newItems = FunctionHelper.LoadXncfProjects(true, "Senparc.Areas.Admin");
             newItems.ForEach(z => InjectDomain.Items.Add(z));
 
-            var defaultSetting = Senparc.AI.Config.SenparcAiSetting;
-            AIModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：{defaultSetting.Endpoint}）", "通过系统默认配置的固定 AI 模型信息", true));
-
-            var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
-            var aiModels = await aiModelAppService.GetListAsync(new AIKernel.OHS.Local.PL.AIModel_GetListRequest() { Show = true });
-
-            if (aiModels.Data != null)
-            {
-                foreach (var item in aiModels.Data)
-                {
-                    AIModel.Items.Add(new SelectionItem(item.Id.ToString(), $"{item.DeploymentName}({item.ModelId}) - {item.Endpoint}", item.Note));
-                }
-            }
+            //载入 AI 模型
+            await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModel);
 
             await base.LoadData(serviceProvider);
         }
@@ -82,19 +103,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            var defaultSetting = Senparc.AI.Config.SenparcAiSetting;
-            AIModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：{defaultSetting.Endpoint}）", "通过系统默认配置的固定 AI 模型信息", true));
-
-            var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
-            var aiModels = await aiModelAppService.GetListAsync(new AIKernel.OHS.Local.PL.AIModel_GetListRequest() { Show = true });
-
-            if (aiModels.Data != null)
-            {
-                foreach (var item in aiModels.Data)
-                {
-                    AIModel.Items.Add(new SelectionItem(item.Id.ToString(), $"{item.DeploymentName}({item.ModelId}) - {item.Endpoint}", item.Note));
-                }
-            }
+            //载入 AI 模型
+            await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModel);
 
             await base.LoadData(serviceProvider);
         }

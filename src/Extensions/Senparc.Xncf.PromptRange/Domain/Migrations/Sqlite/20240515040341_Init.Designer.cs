@@ -11,7 +11,7 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(PromptRangeSenparcEntities_Sqlite))]
-    [Migration("20240514091948_Init")]
+    [Migration("20240515040341_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -115,13 +115,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("EvalAvgScore")
+                    b.Property<double>("EvalAvgScore")
                         .HasMaxLength(3)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("EvalMaxScore")
+                    b.Property<double>("EvalMaxScore")
                         .HasMaxLength(3)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("REAL");
 
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("TEXT");

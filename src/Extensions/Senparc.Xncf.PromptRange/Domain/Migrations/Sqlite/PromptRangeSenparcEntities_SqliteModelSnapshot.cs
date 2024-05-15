@@ -112,13 +112,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("EvalAvgScore")
+                    b.Property<double>("EvalAvgScore")
                         .HasMaxLength(3)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("REAL");
 
-                    b.Property<decimal>("EvalMaxScore")
+                    b.Property<double>("EvalMaxScore")
                         .HasMaxLength(3)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("REAL");
 
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("TEXT");

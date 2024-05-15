@@ -17,6 +17,36 @@ namespace Senparc.Xncf.PromptRange.Models
         public PromptRangeSenparcEntities_Sqlite(DbContextOptions<PromptRangeSenparcEntities_Sqlite> dbContextOptions) : base(dbContextOptions)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+            {
+                modelBuilder.Entity<PromptItem>(b =>
+                {
+                    b.Property(e => e.EvalAvgScore).HasConversion<double>();
+                    b.Property(e => e.EvalMaxScore).HasConversion<double>();
+                });
+            }
+
+            //if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+            //{
+            //    foreach (Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+            //    {
+            //        foreach (Microsoft.EntityFrameworkCore.Metadata.IMutableProperty property in entityType.GetProperties())
+            //        {
+            //            Type propertyType = Nullable.GetUnderlyingType(property.ClrType) ?? property.ClrType;
+            //            if (propertyType == typeof(Decimal))
+            //            {
+            //                property.SetProviderClrType(typeof(Double));//Decimals are treated as doubles
+            //            }
+            //        }
+            //    }
+            //}
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 
 
