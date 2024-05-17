@@ -57,7 +57,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Description("后续操作||指定生成数据库实体后的后续操作")]
         public SelectionList MoreActions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("BuildDto","创建 DTO","创建 DTO 对象（已强制生成）",true),
-                 new SelectionItem("BuildMigration","直接生成数据库迁移信息","使用 EF Core Migration 生成迁移信息（建议查看后进行）",false),
+                 new SelectionItem("BuildMigration","直接生成数据库迁移信息","使用 EF Core Migration 生成迁移信息（建议查看后进行）",true),
                  new SelectionItem("CreateRepository","创建 Repository","创建和实体匹配的 Repository",false),
                  new SelectionItem("CreateService","创建 Service","创建和实体匹配的 Service",false),
                  new SelectionItem("CreateAppService","创建 AppService","创建和实体匹配的 Service",false)
@@ -69,9 +69,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
         });
 
-        [Description("使用数据库 Prompt||指定 Prompt 来源")]
+        [Description("使用数据库 Prompt||指定 Prompt 来源。如果选中，系统将自动安装 PromptRange 模块并初始化 Prompt，全程无需任何人为干预；如不选中此选项，请在运行项目下 Domain/PromptPlugins/ 文件夹下存放 XncfBuilderPlugin 文件夹及所有文件内容。")]
         public SelectionList UseDatabasePrompt { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","是","如果选中，系统将自动安装 PromptRange 模块并初始化 Prompt，全程无需任何人为干预；如不选中此选项，请在运行项目下 Domain/PromptPlugins/ 文件夹下存放 XncfBuilderPlugin 文件夹及所有文件内容。",true)
+                 new SelectionItem("1","是","",true)
         });
 
 

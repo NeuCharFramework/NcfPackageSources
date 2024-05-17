@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
@@ -94,20 +97,23 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 logger.Append("生成实体：");
                 logger.Append(entityResult.Log);
 
-                #endregion
-
-                #region 生成实体 DTO
-
                 var fileInfo = entityResult.FileResult.FileContents.First();
 
                 //从 promptGroupFileContent 分析获得类名
                 var fileContent = fileInfo.Value; //File.ReadAllText(fileInfo.Key);
-                //var entityResultObj = entityResult.ResponseText.GetObject<dynamic>();
+                                                  //var entityResultObj = entityResult.ResponseText.GetObject<dynamic>();
                 var className = new Regex(@"public class (\w+)").Match(fileContent).Groups[1].Value;
 
-                var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
-                logger.Append("生成实体 DTO：");
-                logger.Append(entityResult.Log);
+                #endregion
+
+                #region 生成实体 DTO
+
+                if (request.MoreActions.IsSelected("BuildDto"))
+                {
+                    var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
+                    logger.Append("生成实体 DTO：");
+                    logger.Append(entityResult.Log);
+                }
 
                 #endregion
 
@@ -117,6 +123,73 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 logger.Append("更新 SenparcEntities：");
                 logger.Append(entityResult.Log);
 
+                #endregion
+
+                #region 进行 Migration
+                if (request.MoreActions.IsSelected("BuildMigration"))
+                {
+                    await Console.Out.WriteLineAsync("进入 Migration，可能耗时较长，请等待");
+
+                    #region 需要把 DatabasePlant 进行文件附加
+                    var databasePlantPath = Path.GetFullPath(Path.Combine(projectPath, "..", "Senparc.Web.DatabasePlant"));
+                    var databasePlantCsprojPath = Path.Combine(databasePlantPath, "Senparc.Web.DatabasePlant.csproj");
+                    var projectFolder = Path.GetFileName(projectPath.TrimEnd(Path.DirectorySeparatorChar));
+                    string newReferencePath = @$"..\{projectFolder}\{projectFolder}.csproj";
+                    XDocument doc = XDocument.Load(databasePlantCsprojPath);
+
+                    // 获取 <ItemGroup> 元素  
+                    var itemGroups = doc.Root.Elements("ItemGroup");
+
+                    // 删除所有的 ProjectReference  
+                    foreach (var itemGroup in itemGroups)
+                    {
+                        var projectReferences = itemGroup.Elements("ProjectReference").ToList();
+                        foreach (var reference in projectReferences)
+                        {
+                            reference.Remove();
+                        }
+                    }
+
+                    // 添加新的 ProjectReference  
+                    XElement newProjectReference = new XElement("ProjectReference", new XAttribute("Include", newReferencePath));
+                    var itemGroupToAdd = itemGroups.FirstOrDefault() ?? new XElement("ItemGroup");
+                    itemGroupToAdd.Add(newProjectReference);
+
+                    if (itemGroupToAdd.Parent == null)
+                    {
+                        doc.Root.Add(itemGroupToAdd);
+                    }
+
+                    // 保存修改后的 .csproj 文件  
+                    doc.Save(databasePlantCsprojPath);
+
+                    #endregion
+
+                    var requestObj = new DatabaseMigrations_MigrationRequest()
+                    {
+                        //CustomProjectPath = projectPath,
+                        DatabasePlantPath = databasePlantPath,
+                        DbContextName = null,
+                        MigrationName = $"Add_{className}_Entity",
+                    };
+                    //载入数据
+                    await requestObj.LoadData(this.ServiceProvider);
+                    //指定项目路径
+                    requestObj.ProjectPath.SelectedValues = new[] { projectPath };
+                    //选中所有数据库
+                    requestObj.DatabaseTypes.SelectedValues = requestObj.DatabaseTypes.Items.Select(z => z.Value).ToArray();
+                    //选中输出详情
+                    requestObj.OutputVerbose.SelectedValues = new[] { requestObj.OutputVerbose.Items.First().Value };
+
+                    var databaseMigrationsAppService = base.ServiceProvider.GetRequiredService<DatabaseMigrationsAppService>();
+                    var migrationResult = await databaseMigrationsAppService.AddMigration(requestObj);
+
+                    logger.Append("");
+                    logger.Append("Migration：");
+                    logger.Append("是否成功：" + migrationResult.Success);
+                    logger.Append("消息：" + (migrationResult.Success == true ? migrationResult.Data : $"{migrationResult.Data} / {migrationResult.ErrorMessage}"));
+                    logger.Append("");
+                }
                 #endregion
 
                 return logger.ToString();
