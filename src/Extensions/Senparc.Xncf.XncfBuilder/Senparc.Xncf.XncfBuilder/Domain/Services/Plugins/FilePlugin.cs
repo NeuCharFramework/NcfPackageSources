@@ -82,7 +82,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
             string tempFile = Path.GetTempFileName();
 
-            string targetComment = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
+            string targetComment1 = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
+            string targetComment2 = "//DON'T REMOVE OR MODIFY THIS LINE"; //"//DON'T REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
             string insertStr = $"        public DbSet<{entityName}> {pluralEntityName} {{ get; set; }}";
             bool inserted = false;
 
@@ -93,7 +94,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     string line;
                     while ((line = await reader.ReadLineAsync()) != null)
                     {
-                        if (!inserted && line.Contains(targetComment))
+                        if (!inserted && (line.Contains(targetComment1) || line.Contains(targetComment2)))
                         {
                             await writer.WriteLineAsync(insertStr);
                             await writer.WriteLineAsync("");
