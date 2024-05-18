@@ -38,20 +38,7 @@ namespace Senparc.Ncf.Core.Models
         public int TenantId { get; set; }
 
         #endregion
-    }
 
-    /// <summary>
-    /// 带单一主键的数据库实体基类
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    [Serializable]
-    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*默认支持多租户接口*/
-    {
-        /// <summary>
-        /// 主键
-        /// </summary>
-        [Key]
-        public TKey Id { get; set; }
 
 
         /// <summary>
@@ -78,5 +65,20 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         [MaxLength(300)]
         public string Remark { get; set; }
+    }
+
+    /// <summary>
+    /// 带单一主键的数据库实体基类
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    [Serializable]
+    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*默认支持多租户接口*/
+    {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        [Key]
+        public TKey Id { get; set; }
+
     }
 }
