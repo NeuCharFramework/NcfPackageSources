@@ -12,6 +12,12 @@ namespace Senparc.Ncf.Core.AppServices
     {
         StringBuilder stringBuilder = new StringBuilder();
 
+        public string Append()
+        {
+            stringBuilder.AppendLine("");
+            return "";
+        }
+
         public string Append(string msg)
         {
             stringBuilder.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
