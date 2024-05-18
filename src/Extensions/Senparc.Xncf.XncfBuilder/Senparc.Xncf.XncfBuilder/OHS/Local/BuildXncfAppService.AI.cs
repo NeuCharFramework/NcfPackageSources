@@ -7,8 +7,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
@@ -129,12 +131,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 if (request.MoreActions.IsSelected("BuildMigration"))
                 {
                     await Console.Out.WriteLineAsync("进入 Migration，可能耗时较长，请等待");
+                    logger.Append();
+                    logger.Append("Migration 开始执行");
 
                     #region 需要把 DatabasePlant 进行文件附加
                     var databasePlantPath = Path.GetFullPath(Path.Combine(projectPath, "..", "Senparc.Web.DatabasePlant"));
                     var databasePlantCsprojPath = Path.Combine(databasePlantPath, "Senparc.Web.DatabasePlant.csproj");
-                    var projectFolder = Path.GetFileName(projectPath.TrimEnd(Path.DirectorySeparatorChar));
-                    string newReferencePath = @$"..\{projectFolder}\{projectFolder}.csproj";
+                    //目标项目的文件夹名称
+                    var projectFolderName = Path.GetFileName(projectPath.TrimEnd(Path.DirectorySeparatorChar));
+                    //目标项目的 csproj 项目文件名
+                    string newReferencePath = @$"..\{projectFolderName}\{projectFolderName}.csproj";
                     XDocument doc = XDocument.Load(databasePlantCsprojPath);
 
                     // 获取 <ItemGroup> 元素  
@@ -163,17 +169,23 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     // 保存修改后的 .csproj 文件  
                     doc.Save(databasePlantCsprojPath);
 
+                    logger.Append($"完成 Senparc.Web.DatabasePlant 项目引用自动替换");
+                    logger.Append($"databasePlantPath: {databasePlantPath}");
+                    logger.Append($"projectPath: {projectPath}");
+                    logger.Append($"projectFoldeName: {projectFolderName}");
+                    logger.Append($"newProjectReference: {newProjectReference}");
+
                     #endregion
 
                     var requestObj = new DatabaseMigrations_MigrationRequest()
                     {
                         //CustomProjectPath = projectPath,
                         DatabasePlantPath = databasePlantPath,
-                        DbContextName = null,
                         MigrationName = $"Add_{className}_Entity",
                     };
                     //载入数据
                     await requestObj.LoadData(this.ServiceProvider);
+
                     //指定项目路径
                     requestObj.ProjectPath.SelectedValues = new[] { projectPath };
                     //选中所有数据库
@@ -184,11 +196,22 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     var databaseMigrationsAppService = base.ServiceProvider.GetRequiredService<DatabaseMigrationsAppService>();
                     var migrationResult = await databaseMigrationsAppService.AddMigration(requestObj);
 
-                    logger.Append("");
-                    logger.Append("Migration：");
-                    logger.Append("是否成功：" + migrationResult.Success);
+
+                    logger.Append("执行结束，是否成功：" + migrationResult.Success);
                     logger.Append("消息：" + (migrationResult.Success == true ? migrationResult.Data : $"{migrationResult.Data} / {migrationResult.ErrorMessage}"));
-                    logger.Append("");
+                    logger.Append("Migration 内部日志：");
+
+                    #region 从缓存中读取日志
+
+                    var tempId = migrationResult.RequestTempId;
+                    var cache = this.ServiceProvider.GetObjectCacheStrategyInstance();
+                    //为了加快响应速度，不等待
+                    var migrationLog = await cache.GetAsync<string>(tempId);
+                    logger.Append(migrationLog);
+
+                    #endregion
+
+                    logger.Append();
                 }
                 #endregion
 
@@ -218,5 +241,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return log;
             });
         }
+
+        //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
+        //public async Task<StringAppResponse> CreateAppService()
+        //{ 
+        
+        //}
     }
 }
