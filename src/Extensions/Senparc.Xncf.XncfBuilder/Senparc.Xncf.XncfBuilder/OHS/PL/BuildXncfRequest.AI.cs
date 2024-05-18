@@ -14,7 +14,7 @@ using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
-    public static class BuildXncfRequestHelper
+    internal static class BuildXncfRequestHelper
     {
         public static async Task LoadAiModelData(IServiceProvider serviceProvider, SelectionList aiModel)
         {
@@ -109,5 +109,25 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             await base.LoadData(serviceProvider);
         }
     }
+
+    //public class BuildXncf_CreateAppServiceRequest : FunctionAppRequestBase
+    //{
+    //    [Description("领域||指定需要生成到的领域")]
+    //    public SelectionList InjectDomain { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+
+    //    [Required]
+    //    [MaxLength(250)]
+    //    [Description("生成 AppService 及其方法的具体需求||请输入尽量完整的需求，也可以指定所需要的方法名称等")]
+    //    public string Requirement { get; set; }
+
+    //    public override async Task LoadData(IServiceProvider serviceProvider)
+    //    {
+    //        //扫描当前解决方案包含的所有领域项目
+    //        var newItems = FunctionHelper.LoadXncfProjects(true, "Senparc.Areas.Admin");
+    //        newItems.ForEach(z => InjectDomain.Items.Add(z));
+
+    //        await base.LoadData(serviceProvider);
+    //    }
+    //}
 
 }
