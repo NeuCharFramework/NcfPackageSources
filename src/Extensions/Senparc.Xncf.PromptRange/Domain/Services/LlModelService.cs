@@ -9,6 +9,7 @@ using Senparc.AI;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AIKernel.Domain.Models;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -69,6 +70,35 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await this.SaveObjectAsync(model);
 
             return this.Mapper.Map<LlModelDto>(model);
+        }
+
+        public ConfigModel ConvertToConfigModel(ConfigModelType configModelType)
+        {
+            ConfigModel configModel;
+
+            switch (configModelType)
+            {
+                case AIKernel.Domain.Models.ConfigModelType.TextCompletion:
+                    configModel = ConfigModel.TextCompletion;
+                    break;
+                case AIKernel.Domain.Models.ConfigModelType.Chat:
+                    configModel = ConfigModel.Chat;
+                    break;
+                case AIKernel.Domain.Models.ConfigModelType.TextToImage:
+                    configModel = ConfigModel.TextToImage;
+                    //TODO: Image 需要不一样的触发机制
+                    break;
+                case AIKernel.Domain.Models.ConfigModelType.TextEmbedding:
+                case AIKernel.Domain.Models.ConfigModelType.ImageToText:
+                case AIKernel.Domain.Models.ConfigModelType.TextToSpeech:
+                case AIKernel.Domain.Models.ConfigModelType.SpeechToText:
+                case AIKernel.Domain.Models.ConfigModelType.SpeechRecognition:
+                default:
+                    configModel = ConfigModel.TextCompletion;
+                    break;
+            }
+
+            return configModel;
         }
     }
 }

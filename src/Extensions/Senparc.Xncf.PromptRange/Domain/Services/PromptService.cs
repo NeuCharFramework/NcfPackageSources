@@ -13,6 +13,7 @@ using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Xncf.AIKernel.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;

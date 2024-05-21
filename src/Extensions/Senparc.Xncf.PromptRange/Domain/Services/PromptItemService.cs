@@ -519,7 +519,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         if (promptItem == null)
         {
-            throw new Exception("找不到匹配条件的 PromptItem");
+            throw new NcfExceptionBase("找不到匹配条件的 PromptItem");
         }
 
         return promptItem;

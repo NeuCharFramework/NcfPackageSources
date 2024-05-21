@@ -38,6 +38,38 @@ namespace Senparc.Ncf.Core.Models
         public int TenantId { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// 仅管理员备注
+        /// </summary>
+        [MaxLength(300)]
+        public string AdminRemark { get; set; }
+
+        /// <summary>
+        /// 前台用户可见备注
+        /// </summary>
+        [MaxLength(300)]
+        public string Remark { get; set; }
+
+
+        public EntityBase()
+        {
+            AddTime = SystemTime.Now.DateTime;
+        }
+
+        /// <summary>
+        /// 更新最后更新时间
+        /// </summary>
+        /// <param name="time"></param>
+        protected void SetUpdateTime(DateTime? time = null)
+        {
+            if (AddTime == DateTime.MinValue)
+            {
+                AddTime = SystemTime.Now.LocalDateTime;//通常在添加的时候发生
+            }
+            LastUpdateTime = time ?? SystemTime.Now.LocalDateTime;
+        }
+
     }
 
     /// <summary>
@@ -53,30 +85,5 @@ namespace Senparc.Ncf.Core.Models
         [Key]
         public TKey Id { get; set; }
 
-
-        /// <summary>
-        /// 更新最后更新时间
-        /// </summary>
-        /// <param name="time"></param>
-        protected void SetUpdateTime(DateTime? time = null)
-        {
-            if (AddTime == DateTime.MinValue)
-            {
-                AddTime = SystemTime.Now.LocalDateTime;//通常在添加的时候发生
-            }
-            LastUpdateTime = time ?? SystemTime.Now.LocalDateTime;
-        }
-
-        /// <summary>
-        /// 仅管理员备注
-        /// </summary>
-        [MaxLength(300)]
-        public string AdminRemark { get; set; }
-
-        /// <summary>
-        /// 前台用户可见备注
-        /// </summary>
-        [MaxLength(300)]
-        public string Remark { get; set; }
     }
 }

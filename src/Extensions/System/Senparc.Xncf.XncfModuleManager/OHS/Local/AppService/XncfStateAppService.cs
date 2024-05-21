@@ -49,13 +49,21 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
 
                         //response.Data = logger.Append($"名称：{function.Value.FunctionRenderAttribute.Name}\r\n");
 
-                        var functionParameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(base.ServiceProvider, function.Value, true);
-
-                        foreach (var functionBag in functionParameterInfos)
+                        try
                         {
-                            response.Data += logger.Append($"参数：{functionBag.Name}（{functionBag.Description}）\r\n");
-                            response.Data += logger.Append($"类型：{functionBag.ParameterType}\r\n\r\n");
+                            var functionParameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(base.ServiceProvider, function.Value, true);
+
+                            foreach (var functionBag in functionParameterInfos)
+                            {
+                                response.Data += logger.Append($"参数：{functionBag.Name}（{functionBag.Description}）\r\n");
+                                response.Data += logger.Append($"类型：{functionBag.ParameterType}\r\n\r\n");
+                            }
                         }
+                        catch (Exception ex)
+                        {
+                            response.Data += logger.Append($"载入出错：{ex.Message}\r\nStackTrace:{ex.StackTrace}\r\nInnerException:{ex.InnerException}");
+                        }
+
                     }
                 }
                 else
