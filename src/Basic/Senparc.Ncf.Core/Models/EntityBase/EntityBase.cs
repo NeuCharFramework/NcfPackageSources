@@ -39,7 +39,23 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
+        /// <summary>
+        /// 仅管理员备注
+        /// </summary>
+        [MaxLength(300)]
+        public string AdminRemark { get; set; }
 
+        /// <summary>
+        /// 前台用户可见备注
+        /// </summary>
+        [MaxLength(300)]
+        public string Remark { get; set; }
+
+
+        public EntityBase()
+        {
+            AddTime = SystemTime.Now.DateTime;
+        }
 
         /// <summary>
         /// 更新最后更新时间
@@ -54,17 +70,6 @@ namespace Senparc.Ncf.Core.Models
             LastUpdateTime = time ?? SystemTime.Now.LocalDateTime;
         }
 
-        /// <summary>
-        /// 仅管理员备注
-        /// </summary>
-        [MaxLength(300)]
-        public string AdminRemark { get; set; }
-
-        /// <summary>
-        /// 前台用户可见备注
-        /// </summary>
-        [MaxLength(300)]
-        public string Remark { get; set; }
     }
 
     /// <summary>

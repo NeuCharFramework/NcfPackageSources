@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using log4net.Util;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
@@ -17,6 +18,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
@@ -30,16 +32,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
+        private readonly LlModelService _llModelService;
 
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
             PromptItemService promptItemService,
-            PromptRangeService promptRangeService) : base(repo,
+            PromptRangeService promptRangeService,
+            LlModelService llModelService
+            ) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;
             _promptRangeService = promptRangeService;
+            _llModelService = llModelService;
         }
 
 
@@ -59,7 +65,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             return dtoList;
         }
-
 
         public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
         {
@@ -85,29 +90,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel;
-
-            switch (model.ConfigModelType)
-            {
-                case AIKernel.Domain.Models.ConfigModelType.TextCompletion:
-                    configModel = ConfigModel.TextCompletion;
-                    break;
-                case AIKernel.Domain.Models.ConfigModelType.Chat:
-                    configModel = ConfigModel.Chat;
-                    break;
-                case AIKernel.Domain.Models.ConfigModelType.TextToImage:
-                    configModel = ConfigModel.TextToImage;
-                    //TODO: Image 需要不一样的触发机制
-                    break;
-                case AIKernel.Domain.Models.ConfigModelType.TextEmbedding:
-                case AIKernel.Domain.Models.ConfigModelType.ImageToText:
-                case AIKernel.Domain.Models.ConfigModelType.TextToSpeech:
-                case AIKernel.Domain.Models.ConfigModelType.SpeechToText:
-                case AIKernel.Domain.Models.ConfigModelType.SpeechRecognition:
-                default:
-                    configModel =  ConfigModel.TextCompletion;
-                    break;
-            }
+            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
@@ -321,7 +304,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return await this.RobotScoringAsync(promptResultId, isRefresh, list);
         }
 
-
+        /// <summary>
+        /// AI 打分
+        /// </summary>
+        /// <param name="promptResultId"></param>
+        /// <param name="isRefresh"></param>
+        /// <param name="expectedResultList"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, List<string> expectedResultList)
         {
             // 需要在变量前添加$
@@ -362,24 +352,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //TODO：添加不等号规则
 
 
-            // 获取模型
-            var model = promptItem.AIModelDto;
-
-            // build aiSettings by model
-            var aiSettings = this.BuildSenparcAiSetting(model);
-
-            //定义 AI 接口调用参数和 Token 限制等
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = /*model.MaxToken > 0 ? model.MaxToken :*/ 2000,
-                Temperature = 0.2,
-                TopP = 0.2,
-                // FrequencyPenalty = 0,
-                // PresencePenalty = 0,
-            };
 
             const string scorePrompt = $@"[背景]
-你是一个语言专家，你的工作是根据以下给定的[期望结果],对[实际结果]进行打分。
+你是一个语言专家和 AI 生成结果的评分专家，你的工作是根据以下给定的[期望结果],对[实际结果]进行打分。
 [期望结果]将以 JSON 的数组形式提供，数组中包含了若干个期望结果的描述。
 
 [打分规则]
@@ -402,16 +377,37 @@ IMPORTANT: 返回的结果必须为0-10的数字，且不包含任何标点符�
 
 打分结果：";
 
+            // 获取模型
+            var model = promptItem.AIModelDto;
+
+            // build aiSettings by model
+            var aiSettings = this.BuildSenparcAiSetting(model);
+            //TODO:可以设置一个默认 PromptRange 的值，或者使用配置来指定打分的 AI，而不是使用同一个模型。
+
+            var expectedResult = expectedResultList.ToJson();
+
+            //定义 AI 接口调用参数和 Token 限制等
+            var promptParameter = new PromptConfigParameter()
+            {
+                MaxTokens = promptItem.AIModelDto.MaxToken + expectedResult.Length + scorePrompt.Length + 500,
+                Temperature = 0.2,
+                TopP = 0.2,
+                // FrequencyPenalty = 0,
+                // PresencePenalty = 0,
+            };
+
+            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
+
             var handler = new SemanticAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
-                    .ConfigModel(ConfigModel.TextCompletion, "Test")
+                    .ConfigModel(configModel, "AIScoring")
                     .BuildKernel()
                     .CreateFunctionFromPrompt(scorePrompt, promptParameter)
                     .iWantToRun;
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             aiArguments["actualResult"] = promptResult.ResultString;
-            aiArguments["expectedResult"] = expectedResultList.ToJson();
+            aiArguments["expectedResult"] = expectedResult;
 
             var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
             var dt1 = SystemTime.Now;

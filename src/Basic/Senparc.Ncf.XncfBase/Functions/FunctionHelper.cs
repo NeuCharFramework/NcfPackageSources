@@ -45,7 +45,15 @@ namespace Senparc.Ncf.XncfBase.Functions
 
             if (tryLoadData && paraObj is FunctionAppRequestBase functionRequestPara)
             {
-                await functionRequestPara.LoadData(serviceProvider);//载入原有信息
+                try
+                {
+                    await functionRequestPara.LoadData(serviceProvider);//载入原有信息
+                }
+                catch (Exception ex)
+                {
+                    SenparcTrace.BaseExceptionLog(ex);
+                    throw;
+                }
             }
 
             var props = functionParameterType.GetProperties();
