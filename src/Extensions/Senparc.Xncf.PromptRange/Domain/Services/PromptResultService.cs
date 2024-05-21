@@ -369,13 +369,35 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 IMPORTANT: 返回的结果必须为0-10的数字，且不包含任何标点符号。
 !!不要返回任何我告诉你的内容!!
 
+例如：
+[期望结果]
+Apple
+
+[实际结果]
+今天是星期天
+
+[打分结果]
+0
+
+
+[期望结果]
+Apple
+
+[实际结果]
+Apple
+
+[打分结果]
+10
+
+
 [期望结果]
 {{{{$expectedResult}}}}
 
 [实际结果]
 {{{{$actualResult}}}}
 
-打分结果：";
+[打分结果]
+";
 
             // 获取模型
             var model = promptItem.AIModelDto;
@@ -391,7 +413,7 @@ IMPORTANT: 返回的结果必须为0-10的数字，且不包含任何标点符�
             {
                 MaxTokens = promptItem.AIModelDto.MaxToken + expectedResult.Length + scorePrompt.Length + 500,
                 Temperature = 0.2,
-                TopP = 0.2,
+                TopP = 0.2
                 // FrequencyPenalty = 0,
                 // PresencePenalty = 0,
             };
@@ -430,13 +452,13 @@ IMPORTANT: 返回的结果必须为0-10的数字，且不包含任何标点符�
             {
                 SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
 
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{result.Output}，");
             }
 
             bool success = Decimal.TryParse(match.Value, out var score);
             if (!success)
             {
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为{promptResult.ResultString}, 模型返回为{result.Output}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{result.Output}，");
             }
 
             #region error 打分结果不在 0-MAX_SCORE 之间

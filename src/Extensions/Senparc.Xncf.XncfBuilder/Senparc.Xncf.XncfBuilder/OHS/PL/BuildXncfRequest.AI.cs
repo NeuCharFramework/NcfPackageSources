@@ -14,7 +14,7 @@ using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
-    internal static class BuildXncfRequestHelper
+    public static class BuildXncfRequestHelper
     {
         public static async Task LoadAiModelData(IServiceProvider serviceProvider, SelectionList aiModel)
         {
