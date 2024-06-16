@@ -670,7 +670,30 @@ steps:
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: Senparc.Xncf.AgentsManager
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.AgentsManager.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Xncf.AgentsManager- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Xncf.AgentsManager.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
   
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.Dapr
   inputs:
