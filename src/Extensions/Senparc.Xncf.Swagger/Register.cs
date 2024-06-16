@@ -81,7 +81,9 @@ namespace Senparc.Xncf.Swagger
                 ConfigurationHelper.Configuration = configuration;
                 ConfigurationHelper.HostEnvironment = env;
                 ConfigurationHelper.WebHostEnvironment = webEnv;
-                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder().AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
+                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder()
+                    .AddJsonFile($"appsettings.json")
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
 
                 ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>() ?? new CustsomSwaggerOptions();
