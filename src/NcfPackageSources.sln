@@ -123,7 +123,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.AIAgentsHub", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PromptRange", "PromptRange", "{D58B470F-C349-4D2D-96CA-28FE7559F7C7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AIAgentsHub", "AIAgentsHub", "{9D32485B-CF36-4982-9B80-BD22042632E4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agents", "Agents", "{9D32485B-CF36-4982-9B80-BD22042632E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.AIAgentsHub.Tests", "Extensions\Senparc.Xncf.AIAgentsHub.Tests\Senparc.Xncf.AIAgentsHub.Tests.csproj", "{C0E8312B-F06C-4C64-B18D-374C2FDB20D1}"
 EndProject
