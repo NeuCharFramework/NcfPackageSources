@@ -437,13 +437,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
     /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
     /// </summary>
-    /// <param name="fullVersion"></param>
+    /// <param name="promptRangeVersion"></param>
     /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
-    public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion, bool isAvg = true)
+    public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string promptRangeVersion, bool isAvg = true)
     {
-        var promptItem = await GetBestPromptAsync(fullVersion, isAvg);
+        var promptItem = await GetBestPromptAsync(promptRangeVersion, isAvg);
 
         var dto = await this.TransEntityToDtoAsync(promptItem); // this.Mapper.Map<PromptItemDto>(item);
 
@@ -466,41 +466,43 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
     /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
     /// </summary>
-    /// <param name="fullVersion"></param>
+    /// <param name="promptRangeVersion"></param>
     /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
-    public async Task<PromptItem> GetBestPromptAsync(string fullVersion, bool isAvg)
+    public async Task<PromptItem> GetBestPromptAsync(string promptRangeVersion, bool isAvg)
     {
         PromptItem promptItem;
-        if (fullVersion.Contains("-T") && fullVersion.Contains("-A"))
+        if (promptRangeVersion.Contains("-T") && promptRangeVersion.Contains("-A"))
         {
-            //精准查询，如：2024.01.06.3-T1-A2
-            promptItem = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
-                         throw new NcfExceptionBase($"找不到 {fullVersion} 对应的 PromptItem");
+            //精准查询经过测试的 PromptItem，如：2024.01.06.3-T1-A2
+            promptItem = await this.GetObjectAsync(p => p.FullVersion == promptRangeVersion) ??
+                         throw new NcfExceptionBase($"找不到 {promptRangeVersion} 对应的 PromptItem");
         }
         else
         {
             //模糊查询，如：2024.01.06.3-T1，或者 2024.01.06.3
 
-            var versionSet = fullVersion.Split(new[] { "-T" }, StringSplitOptions.None);
+            var searchTactic = promptRangeVersion.Contains("-T");
+
+            var versionSet = promptRangeVersion.Split(new[] { "-T" }, StringSplitOptions.None);
 
             // validate rangeName
             var rangeName = versionSet[0];
-            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
-                              throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
+            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName)
+                ?? throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
 
             var seh = new SenparcExpressionHelper<PromptItem>();
             seh.ValueCompare
-                .AndAlso(true, z => z.RangeName == promptRange.RangeName) //靶场编号
+                .AndAlso(true, z => z.RangeId == promptRange.Id/* z.RangeName == rangeName*/) //定位靶场
                 .AndAlso(isAvg, z => z.EvalAvgScore >= 0) //平均分
                 .AndAlso(!isAvg, z => z.EvalMaxScore >= 0); //最高分
 
-            if (fullVersion.Contains("-T"))
+            if (searchTactic)
             {
                 //按照靶道进行模糊搜索
                 var tactic = versionSet[1];
-                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);
+                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);//定位靶道
             }
             else
             {

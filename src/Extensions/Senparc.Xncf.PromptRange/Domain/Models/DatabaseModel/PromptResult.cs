@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// PromptResult 数据库实体
+    /// PromptResult：PromptItem 的打靶结果
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //必须添加前缀，防止全系统中发生冲突
     [Serializable]
