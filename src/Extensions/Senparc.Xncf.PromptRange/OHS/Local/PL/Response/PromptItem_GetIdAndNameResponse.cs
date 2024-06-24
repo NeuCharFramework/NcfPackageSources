@@ -40,6 +40,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// </summary>
         public bool IsDraft { get; set; }
 
+        public string PromptContent { get; set; }
+
         public PromptItem_GetIdAndNameResponse()
         {
         }
@@ -53,6 +55,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
             EvalAvgScore = promptItem.EvalAvgScore;
             EvalMaxScore = promptItem.EvalMaxScore;
             IsDraft = promptItem.IsDraft;
+            PromptContent = promptItem.Content;
         }
     }
 }

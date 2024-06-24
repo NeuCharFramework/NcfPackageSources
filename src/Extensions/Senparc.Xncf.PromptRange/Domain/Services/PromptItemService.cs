@@ -245,7 +245,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         foreach (var rootItem in topTierItemList)
         {
             // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
-            var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, new PromptItem_GetIdAndNameResponse(rootItem));
+            var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, rootItem.NickName, new PromptItem_GetIdAndNameResponse(rootItem));
 
             // 递归构建树
             this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
@@ -313,7 +313,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         var promptItems = itemGroupByParentTac[root.Tactic];
         foreach (var childItem in promptItems)
         {
-            var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, new PromptItem_GetIdAndNameResponse(childItem));
+            var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
             this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
             rootNode.Children.Add(childNode);
         }
@@ -596,6 +596,20 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return promptParameter;
     }
 
+    /// <summary>
+    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// </summary>
+    /// <param name="fullVersion"></param>
+    /// <returns></returns>
+    public (string RangeName, string Tactic, int Aim) GetVersionObject(string fullVersion)
+    {
+        string[] parts = fullVersion.Split(new[] { "-T", "-A" }, StringSplitOptions.RemoveEmptyEntries);
 
+        string rangeName = parts[0];
+        string tactic = parts[1];
+        int aim = int.Parse(parts[2]);
+
+        return (rangeName, tactic, aim);
+    }
 
 }
