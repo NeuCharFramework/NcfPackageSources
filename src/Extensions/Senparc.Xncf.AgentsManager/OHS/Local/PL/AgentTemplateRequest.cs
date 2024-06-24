@@ -52,6 +52,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [Description("外界平台参数||通常为 Key 之类的参数")]
         public string HookRobotParameter { get; set; }
 
+        public string GetySystemMessagePromptCode()
+        {
+            var selectionValue = SystemMessagePromptCodeSelection.SelectedValues.FirstOrDefault();
+            if (selectionValue != "0")
+            {
+                return selectionValue;
+            }
+            else
+            {
+                return SystemMessagePromptCode;
+            }
+
+        }
+
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             await base.LoadData(serviceProvider);
@@ -66,7 +80,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             //载入 PromptRange
             SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()
             {
-                Value = "Custom",
+                Value = "0",
                 Text = "手动输入 SystemMessage",
             });
 

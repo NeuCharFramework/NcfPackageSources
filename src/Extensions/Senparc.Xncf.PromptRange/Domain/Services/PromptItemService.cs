@@ -521,7 +521,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         if (promptItem == null)
         {
-            throw new NcfExceptionBase("找不到匹配条件的 PromptItem");
+            throw new NcfExceptionBase("找不到匹配条件的 PromptItem，请检查 PromptRange 的名称是否准确，或其靶场（PromptRange）下面的所有的 PromptItem 结果是否都未进行打分，系统必须选择一个评分最高的 PromptItem。");
         }
 
         return promptItem;
