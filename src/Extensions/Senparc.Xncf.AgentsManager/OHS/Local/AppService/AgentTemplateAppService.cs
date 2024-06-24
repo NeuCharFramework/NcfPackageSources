@@ -34,11 +34,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
                 SenparcAI_GetByVersionResponse promptResult;
+                var promptCode = request.GetySystemMessagePromptCode();
 
                 try
                 {
                     //检查 PromptCode 是否存在
-                    promptResult = await _promptItemService.GetWithVersionAsync(request.SystemMessagePromptCode, isAvg: true);
+                    promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
                 }
                 catch (Exception ex)
                 {
@@ -48,8 +49,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var promptTemplate = promptResult.PromptItem.Content;// Prompt
 
-                var agentTemplateDto = new AgentTemplateDto(request.Name, request.SystemMessagePromptCode, true,
-                    request.Description, request.SystemMessagePromptCode,
+                var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
+                    request.Description, promptCode,
                     Enum.Parse<HookRobotType>(request.HookRobotType.SelectedValues.FirstOrDefault()), request.HookRobotParameter);
 
                 await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);

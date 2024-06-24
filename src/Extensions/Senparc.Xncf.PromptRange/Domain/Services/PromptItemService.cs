@@ -245,7 +245,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         foreach (var rootItem in topTierItemList)
         {
             // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
-            var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, new PromptItem_GetIdAndNameResponse(rootItem));
+            var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, rootItem.NickName, new PromptItem_GetIdAndNameResponse(rootItem));
 
             // 递归构建树
             this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
@@ -313,7 +313,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         var promptItems = itemGroupByParentTac[root.Tactic];
         foreach (var childItem in promptItems)
         {
-            var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, new PromptItem_GetIdAndNameResponse(childItem));
+            var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
             this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
             rootNode.Children.Add(childNode);
         }
@@ -437,13 +437,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
     /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
     /// </summary>
-    /// <param name="fullVersion"></param>
+    /// <param name="promptRangeVersion"></param>
     /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
-    public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string fullVersion, bool isAvg = true)
+    public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string promptRangeVersion, bool isAvg = true)
     {
-        var promptItem = await GetBestPromptAsync(fullVersion, isAvg);
+        var promptItem = await GetBestPromptAsync(promptRangeVersion, isAvg);
 
         var dto = await this.TransEntityToDtoAsync(promptItem); // this.Mapper.Map<PromptItemDto>(item);
 
@@ -466,41 +466,43 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
     /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
     /// </summary>
-    /// <param name="fullVersion"></param>
+    /// <param name="promptRangeVersion"></param>
     /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
-    public async Task<PromptItem> GetBestPromptAsync(string fullVersion, bool isAvg)
+    public async Task<PromptItem> GetBestPromptAsync(string promptRangeVersion, bool isAvg)
     {
         PromptItem promptItem;
-        if (fullVersion.Contains("-T") && fullVersion.Contains("-A"))
+        if (promptRangeVersion.Contains("-T") && promptRangeVersion.Contains("-A"))
         {
-            //精准查询，如：2024.01.06.3-T1-A2
-            promptItem = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
-                         throw new NcfExceptionBase($"找不到 {fullVersion} 对应的 PromptItem");
+            //精准查询经过测试的 PromptItem，如：2024.01.06.3-T1-A2
+            promptItem = await this.GetObjectAsync(p => p.FullVersion == promptRangeVersion) ??
+                         throw new NcfExceptionBase($"找不到 {promptRangeVersion} 对应的 PromptItem");
         }
         else
         {
             //模糊查询，如：2024.01.06.3-T1，或者 2024.01.06.3
 
-            var versionSet = fullVersion.Split(new[] { "-T" }, StringSplitOptions.None);
+            var searchTactic = promptRangeVersion.Contains("-T");
+
+            var versionSet = promptRangeVersion.Split(new[] { "-T" }, StringSplitOptions.None);
 
             // validate rangeName
             var rangeName = versionSet[0];
-            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName) ??
-                              throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
+            var promptRange = await _promptRangeService.GetObjectAsync(r => r.RangeName == rangeName)
+                ?? throw new NcfExceptionBase($"找不到 {rangeName} 对应的靶场");
 
             var seh = new SenparcExpressionHelper<PromptItem>();
             seh.ValueCompare
-                .AndAlso(true, z => z.RangeName == promptRange.RangeName) //靶场编号
+                .AndAlso(true, z => z.RangeId == promptRange.Id/* z.RangeName == rangeName*/) //定位靶场
                 .AndAlso(isAvg, z => z.EvalAvgScore >= 0) //平均分
                 .AndAlso(!isAvg, z => z.EvalMaxScore >= 0); //最高分
 
-            if (fullVersion.Contains("-T"))
+            if (searchTactic)
             {
                 //按照靶道进行模糊搜索
                 var tactic = versionSet[1];
-                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);
+                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);//定位靶道
             }
             else
             {
@@ -519,7 +521,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         if (promptItem == null)
         {
-            throw new NcfExceptionBase("找不到匹配条件的 PromptItem");
+            throw new NcfExceptionBase("找不到匹配条件的 PromptItem，请检查 PromptRange 的名称是否准确，或其靶场（PromptRange）下面的所有的 PromptItem 结果是否都未进行打分，系统必须选择一个评分最高的 PromptItem。");
         }
 
         return promptItem;
@@ -594,6 +596,20 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return promptParameter;
     }
 
+    /// <summary>
+    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// </summary>
+    /// <param name="fullVersion"></param>
+    /// <returns></returns>
+    public (string RangeName, string Tactic, int Aim) GetVersionObject(string fullVersion)
+    {
+        string[] parts = fullVersion.Split(new[] { "-T", "-A" }, StringSplitOptions.RemoveEmptyEntries);
 
+        string rangeName = parts[0];
+        string tactic = parts[1];
+        int aim = int.Parse(parts[2]);
+
+        return (rangeName, tactic, aim);
+    }
 
 }

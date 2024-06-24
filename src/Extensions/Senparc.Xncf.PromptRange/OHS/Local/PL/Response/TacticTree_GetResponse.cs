@@ -21,6 +21,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
     public class TreeNode<T>
     {
         public string Name { get; set; }
+        public string NickName { get; set; }
 
         public List<TreeNode<T>> Children { get; set; } = new();
 
@@ -37,9 +38,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         //     Data = data;
         // }
 
-        public TreeNode(string name, T data)
+        public TreeNode(string name,string nickName, T data)
         {
             Name = name;
+            NickName = nickName;
             Data = data;
         }
     }

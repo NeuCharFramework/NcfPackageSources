@@ -15,7 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// PromptItem
+/// PromptItem：每个不同版本的 Prompt 配置
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(PromptItem))] /*必须添加前缀，防止全系统中发生冲突*/
 [Serializable]
