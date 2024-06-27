@@ -12,6 +12,70 @@ namespace Senparc.Ncf.Core.AppServices
     /// </summary>
     public static class AppServiceHelper
     {
+
+        /// <summary>
+        /// AppService 的自动处理过程
+        /// </summary>
+        /// <typeparam name="TData">从 Service 返回的主体消息类型（必须为 DTO 或 值类型，不能是 Entity）</typeparam>
+        /// <param name="appService">AppService</param>
+        /// <param name="func"></param>
+        /// <param name="exceptionHandler"></param>
+        /// <param name="afterFunc"></param>
+        /// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
+        /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        /// <returns></returns>
+        public static Task<AppResponseBase<TData>> GetResponseAsync<TData>(this IAppService appService, Func<AppResponseBase<TData>, AppServiceLogger, Task<TData>> func, Action<Exception, AppResponseBase<TData>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<TData>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
+            where TData : class
+        {
+            return GetResponseAsync<AppResponseBase<TData>, TData>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
+        }
+
+        ///// <summary>
+        ///// AppService 的自动处理过程（返回 string 数据）
+        ///// </summary>
+        ///// <param name="appService">AppService</param>
+        ///// <param name="func"></param>
+        ///// <param name="exceptionHandler"></param>
+        ///// <param name="afterFunc"></param>
+        ///// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
+        ///// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        ///// <returns></returns>
+        //public static Task<AppResponseBase<string>> GetStringResponseAsync(this IAppService appService, Func<AppResponseBase<string>, AppServiceLogger, Task<string>> func, Action<Exception, AppResponseBase<string>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<string>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
+        //{
+        //    return GetResponseAsync<AppResponseBase<string>, string>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
+        //}
+
+        /// <summary>
+        /// AppService 的自动处理过程（返回 string 数据）
+        /// </summary>
+        /// <param name="appService">AppService</param>
+        /// <param name="func"></param>
+        /// <param name="exceptionHandler"></param>
+        /// <param name="afterFunc"></param>
+        /// <param name="saveLogAfterFinished">执行完成后是否保存日志</param>
+        /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
+        /// <returns></returns>
+        public static Task<StringAppResponse> GetStringResponseAsync(this IAppService appService, Func<StringAppResponse, AppServiceLogger, Task<string>> func, Action<Exception, StringAppResponse, AppServiceLogger> exceptionHandler = null, Action<StringAppResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
+           //where IStringAppResponse : StringAppResponse
+        {
+            //Func<AppResponseBase<string>, AppServiceLogger, Task<string>> adaptFunc = (response, logger) =>
+            //{
+            //    return func?.Invoke((StringAppResponse)response, logger);
+            //};
+
+            //Action<Exception, AppResponseBase<string>, AppServiceLogger> adaptExceptionHandler = (ex, response, logger) =>
+            //{
+            //    exceptionHandler?.Invoke(ex, (StringAppResponse)response, logger);
+            //};
+
+            //Action<AppResponseBase<string>, AppServiceLogger> adaptAfterFunc = (response, logger) =>
+            //{
+            //    afterFunc?.Invoke((StringAppResponse)response, logger);
+            //};
+
+            return GetResponseAsync<StringAppResponse, string>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
+        }
+
         /// <summary>
         /// AppService 的自动处理过程
         /// </summary>
