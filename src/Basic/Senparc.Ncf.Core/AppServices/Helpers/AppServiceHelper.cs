@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Core.AppServices
         /// <param name="saveLogName">保存日志的名称，可选，如果留空，则返回当前 AppService 的名称</param>
         /// <returns></returns>
         public static Task<AppResponseBase<TData>> GetResponseAsync<TData>(this IAppService appService, Func<AppResponseBase<TData>, AppServiceLogger, Task<TData>> func, Action<Exception, AppResponseBase<TData>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<TData>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
-            where TData : class
+            //where TData : class
         {
             return GetResponseAsync<AppResponseBase<TData>, TData>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
         }
