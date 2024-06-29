@@ -78,3 +78,4 @@ SenparcConfig.Development.config
 /src/Extensions/Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.PromptRange.XML
 /src/Extensions/Senparc.Xncf.AIAgentsHub.Tests/appsettings.Development.json
 *.zip
+/tools/BuildXncfBuilderTemplate/ReplacePlaceholders/.vs
