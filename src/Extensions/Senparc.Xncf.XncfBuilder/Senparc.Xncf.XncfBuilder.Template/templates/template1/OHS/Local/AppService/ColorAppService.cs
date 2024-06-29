@@ -1,14 +1,14 @@
 ﻿using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
-using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.Domain.Services;
-using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.Models.DatabaseModel.Dto;
-using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.PL;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
+using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.AppService
+namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 {
     public class ColorAppService : AppServiceBase
     {

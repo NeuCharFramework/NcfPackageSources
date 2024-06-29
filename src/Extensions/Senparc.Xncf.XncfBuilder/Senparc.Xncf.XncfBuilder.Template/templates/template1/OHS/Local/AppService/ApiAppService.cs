@@ -2,12 +2,12 @@
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
-using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.PL;
+using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
 using System;
 using System.Threading.Tasks;
 
 
-namespace ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.AppService
+namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 {
     public class ApiAppService : AppServiceBase
     {

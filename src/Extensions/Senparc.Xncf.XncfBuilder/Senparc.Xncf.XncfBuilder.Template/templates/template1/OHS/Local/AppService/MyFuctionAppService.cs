@@ -3,15 +3,15 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
-using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.Domain.Services;
-using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.PL;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
+using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.AppService
+namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
 {
     public class MyFuctionAppService: AppServiceBase
     {
