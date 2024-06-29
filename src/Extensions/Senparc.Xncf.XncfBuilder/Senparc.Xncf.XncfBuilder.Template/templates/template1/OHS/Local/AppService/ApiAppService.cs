@@ -2,12 +2,12 @@
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
-using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
+using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.PL;
 using System;
 using System.Threading.Tasks;
 
 
-namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
+namespace ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.AppService
 {
     public class ApiAppService : AppServiceBase
     {
@@ -28,7 +28,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
-            return await this.GetResponseAsync<AppResponseBase<int>, int>(async (response, logger) =>
+            return await this.GetResponseAsync<int>(async (response, logger) =>
             {
                 await Task.Delay(100);
                 return 200;
@@ -43,7 +43,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
             //StringAppResponse 是 AppResponseBase<string> 的快捷写法
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
                 response.StateCode = 100;

@@ -1,14 +1,14 @@
 ﻿using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
-using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
-using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
+using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.Domain.Services;
+using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.Models.DatabaseModel.Dto;
+using ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
+namespace ORGPLACEHOLDER.Xncf.MODPLACEHOLDER.OHS.Local.AppService
 {
     public class ColorAppService : AppServiceBase
     {
@@ -26,7 +26,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         /// <returns></returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
-            return await this.GetResponseAsync<AppResponseBase<Color_GetOrInitColorResponse>, Color_GetOrInitColorResponse>(async (response, logger) =>
+            return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
             {
                 var dt1 = SystemTime.Now;//开始计时
 
