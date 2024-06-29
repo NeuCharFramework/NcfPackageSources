@@ -49,8 +49,9 @@
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
+		<!--<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>-->
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
@@ -66,9 +67,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-		<Content Include="..\..\..\icon.jpg" Link="icon.jpg" Pack="true" PackagePath="/">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="readme.md" />
@@ -83,7 +81,6 @@
 		<None Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Senparc.Xncf.XncfBuilder.Tests\Senparc.Xncf.XncfBuilder.Tests.csproj" />
-		<ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 </Project>
