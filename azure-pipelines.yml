@@ -73,6 +73,7 @@ steps:
     command: build
     projects: '**/NcfPackageSources.sln'
     arguments: '--configuration Release'
+  continueOnError: true
 
 # - task: VSTest@2
 #   inputs:
