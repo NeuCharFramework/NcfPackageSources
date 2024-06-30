@@ -78,7 +78,7 @@
 		<None Remove="templates\template1\readme.md" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath="" />
+		<Content Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
