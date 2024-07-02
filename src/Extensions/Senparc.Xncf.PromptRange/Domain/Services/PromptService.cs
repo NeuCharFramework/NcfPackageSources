@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Razor.Language.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -14,6 +15,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,7 +53,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return IWantToRun;
         }
 
-        public async Task<T> GetPromptResultAsync<T>(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> plugins = null, string pluginDir = null, IPromptTemplateFactory? promptTemplateFactory = null, IServiceProvider? services = null, params KernelFunction[] functionPiple)
+        public async Task<T> GetPromptResultAsync<T>(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> pluginCollection = null, string pluginDir = null, IPromptTemplateFactory? promptTemplateFactory = null, IServiceProvider? services = null, params KernelFunction[] functionPiple)
         {
             //准备运行
             //var userId = "XncfBuilder";//区分用户
@@ -70,17 +72,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             List<KernelFunction> allFunctionPiple = new List<KernelFunction>();
 
-            if (plugins?.Count > 0)
+            if (pluginCollection?.Count > 0)
             {
                 //优先从数据库找
                 var fromDatabasePrompt = pluginDir.IsNullOrEmpty();//不提供文件地址时，优先从数据库找
 
                 pluginDir ??= Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
 
-                foreach (var plugin in plugins)
+                foreach (var pluginItem in pluginCollection)
                 {
+                    //第一层：靶场，对应 Plugin
 
-                    var pluginName = plugin.Key;//Plugin 名字
+                    var pluginName = pluginItem.Key;//Plugin 名字
+                    var functionNames = pluginItem.Value;
 
                     KernelPlugin kernelPlugin = null;//导入 Plugin 后的 KernelPlugin 对象
 
@@ -93,12 +97,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     }
                     else
                     {
-
-
                         if (fromDatabasePrompt)
                         {
                             //从数据库读取
-
 
                             ILoggerFactory loggerFactory = services?.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance;
                             IPromptTemplateFactory factory = promptTemplateFactory ?? new KernelPromptTemplateFactory(loggerFactory);
@@ -114,19 +115,58 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             else
                             {
                                 //查找下属所有的靶道
-                                var promptItems = await this._promptItemService.GetObjectListAsync(0, 0, z => z.RangeId == promptRange.Id, z => z.EvalMaxScore, OrderingType.Descending);
-                                var groupedPromptItems = promptItems.GroupBy(z => z.Tactic);//每个 Group 就是一个靶道（Tactic）
+                                var allPromptItems = await this._promptItemService
+                                    .GetObjectListAsync(0, 0,
+                                    z => z.RangeId == promptRange.Id
+                                    //&& (functionNames.Any(f => f == z.FullVersion) //完整版本信息匹配
+                                    //    || functionNames.Any(f => f == z.NickName)) //别称匹配
+                                    ,
+                                    z => z.EvalMaxScore, OrderingType.Descending);
+
+                                /* PromptItem 的命中有几种可能：
+                                 * 1、FullVersion 达到匹配 functionName 要求
+                                 * 2、NickName 达到匹配 functionName 要求（常见）
+                                 * 3、满足上述任意条件后（都可能多个），在相关记录内，找到评分最高的一个
+                                 */
+
+                                List<PromptItem> filtedPromptItems = null;
+
+                                foreach (var functionName in functionNames)
+                                {
+                                    if (PromptItem.IsPromptVersion(functionName))
+                                    {
+                                        //符合版本格式
+                                        filtedPromptItems = allPromptItems.Where(z => z.FullVersion.StartsWith(functionName)).ToList();
+                                        
+                                    }
+                                    else
+                                    {
+                                        //使用别名查找
+                                    }
+                                }
+
+                                /* 同一个名称的可能在同一个靶道中，也可能在不同靶道中 */
+                                var nameGroupedPromptItems = allPromptItems.GroupBy(z => z.GetAvailableName());//每个 Group 就是一个函数（Function）集合
+
+                                var groupedPromptItems = allPromptItems.GroupBy(z => z.Tactic);//每个 Group 就是一个靶道（Tactic）
+
                                 foreach (var promptItemGroup in groupedPromptItems)
                                 {
-                                    //TODO：根据目录需要直接筛选添加，而不是遍历
+                                    //第二层：靶道，对应 Function
 
                                     //选择评分最高的一个
                                     var valiablePromptItem = promptItemGroup.OrderByDescending(z => z.EvalMaxScore).ThenByDescending(z => z.LastUpdateTime).FirstOrDefault();
 
+                                    if (!pluginCollection.Keys.Any(z => z == valiablePromptItem.GetAvailableName()))
+                                    {
+                                        //如果名称不匹配，则过滤
+                                        continue;
+                                    }
+
                                     PromptTemplateConfig promptTemplateConfig = new PromptTemplateConfig()
                                     {
                                         Description = valiablePromptItem.Note,//TODO: 专门提供注释
-                                        Name = valiablePromptItem.GetAvailableName(),
+                                        Name = this.GetAvaliableFunctionName(valiablePromptItem.GetAvailableName()),
                                         //设置模型参数
                                         ExecutionSettings = new Dictionary<string, PromptExecutionSettings>() {
                                         { "Default", new PromptExecutionSettings() {
@@ -162,7 +202,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                                 }
 
-                                kernelPlugin = KernelPluginFactory.CreateFromFunctions(pluginName, null, kernelFunctionList);
+                                var avaliablePluginName = GetAvaliableFunctionName(pluginName);
+
+                                kernelPlugin = KernelPluginFactory.CreateFromFunctions(avaliablePluginName, null, kernelFunctionList);
 
                             }
 
@@ -178,7 +220,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         }
                     }
 
-                    foreach (var functionName in plugin.Value)
+                    foreach (var functionName in pluginItem.Value)
                     {
                         if (kernelPlugin.Contains(functionName))
                         {
@@ -214,6 +256,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //请求
             var result = await iWantToRun.RunAsync<T>(request);
             return result.Output;
+        }
+
+        /// <summary>
+        /// 提供可供 functionName 使用的名称
+        /// <para>如果出现特殊字符，可能出现错误：A function name can contain only ASCII letters, digits, and underscores: '2024.05.17.1-T1.1-A3' is not a valid name. (Parameter 'value')</para>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public string GetAvaliableFunctionName(string name)
+        {
+            return name.Replace(".", "_").Replace("-", "_").Replace(" ", "_");
         }
     }
 }
