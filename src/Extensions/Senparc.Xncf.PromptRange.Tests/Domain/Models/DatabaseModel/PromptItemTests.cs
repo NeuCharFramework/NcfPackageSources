@@ -53,16 +53,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Tests
         }
 
         [TestMethod()]
-        public void IsValidSegmentTest()
+        public void IsValidVersionSegmentTest()
         {
             // 测试用例  
-            Assert.IsTrue(PromptItem.IsValidSegment("2023.12.14.1-T1-A123", "2023.12.14.1-T1-A123")); // true  
-            Assert.IsTrue(PromptItem.IsValidSegment("2023.12.14.1-T1-A123", "2023.12.14.1-T1")); // true  
-            Assert.IsTrue(PromptItem.IsValidSegment("2023.12.14.1-T1.1-A123", "2023.12.14.1-T1")); // true  
-            Assert.IsTrue(PromptItem.IsValidSegment("2023.12.14.2-T2.1.1-A12", "2023.12.14.2-T2.1")); // true  
-            Assert.IsTrue(PromptItem.IsValidSegment("2023.12.14.2-T2.1.1-A12", "2023.12.14.2-T2.1.1")); // true  
-            Assert.IsFalse(PromptItem.IsValidSegment("2023.12.14.2-T2.1.1-A12", "2023.12.14.2-T2.1.1.1")); // false  
-            Assert.IsFalse(PromptItem.IsValidSegment("2023.12.14.2-T2.11.1-A12", "2023.12.14.2-T2.1")); // false  
+            Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.1-T1-A123", "2023.12.14.1-T1-A123")); // true  
+            Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.1-T1-A123", "2023.12.14.1-T1")); // true  
+            Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.1-T1.1-A123", "2023.12.14.1-T1")); // true  
+            Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.2-T2.1.1-A12", "2023.12.14.2-T2.1")); // true  
+            Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.2-T2.1.1-A12", "2023.12.14.2-T2.1.1")); // true  
+            Assert.IsFalse(PromptItem.IsValidVersionSegment("2023.12.14.2-T2.1.1-A12", "2023.12.14.2-T2.1.1.1")); // false  
+            Assert.IsFalse(PromptItem.IsValidVersionSegment("2023.12.14.2-T2.11.1-A12", "2023.12.14.2-T2.1")); // false  
         }
     }
 }

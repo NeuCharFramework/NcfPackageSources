@@ -217,7 +217,7 @@ public class PromptItem : EntityBase<int>
     /// <param name="compareString"></param>
     /// <param name="inputString"></param>
     /// <returns></returns>
-    public static bool IsValidSegment(string compareString, string inputString)
+    public static bool IsValidVersionSegment(string compareString, string inputString)
     {
         // 完整正则表达式  
         string pattern = @"^\d{4}\.\d{2}\.\d{2}\.\d+(-T\d+(\.\d+)*(-A\d+)?)?$";
