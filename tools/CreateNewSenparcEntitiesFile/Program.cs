@@ -5,7 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        string baseDirectory = @"X:\Senparc 项目\NeuCharFramework\NcfPackageSources\src"; // 替换为你的目录路径  
+        string baseDirectory = @"X:\Senparc 项目\NeuCharFramework\NCF\src\back-end";//@"X:\Senparc 项目\NeuCharFramework\NcfPackageSources\src"; // 替换为你的目录路径  
         string replacementText = "Dm"; // 替换为你指定的字符  
 
         ProcessFiles(baseDirectory, replacementText);

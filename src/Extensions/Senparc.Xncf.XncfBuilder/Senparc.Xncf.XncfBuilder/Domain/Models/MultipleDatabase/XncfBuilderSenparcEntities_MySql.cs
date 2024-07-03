@@ -14,7 +14,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     /// 用于生成 MySQL 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
-    public class XncfBuilderSenparcEntities_MySql : XncfBuilderEntities, IMultipleMigrationDbContext
+    public class XncfBuilderSenparcEntities_MySql : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
     {
         public XncfBuilderSenparcEntities_MySql(DbContextOptions<XncfBuilderSenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
         {

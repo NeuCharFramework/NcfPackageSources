@@ -8,7 +8,7 @@ using Senparc.Xncf.XncfBuilder;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Sqlite
 {
-    [DbContext(typeof(XncfBuilderEntities))]
+    [DbContext(typeof(XncfBuilderSenparcEntities))]
     [Migration("20201007170647_AddConfig")]
     partial class AddConfig
     {

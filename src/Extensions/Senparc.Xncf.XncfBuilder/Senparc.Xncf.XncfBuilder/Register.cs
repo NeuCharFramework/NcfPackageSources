@@ -50,7 +50,7 @@ namespace Senparc.Xncf.XncfBuilder
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
-            XncfBuilderEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderEntities;
+            XncfBuilderSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderSenparcEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
             //指定需要删除的数据实体
