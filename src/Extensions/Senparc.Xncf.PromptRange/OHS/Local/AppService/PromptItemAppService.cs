@@ -44,7 +44,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptItem_AddResponse>> Add(PromptItem_AddRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_AddResponse>, PromptItem_AddResponse>(
+            return await this.GetResponseAsync<PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
                     // 新增promptItem
@@ -153,7 +153,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // public async Task<AppResponseBase<TacticTree_GetResponse>> FindItemHistory(int promptItemId)
         // {
         //     // 根据promptItemId找到promptItem， 然后获取version
-        //     return await this.GetResponseAsync<AppResponseBase<TacticTree_GetResponse>, TacticTree_GetResponse>(
+        //     return await this.GetResponseAsync<TacticTree_GetResponse>(
         //         async (resp, logger) =>
         //         {
         //             var root = await _promptItemService.GenerateVersionTree(promptItemId);
@@ -169,7 +169,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind]
         public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
+            return await this.GetResponseAsync<PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
                     // 获取promptItem
@@ -194,7 +194,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         // public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
         // {
-        //     return await this.GetResponseAsync<AppResponseBase<PromptItem_GetResponse>, PromptItem_GetResponse>(
+        //     return await this.GetResponseAsync<PromptItem_GetResponse>(
         //         async (response, logger) =>
         //         {
         //             SenparcAI_GetByVersionResponse promptItem = await _promptItemService.GetWithVersionAsync(fullVersion);
@@ -216,7 +216,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind]
         public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
         {
-            return await this.GetResponseAsync<AppResponseBase<TacticTree_GetResponse>, TacticTree_GetResponse>(
+            return await this.GetResponseAsync<TacticTree_GetResponse>(
                 async (resp, logger) =>
                 {
                     var tacticTree = await _promptItemService.GenerateTacticTreeAsync(rangeName);
@@ -228,7 +228,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
                            throw new Exception($"未找到id为{request.Id}的prompt");
@@ -252,7 +252,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> UpdateDraftAsync(int promptItemId, PromptItemDto dto)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId && p.IsDraft == true) ??
                            throw new Exception($"未找到 ID　为{promptItemId}prompt草稿");
@@ -274,7 +274,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteAsync(int id)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == id) ??
                                  throw new Exception("未找到prompt");
@@ -301,7 +301,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+            return await this.GetResponseAsync<PromptItemDto>(
                 async (response, logger) =>
                     await _promptItemService.UpdateExpectedResultsAsync(promptItemId, expectedResults)
             );
@@ -316,7 +316,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         // public async Task<AppResponseBase<PromptItemDto>> GetBestPromptAsync(string rangeName, bool isAvg = true)
         // {
-        //     return await this.GetResponseAsync<AppResponseBase<PromptItemDto>, PromptItemDto>(
+        //     return await this.GetResponseAsync<PromptItemDto>(
         //         async (response, logger) => { return await _promptItemService.GetBestPromptAsync(rangeName, isAvg); });
         // }
 
@@ -328,7 +328,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> UploadPluginsAsync(IFormFile zipFile)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (resp, logger) =>
+            return await this.GetStringResponseAsync(async (resp, logger) =>
             {
                 await _promptItemService.UploadPluginsAsync(zipFile);
 

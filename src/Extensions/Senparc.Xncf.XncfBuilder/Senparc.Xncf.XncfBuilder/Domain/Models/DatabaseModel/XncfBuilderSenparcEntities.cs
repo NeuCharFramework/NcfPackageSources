@@ -10,9 +10,9 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder
 {
-    public class XncfBuilderEntities : XncfDatabaseDbContext, IMultipleMigrationDbContext
+    public class XncfBuilderSenparcEntities : XncfDatabaseDbContext, IMultipleMigrationDbContext
     {
-        public XncfBuilderEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public XncfBuilderSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 

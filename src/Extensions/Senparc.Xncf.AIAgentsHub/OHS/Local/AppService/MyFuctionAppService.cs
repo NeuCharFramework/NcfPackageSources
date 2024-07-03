@@ -24,7 +24,7 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
         [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 /* 页面上点击“执行”后，将调用这里的方法
                   *

@@ -38,7 +38,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> HumanScore(PromptResult_HumanScoreRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(
+            return await this.GetStringResponseAsync(
                 async (response, logger) =>
                 {
                     var result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
@@ -69,7 +69,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> RobotScore(int promptResultId, List<string> expectedResultList, bool isRefresh = false)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(
+            return await this.GetStringResponseAsync(
                 async (response, logger) =>
                 {
                     #region Validate
@@ -97,7 +97,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GetByItemId(int promptItemId)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
+            return await this.GetResponseAsync<PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
                     var result = await _promptResultService.GetByItemId(promptItemId);
@@ -118,7 +118,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptResult_ListResponse>, PromptResult_ListResponse>(
+            return await this.GetResponseAsync<PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
                     var promptItem = await _promptItemService.DraftSwitch(promptItemId, false);
@@ -152,7 +152,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<StringAppResponse> ReCalculateItemScore(int promptItemId)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(
+            return await this.GetStringResponseAsync(
                 async (response, logger) =>
                 {
                     await _promptResultService.UpdateEvalScoreAsync(promptItemId);

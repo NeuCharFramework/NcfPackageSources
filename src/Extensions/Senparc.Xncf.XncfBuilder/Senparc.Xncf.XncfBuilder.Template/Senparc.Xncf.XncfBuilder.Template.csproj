@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<PackageType>Template</PackageType>
-		<PackageVersion>0.11.0</PackageVersion>
+		<PackageVersion>0.12.0</PackageVersion>
 		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
 		<Title>XNCF Template</Title>
 		<Authors>JeffreySu</Authors>
@@ -14,12 +14,11 @@
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
 		<NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
-		<NoDefaultExcludes>true</NoDefaultExcludes>
+		<!--<NoDefaultExcludes>true</NoDefaultExcludes>-->
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
 		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
 		<PackageIcon>icon.jpg</PackageIcon>
-		<NoWarn>NU5017</NoWarn>
 		<PackageReleaseNotes>
 			v0.1.0 创世
 			v0.1.7 删除无用的日志文件
@@ -44,6 +43,7 @@
 			v0.10.0 重新生成数据库 Migration
 			v0.10.1 添加 SenparcEntities 文件中的命名空间引用
 			v0.11.0 AppService 中使用新的 GetResponseAsync() 简化方法（可以只输入一个 data 数据的泛型），并新增 GetStringResponseAsync() 方法
+			v0.12.0 添加达梦（Dm）数据库支持
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -58,6 +58,11 @@
 		<OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
+		<EmbeddedResource Remove="**\*" />
+
+		<Content Remove="**\*" />
+		<Compile Remove="**\*" />
+		
 		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
 		<Compile Remove="**\*" />
 		<Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
@@ -66,7 +71,12 @@
 		<None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+		<!--<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />-->
+		<!--解决 NU5017 问题-->
+		<Content Include="..\..\..\icon.jpg" Link="icon.jpg" Pack="true" PackagePath="/">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="readme.md" />
@@ -78,9 +88,11 @@
 		<None Remove="templates\template1\readme.md" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="readme.md" Pack="true" PackagePath="" />
+		<None Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="7.0.100" />
 	</ItemGroup>
 </Project>
