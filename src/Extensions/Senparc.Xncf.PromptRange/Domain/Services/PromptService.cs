@@ -129,21 +129,33 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                  * 3、满足上述任意条件后（都可能多个），在相关记录内，找到评分最高的一个
                                  */
 
-                                List<PromptItem> filtedPromptItems = null;
+                                List<PromptItem> filteredPromptItems = null;
 
                                 foreach (var functionName in functionNames)
                                 {
                                     if (PromptItem.IsPromptVersion(functionName))
                                     {
                                         //符合版本格式
-                                        filtedPromptItems = allPromptItems.Where(z => z.FullVersion.StartsWith(functionName)).ToList();
-                                        
+                                        filteredPromptItems = allPromptItems
+                                            .Where(z => PromptItem.IsValidVersionSegment(z.FullVersion, functionName))
+                                            .ToList();
                                     }
                                     else
                                     {
                                         //使用别名查找
+                                        filteredPromptItems = allPromptItems
+                                               .Where(z => z.NickName == functionName)
+                                               .ToList();
                                     }
                                 }
+
+                                if (filteredPromptItems.Count == 0)
+                                {
+                                    continue;
+                                }
+
+
+
 
                                 /* 同一个名称的可能在同一个靶道中，也可能在不同靶道中 */
                                 var nameGroupedPromptItems = allPromptItems.GroupBy(z => z.GetAvailableName());//每个 Group 就是一个函数（Function）集合
