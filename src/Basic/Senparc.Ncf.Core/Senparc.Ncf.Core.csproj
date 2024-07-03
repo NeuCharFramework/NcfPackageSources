@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.16.6-preview1</Version>
+		<Version>0.16.7-preview1</Version>
 		<AssemblyName>Senparc.Ncf.Core</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Core</RootNamespace>
 		<LangVersion>10.0</LangVersion>
@@ -28,6 +28,7 @@
 			v0.14.0 支持根据运行环境，自动启用 SenparcConfig.Development.config
 			v0.14.1 ConvertXmlToEntity 中加入 TimeOnly 和 DateOnly 类型
 			v0.16.4 重构 EntityBase 属性
+			v0.16.7 添加 MultipleDatabaseType.Dm 枚举类型
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

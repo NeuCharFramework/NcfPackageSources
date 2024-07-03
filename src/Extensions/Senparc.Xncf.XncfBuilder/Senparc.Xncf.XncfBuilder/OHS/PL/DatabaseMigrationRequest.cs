@@ -38,6 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  new SelectionItem(MultipleDatabaseType.MySql.ToString(),MultipleDatabaseType.MySql.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.PostgreSQL.ToString(),MultipleDatabaseType.PostgreSQL.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.Oracle.ToString(),MultipleDatabaseType.Oracle.ToString(),"",true),
+                  new SelectionItem(MultipleDatabaseType.Dm.ToString(),MultipleDatabaseType.Dm.ToString(),"",true),
             });
 
         [Required]
