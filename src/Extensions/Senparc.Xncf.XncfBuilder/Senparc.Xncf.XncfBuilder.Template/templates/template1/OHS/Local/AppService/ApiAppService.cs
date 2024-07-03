@@ -28,7 +28,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
-            return await this.GetResponseAsync<int>(async (response, logger) =>
+            return await this.GetResponseAsync<logger) =>
             {
                 await Task.Delay(100);
                 return 200;

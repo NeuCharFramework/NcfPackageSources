@@ -26,7 +26,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         /// <returns></returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
-            return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
+            return await this.GetResponseAsync<logger) =>
             {
                 var dt1 = SystemTime.Now;//开始计时
 

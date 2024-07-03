@@ -34,7 +34,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind]
         public async Task<StringAppResponse> TestAsync()
         {
-            var response = await this.GetResponseAsync<StringAppResponse, string>(
+            var response = await this.GetStringResponseAsync(
                 delegate { return Task.FromResult("Service is Running"); }
             );
             return response;
@@ -43,7 +43,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind]
         public async Task<AppResponseBase<Statistics_TodayTacticResponse>> TodayTacticStatisticAsync([FromQuery] string today)
         {
-            var response = await this.GetResponseAsync<AppResponseBase<Statistics_TodayTacticResponse>, Statistics_TodayTacticResponse>(
+            var response = await this.GetResponseAsync<Statistics_TodayTacticResponse>(
                 async (resp, logger) =>
                 {
                     int cnt = await _promptItemService.GetCountAsync(
@@ -58,7 +58,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScoreAsync(int promptItemId)
         {
-            return await this.GetResponseAsync<AppResponseBase<PromptItem_HistoryScoreResponse>, PromptItem_HistoryScoreResponse>(
+            return await this.GetResponseAsync<PromptItem_HistoryScoreResponse>(
                 async (response, logger) =>
                 {
                     logger.SaveLogs($"传入ID为{promptItemId}");
@@ -71,7 +71,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg = true)
         {
-            return await this.GetResponseAsync<AppResponseBase<Statistic_TodayTacticResponse>, Statistic_TodayTacticResponse>(
+            return await this.GetResponseAsync<Statistic_TodayTacticResponse>(
                 async (response, logger) =>
                 {
                     logger.SaveLogs($"查询三维折线图，传入ID为{promptItemId}");

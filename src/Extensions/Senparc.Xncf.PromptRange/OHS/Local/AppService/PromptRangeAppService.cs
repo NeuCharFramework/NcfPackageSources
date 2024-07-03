@@ -31,7 +31,7 @@ public class PromptRangeAppService : AppServiceBase
     // [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     // public async Task<AppResponseBase<PromptRangeDto>> UpdateExpectedResults(int promptRangeId, string expectedResults)
     // {
-    //     return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
+    //     return await this.GetResponseAsync<PromptRangeDto>(
     //         async (response, logger) =>
     //             await _promptRangeService.UpdateExpectedResultsAsync(promptRangeId, expectedResults)
     //     );
@@ -45,7 +45,7 @@ public class PromptRangeAppService : AppServiceBase
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<PromptRangeDto>> AddAsync(string alias)
     {
-        return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
+        return await this.GetResponseAsync<PromptRangeDto>(
             async (response, logger) =>
                 await _promptRangeService.AddAsync(alias)
         );
@@ -58,7 +58,7 @@ public class PromptRangeAppService : AppServiceBase
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public async Task<AppResponseBase<List<PromptRangeDto>>> GetListAsync()
     {
-        return await this.GetResponseAsync<AppResponseBase<List<PromptRangeDto>>, List<PromptRangeDto>>(
+        return await this.GetResponseAsync<List<PromptRangeDto>>(
             async (response, logger) =>
                 await _promptRangeService.GetListAsync()
         );
@@ -73,7 +73,7 @@ public class PromptRangeAppService : AppServiceBase
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public async Task<AppResponseBase<PromptRangeDto>> ChangeAliasAsync(int rangeId, string alias)
     {
-        return await this.GetResponseAsync<AppResponseBase<PromptRangeDto>, PromptRangeDto>(
+        return await this.GetResponseAsync<PromptRangeDto>(
             async (response, logger) =>
                 await _promptRangeService.ChangeAliasAsync(rangeId, alias)
         );
@@ -87,7 +87,7 @@ public class PromptRangeAppService : AppServiceBase
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
     public async Task<StringAppResponse> DeleteAsync(int rangeId)
     {
-        return await this.GetResponseAsync<StringAppResponse, string>(
+        return await this.GetStringResponseAsync(
             async (response, logger) =>
             {
                 var status = await _promptRangeService.DeleteAsync(rangeId);

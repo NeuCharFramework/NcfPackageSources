@@ -15,15 +15,16 @@ namespace Senparc.Ncf.Database.Dm
             (optionsBuilder, xncfDatabaseData) =>
         {
             var typedBuilder = optionsBuilder as DmDbContextOptionsBuilder;
-            typedBuilder.EnableRetryOnFailure(
-                       maxRetryCount: 5,
-                       maxRetryDelay: TimeSpan.FromSeconds(5),
-                       errorNumbersToAdd: new int[] { 2 });
+            //typedBuilder.EnableRetryOnFailure(
+            //           maxRetryCount: 5,
+            //           maxRetryDelay: TimeSpan.FromSeconds(5),
+            //           errorNumbersToAdd: new int[] { 2 });
         };
 
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase => 
         (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
         {
+            Console.WriteLine($"DM connectionString:{connectionString}");
             optionsBuilder.UseDm(connectionString, actionBase);
         };
 

@@ -41,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<LlModelDto>> Add(LlModel_AddRequest request)
         {
-            var resp = await this.GetResponseAsync<AppResponseBase<LlModelDto>, LlModelDto>(
+            var resp = await this.GetResponseAsync<LlModelDto>(
                 async (response, logger) =>
                 {
                     var llModelDto = await _llModelService.AddAsync(request);
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Put)]
         public async Task<StringAppResponse> Modify(LlmModel_ModifyRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(
+            return await this.GetStringResponseAsync(
                 async (response, logger) =>
                 {
                     await _llModelService.UpdateAsync(request);
@@ -79,7 +79,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind]
         public async Task<AppResponseBase<LlModel_GetPageResponse>> GetLlmModelList(int pageIndex, int pageSize, string key)
         {
-            return await this.GetResponseAsync<AppResponseBase<LlModel_GetPageResponse>, LlModel_GetPageResponse>(
+            return await this.GetResponseAsync<LlModel_GetPageResponse>(
                 async (response, logger) =>
                 {
                     var seh = new SenparcExpressionHelper<LlModel>();
@@ -108,7 +108,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> BatchDelete(List<int> ids)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var deletedCount = 0;
 

@@ -39,7 +39,7 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
         [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(Register))]
         public async Task<StringAppResponse> SetConfig(SetConfigFunctionAppRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 return request.BackupPath;
             });

@@ -43,7 +43,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         [FunctionRender("管理 ChatGroup", "管理 ChatGroup", typeof(Register))]
         public async Task<StringAppResponse> ManageChatGroupManage(ChatGroup_ManageChatGroupRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 //群主
                 if (request.Admin.SelectedValues.Count() == 0 || !int.TryParse(request.Admin.SelectedValues.First(), out int adminId))
@@ -110,7 +110,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         [FunctionRender("启动 ChatGroup", "启动 ChatGroup", typeof(Register))]
         public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 //群主
                 if (request.ChatGroups.SelectedValues.Count() == 0)
