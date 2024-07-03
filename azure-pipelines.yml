@@ -515,6 +515,27 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.Dm
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Dm.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.Dm- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.Dm.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
 - task: NuGetCommand@2
   displayName: Senparc.Xncf.XncfBuilder.Template
   inputs:
