@@ -53,6 +53,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return IWantToRun;
         }
 
+        /// <summary>
+        /// 根据输入的 Version、NickName 等规则，找到关联 PromptItem 中质量最好的一个
+        /// <para>当明确指定时，会精确命中； </para>
+        /// <para>当 Version 是模糊查询时，在下级 PromptItem 中查找最好的一个</para>
+        /// <para>当 NickName 存在多个的时候，寻找同名的最好的一个</para>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="senparcAiSetting"></param>
+        /// <param name="input"></param>
+        /// <param name="context"></param>
+        /// <param name="pluginCollection"></param>
+        /// <param name="pluginDir"></param>
+        /// <param name="promptTemplateFactory"></param>
+        /// <param name="services"></param>
+        /// <param name="functionPiple"></param>
+        /// <returns></returns>
         public async Task<T> GetPromptResultAsync<T>(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> pluginCollection = null, string pluginDir = null, IPromptTemplateFactory? promptTemplateFactory = null, IServiceProvider? services = null, params KernelFunction[] functionPiple)
         {
             //准备运行
@@ -128,89 +144,74 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                  * 3、满足上述任意条件后（都可能多个），在相关记录内，找到评分最高的一个
                                  */
 
-                                List<PromptItem> filteredPromptItems = null;
+                                Dictionary<string, PromptItem> filteredPromptItems = null;
 
                                 foreach (var functionName in functionNames)
                                 {
+                                    //第二层：在某个靶场下的具体 PromptItem 筛选
+                                    List<PromptItem> filteredItems = null;
                                     if (PromptItem.IsPromptVersion(functionName))
                                     {
                                         //符合版本格式
-                                        filteredPromptItems = allPromptItems
+                                        filteredItems = allPromptItems
                                             .Where(z => PromptItem.IsValidVersionSegment(z.FullVersion, functionName))
                                             .ToList();
                                     }
                                     else
                                     {
                                         //使用别名查找
-                                        filteredPromptItems = allPromptItems
+                                        filteredItems = allPromptItems
                                                .Where(z => z.NickName == functionName)
                                                .ToList();
                                     }
-                                }
 
-                                if (filteredPromptItems.Count == 0)
-                                {
-                                    continue;
-                                }
-
-
-
-
-                                /* 同一个名称的可能在同一个靶道中，也可能在不同靶道中 */
-                                var nameGroupedPromptItems = allPromptItems.GroupBy(z => z.GetAvailableName());//每个 Group 就是一个函数（Function）集合
-
-                                var groupedPromptItems = allPromptItems.GroupBy(z => z.Tactic);//每个 Group 就是一个靶道（Tactic）
-
-                                foreach (var promptItemGroup in groupedPromptItems)
-                                {
-                                    //第二层：靶道，对应 Function
-
-                                    //选择评分最高的一个
-                                    var valiablePromptItem = promptItemGroup.OrderByDescending(z => z.EvalMaxScore).ThenByDescending(z => z.LastUpdateTime).FirstOrDefault();
-
-                                    if (!pluginCollection.Keys.Any(z => z == valiablePromptItem.GetAvailableName()))
+                                    //选择最佳结果
+                                    if (filteredItems.Count != 0)
                                     {
-                                        //如果名称不匹配，则过滤
-                                        continue;
-                                    }
+                                        var theBestItem = filteredItems.OrderByDescending(z => z.EvalMaxScore).FirstOrDefault();
+                                        if (theBestItem != null)
+                                        {
+                                            //加入当前 functionName 的最佳结果
+                                            filteredPromptItems.Add(functionName, theBestItem);
 
-                                    PromptTemplateConfig promptTemplateConfig = new PromptTemplateConfig()
-                                    {
-                                        Description = valiablePromptItem.Note,//TODO: 专门提供注释
-                                        Name = this.GetAvaliableFunctionName(valiablePromptItem.GetAvailableName()),
-                                        //设置模型参数
-                                        ExecutionSettings = new Dictionary<string, PromptExecutionSettings>() {
-                                        { "Default", new PromptExecutionSettings() {
-                                            ExtensionData = new Dictionary<string, object>() {
-                                                { "max_tokens", valiablePromptItem.MaxToken },
-                                                { "temperature", valiablePromptItem.Temperature },
-                                                { "top_p", valiablePromptItem.TopP },
-                                                { "presence_penalty", valiablePromptItem.PresencePenalty },
-                                                { "frequency_penalty", valiablePromptItem.FrequencyPenalty },
-                                                { "stop_sequences", valiablePromptItem.StopSequences.IsNullOrEmpty() ? "" : valiablePromptItem.StopSequences.GetObject<List<string>>() }
+
+                                            PromptTemplateConfig promptTemplateConfig = new PromptTemplateConfig()
+                                            {
+                                                Description = theBestItem.Note,//TODO: 专门提供注释
+                                                Name = this.GetAvaliableFunctionName(theBestItem.GetAvailableName()),
+                                                //设置模型参数
+                                                ExecutionSettings = new Dictionary<string, PromptExecutionSettings>() {
+                                                    { "Default", new PromptExecutionSettings() {
+                                                        ExtensionData = new Dictionary<string, object>() {
+                                                            { "max_tokens", theBestItem.MaxToken },
+                                                            { "temperature", theBestItem.Temperature },
+                                                            { "top_p", theBestItem.TopP },
+                                                            { "presence_penalty", theBestItem.PresencePenalty },
+                                                            { "frequency_penalty", theBestItem.FrequencyPenalty },
+                                                            { "stop_sequences", theBestItem.StopSequences.IsNullOrEmpty() ? "" : theBestItem.StopSequences.GetObject<List<string>>() }
+                                                            }
+                                                         }
+                                                    }
+                                                 },
+                                                    //设置输入参数
+                                                InputVariables = theBestItem.VariableDictJson.IsNullOrEmpty()
+                                                                    ? new List<InputVariable>()
+                                                                    : theBestItem.GetInputValiableObject().Select(z => new InputVariable(z)).ToList(),
+                                                Template = theBestItem.Content
+                                                };
+
+                                            await Console.Out.WriteLineAsync("promptTemplateConfig:" + promptTemplateConfig.ToJson(true));
+
+                                            IPromptTemplate promptTemplate = factory.Create(promptTemplateConfig);
+
+                                            if (logger.IsEnabled(LogLevel.Trace))
+                                            {
+                                                logger.LogTrace("Registering function {0}.{1} loaded from {2}", pluginName, theBestItem.GetAvailableName(), promptRange.GetAvailableName());
                                             }
+
+                                            kernelFunctionList.Add(KernelFunctionFactory.CreateFromPrompt(promptTemplate, promptTemplateConfig, loggerFactory));
                                         }
-                                        }
-                                    },
-                                        //设置输入参数
-                                        InputVariables = valiablePromptItem.VariableDictJson.IsNullOrEmpty()
-                                                            ? new List<InputVariable>()
-                                                            : valiablePromptItem.GetInputValiableObject().Select(z => new InputVariable(z)).ToList(),
-                                        Template = valiablePromptItem.Content
-                                    };
-
-                                    await Console.Out.WriteLineAsync("promptTemplateConfig:" + promptTemplateConfig.ToJson(true));
-
-                                    IPromptTemplate promptTemplate = factory.Create(promptTemplateConfig);
-
-                                    if (logger.IsEnabled(LogLevel.Trace))
-                                    {
-                                        logger.LogTrace("Registering function {0}.{1} loaded from {2}", pluginName, valiablePromptItem.GetAvailableName(), promptRange.GetAvailableName());
                                     }
-
-                                    kernelFunctionList.Add(KernelFunctionFactory.CreateFromPrompt(promptTemplate, promptTemplateConfig, loggerFactory));
-
-
                                 }
 
                                 var avaliablePluginName = GetAvaliableFunctionName(pluginName);
@@ -218,24 +219,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                 kernelPlugin = KernelPluginFactory.CreateFromFunctions(avaliablePluginName, null, kernelFunctionList);
 
                             }
-
-                        }// foreach plugings end
-
-
-                        if (!fromDatabasePrompt || tryLocalPromptFile)
-                        {
-
-                            //从文件读取
-                            var finalDir = Path.Combine(pluginDir, pluginName);
-                            kernelPlugin = iWantToRun.ImportPluginFromPromptDirectory(finalDir, pluginName).kernelPlugin;
                         }
                     }
 
-                    foreach (var functionName in pluginItem.Value)
+                    //需要从 Plugin 文件读取
+                    if (!fromDatabasePrompt || tryLocalPromptFile)
+                    {
+                        //从文件读取
+                        var finalDir = Path.Combine(pluginDir, pluginName);
+                        kernelPlugin = iWantToRun.ImportPluginFromPromptDirectory(finalDir, pluginName).kernelPlugin;
+                    }
+
+                    //统一将文件或数据库读取的 function 进行注册
+                    foreach (var functionName in functionNames)
                     {
                         if (kernelPlugin.Contains(functionName))
                         {
-
                             allFunctionPiple.Add(kernelPlugin[functionName]);
                         }
                         else
@@ -244,8 +243,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         }
 
                     }
-                }
+                }// foreach pluginCollection end
             }
+
 
             if (functionPiple?.Length > 0)
             {
