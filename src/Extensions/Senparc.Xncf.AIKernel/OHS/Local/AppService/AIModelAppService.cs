@@ -58,7 +58,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AIModelDto>> GetAsync(int id)
         {
-            return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(async (response, logger) =>
+            return await this.GetResponseAsync<AIModelDto>(async (response, logger) =>
             {
                 var aIModel = await _aIModelService.GetObjectAsync(z => z.Id == id);
                 return _aIModelService.Mapper.Map<AIModelDto>(aIModel);
@@ -98,7 +98,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AIModelDto>>> GetListAsync(AIModel_GetListRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<List<AIModelDto>>, List<AIModelDto>>(
+            return await this.GetResponseAsync<List<AIModelDto>>(
                 async (response, logger) =>
                 {
                     var where = this.GetListWhere(request);
@@ -119,7 +119,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AIModelDto>> CreateAsync(AIModel_CreateOrEditRequest createRequest)
         {
-            return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(
+            return await this.GetResponseAsync<AIModelDto>(
                 async (response, logger) =>
                 {
                     // #region Validate
@@ -150,7 +150,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AIModelDto>> EditAsync(AIModel_CreateOrEditRequest request)
         {
-            return await this.GetResponseAsync<AppResponseBase<AIModelDto>, AIModelDto>(async (response, logger) =>
+            return await this.GetResponseAsync<AIModelDto>(async (response, logger) =>
             {
                 var aiModelDto = await _aIModelService.EditAsync(request);
 
@@ -166,7 +166,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<bool>> DeleteAsync(int id)
         {
-            return await this.GetResponseAsync<AppResponseBase<bool>, bool>(async (response, logger) =>
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
                 AIModel aIModel = await _aIModelService.GetObjectAsync(z => z.Id == id);
                 if (aIModel == null)

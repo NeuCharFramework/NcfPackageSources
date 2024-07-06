@@ -36,7 +36,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         [FunctionRender("备份数据库", "将当前使用的数据库备份到指定路径。友情提示：建议确保该路径不具备公开访问权限！", typeof(Register))]
         public async Task<StringAppResponse> Backup(DatabaseBackup_BackupRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 try
                 {
@@ -120,7 +120,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         [FunctionRender("导出当前数据库 SQL 脚本", "导出当前站点正在使用的所有表的 SQL 脚本", typeof(Register))]
         public async Task<StringAppResponse> ExportSQL()
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 logger.Append("开始获取 ISenparcEntities 对象");
                 var senparcEntities = ServiceProvider.GetService(typeof(ISenparcEntitiesDbContext)) as SenparcEntitiesBase;

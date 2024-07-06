@@ -24,7 +24,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         //[FunctionRender("测试 AI 模型", "测试已经设置的模型", typeof(Register))]
         //public async Task<StringAppResponse> RunModelAsync(AIModelStudioRequest_RunModelAsync request)
         //{
-        //    return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+        //    return await this.GetStringResponseAsync(async (response, logger) =>
         //    {
         //        await request.LoadData(ServiceProvider);//加载数据
 

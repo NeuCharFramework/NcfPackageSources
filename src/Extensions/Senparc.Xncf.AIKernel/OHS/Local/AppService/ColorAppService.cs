@@ -26,7 +26,7 @@
 //        /// <returns></returns>
 //        public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
 //        {
-//            return await this.GetResponseAsync<AppResponseBase<Color_GetOrInitColorResponse>, Color_GetOrInitColorResponse>(async (response, logger) =>
+//            return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
 //            {
 //                var dt1 = SystemTime.Now;//开始计时
 

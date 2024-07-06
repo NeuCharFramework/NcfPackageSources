@@ -16,7 +16,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     /// 用于生成 Oracle 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
-    public class XncfBuilderSenparcEntities_Oracle : XncfBuilderEntities, IMultipleMigrationDbContext
+    public class XncfBuilderSenparcEntities_Oracle : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
     {
         public XncfBuilderSenparcEntities_Oracle(DbContextOptions<XncfBuilderSenparcEntities_Oracle> dbContextOptions) : base(dbContextOptions)
         {

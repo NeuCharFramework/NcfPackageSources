@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.16.1-preview1" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />

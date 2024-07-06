@@ -12,7 +12,8 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
     /// </summary>
     public class BasePoolEntities : SenparcEntities
     {
-        public BasePoolEntities(DbContextOptions/*<BasePoolEntities>*/ dbContextOptions, IServiceProvider serviceProvider) : base(dbContextOptions, serviceProvider)
+        public BasePoolEntities(DbContextOptions/*<BasePoolEntities>*/ dbContextOptions, IServiceProvider serviceProvider) 
+            : base(dbContextOptions, serviceProvider)
         {
 
         }

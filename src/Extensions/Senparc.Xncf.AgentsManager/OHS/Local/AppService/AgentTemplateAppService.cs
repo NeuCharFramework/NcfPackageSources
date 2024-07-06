@@ -31,7 +31,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         [FunctionRender("Agent 模板管理", "Agent 模板管理", typeof(Register))]
         public async Task<StringAppResponse> AgentTemplateManage(AgentTemplate_ManageRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 SenparcAI_GetByVersionResponse promptResult;
                 var promptCode = request.GetySystemMessagePromptCode();

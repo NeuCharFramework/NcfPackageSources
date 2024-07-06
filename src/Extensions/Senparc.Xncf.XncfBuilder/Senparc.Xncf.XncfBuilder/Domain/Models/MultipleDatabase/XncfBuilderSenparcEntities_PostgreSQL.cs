@@ -16,7 +16,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     /// 用于生成 PostgreSQL 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
-    public class XncfBuilderSenparcEntities_PostgreSQL : XncfBuilderEntities, IMultipleMigrationDbContext
+    public class XncfBuilderSenparcEntities_PostgreSQL : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
     {
         public XncfBuilderSenparcEntities_PostgreSQL(DbContextOptions<XncfBuilderSenparcEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
         {

@@ -16,6 +16,7 @@ namespace Senparc.Ncf.Core.Models
         AzureCosmos,
         Oracle,
         PostgreSQL,
+        Dm,
         Other = 99999,
         //TODO:更多
     }

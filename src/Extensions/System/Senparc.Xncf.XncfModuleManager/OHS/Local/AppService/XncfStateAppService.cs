@@ -22,7 +22,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         [FunctionRender("查看 XNCF 模型的 Function 状态", "查看当前 XNCF 的 Function 载入情况", typeof(Register))]
         public async Task<StringAppResponse> ShowFunctions(XncfState_ShowFunctionsRequest request)
         {
-            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var selectedRegisterUid = request.XncfModule.SelectedValues.FirstOrDefault();
                 var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == selectedRegisterUid);
