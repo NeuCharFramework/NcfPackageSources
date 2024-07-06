@@ -88,7 +88,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (iWantToRun.Kernel.Plugins.Contains(pluginName))
                     {
-
                         kernelPlugin = iWantToRun.Kernel.Plugins[pluginName];
                     }
                     else

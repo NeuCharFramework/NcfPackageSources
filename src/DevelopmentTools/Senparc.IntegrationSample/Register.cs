@@ -2,9 +2,12 @@ using Microsoft.Extensions.Options;
 
 using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;
+using Senparc.CO2NET.Utilities;
+using Senparc.CO2NET.WebApi.WebApiEngines;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
+using Senparc.Weixin.WxOpen.AdvancedAPIs.WxApp.WxAppJson;
 using Senparc.Xncf.AreasBase;
 
 namespace Senparc.IntegrationSample
@@ -24,10 +27,13 @@ namespace Senparc.IntegrationSample
         public static void AddNcf(this WebApplicationBuilder builder)
         {
             //激活 Xncf 扩展引擎（必须）
-            var logMsg = builder.StartWebEngine(new[] { "Senparc.IntegrationSample.AreaTests" });
+            var logMsg = builder.StartWebEngine(new[] { "Senparc.IntegrationSample.AreaTests","Senparc.Weixin.MP" });
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");
+
+            //var mvcCoreBuilder = builder.Services.AddMvcCore();
+            //builder.Services.AddAndInitDynamicApi(mvcCoreBuilder, options => options.DocXmlPath = ServerUtility.ContentRootMapPath("~/App_Data/ApiDocXml"));
         }
 
         public static void UseNcf<TDatabaseConfiguration>(this WebApplication app)

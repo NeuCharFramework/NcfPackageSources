@@ -9,6 +9,10 @@ namespace Senparc.Ncf.Database.Dm
 {
     public class DmDatabaseConfiguration : DatabaseConfigurationBase<DmDbContextOptionsBuilder, DmOptionsExtension>
     {
+        public DmDatabaseConfiguration()
+        {
+        }
+
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Dm;
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => 
