@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.PromptRange.Tests;
 
-namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
+namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
 {
     [TestClass()]
     public class PromptServiceTests : PromptTestBase
     {
+
         protected PromptService _service;
 
         public PromptServiceTests()
@@ -15,6 +18,8 @@ namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
         }
 
         #region XncfBuilderPrompt 测试
+
+        #region 文件类型 Prompt
 
         /// <summary>
         /// 测试实体类生成：PromptGroup
@@ -72,5 +77,17 @@ namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
 
         #endregion
 
+
+        #region 数据库类型 Prompt
+
+        [TestMethod()]
+        public void GetPromptResultAsyncTest()
+        {
+            Assert.Fail();
+        }
+
+        #endregion
+
+        #endregion
     }
 }

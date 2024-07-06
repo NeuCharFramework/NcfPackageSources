@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Razor.Language.Extensions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
-using Senparc.AI.Entities;
-using Senparc.AI.Entities.Keys;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Entities;
@@ -14,13 +15,7 @@ using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Enums;
-using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -193,12 +188,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                                          }
                                                     }
                                                  },
-                                                    //设置输入参数
+                                                //设置输入参数
                                                 InputVariables = theBestItem.VariableDictJson.IsNullOrEmpty()
                                                                     ? new List<InputVariable>()
                                                                     : theBestItem.GetInputValiableObject().Select(z => new InputVariable(z)).ToList(),
                                                 Template = theBestItem.Content
-                                                };
+                                            };
 
                                             await Console.Out.WriteLineAsync("promptTemplateConfig:" + promptTemplateConfig.ToJson(true));
 
