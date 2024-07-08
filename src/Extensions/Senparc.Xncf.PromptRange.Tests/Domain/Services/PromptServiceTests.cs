@@ -3,6 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Tests;
+using Moq;
+using Senparc.Ncf.Repository;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using System.Linq.Expressions;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
 {
@@ -14,7 +18,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
 
         public PromptServiceTests()
         {
-            _service = _serviceProvder.GetRequiredService<PromptService>();
+            //_service = _serviceProvder.GetRequiredService<PromptService>();
         }
 
         #region XncfBuilderPrompt 测试
@@ -81,9 +85,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
         #region 数据库类型 Prompt
 
         [TestMethod()]
-        public void GetPromptResultAsyncTest()
+        public async Task GetPromptResultAsyncTest()
         {
-            Assert.Fail();
+              var service = new PromptItemService(base.MockObjects.PromptItemRepository, base._serviceProvider, null, null);
+
+            // Act  
+            var result = await service.ForUnitTest(1);
+            Assert.AreEqual(base.MockObjects.PromptItems.First(), result);
         }
 
         #endregion

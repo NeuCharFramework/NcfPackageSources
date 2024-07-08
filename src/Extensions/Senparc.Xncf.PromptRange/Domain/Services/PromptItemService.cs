@@ -37,6 +37,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         _promptRangeService = promptRangeService;
     }
 
+    public async Task<PromptItem> ForUnitTest(int id)
+    {
+        return await base.RepositoryBase.GetFirstOrDefaultObjectAsync(z => z.Id == id);
+    }
+
     /// <summary>
     /// 新增， 打靶时
     /// </summary>
