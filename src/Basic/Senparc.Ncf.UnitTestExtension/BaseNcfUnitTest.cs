@@ -52,7 +52,7 @@ namespace Senparc.Ncf.UnitTestExtension
         /// </summary>  
         /// <typeparam name="T">实体类型</typeparam>  
         /// <returns>仓储实例</returns>  
-        public (IClientRepositoryBase<T> Repository, Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T, TKey>() where T : EntityBase<TKey>
+        public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T, TKey>() where T : EntityBase<TKey>
         {
             var repo = GetRespository<T>();
 
@@ -95,7 +95,7 @@ namespace Senparc.Ncf.UnitTestExtension
         /// </summary>  
         /// <typeparam name="T">实体类型</typeparam>  
         /// <returns>仓储实例</returns>  
-        public (IClientRepositoryBase<T> Repository, Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T>() where T : EntityBase
+        public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T>() where T : EntityBase
         {
             TryInitSeedData<T>();
 
@@ -193,7 +193,14 @@ namespace Senparc.Ncf.UnitTestExtension
                     return Task.FromResult(dataList.Count(func));
                 });
 
-            return (Repository: mockRepository.Object, MockRepository: mockRepository, DataList: dataList);
+            return (MockRepository: mockRepository, DataList: dataList);
+        }
+
+        public Mock<TInterface> CreateMockForExtendedInterface<TInterface, TBase>(Mock<TBase> baseMock)
+            where TInterface : class, TBase
+            where TBase : class
+        {
+            return baseMock.As<TInterface>();
         }
     }
 }
