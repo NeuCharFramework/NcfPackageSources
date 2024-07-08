@@ -738,6 +738,28 @@ steps:
   condition: succeededOrFailed()
 
 
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.UnitTestExtension
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.UnitTestExtension.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.UnitTestExtension- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.UnitTestExtension.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+
 # 系统模块 结束
 
 - task: DotNetCoreCLI@2
