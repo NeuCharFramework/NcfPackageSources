@@ -39,7 +39,7 @@ public class PromptItem : EntityBase<int>
 
     #region 模型参数
 
-    [Required] 
+    [Required]
     public int ModelId { get; private set; }
 
     /// <summary>
@@ -189,6 +189,109 @@ public class PromptItem : EntityBase<int>
 
     public bool IsDraft { get; private set; }
 
+    #region 静态方法
+
+    /// <summary>
+    /// 判断是否为 Version 格式
+    /// </summary>
+    /// <returns></returns>
+    public static bool IsPromptVersion(string versionOrNickName)
+    {
+        /* 判断是否为 Prompt 版本（从左到右，必须包含 -T 之前的部分，-Txxx 为可选，当，出现 -T 时，-A 为可选，但 -A 不能单独出现）。
+         * 可能的格式为：
+         * 2023.12.14.1-T1-A123，
+         * 2023.12.14.2-T1.1-A123
+         * 2023.12.14.3-T2.1-A123
+         * 2023.12.14.1-T2.2-A123
+         * 2023.12.14.1-T2.2.1-A123
+         * ...（T 后面可以有多个小数点）
+         * 2023.12.14.1
+         * 2023.12.14.2-T1.1
+         */
+        return Regex.IsMatch(versionOrNickName, @"^\d{4}\.\d{2}\.\d{2}\.\d+(-T\d+(\.\d+)*(-A\d+)?)?$");
+    }
+
+    /// <summary>
+    /// 判断 Version 是否能匹配前缀
+    /// </summary>
+    /// <param name="compareString"></param>
+    /// <param name="inputString"></param>
+    /// <returns></returns>
+    public static bool IsValidVersionSegment(string compareString, string inputString)
+    {
+        // 完整正则表达式  
+        string pattern = @"^\d{4}\.\d{2}\.\d{2}\.\d+(-T\d+(\.\d+)*(-A\d+)?)?$";
+        Regex fullRegex = new Regex(pattern);
+
+        // 检查输入字符串和对比字符串是否完全匹配  
+        if (compareString == inputString)
+        {
+            return true;
+        }
+
+        // 检查输入字符串是否部分匹配对比字符串  
+        if (!fullRegex.IsMatch(compareString))
+        {
+            return false;
+        }
+
+        // 分割对比字符串和输入字符串  
+        string[] compareParts = compareString.Split('-');
+        string[] inputParts = inputString.Split('-');
+
+        // 输入部分段数不能超过对比字符串段数  
+        if (inputParts.Length > compareParts.Length)
+        {
+            return false;
+        }
+
+        // 检查每个段是否匹配，并处理-T部分的继承规则  
+        for (int i = 0; i < inputParts.Length; i++)
+        {
+            if (i == 0)
+            {
+                // 比较日期段  
+                if (compareParts[i] != inputParts[i])
+                {
+                    return false;
+                }
+            }
+            else if (inputParts[i].StartsWith("T"))
+            {
+                // 处理-T部分的继承规则  
+                string[] compareTParts = compareParts[i].Substring(1).Split('.');
+                string[] inputTParts = inputParts[i].Substring(1).Split('.');
+
+                // 输入的T部分不能比对比的T部分更长  
+                if (inputTParts.Length > compareTParts.Length)
+                {
+                    return false;
+                }
+
+                // 比较每一级T部分  
+                for (int j = 0; j < inputTParts.Length; j++)
+                {
+                    if (compareTParts[j] != inputTParts[j])
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // 其他部分必须完全匹配  
+                if (compareParts[i] != inputParts[i])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    #endregion
+
 
     #region ctor 构造函数
 
@@ -329,7 +432,7 @@ public class PromptItem : EntityBase<int>
     /// <param name="variableDictJson"></param>
     /// <returns></returns>
     public PromptItem UpdateModelParam(float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty,
-        string stopSequences,string variableDictJson)
+        string stopSequences, string variableDictJson)
     {
         TopP = topP;
         Temperature = temperature;
@@ -343,7 +446,7 @@ public class PromptItem : EntityBase<int>
         return this;
     }
 
-    public PromptItem UpdateVariablesJson(string variablesJson,string prefix, string suffix)
+    public PromptItem UpdateVariablesJson(string variablesJson, string prefix, string suffix)
     {
         VariableDictJson = variablesJson;
         Prefix = prefix;
@@ -426,4 +529,6 @@ public class PromptItem : EntityBase<int>
             return this.FullVersion;
         }
     }
+
+
 }

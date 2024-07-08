@@ -72,7 +72,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<!--<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />-->
-		<!--解决 NU5017 问题-->
 		<Content Include="..\..\..\icon.jpg" Link="icon.jpg" Pack="true" PackagePath="/">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

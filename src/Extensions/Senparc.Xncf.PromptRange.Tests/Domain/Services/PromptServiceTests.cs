@@ -1,20 +1,29 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.PromptRange.Tests;
+using Moq;
+using Senparc.Ncf.Repository;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using System.Linq.Expressions;
 
-namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
+namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
 {
     [TestClass()]
     public class PromptServiceTests : PromptTestBase
     {
+
         protected PromptService _service;
 
         public PromptServiceTests()
         {
-            _service = _serviceProvder.GetRequiredService<PromptService>();
+            //_service = _serviceProvder.GetRequiredService<PromptService>();
         }
 
         #region XncfBuilderPrompt 测试
+
+        #region 文件类型 Prompt
 
         /// <summary>
         /// 测试实体类生成：PromptGroup
@@ -72,5 +81,21 @@ namespace Senparc.Xncf.PromptRange.Tests.Domain.Services
 
         #endregion
 
+
+        #region 数据库类型 Prompt
+
+        [TestMethod()]
+        public async Task GetPromptResultAsyncTest()
+        {
+              var service = new PromptItemService(base.MockObjects.PromptItemRepository, base._serviceProvider, null, null);
+
+            // Act  
+            var result = await service.ForUnitTest(1);
+            Assert.AreEqual(base.MockObjects.PromptItems.First(), result);
+        }
+
+        #endregion
+
+        #endregion
     }
 }
