@@ -23,7 +23,7 @@ namespace Senparc.Ncf.Core.Models
         /// <summary>
         /// 强制手动更改DetectChange
         /// </summary>
-        public bool ManualDetectChangeObject { get; set; }
+        public virtual bool ManualDetectChangeObject { get; set; }
         public abstract DbContext BaseDataContext { get; }
 
         public abstract void CloseConnection();

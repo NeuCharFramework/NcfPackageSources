@@ -11,6 +11,7 @@ using Moq;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
+using Senparc.Xncf.SystemCore.Domain.Database;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
@@ -100,6 +101,12 @@ namespace Senparc.Ncf.UnitTestExtension
             TryInitSeedData<T>();
 
             var mockRepository = new Mock<IClientRepositoryBase<T>>();
+
+            //设置 RepositoryBase.BaseDB.ManualDetectChangeObject
+            var mockBaseDB = new Mock<NcfUnitTestDataDb>();
+            //mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
+            mockBaseDB.SetupProperty(z => z.ManualDetectChangeObject, true);
+            mockRepository.Setup(z => z.BaseDB).Returns(new NcfUnitTestDataDb(this._serviceProvider));
 
             var dataList = dataLists[typeof(T)].Cast<T>().ToList();
 

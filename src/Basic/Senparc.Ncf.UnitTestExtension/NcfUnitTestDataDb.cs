@@ -1,27 +1,24 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Senparc.CO2NET;
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Utility;
+using Senparc.Xncf.SystemCore.Domain.Database;
 
-namespace Senparc.Xncf.SystemCore.Domain.Database
+namespace Senparc.Ncf.UnitTestExtension
 {
-    public interface INcfClientDbData : INcfDbData
+
+    public class NcfUnitTestDataDb : NcfDbData, INcfDbData, INcfClientDbData
     {
-        BasePoolEntities DataContext { get; }
-    }
+        private NcfUnitTestEntities dataContext;
 
-    //[Pluggable("ClientDatabase")]
-    public class NcfClientDbData : NcfDbData, INcfDbData, INcfClientDbData
-    {
-        private BasePoolEntities dataContext;
-
-        public NcfClientDbData() { }
-
-        public NcfClientDbData(BasePoolEntities senparcEntities)
+        public NcfUnitTestDataDb(IServiceProvider serviceProvider)
         {
-            dataContext = senparcEntities;
+            dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
         }
+
 
 
         public BasePoolEntities DataContext
