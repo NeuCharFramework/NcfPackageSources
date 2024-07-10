@@ -21,6 +21,7 @@ namespace Senparc.Ncf.Service
 
         public IRepositoryBase<T> RepositoryBase { get; set; }
         protected IServiceProvider _serviceProvider;
+
         public ServiceBase(IRepositoryBase<T> repo, IServiceProvider serviceProvider)
             : base(repo)
         {
@@ -304,7 +305,10 @@ namespace Senparc.Ncf.Service
             {
                 TryDetectChange(obj);
             }
+
             RepositoryBase.Save(obj);
+
+            AfterSaveObject?.Invoke(this.BaseData, obj);
         }
 
         public virtual async Task SaveObjectAsync(T obj)
@@ -313,22 +317,34 @@ namespace Senparc.Ncf.Service
             {
                 TryDetectChange(obj);
             }
+
             await RepositoryBase.SaveAsync(obj).ConfigureAwait(false);
+
+            AfterSaveObject?.Invoke(this.BaseData, obj);
         }
 
         public virtual async Task SaveObjectListAsync(IEnumerable<T> objs)
         {
             await RepositoryBase.SaveObjectListAsync(objs);
+
+            foreach (var item in objs)
+            {
+                AfterSaveObject?.Invoke(this.BaseData, item);
+            }
         }
 
         public virtual void SaveChanges()
         {
             RepositoryBase.SaveChanges();
+
+            AfterSaveChanges?.Invoke(this.BaseData);
         }
 
         public virtual async Task SaveChangesAsync()
         {
             await RepositoryBase.SaveChangesAsync().ConfigureAwait(false);
+
+            AfterSaveChanges?.Invoke(this.BaseData);
         }
 
 
@@ -340,24 +356,34 @@ namespace Senparc.Ncf.Service
         public virtual void DeleteObject(Expression<Func<T, bool>> predicate)
         {
             T obj = GetObject(predicate);
+
             DeleteObject(obj);
+
+            AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
         public virtual async Task DeleteObjectAsync(Expression<Func<T, bool>> predicate)
         {
             T obj = await GetObjectAsync(predicate);
+
             await DeleteObjectAsync(obj);
+
+            AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
 
         public virtual void DeleteObject(T obj)
         {
             RepositoryBase.Delete(obj);
+
+            AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
         public virtual async Task DeleteObjectAsync(T obj)
         {
             await RepositoryBase.DeleteAsync(obj, true);
+
+            AfterDeleteObject?.Invoke(this.BaseData, obj);
         }
 
         public virtual void DeleteAll(IEnumerable<T> objects)
@@ -373,11 +399,21 @@ namespace Senparc.Ncf.Service
         {
             var list = await GetFullListAsync(where);
             await RepositoryBase.DeleteAllAsync(list, deleteItemAction, softDelete);
+
+            foreach (var obj in list)
+            {
+                AfterDeleteObject?.Invoke(this.BaseData, obj);
+            }
         }
 
         public virtual async Task DeleteAllAsync(IEnumerable<T> objects, Action<T> deleteItemAction = null, bool softDelete = false)
         {
             await RepositoryBase.DeleteAllAsync(objects, deleteItemAction, softDelete);
+
+            foreach (var obj in objects)
+            {
+                AfterDeleteObject?.Invoke(this.BaseData, obj);
+            }
         }
 
         #endregion
