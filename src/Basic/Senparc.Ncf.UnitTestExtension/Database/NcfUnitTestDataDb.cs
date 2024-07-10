@@ -17,7 +17,6 @@ namespace Senparc.Ncf.UnitTestExtension.Database
         public NcfUnitTestDataDb(IServiceProvider serviceProvider)
         {
             dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
-            Console.WriteLine(dataContext.GetType().FullName);
         }
 
 
