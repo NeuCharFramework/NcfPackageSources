@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Repository;
 
 namespace Senparc.Ncf.Service
@@ -17,17 +18,17 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 在指定对象保存后执行（无论是否成功），将影响全局所有保存过程
         /// </summary>
-        public static Action<object>? AfterSaveObject { get; set; }
+        public static Action<IDataBase, object>? AfterSaveObject { get; set; }
 
         /// <summary>
         /// 在指定对象删除后执行（无论是否成功），将影响全局所有保存过程
         /// </summary>
-        public static Action<object>? AfterDeleteObject { get; set; }
+        public static Action<IDataBase, object>? AfterDeleteObject { get; set; }
 
         /// <summary>
         /// 在所有对象保存后执行（无论是否成功），将影响全局所有保存过程
         /// </summary>
-        public static Action? AfterSaveChanges { get; set; }
+        public static Action<IDataBase>? AfterSaveChanges { get; set; }
 
         #endregion
 

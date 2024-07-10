@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.SystemCore.Domain.Database;
+using Senparc.Ncf.UnitTestExtension.Database;
 
 namespace Senparc.Ncf.UnitTestExtension
 {

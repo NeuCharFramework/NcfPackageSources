@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Senparc.Xncf.SystemCore.Domain.Database;
 
-namespace Senparc.Ncf.UnitTestExtension
+namespace Senparc.Ncf.UnitTestExtension.Database
 {
     public class NcfUnitTestEntities : BasePoolEntities //DbContext
     {

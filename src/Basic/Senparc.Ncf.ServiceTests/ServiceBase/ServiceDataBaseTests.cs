@@ -20,7 +20,7 @@ namespace Senparc.Ncf.Service.Tests
             string msg = null;
 
             //设置保存对象后的行为
-            ServiceDataBase.AfterSaveObject = obj => msg = obj.GetType().Name;
+            ServiceDataBase.AfterSaveObject = (dataBase,obj) => msg = obj.GetType().Name;
 
             var promptRangeRepo = base.GetRespository<PromptRange>();
             var promptRangeService = new PromptRangeService(promptRangeRepo.MockRepository.Object, base._serviceProvider);
@@ -28,6 +28,23 @@ namespace Senparc.Ncf.Service.Tests
             var promptRange = new PromptRange("Name", "Alias");
             await promptRangeService.SaveObjectAsync(promptRange);
             Assert.AreEqual(promptRange.GetType().Name, msg);
+        }
+
+        [TestMethod]
+        public async Task AfterSaveChangesTest()
+        {
+            string msg = null;
+
+            //设置保存对象后的行为
+            ServiceDataBase.AfterSaveChanges = (dataBase) => msg = dataBase.BaseDB.GetType().Name;
+
+            var promptRangeRepo = base.GetRespository<PromptRange>();
+            var promptRangeService = new PromptRangeService(promptRangeRepo.MockRepository.Object, base._serviceProvider);
+
+            var promptRange = new PromptRange("Name", "Alias");
+            await promptRangeService.SaveObjectAsync(promptRange);
+
+            Assert.AreEqual("NcfUnitTestDataDb", msg);
         }
 
         [TestMethod()]

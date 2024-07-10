@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.SystemCore.Domain.Database;
 
-namespace Senparc.Ncf.UnitTestExtension
+namespace Senparc.Ncf.UnitTestExtension.Database
 {
 
     public class NcfUnitTestDataDb : NcfDbData, INcfDbData, INcfClientDbData
@@ -17,6 +17,7 @@ namespace Senparc.Ncf.UnitTestExtension
         public NcfUnitTestDataDb(IServiceProvider serviceProvider)
         {
             dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
+            Console.WriteLine(dataContext.GetType().FullName);
         }
 
 
