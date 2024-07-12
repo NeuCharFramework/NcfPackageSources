@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
@@ -602,19 +606,82 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// 返回带树形结构的 PromptRange
     /// </summary>
-    /// <param name="fullVersion"></param>
     /// <returns></returns>
-    public (string RangeName, string Tactic, int Aim) GetVersionObject(string fullVersion)
+    public async Task<List<KeyValuePair<string, string>>> GetPromptRangeTree()
     {
-        string[] parts = fullVersion.Split(new[] { "-T", "-A" }, StringSplitOptions.RemoveEmptyEntries);
+        List<KeyValuePair<string, string>> items = new List<KeyValuePair<string, string>>();
 
-        string rangeName = parts[0];
-        string tactic = parts[1];
-        int aim = int.Parse(parts[2]);
+        var promptRangeService = _promptRangeService;
+        var allPromptRanges = await promptRangeService.GetFullListAsync(z => true, z => z.Id, OrderingType.Ascending);
 
-        return (rangeName, tactic, aim);
+        //获取柱状结构前缀
+        Func<int, string> GetPrefix = currentLevel => string.Concat(Enumerable.Repeat("┣  ", currentLevel));
+
+        //读取评分
+        Func<decimal, string> GetScore = score => score < 0 ? "-" : score.ToString();
+
+        foreach (var promptRange in allPromptRanges)
+        {
+            //获取树状结构
+
+            var rangeTree = await this.GenerateTacticTreeAsync(promptRange.RangeName);
+
+            if (rangeTree.Count == 0)
+            {
+                continue;
+            }
+
+            //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导
+            items.Add(new KeyValuePair<string, string>("▽ " + $"{promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName));
+
+            var lastTactic = string.Empty;
+            var lastAim = 0;
+            var level = 0;
+
+            foreach (var treeNote in rangeTree)
+            {
+                // Traverse the rangeTree and its children
+                TraversePromptItem(treeNote);
+            }
+
+
+            void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
+            {
+                var versionObj = PromptItem.GetVersionObject(treeNote.Data.FullVersion);
+
+                var newLevel = lastTactic != versionObj.Tactic && versionObj.Tactic.Contains(lastTactic);
+                if (newLevel)
+                {
+                    level++;//进入下一层，如从 T1 进入到 T1.1
+
+                    //正在开始一个新的 Tactic，插入这个 Tactic
+                    var partPromptCode = $"{versionObj.RangeName}-T{versionObj.Tactic}";
+
+                    items.Add(new KeyValuePair<string, string>(GetPrefix(level) + " ▽ " + $"{partPromptCode}", partPromptCode));
+                }
+
+                lastTactic = versionObj.Tactic;
+                lastAim = versionObj.Aim;
+
+                var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
+                items.Add(new KeyValuePair<string, string>(
+                     GetPrefix(level + 1) + $" {treeNote.Name}({nickName}AvgScore:{GetScore(treeNote.Data.EvalAvgScore)}，MaxScore:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}",
+                     treeNote.Data.FullVersion));
+
+                foreach (var child in treeNote.Children)
+                {
+                    TraversePromptItem(child);
+                }
+
+                if (newLevel)
+                {
+                    level--;
+                }
+            }
+        }
+
+        return items;
     }
-
 }

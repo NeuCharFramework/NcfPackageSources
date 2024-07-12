@@ -301,7 +301,7 @@ public class PromptItem : EntityBase<int>
     /// <param name="promptRange"></param>
     /// <param name="nickName"></param>
     /// <param name="tactic"></param>
-    public PromptItem(PromptRangeDto promptRange, string nickName, int tactic)
+    public PromptItem(PromptRangeDto promptRange, string nickName, string tactic)
     {
         RangeId = promptRange.Id;
         RangeName = promptRange.RangeName;
@@ -531,4 +531,18 @@ public class PromptItem : EntityBase<int>
     }
 
 
+    /// <summary>
+    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// </summary>
+    /// <param name="fullVersion"></param>
+    /// <returns></returns>
+    public static (string RangeName, string Tactic, int Aim) GetVersionObject(string fullVersion)
+    {
+        string[] parts = fullVersion.Split(new[] { "-T", "-A" }, StringSplitOptions.RemoveEmptyEntries);
+
+        string rangeName = parts[0];
+        string tactic = parts[1];
+        int aim = int.Parse(parts[2]);
+        return (rangeName, tactic, aim);
+    }
 }

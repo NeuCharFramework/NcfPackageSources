@@ -335,7 +335,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     }
 
                     var promptItemAlias = Path.GetFileName(pluginDir);
-                    var promptItem = new PromptItem(promptRangeDto, promptItemAlias, ++tacticIndex);
+                    var promptItem = new PromptItem(promptRangeDto, promptItemAlias, (++tacticIndex).ToString());
                     promptItems.Add(promptItem);
 
                     if (File.Exists(configFilePath))

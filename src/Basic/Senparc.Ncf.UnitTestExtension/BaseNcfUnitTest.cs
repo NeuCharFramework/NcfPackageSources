@@ -204,6 +204,16 @@ namespace Senparc.Ncf.UnitTestExtension
             return (MockRepository: mockRepository, DataList: dataList);
         }
 
+        /// <summary>
+        /// 获取指定类型的仓储实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IClientRepositoryBase<T> GetRespositoryObject<T>() where T : EntityBase
+        {
+            return this.GetRespository<T>().MockRepository.Object;
+        }
+
         public Mock<TInterface> CreateMockForExtendedInterface<TInterface, TBase>(Mock<TBase> baseMock)
             where TInterface : class, TBase
             where TBase : class
