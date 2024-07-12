@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
 using Senparc.CO2NET.Extensions;
@@ -16,6 +19,7 @@ using Senparc.Ncf.Utility;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
@@ -238,30 +242,50 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(string rangeName)
     {
         // 获取同一个靶道下的所有
-        List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == rangeName);
+        List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == rangeName, z => z.Id, OrderingType.Ascending);
+        //Console.WriteLine("fulllist:" + fullList.OrderBy(z=>z.Id).Select(z => new { z.Id, z.RangeName, z.Tactic, z.Aiming, z.FullVersion,z.ParentTac }).ToJson(true));
 
-        // 根据 FullVersion, 将list转为Dictionary，key为FullVersion
-        var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
-
-        // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
-        var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
-            .ToDictionary(p => p.Key, p => p.ToList());
-
-        // 先处理第一级
         var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
-        List<PromptItem> topTierItemList = itemGroupByParentTac[""];
-        foreach (var rootItem in topTierItemList)
+        foreach (var promptitem in fullList)
         {
-            // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
-            var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, rootItem.NickName, new PromptItem_GetIdAndNameResponse(rootItem));
+            var parentNode = rootNodeList
+                .FirstOrDefault(z => z.Data.PromptItemVersion.RangeName == rangeName &&
+                                     z.Data.PromptItemVersion.Tactic == promptitem.ParentTac);
 
-            // 递归构建树
-            this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
+            var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem));
 
-            rootNodeList.Add(rootNode);
+            if (parentNode == null)
+            {
+                //顶部节点
+                rootNodeList.Add(newNode);
+            }
+            else
+            {
+                parentNode.Children.Add(newNode);
+            }
+
+            //// 根据 FullVersion, 将list转为Dictionary，key为FullVersion
+            //var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
+
+            //// 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
+            //var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
+            //    .ToDictionary(p => p.Key, p => p.ToList());
+
+            //// 先处理第一级
+
+            //List<PromptItem> topTierItemList = itemGroupByParentTac[""];//至少有一个是顶级的才能存在这个Group（TODO：删除的时候要考虑是否级联删除，否则可能出错）
+            //foreach (var rootItem in topTierItemList)
+            //{
+            //    // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
+            //    var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, rootItem.NickName, new PromptItem_GetIdAndNameResponse(rootItem));
+
+            //    // 递归构建树
+            //    this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
+
+            //    rootNodeList.Add(rootNode);
+            //}
         }
-
         return rootNodeList;
     }
 
@@ -309,24 +333,24 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         // return rootNode;
     }
 
-    private void BuildVersionTreeHelper(TreeNode<PromptItem_GetIdAndNameResponse> rootNode,
-        Dictionary<string, PromptItem> itemMapByVersion,
-        Dictionary<string, List<PromptItem>> itemGroupByParentTac)
-    {
-        var root = itemMapByVersion[rootNode.Name];
-        if (!itemGroupByParentTac.ContainsKey(root.Tactic))
-        {
-            return;
-        }
+    //private void BuildVersionTreeHelper(TreeNode<PromptItem_GetIdAndNameResponse> rootNode,
+    //    Dictionary<string, PromptItem> itemMapByVersion,
+    //    Dictionary<string, List<PromptItem>> itemGroupByParentTac)
+    //{
+    //    var root = itemMapByVersion[rootNode.Name];
+    //    if (!itemGroupByParentTac.ContainsKey(root.Tactic))
+    //    {
+    //        return;
+    //    }
 
-        var promptItems = itemGroupByParentTac[root.Tactic];
-        foreach (var childItem in promptItems)
-        {
-            var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
-            this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
-            rootNode.Children.Add(childNode);
-        }
-    }
+    //    var promptItems = itemGroupByParentTac[root.Tactic];
+    //    foreach (var childItem in promptItems)
+    //    {
+    //        var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
+    //        this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
+    //        rootNode.Children.Add(childNode);
+    //    }
+    //}
 
 
     /// <summary>
@@ -614,10 +638,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         List<KeyValuePair<string, string>> items = new List<KeyValuePair<string, string>>();
 
         var promptRangeService = _promptRangeService;
+
+        //由于 Tastic 层次是根据时间（ID）顺序向下发展，所以只要根据 ID 排序，即可实现所有节点自顶向下的排列顺序
         var allPromptRanges = await promptRangeService.GetFullListAsync(z => true, z => z.Id, OrderingType.Ascending);
 
         //获取柱状结构前缀
-        Func<int, string> GetPrefix = currentLevel => string.Concat(Enumerable.Repeat("┣  ", currentLevel));
+        Func<string, string> GetPrefix = tascic => string.Concat(Enumerable.Repeat("┣  ", tascic.Count(z => z == '.')));
 
         //读取评分
         Func<decimal, string> GetScore = score => score < 0 ? "-" : score.ToString();
@@ -628,6 +654,8 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             var rangeTree = await this.GenerateTacticTreeAsync(promptRange.RangeName);
 
+            //Console.WriteLine("rangeTree:" + rangeTree.Select(z => new { z.Name, z.Data.FullVersion }).ToJson(true));
+
             if (rangeTree.Count == 0)
             {
                 continue;
@@ -636,9 +664,8 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导
             items.Add(new KeyValuePair<string, string>("▽ " + $"{promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName));
 
-            var lastTactic = string.Empty;
-            var lastAim = 0;
-            var level = 0;
+            PromptItemVersion lastVersion = new PromptItemVersion("", "", -1);
+            //var level = 0;
 
             foreach (var treeNote in rangeTree)
             {
@@ -649,35 +676,52 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
             {
-                var versionObj = PromptItem.GetVersionObject(treeNote.Data.FullVersion);
+                var versionObj = treeNote.Data.PromptItemVersion;
 
-                var newLevel = lastTactic != versionObj.Tactic && versionObj.Tactic.Contains(lastTactic);
-                if (newLevel)
+                var isNextLevel = lastVersion.Tactic != versionObj.Tactic && versionObj.Tactic.Contains(lastVersion.Tactic);
+
+                var isParentLevel = lastVersion.Tactic != versionObj.Tactic && lastVersion.Tactic.Contains(versionObj.Tactic);
+
+                if (isNextLevel /*|| isParentLevel*/)
                 {
-                    level++;//进入下一层，如从 T1 进入到 T1.1
+                    //进入下一层 Tastic，如从 T1 进入到 T1.1，或跳出当前序列
 
                     //正在开始一个新的 Tactic，插入这个 Tactic
                     var partPromptCode = $"{versionObj.RangeName}-T{versionObj.Tactic}";
 
-                    items.Add(new KeyValuePair<string, string>(GetPrefix(level) + " ▽ " + $"{partPromptCode}", partPromptCode));
+                    //改写上一个项目的显示文字（因为已经有了下一级）
+                    var lastItem = items.Last();
+                    items.Remove(lastItem);
+
+                    var oldKey = lastItem.Key;
+                    var target = "┣";
+                    var replacement = "▽";
+                    int lastIndexOfTreeMark = oldKey.LastIndexOf("┣");
+                    var replacedKey = lastIndexOfTreeMark >= 0
+                                ? oldKey.Substring(0, lastIndexOfTreeMark) + replacement + " " + oldKey.Substring(lastIndexOfTreeMark + target.Length)
+                                : oldKey;
+                    var newKey = GetPrefix(versionObj.Tactic) + replacedKey;
+                    string pattern = @$"({replacement})\s+(\d{{4}}\.\d+\.\d+\.\d+)";
+                    string replaceblank = "$1 $2";
+                    newKey = Regex.Replace(newKey, pattern, replaceblank);
+
+                    items.Add(new KeyValuePair<string, string>(newKey, lastItem.Value));
+
+                    //TODO: 给一个选项，是否列出节点，或者只列出完整的 PromptItem
+                    //items.Add(new KeyValuePair<string, string>(GetPrefix(level) + " ▽ " + $"[{treeNote.Data.Id}]" + $"{partPromptCode}", partPromptCode));
                 }
 
-                lastTactic = versionObj.Tactic;
-                lastAim = versionObj.Aim;
+                lastVersion = versionObj;
 
                 var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
+
                 items.Add(new KeyValuePair<string, string>(
-                     GetPrefix(level + 1) + $" {treeNote.Name}({nickName}AvgScore:{GetScore(treeNote.Data.EvalAvgScore)}，MaxScore:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}",
+                     GetPrefix(versionObj.Tactic + ".1") + /*$"[{treeNote.Data.Id}]" +*/ $" {treeNote.Name}({nickName}AvgScore:{GetScore(treeNote.Data.EvalAvgScore)}，MaxScore:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}",
                      treeNote.Data.FullVersion));
 
                 foreach (var child in treeNote.Children)
                 {
                     TraversePromptItem(child);
-                }
-
-                if (newLevel)
-                {
-                    level--;
                 }
             }
         }
