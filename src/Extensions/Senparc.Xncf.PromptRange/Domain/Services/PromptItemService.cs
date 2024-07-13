@@ -234,70 +234,10 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return await this.TransEntityToDtoAsync(toSavePromptItem);
     }
 
-
-    // /// <summary>
-    // /// 输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
-    // /// 即从该节点到root节点的最短路径
-    // /// </summary>
-    // /// <param name="curVersion">当前版本号</param>
-    // /// <returns>版本树</returns>
-    // /// <exception cref="NcfExceptionBase"></exception>
-    // public async Task<TreeNode<PromptItem>> GenerateVersionTree(string curVersion)
-    // {
-    //     #region 找到对应的promptItem
-    //
-    //     var promptItem = await this.GetObjectAsync(p => p.FullVersion == curVersion);
-    //     if (promptItem == null)
-    //     {
-    //         throw new NcfExceptionBase("找不到对应的promptItem");
-    //     }
-    //
-    //     #endregion
-    //
-    //     return await this.GenerateVersionTree(promptItem);
-    // }
-
     public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(PromptItem promptItem)
     {
         return await this.GenerateTacticTreeAsync(promptItem.RangeName);
-        // // 获取同一个靶道下的所有
-        // List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == promptItem.RangeName);
-        //
-        // // 根据 FullVersion, 将list转为Dictionary，key为FullVersion
-        // var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
-        //
-        // // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
-        // var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
-        //     .ToDictionary(p => p.Key, p => p.ToList());
-        //
-        // PromptItem rootItem = itemMapByVersion[$"{promptItem.RangeName}-T1-A1"];
-        // TreeNode<PromptItem> rootNode = new TreeNode<PromptItem>(rootItem.FullVersion, rootItem);
-        //
-        // // 递归构建树
-        // this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
-        //
-        // return rootNode;
     }
-
-    //private void BuildVersionTreeHelper(TreeNode<PromptItem_GetIdAndNameResponse> rootNode,
-    //    Dictionary<string, PromptItem> itemMapByVersion,
-    //    Dictionary<string, List<PromptItem>> itemGroupByParentTac)
-    //{
-    //    var root = itemMapByVersion[rootNode.Name];
-    //    if (!itemGroupByParentTac.ContainsKey(root.Tactic))
-    //    {
-    //        return;
-    //    }
-
-    //    var promptItems = itemGroupByParentTac[root.Tactic];
-    //    foreach (var childItem in promptItems)
-    //    {
-    //        var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
-    //        this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
-    //        rootNode.Children.Add(childNode);
-    //    }
-    //}
-
 
     /// <summary>
     /// 分数趋势图（依据时间）
@@ -577,7 +517,6 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
     #region 生成 PromptItem 树
 
-
     /// <summary>
     /// 输入靶场名，构建该靶场内所有的版本树
     /// </summary>
@@ -593,6 +532,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         //设置顶部节点（Tx）
         var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
+        //查找结点方法
         TreeNode<PromptItem_GetIdAndNameResponse> findNode(TreeNode<PromptItem_GetIdAndNameResponse> parentNode, string promptRange, string tascic)
         {
             if (parentNode == null)
@@ -605,8 +545,10 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 return parentNode;
             }
 
-            foreach (var item in parentNode.Children)
+            //由于 PromptItem 的产生时间顺序特征，反向查找能够更快找到
+            for (int i = parentNode.Children.Count - 1; i >= 0; i--)
             {
+                var item = parentNode.Children[i];
                 var result = findNode(item, promptRange, tascic);
                 if (result != null)
                 {
@@ -617,13 +559,31 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             return null;
         }
 
+        for (int i = 0; i < fullList.Count; i++)
+        {
+            var promptitem = fullList[i];
+
+            //由于 PromptItem 的产生时间顺序特征，反向查找能够更快找到
+            TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
+            for (int j = rootNodeList.Count - 1; j >= 0; j--)
+            {
+                var item = rootNodeList[j];
+                parentNode = findNode(item, promptitem.RangeName, promptitem.ParentTac);
+                if (parentNode != null)
+                {
+                    break;
+                }
+            }
+        }
+
         foreach (var promptitem in fullList)
         {
             //寻找上级节点    TODO：为了提高效率，可以只向上查找
 
             TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
-            foreach (var item in rootNodeList)
+            for (int i = 0; i < rootNodeList.Count; i++)
             {
+                var item = rootNodeList[i];
                 parentNode = findNode(item, promptitem.RangeName, promptitem.ParentTac);
                 if (parentNode != null)
                 {
@@ -667,9 +627,9 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         const string treeBranchMark = "┣";
         const string treeBranchArrowMark = "▽";
         const string treeBranchDarkArrowMark = "▼";
-        const string treeBranchStr = treeBranchMark + " ";
-        const string treeBranchArrowStr = treeBranchArrowMark + " ";
-        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";
+        const string treeBranchStr = treeBranchMark + "　";//加全角空格
+        const string treeBranchArrowStr = treeBranchArrowMark + " ";//加半角空格
+        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";//加半角空格
 
         //获取柱状结构前缀
         Func<int, bool, bool, string> GetPrefix = (level, isTacticPoint, showArrow) =>
@@ -716,6 +676,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 TraversePromptItem(treeNode);
             }
 
+            // 迭代插入子节点
             void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
             {
                 var versionObj = treeNote.Data.PromptItemVersion;
@@ -738,7 +699,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
                 //创建当前节点
                 var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
-                var text = GetPrefix(treeNote.Level, false, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $" {treeNote.Name}({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
+                var text = GetPrefix(treeNote.Level, false, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $"{treeNote.Name} ({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
 
                 tree.AddNode("PromptItem" + treeNote.Data.Id, text, treeNote.Data.FullVersion, treeNote.Level, treeNote.Children.Count);
                 //判断是否还有下级

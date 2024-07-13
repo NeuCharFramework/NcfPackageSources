@@ -79,3 +79,4 @@ SenparcConfig.Development.config
 /src/Extensions/Senparc.Xncf.AIAgentsHub.Tests/appsettings.Development.json
 *.zip
 .vs/
+/src/TestResults
