@@ -71,15 +71,15 @@ namespace Senparc.Ncf.XncfBase
         }
 
 
-        /// <summary>
-        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("请使用 StartNcfEngine()", true)]
-        public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
-        {
-            return StartNcfEngine(services, configuration, env, null);
-        }
+        ///// <summary>
+        ///// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        ///// </summary>
+        ///// <returns></returns>
+        //[Obsolete("请使用 StartNcfEngine()", true)]
+        //public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        //{
+        //    return StartNcfEngine(services, configuration, env, null);
+        //}
 
         /// <summary>
         /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程

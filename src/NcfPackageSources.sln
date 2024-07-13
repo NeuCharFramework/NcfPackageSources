@@ -139,7 +139,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.Database.Dm", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.UnitTestExtension", "Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj", "{FD90A75B-2C62-453E-8ABD-C41C11B51679}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Ncf.ServiceTests", "Basic\Senparc.Ncf.ServiceTests\Senparc.Ncf.ServiceTests.csproj", "{FF956484-4527-48DD-A7BC-35D09AA6C675}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Ncf.ServiceTests", "Basic\Senparc.Ncf.ServiceTests\Senparc.Ncf.ServiceTests.csproj", "{FF956484-4527-48DD-A7BC-35D09AA6C675}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1254,7 +1254,6 @@ Global
 		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.TemplateRelease|x86.ActiveCfg = TemplateRelease|Any CPU
 		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.TemplateRelease|x86.Build.0 = TemplateRelease|Any CPU
 		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|Any CPU.Build.0 = Test|Any CPU
 		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|ARM64.ActiveCfg = Test|Any CPU
 		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|ARM64.Build.0 = Test|Any CPU
 		{5959B9E5-B3D5-4E8B-9DAD-FF30C3D7FF33}.Test|x64.ActiveCfg = Test|Any CPU

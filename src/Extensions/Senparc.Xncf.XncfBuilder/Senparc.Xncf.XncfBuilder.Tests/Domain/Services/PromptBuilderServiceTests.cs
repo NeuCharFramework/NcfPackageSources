@@ -4,6 +4,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.AI.Entities;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Annotations;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel.Models;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Tests;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
@@ -32,8 +36,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
             //    Temperature = 0.7,
             //    TopP = 0.5,
             //};
-
-            _promptBuilderService = base._serviceProvder.GetRequiredService<PromptBuilderService>();
+            var promptRangeService = new PromptRangeService(base.GetRespositoryObject<Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange>(), base._serviceProvider);
+            var aiModelService = new AIModelService(base.GetRespositoryObject<AIModel>(),base._serviceProvider);
+            var promptItemService = new PromptItemService(base.GetRespositoryObject<PromptItem>(), base._serviceProvider, aiModelService, promptRangeService);
+            var promptService = new PromptService(promptRangeService, promptItemService, null);
+            var llmModelService = new LlModelService(base.GetRespositoryObject<LlModel>(), base._serviceProvider);
+            var promptResultService = new PromptResultService(base.GetRespositoryObject<PromptResult>(), base._serviceProvider, promptItemService, promptRangeService, llmModelService);
+            _promptBuilderService = new PromptBuilderService(promptService, promptRangeService, promptItemService, promptResultService);
         }
 
         [TestMethod()]
