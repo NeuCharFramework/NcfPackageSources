@@ -1,4 +1,5 @@
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
@@ -24,6 +25,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// 完整版号
         /// </summary>
         public string FullVersion { get; set; }
+        public PromptItemVersion PromptItemVersion { get; set; }
+
+        public PromptItemVersion ParentPromptItemVersion { get; set; }
 
         /// <summary>
         /// 评估参数, 平均分
@@ -49,9 +53,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public PromptItem_GetIdAndNameResponse(PromptItem promptItem)
         {
             Id = promptItem.Id;
+            FullVersion = promptItem.FullVersion;
             NickName = promptItem.NickName;
             RangeName = promptItem.RangeName;
-            FullVersion = promptItem.FullVersion;
+            PromptItemVersion = PromptItem.GetVersionObject(promptItem.FullVersion);
+            ParentPromptItemVersion = PromptItemVersion with
+            {
+                Tactic = promptItem.ParentTac,// PromptItem.GetParentTasticFromTastic(PromptItemVersion.Tactic),
+                Aim = -1
+            };
+
             EvalAvgScore = promptItem.EvalAvgScore;
             EvalMaxScore = promptItem.EvalMaxScore;
             IsDraft = promptItem.IsDraft;

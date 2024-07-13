@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
@@ -225,42 +235,6 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
 
-    /// <summary>
-    /// 输入靶场名，构建该靶场内所有的版本树
-    /// </summary>
-    /// <param name="rangeName">靶场名</param>
-    /// <returns >版本树</returns>
-    /// <exception cref="NcfExceptionBase"></exception>
-    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(string rangeName)
-    {
-        // 获取同一个靶道下的所有
-        List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == rangeName);
-
-        // 根据 FullVersion, 将list转为Dictionary，key为FullVersion
-        var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
-
-        // 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
-        var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
-            .ToDictionary(p => p.Key, p => p.ToList());
-
-        // 先处理第一级
-        var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
-
-        List<PromptItem> topTierItemList = itemGroupByParentTac[""];
-        foreach (var rootItem in topTierItemList)
-        {
-            // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
-            var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, rootItem.NickName, new PromptItem_GetIdAndNameResponse(rootItem));
-
-            // 递归构建树
-            this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
-
-            rootNodeList.Add(rootNode);
-        }
-
-        return rootNodeList;
-    }
-
     // /// <summary>
     // /// 输入一个版本号，构建子版本树，包含自己，父版本，递归直到root
     // /// 即从该节点到root节点的最短路径
@@ -305,24 +279,24 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         // return rootNode;
     }
 
-    private void BuildVersionTreeHelper(TreeNode<PromptItem_GetIdAndNameResponse> rootNode,
-        Dictionary<string, PromptItem> itemMapByVersion,
-        Dictionary<string, List<PromptItem>> itemGroupByParentTac)
-    {
-        var root = itemMapByVersion[rootNode.Name];
-        if (!itemGroupByParentTac.ContainsKey(root.Tactic))
-        {
-            return;
-        }
+    //private void BuildVersionTreeHelper(TreeNode<PromptItem_GetIdAndNameResponse> rootNode,
+    //    Dictionary<string, PromptItem> itemMapByVersion,
+    //    Dictionary<string, List<PromptItem>> itemGroupByParentTac)
+    //{
+    //    var root = itemMapByVersion[rootNode.Name];
+    //    if (!itemGroupByParentTac.ContainsKey(root.Tactic))
+    //    {
+    //        return;
+    //    }
 
-        var promptItems = itemGroupByParentTac[root.Tactic];
-        foreach (var childItem in promptItems)
-        {
-            var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
-            this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
-            rootNode.Children.Add(childNode);
-        }
-    }
+    //    var promptItems = itemGroupByParentTac[root.Tactic];
+    //    foreach (var childItem in promptItems)
+    //    {
+    //        var childNode = new TreeNode<PromptItem_GetIdAndNameResponse>(childItem.FullVersion, childItem.NickName, new PromptItem_GetIdAndNameResponse(childItem));
+    //        this.BuildVersionTreeHelper(childNode, itemMapByVersion, itemGroupByParentTac);
+    //        rootNode.Children.Add(childNode);
+    //    }
+    //}
 
 
     /// <summary>
@@ -601,20 +575,185 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return promptParameter;
     }
 
+    #region 生成 PromptItem 树
+
+
     /// <summary>
-    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// 输入靶场名，构建该靶场内所有的版本树
     /// </summary>
-    /// <param name="fullVersion"></param>
-    /// <returns></returns>
-    public (string RangeName, string Tactic, int Aim) GetVersionObject(string fullVersion)
+    /// <param name="rangeName">靶场名</param>
+    /// <returns >版本树</returns>
+    /// <exception cref="NcfExceptionBase"></exception>
+    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(string rangeName)
     {
-        string[] parts = fullVersion.Split(new[] { "-T", "-A" }, StringSplitOptions.RemoveEmptyEntries);
+        // 获取同一个靶道下的所有的 PromptItem
+        List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == rangeName, z => z.Id, OrderingType.Ascending);
+        //Console.WriteLine("fulllist:" + fullList.OrderBy(z=>z.Id).Select(z => new { z.Id, z.RangeName, z.Tactic, z.Aiming, z.FullVersion,z.ParentTac }).ToJson(true));
 
-        string rangeName = parts[0];
-        string tactic = parts[1];
-        int aim = int.Parse(parts[2]);
+        //设置顶部节点（Tx）
+        var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
-        return (rangeName, tactic, aim);
+        TreeNode<PromptItem_GetIdAndNameResponse> findNode(TreeNode<PromptItem_GetIdAndNameResponse> parentNode, string promptRange, string tascic)
+        {
+            if (parentNode == null)
+            {
+                return null;
+            }
+
+            if (parentNode.Data.PromptItemVersion.RangeName == rangeName && parentNode.Data.PromptItemVersion.Tactic == tascic)
+            {
+                return parentNode;
+            }
+
+            foreach (var item in parentNode.Children)
+            {
+                var result = findNode(item, promptRange, tascic);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        foreach (var promptitem in fullList)
+        {
+            //寻找上级节点    TODO：为了提高效率，可以只向上查找
+
+            TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
+            foreach (var item in rootNodeList)
+            {
+                parentNode = findNode(item, promptitem.RangeName, promptitem.ParentTac);
+                if (parentNode != null)
+                {
+                    break;
+                }
+            }
+
+            //创造当前新节点信息
+            var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem), -1);
+
+            if (parentNode == null)
+            {
+                //顶部节点
+                newNode.Level = 1;
+                rootNodeList.Add(newNode);
+            }
+            else
+            {
+                //子节点
+                newNode.Level = parentNode.Level + 1;
+                parentNode.Children.Add(newNode);
+            }
+        }
+        return rootNodeList;
     }
 
+
+    /// <summary>
+    /// 返回带树形结构的 PromptRange
+    /// </summary>
+    /// <returns></returns>
+    public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode)
+    {
+        PromptItemTreeList tree = new();
+
+        var promptRangeService = _promptRangeService;
+
+        //由于 Tastic 层次是根据时间（ID）顺序向下发展，所以只要根据 ID 排序，即可实现所有节点自顶向下的排列顺序
+        var allPromptRanges = await promptRangeService.GetFullListAsync(z => true, z => z.Id, OrderingType.Ascending);
+
+        const string treeBranchMark = "┣";
+        const string treeBranchArrowMark = "▽";
+        const string treeBranchDarkArrowMark = "▼";
+        const string treeBranchStr = treeBranchMark + " ";
+        const string treeBranchArrowStr = treeBranchArrowMark + " ";
+        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";
+
+        //获取柱状结构前缀
+        Func<int, bool, bool, string> GetPrefix = (level, isTacticPoint, showArrow) =>
+        {
+            var prefix = string.Concat(Enumerable.Repeat(treeBranchStr, level));
+
+            if (!showArrow)
+            {
+                return prefix;
+            }
+            else
+            {
+                return prefix + (level == 1 && isTacticPoint ? treeBranchDarkArrowStr : treeBranchArrowStr);
+            }
+        };
+
+        //读取评分
+        Func<decimal, string> GetScore = score => score < 0 ? "-" : score.ToString();
+        foreach (var promptRange in allPromptRanges)
+        {
+            //获取树状结构
+            var rangeTree = await this.GenerateTacticTreeAsync(promptRange.RangeName);
+
+            //Console.WriteLine("rangeTree:" + rangeTree.Select(z => new { z.Name, z.Data.FullVersion }).ToJson(true));
+
+            if (rangeTree.Count == 0)
+            {
+                continue;
+            }
+
+            List<string> addedTopNode = new List<string>();
+
+            if (showPromptRangeNode)
+            {
+                //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导 TODO：判断是否需要添加额外描述性节点
+                tree.AddNode("PromptRange" + promptRange.Id, $"⊙ {promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName, -1, rangeTree.Count);
+            }
+
+            PromptItemVersion lastVersion = new PromptItemVersion("", "", -1);
+
+            foreach (var treeNode in rangeTree)
+            {
+                //  the rangeTree and its children
+                TraversePromptItem(treeNode);
+            }
+
+            void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
+            {
+                var versionObj = treeNote.Data.PromptItemVersion;
+
+                string lastTactic = string.Empty;
+
+                //显示 Tactic 虚拟节点
+                if (showTacticNode && treeNote.Level == 1 && !addedTopNode.Contains(versionObj.Tactic))
+                {
+                    //顶层，如：T1，加上下拉标记
+                    var version = $"{versionObj.RangeName}-T{versionObj.Tactic}";
+                    tree.AddNode(key: "PromptItemTactic" + treeNote.Data.PromptItemVersion.Tactic,
+                                 text: GetPrefix(treeNote.Level, true, true) + version,
+                                 value: version,
+                                 level: treeNote.Level,
+                                 subNodeCount: 0);
+
+                    addedTopNode.Add(versionObj.Tactic);
+                }
+
+                //创建当前节点
+                var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
+                var text = GetPrefix(treeNote.Level, false, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $" {treeNote.Name}({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
+
+                tree.AddNode("PromptItem" + treeNote.Data.Id, text, treeNote.Data.FullVersion, treeNote.Level, treeNote.Children.Count);
+                //判断是否还有下级
+
+                foreach (var child in treeNote.Children)
+                {
+                    TraversePromptItem(child);
+                }
+
+                lastTactic = versionObj.Tactic;
+            }
+        }
+
+        return tree;
+    }
+
+    #endregion
 }

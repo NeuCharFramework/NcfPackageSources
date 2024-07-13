@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections.Generic;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
@@ -301,11 +302,11 @@ public class PromptItem : EntityBase<int>
     /// <param name="promptRange"></param>
     /// <param name="nickName"></param>
     /// <param name="tactic"></param>
-    public PromptItem(PromptRangeDto promptRange, string nickName, int tactic)
+    public PromptItem(PromptRangeDto promptRange, string nickName, string tactic)
     {
         RangeId = promptRange.Id;
         RangeName = promptRange.RangeName;
-        Tactic = tactic.ToString();
+        Tactic = tactic;
         ParentTac = "";
         Aiming = 1;
         IsDraft = true;
@@ -531,4 +532,37 @@ public class PromptItem : EntityBase<int>
     }
 
 
+    /// <summary>
+    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// </summary>
+    /// <param name="fullVersion"></param>
+    /// <returns></returns>
+    public static PromptItemVersion GetVersionObject(string fullVersion)
+    {
+        string[] parts = fullVersion.Split(new[] { "-T", "-A" }, StringSplitOptions.RemoveEmptyEntries);
+
+        string rangeName = parts[0];
+        string tactic = parts[1];
+        int aim = int.Parse(parts[2]);
+        return new(rangeName, tactic, aim);
+    }
+
+    /// <summary>
+    /// 从 Tastic 字符串判断上一级 Tastic，如果已经是顶级，则返回 ""
+    /// </summary>
+    /// <param name="tastic"></param>
+    /// <returns></returns>
+    public static string GetParentTasticFromTastic(string tastic)
+    {
+        var tasticArr = tastic.Split('.');
+        if (tasticArr.Length == 1)
+        {
+            return "";
+        }
+        else
+        {
+            var newTasticArr = tasticArr.Take(tasticArr.Length - 1).ToArray();
+            return string.Join(".", newTasticArr);
+        }
+    }
 }

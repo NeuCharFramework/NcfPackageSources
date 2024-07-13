@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json.Nodes;
+using Senparc.CO2NET.WebApi;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
@@ -29,6 +32,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public T Data { get; set; }
 
+        public int Level { get; set; }
+
         public TreeNode()
         {
         }
@@ -38,11 +43,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         //     Data = data;
         // }
 
-        public TreeNode(string name,string nickName, T data)
+        public TreeNode(string name, string nickName, T data, int level)
         {
             Name = name;
             NickName = nickName;
             Data = data;
+            Level = level;
         }
     }
 }
