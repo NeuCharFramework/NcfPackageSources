@@ -84,5 +84,56 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
                 Assert.IsTrue(result.Any(z => z.Text.Contains("▼")));
             }
         }
+
+        [TestMethod]
+        public async Task GetPromptRangeTreeFilterRangeNameTest()
+        {
+            //测试对 PromptName 的筛选：选中所有
+            {
+                var promptRangeList = base.dataLists.GetList<Models.DatabaseModel.PromptRange>();
+                Console.WriteLine("所有 PromptRange：");
+                Console.WriteLine(promptRangeList.Select(z => z.RangeName).ToList().ToJson());
+
+                var result = await this._promptItemService.GetPromptRangeTreeList(true, false, null);
+                Assert.IsNotNull(result);
+                Console.WriteLine(result.Select(z=>z.Text).ToJson(true));
+
+                Assert.IsTrue(promptRangeList.All(r => result.Any(p => p.Text.Contains(r.RangeName))));
+            }
+
+            //测试对 PromptName 的筛选：选中其中一个
+            {
+                var promptRangeList = base.dataLists.GetList<Models.DatabaseModel.PromptRange>();
+                Console.WriteLine("展示所有 PromptRange");
+                Console.WriteLine(promptRangeList.Select(z => z.RangeName).ToList().ToJson());
+
+                var firstPromptRange = promptRangeList.First();
+                var secondPromptRange = promptRangeList.Skip(1).First();
+                var result = await this._promptItemService.GetPromptRangeTreeList(true, false, firstPromptRange.RangeName);
+                Assert.IsNotNull(result);
+
+                Console.WriteLine("不显示 PromptRange 节点 / 显示 Tratic 节点");
+                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
+
+                Assert.IsTrue(result.Any(z => z.Text.Contains($"⊙")));
+
+                Assert.IsTrue(result.Any(z=>z.Text.Contains(firstPromptRange.RangeName)));
+                Assert.IsTrue(!result.Any(z=>z.Text.Contains(secondPromptRange.RangeName)));
+            }
+            
+            
+            //测试对 PromptName 的筛选：都未选中
+            {
+                var promptRangeList = base.dataLists.GetList<Models.DatabaseModel.PromptRange>();
+                Console.WriteLine("展示所有 PromptRange");
+                Console.WriteLine(promptRangeList.Select(z => z.RangeName).ToList().ToJson());
+
+                var firstPromptRange = promptRangeList.First();
+                var secondPromptRange = promptRangeList.Skip(1).First();
+                var result = await this._promptItemService.GetPromptRangeTreeList(true, false, "RangeNotExist");
+                Assert.IsNotNull(result);
+                Assert.AreEqual(0,result.Count);
+            }
+        }
     }
 }

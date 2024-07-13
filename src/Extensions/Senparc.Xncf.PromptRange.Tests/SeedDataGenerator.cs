@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Senparc.AI.Kernel;
 using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.UnitTestExtension.Entities;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -15,7 +16,7 @@ namespace Senparc.Xncf.PromptRange.Tests
         /// <summary>
         /// 初始化 PromptRange 数据
         /// </summary>
-        public static Action<Dictionary<Type, List<object>>> InitPromptRange = datalist =>
+        public static Action<DataList> InitPromptRange = datalist =>
         {
             var rangeNames = new[] {
                 "2024.7.12.1",
@@ -25,7 +26,7 @@ namespace Senparc.Xncf.PromptRange.Tests
             List<Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange> orderedList = new();
             for (int i = 1; i <= rangeNames.Length; i++)
             {
-                var item = rangeNames[i-1];
+                var item = rangeNames[i - 1];
                 var promptRange = new Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange(item, $"Range {item}");
                 promptRange.Id = i;
                 orderedList.Add(promptRange);
@@ -50,59 +51,67 @@ namespace Senparc.Xncf.PromptRange.Tests
         /// <summary>
         /// 初始化 PromptRange 数据
         /// </summary>
-        public static Action<Dictionary<Type, List<object>>> InitPromptItem = datalist =>
+        public static Action<DataList> InitPromptItem = datalist =>
            {
                //先初始化 PromptRange
                InitPromptRange(datalist);
 
-               var promptRangeList = datalist[typeof(Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange)];
-               var defaultPromptRange = promptRangeList.Cast<Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange>().First();
+               var promptRangeList = datalist[typeof(Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange)]
+                                        .Cast<Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange>();
+               var firstPromptRange = promptRangeList.First();
+               var secondPromptRange = promptRangeList.Skip(1).First();
 
                //Version , parentTactic
                var promptVersions = new Dictionary<string, string> {
-               { $"{defaultPromptRange.RangeName}-T1-A1",    ""},
-               { $"{defaultPromptRange.RangeName}-T1-A2",    ""},
-               { $"{defaultPromptRange.RangeName}-T1-A3",    ""},
-               { $"{defaultPromptRange.RangeName}-T2-A1",    ""},
-               { $"{defaultPromptRange.RangeName}-T2-A2",    ""},
-               { $"{defaultPromptRange.RangeName}-T2-A3",    ""},
-               { $"{defaultPromptRange.RangeName}-T2.1-A1",  "2"},
-               { $"{defaultPromptRange.RangeName}-T2.1-A2",  "2"},
-               { $"{defaultPromptRange.RangeName}-T2.1-A3",  "2"},
-               { $"{defaultPromptRange.RangeName}-T2.1-A4",  "2"},
-               { $"{defaultPromptRange.RangeName}-T2.1.1-A1","2.1"},
-               { $"{defaultPromptRange.RangeName}-T2.2-A1",  "2"},
-               { $"{defaultPromptRange.RangeName}-T2.2.1-A1","2.2"},
-               { $"{defaultPromptRange.RangeName}-T2.2.1-A2","2.2"},
-               { $"{defaultPromptRange.RangeName}-T2.2.1-A3","2.2"},
-               { $"{defaultPromptRange.RangeName}-T2.2.1-A4","2.2"},
-               { $"{defaultPromptRange.RangeName}-T2.2.2-A1","2.2"},
-               { $"{defaultPromptRange.RangeName}-T3-A1",    ""},
-               { $"{defaultPromptRange.RangeName}-T3.1-A1",  "3"},
-               { $"{defaultPromptRange.RangeName}-T3.1.1-A1","3.1"},
-               { $"{defaultPromptRange.RangeName}-T3-A2",    ""},
-               { $"{defaultPromptRange.RangeName}-T3.2-A1",  "3"},
-               { $"{defaultPromptRange.RangeName}-T3.1.1-A2","3.1"}
+               { $"{firstPromptRange.RangeName}-T1-A1",    ""},
+               { $"{firstPromptRange.RangeName}-T1-A2",    ""},
+               { $"{firstPromptRange.RangeName}-T1-A3",    ""},
+               { $"{firstPromptRange.RangeName}-T2-A1",    ""},
+               { $"{firstPromptRange.RangeName}-T2-A2",    ""},
+               { $"{firstPromptRange.RangeName}-T2-A3",    ""},
+               { $"{firstPromptRange.RangeName}-T2.1-A1",  "2"},
+               { $"{firstPromptRange.RangeName}-T2.1-A2",  "2"},
+               { $"{firstPromptRange.RangeName}-T2.1-A3",  "2"},
+               { $"{firstPromptRange.RangeName}-T2.1-A4",  "2"},
+               { $"{firstPromptRange.RangeName}-T2.1.1-A1","2.1"},
+               { $"{firstPromptRange.RangeName}-T2.2-A1",  "2"},
+               { $"{firstPromptRange.RangeName}-T2.2.1-A1","2.2"},
+               { $"{firstPromptRange.RangeName}-T2.2.1-A2","2.2"},
+               { $"{firstPromptRange.RangeName}-T2.2.1-A3","2.2"},
+               { $"{firstPromptRange.RangeName}-T2.2.1-A4","2.2"},
+               { $"{firstPromptRange.RangeName}-T2.2.2-A1","2.2"},
+               { $"{firstPromptRange.RangeName}-T3-A1",    ""},
+               { $"{firstPromptRange.RangeName}-T3.1-A1",  "3"},
+               { $"{firstPromptRange.RangeName}-T3.1.1-A1","3.1"},
+               { $"{firstPromptRange.RangeName}-T3-A2",    ""},
+               { $"{firstPromptRange.RangeName}-T3.2-A1",  "3"},
+               { $"{firstPromptRange.RangeName}-T3.1.1-A2","3.1"},
+
+               { $"{secondPromptRange.RangeName}-T1-A1",   ""},
+               { $"{secondPromptRange.RangeName}-T1-A2",   ""},
+               { $"{secondPromptRange.RangeName}-T1.1-A1", "1"},
                };
 
                List<PromptItem> promptItems = new List<PromptItem>();
                int i = 0;
+
                foreach (var item in promptVersions)
                {
                    var versionObject = PromptItem.GetVersionObject(item.Key);
 
+                   var range = promptRangeList.First(z => z.RangeName == versionObject.RangeName);
                    var promptItem = new PromptItem(
                                 new PromptItemDto()
                                 {
                                     Id = ++i,
-                                    RangeName = defaultPromptRange.RangeName,
-                                    RangeId = defaultPromptRange.Id,
+                                    RangeName = versionObject.RangeName,
+                                    RangeId = range.Id,
                                     Tactic = versionObject.Tactic,
                                     Aiming = versionObject.Aim,
                                     ParentTac = PromptItem.GetParentTasticFromTastic(versionObject.Tactic)
                                 });
 
-                   if (promptItem.ParentTac!=item.Value)
+                   if (promptItem.ParentTac != item.Value)
                    {
                        Assert.Fail("ParentTac 定义错误：" + item.ToJson());
                    }
