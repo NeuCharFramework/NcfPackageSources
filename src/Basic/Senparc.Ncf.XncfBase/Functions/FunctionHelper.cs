@@ -1,4 +1,5 @@
 ﻿using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -30,23 +31,6 @@ namespace Senparc.Ncf.XncfBase.Functions
             sb.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
         }
 
-        private static bool HasParameterlessConstructor(Type type)
-        {
-            // 获取所有公共和非公共的构造函数  
-            ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-            // 检查是否存在不带参数的构造函数  
-            foreach (ConstructorInfo constructor in constructors)
-            {
-                if (constructor.GetParameters().Length == 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         /// <summary>
         /// 获取所有参数的信息列表
         /// </summary>
@@ -60,7 +44,7 @@ namespace Senparc.Ncf.XncfBase.Functions
 
             IAppRequest paraObj = null;
 
-            if (HasParameterlessConstructor(functionParameterType))
+            if (ReflectionHelper.HasParameterlessConstructor(functionParameterType))
             {
                 //包含不带参数的构造函数
                 paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO:通过 DI 生成
