@@ -15,10 +15,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
     {
 
         protected PromptService _service;
+        //protected PromptItemService _PromptItemService;
+        //protected PromptRangeService _PromptRangeService;
 
         public PromptServiceTests()
         {
-            //_service = _serviceProvder.GetRequiredService<PromptService>();
+            _service = base.GetPromptService();
         }
 
         #region XncfBuilderPrompt 测试
@@ -87,11 +89,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
         [TestMethod()]
         public async Task GetPromptResultAsyncTest()
         {
-              var service = new PromptItemService(base.MockObjects.PromptItemRepository, base._serviceProvider, null, null);
-
+            var service = base.GetPromptItemService();
             // Act  
             var result = await service.ForUnitTest(1);
-            Assert.AreEqual(base.MockObjects.PromptItems.First(), result);
+            Assert.AreEqual(base.dataLists.GetList<PromptItem>().OrderBy(z=>z.Id).First(), result);
         }
 
         #endregion

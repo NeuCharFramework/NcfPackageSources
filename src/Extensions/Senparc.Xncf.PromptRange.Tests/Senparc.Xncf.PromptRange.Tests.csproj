@@ -16,6 +16,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="appsettings.json" />
+	  <None Remove="appsettings.test.json" />
 	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json" />
 	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\skprompt.txt" />
 	  <None Remove="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityDtoClass\config.json" />
@@ -27,6 +29,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Include="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="appsettings.test.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="Domain\PromptPlugins\XncfBuilderPlugin\GenerateEntityClass\config.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -69,15 +77,6 @@
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Tests\Senparc.Ncf.Core.Tests.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="appsettings.test.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 	</ItemGroup>
 
 </Project>

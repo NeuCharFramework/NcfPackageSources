@@ -540,7 +540,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 return null;
             }
 
-            if (parentNode.Data.PromptItemVersion.RangeName == rangeName && parentNode.Data.PromptItemVersion.Tactic == tascic)
+            if (parentNode.Data.RangeName == rangeName && parentNode.Data.PromptItemVersion.Tactic == tascic)
             {
                 return parentNode;
             }
@@ -615,14 +615,18 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// 返回带树形结构的 PromptRange
     /// </summary>
     /// <returns></returns>
-    public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode)
+    public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode, string promptName = null)
     {
         PromptItemTreeList tree = new();
 
         var promptRangeService = _promptRangeService;
 
         //由于 Tastic 层次是根据时间（ID）顺序向下发展，所以只要根据 ID 排序，即可实现所有节点自顶向下的排列顺序
-        var allPromptRanges = await promptRangeService.GetFullListAsync(z => true, z => z.Id, OrderingType.Ascending);
+
+        var seh = new SenparcExpressionHelper<Models.DatabaseModel.PromptRange>();
+        seh.ValueCompare.AndAlso(!promptName.IsNullOrEmpty(), z => z.RangeName == promptName);
+        var where = seh.BuildWhereExpression();
+        var allPromptRanges = await promptRangeService.GetFullListAsync(where, z => z.Id, OrderingType.Ascending);
 
         const string treeBranchMark = "┣";
         const string treeBranchArrowMark = "▽";

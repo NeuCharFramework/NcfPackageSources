@@ -88,6 +88,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 this.GetResponseAsync<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>, List<PromptItem_GetIdAndNameResponse>>(
                     async (response, logger) =>
                     {
+                        var promptItemTreeList = await _promptItemService.GetPromptRangeTreeList(false, false);
+
                         List<PromptItem> promptItems = await _promptItemService
                             .GetFullListAsync(p => p.RangeName == rangeName,
                                 p => p.Id,

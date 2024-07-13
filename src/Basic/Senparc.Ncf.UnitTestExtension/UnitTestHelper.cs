@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Senparc.Ncf.Core.Tests
+namespace Senparc.Ncf.UnitTestExtension
 {
     public static class UnitTestHelper
     {
