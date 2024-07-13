@@ -590,12 +590,43 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         //设置顶部节点（Tx）
         var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
+        TreeNode<PromptItem_GetIdAndNameResponse> findNode(TreeNode<PromptItem_GetIdAndNameResponse> parentNode, string promptRange, string tascic)
+        {
+            if (parentNode == null)
+            {
+                return null;
+            }
+
+            if (parentNode.Data.PromptItemVersion.RangeName == rangeName && parentNode.Data.PromptItemVersion.Tactic == tascic)
+            {
+                return parentNode;
+            }
+
+            foreach (var item in parentNode.Children)
+            {
+                var result = findNode(item, promptRange, tascic);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
         foreach (var promptitem in fullList)
         {
             //寻找上级节点    TODO：为了提高效率，可以只向上查找
-            var parentNode = rootNodeList
-                .FirstOrDefault(z => z.Data.PromptItemVersion.RangeName == rangeName &&
-                                     z.Data.PromptItemVersion.Tactic == promptitem.ParentTac);
+
+            TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
+            foreach (var item in rootNodeList)
+            {
+                parentNode = findNode(item, promptitem.RangeName, promptitem.ParentTac);
+                if (parentNode!=null)
+                {
+                    break;
+                }
+            }
 
             //创造当前新节点信息
             var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem), -1);
@@ -609,7 +640,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             else
             {
                 //子节点
-                newNode.Level = parentNode.Level+1;
+                newNode.Level = parentNode.Level + 1;
                 parentNode.Children.Add(newNode);
             }
         }
