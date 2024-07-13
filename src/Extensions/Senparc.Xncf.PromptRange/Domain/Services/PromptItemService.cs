@@ -575,6 +575,9 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return promptParameter;
     }
 
+    #region 生成 PromptItem 树
+
+
     /// <summary>
     /// 输入靶场名，构建该靶场内所有的版本树
     /// </summary>
@@ -622,7 +625,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             foreach (var item in rootNodeList)
             {
                 parentNode = findNode(item, promptitem.RangeName, promptitem.ParentTac);
-                if (parentNode!=null)
+                if (parentNode != null)
                 {
                     break;
                 }
@@ -652,7 +655,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// 返回带树形结构的 PromptRange
     /// </summary>
     /// <returns></returns>
-    public async Task<PromptItemTreeList> GetPromptRangeTreeList()
+    public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode)
     {
         PromptItemTreeList tree = new();
 
@@ -669,7 +672,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";
 
         //获取柱状结构前缀
-        Func<int, bool, string> GetPrefix = (level, showArrow) =>
+        Func<int, bool, bool, string> GetPrefix = (level, isTacticPoint, showArrow) =>
         {
             var prefix = string.Concat(Enumerable.Repeat(treeBranchStr, level));
 
@@ -679,7 +682,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             }
             else
             {
-                return prefix + (level == 1 ? treeBranchDarkArrowStr : treeBranchArrowStr);
+                return prefix + (level == 1 && isTacticPoint ? treeBranchDarkArrowStr : treeBranchArrowStr);
             }
         };
 
@@ -699,8 +702,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             List<string> addedTopNode = new List<string>();
 
-            //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导 TODO：判断是否需要添加额外描述性节点
-            tree.AddNode("PromptRange" + promptRange.Id, $"{promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName, -1, rangeTree.Count);
+            if (showPromptRangeNode)
+            {
+                //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导 TODO：判断是否需要添加额外描述性节点
+                tree.AddNode("PromptRange" + promptRange.Id, $"⊙ {promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName, -1, rangeTree.Count);
+            }
 
             PromptItemVersion lastVersion = new PromptItemVersion("", "", -1);
 
@@ -710,19 +716,19 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 TraversePromptItem(treeNode);
             }
 
-
             void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
             {
                 var versionObj = treeNote.Data.PromptItemVersion;
 
                 string lastTactic = string.Empty;
 
-                if (treeNote.Level == 1 && !addedTopNode.Contains(versionObj.Tactic))
+                //显示 Tactic 虚拟节点
+                if (showTacticNode && treeNote.Level == 1 && !addedTopNode.Contains(versionObj.Tactic))
                 {
                     //顶层，如：T1，加上下拉标记
                     var version = $"{versionObj.RangeName}-T{versionObj.Tactic}";
                     tree.AddNode(key: "PromptItemTactic" + treeNote.Data.PromptItemVersion.Tactic,
-                                 text: GetPrefix(treeNote.Level, true) + version,
+                                 text: GetPrefix(treeNote.Level, true, true) + version,
                                  value: version,
                                  level: treeNote.Level,
                                  subNodeCount: 0);
@@ -732,7 +738,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
                 //创建当前节点
                 var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
-                var text = GetPrefix(treeNote.Level, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $" {treeNote.Name}({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
+                var text = GetPrefix(treeNote.Level, false, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $" {treeNote.Name}({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
 
                 tree.AddNode("PromptItem" + treeNote.Data.Id, text, treeNote.Data.FullVersion, treeNote.Level, treeNote.Children.Count);
                 //判断是否还有下级
@@ -748,4 +754,6 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         return tree;
     }
+
+    #endregion
 }

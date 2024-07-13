@@ -27,7 +27,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Extensions
             });
 
             var promptItemService = serviceProvider.GetService<PromptItemService>();
-            var items = await promptItemService.GetPromptRangeTreeList();
+            var items = await promptItemService.GetPromptRangeTreeList(true, true);
             foreach (var item in items)
             {
                 SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()

@@ -36,9 +36,53 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
         [TestMethod()]
         public async Task GetPromptRangeTreeTest()
         {
-            var result = await this._promptItemService.GetPromptRangeTreeList();
-            Assert.IsNotNull(result);
-            Console.WriteLine(result.Select(z => z.Text).ToJson(true));
+            //测试全部显示虚拟节点
+            {
+                var result = await this._promptItemService.GetPromptRangeTreeList(true, true);
+                Assert.IsNotNull(result);
+
+                Console.WriteLine("显示 PromptRange 节点 / 显示 Tratic 节点");
+                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
+
+                Assert.IsTrue(result.Any(z => z.Text.Contains($"⊙")));
+            }
+
+            //测试全部不显示虚拟节点
+            {
+                var result = await this._promptItemService.GetPromptRangeTreeList(false, false);
+                Assert.IsNotNull(result);
+
+                Console.WriteLine("不显示 PromptRange 节点 / 不显示 Tratic 节点");
+                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
+
+                Assert.IsTrue(!result.Any(z => z.Text.Contains($"⊙")));
+                Assert.IsTrue(!result.Any(z => z.Text.Contains("▼")));
+            }
+
+
+            //测试只显示 Prompt Range 虚拟节点
+            {
+                var result = await this._promptItemService.GetPromptRangeTreeList(true, false);
+                Assert.IsNotNull(result);
+
+                Console.WriteLine("显示 PromptRange 节点 / 不显示 Tratic 节点");
+                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
+
+                Assert.IsTrue(result.Any(z => z.Text.Contains($"⊙")));
+                Assert.IsTrue(!result.Any(z => z.Text.Contains("▼")));
+            }
+
+            //测试只显示 Tactic 虚拟节点
+            {
+                var result = await this._promptItemService.GetPromptRangeTreeList(false, true);
+                Assert.IsNotNull(result);
+
+                Console.WriteLine("不显示 PromptRange 节点 / 显示 Tratic 节点");
+                Console.WriteLine(result.Select(z => z.Text).ToJson(true));
+
+                Assert.IsTrue(!result.Any(z => z.Text.Contains($"⊙")));
+                Assert.IsTrue(result.Any(z => z.Text.Contains("▼")));
+            }
         }
     }
 }
