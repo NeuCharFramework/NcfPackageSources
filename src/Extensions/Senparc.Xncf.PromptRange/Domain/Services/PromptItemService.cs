@@ -597,42 +597,21 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 .FirstOrDefault(z => z.Data.PromptItemVersion.RangeName == rangeName &&
                                      z.Data.PromptItemVersion.Tactic == promptitem.ParentTac);
 
-            var level = parentNode == null ? 1 : parentNode.Level + 1;
-
             //创造当前新节点信息
-            var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem), level);
+            var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem), -1);
 
             if (parentNode == null)
             {
                 //顶部节点
+                newNode.Level = 1;
                 rootNodeList.Add(newNode);
             }
             else
             {
                 //子节点
+                newNode.Level = parentNode.Level+1;
                 parentNode.Children.Add(newNode);
             }
-
-            //// 根据 FullVersion, 将list转为Dictionary，key为FullVersion
-            //var itemMapByVersion = fullList.ToDictionary(p => p.FullVersion, p => p);
-
-            //// 根据 ParentTac, 将list转为Dictionary<string,List<PromptItem>>
-            //var itemGroupByParentTac = fullList.GroupBy(p => p.ParentTac)
-            //    .ToDictionary(p => p.Key, p => p.ToList());
-
-            //// 先处理第一级
-
-            //List<PromptItem> topTierItemList = itemGroupByParentTac[""];//至少有一个是顶级的才能存在这个Group（TODO：删除的时候要考虑是否级联删除，否则可能出错）
-            //foreach (var rootItem in topTierItemList)
-            //{
-            //    // PromptItem rootItem = itemMapByVersion[$"{rangeName}-T1-A1"];
-            //    var rootNode = new TreeNode<PromptItem_GetIdAndNameResponse>(rootItem.FullVersion, rootItem.NickName, new PromptItem_GetIdAndNameResponse(rootItem));
-
-            //    // 递归构建树
-            //    this.BuildVersionTreeHelper(rootNode, itemMapByVersion, itemGroupByParentTac);
-
-            //    rootNodeList.Add(rootNode);
-            //}
         }
         return rootNodeList;
     }

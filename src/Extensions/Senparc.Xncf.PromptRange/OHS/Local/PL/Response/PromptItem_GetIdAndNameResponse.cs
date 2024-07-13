@@ -59,7 +59,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
             PromptItemVersion = PromptItem.GetVersionObject(promptItem.FullVersion);
             ParentPromptItemVersion = PromptItemVersion with
             {
-                Tactic = PromptItem.GetParentTasticFromTastic(PromptItemVersion.Tactic),
+                Tactic = promptItem.ParentTac,// PromptItem.GetParentTasticFromTastic(PromptItemVersion.Tactic),
                 Aim = -1
             };
 
