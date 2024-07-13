@@ -1,4 +1,5 @@
 ﻿using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -41,18 +42,24 @@ namespace Senparc.Ncf.XncfBase.Functions
         {
             var functionParameterType = functionRenderBag.FunctionParameterType;
 
-            var paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO:通过 DI 生成
+            IAppRequest paraObj = null;
 
-            if (tryLoadData && paraObj is FunctionAppRequestBase functionRequestPara)
+            if (ReflectionHelper.HasParameterlessConstructor(functionParameterType))
             {
-                try
+                //包含不带参数的构造函数
+                paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO:通过 DI 生成
+
+                if (tryLoadData && paraObj is FunctionAppRequestBase functionRequestPara)
                 {
-                    await functionRequestPara.LoadData(serviceProvider);//载入原有信息
-                }
-                catch (Exception ex)
-                {
-                    SenparcTrace.BaseExceptionLog(ex);
-                    throw;
+                    try
+                    {
+                        await functionRequestPara.LoadData(serviceProvider);//载入原有信息
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                        throw;
+                    }
                 }
             }
 
@@ -122,7 +129,7 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// </summary>
         /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
         /// <param name="additionalProjects">除了标准的 XNCF 以外额外的项目</param>
-        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false,params string[] additionalProjects)
+        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false, params string[] additionalProjects)
         {
             var selectList = new List<SelectionItem>();
 
@@ -151,7 +158,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                     foreach (var proj in additionalProjects)
                     {
                         var addProjectFolders = Directory.GetDirectories(currentDir, proj, SearchOption.AllDirectories);
-                        if (addProjectFolders.Count()>0)
+                        if (addProjectFolders.Count() > 0)
                         {
                             projectFolders.AddRange(addProjectFolders);
                         }

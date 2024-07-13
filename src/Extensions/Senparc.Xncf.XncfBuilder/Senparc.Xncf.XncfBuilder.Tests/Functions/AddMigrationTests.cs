@@ -27,7 +27,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
             using (var service = base.ServiceCollection.BuildServiceProvider())
             {
                 var function = new DatabaseMigrationsAppService(service);
-                var result = function.Migration(new OHS.PL.DatabaseMigrations_MigrationRequest
+                var result = function.AddMigration(new OHS.PL.DatabaseMigrations_MigrationRequest
                 {
                     DatabaseTypes = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
                     {

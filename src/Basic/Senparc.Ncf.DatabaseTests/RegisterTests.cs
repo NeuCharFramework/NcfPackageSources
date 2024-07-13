@@ -15,10 +15,10 @@ namespace Senparc.Ncf.Database.Tests
         [TestMethod()]
         public void UseNcfDatabaseTest()
         {
-            var dbConfig = Activator.CreateInstance(typeof(SqliteDatabaseConfiguration), BindingFlags.IgnoreCase);
+            var dbConfig = Activator.CreateInstance(typeof(SqliteDatabaseConfiguration));
             Assert.IsNotNull(dbConfig);
 
-            dbConfig = Activator.CreateInstance(typeof(SqlServerDatabaseConfiguration), BindingFlags.IgnoreCase);
+            dbConfig = Activator.CreateInstance(typeof(SqlServerDatabaseConfiguration));
             Assert.IsNotNull(dbConfig);
         }
     }

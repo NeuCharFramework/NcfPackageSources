@@ -48,16 +48,18 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
 
 
     [TestClass()]
-    public class FunctionHelperTests : RegisterTest
+    public class FunctionHelperTests : BaseXncfBaseTest
     {
         [TestMethod()]
         public void GetFunctionParameterInfoAsyncTest()
         {
-            base.StartEngineTest();
+            Console.WriteLine("FunctionRenderCollection: " + Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.Keys.Select(z => z.FullName).ToJson(true));
 
-            var serviceProvider = base.ServiceCollection.BuildServiceProvider();
-            var functionBag = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection[typeof(TestModule)].Values.First();
-            var result = FunctionHelper.GetFunctionParameterInfoAsync(base.ServiceCollection.BuildServiceProvider(), functionBag, true).GetAwaiter().GetResult();
+            var registerList = XncfRegisterManager.RegisterList;
+            Console.WriteLine("Register List:" + registerList.Select(z => z.Name).ToJson(true));
+
+            var functionBag = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection[typeof(TestModuleRegister)].Values.First();
+            var result = FunctionHelper.GetFunctionParameterInfoAsync(base._serviceProvider, functionBag, true).GetAwaiter().GetResult();
 
             Assert.IsTrue(result.Count > 0);
             Console.WriteLine(result.ToJson(true));

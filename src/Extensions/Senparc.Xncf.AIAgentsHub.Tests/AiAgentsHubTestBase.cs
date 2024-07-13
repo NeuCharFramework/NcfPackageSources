@@ -28,10 +28,11 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.SystemManager.Domain.Service;
+using Senparc.Ncf.UnitTestExtension;
 
 namespace Senparc.Xncf.AIAgentsHub.Tests
 {
-    public class AiAgentsHubTestBase
+    public class AiAgentsHubTestBase : BaseNcfUnitTest
     {
         //public IServiceCollection ServiceCollection { get; set; }
         //public IConfiguration Configuration { get; set; }
@@ -73,6 +74,7 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             //Use NCF（必须）
             registerService = app.UseNcf();
 
+            /*
             //初始化安装
             var installService = this._serviceProvider.GetRequiredService<InstallerService>();
             var installOptionsService = this._serviceProvider.GetRequiredService<InstallOptionsService>();
@@ -96,7 +98,8 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
             //输出调试信息
             var allKeys = Senparc.Ncf.Core.Models.EntitySetKeys.GetAllEntitySetInfo();
             Console.WriteLine("All Keys:\r\n" + allKeys.ToJson(true));
-
+            
+             */
 
             //安装模块
             var register = new Register();
