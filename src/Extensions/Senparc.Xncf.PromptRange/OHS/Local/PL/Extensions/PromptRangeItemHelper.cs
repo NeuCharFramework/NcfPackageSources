@@ -27,12 +27,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Extensions
             });
 
             var promptItemService = serviceProvider.GetService<PromptItemService>();
-            List<KeyValuePair<string, string>> items = await promptItemService.GetPromptRangeTree();
+            var items = await promptItemService.GetPromptRangeTreeList();
             foreach (var item in items)
             {
                 SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()
                 {
-                    Text = item.Key,
+                    Text = item.Text,
                     Value = item.Value
                 });
             }

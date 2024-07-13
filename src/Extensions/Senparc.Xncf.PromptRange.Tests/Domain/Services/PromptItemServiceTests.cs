@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.UnitTestExtension;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.Models;
@@ -35,9 +36,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services.Tests
         [TestMethod()]
         public async Task GetPromptRangeTreeTest()
         {
-            var result = await this._promptItemService.GetPromptRangeTree();
+            var result = await this._promptItemService.GetPromptRangeTreeList();
             Assert.IsNotNull(result);
-            Console.WriteLine(result);
+            Console.WriteLine(result.Select(z => z.Text).ToJson(true));
         }
     }
 }

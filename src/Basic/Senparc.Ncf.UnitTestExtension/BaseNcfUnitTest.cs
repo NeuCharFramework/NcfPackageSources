@@ -13,6 +13,9 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.SystemCore.Domain.Database;
 using Senparc.Ncf.UnitTestExtension.Database;
+using Senparc.CO2NET.Extensions;
+using System.Xml;
+using Senparc.Ncf.Utility.ExpressionExtension;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
@@ -172,18 +175,54 @@ namespace Senparc.Ncf.UnitTestExtension
             mockRepository.Setup(z => z.SaveChangesAsync())
                 .Returns(Task.CompletedTask);
 
-            // Add mocks for other methods similarly...  
+
+            //// 泛型版本的Mock设置  
+            //mockRepository.Setup(z => z.GetObjectListAsync<TOrderProperty>(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, TOrderProperty>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
+            //    .Returns<Expression<Func<T, bool>>, Expression<Func<T, TOrderProperty>>, OrderingType, int, int, string[]>((where, orderBy, orderingType, pageIndex, pageCount, includes) =>
+            //    {
+            //        Console.WriteLine("GetObjectListAsync run with TOrderProperty:" + typeof(T).Name);
+            //        var func = where.Compile();
+            //        var orderedData = orderingType == OrderingType.Ascending ?
+            //            dataList.AsQueryable().Where(where).OrderBy(orderBy) :
+            //            dataList.AsQueryable().Where(where).OrderByDescending(orderBy);
+            //        return Task.FromResult(new PagedList<T>(orderedData.Skip((pageIndex - 1) * pageCount).Take(pageCount).ToList(), pageIndex, pageCount, dataList.Count));
+            //    });
+
 
             // Mock GetObjectListAsync 方法  
-            mockRepository.Setup(z => z.GetObjectListAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, object>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
-                .Returns<Expression<Func<T, bool>>, Expression<Func<T, object>>, OrderingType, int, int, string[]>((where, orderBy, orderingType, pageIndex, pageCount, includes) =>
+            mockRepository.Setup(z => z.GetObjectListAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, int>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
+                .Returns<Expression<Func<T, bool>>, Expression<Func<T, int>>, OrderingType, int, int, string[]>((where, orderBy, orderingType, pageIndex, pageCount, includes) =>
                 {
                     var func = where.Compile();
                     var orderedData = orderingType == OrderingType.Ascending ?
                         dataList.AsQueryable().Where(where).OrderBy(orderBy) :
                         dataList.AsQueryable().Where(where).OrderByDescending(orderBy);
-                    return Task.FromResult(new PagedList<T>(orderedData.Skip((pageIndex - 1) * pageCount).Take(pageCount).ToList(), pageIndex, pageCount, dataList.Count));
+
+                    var result = pageIndex <= 0 && pageCount <= 0
+                        ? orderedData.ToList()
+                        : orderedData.Skip((pageIndex - 1) * pageCount).Take(pageCount).ToList();
+
+                    return Task.FromResult(new PagedList<T>(result, pageIndex, pageCount, dataList.Count));
                 });
+
+            //GetObjectListAsync(Expression<Func<T, bool>> where, string OrderbyField, int pageIndex, int pageCount, params string[] includes)
+            mockRepository.Setup(repo => repo.GetObjectListAsync(
+                It.IsAny<Expression<Func<T, bool>>>(),
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<string[]>()))
+            .Returns<Expression<Func<T, bool>>, string, int, int, string[]>((where, OrderbyField, pageIndex, pageCount, includes) =>
+            {
+                var func = where.Compile();
+                var orderedData = dataList.AsQueryable().Where(where).OrderByExtension(OrderbyField);
+
+                var result = pageIndex <= 0 && pageCount <= 0
+                    ? orderedData.ToList()
+                    : orderedData.Skip((pageIndex - 1) * pageCount).Take(pageCount).ToList();
+
+                return Task.FromResult(new PagedList<T>(result, pageIndex, pageCount, dataList.Count));
+            }); ;
 
             // Mock GetFirstOrDefaultObjectAsync 方法 (带 includesNavigationPropertyPathFunc)  
             mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<DbSet<T>, IIncludableQueryable<T, object>>>>()))

@@ -25,10 +25,15 @@ namespace Senparc.Xncf.PromptRange.Tests
 
             //打乱顺序
             Random random = new Random();
+            var i = 0;
             while (list.Count < gangeNames.Length)
             {
                 var item = gangeNames[random.Next(gangeNames.Length)];
-                list.Add(new Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange(item, item));
+
+                var promptRange = new Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange(item, $"Range {item}");
+                promptRange.Id = ++i;
+
+                list.Add(promptRange);
             }
 
             datalist[typeof(Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange)] = list;
@@ -53,7 +58,7 @@ namespace Senparc.Xncf.PromptRange.Tests
                 $"{defaultPromptRange.RangeName}-T1-A3",
                 $"{defaultPromptRange.RangeName}-T2-A1",
                 $"{defaultPromptRange.RangeName}-T2-A2",
-                $"{defaultPromptRange.RangeName}-T2-A2",
+                $"{defaultPromptRange.RangeName}-T2-A3",
                 $"{defaultPromptRange.RangeName}-T2.1-A1",
                 $"{defaultPromptRange.RangeName}-T2.1-A2",
                 $"{defaultPromptRange.RangeName}-T2.1-A3",
@@ -63,7 +68,32 @@ namespace Senparc.Xncf.PromptRange.Tests
                 $"{defaultPromptRange.RangeName}-T2.2.1-A1",
                 $"{defaultPromptRange.RangeName}-T2.2.1-A2",
                 $"{defaultPromptRange.RangeName}-T2.2.1-A3",
+                $"{defaultPromptRange.RangeName}-T3-A1",
+                $"{defaultPromptRange.RangeName}-T3.1-A1",
+                $"{defaultPromptRange.RangeName}-T3.1.1-A1",
+                $"{defaultPromptRange.RangeName}-T3-A2",
+                $"{defaultPromptRange.RangeName}-T3.2-A1",
                };
+
+               List<PromptItem> promptItems = new List<PromptItem>();
+               int i = 0;
+               foreach (var item in promptVersions)
+               {
+                   var versionObject = PromptItem.GetVersionObject(item);
+
+                   var promptItem = new PromptItem(
+                                new PromptItemDto()
+                                {
+                                    Id = ++i,
+                                    RangeName = defaultPromptRange.RangeName,
+                                    RangeId = defaultPromptRange.Id,
+                                    Tactic = versionObject.Tactic,
+                                    Aiming = versionObject.Aim,
+                                    ParentTac = PromptItem.GetParentTasticFromTastic(versionObject.Tactic)
+                                });
+
+                   promptItems.Add(promptItem);
+               }
 
                List<object> list = new List<object>();
 
@@ -71,16 +101,13 @@ namespace Senparc.Xncf.PromptRange.Tests
                Random random = new Random();
                while (list.Count < promptVersions.Length)
                {
-                   var item = promptVersions[random.Next(promptVersions.Length)];
+                   var index = random.Next(promptItems.Count);
+                   var item = promptItems[index];
+                   promptItems.RemoveAt(index);
 
-                   var versionObject = PromptItem.GetVersionObject(item);
-                   list.Add(new PromptItem(
-                                new PromptRangeDto()
-                                {
-                                    RangeName = defaultPromptRange.RangeName
-                                },
-                                defaultPromptRange.RangeName,
-                                versionObject.Tactic));
+                   var versionObject = PromptItem.GetVersionObject(item.FullVersion);
+
+                   list.Add(item);
                }
 
                datalist[typeof(PromptItem)] = list;
