@@ -22,5 +22,15 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
 
             return base[typeof(T)].Cast<T>().ToList();
         }
+
+        /// <summary>
+        /// 快速添加实体类型的列表数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public void Add<T>(List<T> list)
+        {
+            base[typeof(T)] = list.Cast<object>().ToList();
+        }
     }
 }
