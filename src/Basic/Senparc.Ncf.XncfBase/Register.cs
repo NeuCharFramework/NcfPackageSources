@@ -594,6 +594,7 @@ namespace Senparc.Ncf.XncfBase
                 var interfaceType = mappintConfigType.GetInterfaces().FirstOrDefault(z => z.Name.StartsWith("IEntityTypeConfiguration"));
                 if (interfaceType == null)
                 {
+                    Console.WriteLine("interfaceType 为 null（不为 IEntityTypeConfiguration）");
                     continue;
                 }
                 //实体类型，如：DbConfig
