@@ -32,7 +32,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         /// <summary>  
         /// 关联的列元数据。  
         /// </summary>  
-        public ColumnMetadata ColumnMetadata { get; set; }
+        public ColumnMetadataDto ColumnMetadata { get; set; }
 
         private TableDataDto() { }
 

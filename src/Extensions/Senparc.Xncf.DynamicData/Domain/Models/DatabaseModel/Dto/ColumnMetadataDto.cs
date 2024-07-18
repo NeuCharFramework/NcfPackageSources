@@ -45,13 +45,13 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         /// 关联的表格元数据。  
         /// </summary>  
         //[InverseProperty(nameof(TableMetadata.ColumnMetadatas))]
-        public TableMetadata TableMetadata { get; set; }
+        public TableMetadataDto TableMetadata { get; set; }
 
         /// <summary>  
         /// 关联的表格元数据。  
         /// </summary>  
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
-        public ICollection<TableData> TableDatas { get; set; }
+        public ICollection<TableDataDto> TableDatas { get; set; }
 
         private ColumnMetadataDto() { }
     }

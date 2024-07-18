@@ -30,7 +30,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         /// <summary>  
         /// 关联的数据集合。  
         /// </summary>  
-        public ICollection<TableData> TableDatas { get; set; }
+        public ICollection<TableDataDto> TableDatas { get; set; }
 
 
         private TableMetadataDto() { }

@@ -49,17 +49,18 @@ namespace Senparc.Xncf.DynamicData
         /// 关联的表格元数据。  
         /// </summary>  
         //[InverseProperty(nameof(TableMetadata.ColumnMetadatas))]
-        public TableMetadata TableMetadata { get;  set; }
+        public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
         /// 关联的表格元数据。  
         /// </summary>  
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
-        public ICollection<TableData> TableDatas { get;  set; }
+        public ICollection<TableData> TableDatas { get; set; }
 
         private ColumnMetadata() { }
-        public ColumnMetadata(string columnName, string columnType, bool isNullable, string defaultValue)
+        public ColumnMetadata(int tableMetadataId, string columnName, string columnType, bool isNullable, string defaultValue)
         {
+            TableMetadataId = tableMetadataId;
             ColumnName = columnName;
             ColumnType = columnType;
             IsNullable = isNullable;

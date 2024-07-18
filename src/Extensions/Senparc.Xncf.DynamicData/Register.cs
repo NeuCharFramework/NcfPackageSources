@@ -14,6 +14,8 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.DynamicData.Models.DatabaseModel.Dto;
+using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.DynamicData.Domain.Services;
 
 namespace Senparc.Xncf.DynamicData
 {
@@ -44,10 +46,10 @@ namespace Senparc.Xncf.DynamicData
             {
                 case InstallOrUpdate.Install:
                     //新安装
-            #region 初始化数据库数据
+                    #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
-            #endregion
+                    #endregion
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -78,10 +80,16 @@ namespace Senparc.Xncf.DynamicData
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-            
+            services.AddScoped<TableMetadataService>();
+            services.AddScoped<ColumnMetadataService>();
+            services.AddScoped<TableDataService>();
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
+                z.CreateMap<TableMetadata, TableMetadataDto>().ReverseMap();
+                z.CreateMap<ColumnMetadata, ColumnMetadataDto>().ReverseMap();
+                z.CreateMap<TableData, TableDataDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
         }
