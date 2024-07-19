@@ -168,15 +168,21 @@ namespace Senparc.Ncf.Database
                 dbOptionBuilder = new DbContextOptionsBuilder();
             }
 
-            //获取当前数据库配置
-            var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
-            //指定使用当前数据库
-            currentDatabasConfiguration.UseDatabase(
-                dbOptionBuilder,
-                connectionString ?? SenparcDatabaseConnectionConfigs.ClientConnectionString,
-                xncfDatabaseData,
-                dbContextOptionsAction
-                );
+            if (UnitTestDatabaseConfiguration.UnitTestPillarDbContext == null)
+            {
+                //不是单元测试，需要读取数据库
+
+                //获取当前数据库配置
+                var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
+                //指定使用当前数据库
+                currentDatabasConfiguration.UseDatabase(
+                    dbOptionBuilder,
+                    connectionString ?? SenparcDatabaseConnectionConfigs.ClientConnectionString,
+                    xncfDatabaseData,
+                    dbContextOptionsAction
+                    );
+            }
+
             //实例化 DbContext
             T dbContext;
             if (serviceProvider == null)

@@ -16,7 +16,7 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 单元测试环境下的默认总数据库
         /// </summary>
-        public static Type UnitTestPillarDbContext { get; set; } = typeof(SenparcEntitiesBase);
+        public static Type? UnitTestPillarDbContext { get; set; } = null;
 
         public MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.UnitTest;
 

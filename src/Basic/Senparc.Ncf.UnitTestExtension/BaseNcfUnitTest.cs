@@ -397,6 +397,9 @@ namespace Senparc.Ncf.UnitTestExtension
 
             ActionInServiceCollection();
 
+            //设置单元测试默认 DbContext（需要在 StartNcfEngine 之前）
+            UnitTestDatabaseConfiguration.UnitTestPillarDbContext = typeof(NcfUnitTestEntities);
+
             var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(ServiceCollection, Configuration, Env, null);
 
             //覆盖 NCF 基础设置
@@ -412,9 +415,7 @@ namespace Senparc.Ncf.UnitTestExtension
 
             ServiceCollection.AddScoped<NcfUnitTestDataDb>();
 
-            //设置单元测试默认 DbContext
-            UnitTestDatabaseConfiguration.UnitTestPillarDbContext = typeof(NcfUnitTestEntities);
-
+        
             ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
             {
                 //初始化对象
