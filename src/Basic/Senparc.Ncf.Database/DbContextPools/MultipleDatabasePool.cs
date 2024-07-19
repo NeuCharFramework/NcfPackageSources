@@ -116,6 +116,7 @@ namespace Senparc.Ncf.Database
             if (multipleDatabaseType == MultipleDatabaseType.UnitTest)
             {
                 //单元测试
+                return UnitTestDatabaseConfiguration.UnitTestPillarDbContext;
             }
             else if (!this.ContainsKey(multipleDatabaseType))
             {
@@ -140,7 +141,7 @@ namespace Senparc.Ncf.Database
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
-        public T GetDbContext<T>(string connectionString = null, XncfDatabaseData xncfDatabaseData = null, 
+        public T GetDbContext<T>(string connectionString = null, XncfDatabaseData xncfDatabaseData = null,
             Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null) where T : DbContext
         {
             var dbContextType = typeof(T);
@@ -203,7 +204,7 @@ namespace Senparc.Ncf.Database
         /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
         /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
-        public DbContext GetXncfDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null, 
+        public DbContext GetXncfDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null,
             Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null, IServiceProvider serviceProvider = null)
         {
             if (!typeof(IXncfDatabase).IsAssignableFrom(xncfDatabaseRegisterType))
@@ -216,7 +217,7 @@ namespace Senparc.Ncf.Database
 
             return this.GetType().GetMethod(nameof(GetDbContext))
                 .MakeGenericMethod(new Type[] { dbContextType })
-                .Invoke(this, new object[] { connectionString , xncfDatabaseData , dbContextOptionsAction , serviceProvider }) as DbContext;
+                .Invoke(this, new object[] { connectionString, xncfDatabaseData, dbContextOptionsAction, serviceProvider }) as DbContext;
 
             //return GetDbContext(dbContextType, connectionString, xncfDatabaseData, dbContextOptionsAction, serviceProvider);
         }

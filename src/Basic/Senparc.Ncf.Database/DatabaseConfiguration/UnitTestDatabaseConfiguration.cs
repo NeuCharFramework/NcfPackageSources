@@ -13,6 +13,11 @@ namespace Senparc.Ncf.Database
     /// </summary>
     public class UnitTestDatabaseConfiguration : IDatabaseConfiguration
     {
+        /// <summary>
+        /// 单元测试环境下的默认总数据库
+        /// </summary>
+        public static Type UnitTestPillarDbContext { get; set; } = typeof(SenparcEntitiesBase);
+
         public MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.UnitTest;
 
         public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase => throw new NotImplementedException();

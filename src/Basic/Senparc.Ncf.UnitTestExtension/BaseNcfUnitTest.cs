@@ -70,15 +70,16 @@ namespace Senparc.Ncf.UnitTestExtension
             RegisterServiceCollectionFinished();
 
             BuildServiceProvider();
-            
+
             RegisterServiceStart();
 
             var app = builder.Build();
             app.UseNcfDatabase<UnitTestDatabaseConfiguration>();
         }
 
-        protected virtual void RegisterServiceCollectionFinished() { 
-        
+        protected virtual void RegisterServiceCollectionFinished()
+        {
+
         }
 
         /// <summary>  
@@ -410,6 +411,9 @@ namespace Senparc.Ncf.UnitTestExtension
 
 
             ServiceCollection.AddScoped<NcfUnitTestDataDb>();
+
+            //设置单元测试默认 DbContext
+            UnitTestDatabaseConfiguration.UnitTestPillarDbContext = typeof(NcfUnitTestEntities);
 
             ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
             {
