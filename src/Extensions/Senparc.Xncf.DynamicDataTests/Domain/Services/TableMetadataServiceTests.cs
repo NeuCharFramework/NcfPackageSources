@@ -16,6 +16,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
         [TestMethod()]
         public async Task GetTableMetadataDtoAsyncTest()
         {
+            var repo = base.GetRespositoryBase<TableMetadata>();
+            var service = new TableMetadataService(repo.Repository, base._serviceProvider);
+
+
             var tableMetadataDto = await base._tableMetadataService.GetTableMetadataDtoAsync(1);
 
             Assert.IsNotNull(tableMetadataDto);

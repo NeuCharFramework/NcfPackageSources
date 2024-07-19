@@ -16,7 +16,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
     {
         private BasePoolEntities dataContext;
 
-        public NcfClientDbData() { }
+        //public NcfClientDbData() { }
 
         public NcfClientDbData(BasePoolEntities senparcEntities)
         {

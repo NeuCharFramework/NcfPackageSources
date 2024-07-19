@@ -51,9 +51,17 @@ namespace Senparc.Xncf.DynamicDataTests
             {
                 var item = columnMetadataList[i - 1];
                 item.Id = i;
+
+                item.TableMetadata = dataList.GetList<TableMetadata>().First(z => z.Id == item.TableMetadataId);
+            }
+            
+            dataList.Add(columnMetadataList);
+
+            foreach (var item in dataList.GetList<TableMetadata>())
+            {
+                item.ColumnMetadatas = dataList.GetList<ColumnMetadata>().Where(z => z.TableMetadataId == item.Id).ToList();
             }
 
-            dataList.Add(columnMetadataList);
         };
 
         //protected TableDataService _tableDataService;

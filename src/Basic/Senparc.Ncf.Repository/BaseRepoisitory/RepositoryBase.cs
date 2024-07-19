@@ -478,6 +478,14 @@ namespace Senparc.Ncf.Repository
                                         .Where(where).OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
         }
 
+        //public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<T, TIncludesProperty>> includesNavigationPropertyPathFunc)
+        //{
+        //    return await BaseDB.BaseDataContext
+        //     .Set<T>()
+        //     .Include(includesNavigationPropertyPathFunc).Where(where).OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
+        //}
+
+
 
         public virtual async Task<int> ObjectCountAsync(Expression<Func<T, bool>> where, params string[] includes)
         {

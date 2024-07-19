@@ -2,27 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Repository;
-using Senparc.Xncf.SystemCore.Domain.Database;
-using Senparc.Ncf.UnitTestExtension.Database;
-using Senparc.CO2NET.Extensions;
-using System.Xml;
-using Senparc.Ncf.Utility.ExpressionExtension;
-using Senparc.Ncf.UnitTestExtension.Entities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Senparc.CO2NET.RegisterServices;
+using Polly;
 using Senparc.CO2NET;
-using System.Configuration;
-using System.Text;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Extensions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Database;
+using Senparc.Ncf.Repository;
+using Senparc.Ncf.UnitTestExtension.Database;
+using Senparc.Ncf.UnitTestExtension.Entities;
+using Senparc.Ncf.Utility.ExpressionExtension;
+using Senparc.Xncf.SystemCore.Domain.Database;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
@@ -42,7 +44,7 @@ namespace Senparc.Ncf.UnitTestExtension
 
         public BaseNcfUnitTest() : this(null, null)
         {
-          
+
         }
 
         /// <summary>  
@@ -73,6 +75,29 @@ namespace Senparc.Ncf.UnitTestExtension
             {
                 dataLists[typeof(T)] = new List<object>();
             }
+        }
+
+        public (IClientRepositoryBase<T> Repository, List<T> DataList) GetRespositoryBase<T>() where T : EntityBase
+        {
+            var dataList = dataLists[typeof(T)].Cast<T>().ToList();
+
+            //var mockRepository = new Mock<IClientRepositoryBase<T>>();
+
+            //设置 RepositoryBase.BaseDB.ManualDetectChangeObject
+            var mockBaseDB = new Mock<NcfUnitTestDataDb>();
+            //mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
+
+
+            mockBaseDB.Setup(z => z.DataContext.Set<T>())
+                      .Returns<DbSet<T>>(z =>
+                      {
+                          var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
+                          return mockDbSet.Object;
+                      });
+
+            var repo = new ClientRepositoryBase<T>(mockBaseDB.Object);
+
+            return (Repository: repo, DataList: dataList);
         }
 
         /// <summary>  
@@ -118,24 +143,30 @@ namespace Senparc.Ncf.UnitTestExtension
             return repo;
         }
 
-        /// <summary>  
-        /// 获取指定类型的仓储实例，带有预设的 Mock 行为  
-        /// </summary>  
-        /// <typeparam name="T">实体类型</typeparam>  
-        /// <returns>仓储实例</returns>  
-        public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T>() where T : EntityBase
+        public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T, TOrderProperty, TIncludesProperty>() where T : EntityBase
         {
             TryInitSeedData<T>();
+
+            var dataList = dataLists[typeof(T)].Cast<T>().ToList();
 
             var mockRepository = new Mock<IClientRepositoryBase<T>>();
 
             //设置 RepositoryBase.BaseDB.ManualDetectChangeObject
             var mockBaseDB = new Mock<NcfUnitTestDataDb>();
             //mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
-            mockBaseDB.SetupProperty(z => z.ManualDetectChangeObject, true);
-            mockRepository.Setup(z => z.BaseDB).Returns(new NcfUnitTestDataDb(this._serviceProvider));
 
-            var dataList = dataLists[typeof(T)].Cast<T>().ToList();
+
+            mockBaseDB.Setup(z => z.DataContext.Set<T>())
+                      .Returns<DbSet<T>>(z =>
+                      {
+                          var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
+                          return mockDbSet.Object;
+                      });
+
+
+            mockBaseDB.SetupProperty(z => z.ManualDetectChangeObject, true);
+            mockRepository.Setup(z => z.BaseDB).Returns(mockBaseDB.Object);
+
 
             // Mock GetFirstOrDefaultObjectAsync 方法  
             mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<string[]>()))
@@ -212,8 +243,8 @@ namespace Senparc.Ncf.UnitTestExtension
             //    });
 
 
-            // Mock GetObjectListAsync 方法  
-            mockRepository.Setup(z => z.GetObjectListAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, int>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
+            // Mock GetObjectListAsync 方法
+            mockRepository.Setup(z => z.GetObjectListAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, TOrderProperty>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
                 .Returns<Expression<Func<T, bool>>, Expression<Func<T, int>>, OrderingType, int, int, string[]>((where, orderBy, orderingType, pageIndex, pageCount, includes) =>
                 {
                     var func = where.Compile();
@@ -248,12 +279,33 @@ namespace Senparc.Ncf.UnitTestExtension
             }); ;
 
             // Mock GetFirstOrDefaultObjectAsync 方法 (带 includesNavigationPropertyPathFunc)  
-            mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<DbSet<T>, IIncludableQueryable<T, object>>>>()))
-                .Returns<Expression<Func<T, bool>>, Expression<Func<DbSet<T>, IIncludableQueryable<T, object>>>>((where, includesNavigationPropertyPathFunc) =>
+            mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>>>()))
+                .Returns<Expression<Func<T, bool>>, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>>>((where, includesNavigationPropertyPathFunc) =>
                 {
+                    //TODO:待完善
                     var func = where.Compile();
                     return Task.FromResult(dataList.FirstOrDefault(func));
                 });
+
+            mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(
+                It.IsAny<Expression<Func<T, bool>>>(),
+                It.IsAny<Expression<Func<T, TOrderProperty>>>(),
+                It.IsAny<OrderingType>(),
+                It.IsAny<Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>>>()))
+            .Returns<Expression<Func<T, bool>>, Expression<Func<T, TOrderProperty>>, OrderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>>>(
+                async (where, orderBy, orderingType, includesNavigationPropertyPathFunc) =>
+                {
+                    var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
+
+                    // 使用Mock DbSet  
+                    var query = await includesNavigationPropertyPathFunc.Compile()(mockDbSet.Object)
+                                        .OrderBy(orderBy, orderingType)
+                                        .Where(where)
+                                        .OrderBy(orderBy, orderingType).FirstOrDefaultAsync();
+
+                    return query;
+                });
+
 
             // Mock ObjectCountAsync 方法  
             mockRepository.Setup(z => z.ObjectCountAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<string[]>()))
@@ -264,6 +316,17 @@ namespace Senparc.Ncf.UnitTestExtension
                 });
 
             return (MockRepository: mockRepository, DataList: dataList);
+        }
+
+        /// <summary>  
+        /// 获取指定类型的仓储实例，带有预设的 Mock 行为  
+        /// </summary>  
+        /// <typeparam name="T">实体类型（OrderBy 默认为 int 类型，include 默认为 object 类型）</typeparam>  
+        /// <returns>仓储实例</returns>  
+        public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T>() where T : EntityBase
+        {
+            var result = this.GetRespository<T, int, object>();
+            return result;
         }
 
         /// <summary>
@@ -316,6 +379,59 @@ namespace Senparc.Ncf.UnitTestExtension
             ServiceCollection.AddMemoryCache();//使用内存缓存
 
             ActionInServiceCollection();
+
+            var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(ServiceCollection, Configuration, Env, null);
+
+            //覆盖 NCF 基础设置
+
+            //BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要）
+            Func<IServiceProvider, BasePoolEntities> basePoolEntitiesImplementationFactory = s =>
+            {
+                var multipleDatabasePool = MultipleDatabasePool.Instance;
+                return multipleDatabasePool.GetXncfDbContext(this.GetType(), serviceProvider: s) as BasePoolEntities;
+            };
+            ServiceCollection.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
+
+
+            //ServiceCollection.AddScoped<NcfUnitTestDataDb>();
+            //ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
+            //{
+            //    var mockDbContext = new Mock<NcfUnitTestEntities>(new DbContextOptions<NcfUnitTestEntities>(), s);
+            //    //var dbContext = new NcfUnitTestEntities(new DbContextOptions<DbContext>(), s);
+
+            //    // 获取 DbContext 的所有属性  
+            //    var properties = typeof(NcfUnitTestEntities).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+
+            //    mockDbContext.Setup(z => z.Set<It.IsAnyType>())
+            //          .Returns<DbSet<It.IsAnyType>>(z =>
+            //          {
+            //              var properties = z.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+
+
+            //              var dataList = dataLists[].
+            //              var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
+            //              return mockDbSet.Object;
+            //          });
+            //});
+
+            //ServiceCollection.AddScoped(typeof(ClientRepositoryBase<>));
+
+            //var mockBaseDB = new Mock<NcfUnitTestDataDb>();
+            ////mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
+
+
+
+            //mockBaseDB.Setup(z => z.DataContext.Set<T>())
+            //          .Returns<DbSet<T>>(z =>
+            //          {
+            //              var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
+            //              return mockDbSet.Object;
+            //          });
+
+            //var repo = new ClientRepositoryBase<T>(mockBaseDB.Object);
+
 
             BuildServiceProvider();
         }
