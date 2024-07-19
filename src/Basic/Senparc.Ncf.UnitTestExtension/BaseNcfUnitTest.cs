@@ -105,7 +105,7 @@ namespace Senparc.Ncf.UnitTestExtension
             }
         }
 
-   
+
 
         public void BuildServiceProvider(IServiceCollection services = null)
         {
@@ -127,7 +127,7 @@ namespace Senparc.Ncf.UnitTestExtension
         /// </summary>
         public void RegisterServiceCollection()
         {
-             var configBuilder = new ConfigurationBuilder();
+            var configBuilder = new ConfigurationBuilder();
             configBuilder.AddJsonFile(UnitTestHelper.GetAppSettingsFile(), false, false);
             var config = configBuilder.Build();
             Configuration = config;
@@ -156,13 +156,20 @@ namespace Senparc.Ncf.UnitTestExtension
             //ServiceCollection.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
 
 
-            ServiceCollection.AddScoped<NcfUnitTestDataDb>();
+            ServiceCollection.AddScoped<NcfUnitTestDataDb>(s =>
+            {
+                var dbContext = s.GetService<NcfUnitTestEntities>();
+                return new NcfUnitTestDataDb(dbContext);
+            });
 
-        
+
             ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
             {
                 //初始化对象
-                var dbContext = new NcfUnitTestEntities(new DbContextOptions<NcfUnitTestEntities>(), s);
+                var options = new DbContextOptionsBuilder<NcfUnitTestEntities>()
+                                    .UseInMemoryDatabase(databaseName: "UnitTestDb")
+                                    .Options;
+                var dbContext = new NcfUnitTestEntities(options, s);
 
                 // 获取所有DbSet属性  
                 var dbSetProperties = typeof(NcfUnitTestEntities).GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));

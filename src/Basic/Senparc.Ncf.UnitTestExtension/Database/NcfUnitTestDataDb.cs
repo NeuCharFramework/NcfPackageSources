@@ -21,10 +21,10 @@ namespace Senparc.Ncf.UnitTestExtension.Database
             dataContext = dbContext;
         }
 
-        public NcfUnitTestDataDb(IServiceProvider serviceProvider)
-        {
-            dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
-        }
+        //public NcfUnitTestDataDb(IServiceProvider serviceProvider)
+        //{
+        //    dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
+        //}
 
 
 
