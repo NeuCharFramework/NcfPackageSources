@@ -63,8 +63,14 @@ namespace Senparc.Ncf.UnitTestExtension
             var builder = WebApplication.CreateBuilder();
             ServiceCollection = builder.Services;
 
+            var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
+            mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
+
+            Env = mockEnv.Object;
+
             initSeedData?.Invoke(dataLists);
             servicesRegister?.Invoke(ServiceCollection);
+
 
             RegisterServiceCollection();
             RegisterServiceCollectionFinished();
@@ -486,11 +492,6 @@ namespace Senparc.Ncf.UnitTestExtension
         public void RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
             //注册
-            var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
-            mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
-
-            Env = mockEnv.Object;
-
             registerService = Senparc.CO2NET.AspNet.RegisterServices.RegisterService.Start(Env, _senparcSetting)
                 .UseSenparcGlobal(autoScanExtensionCacheStrategies);
 
