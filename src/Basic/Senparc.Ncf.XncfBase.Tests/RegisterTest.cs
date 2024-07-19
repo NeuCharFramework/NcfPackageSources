@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Tests;
@@ -59,12 +60,20 @@ namespace Senparc.Ncf.XncfBase.Tests
     [TestClass]
     public class RegisterTest : TestBase
     {
+        IServiceCollection _services;
+        protected override void RegisterServiceCollectionFinished(IServiceCollection services)
+        {
+            base.RegisterServiceCollectionFinished(services);
+
+            _services = services;
+        }
+
         [TestMethod]
         public void StartEngineTest()
         {
             try
             {
-                var result = base.ServiceCollection.StartNcfEngine(base.Configuration, base.Env, null);
+                var result = _services.StartNcfEngine(base.Configuration, base.Env, null);
                 Console.WriteLine(result);
 
                 //基类中可能会已经执行过

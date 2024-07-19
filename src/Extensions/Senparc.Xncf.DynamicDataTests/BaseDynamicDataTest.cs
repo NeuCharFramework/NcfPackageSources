@@ -54,7 +54,7 @@ namespace Senparc.Xncf.DynamicDataTests
 
                 item.TableMetadata = dataList.GetList<TableMetadata>().First(z => z.Id == item.TableMetadataId);
             }
-            
+
             dataList.Add(columnMetadataList);
 
             foreach (var item in dataList.GetList<TableMetadata>())
@@ -70,13 +70,22 @@ namespace Senparc.Xncf.DynamicDataTests
         public BaseDynamicDataTest(Action<IServiceCollection> servicesRegister = null, Action<DataList> initSeedData = null)
             : base(servicesRegister, initSeedData ?? InitSeedData)
         {
-            var tableMetadataRepo = base.GetRespositoryObject<TableMetadata>();
-            _tableMetadataService = new TableMetadataService(tableMetadataRepo, base._serviceProvider);
+            //var tableMetadataRepo = base.GetRespositoryObject<TableMetadata>();
+            //_tableMetadataService = new TableMetadataService(tableMetadataRepo, base._serviceProvider);
         }
 
-        protected override void RegisterServiceCollectionFinished()
+        protected override void BeforeRegisterServiceCollection(IServiceCollection services)
         {
-            base.RegisterServiceCollectionFinished();
+            base.BeforeRegisterServiceCollection(services);
+
+            Console.WriteLine("BaseDynamicDataTest.BeforeRegisterServiceCollection");
+
+            services.AddScoped<TableMetadataService>();
+        }
+
+        protected override void RegisterServiceCollectionFinished(IServiceCollection services)
+        {
+            base.RegisterServiceCollectionFinished(services);
         }
     }
 }
