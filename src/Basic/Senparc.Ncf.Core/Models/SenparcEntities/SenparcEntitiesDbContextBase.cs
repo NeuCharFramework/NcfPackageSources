@@ -155,6 +155,10 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
+        /// <summary>
+        /// 【核心】 将当前动态模块的 DbContext 对象注入到 DbContext
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType)).ToList();
@@ -165,7 +169,7 @@ namespace Senparc.Ncf.Core.Models
             for (int i = 0; i < types.Count; i++)
             {
                 var entityType = types[i];
-                Console.WriteLine($"  {(i + 1)}.\tentity type: {entityType.Name}");
+                Console.WriteLine($"  {(i + 1)}.\tEntity Type: {entityType.Name}");
                 SetGlobalQueryMethodInfo
                         .MakeGenericMethod(entityType.ClrType)
                         .Invoke(this, new object[] { modelBuilder });

@@ -73,5 +73,10 @@ namespace Senparc.Xncf.DynamicDataTests
             var tableMetadataRepo = base.GetRespositoryObject<TableMetadata>();
             _tableMetadataService = new TableMetadataService(tableMetadataRepo, base._serviceProvider);
         }
+
+        protected override void RegisterServiceCollectionFinished()
+        {
+            base.RegisterServiceCollectionFinished();
+        }
     }
 }

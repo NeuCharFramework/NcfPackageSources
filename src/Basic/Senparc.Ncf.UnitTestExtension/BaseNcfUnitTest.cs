@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
@@ -28,6 +29,7 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
+
     [TestClass]
     public class BaseNcfUnitTest
     {
@@ -62,7 +64,15 @@ namespace Senparc.Ncf.UnitTestExtension
             servicesRegister?.Invoke(ServiceCollection);
 
             RegisterServiceCollection();
+            RegisterServiceCollectionFinished();
+
+            BuildServiceProvider();
+            
             RegisterServiceStart();
+        }
+
+        protected virtual void RegisterServiceCollectionFinished() { 
+        
         }
 
         /// <summary>  
@@ -156,12 +166,12 @@ namespace Senparc.Ncf.UnitTestExtension
             //mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
 
 
-            mockBaseDB.Setup(z => z.DataContext.Set<T>())
-                      .Returns<DbSet<T>>(z =>
-                      {
-                          var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
-                          return mockDbSet.Object;
-                      });
+            //mockBaseDB.Setup(z => z.DataContext.Set<T>())
+            //          .Returns<DbSet<T>>(z =>
+            //          {
+            //              var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
+            //              return mockDbSet.Object;
+            //          });
 
 
             mockBaseDB.SetupProperty(z => z.ManualDetectChangeObject, true);
@@ -384,37 +394,61 @@ namespace Senparc.Ncf.UnitTestExtension
 
             //覆盖 NCF 基础设置
 
-            //BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要）
-            Func<IServiceProvider, BasePoolEntities> basePoolEntitiesImplementationFactory = s =>
-            {
-                var multipleDatabasePool = MultipleDatabasePool.Instance;
-                return multipleDatabasePool.GetXncfDbContext(this.GetType(), serviceProvider: s) as BasePoolEntities;
-            };
-            ServiceCollection.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
-
-
-            //ServiceCollection.AddScoped<NcfUnitTestDataDb>();
-            //ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
+            ////BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要）
+            //Func<IServiceProvider, BasePoolEntities> basePoolEntitiesImplementationFactory = s =>
             //{
-            //    var mockDbContext = new Mock<NcfUnitTestEntities>(new DbContextOptions<NcfUnitTestEntities>(), s);
-            //    //var dbContext = new NcfUnitTestEntities(new DbContextOptions<DbContext>(), s);
-
-            //    // 获取 DbContext 的所有属性  
-            //    var properties = typeof(NcfUnitTestEntities).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-
-            //    mockDbContext.Setup(z => z.Set<It.IsAnyType>())
-            //          .Returns<DbSet<It.IsAnyType>>(z =>
-            //          {
-            //              var properties = z.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            //    var multipleDatabasePool = MultipleDatabasePool.Instance;
+            //    return multipleDatabasePool.GetXncfDbContext(this.GetType(), serviceProvider: s) as BasePoolEntities;
+            //};
+            //ServiceCollection.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
 
 
+            ServiceCollection.AddScoped<NcfUnitTestDataDb>();
 
-            //              var dataList = dataLists[].
-            //              var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
-            //              return mockDbSet.Object;
-            //          });
-            //});
+            ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
+            {
+                //初始化对象
+                var dbContext = new NcfUnitTestEntities(new DbContextOptions<NcfUnitTestEntities>(), s);
+
+                // 获取所有DbSet属性  
+                var dbSetProperties = typeof(NcfUnitTestEntities).GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
+
+
+                foreach (var dbSetProperty in dbSetProperties)
+                {
+                    // 获取DbSet的类型  
+                    var dbSetType = dbSetProperty.PropertyType.GetGenericArguments()[0];
+                    Console.WriteLine("找到 DbSet：" + dbSetType.FullName);
+
+                    // 创建模拟的DbSet  
+                    var mockDbSetType = typeof(Mock<>).MakeGenericType(typeof(DbSet<>).MakeGenericType(dbSetType));
+                    var mockDbSet = Activator.CreateInstance(mockDbSetType);
+
+                    // 设置DbSet的行为  
+                    if (dataLists.TryGetValue(dbSetType, out var data))
+                    {
+                        var queryableData = data.AsQueryable();
+
+                        // 设置DbSet的Provider属性  
+                        mockDbSetType.GetProperty("Provider").SetValue(mockDbSet, queryableData.Provider);
+
+                        // 设置DbSet的Expression属性  
+                        mockDbSetType.GetProperty("Expression").SetValue(mockDbSet, queryableData.Expression);
+
+                        // 设置DbSet的ElementType属性  
+                        mockDbSetType.GetProperty("ElementType").SetValue(mockDbSet, queryableData.ElementType);
+
+                        // 设置DbSet的GetEnumerator()方法  
+                        mockDbSetType.GetMethod("GetEnumerator").Invoke(mockDbSet, null);
+
+                        // 将模拟的DbSet设置到模拟的DbContext中  
+                        dbSetProperty.SetValue(dbContext, mockDbSet);
+                    }
+
+                }
+                return dbContext;
+
+            });
 
             //ServiceCollection.AddScoped(typeof(ClientRepositoryBase<>));
 
@@ -433,7 +467,6 @@ namespace Senparc.Ncf.UnitTestExtension
             //var repo = new ClientRepositoryBase<T>(mockBaseDB.Object);
 
 
-            BuildServiceProvider();
         }
 
         /// <summary>

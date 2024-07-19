@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.DynamicData.Domain.Services;
 using Senparc.Xncf.DynamicDataTests;
@@ -16,9 +17,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
         [TestMethod()]
         public async Task GetTableMetadataDtoAsyncTest()
         {
-            var repo = base.GetRespositoryBase<TableMetadata>();
-            var service = new TableMetadataService(repo.Repository, base._serviceProvider);
-
+            var repo = base._serviceProvider.GetService<TableMetadataService>();
 
             var tableMetadataDto = await base._tableMetadataService.GetTableMetadataDtoAsync(1);
 

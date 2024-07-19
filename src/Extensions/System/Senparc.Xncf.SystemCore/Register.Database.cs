@@ -69,7 +69,7 @@ namespace Senparc.Xncf.SystemCore
 
             #endregion
 
-            //BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要）
+            //BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要，NcfClientDbData 也不需要在正式系统中被使用到）
             Func<IServiceProvider, BasePoolEntities> basePoolEntitiesImplementationFactory = s =>
             {
                 var multipleDatabasePool = MultipleDatabasePool.Instance;
