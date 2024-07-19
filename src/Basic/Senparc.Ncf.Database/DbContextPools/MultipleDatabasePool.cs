@@ -112,7 +112,12 @@ namespace Senparc.Ncf.Database
             var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
             //当前数据库类型
             MultipleDatabaseType multipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
-            if (!this.ContainsKey(multipleDatabaseType))
+
+            if (multipleDatabaseType == MultipleDatabaseType.UnitTest)
+            {
+                //单元测试
+            }
+            else if (!this.ContainsKey(multipleDatabaseType))
             {
                 throw new NcfDatabaseException($"未发现任何支持此数据库类型的 XNCF 模块：{multipleDatabaseType}", currentDatabaseConfiguration.GetType());
             }

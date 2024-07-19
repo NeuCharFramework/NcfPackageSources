@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Humanizer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
@@ -21,6 +22,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
+using Senparc.Ncf.Database.Dm;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.UnitTestExtension.Database;
 using Senparc.Ncf.UnitTestExtension.Entities;
@@ -58,7 +60,8 @@ namespace Senparc.Ncf.UnitTestExtension
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            ServiceCollection = new ServiceCollection();
+            var builder = WebApplication.CreateBuilder();
+            ServiceCollection = builder.Services;
 
             initSeedData?.Invoke(dataLists);
             servicesRegister?.Invoke(ServiceCollection);
@@ -69,6 +72,9 @@ namespace Senparc.Ncf.UnitTestExtension
             BuildServiceProvider();
             
             RegisterServiceStart();
+
+            var app = builder.Build();
+            app.UseNcfDatabase<UnitTestDatabaseConfiguration>();
         }
 
         protected virtual void RegisterServiceCollectionFinished() { 
@@ -505,6 +511,7 @@ namespace Senparc.Ncf.UnitTestExtension
                 //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//键值对
                 //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
             }
+
         }
     }
 }
