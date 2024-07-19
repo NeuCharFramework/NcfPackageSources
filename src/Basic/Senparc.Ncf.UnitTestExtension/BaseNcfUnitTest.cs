@@ -155,13 +155,18 @@ namespace Senparc.Ncf.UnitTestExtension
             //};
             //ServiceCollection.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
 
-
-            ServiceCollection.AddScoped<NcfUnitTestDataDb>(s =>
+            //覆盖原始设置
+            ServiceCollection.AddScoped<INcfDbData, NcfUnitTestDataDb>(s =>
             {
                 var dbContext = s.GetService<NcfUnitTestEntities>();
                 return new NcfUnitTestDataDb(dbContext);
             });
 
+            ServiceCollection.AddScoped<INcfClientDbData, NcfUnitTestDataDb>(s =>
+            {
+                var dbContext = s.GetService<NcfUnitTestEntities>();
+                return new NcfUnitTestDataDb(dbContext);
+            });
 
             ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
             {
