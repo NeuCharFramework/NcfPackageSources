@@ -91,6 +91,7 @@ namespace Senparc.Ncf.Service
 
         public virtual async Task<T> GetObjectAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
+            Console.WriteLine("0720-temp- ServiceBase GetObjectAsync");
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, orderBy, orderingType, includesNavigationPropertyPathFunc);
         }
 

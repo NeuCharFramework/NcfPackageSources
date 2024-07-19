@@ -472,6 +472,8 @@ namespace Senparc.Ncf.Repository
 
         public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
+            Console.WriteLine("0720-temp- RepositoryBase GetFirstOrDefaultObjectAsync");
+
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             return await includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
                                         .OrderBy(orderBy, orderingType)

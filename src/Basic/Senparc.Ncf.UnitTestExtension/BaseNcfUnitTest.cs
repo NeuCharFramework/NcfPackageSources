@@ -369,6 +369,7 @@ namespace Senparc.Ncf.UnitTestExtension
             return baseMock.As<TInterface>();
         }
 
+
         public void BuildServiceProvider(IServiceCollection services = null)
         {
             if (services != null)
