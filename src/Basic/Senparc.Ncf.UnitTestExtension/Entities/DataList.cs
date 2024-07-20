@@ -14,7 +14,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> GetList<T>()
+        public List<T> GetDataList<T>()
         {
             if (!base.ContainsKey(typeof(T)))
             {

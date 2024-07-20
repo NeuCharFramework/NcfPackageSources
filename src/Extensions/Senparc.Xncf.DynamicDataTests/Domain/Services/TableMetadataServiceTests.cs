@@ -22,7 +22,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             var tableMetadataDto = await service.GetTableMetadataDtoAsync(1);
 
             Assert.IsNotNull(tableMetadataDto);
-            Console.WriteLine(tableMetadataDto.ToJson(true));
+            Console.WriteLine(tableMetadataDto.ToJson(true, new Newtonsoft.Json.JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            }));
         }
     }
 }

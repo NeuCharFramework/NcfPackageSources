@@ -611,7 +611,7 @@ namespace Senparc.Ncf.XncfBase
                                 .Invoke(modelBuilder, new object[1]
                                 {
                                     autoConfigurationMapping
-                 });
+                                });
 
                 ApplyedAutoConfigurationMappingTypes.Add(entityType);
 

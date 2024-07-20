@@ -168,6 +168,8 @@ namespace Senparc.Ncf.Core.Models
             //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
             for (int i = 0; i < types.Count; i++)
             {
+                //设置需要添加的全局查询
+
                 var entityType = types[i];
                 Console.WriteLine($"  {(i + 1)}.\tEntity Type: {entityType.Name}");
                 SetGlobalQueryMethodInfo

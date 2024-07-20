@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Polly;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Extensions;
@@ -70,6 +73,11 @@ namespace Senparc.Ncf.UnitTestExtension
 
             initSeedData?.Invoke(dataLists);
             servicesRegister?.Invoke(ServiceCollection);
+
+            //Console.WriteLine("Test Data:" + dataLists.ToJson(true, new Newtonsoft.Json.JsonSerializerSettings()
+            //{
+            //    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //}));
 
             BeforeRegisterServiceCollection(ServiceCollection);
             RegisterServiceCollection();
@@ -146,16 +154,6 @@ namespace Senparc.Ncf.UnitTestExtension
             var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(ServiceCollection, Configuration, Env, null);
 
             //覆盖 NCF 基础设置
-
-            ////BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要）
-            //Func<IServiceProvider, BasePoolEntities> basePoolEntitiesImplementationFactory = s =>
-            //{
-            //    var multipleDatabasePool = MultipleDatabasePool.Instance;
-            //    return multipleDatabasePool.GetXncfDbContext(this.GetType(), serviceProvider: s) as BasePoolEntities;
-            //};
-            //ServiceCollection.AddScoped<BasePoolEntities>(basePoolEntitiesImplementationFactory);
-
-            //覆盖原始设置
             ServiceCollection.AddScoped<INcfDbData, NcfUnitTestDataDb>(s =>
             {
                 var dbContext = s.GetService<NcfUnitTestEntities>();
@@ -174,44 +172,45 @@ namespace Senparc.Ncf.UnitTestExtension
                 var options = new DbContextOptionsBuilder<NcfUnitTestEntities>()
                                     .UseInMemoryDatabase(databaseName: "UnitTestDb")
                                     .Options;
-                var dbContext = new NcfUnitTestEntities(options, s);
+                var dbContext = new NcfUnitTestEntities(options, s, dataLists);
 
-                // 获取所有DbSet属性  
-                var dbSetProperties = typeof(NcfUnitTestEntities).GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
+                //// 获取所有DbSet属性  
+                //var dbSetProperties = typeof(NcfUnitTestEntities).GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
 
+                //Console.WriteLine("dbSetProperties Cunt:" + dbSetProperties.Count());
 
-                foreach (var dbSetProperty in dbSetProperties)
-                {
-                    // 获取DbSet的类型  
-                    var dbSetType = dbSetProperty.PropertyType.GetGenericArguments()[0];
-                    Console.WriteLine("找到 DbSet：" + dbSetType.FullName);
+                //foreach (var dbSetProperty in dbSetProperties)
+                //{
+                //    // 获取DbSet的类型  
+                //    var dbSetType = dbSetProperty.PropertyType.GetGenericArguments()[0];
+                //    Console.WriteLine("找到 DbSet：" + dbSetType.FullName);
 
-                    // 创建模拟的DbSet  
-                    var mockDbSetType = typeof(Mock<>).MakeGenericType(typeof(DbSet<>).MakeGenericType(dbSetType));
-                    var mockDbSet = Activator.CreateInstance(mockDbSetType);
+                //    // 创建模拟的DbSet  
+                //    var mockDbSetType = typeof(Mock<>).MakeGenericType(typeof(DbSet<>).MakeGenericType(dbSetType));
+                //    var mockDbSet = Activator.CreateInstance(mockDbSetType);
 
-                    // 设置DbSet的行为  
-                    if (dataLists.TryGetValue(dbSetType, out var data))
-                    {
-                        var queryableData = data.AsQueryable();
+                //    // 设置DbSet的行为  
+                //    if (dataLists.TryGetValue(dbSetType, out var data))
+                //    {
+                //        var queryableData = data.AsQueryable();
 
-                        // 设置DbSet的Provider属性  
-                        mockDbSetType.GetProperty("Provider").SetValue(mockDbSet, queryableData.Provider);
+                //        // 设置DbSet的Provider属性  
+                //        mockDbSetType.GetProperty("Provider").SetValue(mockDbSet, queryableData.Provider);
 
-                        // 设置DbSet的Expression属性  
-                        mockDbSetType.GetProperty("Expression").SetValue(mockDbSet, queryableData.Expression);
+                //        // 设置DbSet的Expression属性  
+                //        mockDbSetType.GetProperty("Expression").SetValue(mockDbSet, queryableData.Expression);
 
-                        // 设置DbSet的ElementType属性  
-                        mockDbSetType.GetProperty("ElementType").SetValue(mockDbSet, queryableData.ElementType);
+                //        // 设置DbSet的ElementType属性  
+                //        mockDbSetType.GetProperty("ElementType").SetValue(mockDbSet, queryableData.ElementType);
 
-                        // 设置DbSet的GetEnumerator()方法  
-                        mockDbSetType.GetMethod("GetEnumerator").Invoke(mockDbSet, null);
+                //        // 设置DbSet的GetEnumerator()方法  
+                //        mockDbSetType.GetMethod("GetEnumerator").Invoke(mockDbSet, null);
 
-                        // 将模拟的DbSet设置到模拟的DbContext中  
-                        dbSetProperty.SetValue(dbContext, mockDbSet);
-                    }
+                //        // 将模拟的DbSet设置到模拟的DbContext中  
+                //        dbSetProperty.SetValue(dbContext, mockDbSet);
+                //    }
 
-                }
+                //}
                 return dbContext;
 
             });

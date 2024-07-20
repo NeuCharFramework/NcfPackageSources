@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
@@ -251,6 +252,9 @@ namespace Senparc.Ncf.Repository
 
         public virtual T GetFirstOrDefaultObject<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
+            Console.WriteLine("RepositoryBase GetFirstOrDefaultObject");
+            Console.WriteLine("Data:" + BaseDB.BaseDataContext.Set<T>().ToList().ToJson(true, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore }));
+
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             return includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())
                                         .OrderBy(orderBy, orderingType)
@@ -473,6 +477,10 @@ namespace Senparc.Ncf.Repository
         public virtual async Task<T> GetFirstOrDefaultObjectAsync<TOrderProperty, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             Console.WriteLine("0720-temp- RepositoryBase GetFirstOrDefaultObjectAsync");
+
+            Console.WriteLine("DbContext:" + BaseDB.BaseDataContext.GetType().FullName);
+
+            Console.WriteLine("Data:" + BaseDB.BaseDataContext.Set<T>().ToList().ToJson(true));
 
             //string sql = string.Format("SELECT VALUE c FROM {0} AS c ", _entitySetName);
             return await includesNavigationPropertyPathFunc.Compile()(BaseDB.BaseDataContext.Set<T>())

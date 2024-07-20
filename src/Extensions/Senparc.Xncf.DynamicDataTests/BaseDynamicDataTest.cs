@@ -28,7 +28,7 @@ namespace Senparc.Xncf.DynamicDataTests
 
             dataList.Add(tableMetadataList);
 
-            Func<string, int> GetTableId = name => dataList.GetList<TableMetadata>().First(z => z.TableName == name).Id;
+            Func<string, int> GetTableId = name => dataList.GetDataList<TableMetadata>().First(z => z.TableName == name).Id;
 
             // ColumnMetadata
             List<ColumnMetadata> columnMetadataList = new() {
@@ -52,14 +52,14 @@ namespace Senparc.Xncf.DynamicDataTests
                 var item = columnMetadataList[i - 1];
                 item.Id = i;
 
-                item.TableMetadata = dataList.GetList<TableMetadata>().First(z => z.Id == item.TableMetadataId);
+                item.TableMetadata = dataList.GetDataList<TableMetadata>().First(z => z.Id == item.TableMetadataId);
             }
 
             dataList.Add(columnMetadataList);
 
-            foreach (var item in dataList.GetList<TableMetadata>())
+            foreach (var item in dataList.GetDataList<TableMetadata>())
             {
-                item.ColumnMetadatas = dataList.GetList<ColumnMetadata>().Where(z => z.TableMetadataId == item.Id).ToList();
+                item.ColumnMetadatas = dataList.GetDataList<ColumnMetadata>().Where(z => z.TableMetadataId == item.Id).ToList();
             }
 
         };
