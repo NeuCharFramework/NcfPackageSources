@@ -52,15 +52,15 @@ namespace Senparc.Xncf.DynamicDataTests
                 var item = columnMetadataList[i - 1];
                 item.Id = i;
 
-                item.TableMetadata = dataList.GetDataList<TableMetadata>().First(z => z.Id == item.TableMetadataId);
+                //item.TableMetadata = dataList.GetDataList<TableMetadata>().First(z => z.Id == item.TableMetadataId);
             }
 
             dataList.Add(columnMetadataList);
 
-            foreach (var item in dataList.GetDataList<TableMetadata>())
-            {
-                item.ColumnMetadatas = dataList.GetDataList<ColumnMetadata>().Where(z => z.TableMetadataId == item.Id).ToList();
-            }
+            //foreach (var item in dataList.GetDataList<TableMetadata>())
+            //{
+            //    item.ColumnMetadatas = dataList.GetDataList<ColumnMetadata>().Where(z => z.TableMetadataId == item.Id).ToList();
+            //}
 
         };
 

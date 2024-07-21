@@ -22,6 +22,9 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             var tableMetadataDto = await service.GetTableMetadataDtoAsync(1);
 
             Assert.IsNotNull(tableMetadataDto);
+            Assert.IsNotNull(tableMetadataDto.ColumnMetadatas);
+            Assert.IsTrue(tableMetadataDto.ColumnMetadatas.Count > 0);//注意：InMemory 数据库中，这里会自动进行关联，无论底层代码是否 Include
+
             Console.WriteLine(tableMetadataDto.ToJson(true, new Newtonsoft.Json.JsonSerializerSettings()
             {
                 ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

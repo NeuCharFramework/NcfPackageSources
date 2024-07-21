@@ -20,10 +20,6 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         {
             var tableMetadata = await base.GetObjectAsync(z => z.Id == tableId, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
 
-            //var tableMetadata =  base.GetObject(z => z.Id == tableId, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
-
-            Console.WriteLine("tableMetadata:" + tableMetadata?.TableName);
-
             var result = base.Mapper.Map<TableMetadataDto>(tableMetadata);
             return result;
         }
