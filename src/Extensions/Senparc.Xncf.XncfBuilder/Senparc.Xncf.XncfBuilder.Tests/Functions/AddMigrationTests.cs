@@ -17,14 +17,23 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
     [TestClass]
     public class AddMigrationTests : TestBase
     {
+        IServiceCollection _services;
         public AddMigrationTests()
         {
+            
+        }
+
+        protected override void BeforeRegisterServiceCollection(IServiceCollection services)
+        {
+            base.BeforeRegisterServiceCollection(services);
+
+            _services = services;
         }
 
         [TestMethod]
         public void AddMigrationRunTest()
         {
-            using (var service = base.ServiceCollection.BuildServiceProvider())
+            using (var service = _services.BuildServiceProvider())
             {
                 var function = new DatabaseMigrationsAppService(service);
                 var result = function.AddMigration(new OHS.PL.DatabaseMigrations_MigrationRequest

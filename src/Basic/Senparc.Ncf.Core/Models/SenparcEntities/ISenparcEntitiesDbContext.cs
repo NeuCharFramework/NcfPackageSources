@@ -10,7 +10,7 @@ namespace Senparc.Ncf.Core.Models
     /// <summary>
     /// ISenparcEntities
     /// </summary>
-    public interface ISenparcEntitiesDbContext : IDisposable, IInfrastructure<IServiceProvider>, IDbContextDependencies, IDbSetCache, /*IDbQueryCache, */IDbContextPoolable
+    public interface ISenparcEntitiesDbContext : IDisposable /*, IInfrastructure<IServiceProvider>,*/ /*IDbContextDependencies,*/ /*IDbSetCache*/ /*IDbQueryCache, *//*,IDbContextPoolable*/
     {
         void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase;
 

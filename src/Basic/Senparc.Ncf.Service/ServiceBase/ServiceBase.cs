@@ -74,7 +74,6 @@ namespace Senparc.Ncf.Service
             return await RepositoryBase.GetFirstOrDefaultObjectAsync(where, includesNavigationPropertyPathFunc);
         }
 
-
         public virtual T GetObject<TK>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return RepositoryBase.GetFirstOrDefaultObject(where, orderBy, orderingType, includes);

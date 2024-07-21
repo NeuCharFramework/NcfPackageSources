@@ -14,14 +14,21 @@ namespace Senparc.Ncf.UnitTestExtension.Database
     {
         private NcfUnitTestEntities dataContext;
 
-        public NcfUnitTestDataDb(IServiceProvider serviceProvider)
+        public NcfUnitTestDataDb() { }
+
+        public NcfUnitTestDataDb(NcfUnitTestEntities dbContext)
         {
-            dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
+            dataContext = dbContext;
         }
 
+        //public NcfUnitTestDataDb(IServiceProvider serviceProvider)
+        //{
+        //    dataContext = new NcfUnitTestEntities(new DbContextOptionsBuilder().Options, serviceProvider);
+        //}
 
 
-        public BasePoolEntities DataContext
+
+        public virtual BasePoolEntities DataContext
         {
             get
             {

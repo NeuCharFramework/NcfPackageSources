@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Senparc.Ncf.UnitTestExtension.Entities
 {
@@ -13,7 +14,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> GetList<T>()
+        public List<T> GetDataList<T>()
         {
             if (!base.ContainsKey(typeof(T)))
             {
@@ -21,6 +22,27 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
             }
 
             return base[typeof(T)].Cast<T>().ToList();
+        }
+
+        public List<object> GetList(Type type)
+        {
+            if (!base.ContainsKey(type))
+            {
+                return null;
+            }
+
+            return base[type];
+        }
+
+
+        /// <summary>
+        /// 快速添加实体类型的列表数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public void Add<T>(List<T> list)
+        {
+            base[typeof(T)] = list.Cast<object>().ToList();
         }
     }
 }
