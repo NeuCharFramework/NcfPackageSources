@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
-    public partial class BaseNcfUnitTest
-    {
+    //public partial class BaseNcfUnitTest
+    //{
         //public (IClientRepositoryBase<T> Repository, List<T> DataList) GetRespositoryBase<T>() where T : EntityBase
         //{
         //    var dataList = dataLists[typeof(T)].Cast<T>().ToList();
@@ -276,5 +276,5 @@ namespace Senparc.Ncf.UnitTestExtension
         //{
         //    return baseMock.As<TInterface>();
         //}
-    }
+//    }
 }

@@ -11,10 +11,21 @@ namespace Senparc.Xncf.DynamicDataTests
     [TestClass]
     public class BaseDynamicDataTest : BaseNcfUnitTest
     {
+        private static object InitLock = new object();
+        private static bool InitFinished = false;
+
         public static Action<DataList> InitSeedData = dataList =>
         {
-            // TableMetadata
-            List<TableMetadata> tableMetadataList = new() {
+            lock (InitLock)
+            {
+                if (InitFinished)
+                {
+                    //由于单元测试每个 TestMethod 都会重新初始化 TestClass 类，因此需要防止静态储存的数据被重复添加。
+                    return;
+                }
+
+                // TableMetadata
+                List<TableMetadata> tableMetadataList = new() {
                  new("User","用户表"){
                   ColumnMetadatas=new List<ColumnMetadata>(){
                        new ColumnMetadata(0,"Guid","Text",false,""),
@@ -40,17 +51,16 @@ namespace Senparc.Xncf.DynamicDataTests
                  },
             };
 
-            for (int i = 1; i <= tableMetadataList.Count; i++)
-            {
-                var data = tableMetadataList[i - 1];
-                //data.Id = i;
+                for (int i = 1; i <= tableMetadataList.Count; i++)
+                {
+                    var data = tableMetadataList[i - 1];
+                    //data.Id = i;
+                }
+
+                dataList.Add(tableMetadataList);
+                InitFinished = true;
             }
-
-            dataList.Add(tableMetadataList);
         };
-
-        //protected TableDataService _tableDataService;
-        protected TableMetadataService _tableMetadataService;
 
         public BaseDynamicDataTest(Action<IServiceCollection> servicesRegister = null, Action<DataList> initSeedData = null)
             : base(servicesRegister, initSeedData ?? InitSeedData)
@@ -63,8 +73,6 @@ namespace Senparc.Xncf.DynamicDataTests
             base.BeforeRegisterServiceCollection(services);
 
             Console.WriteLine("BaseDynamicDataTest.BeforeRegisterServiceCollection");
-
-            services.AddScoped<TableMetadataService>();
         }
 
         protected override void RegisterServiceCollectionFinished(IServiceCollection services)

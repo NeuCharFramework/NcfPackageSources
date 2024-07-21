@@ -65,7 +65,7 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 单元测试用的 DbContext
         /// </summary>
-        public static Type UnitTestPillarDbContext { get; set; }
+        public static Type UnitTestPillarDbContext { get; set; } = null;
 
         /// <summary>
         /// 添加配置

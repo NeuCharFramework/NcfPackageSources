@@ -41,7 +41,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
                 var tableMetadata = await _service.GetObjectAsync(z => z.TableName.Contains("Product"));
                 Assert.IsNotNull(tableMetadata);
                 Assert.AreEqual("产品表", tableMetadata.Description);
+            }
 
+            {
+                var tabeMetadataList = await _service.GetFullListAsync(z => z.TableName=="User");
+                Assert.AreEqual(1, tabeMetadataList.Count);
             }
 
         }
@@ -54,6 +58,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
                 Assert.IsNotNull(tableMetadata);
                 Assert.AreEqual("Product", tableMetadata.TableName);
                 Assert.AreEqual("产品表", tableMetadata.Description);
+            }
+
+            {
+                var tabeMetadataList = await _service.GetFullListAsync(z => z.TableName == "User");
+                Assert.AreEqual(1, tabeMetadataList.Count);
             }
         }
     }

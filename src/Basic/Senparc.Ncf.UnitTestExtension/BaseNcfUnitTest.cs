@@ -36,8 +36,7 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 namespace Senparc.Ncf.UnitTestExtension
 {
 
-    [TestClass]
-    public partial class BaseNcfUnitTest
+    public class BaseNcfUnitTest
     {
         private IServiceCollection ServiceCollection { get; set; }
         public IConfiguration Configuration { get; set; }
@@ -201,64 +200,9 @@ namespace Senparc.Ncf.UnitTestExtension
                     dbContext.SaveChanges();
                 }
 
-                //// 获取所有DbSet属性  
-                //var dbSetProperties = typeof(NcfUnitTestEntities).GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
-
-                //Console.WriteLine("dbSetProperties Cunt:" + dbSetProperties.Count());
-
-                //foreach (var dbSetProperty in dbSetProperties)
-                //{
-                //    // 获取DbSet的类型  
-                //    var dbSetType = dbSetProperty.PropertyType.GetGenericArguments()[0];
-                //    Console.WriteLine("找到 DbSet：" + dbSetType.FullName);
-
-                //    // 创建模拟的DbSet  
-                //    var mockDbSetType = typeof(Mock<>).MakeGenericType(typeof(DbSet<>).MakeGenericType(dbSetType));
-                //    var mockDbSet = Activator.CreateInstance(mockDbSetType);
-
-                //    // 设置DbSet的行为  
-                //    if (dataLists.TryGetValue(dbSetType, out var data))
-                //    {
-                //        var queryableData = data.AsQueryable();
-
-                //        // 设置DbSet的Provider属性  
-                //        mockDbSetType.GetProperty("Provider").SetValue(mockDbSet, queryableData.Provider);
-
-                //        // 设置DbSet的Expression属性  
-                //        mockDbSetType.GetProperty("Expression").SetValue(mockDbSet, queryableData.Expression);
-
-                //        // 设置DbSet的ElementType属性  
-                //        mockDbSetType.GetProperty("ElementType").SetValue(mockDbSet, queryableData.ElementType);
-
-                //        // 设置DbSet的GetEnumerator()方法  
-                //        mockDbSetType.GetMethod("GetEnumerator").Invoke(mockDbSet, null);
-
-                //        // 将模拟的DbSet设置到模拟的DbContext中  
-                //        dbSetProperty.SetValue(dbContext, mockDbSet);
-                //    }
-
-                //}
                 return dbContext;
 
             });
-
-            //ServiceCollection.AddScoped(typeof(ClientRepositoryBase<>));
-
-            //var mockBaseDB = new Mock<NcfUnitTestDataDb>();
-            ////mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
-
-
-
-            //mockBaseDB.Setup(z => z.DataContext.Set<T>())
-            //          .Returns<DbSet<T>>(z =>
-            //          {
-            //              var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
-            //              return mockDbSet.Object;
-            //          });
-
-            //var repo = new ClientRepositoryBase<T>(mockBaseDB.Object);
-
-
         }
 
         /// <summary>

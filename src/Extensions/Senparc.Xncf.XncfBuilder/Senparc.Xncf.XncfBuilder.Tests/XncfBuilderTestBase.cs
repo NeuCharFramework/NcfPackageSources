@@ -15,36 +15,34 @@ namespace Senparc.Xncf.PromptRange.Tests
     [TestClass]
     public class XncfBuilderTestBase : TestBase
     {
-        protected IServiceProvider _serviceProvder;
         protected SenparcAiSetting _senparcAiSetting;
 
-        IServiceCollection _services;
-        protected override void RegisterServiceCollectionFinished(IServiceCollection services)
+        protected override void BeforeRegisterServiceCollection(IServiceCollection services)
         {
-            base.RegisterServiceCollectionFinished(services);
+            base.BeforeRegisterServiceCollection(services);
 
-            _services = services;
-        }
-
-        public XncfBuilderTestBase() : base()
-        {
             _senparcAiSetting = new Senparc.AI.Kernel.SenparcAiSetting();
             base.Configuration.GetSection("SenparcAiSetting").Bind(_senparcAiSetting);
 
             //_senparcAiSetting = new  SenparcAiSetting() { IsDebug = true };
             //_senparcAiSetting.GetSection("SenparcAiSetting").Bind(_senparcSetting);
 
-            _services.AddSenparcAI(base.Configuration, _senparcAiSetting);
+            services.AddSenparcAI(base.Configuration, _senparcAiSetting);
 
-            _services.AddScoped<PromptService>();
-            _services.AddScoped<PromptBuilderService>();
+            services.AddScoped<PromptService>();
+            services.AddScoped<PromptBuilderService>();
 
-            _services.AddScoped<IAiHandler, SemanticAiHandler>();
+            services.AddScoped<IAiHandler, SemanticAiHandler>();
+        }
 
-            _serviceProvder = _services.BuildServiceProvider();
+        protected override void RegisterServiceCollectionFinished(IServiceCollection services)
+        {
+            base.RegisterServiceCollectionFinished(services);
+        }
 
+        public XncfBuilderTestBase() : base()
+        {
             base.registerService.UseSenparcAI(/*senparcAiSetting*/);
-
         }
 
         [TestMethod]
