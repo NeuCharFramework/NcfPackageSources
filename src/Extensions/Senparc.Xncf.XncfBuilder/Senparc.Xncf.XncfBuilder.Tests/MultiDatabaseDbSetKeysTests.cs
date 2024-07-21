@@ -13,22 +13,15 @@ namespace Senparc.Xncf.XncfBuilder.Tests
     [TestClass]
     public class MultiDatabaseDbSetKeysTests : TestBase
     {
-        IServiceCollection _services;
         protected override void RegisterServiceCollectionFinished(IServiceCollection services)
         {
             base.RegisterServiceCollectionFinished(services);
-
-            _services = services;
         }
 
         public MultiDatabaseDbSetKeysTests()
         {
             Console.WriteLine(typeof(Senparc.Xncf.XncfBuilder.Register).FullName);
-            Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { }, app => { });
-
-            var env = _services.BuildServiceProvider().GetService<IHostEnvironment>();
-            var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(_services, base.Configuration, env, null);
-            //Senparc.Ncf.XncfBase.Register.UseXncfModules()
+            //Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { }, app => { });
         }
 
         [TestMethod]
