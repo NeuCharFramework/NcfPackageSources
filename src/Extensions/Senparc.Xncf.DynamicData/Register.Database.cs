@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Mapping;
 
 namespace Senparc.Xncf.DynamicData
 {
@@ -29,6 +30,9 @@ namespace Senparc.Xncf.DynamicData
         {
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
+
+            modelBuilder.ApplyConfiguration(new DynamicData_ColumnMetadataConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new DynamicData_TableDataConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
