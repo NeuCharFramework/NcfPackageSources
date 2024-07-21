@@ -174,6 +174,7 @@ namespace Senparc.Ncf.UnitTestExtension
                                     .Options;
                 var dbContext = new NcfUnitTestEntities(options, s, dataLists);
 
+                //填充所有数据
                 foreach (var dataListKv in dataLists)
                 {
                     var type = dataListKv.Key;
