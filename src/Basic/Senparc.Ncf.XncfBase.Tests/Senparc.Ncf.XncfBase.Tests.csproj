@@ -32,4 +32,8 @@
 		<ProjectReference Include="..\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Senparc.Ncf.Database.UnitTest\" />
+	</ItemGroup>
+
 </Project>

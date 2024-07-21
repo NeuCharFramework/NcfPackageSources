@@ -23,5 +23,13 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
             var result = base.Mapper.Map<TableMetadataDto>(tableMetadata);
             return result;
         }
+
+        public async Task<TableMetadataDto> GetTableMetadataDtoAsync(string name)
+        {
+            var tableMetadata = await base.GetObjectAsync(z => z.TableName==name, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
+
+            var result = base.Mapper.Map<TableMetadataDto>(tableMetadata);
+            return result;
+        }
     }
 }

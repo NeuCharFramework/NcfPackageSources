@@ -25,7 +25,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
 
             #endregion
 
-            #region 其他动态模块注入到当前 DbContext
+            #region 其他动态模块的 OnModelCreating 过程注入到当前 DbContext
 
             Console.WriteLine("============= SenparcEntities 动态加载 Start =============");
             foreach (var databaseRegister in XncfRegisterManager.XncfDatabaseList)
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
 
             #endregion
 
-            #region 全局自动注入（请勿改变此命令位置）
+            #region 【核心】全局自动注入（请勿改变此命令位置）
 
             //注册所有 XncfAutoConfigurationMapping 动态模块
             var dt1 = SystemTime.Now;

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.DynamicData.Domain.Services;
 using Senparc.Xncf.DynamicDataTests;
@@ -13,13 +14,56 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
     [TestClass()]
     public class TableMetadataServiceTests : BaseDynamicDataTest
     {
+        TableMetadataService _service;
+
+        public TableMetadataServiceTests()
+        {
+            _service = base._serviceProvider.GetRequiredService<TableMetadataService>();
+        }
+
         [TestMethod()]
         public async Task GetTableMetadataDtoAsyncTest()
         {
-            var tableMetadataDto = await base._tableMetadataService.GetTableMetadataDtoAsync(1);
+            {
+                var tableMetadataDto = await _service.GetTableMetadataDtoAsync(1);
 
-            Assert.IsNotNull(tableMetadataDto);
-            Console.WriteLine(tableMetadataDto.ToJson(true));
+                Assert.IsNotNull(tableMetadataDto);
+                Assert.IsNotNull(tableMetadataDto.ColumnMetadatas);
+                Assert.IsTrue(tableMetadataDto.ColumnMetadatas.Count > 0);//注意：InMemory 数据库中，这里会自动进行关联，无论底层代码是否 Include
+
+                Console.WriteLine(tableMetadataDto.ToJson(true, new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                }));
+            }
+
+            {
+                var tableMetadata = await _service.GetObjectAsync(z => z.TableName.Contains("Product"));
+                Assert.IsNotNull(tableMetadata);
+                Assert.AreEqual("产品表", tableMetadata.Description);
+            }
+
+            {
+                var tabeMetadataList = await _service.GetFullListAsync(z => z.TableName=="User");
+                Assert.AreEqual(1, tabeMetadataList.Count);
+            }
+
+        }
+
+        [TestMethod()]
+        public async Task GetTableMetadataDtoAsyncByNameTest()
+        {
+            { 
+                var tableMetadata = await _service.GetTableMetadataDtoAsync("Product");
+                Assert.IsNotNull(tableMetadata);
+                Assert.AreEqual("Product", tableMetadata.TableName);
+                Assert.AreEqual("产品表", tableMetadata.Description);
+            }
+
+            {
+                var tabeMetadataList = await _service.GetFullListAsync(z => z.TableName == "User");
+                Assert.AreEqual(1, tabeMetadataList.Count);
+            }
         }
     }
 }
