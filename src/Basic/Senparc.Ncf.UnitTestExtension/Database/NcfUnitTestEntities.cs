@@ -61,92 +61,131 @@ namespace Senparc.Ncf.UnitTestExtension.Database
             // Get all entity types  
             var entityTypes = modelBuilder.Model.GetEntityTypes();
 
-            Console.WriteLine("entityTypes:" + entityTypes.Select(z => z.ClrType.Name).ToJson(true));
+            //Console.WriteLine("entityTypes:" + entityTypes.Select(z => z.ClrType.Name).ToJson(true));
 
-            foreach (var entityType in entityTypes)
-            {
-                var clrType = entityType.ClrType;
-
-                var data = _dataList.GetType().GetMethod("GetDataList").MakeGenericMethod(clrType).Invoke(_dataList, null) as IList;
-
-                //var data = _dataList.GetList(clrType);
-                if (data != null)
-                {
-                    //ConvertList(data, clrType);
-
-                    Console.WriteLine("clrType：" + clrType.FullName);
-
-                    var entityData = data.AsQueryable();
-
-                    var mockDbSet = CreateMockDbSet(entityData, clrType);
-
-                    // Add the Mock DbSet to the _dbSets dictionary  
-                    _dbSets[clrType] = mockDbSet;
-                }
-                else
-                {
-                    Console.WriteLine("未找到 clrType 对应数据集：" + clrType.FullName);
-                }
-            }
-        }
-
-        private object CreateMockDbSet(IQueryable entityData, Type clrType)
-        {
-            var queryableMockType = typeof(Mock<>).MakeGenericType(typeof(IQueryable<>).MakeGenericType(clrType));
-            var queryableMock = (Mock)Activator.CreateInstance(queryableMockType);
-          
-            // Setup the IQueryable properties  
-            queryableMock.As<IQueryable>().Setup(m => m.Provider).Returns(entityData.Provider);
-            queryableMock.As<IQueryable>().Setup(m => m.Expression).Returns(entityData.Expression);
-            queryableMock.As<IQueryable>().Setup(m => m.ElementType).Returns(entityData.ElementType);
-            queryableMock.As<IQueryable>().Setup(m => m.GetEnumerator()).Returns(entityData.GetEnumerator());
-
-            var dbSetMockType = typeof(Mock<>).MakeGenericType(typeof(DbSet<>).MakeGenericType(clrType));
-            var dbSetMock = (Mock)Activator.CreateInstance(dbSetMockType);
-
-            // Setup the DbSet methods  
-            dbSetMock.As<IQueryable>().Setup(m => m.Provider).Returns(entityData.Provider);
-            dbSetMock.As<IQueryable>().Setup(m => m.Expression).Returns(entityData.Expression);
-            dbSetMock.As<IQueryable>().Setup(m => m.ElementType).Returns(entityData.ElementType);
-            dbSetMock.As<IQueryable>().Setup(m => m.GetEnumerator()).Returns(entityData.GetEnumerator());
-
-
-            //Async
-            //var mockAsyncQueryProvider = new Mock<IAsyncQueryProvider>();
-            //mockAsyncQueryProvider.Setup(m => m.ExecuteAsync<object>(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
-            //    .Returns<Expression, CancellationToken>((expression, token) => new ValueTask<object>(entityData.Provider.Execute(expression)));
-            //mockAsyncQueryProvider.Setup(m => m.ExecuteAsync(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
-            //    .Returns<Expression, CancellationToken>((expression, token) => new ValueTask(entityData.Provider.Execute(expression)));
-            //mockAsyncQueryProvider.Setup(m => m.CreateQuery<object>(It.IsAny<Expression>())).Returns<Expression>(expression => entityData.Provider.CreateQuery<object>(expression));
-            //mockAsyncQueryProvider.Setup(m => m.CreateQuery(It.IsAny<Expression>())).Returns<Expression>(expression => entityData.Provider.CreateQuery(expression));
-
-            //queryableMock.As<IAsyncEnumerable<object>>().Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(entityData.GetAsyncEnumerator());
-            //queryableMock.As<IQueryable>().Setup(m => m.Provider).Returns(mockAsyncQueryProvider.Object);
-
-            //dbSetMock.As<IAsyncEnumerable<object>>().Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(entityData.GetAsyncEnumerator());
-            //dbSetMock.As<IQueryable>().Setup(m => m.Provider).Returns(mockAsyncQueryProvider.Object);
-
-            return dbSetMock.Object;
-        }
-
-        public override DbSet<TEntity> Set<TEntity>()
-        {
-            if (_baseOnModelCreatingCalled)
-            {
-                return _dbSets[typeof(TEntity)] as DbSet<TEntity>;
-            }
-
-            //方案二：
-            //if (_dbSets.TryGetValue(typeof(TEntity), out var dbSet))
+            //foreach (var entityType in entityTypes)
             //{
-            //    return dbSet as DbSet<TEntity>;
+            //    var clrType = entityType.ClrType;
+
+            //    var data = _dataList.GetType().GetMethod("GetDataList").MakeGenericMethod(clrType).Invoke(_dataList, null) as IList;
+
+            //    //var data = _dataList.GetList(clrType);
+            //    if (data != null)
+            //    {
+            //        //ConvertList(data, clrType);
+
+            //        Console.WriteLine("clrType：" + clrType.FullName);
+
+            //        var entityData = data.AsQueryable();
+
+            //        var mockDbSet = CreateMockDbSet(entityData, clrType);
+
+            //        // Add the Mock DbSet to the _dbSets dictionary  
+            //        _dbSets[clrType] = mockDbSet;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("未找到 clrType 对应数据集：" + clrType.FullName);
+            //    }
             //}
-
-
-            //由于 base.OnModelCreating 可能也会访问到 DbSet<TEntity>，而此时斌没有完成完全的 Mock 初始化，
-            //所以这种情况下还是返回原始对象
-            return base.Set<TEntity>();
         }
+
+        //private object CreateMockDbSet(IQueryable entityData, Type clrType)
+        //{
+        //    var queryableMockType = typeof(Mock<>).MakeGenericType(typeof(IQueryable<>).MakeGenericType(clrType));
+        //    var queryableMock = (Mock)Activator.CreateInstance(queryableMockType);
+
+        //    // Setup the IQueryable properties  
+        //    queryableMock.As<IQueryable>().Setup(m => m.Provider).Returns(entityData.Provider);
+        //    queryableMock.As<IQueryable>().Setup(m => m.Expression).Returns(entityData.Expression);
+        //    queryableMock.As<IQueryable>().Setup(m => m.ElementType).Returns(entityData.ElementType);
+        //    queryableMock.As<IQueryable>().Setup(m => m.GetEnumerator()).Returns(entityData.GetEnumerator());
+
+        //    var dbSetMockType = typeof(Mock<>).MakeGenericType(typeof(DbSet<>).MakeGenericType(clrType));
+        //    var dbSetMock = (Mock)Activator.CreateInstance(dbSetMockType);
+
+        //    // Setup the DbSet methods  
+        //    dbSetMock.As<IQueryable>().Setup(m => m.Provider).Returns(entityData.Provider);
+        //    dbSetMock.As<IQueryable>().Setup(m => m.Expression).Returns(entityData.Expression);
+        //    dbSetMock.As<IQueryable>().Setup(m => m.ElementType).Returns(entityData.ElementType);
+        //    dbSetMock.As<IQueryable>().Setup(m => m.GetEnumerator()).Returns(entityData.GetEnumerator());
+
+
+        //    ////Async
+        //    //var mockAsyncQueryProvider = new Mock<IAsyncQueryProvider>();
+
+        //    //mockAsyncQueryProvider.Setup(m => m.ExecuteAsync<object>(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
+        //    //    .Returns<Expression, CancellationToken>((expression, token) => new ValueTask<object>(entityData.Provider.Execute(expression)));
+
+        //    //mockAsyncQueryProvider.Setup(m => m.ExecuteAsync(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
+        //    //    .Returns<Expression, CancellationToken>((expression, token) => new ValueTask(entityData.Provider.Execute(expression)));
+        //    //Async  
+        //    var mockAsyncQueryProvider = new Mock<IAsyncQueryProvider>();
+
+        //    // Create a generic ExecuteAsync method for the specific clrType  
+        //    var method = typeof(IAsyncQueryProvider).GetMethod("ExecuteAsync", new Type[] { typeof(Expression), typeof(CancellationToken) });
+        //    var genericMethod = method.MakeGenericMethod(clrType);
+        //    var expressionParameter = Expression.Parameter(typeof(Expression), "expression");
+        //    var tokenParameter = Expression.Parameter(typeof(CancellationToken), "token");
+        //    var executeAsyncDelegate = Expression.Lambda<Func<Expression, CancellationToken, object>>(
+        //        Expression.Call(
+        //            Expression.Convert(Expression.Constant(mockAsyncQueryProvider.Object), typeof(IAsyncQueryProvider)),
+        //            genericMethod,
+        //            expressionParameter,
+        //            tokenParameter),
+        //        expressionParameter,
+        //        tokenParameter).Compile();
+
+        //    mockAsyncQueryProvider
+        //        .Setup(m => m.ExecuteAsync<object>(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
+        //        .Returns<Expression, CancellationToken>((expression, token) => new ValueTask<object>(executeAsyncDelegate(expression, token)));
+
+
+        //    //mockAsyncQueryProvider
+        //    //    .Setup(m => m.ExecuteAsync<object>(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
+        //    //    .Returns<Expression, CancellationToken>((expression, token) =>
+        //    //    {
+        //    //        var resultType = expression.Type;
+        //    //        var executeAsyncMethod = typeof(IAsyncQueryProvider)
+        //    //            .GetMethod(nameof(IAsyncQueryProvider.ExecuteAsync))
+        //    //            .MakeGenericMethod(resultType);
+        //    //        return (ValueTask<object>)executeAsyncMethod.Invoke(entityData.Provider, new object[] { expression, token });
+        //        //});
+
+        //    //TODO：更多类型
+
+        //    mockAsyncQueryProvider.Setup(m => m.CreateQuery<object>(It.IsAny<Expression>())).Returns<Expression>(expression => entityData.Provider.CreateQuery<object>(expression));
+        //    mockAsyncQueryProvider.Setup(m => m.CreateQuery(It.IsAny<Expression>())).Returns<Expression>(expression => entityData.Provider.CreateQuery(expression));
+
+        //    queryableMock.As<IAsyncEnumerable<object>>().Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(entityData.GetAsyncEnumerator());
+        //    queryableMock.As<IQueryable>().Setup(m => m.Provider).Returns(mockAsyncQueryProvider.Object);
+
+        //    dbSetMock.As<IAsyncEnumerable<object>>().Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(entityData.GetAsyncEnumerator());
+        //    dbSetMock.As<IQueryable>().Setup(m => m.Provider).Returns(mockAsyncQueryProvider.Object);
+
+        //    return dbSetMock.Object;
+        //}
+
+        //public override DbSet<TEntity> Set<TEntity>()
+        //{
+        //    if (_baseOnModelCreatingCalled)
+        //    {
+        //        //var data = _dataList.GetDataList<TEntity>();
+        //        //return data;
+        //        return _dbSets[typeof(TEntity)] as DbSet<TEntity>;
+        //    }
+
+        //    //方案二：
+        //    //if (_dbSets.TryGetValue(typeof(TEntity), out var dbSet))
+        //    //{
+        //    //    return dbSet as DbSet<TEntity>;
+        //    //}
+
+
+        //    //由于 base.OnModelCreating 可能也会访问到 DbSet<TEntity>，而此时斌没有完成完全的 Mock 初始化，
+        //    //所以这种情况下还是返回原始对象
+        //    return base.Set<TEntity>();
+        //}
     }
 
     //public class DbContextMockHelper

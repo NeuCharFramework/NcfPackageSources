@@ -174,6 +174,31 @@ namespace Senparc.Ncf.UnitTestExtension
                                     .Options;
                 var dbContext = new NcfUnitTestEntities(options, s, dataLists);
 
+                foreach (var dataListKv in dataLists)
+                {
+                    var type = dataListKv.Key;
+                    var dataList = dataListKv.Value;
+
+                    //设置 DbSet<T>
+                    var binder = Type.DefaultBinder;
+                    var method = dbContext.GetType().GetMethod(nameof(dbContext.Set), BindingFlags.Instance | BindingFlags.Public, binder, Type.EmptyTypes, null).MakeGenericMethod(type);
+                    var dbSet = method.Invoke(dbContext, null);
+
+                    //转换 data 类型
+                    var listType = typeof(List<>).MakeGenericType(type);
+                    var castMethod = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(type);
+                    var toListMethod = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(type);
+
+                    var castData = castMethod.Invoke(null, new object[] { dataList });
+                    var listData = toListMethod.Invoke(null, new object[] { castData });
+
+                    //添加到 DbSet<T>
+                    var addRangeMethod = dbSet.GetType().GetMethod("AddRange", new[] { listType });
+                    addRangeMethod.Invoke(dbSet, new[] { listData });
+
+                    dbContext.SaveChanges();
+                }
+
                 //// 获取所有DbSet属性  
                 //var dbSetProperties = typeof(NcfUnitTestEntities).GetProperties().Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
 

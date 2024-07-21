@@ -18,9 +18,9 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
 
         public async Task<TableMetadataDto> GetTableMetadataDtoAsync(int tableId)
         {
-            //var tableMetadata = await base.GetObjectAsync(z => z.Id == tableId, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
+            var tableMetadata = await base.GetObjectAsync(z => z.Id == tableId, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
 
-            var tableMetadata =  base.GetObject(z => z.Id == tableId, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
+            //var tableMetadata =  base.GetObject(z => z.Id == tableId, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, z => z.Include(t => t.ColumnMetadatas));
 
             Console.WriteLine("tableMetadata:" + tableMetadata?.TableName);
 
