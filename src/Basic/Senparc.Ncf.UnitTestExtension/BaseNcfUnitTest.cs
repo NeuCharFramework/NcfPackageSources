@@ -26,6 +26,7 @@ using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.Dm;
+using Senparc.Ncf.Database.InMemory;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.UnitTestExtension.Database;
 using Senparc.Ncf.UnitTestExtension.Entities;
@@ -49,10 +50,10 @@ namespace Senparc.Ncf.UnitTestExtension
         protected IServiceProvider _serviceProvider;
         protected DataList dataLists = new DataList();
 
-        public BaseNcfUnitTest() : this(null, null)
-        {
+        //public BaseNcfUnitTest() : this(null, null)
+        //{
 
-        }
+        //}
 
         /// <summary>  
         /// 构造函数，用于初始化服务提供者和种子数据  
@@ -88,7 +89,7 @@ namespace Senparc.Ncf.UnitTestExtension
             RegisterServiceStart();
 
             var app = builder.Build();
-            app.UseNcfDatabase<UnitTestDatabaseConfiguration>();
+            app.UseNcfDatabase<InMemoryDatabaseConfiguration>();
         }
 
         protected virtual void BeforeRegisterServiceCollection(IServiceCollection services)
@@ -149,7 +150,7 @@ namespace Senparc.Ncf.UnitTestExtension
             ActionInServiceCollection();
 
             //设置单元测试默认 DbContext（需要在 StartNcfEngine 之前）
-            UnitTestDatabaseConfiguration.UnitTestPillarDbContext = typeof(NcfUnitTestEntities);
+            MultipleDatabasePool.UnitTestPillarDbContext = typeof(NcfUnitTestEntities);
 
             var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(ServiceCollection, Configuration, Env, null);
 

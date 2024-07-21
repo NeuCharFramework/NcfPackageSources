@@ -33,12 +33,10 @@
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Remove="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <ItemGroup>

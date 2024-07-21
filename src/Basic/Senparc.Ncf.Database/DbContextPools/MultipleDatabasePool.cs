@@ -63,6 +63,11 @@ namespace Senparc.Ncf.Database
         #endregion
 
         /// <summary>
+        /// 单元测试用的 DbContext
+        /// </summary>
+        public static Type UnitTestPillarDbContext { get; set; }
+
+        /// <summary>
         /// 添加配置
         /// </summary>
         /// <param name="multiDbContextAttr"></param>
@@ -113,13 +118,12 @@ namespace Senparc.Ncf.Database
             //当前数据库类型
             MultipleDatabaseType multipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
 
-            //if (multipleDatabaseType == MultipleDatabaseType.UnitTest)
-            //{
-            //    //单元测试
-            //    return UnitTestDatabaseConfiguration.UnitTestPillarDbContext;
-            //}
-            //else 
-            if (!this.ContainsKey(multipleDatabaseType))
+            if (multipleDatabaseType == MultipleDatabaseType.InMemory)
+            {
+                //单元测试
+                return UnitTestPillarDbContext ?? throw new NcfExceptionBase($"当前数据库类型为 {multipleDatabaseType}，需要指定 {nameof(UnitTestPillarDbContext)}！");
+            }
+            else if (!this.ContainsKey(multipleDatabaseType))
             {
                 throw new NcfDatabaseException($"未发现任何支持此数据库类型的 XNCF 模块：{multipleDatabaseType}", currentDatabaseConfiguration.GetType());
             }
@@ -169,7 +173,7 @@ namespace Senparc.Ncf.Database
                 dbOptionBuilder = new DbContextOptionsBuilder();
             }
 
-            if (UnitTestDatabaseConfiguration.UnitTestPillarDbContext == null)
+            //if (UnitTestDatabaseConfiguration.UnitTestPillarDbContext == null)
             {
                 //不是单元测试，需要读取数据库
 
@@ -178,7 +182,7 @@ namespace Senparc.Ncf.Database
                 //指定使用当前数据库
                 currentDatabasConfiguration.UseDatabase(
                     dbOptionBuilder,
-                    connectionString ?? SenparcDatabaseConnectionConfigs.ClientConnectionString,
+                    connectionString ?? (SenparcDatabaseConnectionConfigs.ClientConnectionString),
                     xncfDatabaseData,
                     dbContextOptionsAction
                     );

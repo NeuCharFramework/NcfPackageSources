@@ -22,14 +22,14 @@ namespace Senparc.Xncf.DynamicDataTests
                        new ColumnMetadata(0,"Balance","Float",false,"0.0"),
                   }
                  },
-                 new("Product","产品表"){ 
+                 new("Product","产品表"){
                   ColumnMetadatas = new List<ColumnMetadata>(){
                        new ColumnMetadata(0,"Guid","Text",false,""),
                        new ColumnMetadata(0,"Name","Text",false,""),
                        new ColumnMetadata(0,"Price","Float",false,"0.0"),
                   }
                  },
-                 new("Order","订单表"){ 
+                 new("Order","订单表"){
                   ColumnMetadatas = new List<ColumnMetadata>(){
                        new ColumnMetadata(0,"Guid","Text",false,""),
                        new ColumnMetadata(0,"UserGuid","Text",false,""),

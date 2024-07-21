@@ -14,13 +14,18 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
     [TestClass()]
     public class TableMetadataServiceTests : BaseDynamicDataTest
     {
+        TableMetadataService _service;
+
+        public TableMetadataServiceTests()
+        {
+            _service = base._serviceProvider.GetRequiredService<TableMetadataService>();
+        }
+
         [TestMethod()]
         public async Task GetTableMetadataDtoAsyncTest()
         {
-            var service = base._serviceProvider.GetRequiredService<TableMetadataService>();
-
             {
-                var tableMetadataDto = await service.GetTableMetadataDtoAsync(1);
+                var tableMetadataDto = await _service.GetTableMetadataDtoAsync(1);
 
                 Assert.IsNotNull(tableMetadataDto);
                 Assert.IsNotNull(tableMetadataDto.ColumnMetadatas);
@@ -33,12 +38,23 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             }
 
             {
-                var tableMetadataDto = await service.GetObjectAsync(z => z.TableName.Contains("Product"));
-                Assert.IsNotNull(tableMetadataDto);
-                Assert.AreEqual("产品表",tableMetadataDto.Description);
+                var tableMetadata = await _service.GetObjectAsync(z => z.TableName.Contains("Product"));
+                Assert.IsNotNull(tableMetadata);
+                Assert.AreEqual("产品表", tableMetadata.Description);
 
             }
 
+        }
+
+        [TestMethod()]
+        public async Task GetTableMetadataDtoAsyncByNameTest()
+        {
+            { 
+                var tableMetadata = await _service.GetTableMetadataDtoAsync("Product");
+                Assert.IsNotNull(tableMetadata);
+                Assert.AreEqual("Product", tableMetadata.TableName);
+                Assert.AreEqual("产品表", tableMetadata.Description);
+            }
         }
     }
 }

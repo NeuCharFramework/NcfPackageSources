@@ -160,11 +160,11 @@ namespace Senparc.Ncf.Database
                     throw new NcfDatabaseException($"appsettings.json 中的 {nameof(SiteConfig.SenparcCoreSetting.DatabaseType)} 指定数据库类型错误：{SiteConfig.SenparcCoreSetting.DatabaseType}。内部错误信息：{ex.Message}", databaseConfigurationType, inner: ex);
                 }
             }
-            else if (databaseConfigurationType == typeof(UnitTestDatabaseConfiguration))
-            {
-                //供单元测试使用
-                Console.WriteLine("进入单元测试环境");
-            }
+            //else if (databaseConfigurationType == typeof(DatabaseConfiguration))
+            //{
+            //    //供单元测试使用
+            //    Console.WriteLine("进入单元测试环境");
+            //}
 
             var databaseConfiguration = (IDatabaseConfiguration)Activator.CreateInstance(databaseConfigurationType);
 
