@@ -167,7 +167,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                       maxRound: 10);
 
                 Console.WriteLine("Chat finished.");
-                logger.Append("未完成运行：" + chatGroup.Name);
+                logger.Append("已完成运行：" + chatGroup.Name);
 
                 return result;
             }
