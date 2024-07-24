@@ -53,7 +53,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 
         public PromptRangeGenerateTests()
         {
-            _service = base._serviceProvder.GetRequiredService<PromptBuilderService>();
+            _service = base._serviceProvider.GetRequiredService<PromptBuilderService>();
         }
 
 

@@ -15,7 +15,7 @@ namespace Senparc.Ncf.Database
     /// </summary>
     public abstract class DatabaseConfigurationBase<TBuilder, TExtension> : IDatabaseConfiguration<TBuilder, TExtension>
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
-        where TExtension : RelationalOptionsExtension, new()
+        where TExtension :  RelationalOptionsExtension, new()
     {
         public abstract MultipleDatabaseType MultipleDatabaseType { get; }
 

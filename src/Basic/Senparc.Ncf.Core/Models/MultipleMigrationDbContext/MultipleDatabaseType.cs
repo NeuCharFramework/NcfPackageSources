@@ -18,6 +18,7 @@ namespace Senparc.Ncf.Core.Models
         PostgreSQL,
         Dm,
         Other = 99999,
+        //UnitTest = 100000,
         //TODO:更多
     }
 }

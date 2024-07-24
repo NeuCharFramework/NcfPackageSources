@@ -431,6 +431,25 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+- task: NuGetCommand@2
+  displayName: Senparc.Ncf.Database.InMemory
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.InMemory.*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: NuGetCommand@2
+  displayName: 'Senparc.Ncf.Database.InMemory- Symbol'
+  inputs:
+    command: push
+    packagesToPush: '**/Senparc.Ncf.Database.InMemory.*.snupkg;'
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget-jeffrey-full-key'
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - task: NuGetCommand@2
   displayName: Senparc.Ncf.Database.SqlServer

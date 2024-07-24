@@ -54,7 +54,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
 
         //[InverseProperty(nameof(ChatGroupMember.AgentTemplate))]
-        public List<ChatGroupMember> ChatGroupMembers { get; private set; }
+        public ICollection<ChatGroupMember> ChatGroupMembers { get; private set; }
 
         //[InverseProperty(nameof(ChatGroup.AdminAgentTemplate))]
         public ICollection<ChatGroup> AdminChatGroups { get; private set; }

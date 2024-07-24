@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
@@ -53,6 +56,19 @@ namespace Senparc.Ncf.UnitTestExtension
             Console.WriteLine("use appsettings.json");
 
             return "appsettings.json";
+        }
+
+        public static Mock<DbSet<T>> CreateMockDbSet<T>(List<T> dataList) where T : class
+        {
+            var queryable = dataList.AsQueryable();
+
+            var mockSet = new Mock<DbSet<T>>();
+            mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
+
+            return mockSet;
         }
     }
 }

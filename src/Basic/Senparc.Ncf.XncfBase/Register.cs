@@ -235,7 +235,15 @@ namespace Senparc.Ncf.XncfBase
                         {
                             if (XncfRegisterManager.RegisterList.Exists(z => z.Uid.Equals(register.Uid, StringComparison.OrdinalIgnoreCase)))
                             {
-                                throw new XncfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
+                                if (DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType == MultipleDatabaseType.InMemory)
+                                {
+                                    //单元测试，忽略
+                                    Console.WriteLine("MultipleDatabaseType.InMemory 模式，单元测试忽略重复加载");
+                                }
+                                else
+                                {
+                                    throw new XncfFunctionException("已经存在相同 Uid 的模块：" + register.Uid);
+                                }
                             }
 
                             if (register.IgnoreInstall)
@@ -244,10 +252,10 @@ namespace Senparc.Ncf.XncfBase
                             }
                             XncfRegisterManager.RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
                             services.AddScoped(type);//DI 中注册
-                            //foreach (var functionType in register.Functions)
-                            //{
-                            //    services.AddScoped(functionType);//DI 中注册
-                            //}
+                                                     //foreach (var functionType in register.Functions)
+                                                     //{
+                                                     //    services.AddScoped(functionType);//DI 中注册
+                                                     //}
                         }
 
                         //初始化数据库
@@ -594,6 +602,7 @@ namespace Senparc.Ncf.XncfBase
                 var interfaceType = mappintConfigType.GetInterfaces().FirstOrDefault(z => z.Name.StartsWith("IEntityTypeConfiguration"));
                 if (interfaceType == null)
                 {
+                    Console.WriteLine("interfaceType 为 null（不为 IEntityTypeConfiguration）");
                     continue;
                 }
                 //实体类型，如：DbConfig
@@ -610,7 +619,7 @@ namespace Senparc.Ncf.XncfBase
                                 .Invoke(modelBuilder, new object[1]
                                 {
                                     autoConfigurationMapping
-                 });
+                                });
 
                 ApplyedAutoConfigurationMappingTypes.Add(entityType);
 
