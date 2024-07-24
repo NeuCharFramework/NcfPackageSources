@@ -80,3 +80,4 @@ SenparcConfig.Development.config
 *.zip
 .vs/
 /src/TestResults
+Thumbs.db
