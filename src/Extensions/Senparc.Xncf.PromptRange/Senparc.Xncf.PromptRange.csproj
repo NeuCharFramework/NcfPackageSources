@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.1.1-preview1</Version>
+    <Version>0.9.1.2-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
