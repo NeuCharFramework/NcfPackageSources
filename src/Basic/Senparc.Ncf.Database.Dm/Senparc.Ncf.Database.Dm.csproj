@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="7.0.0.20986" />
-    <PackageReference Include="Senparc.CO2NET" Version="2.4.2" />
+    <PackageReference Include="Senparc.CO2NET" Version="2.4.3" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
