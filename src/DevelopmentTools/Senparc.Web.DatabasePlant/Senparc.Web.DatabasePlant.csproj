@@ -14,8 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.DynamicData\Senparc.Xncf.DynamicData.csproj" />
 	</ItemGroup>
 
 </Project>

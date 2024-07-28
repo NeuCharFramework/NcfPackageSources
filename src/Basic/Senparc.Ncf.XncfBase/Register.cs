@@ -547,8 +547,8 @@ namespace Senparc.Ncf.XncfBase
         /// <summary>
         /// 所有已经使用的 [AutoConfigurationMapping] 对应的实体类型
         /// </summary>
-        public static List<Type> ApplyedAutoConfigurationMappingTypes = new List<Type>();
-        private static List<Type> AddedApplyedAutoConfigurationMappingEntityTypes = new List<Type>();
+        public static List<Type> ApplyedAutoConfigurationMappingTypes { get; set; } = new List<Type>();
+        private static List<Type> AddedApplyedAutoConfigurationMappingEntityTypes { get; set; } = new List<Type>();
         /// <summary>
         /// 自动添加所有 XNCF 模块中标记了 [XncfAutoConfigurationMapping] 特性的对象
         /// </summary>
