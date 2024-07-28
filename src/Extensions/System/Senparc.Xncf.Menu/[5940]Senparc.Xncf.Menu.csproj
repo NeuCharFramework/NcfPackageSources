@@ -51,7 +51,7 @@
     <None Remove="Domain\Migrations\Oracle\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />-->
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
