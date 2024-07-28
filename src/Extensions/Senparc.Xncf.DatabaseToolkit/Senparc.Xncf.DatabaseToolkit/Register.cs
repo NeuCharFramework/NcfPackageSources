@@ -41,7 +41,7 @@ namespace Senparc.Xncf.DatabaseToolkit
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
-            DatabaseToolkitEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as DatabaseToolkitEntities;
+            DatabaseToolkitSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as DatabaseToolkitSenparcEntities;
 
             //指定需要删除的数据实体
 

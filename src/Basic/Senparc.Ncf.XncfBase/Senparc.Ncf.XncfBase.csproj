@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.20.1.1-preview1</Version>
+    <Version>0.20.1.4-preview1</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -61,7 +61,7 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="2.4.2" />
+    <PackageReference Include="Senparc.CO2NET" Version="2.4.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.14.1-preview1</Version>
+    <Version>0.14.1.2-preview1</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -49,7 +49,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.0-beta1" />
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.128-beta1" />-->
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />

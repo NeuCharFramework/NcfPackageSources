@@ -7,7 +7,7 @@ using Senparc.Xncf.DatabaseToolkit;
 
 namespace Senparc.Xncf.DatabaseToolkit.Migrations.Sqlite
 {
-    [DbContext(typeof(DatabaseToolkitEntities))]
+    [DbContext(typeof(DatabaseToolkitSenparcEntities))]
     partial class DatabaseToolkitSenparcEntities_SqliteModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

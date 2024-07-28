@@ -16,7 +16,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 Oracle 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
-    public class DatabaseToolkitSenparcEntities_Oracle : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitSenparcEntities_Oracle : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext
     {
         public DatabaseToolkitSenparcEntities_Oracle(DbContextOptions<DatabaseToolkitSenparcEntities_Oracle> dbContextOptions) : base(dbContextOptions)
         {

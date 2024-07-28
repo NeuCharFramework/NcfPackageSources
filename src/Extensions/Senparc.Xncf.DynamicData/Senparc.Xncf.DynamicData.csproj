@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.1-preview1</Version>
+    <Version>0.1.1.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -27,7 +27,8 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
+    <PackageReference Include="Senparc.CO2NET.MagicObject" Version="0.0.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.0-beta1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\SenparcTraceLog\*" />

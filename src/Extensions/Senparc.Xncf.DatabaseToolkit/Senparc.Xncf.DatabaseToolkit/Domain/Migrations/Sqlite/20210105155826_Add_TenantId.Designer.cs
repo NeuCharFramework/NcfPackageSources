@@ -8,7 +8,7 @@ using Senparc.Xncf.DatabaseToolkit;
 
 namespace Senparc.Xncf.DatabaseToolkit.Migrations.Sqlite
 {
-    [DbContext(typeof(DatabaseToolkitEntities))]
+    [DbContext(typeof(DatabaseToolkitSenparcEntities))]
     [Migration("20210105155826_Add_TenantId")]
     partial class Add_TenantId
     {

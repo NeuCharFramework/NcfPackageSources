@@ -14,7 +14,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 Sqlite 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
-    public class DatabaseToolkitSenparcEntities_Sqlite : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitSenparcEntities_Sqlite : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext
     {
         public DatabaseToolkitSenparcEntities_Sqlite(DbContextOptions<DatabaseToolkitSenparcEntities_Sqlite> dbContextOptions) : base(dbContextOptions)
         {
