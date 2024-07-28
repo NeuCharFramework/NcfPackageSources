@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.DI;
 using Senparc.Ncf.Core.Models;
@@ -81,7 +82,7 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
             {
                 fullList = await GetEnabledListAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //当前可能正在 Middleware 的获取过程中，还没有完成多租户获取
                 //如果从旧版本升级，表不存在，则需要更新
@@ -89,6 +90,8 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
                 //TODO:_senparcEntitiesMultiTenant 当前没有做 Migration，所有实际上无法进行更新
                 _senparcEntitiesMultiTenant.ResetMigrate();
                 _senparcEntitiesMultiTenant.Migrate();
+
+                SenparcTrace.SendCustomLog($"{nameof(FullTenantInfoCache)} - {nameof(UpdateAsync)} 异常", ex.ToString());
 
                 //var HttpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();//注意：这里不能使用 TenantInfoService.SetScopedRequestTenantInfoAsync()， 否则会引发死循环
             }

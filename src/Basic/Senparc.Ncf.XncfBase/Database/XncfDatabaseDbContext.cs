@@ -146,16 +146,21 @@ namespace Senparc.Ncf.XncfBase.Database
             //更新数据库
             var pendingMigs = await dbContext.Database.GetPendingMigrationsAsync();
 
+            SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext:{dbContext.GetType().FullName}");
+
             if (pendingMigs.Count() > 0)
             {
                 dbContext.ResetMigrate();//重置合并状态
 
+                SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext.ResetMigrate() 运行完毕");
+
                 try
                 {
                     var script = dbContext.Database.GenerateCreateScript();
-                    SenparcTrace.SendCustomLog($"{dbContext.GetType().Name}.Database.GenerateCreateScript", script);
+                    SenparcTrace.SendCustomLog($"MigrateOnInstallAsync", $"{dbContext.GetType().Name}.Database.GenerateCreateScript:\r\n{script}");
 
                     dbContext.Migrate();//进行合并
+                    SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext.Migrate() 运行完毕");
                 }
                 catch (Exception ex)
                 {
