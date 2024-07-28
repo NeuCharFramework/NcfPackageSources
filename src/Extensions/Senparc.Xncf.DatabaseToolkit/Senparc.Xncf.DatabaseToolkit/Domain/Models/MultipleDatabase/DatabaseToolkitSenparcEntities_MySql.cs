@@ -14,7 +14,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 MySQL 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
-    public class DatabaseToolkitSenparcEntities_MySql : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitSenparcEntities_MySql : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext
     {
         public DatabaseToolkitSenparcEntities_MySql(DbContextOptions<DatabaseToolkitSenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
         {

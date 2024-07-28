@@ -10,9 +10,9 @@ using System.Text;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    public class DatabaseToolkitEntities : XncfDatabaseDbContext
+    public class DatabaseToolkitSenparcEntities : XncfDatabaseDbContext
     {
-        public DatabaseToolkitEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public DatabaseToolkitSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 

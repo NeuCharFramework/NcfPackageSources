@@ -16,7 +16,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 PostgreSQL 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
-    public class DatabaseToolkitSenparcEntities_PostgreSQL : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitSenparcEntities_PostgreSQL : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext
     {
         public DatabaseToolkitSenparcEntities_PostgreSQL(DbContextOptions<DatabaseToolkitSenparcEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
         {

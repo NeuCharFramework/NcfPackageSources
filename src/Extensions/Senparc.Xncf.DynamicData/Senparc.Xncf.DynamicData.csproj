@@ -27,6 +27,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Senparc.CO2NET.MagicObject" Version="0.0.1" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.5.2.1" />
   </ItemGroup>
   <ItemGroup>

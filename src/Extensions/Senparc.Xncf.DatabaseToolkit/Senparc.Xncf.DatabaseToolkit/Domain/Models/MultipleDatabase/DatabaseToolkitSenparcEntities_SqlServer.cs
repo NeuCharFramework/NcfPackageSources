@@ -16,7 +16,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     /// 用于生成 SQLServer 数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
-    public class DatabaseToolkitSenparcEntities_SqlServer : DatabaseToolkitEntities, IMultipleMigrationDbContext
+    public class DatabaseToolkitSenparcEntities_SqlServer : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext
     {
         public DatabaseToolkitSenparcEntities_SqlServer(DbContextOptions<DatabaseToolkitSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
