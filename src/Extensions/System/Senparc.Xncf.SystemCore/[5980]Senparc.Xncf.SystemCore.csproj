@@ -40,7 +40,7 @@
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <!--<PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />-->
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.0-beta1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
