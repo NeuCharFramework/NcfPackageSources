@@ -59,7 +59,7 @@ namespace Senparc.Ncf.UnitTestExtension
         /// </summary>  
         /// <param name="servicesRegister">在启动时注册 ServiceCollection 的委托</param>  
         /// <param name="initSeedData">初始化种子数据的委托</param>  
-        public BaseNcfUnitTest(Action<IServiceCollection> servicesRegister = null, Action<DataList> initSeedData = null)
+        public BaseNcfUnitTest(Action<IServiceCollection> servicesRegister = null, UnitTestSeedDataBuilder seedDataBuilder = null)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -71,7 +71,6 @@ namespace Senparc.Ncf.UnitTestExtension
 
             Env = mockEnv.Object;
 
-            initSeedData?.Invoke(dataLists);
             servicesRegister?.Invoke(ServiceCollection);
 
             //Console.WriteLine("Test Data:" + dataLists.ToJson(true, new Newtonsoft.Json.JsonSerializerSettings()
@@ -89,6 +88,52 @@ namespace Senparc.Ncf.UnitTestExtension
 
             var app = builder.Build();
             app.UseNcfDatabase<InMemoryDatabaseConfiguration>();
+
+            #region 填充种子数据
+            //执行前准备
+            seedDataBuilder?.ExecuteAsync(this._serviceProvider, dataLists).GetAwaiter().GetResult();
+            //自动填充
+            AutoFillSeedData(seedDataBuilder);
+            //填充后
+            seedDataBuilder?.OnExecutedAsync(this._serviceProvider, dataLists).GetAwaiter().GetResult();
+
+            #endregion   
+        }
+
+        private void AutoFillSeedData(UnitTestSeedDataBuilder seedDataBuilder)
+        {
+            using (var scope = this._serviceProvider.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                var dbContext = serviceProvider.GetService<NcfUnitTestEntities>();
+                //填充所有数据
+                foreach (var dataListKv in dataLists)
+                {
+                    var type = dataListKv.Key;
+                    var dataList = dataListKv.Value;
+
+                    //设置 DbSet<T>
+                    var binder = Type.DefaultBinder;
+                    var method = dbContext.GetType().GetMethod(nameof(dbContext.Set), BindingFlags.Instance | BindingFlags.Public, binder, Type.EmptyTypes, null).MakeGenericMethod(type);
+                    var dbSet = method.Invoke(dbContext, null);
+
+                    //转换 data 类型
+                    var listType = typeof(List<>).MakeGenericType(type);
+                    var castMethod = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(type);
+                    var toListMethod = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(type);
+
+                    var castData = castMethod.Invoke(null, new object[] { dataList });
+                    var listData = toListMethod.Invoke(null, new object[] { castData });
+
+                    //添加到 DbSet<T>
+                    var addRangeMethod = dbSet.GetType().GetMethod("AddRange", new[] { listType });
+                    addRangeMethod.Invoke(dbSet, new[] { listData });
+
+                    dbContext.SaveChanges();
+                }
+
+                seedDataBuilder?.OnExecutedAsync(this._serviceProvider, dataLists).GetAwaiter().GetResult();
+            }
         }
 
         protected virtual void BeforeRegisterServiceCollection(IServiceCollection services)
@@ -173,32 +218,6 @@ namespace Senparc.Ncf.UnitTestExtension
                                     .UseInMemoryDatabase(databaseName: "UnitTestDb")
                                     .Options;
                 var dbContext = new NcfUnitTestEntities(options, s, dataLists);
-
-                //填充所有数据
-                foreach (var dataListKv in dataLists)
-                {
-                    var type = dataListKv.Key;
-                    var dataList = dataListKv.Value;
-
-                    //设置 DbSet<T>
-                    var binder = Type.DefaultBinder;
-                    var method = dbContext.GetType().GetMethod(nameof(dbContext.Set), BindingFlags.Instance | BindingFlags.Public, binder, Type.EmptyTypes, null).MakeGenericMethod(type);
-                    var dbSet = method.Invoke(dbContext, null);
-
-                    //转换 data 类型
-                    var listType = typeof(List<>).MakeGenericType(type);
-                    var castMethod = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(type);
-                    var toListMethod = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(type);
-
-                    var castData = castMethod.Invoke(null, new object[] { dataList });
-                    var listData = toListMethod.Invoke(null, new object[] { castData });
-
-                    //添加到 DbSet<T>
-                    var addRangeMethod = dbSet.GetType().GetMethod("AddRange", new[] { listType });
-                    addRangeMethod.Invoke(dbSet, new[] { listData });
-
-                    dbContext.SaveChanges();
-                }
 
                 return dbContext;
 
