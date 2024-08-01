@@ -22,7 +22,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Senparc.CO2NET" Version="2.4.3" />
-		<PackageReference Include="Senparc.CO2NET.AspNet" Version="1.4.0-beta1" />
+		<PackageReference Include="Senparc.CO2NET.AspNet" Version="1.4.0" />
 		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="4.2.2" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
 	</ItemGroup>

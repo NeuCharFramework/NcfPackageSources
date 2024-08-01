@@ -8,13 +8,12 @@ using Senparc.Xncf.DynamicData.Domain.Services;
 
 namespace Senparc.Xncf.DynamicDataTests
 {
-    [TestClass]
-    public class BaseDynamicDataTest : BaseNcfUnitTest
+    public class BaseDynamicDataTest_Seed : UnitTestSeedDataBuilder
     {
         private static object InitLock = new object();
         private static bool InitFinished = false;
 
-        public static Action<DataList> InitSeedData = dataList =>
+        public override async Task ExecuteAsync(IServiceProvider serviceProvider, DataList dataList)
         {
             lock (InitLock)
             {
@@ -26,44 +25,53 @@ namespace Senparc.Xncf.DynamicDataTests
 
                 // TableMetadata
                 List<TableMetadata> tableMetadataList = new() {
-                 new("User","用户表"){
-                  ColumnMetadatas=new List<ColumnMetadata>(){
-                       new ColumnMetadata(0,"Guid","Text",false,""),
-                       new ColumnMetadata(0,"UserName","Text",false,""),
-                       new ColumnMetadata(0,"Balance","Float",false,"0.0"),
-                  }
-                 },
-                 new("Product","产品表"){
-                  ColumnMetadatas = new List<ColumnMetadata>(){
-                       new ColumnMetadata(0,"Guid","Text",false,""),
-                       new ColumnMetadata(0,"Name","Text",false,""),
-                       new ColumnMetadata(0,"Price","Float",false,"0.0"),
-                  }
-                 },
-                 new("Order","订单表"){
-                  ColumnMetadatas = new List<ColumnMetadata>(){
-                       new ColumnMetadata(0,"Guid","Text",false,""),
-                       new ColumnMetadata(0,"UserGuid","Text",false,""),
-                       new ColumnMetadata(0,"ProductGuid","Text",false,""),
-                       new ColumnMetadata(0,"Price","Float",false,"0.0"),
-                       new ColumnMetadata(0,"State","Enums(Open,Paid,Closed)",false,"0.0"),
-                  }
-                 },
-            };
+     new("User","用户表"){
+      ColumnMetadatas=new List<ColumnMetadata>(){
+           new ColumnMetadata(0,"Guid","Text",false,""),
+           new ColumnMetadata(0,"UserName","Text",false,""),
+           new ColumnMetadata(0,"Balance","Float",false,"0.0"),
+      }
+     },
+     new("Product","产品表"){
+      ColumnMetadatas = new List<ColumnMetadata>(){
+           new ColumnMetadata(0,"Guid","Text",false,""),
+           new ColumnMetadata(0,"Name","Text",false,""),
+           new ColumnMetadata(0,"Price","Float",false,"0.0"),
+      }
+     },
+     new("Order","订单表"){
+      ColumnMetadatas = new List<ColumnMetadata>(){
+           new ColumnMetadata(0,"Guid","Text",false,""),
+           new ColumnMetadata(0,"UserGuid","Text",false,""),
+           new ColumnMetadata(0,"ProductGuid","Text",false,""),
+           new ColumnMetadata(0,"Price","Float",false,"0.0"),
+           new ColumnMetadata(0,"State","Enums(Open,Paid,Closed)",false,"0.0"),
+      }
+     },
+};
 
-                for (int i = 1; i <= tableMetadataList.Count; i++)
-                {
-                    var data = tableMetadataList[i - 1];
-                    //data.Id = i;
-                }
+                //for (int i = 1; i <= tableMetadataList.Count; i++)
+                //{
+                //    var data = tableMetadataList[i - 1];
+                //    //data.Id = i;
+                //}
 
                 dataList.Add(tableMetadataList);
                 InitFinished = true;
             }
-        };
+        }
 
-        public BaseDynamicDataTest(Action<IServiceCollection> servicesRegister = null, Action<DataList> initSeedData = null)
-            : base(servicesRegister, initSeedData ?? InitSeedData)
+        public override async Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList)
+        {
+
+        }
+    }
+
+    [TestClass]
+    public class BaseDynamicDataTest : BaseNcfUnitTest
+    {
+        public BaseDynamicDataTest(Action<IServiceCollection> servicesRegister = null, UnitTestSeedDataBuilder seedDataBuilder = null)
+     :      base(servicesRegister, seedDataBuilder ?? new BaseDynamicDataTest_Seed())
         {
 
         }
