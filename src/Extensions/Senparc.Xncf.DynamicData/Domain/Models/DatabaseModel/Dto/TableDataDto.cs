@@ -9,20 +9,21 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
 {
     public class TableDataDto: DtoBase
     {
+
         /// <summary>  
         /// 关联的表格ID。  
         /// </summary>  
-        public int TableId { get; private set; }
+        public int TableId { get; set; }
 
         /// <summary>  
         /// 关联的列ID。  
         /// </summary>  
-        public int ColumnMetadataId { get; private set; }
+        public int ColumnMetadataId { get; set; }
 
         /// <summary>  
         /// 单元格的值。  
         /// </summary>  
-        public string CellValue { get; private set; }
+        public string CellValue { get; set; }
 
         /// <summary>  
         /// 关联的表格元数据。  
@@ -34,7 +35,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         /// </summary>  
         public ColumnMetadataDto ColumnMetadata { get; set; }
 
-        private TableDataDto() { }
+        public TableDataDto() { }
 
     }
 }
