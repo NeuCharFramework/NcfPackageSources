@@ -158,11 +158,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = aiModel.ApiKey,
                         Endpoint = aiModel.Endpoint,
-                        //OrganizationId = aiModel.OrganizationId
+                    };
+                    break;
+                case AiPlatform.Ollama:
+                    aiSettings.OllamaKeys = new OllamaKeys()
+                    {
+                        Endpoint = aiModel.Endpoint,
                     };
                     break;
                 default:
-                    throw new NcfExceptionBase($"暂时不支持{aiSettings.AiPlatform}类型");
+                    throw new NcfExceptionBase($"Xncf.AIKernel 暂时不支持 {aiSettings.AiPlatform} 类型");
             }
 
 

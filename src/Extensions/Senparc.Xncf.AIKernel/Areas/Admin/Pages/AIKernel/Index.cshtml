@@ -5,11 +5,11 @@
     Layout = "_Layout_Vue";
 }
 
-@section Style{
+@section Style {
     <link href="~/css/Admin/AIKernel/index.css" rel="stylesheet" />
 }
 
-@section breadcrumbs{
+@section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>AI 核心模块</el-breadcrumb-item>
     <el-breadcrumb-item>首页</el-breadcrumb-item>
@@ -32,6 +32,8 @@
                 <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
                 <span v-else-if="scope.row.aiPlatform===16">AzureOpenAI</span>
                 <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
+                <span v-else-if="scope.row.aiPlatform===128">FastAPI</span>
+                <span v-else-if="scope.row.aiPlatform===256">Ollama</span>
                 <span v-else type="danger">未知</span>
             </template>
         </el-table-column>
@@ -71,17 +73,15 @@
         </el-table-column>
     </el-table>
     <div class="pagination-container">
-        <el-pagination
-            @@current-change="handleCurrentChange"
-            @@size-change="handleSizeChange"
-            :current-page="page.page"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="page.size"
-            layout="sizes, prev, next, jumper"
-            :total="total"
-            background
-            style="margin-top: 20px"
-        >
+        <el-pagination @@current-change="handleCurrentChange"
+                       @@size-change="handleSizeChange"
+                       :current-page="page.page"
+                       :page-sizes="[10, 20, 30, 40]"
+                       :page-size="page.size"
+                       layout="sizes, prev, next, jumper"
+                       :total="total"
+                       background
+                       style="margin-top: 20px">
         </el-pagination>
     </div>
 
@@ -98,7 +98,7 @@
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
                     <el-option label="HuggingFace" value="32"></el-option>
-                    <el-option label="FastAPI" value="128"></el-option>
+                    <el-option label="FastAPI" value="128"></el-option>                    <el-option label="Ollama" value="256"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="模型类型" prop="configModelType">
@@ -127,10 +127,10 @@
             <el-form-item label="ApiKey" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='8'||addForm.aiPlatform==='4'" prop="apiKey">
                 <el-input v-model="addForm.apiKey" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'" prop="endpoint">
+            <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'||addForm.aiPlatform==='128'||addForm.aiPlatform==='256'" prop="endpoint">
                 <el-input v-model="addForm.endpoint"></el-input>
             </el-form-item>
-            <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
+           <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
                 <el-input v-model="addForm.organizationId" type="password"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
@@ -161,6 +161,7 @@
                 @*  AzureOpenAI = 16, *@
                 @*  HuggingFace = 32 *@
                 @*  FastAPI = 128 *@
+                @*  Ollama = 256 *@
                 @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
                 @* use el-select *@
                 <el-select v-model="editForm.aiPlatform" placeholder="请选择">
@@ -169,7 +170,8 @@
                     <el-option label="AzureOpenAI" value="16"></el-option>
                     <el-option label="HuggingFace" value="32"></el-option>
                     <el-option label="FastAPI" value="128"></el-option>
-                </el-select>
+                    <el-option label="Ollama" value="256"></el-option>
+                 </el-select>
             </el-form-item>
 
             <el-form-item label="模型类型" prop="configModelType">
@@ -184,39 +186,39 @@
                     <el-option label="SpeechRecognition" value="8"></el-option>
                 </el-select>
             </el-form-item>
-
-            <el-form-item label="模型名称" prop="modelId">
-                <el-input v-model="editForm.modelId"></el-input>
-            </el-form-item>
+ 
+                 <el-form-item label="模型名称" prop="modelId">
+                    <el-input v-model="editForm.modelId"></el-input>
+                </el-form-item>
             <el-form-item label="部署名称" prop="deploymentName">
-                <el-input v-model="editForm.deploymentName"></el-input>
-            </el-form-item>
-            @* ,[ApiVersion] *@
-            <el-form-item label="ApiVersion" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'" prop="apiVersion">
-                <el-input v-model="editForm.apiVersion"></el-input>
-            </el-form-item>
-            @* ,[ApiKey] *@
-            <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'" prop="apiKey">
-                <el-input v-model="editForm.apiKey" type="password" placeholder="********"></el-input>
-            </el-form-item>
-            <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'" prop="endpoint">
-                <el-input v-model="editForm.endpoint"></el-input>
-            </el-form-item>
-            <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
-                <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
-            </el-form-item>
+                    <el-input v-model="editForm.deploymentName"></el-input>
+                </el-form-item>
+                @* ,[ApiVersion] *@
+                <el-form-item label="ApiVersion" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'" prop="apiVersion">
+                    <el-input v-model="editForm.apiVersion"></el-input>
+                </el-form-item>
+                @* ,[ApiKey] *@
+               <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'" prop="apiKey">
+                    <el-input v-model="editForm.apiKey" type="password" placeholder="********"></el-input>
+                </el-form-item>
+                <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'||editForm.aiPlatform==='256'" prop="endpoint">
+                    <el-input v-model="editForm.endpoint"></el-input>
+                </el-form-item>
+             <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
+                    <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
+                </el-form-item>
             <el-form-item label="备注" prop="note">
-                <el-input v-model="editForm.note"></el-input>
-            </el-form-item>
-            <el-form-item label="显示" prop="show">
-                @* use switch *@
-                <el-switch v-model="editForm.show"></el-switch>
-            </el-form-item>
-            @* ,[MaxToken] *@
-            @* ,[AdminRemark] *@
-            @* ,[Remark] *@
+                    <el-input v-model="editForm.note"></el-input>
+                </el-form-item>
+               <el-form-item label="显示" prop="show">
+                    @* use switch *@
+                    <el-switch v-model="editForm.show"></el-switch>
+                </el-form-item>
+                @* ,[MaxToken] *@
+                @* ,[AdminRemark] *@
+                @* ,[Remark] *@
             <el-form-item label="MaxToken" prop="maxToken">
-                <el-input v-model="editForm.maxToken"></el-input>
+                    <el-input v-model="editForm.maxToken"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">

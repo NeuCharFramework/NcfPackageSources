@@ -288,8 +288,23 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         }
                     };
                     break;
+                case AiPlatform.Ollama:
+                    aiSettings.OllamaKeys = new OllamaKeys()
+                    {
+                        Endpoint = llModel.Endpoint,
+                        //OrganizationId = aiModel.OrganizationId
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
                 default:
-                    throw new NcfExceptionBase($"暂时不支持{aiSettings.AiPlatform}类型");
+                    throw new NcfExceptionBase($"PromptRange 暂时不支持 {aiSettings.AiPlatform} 类型");
             }
 
 
