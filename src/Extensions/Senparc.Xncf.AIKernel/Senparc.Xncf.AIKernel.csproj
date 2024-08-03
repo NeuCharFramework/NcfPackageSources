@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.8.1.2-preview1</Version>
+    <Version>0.8.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -25,7 +25,8 @@
 		v0.3.3 升级 Senparc.AI，优化模型调用，支持流式输出
 		v0.5.2 升级 Senparc.AI，支持新格式模型配置
 		v0.5.3.1 添加 AIKernelAutoMapperProfile 映射
-</PackageReleaseNotes>
+		v0.8.2 支持 Ollama
+	</PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -34,7 +35,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.16.3-beta1" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.17.0-beta1" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
