@@ -1,33 +1,29 @@
-﻿using AutoGen.SemanticKernel;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoGen.Core;
+using AutoGen.SemanticKernel;
+using AutoGen.SemanticKernel.Extension;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel;
+using Senaprc.AI.Agents.AgentExtensions;
 using Senaprc.AI.Agents.AgentUtility;
-using Senparc.AI.Entities;
 using Senparc.AI;
+using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Helpers;
+using Senparc.AI.Kernel.Handlers;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AgentsManager.ACL;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.Xncf.PromptRange.Domain.Services;
-using Senaprc.AI.Agents.AgentExtensions;
-using AutoGen;
-using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
-using AutoGen.Core;
-using Senparc.Ncf.Core.AppServices;
-using Senparc.CO2NET.Trace;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
-using Senparc.Xncf.AgentsManager.ACL;
+using Senparc.Xncf.PromptRange.Domain.Services;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
@@ -176,7 +172,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
-
         }
     }
 }

@@ -1,41 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Polly;
 using Senparc.CO2NET;
-using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.Dm;
 using Senparc.Ncf.Database.InMemory;
-using Senparc.Ncf.Repository;
 using Senparc.Ncf.UnitTestExtension.Database;
 using Senparc.Ncf.UnitTestExtension.Entities;
-using Senparc.Ncf.Utility.ExpressionExtension;
 using Senparc.Xncf.SystemCore.Domain.Database;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
-
     public class BaseNcfUnitTest
     {
         private IServiceCollection ServiceCollection { get; set; }
