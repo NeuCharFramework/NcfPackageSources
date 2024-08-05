@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
 {
-    public class ColumnMetadataDto: DtoBase
+    public class ColumnMetadataDto : DtoBase
     {
+
+        public int Id { get; set; }
+
         /// <summary>  
         /// 关联的表格ID。  
         /// </summary>  
