@@ -24,9 +24,12 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
         public async Task GetColumnDtosTest()
         {
             var data = await _columnMetadataService.GetColumnDtos(1);
-            Assert.IsNull(data);
+            Assert.IsNotNull(data);
             Assert.AreEqual(3, data.Count);
             Assert.AreEqual("Guid", data.First().ColumnName);
+            Assert.AreEqual("UserName", data.Skip(1).First().ColumnName); 
+            Assert.AreEqual("Balance", data.Skip(2).First().ColumnName);
+
         }
     }
 }
