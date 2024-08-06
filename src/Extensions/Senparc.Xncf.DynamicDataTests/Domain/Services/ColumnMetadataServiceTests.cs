@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.DynamicData.Domain.Services;
+using Senparc.Xncf.DynamicDataTests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +11,22 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
 {
     [TestClass()]
-    public class ColumnMetadataServiceTests
+    public class ColumnMetadataServiceTests : BaseDynamicDataTest
     {
-        [TestMethod()]
-        public void GetColumnDtosTest()
+        ColumnMetadataService _columnMetadataService;
+
+        public ColumnMetadataServiceTests()
         {
-            Assert.Fail();
+            _columnMetadataService = base._serviceProvider.GetRequiredService<ColumnMetadataService>();
+        }
+
+        [TestMethod()]
+        public async Task GetColumnDtosTest()
+        {
+            var data = await _columnMetadataService.GetColumnDtos(1);
+            Assert.IsNull(data);
+            Assert.AreEqual(3, data.Count);
+            Assert.AreEqual("Guid", data.First().ColumnName);
         }
     }
 }

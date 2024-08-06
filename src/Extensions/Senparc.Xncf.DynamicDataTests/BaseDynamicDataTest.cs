@@ -60,18 +60,43 @@ namespace Senparc.Xncf.DynamicDataTests
         public override async Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList)
         {
             var tableDataService = serviceProvider.GetRequiredService<TableDataService>();
-            var  columnMetadataService = serviceProvider.GetRequiredService<ColumnMetadataService>();
+            var columnMetadataService = serviceProvider.GetRequiredService<ColumnMetadataService>();
 
             // User 表
             var userTableColumns = await columnMetadataService.GetColumnDtos(1);
             var tableDataDtos = new List<TableDataDto>();
 
-            foreach (var column in userTableColumns)
+            //创造一些数据
+
+            /* User 表
+             * | Column   | Value  |
+             * |----------|--------|
+             * | Guid     |        |
+             * | UserName | UserX  |
+             * | Balance  |   X    |
+             */
+
+            var userData = new[] {
+                new { Guid = Guid.NewGuid().ToString(), UserName = "User1", Balance = "0.00" },
+                new { Guid = Guid.NewGuid().ToString(), UserName = "User2", Balance = "1.00" },
+                new { Guid = Guid.NewGuid().ToString(), UserName = "User3", Balance = "2.00" },
+            };
+
+            foreach (var item in userData)
             {
-                tableDataDtos.Add(new TableDataDto() { 
-                 TableId = column.TableMetadataId,
-                  ColumnMetadataId = column.Id,
-                   
+                SetData(userTableColumns, tableDataDtos, nameof(item.Guid), item.Guid);
+                SetData(userTableColumns, tableDataDtos, nameof(item.UserName), item.UserName);
+                SetData(userTableColumns, tableDataDtos, nameof(item.Balance), item.Balance);
+            }
+
+            static void SetData(List<ColumnMetadataDto> userTableColumns, List<TableDataDto> tableDataDtos, string columnName, string value)
+            {
+                var column = userTableColumns.First(z => z.ColumnName == columnName);
+                tableDataDtos.Add(new TableDataDto()
+                {
+                    TableId = column.TableMetadataId,
+                    ColumnMetadataId = column.Id,
+                    CellValue = value
                 });
             }
         }
