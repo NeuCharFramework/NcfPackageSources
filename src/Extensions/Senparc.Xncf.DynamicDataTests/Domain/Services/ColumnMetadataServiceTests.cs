@@ -29,7 +29,6 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             Assert.AreEqual("Guid", data.First().ColumnName);
             Assert.AreEqual("UserName", data.Skip(1).First().ColumnName); 
             Assert.AreEqual("Balance", data.Skip(2).First().ColumnName);
-
         }
     }
 }
