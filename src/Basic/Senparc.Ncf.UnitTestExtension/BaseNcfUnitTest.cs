@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -201,6 +202,8 @@ namespace Senparc.Ncf.UnitTestExtension
                 //初始化对象
                 var options = new DbContextOptionsBuilder<NcfUnitTestEntities>()
                                     .UseInMemoryDatabase(databaseName: "UnitTestDb")
+                                    //InMemory 不支持事务，如果不希望抛错，则忽略警告
+                                    .ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                                     .Options;
                 var dbContext = new NcfUnitTestEntities(options, s, dataLists);
 

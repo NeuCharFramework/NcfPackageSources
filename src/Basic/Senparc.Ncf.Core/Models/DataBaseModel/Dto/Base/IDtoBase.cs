@@ -2,9 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Microsoft.AspNetCore.Routing.Tree;
 
 namespace Senparc.Ncf.Core.Models
 {
+    /// <summary>
+    /// 所有 DTO 接口或类的基类
+    /// </summary>
+    public interface IDtoBase<T> : IDtoBase
+    {
+        T Id { get; set; }
+    }
+
     /// <summary>
     /// 所有 DTO 接口或类的基类
     /// </summary>
