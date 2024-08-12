@@ -8,7 +8,9 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.DynamicData.Domain.Models;
 using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.DynamicData.Domain.Models.Extensions;
 
 namespace Senparc.Xncf.DynamicData.Domain.Services
 {
@@ -26,11 +28,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         /// </summary>
         /// <param name="tableId"></param>
         /// <returns></returns>
-        public async Task<(List<TableDataDto> DataTemplate, List<ColumnMetadataDto> ColumnTamplate)> GetTableDataTemplateAsync(int tableId)
+        public async Task<DataTemplate> GetTableDataTemplateAsync(int tableId)
         {
             var columnTemplate = await _columnMetadataService.GetColumnDtos(tableId);
             var dataTemplate = GetTableDataTemplate(columnTemplate);
-            return (DataTemplate: dataTemplate, ColumnTamplate: columnTemplate);
+            return dataTemplate;
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         /// </summary>
         /// <param name="columnTemplate"></param>
         /// <returns></returns>
-        public List<TableDataDto> GetTableDataTemplate(List<ColumnMetadataDto> columnTemplate)
+        public DataTemplate GetTableDataTemplate(ColumnTemplate columnTemplate)
         {
             //从ColumnMetadataDto中获取TableDataDto
             var tableDataDtos = new List<TableDataDto>();
@@ -51,7 +53,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
                 };
                 tableDataDtos.Add(tableDataDto);
             }
-            return tableDataDtos;
+            return new DataTemplate(columnTemplate.TableId, columnTemplate, tableDataDtos);
         }
 
         //public async Task<TableDataDto> GetTableData(int id)
@@ -59,13 +61,14 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         //    var tableData = await base.GetObjectAsync(z=>z.Id == id,z=> z.Id , Ncf.Core.Enums.OrderingType.Ascending,z=>z.Include(typeof()))
         //}
 
-        public async Task<(bool Success, List<TableData> SucessDataList)> InsertDataAsync(List<TableDataDto> tableDataDtos)
+        public async Task<(bool Success, List<TableData> SucessDataList)> InsertDataAsync(DataTemplate dataTemplate)
         {
             try
             {
                 var datas = new List<TableData>();
                 await base.BeginTransactionAsync(async () =>
                 {
+                    var tableDataDtos = dataTemplate.TableDataDtos;
                     foreach (var item in tableDataDtos)
                     {
                         var tableData = new TableData(item.TableId, item.ColumnMetadataId, item.CellValue);
@@ -91,10 +94,11 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         /// <param name="dataList"></param>
         /// <param name="dataDic"></param>
         /// <returns></returns>
-        public List<TableDataDto> SetData(List<ColumnMetadataDto> dataTemplate, List<TableDataDto> dataList, Dictionary<string, string> dataDic)
+        public void SetData(DataTemplate dataTemplate, Dictionary<string, string> dataDic)
         {
+            var dataList = dataTemplate.TableDataDtos;
 
-            foreach (var item in dataTemplate)
+            foreach (var item in dataTemplate.ColumnTemplate)
             {
                 var data = dataList.FirstOrDefault(z => z.ColumnMetadataId == item.Id);
                 if (data == null)
@@ -112,8 +116,6 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
                     data.CellValue = dataDic[item.ColumnName];
                 }
             }
-
-            return dataList;
         }
     }
 }
