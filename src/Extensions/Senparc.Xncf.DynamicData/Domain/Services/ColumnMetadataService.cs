@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.DynamicData.Domain.Models;
 using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.DynamicData.Domain.Models.Extensions;
 
 namespace Senparc.Xncf.DynamicData.Domain.Services
 {
@@ -16,12 +18,12 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         {
         }
 
-        public async Task<List<ColumnMetadataDto>> GetColumnDtos(int tableId)
+        public async Task<ColumnTemplate> GetColumnDtos(int tableId)
         {
             var columns = await base.GetFullListAsync(z => z.TableMetadataId == tableId);
             //TODO: 添加 .ToDto<T>扩展方法
             var columnDtos = columns.Select(z=> base.Mapper.Map<ColumnMetadataDto>(z)).ToList();
-            return columnDtos;
+            return new ColumnTemplate(tableId, columnDtos);
         }
     }
 }

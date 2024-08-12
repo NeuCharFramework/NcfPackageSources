@@ -8,8 +8,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.DynamicData;
 using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.DynamicData.Domain.Services;
+using Senparc.Xncf.DynamicDataTests;
 
-namespace Senparc.Xncf.DynamicDataTests.Domain.Services
+namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
 {
     [TestClass]
     public class TableDataTests : BaseDynamicDataTest
@@ -28,8 +29,8 @@ namespace Senparc.Xncf.DynamicDataTests.Domain.Services
         {
             var tableId = 1;
             var data = await _tableDataService.GetTableDataTemplateAsync(tableId);
-            Assert.AreEqual(3, data.ColumnTamplate.Count);
-            Assert.AreEqual(3, data.DataTemplate.Count);
+            Assert.AreEqual(3, data.ColumnTemplate.Count);
+            Assert.AreEqual(3, data.TableDataDtos.Count);
 
             var dataDic1 = new Dictionary<string, string>() {
                 {"Guid",Guid.NewGuid().ToString()},
@@ -42,14 +43,14 @@ namespace Senparc.Xncf.DynamicDataTests.Domain.Services
                 {"Balance","2000"}
             };
 
-            _tableDataService.SetData(data.ColumnTamplate, data.DataTemplate, dataDic1);
-            var insertResult = await _tableDataService.InsertDataAsync(data.DataTemplate);
+            _tableDataService.SetData(data, dataDic1);
+            var insertResult = await _tableDataService.InsertDataAsync(data);
             Assert.IsTrue(insertResult.Success);
             Assert.AreEqual(3, insertResult.SucessDataList.Count);
 
             //插入第二条数据   TODO:
-            _tableDataService.SetData(data.ColumnTamplate, data.DataTemplate, dataDic2);
-            insertResult = await _tableDataService.InsertDataAsync(data.DataTemplate);
+            _tableDataService.SetData(data, dataDic2);
+            insertResult = await _tableDataService.InsertDataAsync(data);
             Assert.IsTrue(insertResult.Success);
             Assert.AreEqual(3, insertResult.SucessDataList.Count);
 
