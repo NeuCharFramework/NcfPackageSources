@@ -62,7 +62,6 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             Assert.IsTrue(tableData.Exists(z => z.CellValue == "1000"));
             Assert.IsTrue(tableData.Exists(z => z.CellValue == "Bob"));
             Assert.IsTrue(tableData.Exists(z => z.CellValue == "2000"));
-
         }
     }
 }

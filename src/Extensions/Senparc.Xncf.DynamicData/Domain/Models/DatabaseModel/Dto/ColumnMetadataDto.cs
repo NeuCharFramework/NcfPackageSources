@@ -53,6 +53,6 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
         public ICollection<TableDataDto> TableDatas { get; set; }
 
-        private ColumnMetadataDto() { }
+        public ColumnMetadataDto() { }
     }
 }
