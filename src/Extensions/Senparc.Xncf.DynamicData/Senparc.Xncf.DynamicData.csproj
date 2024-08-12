@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Version>0.1.4-preview1</Version>
+        <Version>0.2.0-preview1</Version>
         <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
         <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
         <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -23,6 +23,7 @@
             [2024-08-11] v0.1.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
             [2024-08-12] v0.1.3-preview1 添加 TableData 的数据插入方法，通过单元测试
             [2024-08-12] v0.1.4-preview1 优化 DynamicData Service,重构封装 DataTemplate、ColumnTemplate 对象
+            [2024-08-13] v0.2.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
 </PackageReleaseNotes>
         <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
         <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

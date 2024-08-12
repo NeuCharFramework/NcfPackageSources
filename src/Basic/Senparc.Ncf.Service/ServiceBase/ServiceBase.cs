@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Query;
+using Senparc.Ncf.Core.Models.DataBaseModel;
 
 namespace Senparc.Ncf.Service
 {
@@ -562,5 +563,19 @@ namespace Senparc.Ncf.Service
 
         #endregion
 
+        #region Mapping
+
+        /// <summary>
+        /// 使用 Mapper.Map&lt;TDto&gt;(entity) 快速返回
+        /// </summary>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public TDto Mapping<TDto>(T entity)
+        {
+            return Mapper.Map<TDto>(entity);
+        }
+
+        #endregion
     }
 }
