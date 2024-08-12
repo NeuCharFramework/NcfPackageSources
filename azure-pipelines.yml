@@ -310,20 +310,20 @@ steps:
   condition: succeededOrFailed()
 
 - task: NuGetCommand@2
-  displayName: Senparc.Xncf.DyamicData
+  displayName: Senparc.Xncf.DynamicData
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.DyamicData.*.nupkg'
+    packagesToPush: '**/Senparc.Xncf.DynamicData.*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
   condition: succeededOrFailed()
 
 - task: NuGetCommand@2
-  displayName: 'Senparc.Xncf.DyamicData - Symbol'
+  displayName: 'Senparc.Xncf.DynamicData - Symbol'
   inputs:
     command: push
-    packagesToPush: '**/Senparc.Xncf.DyamicData.*.snupkg;'
+    packagesToPush: '**/Senparc.Xncf.DynamicData.*.snupkg;'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget-jeffrey-full-key'
   continueOnError: true
