@@ -316,6 +316,9 @@ var app = new Vue({
                 paddingLeft: `${left}%`,
             }
         },
+        fullscreen(item){
+          item.fullscreen=!item.fullscreen;  
+        },
         // 靶场删除
         fieldDeleteHandel(e, id) {
             // 阻止事件冒泡

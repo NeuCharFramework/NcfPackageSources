@@ -319,11 +319,14 @@
             </div>
         </div>
         <div class="outputArea_contentBox" id="resultBox">
-            <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
+            <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index,'fullscreen':item.fullscreen}" @@click="app.outputSelectSwitch(index)">
                 <div class="infoRow">
                     <span>版本: {{item.version}}</span>
                     <span>打靶时间: {{item.addTime}}</span>
                     <span>耗时(毫秒): {{item.costTime}}</span>
+                </div>
+                <div>
+                    <el-button type="text" @@click="fullscreen(item)">全屏</el-button>
                 </div>
                 <div class="contentRow" v-html="marked.parse(item.resultString)"></div>
                 <div class="operateRow" v-if="item.resultString.length>0">

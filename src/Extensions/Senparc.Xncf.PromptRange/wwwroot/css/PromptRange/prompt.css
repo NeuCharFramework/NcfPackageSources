@@ -5,6 +5,14 @@
    text-align:left;
    
 }
+.fullscreen{
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90vw;
+    height: 80vh;
+}
 
 .my-slider{
     .my-slider__tooltip {
