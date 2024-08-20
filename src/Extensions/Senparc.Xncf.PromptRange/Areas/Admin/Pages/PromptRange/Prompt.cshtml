@@ -325,9 +325,7 @@
                     <span>打靶时间: {{item.addTime}}</span>
                     <span>耗时(毫秒): {{item.costTime}}</span>
                 </div>
-                <div class="contentRow">
-                    {{item.resultString}}
-                </div>
+                <div class="contentRow" v-html="marked.parse(item.resultString)"></div>
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                         <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
@@ -673,4 +671,5 @@
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>
     <script src="~/js/PromptRange/prompt.js"></script>
+    <script src="~/js/PromptRange/marked.js"></script>
 }
