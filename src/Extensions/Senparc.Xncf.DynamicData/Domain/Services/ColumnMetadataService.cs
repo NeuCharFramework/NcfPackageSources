@@ -18,7 +18,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
 
         public async Task<List<ColumnMetadataDto>> GetColumnDtos(int tableId)
         {
-            var columns = base.GetFullListAsync(z => z.TableMetadataId == tableId);
+            var columns = await base.GetFullListAsync(z => z.TableMetadataId == tableId);
             var columnDtos = base.Mapper.Map<List<ColumnMetadataDto>>(columns);
             return columnDtos;
         }
