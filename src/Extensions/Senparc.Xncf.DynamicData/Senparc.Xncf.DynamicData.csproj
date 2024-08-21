@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.1.2-preview1</Version>
+    <Version>0.1.1.2-preview1.7</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -34,7 +34,14 @@
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="wwwroot\**\*" />
     <Content Remove="App_Data\Database\SenparcConfig.config" />
+    <Content Remove="wwwroot\js\DynamicData\axios.js" />
+    <Content Remove="wwwroot\js\DynamicData\interfaceSet.js" />
+    <Content Remove="wwwroot\js\DynamicData\lib\axios.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+  
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -43,5 +50,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\image\DynamicData\" />
   </ItemGroup>
 </Project>

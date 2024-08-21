@@ -1,0 +1,28 @@
+﻿@page
+@model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.DataSheetSetModel
+
+@{
+    ViewData["Title"] = "DynamicData 数据表设置";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/DynamicData/dataSheetSet.css" rel="stylesheet" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
+    <el-breadcrumb-item>数据表设置</el-breadcrumb-item>
+}
+
+<div>
+    数据表设置
+</div>
+
+@section scripts {
+    <script src="~/js/DynamicData/lib/axios.min.js"></script>
+    <script src="~/js/DynamicData/axios.js"></script>
+    <script src="~/js/DynamicData/dataSheetSet.js"></script>
+}
