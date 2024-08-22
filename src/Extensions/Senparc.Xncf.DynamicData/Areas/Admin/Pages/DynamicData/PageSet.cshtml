@@ -19,7 +19,7 @@
 <div class="interfaceSet-page">
     <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout(item)">添加</el-button>
     <section class="df flex-as flex-js cardArea">
-        <div v-for="item in layoutList" class="df-wn flex-dc flex-ac cardItem">
+        <div v-for="item in layoutList" :key="item.id" class="df-wn flex-dc flex-ac cardItem">
             <img :src="item.thumbnail" alt="缩略图" class="cardItem_thumbnail" />
             <div class="cardItem_title">
                 {{ item.name }}
