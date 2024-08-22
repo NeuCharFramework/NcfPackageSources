@@ -1,4 +1,7 @@
-﻿.interfaceSet-page {
+﻿* {
+    box-sizing: border-box;
+}
+.interfaceSet-page {
     box-sizing:border-box;
     overflow:hidden;
 }
