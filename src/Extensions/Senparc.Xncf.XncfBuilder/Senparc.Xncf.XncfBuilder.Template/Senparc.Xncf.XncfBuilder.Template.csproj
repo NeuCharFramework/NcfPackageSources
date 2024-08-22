@@ -46,7 +46,7 @@
 		v0.12.0 添加达梦（Dm）数据库支持
 		v0.12.1 修正模板代码
 		v0.12.2 更新基础库
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>

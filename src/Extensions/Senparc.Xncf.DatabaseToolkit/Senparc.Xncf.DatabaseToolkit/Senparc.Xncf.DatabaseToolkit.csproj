@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.23.0.2-preview1</Version>
+    <Version>0.23.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -68,7 +68,7 @@
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.0" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.2" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
