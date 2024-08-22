@@ -17,9 +17,46 @@
     <el-breadcrumb-item>数据表设置</el-breadcrumb-item>
 }
 
-<div>
-    数据表设置
-</div>
+<el-container style="height: 100%;flex-wrap: nowrap;gap: 20px;">
+    @* 侧边栏 *@
+    <div class="dataSheetSet-aside">
+        <div class="aside_title">数据表</div>
+        <div class="aside_list">
+            <div v-for="item in dataSheetList" :key="item.id" class="aside_list_item" :class="{'aside_select': sheetSelectId === item.id}" :title="item.name" @@click="viewTableDetails(item)">
+                {{ item.name }}
+            </div>
+        </div>
+        <div class="aside_newbtn" :class="{'aside_select':sheetSelectId === 0}" @@click="addDataTable"><i class="el-icon-plus"></i> 新增数据表</div>
+    </div>
+    @* 详情内容 *@
+    <div class="dataSheetSet-main">
+        <div class="main_header">
+            <el-button type="primary" :size="elSize" :disabled="sheetBD" @@click="newFieldsAdd">新增字段</el-button>
+            <el-button type="primary" :disabled="layoutBD" :size="elSize" @@click="createLayout">创建布局</el-button>
+            <el-button :size="elSize" :disabled="sheetBD" @@click="importDataSheet">导入</el-button>
+            <el-button :size="elSize" :disabled="sheetBD" @@click="exportDataSheet">导出</el-button>
+        </div>
+        <div class="main_content">
+            @* :rules="formRules" ref="sheetElForm" *@
+            <el-form :inline="true" :model="sheetForm"  :size="elSize" class="sheetForm-inline">
+                <el-form-item label="名称" prop="name">
+                    <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.name">{{ sheetForm.name }}</div>
+                    <el-input v-else v-model.trim="sheetForm.name" :size="elSize" placeholder="请输入名称"></el-input>
+                    
+                </el-form-item>
+                <el-form-item label="描述" prop="description">
+                    <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.description">{{ sheetForm.description }}</div>
+                    <el-input v-else v-model.trim="sheetForm.description" :size="elSize" placeholder="请输入描述"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button v-if="sheetFormEidt" type="primary" :size="elSize" @@click="onEidtSheet">编辑</el-button>
+                    <el-button v-else type="primary" :size="elSize" @@click="onSubmitSheet">确定</el-button>
+                </el-form-item>
+            </el-form>
+            <div class="tips-dataSheet">提示：新增数据表之后才能新增字段</div>
+        </div>
+    </div>
+</el-container>
 
 @section scripts {
     <script src="~/js/DynamicData/lib/axios.min.js"></script>
