@@ -88,6 +88,23 @@ var app = new Vue({
             if (!item) return
             item.operationVisible = false
             // todo 调用接口
+            // <strong>这是 <i>HTML</i> 片段</strong>
+            this.$prompt('布局名称', '复制布局', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /^(?!\s*$).+/,
+                inputErrorMessage: '布局名称不正确'
+            }).then(({ value }) => {
+                this.$message({
+                    type: 'success',
+                    message: '你的布局名称是: ' + value
+                });
+            }).catch(() => {
+                //this.$message({
+                //    type: 'info',
+                //    message: '取消输入'
+                //});
+            });
         },
         // 查看布局
         viewLayout(item) {
