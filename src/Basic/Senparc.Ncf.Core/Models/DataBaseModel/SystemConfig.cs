@@ -27,13 +27,24 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public bool? HideModuleManager { get; private set; }
 
-        public SystemConfig(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager)
+        public int NeuCharDeveloperId { get; private set; }
+
+        [MaxLength(100)]
+        public string NeuCharAppKey { get; private set; }
+
+        [MaxLength(100)]
+        public string NeuCharAppSecret { get; private set; }
+
+        public SystemConfig(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret)
         {
             SystemName = systemName;
             MchId = mchId;
             MchKey = mchKey;
             TenPayAppId = tenPayAppId;
             HideModuleManager = hideModuleManager;
+            NeuCharDeveloperId = neuCharDeveloperId;
+            NeuCharAppKey = neuCharAppKey;
+            NeuCharAppSecret = neuCharAppSecret;
         }
 
         /// <summary>
@@ -44,13 +55,19 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="mchKey"></param>
         /// <param name="tenPayAppId"></param>
         /// <param name="hideModuleManager"></param>
-        public void Update(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager)
+        /// <param name="neuCharDeveloperId"></param>
+        /// <param name="neuCharAppKey"></param>
+        /// <param name="neuCharAppSecret"></param>
+        public void Update(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret)
         {
             SystemName = systemName;
             MchId = mchId;
             MchKey = mchKey;
             TenPayAppId = tenPayAppId;
             HideModuleManager = hideModuleManager;
+            NeuCharDeveloperId = neuCharDeveloperId;
+            NeuCharAppKey = neuCharAppKey;
+            NeuCharAppSecret = neuCharAppSecret;
         }
 
     }

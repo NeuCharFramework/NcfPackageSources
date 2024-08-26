@@ -121,7 +121,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 //开始安装并启用系统模块（Admin）
                 //Senparc.Areas.Admin.Register adminRegister = new Senparc.Areas.Admin.Register();
                 //var adminModule = await InstallAndOpenModuleAsync(adminRegister, serviceProvider);
-               
+
                 ////确保已被赋值
                 //adminModule ??= await _xncfModuleService.GetObjectAsync(z => z.Uid == adminRegister.Uid);
 
@@ -129,7 +129,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 //await _xncfModuleService.SaveObjectAsync(adminModule).ConfigureAwait(false);
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
-                _systemConfigService.Init(systemName);//初始化系统信息
+                _systemConfigService.Init(out string errorMsg, systemName);//初始化系统信息
             }
 
             {
