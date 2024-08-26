@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
@@ -11,9 +12,11 @@ using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
 {
     [DbContext(typeof(SystemManagerSenparcEntities_Oracle))]
-    partial class SystemManagerSenparcEntities_OracleModelSnapshot : ModelSnapshot
+    [Migration("20240826155305_Add_NeuCharAccountInfo_To_SystemConfig")]
+    partial class Add_NeuCharAccountInfo_To_SystemConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
