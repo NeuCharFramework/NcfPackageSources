@@ -18,6 +18,7 @@
 <div>
     <div class="filter-container">
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">导入 NeuCharAI 云端模型算力</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.20.1.3-preview1</Version>
+		<Version>0.20.2-preview1</Version>
 		<AssemblyName>Senparc.Ncf.Core</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Core</RootNamespace>
 		<LangVersion>10.0</LangVersion>
@@ -32,6 +32,7 @@
 			[2024-08-11] v0.19.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
 			[2024-08-22] v0.20.0-preview1 为MethodCache 添加异步方法
 			[2024-08-26] v0.20.1 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
+			[2024-08-27] v0.20.2 修改 FullSystemConfig，添加 NeuCharAppKey 等云端账户信息
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

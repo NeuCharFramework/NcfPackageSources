@@ -19,6 +19,9 @@ using System.Threading.Tasks;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
+using Senparc.NeuChar.App.AppStore.Api;
+using Senparc.Ncf.Core.Cache;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
@@ -178,6 +181,21 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                 await _aIModelService.DeleteObjectAsync(aIModel);
                 return true;
+            });
+        }
+
+        public async Task<string> GetNeuCharModel(string developerId, string apiKey)
+        { 
+
+            return await this.GetStringResponseAsync(async(r,l) =>
+            {
+                var url = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/developer/getModelInfoByDeveloper";
+
+                FullSystemConfigCache service = base.ServiceProvider.GetService<FullSystemConfigCache>();
+                var apiContainer = new ApiContainer();
+
+                var model = await Senparc.CO2NET.HttpUtility.Get.GetJsonAsync<string>($"{Senparc.NeuChar}/api/NeuCharModel/GetNeuCharModel?developerId={developerId}&apiKey={apiKey}");
+                return model;
             });
         }
     }

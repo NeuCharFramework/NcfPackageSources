@@ -1,15 +1,15 @@
-var app=new Vue({
+var app = new Vue({
     el: "#app",
-    data(){
+    data() {
         return {
-            page:{
-                page:1,
-                size:10
+            page: {
+                page: 1,
+                size: 10
             },
-            tableLoading:true,
+            tableLoading: true,
             tableData: [],
             addFormDialogVisible: false,
-            addForm:{
+            addForm: {
                 alias: "",
                 "modelId": "",
                 "deploymentName": "",
@@ -24,7 +24,7 @@ var app=new Vue({
                 // "show": true
             },
             editFormDialogVisible: false,
-            editForm:{
+            editForm: {
                 alias: "",
                 "modelId": "",
                 "deploymentName": "",
@@ -38,13 +38,13 @@ var app=new Vue({
                 "maxToken": 0,
                 "show": true
             },
-            total:0,
+            total: 0,
             addRules: {
                 alias: [
-                    {required: true, message: '请输入别名', trigger: 'change'}
+                    { required: true, message: '请输入别名', trigger: 'change' }
                 ],
                 aiPlatform: [
-                    {required: true, message: '请选择平台类型', trigger: 'change'}
+                    { required: true, message: '请选择平台类型', trigger: 'change' }
                 ],
                 configModelType: [
                     { required: true, message: '请选择模型类型', trigger: 'change' }
@@ -56,52 +56,52 @@ var app=new Vue({
                     { required: true, message: '请输入模型部署名称', trigger: 'blur' }
                 ],
                 apiVersion: [
-                    {required: true, message: '请输入API Version', trigger: 'blur'}
+                    { required: true, message: '请输入API Version', trigger: 'blur' }
                 ],
                 apiKey: [
-                    {required: true, message: '请输入API key', trigger: 'blur'}
+                    { required: true, message: '请输入API key', trigger: 'blur' }
                 ],
                 endpoint: [
-                    {required: true, message: '请输入End Point', trigger: 'blur'}
+                    { required: true, message: '请输入End Point', trigger: 'blur' }
                 ],
                 organizationId: [
-                    {required: true, message: '请输入Organization Id', trigger: 'blur'}
+                    { required: true, message: '请输入Organization Id', trigger: 'blur' }
                 ]
             },
             editRules: {
                 alias: [
-                    {required: true, message: '请输入别名', trigger: 'change'}
+                    { required: true, message: '请输入别名', trigger: 'change' }
                 ],
                 aiPlatform: [
-                    {required: true, message: '请选择平台类型', trigger: 'change'}
+                    { required: true, message: '请选择平台类型', trigger: 'change' }
                 ],
                 configModelType: [
                     { required: true, message: '请选择模型类型', trigger: 'change' }
                 ],
                 modelId: [
-                    {required: true, message: '请输入模型名称', trigger: 'blur'}
+                    { required: true, message: '请输入模型名称', trigger: 'blur' }
                 ],
                 deploymentName: [
                     { required: true, message: '请输入模型部署名称', trigger: 'blur' }
                 ],
                 apiVersion: [
-                    {required: true, message: '请输入API Version', trigger: 'blur'}
+                    { required: true, message: '请输入API Version', trigger: 'blur' }
                 ],
                 endpoint: [
-                    {required: true, message: '请输入End Point', trigger: 'blur'}
+                    { required: true, message: '请输入End Point', trigger: 'blur' }
                 ]
             }
 
         }
     },
-    mounted () {
+    mounted() {
         //wait page load
         setTimeout(async () => {
             await this.init();
-        },100)
+        }, 100)
     },
-    methods:{
-        async init(){
+    methods: {
+        async init() {
             await this.getDataList();
         },
         async handleSizeChange(val) {
@@ -112,21 +112,24 @@ var app=new Vue({
             this.page.page = val;
             await this.getDataList();
         },
-        async getDataList(){
+        async getDataList() {
             this.tableLoading = true
-            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync',{
+            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', {
                 "page": this.page.page,
                 "size": this.page.size,
             })
-                .then(res=>{
+                .then(res => {
                     console.log(res)
-                    this.tableData=res.data.data.data;
-                    this.total=res.data.data.total;
+                    this.tableData = res.data.data.data;
+                    this.total = res.data.data.total;
                     this.tableLoading = false
                 })
         },
-        addModel(){
+        addModel() {
             this.addFormDialogVisible = true;
+        },
+        addNeuCharModel() {
+            
         },
         copyInfo(key){
             // 把结果复制到剪切板
