@@ -69,7 +69,9 @@ namespace Senparc.Ncf.Core.Models
 
         public void UpdateNeuCharAccount(int developerId, string appKey, string appSecret)
         {
-            throw new NotImplementedException();
+            this.NeuCharDeveloperId = developerId;
+            this.NeuCharAppKey = appKey;
+            this.NeuCharAppSecret = appSecret;
         }
     }
 }
