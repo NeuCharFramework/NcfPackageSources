@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.DataProtection;
+ï»¿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -24,7 +24,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         }
 
         /// <summary>
-        /// ¸üĞÂ NeuChar ÕËºÅ
+        /// æ›´æ–° NeuChar è´¦å·
         /// </summary>
         /// <param name="neuCharAppKey"></param>
         /// <param name="neuCharAppSecret"></param>
@@ -39,7 +39,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
 
             if (!neuCharAppKey.IsNullOrEmpty() && !neuCharAppSecret.IsNullOrEmpty())
             {
-                //Ğ£Ñé²¢»ñÈ¡ NeuCharDeveloperId
+                //æ ¡éªŒå¹¶è·å– NeuCharDeveloperId
                 var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/GetPassport";
                 //Console.WriteLine("passport:" + (passportUrl));
 
@@ -50,7 +50,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
 
                 var messageResult = await Senparc.CO2NET.HttpUtility.Post.PostFileGetJsonAsync<PassportResult>(_serviceProvider, passportUrl, postDataDictionary: data, encoding: Encoding.UTF8);
 
-                if (messageResult.Result == AppResultKind.³É¹¦)
+                if (messageResult.Result == AppResultKind.æˆåŠŸ)
                 {
                     developerId = messageResult.Data.DeveloperId;
                     appKey = messageResult.Data.AppKey;
@@ -58,18 +58,18 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
                     systemConfig.UpdateNeuCharAccount(developerId, appKey, appSecret);
                     await base.SaveObjectAsync(systemConfig);
 
-                    SenparcTrace.SendCustomLog("Íê³É¿ª·¢ÕßĞÅÏ¢ÈÏÖ¤", $"DeveloperId:{developerId}");
+                    SenparcTrace.SendCustomLog("å®Œæˆå¼€å‘è€…ä¿¡æ¯è®¤è¯", $"DeveloperId:{developerId}");
 
-                    return "ºËÑé³É¹¦£¡ĞÅÏ¢ÒÑ±£´æ£¡";
+                    return "æ ¸éªŒæˆåŠŸï¼ä¿¡æ¯å·²ä¿å­˜ï¼";
                 }
                 else
                 {
-                    return "AppKey »ò AppSecret ²»ÕıÈ·£¡´íÎóĞÅÏ¢Î´±»¼ÇÂ¼£¬ÇëÖØĞÂÉèÖÃ£¡";
+                    return "AppKey æˆ– AppSecret ä¸æ­£ç¡®ï¼é”™è¯¯ä¿¡æ¯æœªè¢«è®°å½•ï¼Œè¯·é‡æ–°è®¾ç½®ï¼";
                 }
             }
             else
             {
-                return "ÇëÌá¹©ÓĞĞ§µÄ AppKey »ò AppSecret£¡";
+                return "è¯·æä¾›æœ‰æ•ˆçš„ AppKey æˆ– AppSecretï¼";
             }
         }
 
@@ -95,11 +95,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         public override void SaveObject(SystemConfig obj)
         {
             base.SaveObject(obj);
-            LogUtility.WebLogger.InfoFormat("SystemConfig ±»±à¼­£º{0}", obj.ToJson());
+            LogUtility.WebLogger.InfoFormat("SystemConfig è¢«ç¼–è¾‘ï¼š{0}", obj.ToJson());
 
-            //Çå³ı»º´æ
+            //æ¸…é™¤ç¼“å­˜
             var fullSystemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
-            //Ê¾·¶Í¬²½»º´æËø
+            //ç¤ºèŒƒåŒæ­¥ç¼“å­˜é”
             using (fullSystemConfigCache.Cache.BeginCacheLock(FullSystemConfigCache.CACHE_KEY, ""))
             {
                 fullSystemConfigCache.RemoveCache();
@@ -109,11 +109,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         public override async Task SaveObjectAsync(SystemConfig obj)
         {
             await base.SaveObjectAsync(obj);
-            LogUtility.WebLogger.InfoFormat("SystemConfig ±»±à¼­£º{0}", obj.ToJson());
+            LogUtility.WebLogger.InfoFormat("SystemConfig è¢«ç¼–è¾‘ï¼š{0}", obj.ToJson());
 
-            //Çå³ı»º´æ
+            //æ¸…é™¤ç¼“å­˜
             var fullSystemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
-            //Ê¾·¶Í¬²½»º´æËø
+            //ç¤ºèŒƒåŒæ­¥ç¼“å­˜é”
             using (await fullSystemConfigCache.Cache.BeginCacheLockAsync(FullSystemConfigCache.CACHE_KEY, ""))
             {
                 fullSystemConfigCache.RemoveCache();
