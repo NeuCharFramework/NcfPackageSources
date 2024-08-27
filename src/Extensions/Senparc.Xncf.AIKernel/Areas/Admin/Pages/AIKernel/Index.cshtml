@@ -123,8 +123,8 @@
                     <el-option label="SpeechRecognition" value="8"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称"  prop="modelId">
-                <el-select v-if="addForm.aiPlatform==='4'" v-model="addForm.modelId" placeholder="请选择">
+            <el-form-item label="模型名称" v-if="addForm.aiPlatform==='4'" prop="modelId">
+                <el-select  v-model="addForm.modelId" filterable allow-create default-first-option placeholder="请选择">
                     <el-option label="text-davinci-003" value="text-davinci-003"></el-option>
                     <el-option label="gpt-4" value="gpt-4"></el-option>
                     <el-option label="text-embedding-ada-002" value="text-embedding-ada-002"></el-option>
@@ -132,7 +132,9 @@
                     <el-option label="gpt-35-turbo-instruct" value="gpt-35-turbo-instruct"></el-option>
                     <el-option label="dall-e-3" value="dall-e-3"></el-option>
                 </el-select>
-                <el-input v-if="addForm.aiPlatform!=='4'" v-model="addForm.modelId"></el-input>
+            </el-form-item>
+            <el-form-item label="模型名称" v-else="addForm.aiPlatform!=='4'" prop="modelId">
+                <el-input v-model="addForm.modelId"></el-input>
             </el-form-item>
             <el-form-item label="部署名称" prop="deploymentName">
                 <el-input v-model="addForm.deploymentName"></el-input>
@@ -206,7 +208,7 @@
             </el-form-item>
 
             <el-form-item label="模型名称" prop="modelId">
-                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" placeholder="请选择">
+                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="请选择">
                     <el-option label="text-davinci-003" value="text-davinci-003"></el-option>
                     <el-option label="gpt-4" value="gpt-4"></el-option>
                     <el-option label="text-embedding-ada-002" value="text-embedding-ada-002"></el-option>
