@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Log;
@@ -40,17 +41,14 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             {
                 //校验并获取 NeuCharDeveloperId
                 var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/GetPassport";
-                Console.WriteLine("passport:" + (passportUrl));
+                //Console.WriteLine("passport:" + (passportUrl));
 
                 var data = new Dictionary<string, string>() {
                     { "appKey",neuCharAppKey },
-                    { "secret" ,passportUrl}
+                    { "secret" ,neuCharAppSecret}
                   };
-                var messageResultstr = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpPostAsync(_serviceProvider, passportUrl, formData: data, encoding: Encoding.UTF8);
-                Console.WriteLine("messageResult:" + (messageResultstr != null));
-                Console.WriteLine("messageResult:" + (messageResultstr));
 
-                var messageResult = Senparc.CO2NET.Helpers.SerializerHelper.GetObject<PassportResult>(messageResultstr);
+                var messageResult = await Senparc.CO2NET.HttpUtility.Post.PostFileGetJsonAsync<PassportResult>(_serviceProvider, passportUrl, postDataDictionary: data, encoding: Encoding.UTF8);
 
                 if (messageResult.Result == AppResultKind.成功)
                 {
@@ -59,6 +57,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
                     appSecret = messageResult.Data.Secret;
                     systemConfig.UpdateNeuCharAccount(developerId, appKey, appSecret);
                     await base.SaveObjectAsync(systemConfig);
+
+                    SenparcTrace.SendCustomLog("完成开发者信息认证", $"DeveloperId:{developerId}");
+
                     return "核验成功！信息已保存！";
                 }
                 else

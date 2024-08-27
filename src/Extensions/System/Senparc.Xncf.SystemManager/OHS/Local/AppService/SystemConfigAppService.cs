@@ -22,7 +22,16 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                return await _systemConfigService.UpdateNeuCharAccount(request.AppKey, request.AppSecret);
+                try
+                {
+
+                    return await _systemConfigService.UpdateNeuCharAccount(request.AppKey, request.AppSecret);
+                }
+                catch (Exception ex)
+                {
+                    logger.Append(ex.ToString());
+                    return "更新 NeuChar 云账户信息失败：" + ex.Message;
+                }
             });
         }
     }
