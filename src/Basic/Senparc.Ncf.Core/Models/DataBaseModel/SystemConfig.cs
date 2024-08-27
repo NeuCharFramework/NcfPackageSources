@@ -55,20 +55,21 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="mchKey"></param>
         /// <param name="tenPayAppId"></param>
         /// <param name="hideModuleManager"></param>
-        /// <param name="neuCharDeveloperId"></param>
-        /// <param name="neuCharAppKey"></param>
-        /// <param name="neuCharAppSecret"></param>
-        public void Update(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret)
+        public void Update(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager/*, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret*/)
         {
             SystemName = systemName;
             MchId = mchId;
             MchKey = mchKey;
             TenPayAppId = tenPayAppId;
             HideModuleManager = hideModuleManager;
-            NeuCharDeveloperId = neuCharDeveloperId;
-            NeuCharAppKey = neuCharAppKey;
-            NeuCharAppSecret = neuCharAppSecret;
+            //NeuCharDeveloperId = neuCharDeveloperId;
+            //NeuCharAppKey = neuCharAppKey;
+            //NeuCharAppSecret = neuCharAppSecret;
         }
 
+        public void UpdateNeuCharAccount(int developerId, string appKey, string appSecret)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

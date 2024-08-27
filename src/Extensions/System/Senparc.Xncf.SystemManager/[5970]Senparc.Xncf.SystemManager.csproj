@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.11.0-preview1</Version>
+    <Version>0.11.0.7-preview1</Version>
     <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -18,7 +18,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 		v0.1.0 创世
-		v0.3.3.1 添加 Oracle 数据库迁移代码v0.3.3.1 添加 Oracle 数据库迁移代码
+		v0.3.3.1 添加 Oracle 数据库迁移代码 v0.3.3.1 添加 Oracle 数据库迁移代码
 		v0.11.0 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

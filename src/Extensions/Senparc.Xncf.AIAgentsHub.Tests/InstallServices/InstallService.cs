@@ -129,7 +129,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 //await _xncfModuleService.SaveObjectAsync(adminModule).ConfigureAwait(false);
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
-                _systemConfigService.Init(out string errorMsg, systemName);//初始化系统信息
+                _systemConfigService.Init(systemName);//初始化系统信息
             }
 
             {
