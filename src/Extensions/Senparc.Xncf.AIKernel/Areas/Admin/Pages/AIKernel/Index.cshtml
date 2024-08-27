@@ -24,6 +24,15 @@
         @* alias *@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="modelId" label="模型名称" width="auto"></el-table-column>
+            @* <template slot-scope="scope">
+                <span v-if="scope.row.modelId==='text-davinci-003'">text-davinci-003</span>
+                <span v-else-if="scope.row.modelId==='gpt-4'">gpt-4</span>
+                <span v-else-if="scope.row.modelId==='text-embedding-ada-002'">text-embedding-ada-002</span>
+                <span v-else-if="scope.row.modelId==='gpt-35-turbo'">gpt-35-turbo</span>
+                <span v-else-if="scope.row.modelId==='gpt-4-32k'">gpt-4-32k</span>
+                <span v-else-if="scope.row.modelId==='gpt-35-turbo-instruct'">gpt-35-turbo-instruct</span>
+                <span v-else-if="scope.row.modelId==='dall-e-3'">dall-e-3</span>
+            </template> *@
         <el-table-column prop="deploymentName" label="部署名称" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
         <el-table-column prop="aiPlatform" label="平台" width="auto">
@@ -114,8 +123,16 @@
                     <el-option label="SpeechRecognition" value="8"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" prop="modelId">
-                <el-input v-model="addForm.modelId"></el-input>
+            <el-form-item label="模型名称"  prop="modelId">
+                <el-select v-if="addForm.aiPlatform==='4'" v-model="addForm.modelId" placeholder="请选择">
+                    <el-option label="text-davinci-003" value="text-davinci-003"></el-option>
+                    <el-option label="gpt-4" value="gpt-4"></el-option>
+                    <el-option label="text-embedding-ada-002" value="text-embedding-ada-002"></el-option>
+                    <el-option label="gpt-35-turbo" value="gpt-35-turbo"></el-option>
+                    <el-option label="gpt-35-turbo-instruct" value="gpt-35-turbo-instruct"></el-option>
+                    <el-option label="dall-e-3" value="dall-e-3"></el-option>
+                </el-select>
+                <el-input v-if="addForm.aiPlatform!=='4'" v-model="addForm.modelId"></el-input>
             </el-form-item>
             <el-form-item label="部署名称" prop="deploymentName">
                 <el-input v-model="addForm.deploymentName"></el-input>
@@ -176,7 +193,7 @@
             </el-form-item>
 
             <el-form-item label="模型类型" prop="configModelType">
-                <el-select v-model="addForm.configModelType" placeholder="请选择">
+                <el-select v-model="editForm.configModelType" placeholder="请选择">
                     <el-option label="TextCompletion" value="1"></el-option>
                     <el-option label="Chat" value="2"></el-option>
                     <el-option label="TextEmbedding" value="3"></el-option>
@@ -187,10 +204,18 @@
                     <el-option label="SpeechRecognition" value="8"></el-option>
                 </el-select>
             </el-form-item>
- 
-                 <el-form-item label="模型名称" prop="modelId">
-                    <el-input v-model="editForm.modelId"></el-input>
-                </el-form-item>
+
+            <el-form-item label="模型名称" prop="modelId">
+                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" placeholder="请选择">
+                    <el-option label="text-davinci-003" value="text-davinci-003"></el-option>
+                    <el-option label="gpt-4" value="gpt-4"></el-option>
+                    <el-option label="text-embedding-ada-002" value="text-embedding-ada-002"></el-option>
+                    <el-option label="gpt-35-turbo" value="gpt-35-turbo"></el-option>
+                    <el-option label="gpt-35-turbo-instruct" value="gpt-35-turbo-instruct"></el-option>
+                    <el-option label="dall-e-3" value="dall-e-3"></el-option>
+                </el-select>
+                <el-input v-if="editForm.aiPlatform!=='4'" v-model="editForm.modelId"></el-input>
+            </el-form-item>
             <el-form-item label="部署名称" prop="deploymentName">
                     <el-input v-model="editForm.deploymentName"></el-input>
                 </el-form-item>
