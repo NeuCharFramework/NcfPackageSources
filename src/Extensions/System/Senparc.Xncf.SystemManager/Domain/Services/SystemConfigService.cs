@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Cache;
@@ -27,7 +28,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         /// <param name="neuCharAppKey"></param>
         /// <param name="neuCharAppSecret"></param>
         /// <returns></returns>
-        public async Task<string> UpdateNeuCharAccount(string neuCharAppKey = null, string neuCharAppSecret = null)
+        public async Task<string> UpdateNeuCharAccount(string neuCharAppKey, string neuCharAppSecret)
         {
             var developerId = 0;
             string appKey = null;
@@ -38,10 +39,14 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             if (!neuCharAppKey.IsNullOrEmpty() && !neuCharAppSecret.IsNullOrEmpty())
             {
                 //校验并获取 NeuCharDeveloperId
-                var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/GetPassport?appKey={neuCharAppKey}&secret={neuCharAppSecret}";
+                var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/GetPassport";
                 Console.WriteLine("passport:" + (passportUrl));
 
-                var messageResultstr = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpPostAsync(_serviceProvider, passportUrl, formData: new Dictionary<string, string>(), encoding: Encoding.UTF8);
+                var data = new Dictionary<string, string>() {
+                    { "appKey",neuCharAppKey },
+                    { "secret" ,passportUrl}
+                  };
+                var messageResultstr = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpPostAsync(_serviceProvider, passportUrl, formData: data, encoding: Encoding.UTF8);
                 Console.WriteLine("messageResult:" + (messageResultstr != null));
                 Console.WriteLine("messageResult:" + (messageResultstr));
 
