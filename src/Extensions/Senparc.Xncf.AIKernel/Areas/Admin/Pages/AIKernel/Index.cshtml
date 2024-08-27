@@ -228,6 +228,23 @@
             <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
         </span>
     </el-dialog>
+
+    <!-- dialog for 导入 NeuCharAI 云端模型算力 -->  
+    <el-dialog title="导入 NeuCharAI 云端模型算力" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">  
+        <el-form :model="neuCharForm" label-width="120px" :rules="neuCharRules" ref="neuCharForm">  
+            <el-form-item label="DeveloperId" prop="developerId">  
+                <el-input v-model="neuCharForm.developerId"></el-input>  
+            </el-form-item>  
+            <el-form-item label="ApiKey" prop="apiKey">  
+                <el-input v-model="neuCharForm.apiKey" type="password"></el-input>  
+            </el-form-item>  
+        </el-form>  
+        <span slot="footer" class="dialog-footer">  
+            <el-button @@click="neuCharFormDialogVisible = false">取消</el-button>  
+            <el-button type="primary" @@click="addNeuCharModelSubmit">确定</el-button>  
+        </span>  
+    </el-dialog>  
+
 </div>
 
 @section scripts{

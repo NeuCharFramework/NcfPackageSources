@@ -22,6 +22,8 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.NeuChar.App.AppStore.Api;
 using Senparc.Ncf.Core.Cache;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
+using Senparc.NeuChar.App.AppStore;
 
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
@@ -184,18 +186,60 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             });
         }
 
-        public async Task<string> GetNeuCharModel(string developerId, string apiKey)
-        { 
-
-            return await this.GetStringResponseAsync(async(r,l) =>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<NeuCharGetModelJsonResult>> GetNeuCharModels()
+        {
+            return await this.GetResponseAsync<NeuCharGetModelJsonResult>(async (r, l) =>
             {
+                var result = new NeuCharGetModelJsonResult();
+
+                FullSystemConfigCache fullSystemConfigCache = base.ServiceProvider.GetService<FullSystemConfigCache>();
+                var fullSystemConfig = fullSystemConfigCache.Data;
+
+                if (fullSystemConfig.NeuCharAppKey.IsNullOrEmpty() || fullSystemConfig.NeuCharAppSecret.IsNullOrEmpty())
+                {
+                    r.Success = false;
+                    //TODO: 使用日志下载提供详细教程
+                    result.Message = "错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！";
+                    return result;
+                }
+
+                //var apiContainer = new ApiContainer(base.ServiceProvider, fullSystemConfig.NeuCharAppKey, fullSystemConfig.NeuCharAppSecret);
+
+                ////TODO: 集成到 ApiContainer
+                ///
+
+
+                //var url = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/developer/getModelInfoByDeveloper";
+                //var data = new Dictionary<string, string>() { { "accesstoken", apiContainer.Passport.Token } };
+
+                var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/App/Api/GetPassport";
+                //Console.WriteLine("passport:" + (passportUrl));
+
+                var data = new Dictionary<string, string>() {
+                    { "appKey",fullSystemConfig.NeuCharAppKey },
+                    { "secret" ,fullSystemConfig.NeuCharAppSecret}
+                  };
+
+                var passportResult = await Senparc.CO2NET.HttpUtility.Post.PostFileGetJsonAsync<PassportResult>(base.ServiceProvider, passportUrl, postDataDictionary: data, encoding: Encoding.UTF8);
+
+                if (passportResult.Result != AppResultKind.成功)
+                {
+                    result.Message = "AppKey 或 AppSecret 错误！请重新设置！";
+                    return result;
+                }
+
                 var url = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/developer/getModelInfoByDeveloper";
 
-                FullSystemConfigCache service = base.ServiceProvider.GetService<FullSystemConfigCache>();
-                var apiContainer = new ApiContainer();
+                var modelData = new Dictionary<string, string>() {
+                    { "accessToken",passportResult.Data.Token }
+                  };
 
-                var model = await Senparc.CO2NET.HttpUtility.Get.GetJsonAsync<string>($"{Senparc.NeuChar}/api/NeuCharModel/GetNeuCharModel?developerId={developerId}&apiKey={apiKey}");
-                return model;
+                //var s1 = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpPostAsync(base.ServiceProvider, url, formData: modelData, encoding: Encoding.UTF8);
+                //Console.WriteLine(s1);
+
+                result = await Senparc.CO2NET.HttpUtility.Post.PostGetJsonAsync<NeuCharGetModelJsonResult>(base.ServiceProvider, url, formData: modelData, encoding: Encoding.UTF8);
+                return result;
             });
         }
     }

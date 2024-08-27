@@ -34,4 +34,19 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
         /// </summary>
         public DateTime AddTime { get; set; }
     }
+
+    public class NeuCharGetModelJsonResult
+    {
+        /// <summary>
+        /// 此属性是本地新增
+        /// </summary>
+        public string Message { get; set; }
+        public bool Success { get; set; }
+        public AIModel_GetNeuCharModelsResponse_Result Result { get; set; }
+
+        public class AIModel_GetNeuCharModelsResponse_Result
+        {
+            public List<NeuCharModel> Data { get; set; }
+        }
+    }
 }

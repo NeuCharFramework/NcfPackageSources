@@ -9,6 +9,7 @@ var app = new Vue({
             tableLoading: true,
             tableData: [],
             addFormDialogVisible: false,
+            neuCharFormDialogVisible: false, // 新增的对话框可见性  
             addForm: {
                 alias: "",
                 "modelId": "",
@@ -21,7 +22,10 @@ var app = new Vue({
                 "apiVersion": "",
                 "note": "",
                 "maxToken": 0,
-                // "show": true
+            },
+            neuCharForm: { // 新增的表单数据  
+                developerId: "",
+                apiKey: ""
             },
             editFormDialogVisible: false,
             editForm: {
@@ -68,6 +72,14 @@ var app = new Vue({
                     { required: true, message: '请输入Organization Id', trigger: 'blur' }
                 ]
             },
+            neuCharRules: { // 新增的验证规则  
+                developerId: [
+                    { required: true, message: '请输入 DeveloperId', trigger: 'blur' }
+                ],
+                apiKey: [
+                    { required: true, message: '请输入 ApiKey', trigger: 'blur' }
+                ]
+            },
             editRules: {
                 alias: [
                     { required: true, message: '请输入别名', trigger: 'change' }
@@ -91,11 +103,10 @@ var app = new Vue({
                     { required: true, message: '请输入End Point', trigger: 'blur' }
                 ]
             }
-
         }
     },
     mounted() {
-        //wait page load
+        //wait page load  
         setTimeout(async () => {
             await this.init();
         }, 100)
@@ -129,10 +140,10 @@ var app = new Vue({
             this.addFormDialogVisible = true;
         },
         addNeuCharModel() {
-            
+            this.neuCharFormDialogVisible = true; // 显示对话框  
         },
-        copyInfo(key){
-            // 把结果复制到剪切板
+        copyInfo(key) {
+            // 把结果复制到剪切板  
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
             input.setAttribute('value', key)
@@ -141,38 +152,59 @@ var app = new Vue({
             input.setSelectionRange(0, 9999)
             if (document.execCommand('copy')) {
                 document.execCommand('copy')
-                //提示时展示'******'+key的后4位
+                //提示时展示'******'+key的后4位  
                 this.$message.success(`已复制【******${key.slice(-4)}】！`)
             }
         },
-        async addModelSubmit(){
+        async addModelSubmit() {
             this.$refs.addForm.validate(async (valid) => {
                 if (valid) {
                     this.addForm.aiPlatform = parseInt(this.addForm.aiPlatform)
                     this.addForm.configModelType = parseInt(this.addForm.configModelType)
                     this.addForm.maxToken = parseInt(this.addForm.maxToken)
                     await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.CreateAsync', {
-                            ...this.addForm
-                        }
+                        ...this.addForm
+                    }
                     ).then(res => {
                         this.$message({
                             type: res.data.success ? 'success' : 'error',
                             message: res.data.success ? '添加成功!' : '添加失败'
                         });
-                        if (res.data.success){
+                        if (res.data.success) {
                             this.getDataList()
                             this.clearAddForm()
                             this.addFormDialogVisible = false;
                         }
-                      
                     })
                 } else {
                     return false;
                 }
             });
         },
-        clearAddForm(){
-            this.addForm={
+        async addNeuCharModelSubmit() {
+            this.$refs.neuCharForm.validate(async (valid) => {
+                if (valid) {
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetNeuCharModels', {
+                        developerId: this.neuCharForm.developerId,
+                        apiKey: this.neuCharForm.apiKey
+                    }).then(res => {
+                        this.$message({
+                            type: res.data.success ? 'success' : 'error',
+                            message: res.data.message
+                        });
+                        if (res.data.success) {
+                            this.getDataList()
+                            this.clearNeuCharForm()
+                            this.neuCharFormDialogVisible = false;
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            });
+        },
+        clearAddForm() {
+            this.addForm = {
                 "alias": "",
                 "modelId": "",
                 "deploymentName": "",
@@ -184,11 +216,16 @@ var app = new Vue({
                 "apiVersion": "",
                 "note": "",
                 "maxToken": 0,
-                // "show": true
             }
         },
-        clearEditForm(){
-            this.editForm={
+        clearNeuCharForm() { // 新增的清理表单方法  
+            this.neuCharForm = {
+                developerId: "",
+                apiKey: ""
+            }
+        },
+        clearEditForm() {
+            this.editForm = {
                 "alias": "",
                 "modelId": "",
                 "deploymentName": "",
@@ -203,22 +240,22 @@ var app = new Vue({
                 "show": true
             }
         },
-        async editModelSubmit(){
+        async editModelSubmit() {
             this.$refs.editForm.validate(async (valid) => {
                 if (valid) {
                     this.editForm.aiPlatform = parseInt(this.editForm.aiPlatform)
                     this.editForm.configModelType = parseInt(this.editForm.configModelType)
                     this.editForm.maxToken = parseInt(this.editForm.maxToken)
-                    // clear empty value
+                    // clear empty value  
                     for (const key in this.editForm) {
                         if (this.editForm.hasOwnProperty(key)) {
                             const element = this.editForm[key];
-                            if(element === null || element === undefined){
+                            if (element === null || element === undefined) {
                                 delete this.editForm[key]
                             }
                         }
                     }
-                    
+
                     await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync', {
                         ...this.editForm
                     }).then(res => {
@@ -226,7 +263,7 @@ var app = new Vue({
                             type: res.data.success ? 'success' : 'error',
                             message: res.data.success ? '编辑成功!' : '编辑失败'
                         });
-                        if(res.data.success){
+                        if (res.data.success) {
                             this.clearEditForm()
                             this.getDataList()
                             this.editFormDialogVisible = false;
@@ -237,10 +274,10 @@ var app = new Vue({
                 }
             });
         },
-        dateformatter(date){
+        dateformatter(date) {
             return new Date(date).toLocaleString()
         },
-        editModel(row){
+        editModel(row) {
             this.editFormDialogVisible = true;
             this.editForm = {
                 ...row,
@@ -248,29 +285,28 @@ var app = new Vue({
                 configModelType: row.configModelType.toString()
             };
         },
-        deleteModel(row){
+        deleteModel(row) {
             this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await service.delete('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.DeleteAsync',{
-                    params:{
-                        id:row.id
+                await service.delete('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.DeleteAsync', {
+                    params: {
+                        id: row.id
                     }
                 }).then(async res => {
                     this.$message({
                         type: res.data.success ? 'success' : 'error',
                         message: res.data.success ? '删除成功!' : '删除失败'
                     });
-                    await this.getDataList().then(()=>{
+                    await this.getDataList().then(() => {
                         if (this.tableData.length === 0 && this.page.page > 1) {
                             this.page.page--;
                             this.getDataList();
                         }
                     })
                 })
-
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -279,4 +315,4 @@ var app = new Vue({
             });
         },
     },
-});
+});  
