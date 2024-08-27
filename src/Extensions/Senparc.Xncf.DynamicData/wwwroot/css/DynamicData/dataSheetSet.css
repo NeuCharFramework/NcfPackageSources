@@ -93,13 +93,17 @@
         }
             .dataSheetSet-main .main_content .sheetForm-inline .formValueText {
                 width: 200px;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 400;
                 letter-spacing: 0px;
                 color: #606266;
                 text-align: left;
                 vertical-align: top;
-                cursor: pointer;
+                /*cursor: pointer;*/
+                /*height: 40px;*/
+                padding: 0 15px;
+                border-radius: 4px;
+                border: 1px solid #DCDFE6;
                 /* 单行 溢出隐藏 */
                 white-space: nowrap;
                 overflow: hidden;
@@ -115,8 +119,92 @@
     text-align: center;
     vertical-align: top;
 }
+.drawerRtl {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.drawerRtl__header {
+    flex: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    border-bottom: 1px solid #d3d4d5;
+}
+.drawerRtl__header__title {
+    flex: auto;
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: #333333;
+    letter-spacing: 0;
+}
+
+.drawerRtl__header__close {
+    color: #979797;
+    font-size: 22px;
+    flex: none;
+    cursor: pointer;
+}
+
+.drawerRtl__body {
+    flex: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 15px 20px;
+}
+
+.drawerRtl__footer {
+    flex: none;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    border-top: 1px solid #d3d4d5;
+    /*background: #f9f8f8;*/
+    /*border-top: 1px solid #ededed;*/
+    /*box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.14);*/
+}
+
+.newFieldForm-container{
+    padding:0px 20px;
+
+}
+    .newFieldForm-container .inputAppendIdBox {
+        /*background-color: #F5F7FA;
+        color: #909399;
+        position: relative;
+        border: 1px solid #DCDFE6;
+        border-radius: 4px;
+        width: 1px;
+        white-space: nowrap;*/
+        height:32px;
+        line-height:32px;
+        padding: 0 20px;
+        cursor: pointer;
+    }
+    .newFieldForm-container .inputIdTips {
+        display: block;
+        font-size: 14px;
+        color: #606266;
+    }
+    .newFieldForm-container .formitem-labelText {
+        white-space:nowrap;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 14px;
+        line-height: 36px;
+        color: #606266;
+        padding: 0 12px 0 0;
+    }
 /* 以下 修改el组件样式 */
+.el-input-group__append {
+    padding: 0;
+}
 /* 以下 自定义公用样式 */
+.text-right{
+    text-align:right;
+}
 .df {
     display: flex;
     flex-wrap: wrap;
