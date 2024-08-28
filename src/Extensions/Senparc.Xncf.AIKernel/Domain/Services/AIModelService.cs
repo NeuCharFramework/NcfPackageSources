@@ -16,6 +16,8 @@ using Senparc.AI.Kernel.Handlers;
 using Senparc.AI.Entities;
 using Senparc.AI.Exceptions;
 using Senparc.AI.Entities.Keys;
+using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
@@ -203,5 +205,54 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiResult;
         }
 
+        public async Task<string> UpdateModelsFromNeuCharAsync(NeuCharGetModelJsonResult modelResult, int developerId, string apiKey)
+        {
+            if (modelResult?.Result?.Data == null)
+            {
+                return "模型数据不存在，请检查是否已部署，或是否具备权限！";
+            }
+
+            var models = await base.GetFullListAsync(z => z.AiPlatform == AiPlatform.NeuCharAI);
+            var updateCount = 0;
+            var addCount = 0;
+            foreach (var neucharModel in modelResult.Result.Data)
+            {
+                var model = await base.GetObjectAsync(z => z.DeploymentName == neucharModel.Name);
+                var dto = new AIModel_CreateOrEditRequest()
+                {
+                    AiPlatform = AiPlatform.NeuCharAI,
+                    ApiKey = apiKey,
+                    Alias = neucharModel.Name,
+                    DeploymentName = neucharModel.Name,
+                    ModelId = neucharModel.Name,
+                    ApiVersion = "2022-12-01",
+                    Endpoint = $"https://www.neuchar.com/{developerId}",
+                    ConfigModelType = Models.ConfigModelType.Chat,
+                    Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
+                    Show = true
+                };
+
+                if (model == null)
+                {
+                    model = new AIModel(dto);
+                    addCount++;
+                }
+                else
+                {
+                    if (!model.Note.IsNullOrEmpty())
+                    {
+                        dto.Note = model.Note;
+                    }
+                    dto.MaxToken = model.MaxToken;
+                    dto.Alias = model.Alias;
+                    model.Update(dto);
+
+                    updateCount++;
+                }
+
+                await base.SaveObjectAsync(model);
+            }
+            return $"已成功添加 {addCount} 个模型，更新 {updateCount} 个模型信息。";
+        }
     }
 }

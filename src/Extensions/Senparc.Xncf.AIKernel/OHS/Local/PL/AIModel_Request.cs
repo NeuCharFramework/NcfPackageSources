@@ -174,4 +174,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// </summary>
         public bool IsShared { get; set; }
     }
+
+    public class AIModel_UpdateNeuCharModelsRequest
+    {
+        public int DeveloperId { get; set; }
+        public string AppKey { get; set; }
+    }
 }
