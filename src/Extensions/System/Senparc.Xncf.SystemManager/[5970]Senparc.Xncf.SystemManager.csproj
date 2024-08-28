@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Version>0.11.1.5-preview1</Version>
+        <Version>0.11.1.6-preview1</Version>
         <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
         <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
         <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -22,6 +22,7 @@
 		v0.3.3.1 添加 Oracle 数据库迁移代码 v0.3.3.1 添加 Oracle 数据库迁移代码
 		v0.11.0 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
             [2024-08-28] v0.11.1.5-preview1 完善 NeuChar AI 云端模型自动载入
+            [2024-08-28] v0.11.1.6-preview1 更新 Function 的 Password 类型，并将 MaxLength 参数传送到前端 UI
 </PackageReleaseNotes>
         <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
         <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -42,6 +42,9 @@ namespace Senparc.Ncf.XncfBase
         /// 系统类型
         /// </summary>
         public string SystemType { get; set; }
+        /// <summary>
+        /// 最大长度（一般应用于字符串）
+        public int MaxLength { get; set; }
 
         /// <summary>
         /// 参数类型
@@ -63,7 +66,7 @@ namespace Senparc.Ncf.XncfBase
         }
 
         public FunctionParameterInfo(string name, string title, string description,
-            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value)
+            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value, int maxLength)
         {
             Name = name;
             Title = title;
@@ -73,6 +76,7 @@ namespace Senparc.Ncf.XncfBase
             SelectionList = selectionList;
             ParameterType = parameterType;
             Value = value;
+            MaxLength = maxLength;
         }
     }
 }

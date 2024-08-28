@@ -18,7 +18,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
         }
 
         [FunctionRender("更新 NeuChar 云账户信息", "使用 https://www.neuchar.com/Developer/Developer 页面中提供的 AppKey、Secret 信息，绑定 NeuChar 云账号，激活更多高级功能", typeof(Register))]
-        public async Task<StringAppResponse> UpdateNeuCharAccount(SystemConfig_Request request)
+        public async Task<StringAppResponse> UpdateNeuCharAccount(SystemConfig_UpdateNeuCharAccountRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {

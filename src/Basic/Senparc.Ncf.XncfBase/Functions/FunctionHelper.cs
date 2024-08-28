@@ -94,11 +94,15 @@ namespace Senparc.Ncf.XncfBase.Functions
                     parameterType = ParameterType.Password;
                 }
 
+
+
                 var name = prop.Name;
                 string title = null;
                 string description = null;
                 var isRequired = prop.GetCustomAttribute<RequiredAttribute>() != null;
                 var descriptionAttr = prop.GetCustomAttribute<DescriptionAttribute>();
+                var maxLengthAttr = prop.GetCustomAttribute<MaxLengthAttribute>();
+                var maxLength = 0;
                 if (descriptionAttr != null && descriptionAttr.Description != null)
                 {
                     //分割：名称||说明
@@ -109,6 +113,12 @@ namespace Senparc.Ncf.XncfBase.Functions
                         description = descriptionAttrArr[1];
                     }
                 }
+
+                if (maxLengthAttr != null)
+                {
+                    maxLength = maxLengthAttr.Length;
+                }
+
                 var systemType = prop.PropertyType.Name;
 
                 object value = null;
@@ -122,7 +132,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,
-                                                selectionList ?? new SelectionList(SelectionType.Unknown), value);
+                                                selectionList ?? new SelectionList(SelectionType.Unknown), value, maxLength);
                 result.Add(functionParamInfo);
             }
             return result;

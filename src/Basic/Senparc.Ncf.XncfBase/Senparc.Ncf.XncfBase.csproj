@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-        <Version>0.21.6-preview1</Version>
+        <Version>0.21.6.1-preview1</Version>
         <LangVersion>10.0</LangVersion>
         <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
         <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -41,6 +41,7 @@
 			[2024-08-11] v0.21.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
 			[2024-08-12] v0.21.3-preview1 添加 TableData 的数据插入方法，通过单元测试
             [2024-08-28] v0.21.6-preview1 Function 添加 Password 类型
+            [2024-08-28] v0.21.6.1-preview1 更新 Function 的 Password 类型，并将 MaxLength 参数传送到前端 UI
 </PackageReleaseNotes>
         <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
         <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
