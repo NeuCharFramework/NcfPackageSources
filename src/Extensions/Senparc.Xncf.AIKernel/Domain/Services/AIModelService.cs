@@ -232,6 +232,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     Show = true
                 };
 
+                //TODO: 远程不提供，临时本地判断
+                if (neucharModel.Name.Contains("embedding"))
+                {
+                    dto.ConfigModelType = Models.ConfigModelType.TextEmbedding;
+                }
+                else if (neucharModel.Name.Contains("text-davinci"))
+                {
+                    dto.ConfigModelType = Models.ConfigModelType.TextCompletion;
+                }
+
                 if (model == null)
                 {
                     model = new AIModel(dto);

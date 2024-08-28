@@ -37,10 +37,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
 
     public class NeuCharGetModelJsonResult
     {
-        /// <summary>
-        /// 此属性是本地新增
-        /// </summary>
-        public string Message { get; set; }
+        ///// <summary>
+        ///// 此属性是本地新增
+        ///// </summary>
+        //public string Message { get; set; }
         public bool Success { get; set; }
         public AIModel_GetNeuCharModelsResponse_Result Result { get; set; }
 

@@ -198,7 +198,8 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                 {
                     r.Success = false;
                     //TODO: 使用日志下载提供详细教程
-                    return "错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！";
+                    r.ErrorMessage= "错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！";
+                    return "error";
                 }
 
                 //var apiContainer = new ApiContainer(base.ServiceProvider, fullSystemConfig.NeuCharAppKey, fullSystemConfig.NeuCharAppSecret);
@@ -223,13 +224,15 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                 if (passportResult.Result != AppResultKind.成功)
                 {
                     r.Success = false;
-                    return "AppKey 或 AppSecret 错误！请重新设置！";
+                    r.ErrorMessage = "AppKey 或 AppSecret 错误！请重新设置！";
+                    return "error";
                 }
 
                 if (request.DeveloperId != passportResult.Data.DeveloperId)
                 {
                     r.Success = false;
-                    return "所提供和 DeveloperId 和系统配置的 AppKey 不一致，请检查或更新后重试！";
+                    r.ErrorMessage= "所提供和 DeveloperId 和系统配置的 AppKey 不一致，请检查或更新后重试！";
+                    return "error";
                 }
 
                 var url = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/developer/getModelInfoByDeveloper";
@@ -243,7 +246,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                 //TODO: 核验 AppKey 是否正确
 
-                var result = await _aIModelService.UpdateModelsFromNeuCharAsync(models, passportResult.Data.DeveloperId, request.AppKey);
+                var result = await _aIModelService.UpdateModelsFromNeuCharAsync(models, passportResult.Data.DeveloperId, request.ApiKey);
 
                 //TODO：立即使用一个模型做一个测试
 

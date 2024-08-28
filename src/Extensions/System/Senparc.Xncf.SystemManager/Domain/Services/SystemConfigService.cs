@@ -56,7 +56,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
                     appKey = messageResult.Data.AppKey;
                     appSecret = messageResult.Data.Secret;
                     systemConfig.UpdateNeuCharAccount(developerId, appKey, appSecret);
-                    await base.SaveObjectAsync(systemConfig);
+                    await this.SaveObjectAsync(systemConfig);
 
                     SenparcTrace.SendCustomLog("完成开发者信息认证", $"DeveloperId:{developerId}");
 
