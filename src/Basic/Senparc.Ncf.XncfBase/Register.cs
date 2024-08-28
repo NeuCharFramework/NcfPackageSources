@@ -88,7 +88,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <param name="env"></param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名， “.Xncf.”会被必定包含在里面</param>
         /// <returns></returns>
         public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env, string[] dllFilePatterns)
         {

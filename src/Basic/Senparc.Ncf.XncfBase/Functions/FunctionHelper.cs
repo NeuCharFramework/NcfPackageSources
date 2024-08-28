@@ -94,8 +94,6 @@ namespace Senparc.Ncf.XncfBase.Functions
                     parameterType = ParameterType.Password;
                 }
 
-
-
                 var name = prop.Name;
                 string title = null;
                 string description = null;

@@ -12,9 +12,9 @@ namespace Senparc.Ncf.XncfBase
     public enum ParameterType
     {
         Text = 0,
-        DropDownList = 2,
-        CheckBoxList = 3,
-        Password = 4,
+        DropDownList = 1,
+        CheckBoxList = 2,
+        Password = 3,
     }
 
     /// <summary>
