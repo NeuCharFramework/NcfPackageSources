@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 .indexPage{
     position:relative;
     overflow:auto;
@@ -136,3 +137,88 @@
                 border-radius: 4px;
                 background: #0083FF;
             }
+#main {
+    width: 400px;
+    height: 500px;
+}
+#rank {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #303133;
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.ranking-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.ranking {
+    width: 40%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .ranking:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+h2 {
+    color: #409eff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ebeef5;
+    padding-bottom: 10px;
+}
+
+#ol {
+    padding-left: 0;
+}
+
+#li {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+}
+
+    #li:hover {
+        background-color: #e6f7ff;
+    }
+
+.rank {
+    font-weight: 500;
+    font-size: 20px;
+    color: #409eff;
+}
+
+.content {
+    flex-grow: 1;
+    text-align: left;
+    margin-left: 10px;
+    font-size: 18px;
+    color: #606266;
+}
+
+.usage {
+    font-size: 16px;
+    color: #909399;
+}
