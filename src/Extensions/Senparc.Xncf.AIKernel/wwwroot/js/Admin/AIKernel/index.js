@@ -188,14 +188,19 @@ var app = new Vue({
                         developerId: this.neuCharForm.developerId,
                         apiKey: this.neuCharForm.apiKey
                     }).then(res => {
-                        this.$message({
-                            type: res.data.success ? 'success' : 'error',
-                            message: res.data.message
-                        });
                         if (res.data.success) {
+                            this.$message({
+                                type: 'success',
+                                message: res.data.data // display success message from res.data.data  
+                            });
                             this.getDataList()
                             this.clearNeuCharForm()
                             this.neuCharFormDialogVisible = false;
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.errorMessage
+                            });
                         }
                     })
                 } else {

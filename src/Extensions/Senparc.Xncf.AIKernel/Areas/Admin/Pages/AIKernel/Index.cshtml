@@ -260,11 +260,12 @@
     <el-dialog title="导入 NeuCharAI 云端模型算力" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">  
         <el-form :model="neuCharForm" label-width="120px" :rules="neuCharRules" ref="neuCharForm">  
             <el-form-item label="DeveloperId" prop="developerId">  
-                <el-input v-model="neuCharForm.developerId"></el-input>  
+                <el-input v-model="neuCharForm.developerId"></el-input>
             </el-form-item>  
             <el-form-item label="ApiKey" prop="apiKey">  
                 <el-input v-model="neuCharForm.apiKey" type="password"></el-input>  
             </el-form-item>  
+            <p><i class="fa fa-info-circle"></i>&nbsp; &nbsp;可从 https://www.neuchar.com/Developer/AiApp 页面中，点击【显示 ApiKey】按钮查看到 DeveloperId 及 ApiKey，如果您有多项，可分批次导入。</p>
         </el-form>  
         <span slot="footer" class="dialog-footer">  
             <el-button @@click="neuCharFormDialogVisible = false">取消</el-button>  
