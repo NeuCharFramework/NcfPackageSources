@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.8-preview1</Version>
+    <Version>0.9.9-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -35,6 +35,7 @@
 			v0.6.4 更新 Prompt 导入和导出 #207
 			v0.6.5 优化通过 PromptRangeCode 查询
 			[2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
+			[2024-08-29] v0.9.9.0-preview1 更新首页统计
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

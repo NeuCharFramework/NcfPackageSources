@@ -2,6 +2,7 @@
 using Senparc.Ncf.Core.Config;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -137,7 +138,14 @@ namespace Senparc.Ncf.Core.AssembleScan
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Already loaded: {assemblyName}");
+                                    //获取当前文件dll版本
+                                    // 获取文件版本信息  
+                                    FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(filePath);
+
+                                    // 获取版本号  
+                                    string version = fvi.FileVersion;
+
+                                    Console.WriteLine($"Already loaded: {assemblyName} ({version})");
                                 }
                             }
                         }

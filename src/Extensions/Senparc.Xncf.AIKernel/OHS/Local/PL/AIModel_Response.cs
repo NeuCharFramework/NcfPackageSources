@@ -1,5 +1,7 @@
-﻿using Senparc.AI;
+﻿using System.Collections.Generic;
+using Senparc.AI;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
 using Senparc.Xncf.AIKernel.Models;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL;
@@ -61,6 +63,7 @@ public class AIModel_GetDetailResponse
         MaxToken = model.MaxToken;
         Show = model.Show;
     }
+
     public AIModel_GetDetailResponse(AIModelDto dto)
     {
         Id = dto.Id;
@@ -75,3 +78,4 @@ public class AIModel_GetDetailResponse
         Show = dto.Show;
     }
 }
+

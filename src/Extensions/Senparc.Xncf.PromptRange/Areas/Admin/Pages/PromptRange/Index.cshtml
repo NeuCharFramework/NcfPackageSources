@@ -31,7 +31,32 @@
     </div>
     <div class="mainBox">
         <div class="leftBox cardBox">
-            <div class="title">热门Prompt及Model</div>
+            <div class="title"></div>
+            <div id="rank">
+                <h1>热门 Prompt 和 模型 排行榜</h1>
+                <div class="ranking-container">
+                    <div class="ranking">
+                        <h2>热门 Prompt</h2>
+                        <ol id="ol">
+                            <li id="li" v-for="(prompt, index) in topPrompts" :key="index">
+                                <span class="rank">{{ index + 1 }}</span>
+                                <span class="content">{{ prompt.text }}</span>
+                                <span class="usage">使用次数: {{ prompt.usageCount }}</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="ranking">
+                        <h2>热门模型</h2>
+                        <ol id="ol">
+                            <li id="li" v-for="(model, index) in topModels" :key="index">
+                                <span class="rank">{{ index + 1 }}</span>
+                                <span class="content">{{ model.name }}</span>
+                                <span class="usage">调用次数: {{ model.usageCount }}</span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
             <div class="hotMainBox"></div>
         </div>
         <div class="rightBox">
@@ -40,10 +65,11 @@
                     <span class="activeText">已测试Prompt</span>
                     <span class="">已使用模型</span>
                 </div>
+                <div id="main"></div>
                 <div class="hotMainBox"></div>
             </div>
             <div class="cardBox">
-                <div class="title">Prompt分数趋势图</div>
+                <div class="title">模型使用次数</div>
                 <div class="hotMainBox"></div>
             </div>
         </div>
@@ -51,5 +77,7 @@
 </div>
 
 @section scripts{
+    <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
+    <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
     <script src="~/js/PromptRange/index.js"></script>
 }

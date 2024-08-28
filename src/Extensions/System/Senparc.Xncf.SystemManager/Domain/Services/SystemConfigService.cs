@@ -40,7 +40,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             if (!neuCharAppKey.IsNullOrEmpty() && !neuCharAppSecret.IsNullOrEmpty())
             {
                 //校验并获取 NeuCharDeveloperId
-                var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/GetPassport";
+                var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/App/Api/GetPassport";
                 //Console.WriteLine("passport:" + (passportUrl));
 
                 var data = new Dictionary<string, string>() {
@@ -56,7 +56,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
                     appKey = messageResult.Data.AppKey;
                     appSecret = messageResult.Data.Secret;
                     systemConfig.UpdateNeuCharAccount(developerId, appKey, appSecret);
-                    await base.SaveObjectAsync(systemConfig);
+                    await this.SaveObjectAsync(systemConfig);
 
                     SenparcTrace.SendCustomLog("完成开发者信息认证", $"DeveloperId:{developerId}");
 
