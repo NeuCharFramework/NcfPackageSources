@@ -184,7 +184,7 @@ var app = new Vue({
         async addNeuCharModelSubmit() {
             this.$refs.neuCharForm.validate(async (valid) => {
                 if (valid) {
-                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetNeuCharModels', {
+                    await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.UpdateNeuCharModels', {
                         developerId: this.neuCharForm.developerId,
                         apiKey: this.neuCharForm.apiKey
                     }).then(res => {
