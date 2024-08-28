@@ -4,6 +4,7 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Functions.Parameters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,6 +88,10 @@ namespace Senparc.Ncf.XncfBase.Functions
                             break;
                     }
                     selectionList = selections;
+                }
+                else if (prop.Name.Contains("SECRET", StringComparison.OrdinalIgnoreCase) || prop.GetCustomAttribute<PasswordAttribute>() != null)
+                {
+                    parameterType = ParameterType.Password;
                 }
 
                 var name = prop.Name;

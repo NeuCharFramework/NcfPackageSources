@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Version>0.8.10.7-preview1</Version>
+        <Version>0.8.10.10-preview1</Version>
         <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
         <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
         <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -29,9 +29,9 @@
 			v0.8.3 支持 Ollama
 			[2024-08-06] v0.8.6-preview1 update Senparc.AI.Kernel
 			[2024-08-28] v0.8.9 添加 NeuChar 模型获取接口
-			[2024-08-18] v0.8.10 NeuCharAI 模型提供快速选择；解决 Chat/TextCompetion 编辑选中 bug 
-		            [2024-08-28] v0.8.10.6-preview1 完善 NeuChar AI 云端模型自动载入
-            [2024-08-28] v0.8.10.7-preview1 完善 NeuChar AI 云端模型自动载入
+			[2024-08-18] v0.8.10 NeuCharAI 模型提供快速选择；解决 Chat/TextCompetion 编辑选中 bug
+			[2024-08-28] v0.8.10.6-preview1 完善 NeuChar AI 云端模型自动载入
+			[2024-08-28] v0.8.10.7-preview1 完善 NeuChar AI 云端模型自动载入
 </PackageReleaseNotes>
         <PackageIcon>icon.jpg</PackageIcon>
         <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

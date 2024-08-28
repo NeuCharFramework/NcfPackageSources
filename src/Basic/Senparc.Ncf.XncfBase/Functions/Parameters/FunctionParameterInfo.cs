@@ -5,11 +5,16 @@ using System.Text;
 
 namespace Senparc.Ncf.XncfBase
 {
+    /// <summary>
+    /// 参数类型
+    /// <para>注意：请勿更改已经定义的顺序和值！</para>
+    /// </summary>
     public enum ParameterType
     {
-        Text,
-        DropDownList,
-        CheckBoxList,
+        Text = 0,
+        DropDownList = 2,
+        CheckBoxList = 3,
+        Password = 4,
     }
 
     /// <summary>
