@@ -325,8 +325,7 @@
                     <span>打靶时间: {{item.addTime}}</span>
                     <span>耗时(毫秒): {{item.costTime}}</span>
                 </div>
-                <div class="contentRow">
-                    {{item.resultString}}
+                    <div class="contentRow" v-html="item.resultString">
                 </div>
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
@@ -384,7 +383,7 @@
                 </div>
             </div>
             <div v-if="outputList.length===0" class="emptyDataArea">
-                暂无数据
+                暂无生成结果
             </div>
         </div>
     </div>
@@ -669,6 +668,7 @@
     <script src="~/js/PromptRange/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>
+    <script src="~/js/PromptRange/lib/marked.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>
