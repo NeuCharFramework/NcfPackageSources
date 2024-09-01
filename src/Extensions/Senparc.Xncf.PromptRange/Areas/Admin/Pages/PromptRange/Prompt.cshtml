@@ -320,6 +320,9 @@
         </div>
         <div class="outputArea_contentBox" id="resultBox">
             <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
+                    <div class="copyButtonArea">
+                        <a href="javascript:void(0);" @@click="copyPromptResult(item)">复制</a>
+                    </div>
                 <div class="infoRow">
                     <span>版本: {{item.version}}</span>
                     <span>打靶时间: {{item.addTime}}</span>

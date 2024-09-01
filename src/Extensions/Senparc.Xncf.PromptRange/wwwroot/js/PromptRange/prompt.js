@@ -2835,7 +2835,29 @@ var app = new Vue({
                 }
             });
         },
+        // 复制 Prompt 测试结果
+        copyPromptResult(item) {
+
+            // 把结果复制到剪切板
+            try {
+                const input = document.createElement('input')
+                input.setAttribute('readonly', 'readonly')
+                input.setAttribute('value', item.resultString)
+                document.body.appendChild(input)
+                input.select()
+                input.setSelectionRange(0, 9999)
+                if (document.execCommand('copy')) {
+                    document.execCommand('copy')
+                    this.$message.success(`复制成功`)
+                } else {
+                    this.$message.error(`复制失败`)
+                }
+            }
+            } catch(err) {
+            console.error('Oops, unable to copy', err);
+        }
     }
+}
 });
 
 
