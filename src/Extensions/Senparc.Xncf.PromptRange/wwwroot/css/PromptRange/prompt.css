@@ -998,3 +998,8 @@ flex-wrap: nowrap;
             .versionTreeMorePopover > .operateArea > .operateItem:hover {
                 background-color: #F3F4F6;
             }
+
+
+.copyButtonArea {
+    float:right;
+}

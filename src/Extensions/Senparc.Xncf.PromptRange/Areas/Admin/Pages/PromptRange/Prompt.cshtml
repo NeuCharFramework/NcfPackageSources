@@ -321,14 +321,15 @@
         <div class="outputArea_contentBox" id="resultBox">
             <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                     <div class="copyButtonArea">
-                        <a href="javascript:void(0);" @@click="copyPromptResult(item)">复制</a>
+                        <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a> | 
+                        <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
                     </div>
                 <div class="infoRow">
                     <span>版本: {{item.version}}</span>
                     <span>打靶时间: {{item.addTime}}</span>
                     <span>耗时(毫秒): {{item.costTime}}</span>
                 </div>
-                    <div class="contentRow" v-html="item.resultString">
+                    <div class="contentRow" v-html="item.resultStringHtml">
                 </div>
                 <div class="operateRow" v-if="item.resultString.length>0">
                     <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
