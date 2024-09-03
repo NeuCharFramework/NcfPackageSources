@@ -1,26 +1,32 @@
-﻿.tipsRow{
-    margin-bottom:10px;
-    font-size:12px;
-   color:red;
-   text-align:left;
-   
+﻿.tipsRow {
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: red;
+    text-align: left;
 }
 
-.my-slider{
-    .my-slider__tooltip {
-        text-align: left;
-        .my-slider__tooltip-wrapper {
-            transform: translateX(-50%);
-            top: -50%;
-        }
-    }
+.my-slider {
+    .my-slider__tooltip
+
+{
+    text-align: left;
+    .my-slider__tooltip-wrapper
+
+{
+    transform: translateX(-50%);
+    top: -50%;
 }
-.expectedPluginTreeBox{
-    width:100%;
-    max-height:60vh;
-    overflow:hidden;
-    overflow-y:auto;
+
 }
+}
+
+.expectedPluginTreeBox {
+    width: 100%;
+    max-height: 60vh;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
 .tacticalFormBox .el-radio-group {
     display: flex;
     flex-wrap: wrap;
@@ -28,6 +34,7 @@
     justify-content: flex-start;
     gap: 15px 0px;
 }
+
     .tacticalFormBox .el-radio-group .el-radio {
         display: flex;
         flex-wrap: nowrap;
@@ -41,14 +48,16 @@
     align-items: flex-start;
     justify-content: flex-start;
 }
+
 .d-c-startr-start-nowrap {
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     flex-wrap: nowrap;
     align-items: flex-start;
     justify-content: flex-start;
-    gap:5px;
+    gap: 5px;
 }
+
 .deleteIcon {
     /*position: absolute;
                 right: 0;
@@ -57,10 +66,12 @@
     color: red;
     cursor: pointer;
 }
-.el-upload-dragger{
-    width:100%;
-    min-width:360px;
+
+.el-upload-dragger {
+    width: 100%;
+    min-width: 360px;
 }
+
 .tipsRow::before {
     content: '*';
     font-size: 12px;
@@ -77,7 +88,7 @@
     display: flex;
 }
 
-.align-center{
+.align-center {
     align-items: center;
 }
 
@@ -94,7 +105,8 @@
 .selectRow {
     width: 100%;
 }
-.justify-content-between{
+
+.justify-content-between {
     justify-content: space-between;
 }
 
@@ -102,32 +114,32 @@
     justify-content: center;
 }
 
-.align-flex-end{
+.align-flex-end {
     align-items: flex-end;
 }
 
-.align-center{
+.align-center {
     align-items: center;
 }
 
-.w-100{
+.w-100 {
     width: 100%;
 }
 
 .el-dropdown .el-button-group {
-    display: flex!important;
+    display: flex !important;
 }
 
-.warnRow{
-    color:#f00;
+.warnRow {
+    color: #f00;
 }
 
-.targetShootBtnRow{
-    display:flex;
-    flex-wrap:nowrap;
-    align-items:center;
-    justify-content:flex-start;
-    gap:7px;
+.targetShootBtnRow {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
 }
 
 .promptLoaderBox {
@@ -143,11 +155,11 @@
     justify-content: center;
 }
 
-    .loading,
-    .loading > div {
-        position: relative;
-        box-sizing: border-box;
-    }
+.loading,
+.loading > div {
+    position: relative;
+    box-sizing: border-box;
+}
 
 .loading {
     display: block;
@@ -257,11 +269,11 @@
     }
 }
 
-.text-center{
+.text-center {
     text-align: center;
 }
 
-.prompt-mask{
+.prompt-mask {
     display: flex;
     position: absolute;
     width: 100%;
@@ -591,13 +603,15 @@
             align-items: flex-end;
             gap: 10px;
         }
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox{
-                display:flex;
-                flex-direction:column;
-                flex-wrap:nowrap;
+
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
                 /*align-items:flex-end;*/
-                gap:5px;
+                gap: 5px;
             }
+
                 .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
                     white-space: nowrap;
                     padding: 7px 10px;
@@ -607,14 +621,16 @@
                     font-size: 12px;
                     cursor: pointer;
                 }
+
                     .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
-                        display:inline-block;
+                        display: inline-block;
                         width: 20px;
-                        text-align:left;
+                        text-align: left;
                     }
-.promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
-    position: relative;
-}
+
+            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
+                position: relative;
+            }
 
                 .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
                     padding: 5px 15px 5px 55px;
@@ -635,7 +651,7 @@
                     font-style: normal;
                     font-weight: 400;
                 }
-                
+
 
     /*输入Prompt请求参数盒子 promptPmroparaBox */
     .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox {
@@ -660,7 +676,7 @@
 
 
         .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
-            margin-top:10px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -715,7 +731,7 @@
         box-sizing: border-box;
         overflow: hidden;
         overflow-y: auto;
-        min-height:416px !important;
+        min-height: 416px !important;
         max-height: 46Vh;
     }
 
@@ -912,8 +928,8 @@
     box-sizing: border-box;
     overflow: hidden;
     display: flex;
-flex-direction: column;
-flex-wrap: nowrap;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
 .versionDrawerArea > .versionDrawerArea_titleRow {
@@ -944,10 +960,10 @@ flex-wrap: nowrap;
 
 .versionDrawerArea > .versionDrawerArea_contentRow {
     margin-top: 15px;
-    min-height:300px;
+    min-height: 300px;
     height: 72%;
-    overflow:hidden;
-    overflow-y:auto;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
     .versionDrawerArea > .versionDrawerArea_contentRow .custom-tree-node {
@@ -1001,5 +1017,21 @@ flex-wrap: nowrap;
 
 
 .copyButtonArea {
-    float:right;
+    text-align: right;
+    clear: both;
+    overflow: hidden;
+    margin-bottom: 10px;
+    font-size: 11px;
 }
+
+    .copyButtonArea a {
+        border: 1px solid #aaa;
+        border-radius: 5px;
+    }
+
+        .copyButtonArea a:hover {
+            background-color: #c561ea;
+            color: #fff;
+            border-color: #c561ea;
+            box-shadow: 0 0 5px rgba(56, 20, 200, 0.5);
+        }

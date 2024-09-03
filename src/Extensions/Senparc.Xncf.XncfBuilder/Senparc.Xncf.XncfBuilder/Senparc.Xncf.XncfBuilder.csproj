@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 		<PropertyGroup>
 				<TargetFramework>net8.0</TargetFramework>
-				<Version>0.30.0-preview1</Version>
+				<Version>0.30.2-preview1</Version>
 				<LangVersion>9.0</LangVersion>
 				<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 				<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -41,6 +41,8 @@
 			[2024-08-06] v0.28.6.0-preview1 update Senparc.AI.Kernel
 		            [2024-08-13] v0.29.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
 			[2024-08-31] v0.30.0-preview1 PromptRange 支持 Markdown 输出格式展示
+			[2024-09-03] v0.30.1-preview1 PromptRange 结果提供“复制”功能
+			[2024-09-03] v0.30.2-preview1 PromptRange 结果提供“复制”功能
 </PackageReleaseNotes>
 				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 				<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
