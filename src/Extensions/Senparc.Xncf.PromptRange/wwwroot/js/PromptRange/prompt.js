@@ -508,7 +508,7 @@ var app = new Vue({
                                 item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
                                 //使用 MarkDown 格式，对输出结果进行展示
-                                item.resultString = marked.parse(item.resultString);
+                                item.resultStringHtml = marked.parse(item.resultString);
 
                                 item.scoreVal = 0 // 手动评分
                                 // ai评分预期结果
@@ -722,7 +722,7 @@ var app = new Vue({
                                 item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
                                 //使用 MarkDown 格式，对输出结果进行展示
-                                item.resultString = marked.parse(item.resultString);
+                                item.resultStringHtml = marked.parse(item.resultString);
 
                                 // 手动评分
                                 item.scoreVal = 0
@@ -1897,7 +1897,7 @@ var app = new Vue({
                         item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
                         //使用 MarkDown 格式，对输出结果进行展示
-                        item.resultString = marked.parse(item.resultString);
+                        item.resultStringHtml = marked.parse(item.resultString);
 
                         // 手动评分
                         item.scoreVal = item.humanScore > -1 ? item.humanScore : 0
@@ -2081,7 +2081,7 @@ var app = new Vue({
                         item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
                         //使用 MarkDown 格式，对输出结果进行展示
-                        item.resultString = marked.parse(item.resultString);
+                        item.resultStringHtml = marked.parse(item.resultString);
 
                         // 手动评分
                         item.scoreVal = 0
@@ -2835,6 +2835,27 @@ var app = new Vue({
                 }
             });
         },
+        // 复制 Prompt 测试结果
+        copyPromptResult(item, rawResult) {
+
+            // 把结果复制到剪切板
+            try {
+                const input = document.createElement('input');
+                input.setAttribute('readonly', 'readonly');
+                input.setAttribute('value', rawResult ? item.resultString : item.resultStringHtml);
+                document.body.appendChild(input);
+                input.select();
+                input.setSelectionRange(0, 9999);
+                if (document.execCommand('copy')) {
+                    document.execCommand('copy');
+                    this.$message.success(`复制成功`);
+                } else {
+                    this.$message.error(`复制失败`);
+                }
+            } catch (err) {
+                console.error('Oops, unable to copy', err);
+            }
+        }
     }
 });
 
