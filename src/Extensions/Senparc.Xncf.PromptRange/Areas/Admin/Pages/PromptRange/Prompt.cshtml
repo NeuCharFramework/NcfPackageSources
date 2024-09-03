@@ -6,7 +6,7 @@
 }
 
 @section Style {
-    <link href="~/css/PromptRange/prompt.css" rel="stylesheet"/>
+    <link href="~/css/PromptRange/prompt.css" rel="stylesheet" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 }
 
@@ -18,277 +18,277 @@
 
 
 <div class="promptPage">
-@*左侧 输入测试 *@
-<div class="promptPage_leftArea" class="{'promptPage_leftAreaHide':promptLeftShow}">
-@*配置*@
-<div class="boxCard configurineArea">
-    @*选择靶场*@
-    <div class="configurineAreaItem rangeBox">
-        <div class="d-flex align-flex-end" style="gap: 10px">
-            <div class="w-100">
-                <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
-                    <div class="d-flex align-center">
-                        <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
-                        <div class="titleContent">选择靶场</div>
-                    </div>
-                    <div>
+    @*左侧 输入测试 *@
+    <div class="promptPage_leftArea" class="{'promptPage_leftAreaHide':promptLeftShow}">
+        @*配置*@
+        <div class="boxCard configurineArea">
+            @*选择靶场*@
+            <div class="configurineAreaItem rangeBox">
+                <div class="d-flex align-flex-end" style="gap: 10px">
+                    <div class="w-100">
+                        <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
+                            <div class="d-flex align-center">
+                                <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                                <div class="titleContent">选择靶场</div>
+                            </div>
+                            <div>
                                 <el-button type="primary" size="mini" @@click="expectedPluginOpen">导出 plugins</el-button>
                                 <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">导入 plugins</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
-                    </div>
-                    
-                </div>
+                            </div>
+
+                        </div>
                         <el-select v-model="promptField" filterable placeholder="请选择靶场" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
-                    <el-option v-for="item in promptFieldOpt"
-                               v-key="item.id"
-                               :label="item.label"
-                               :value="item.value"
-                               :disabled="item.disabled">
-                        <div class="d-flex justify-content-between align-center">
-                            <span>{{ item.label }}</span>
-                            <div>
-                                        
+                            <el-option v-for="item in promptFieldOpt"
+                                       v-key="item.id"
+                                       :label="item.label"
+                                       :value="item.value"
+                                       :disabled="item.disabled">
+                                <div class="d-flex justify-content-between align-center">
+                                    <span>{{ item.label }}</span>
+                                    <div>
+
                                         <el-button type="primary" size="mini" @@click="renameField($event,item)">重命名靶场</el-button>
                                         <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">删除</el-button>
+                                    </div>
+                                </div>
+                            </el-option>
+                        </el-select>
+                    </div>
+
+                    <div class="w-100">
+                        <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
+                            <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                            <div class="titleContent d-flex justify-content-between  align-center w-100">
+                                <span>选择靶道</span>
+                                <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
-                    </el-option>
-                </el-select>
-            </div>
-
-            <div class="w-100">
-                <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
-                    <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon"/>
-                    <div class="titleContent d-flex justify-content-between  align-center w-100">
-                        <span>选择靶道</span>
-                        <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
-                    </div>
-                </div>
-                <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
-                    <el-option v-for="item in promptOpt"
-                               v-key="item.id"
-                               :label="item.label"
-                               :value="item.value"
-                               :disabled="item.disabled">
+                        <el-select v-model="promptid" :disabled="!promptField" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
+                            <el-option v-for="item in promptOpt"
+                                       v-key="item.id"
+                                       :label="item.label"
+                                       :value="item.value"
+                                       :disabled="item.disabled">
                                 <div class="d-flex justify-content-between align-center" style="gap:20px">
                                     <span>{{ item.label }}</span>
                                     <div>
-                                        
+
                                         <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
                                         <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">删除</el-button>
                                     </div>
                                 </div>
-                    </el-option>
-                </el-select>
-            </div>
-        </div>
-    </div>
-    @*选择模型*@
-    <div class="configurineAreaItem modelBox" style="width: 50%;">
-        <div class="titleRow" style="padding: 5px">
-            <div class="titleRow_leftBox">
-                <img src="~/image/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon"/>
-                <div class="titleContent">选择模型</div>
-            </div>
-            <div class="d-flex" style="gap:5px">
-                <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">刷新</el-button>
-                <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
-            </div>
-        </div>
-        <div style="padding-right: 5px">
-                    <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
-                <el-option v-for="item in modelOpt"
-                           v-key="item.id"
-                           :label="item.label"
-                           :value="item.value"
-                           :disabled="item.disabled">
-                    <span>{{ item.label }}</span>
-                </el-option>
-            </el-select>
-        </div>
-    </div>
-</div>
-@*输入*@
-<div class="boxCard inputPromptArea" style="padding: 0">
-    @* 请新建或选择靶场 mask *@
-    <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
-        <div class="text-center">
-            <i class="el-icon-lock" style="font-size:2.5rem"></i>
-            <br>请新建或选择靶场后再进行操作
-        </div>
-    </div>
-    @* 连发 mask *@
-    <div class="prompt-mask" v-if="dodgersLoading">
-        <div class="text-center">
-            <i class="el-icon-lock" style="font-size:2.5rem"></i>
-            <br>当前处于连发模式，内容已锁定
-            <br>如需修改，请切换其他模式
-        </div>
-    </div>
-    @*模型参数设置*@
-    <div class="configurineAreaItem paramBox" style="padding: 15px">
-        <div class="titleRow">
-            <div class="titleRow_leftBox">
-                <i class="requirIcon">*</i>
-                <div class="titleContent">模型参数</div>
-            </div>
-            <div class="titleRow_rightBox">
-                        @* parameterViewShow=!parameterViewShow *@
-                <el-button size="mini" @@click="resetConfigurineParam(true)">重置</el-button>
-                        <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewToggle"></i>
-            </div>
-        </div>
-        <div class="paramBox_contentBox" :class="{'paramBox_contentBoxCollapse':parameterViewShow}">
-            <div v-for="item in parameterViewList" v-key="item.formField" class="paramBox_contentBox_item">
-                <div class="lableRow">
-                    <div class="lableBtn">
-                        <span>{{ item.label }}</span>
-                        <el-tooltip class="item" effect="dark" :content="item.tips" placement="top">
-                            <i class="el-icon-warning-outline"></i>
-                        </el-tooltip>
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
-                @* v-bind: *@
-                <el-input v-model="item.value" placeholder="" class="inputBox" v-bind:style="{'flex':item.isStr?'1':''}" @@input="parameterInputHandle($event,item)" @@change="promptChangeHandel($event,item.formField)"></el-input>
-                <div v-if="item.isSlider" class="sliderBox">
-                    <span>{{item.sliderMin}}</span>
-                    <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider" @@change="promptChangeHandel($event,item.formField)"></el-slider>
-                    <span>{{item.sliderMax}}</span>
+            </div>
+            @*选择模型*@
+            <div class="configurineAreaItem modelBox" style="width: 50%;">
+                <div class="titleRow" style="padding: 5px">
+                    <div class="titleRow_leftBox">
+                        <img src="~/image/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon" />
+                        <div class="titleContent">选择模型</div>
+                    </div>
+                    <div class="d-flex" style="gap:5px">
+                        <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">刷新</el-button>
+                        <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
+                    </div>
+                </div>
+                <div style="padding-right: 5px">
+                    <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
+                        <el-option v-for="item in modelOpt"
+                                   v-key="item.id"
+                                   :label="item.label"
+                                   :value="item.value"
+                                   :disabled="item.disabled">
+                            <span>{{ item.label }}</span>
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
         </div>
-    </div>
-    @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
-    <div style="padding-left: 15px">
-        <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
-    </div>
-    @*输入Prompt*@
-    <div class="promptContetnPmroparaBox" style="padding: 15px">
-        @* 输入Prompt内容 *@
-        <div class="configurineAreaItem leftItemBox">
-            <div class="titleRow">
-                <div class="titleRow_leftBox">
-                    <img src="~/image/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon"/>
-                    <div class="titleContent">输入Prompt</div>
-                </div>
-                <div class="titleRow_rightBox">
-                    <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
-                    <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
+        @*输入*@
+        <div class="boxCard inputPromptArea" style="padding: 0">
+            @* 请新建或选择靶场 mask *@
+            <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
+                <div class="text-center">
+                    <i class="el-icon-lock" style="font-size:2.5rem"></i>
+                    <br>请新建或选择靶场后再进行操作
                 </div>
             </div>
-            <div class="promptContentBox">
-                <el-input v-model="content" type="textarea"
+            @* 连发 mask *@
+            <div class="prompt-mask" v-if="dodgersLoading">
+                <div class="text-center">
+                    <i class="el-icon-lock" style="font-size:2.5rem"></i>
+                    <br>当前处于连发模式，内容已锁定
+                    <br>如需修改，请切换其他模式
+                </div>
+            </div>
+            @*模型参数设置*@
+            <div class="configurineAreaItem paramBox" style="padding: 15px">
+                <div class="titleRow">
+                    <div class="titleRow_leftBox">
+                        <i class="requirIcon">*</i>
+                        <div class="titleContent">模型参数</div>
+                    </div>
+                    <div class="titleRow_rightBox">
+                        @* parameterViewShow=!parameterViewShow *@
+                        <el-button size="mini" @@click="resetConfigurineParam(true)">重置</el-button>
+                        <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewToggle"></i>
+                    </div>
+                </div>
+                <div class="paramBox_contentBox" :class="{'paramBox_contentBoxCollapse':parameterViewShow}">
+                    <div v-for="item in parameterViewList" v-key="item.formField" class="paramBox_contentBox_item">
+                        <div class="lableRow">
+                            <div class="lableBtn">
+                                <span>{{ item.label }}</span>
+                                <el-tooltip class="item" effect="dark" :content="item.tips" placement="top">
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                        </div>
+                        @* v-bind: *@
+                        <el-input v-model="item.value" placeholder="" class="inputBox" v-bind:style="{'flex':item.isStr?'1':''}" @@input="parameterInputHandle($event,item)" @@change="promptChangeHandel($event,item.formField)"></el-input>
+                        <div v-if="item.isSlider" class="sliderBox">
+                            <span>{{item.sliderMin}}</span>
+                            <el-slider v-model="item.value" :min="item.sliderMin" :max="item.sliderMax" :step="item.sliderStep" class="slider" @@change="promptChangeHandel($event,item.formField)"></el-slider>
+                            <span>{{item.sliderMax}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
+            <div style="padding-left: 15px">
+                <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+            </div>
+            @*输入Prompt*@
+            <div class="promptContetnPmroparaBox" style="padding: 15px">
+                @* 输入Prompt内容 *@
+                <div class="configurineAreaItem leftItemBox">
+                    <div class="titleRow">
+                        <div class="titleRow_leftBox">
+                            <img src="~/image/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
+                            <div class="titleContent">输入Prompt</div>
+                        </div>
+                        <div class="titleRow_rightBox">
+                            <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
+                            <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
+                        </div>
+                    </div>
+                    <div class="promptContentBox">
+                        <el-input v-model="content" type="textarea"
                                   :rows="contentTextareaRows"
-                          resize="none"
-                          placeholder="请输入内容"
-                          class="promptInput" @@change="promptChangeHandel($event,'content')">
-                </el-input>
-                <div class="remarkRow">
-                    <el-input v-model="remarks" type="textarea"
-                              :rows="4"
-                              resize="none"
-                              maxlength="200"
-                              show-word-limit
+                                  resize="none"
+                                  placeholder="请输入内容"
+                                  class="promptInput" @@change="promptChangeHandel($event,'content')">
+                        </el-input>
+                        <div class="remarkRow">
+                            <el-input v-model="remarks" type="textarea"
+                                      :rows="4"
+                                      resize="none"
+                                      maxlength="200"
+                                      show-word-limit
                                       placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')" @@blur="promptRemarkSave">
-                    </el-input>
+                            </el-input>
                             @* style="z-index: 1250;" *@
-                    <div class="operationBox" >
+                            <div class="operationBox">
                                 @* 选择连发次数  *@
                                 <el-dropdown trigger="click" @@command="changeNumsBtn" type="primary" size="small">
-                            <div class="numsOfResultsBox">
-                                连发次数：<span class="numVal">{{numsOfResults}}</span>
-                                <i class="el-icon-arrow-down"></i>
-                            </div>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-for="btn of numsOfResultsOpt" :key="btn" :command="btn">{{btn}}</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                        @* 打靶按钮  v-loading="targetShootLoading" *@
-                        <div class="targetShootBtnRow">
+                                    <div class="numsOfResultsBox">
+                                        连发次数：<span class="numVal">{{numsOfResults}}</span>
+                                        <i class="el-icon-arrow-down"></i>
+                                    </div>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item v-for="btn of numsOfResultsOpt" :key="btn" :command="btn">{{btn}}</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                                @* 打靶按钮  v-loading="targetShootLoading" *@
+                                <div class="targetShootBtnRow">
                                     <el-dropdown trigger="click" @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                                {{sendBtnText}}
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">{{btn.text}}</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                            <el-tooltip class="item" effect="dark" placement="top">
-                                <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br/>连发：根据当前选择的靶道信息，连续输出多个结果。<br/>草稿：保存当前输入的内容，并创建新的靶道。</div>
-                                <i class="el-icon-warning-outline" :style="sendBtnText==='连发'?'filter:invert(1)':''"></i>
-                            </el-tooltip>
+                                        {{sendBtnText}}
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                    <el-tooltip class="item" effect="dark" placement="top">
+                                        <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br />连发：根据当前选择的靶道信息，连续输出多个结果。<br />草稿：保存当前输入的内容，并创建新的靶道。</div>
+                                        <i class="el-icon-warning-outline" :style="sendBtnText==='连发'?'filter:invert(1)':''"></i>
+                                    </el-tooltip>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Prompt请求参数 *@
+                <div class="configurineAreaItem rightItemBox" :class="{'rightItemHide':promptParamVisible}">
+                    <div class="titleRow" style="height:28px;">
+                        <div class="titleRow_leftBox">
+                            <div class="titleContent">Prompt请求参数</div>
+                        </div>
+                    </div>
+                    <div class="promptPmroparaBox">
+                        <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
+                            <div class="formItem">
+                                <el-form-item label="前缀" prop="prefix">
+                                    <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{$"></el-input>
+                                </el-form-item>
+                                <el-form-item label="后缀" prop="suffix">
+                                    <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}"></el-input>
+                                </el-form-item>
+                            </div>
+                            @* 变量名 变量值 *@
+                            <el-table :data="promptParamForm.variableList" border
+                                      max-height="150"
+                                      style="width: 100%">
+                                <el-table-column label="变量名">
+                                    <template slot-scope="scope">
+                                        <el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                                        @* <el-form-item :prop="'variableList.' + scope.$index + '.name'" :rules="rules.variableName" label-width="0px">
+                                        <el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                                        </el-form-item> *@
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="变量值">
+                                    <template slot-scope="scope">
+                                        <el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                                        @* <el-form-item :prop="'variableList.' + scope.$index + '.value'" :rules="rules.variableValue" label-width="0px">
+                                        <el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                                        </el-form-item> *@
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="50">
+                                    <template slot-scope="scope">
+                                        <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(scope.$index)"></i>
+                                    </template>
+
+                                </el-table-column>
+                            </el-table>
+                            @* <div v-for="(item,index) in promptParamForm.variableList" v-key="index" class="formItem">
+                            <el-form-item label="" :prop="'variableList.' + index + '.name'" :rules="rules.variableName" label-width="0px">
+                            <el-input v-model="item.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                            </el-form-item>
+                            <el-form-item label="" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue" label-width="0px">
+                            <el-input v-model="item.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                            </el-form-item>
+                            <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(index)"></i>
+                            </div> *@
+                            <div class="addVariableRow">
+                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
+                            </div>
+                        </el-form>
+                        <div class="footerBtnRow">
+                            @* <el-button size="mini" @@click="promptParamFormClose">取 消</el-button> *@
+                            @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button> *@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        @* Prompt请求参数 *@
-        <div class="configurineAreaItem rightItemBox" :class="{'rightItemHide':promptParamVisible}">
-            <div class="titleRow" style="height:28px;">
-                <div class="titleRow_leftBox">
-                    <div class="titleContent">Prompt请求参数</div>
-                </div>
-            </div>
-            <div class="promptPmroparaBox">
-                <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
-                    <div class="formItem">
-                        <el-form-item label="前缀" prop="prefix">
-                            <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{$"></el-input>
-                        </el-form-item>
-                        <el-form-item label="后缀" prop="suffix">
-                            <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}"></el-input>
-                        </el-form-item>
-                    </div>
-                    @* 变量名 变量值 *@
-                    <el-table :data="promptParamForm.variableList" border
-                              max-height="150"
-                              style="width: 100%">
-                        <el-table-column label="变量名">
-                            <template slot-scope="scope">
-                                <el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="请输入变量名"></el-input>
-                                @* <el-form-item :prop="'variableList.' + scope.$index + '.name'" :rules="rules.variableName" label-width="0px">
-                                            <el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="请输入变量名"></el-input>
-                                        </el-form-item> *@
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="变量值">
-                            <template slot-scope="scope">
-                                <el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="请输入变量值"></el-input>
-                                @* <el-form-item :prop="'variableList.' + scope.$index + '.value'" :rules="rules.variableValue" label-width="0px">
-                                            <el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="请输入变量值"></el-input>
-                                        </el-form-item> *@
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="操作" width="50">
-                            <template slot-scope="scope">
-                                <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(scope.$index)"></i>
-                            </template>
-
-                        </el-table-column>
-                    </el-table>
-                    @* <div v-for="(item,index) in promptParamForm.variableList" v-key="index" class="formItem">
-                                <el-form-item label="" :prop="'variableList.' + index + '.name'" :rules="rules.variableName" label-width="0px">
-                                    <el-input v-model="item.name" autocomplete="off" placeholder="请输入变量名"></el-input>
-                                </el-form-item>
-                                <el-form-item label="" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue" label-width="0px">
-                                    <el-input v-model="item.value" autocomplete="off" placeholder="请输入变量值"></el-input>
-                                </el-form-item>
-                                <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(index)"></i>
-                            </div> *@
-                    <div class="addVariableRow">
-                        <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
-                    </div>
-                </el-form>
-                <div class="footerBtnRow">
-                    @* <el-button size="mini" @@click="promptParamFormClose">取 消</el-button> *@
-                    @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button> *@
-                </div>
-            </div>
-        </div>
     </div>
-</div>
-</div>
-@*右侧 评分|分析*@
-<div class="promptPage_rightArea">
-    @*输出*@
+    @*右侧 评分|分析*@
+    <div class="promptPage_rightArea">
+        @*输出*@
         <div class="boxCard outputArea" :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}">
             <div class="titleRow">
                 <div class="titleRow_scoreBox">
@@ -303,167 +303,163 @@
                     <span>瞄准:</span>
                     <span>{{promptDetail.tacticsStr||'--'}}</span>
                 </div>
-        </div>
-        <div class="titleRow">
-            <div class="titleRow_leftBox">
-                <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon"/>
-                <div class="titleContent">输出</div>
             </div>
-            <div class="titleRow_scoreBox">
-                <span>平均分:</span>
-                <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">输出</div>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>平均分:</span>
+                    <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>最高分:</span>
+                    <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
+                </div>
             </div>
-            <div class="titleRow_scoreBox">
-                <span>最高分:</span>
-                <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
-            </div>
-        </div>
-        <div class="outputArea_contentBox" id="resultBox">
-            <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
+            <div class="outputArea_contentBox" id="resultBox">
+                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
+                    <div class="promptVersion"><span>Prompt 版本: <strong>{{item.version}}</strong></span></div>
                     <div class="copyButtonArea">
-                        <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a> | 
+                        <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a> |
                         <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
                     </div>
-                <div class="infoRow">
-                    <span>版本: {{item.version}}</span>
-                    <span>打靶时间: {{item.addTime}}</span>
-                    <span>耗时(毫秒): {{item.costTime}}</span>
-                </div>
+                    <div class="infoRow">
+                        <span>打靶时间: {{item.addTime}}</span>
+                        <span>耗时(毫秒): {{item.costTime}}</span>
+                    </div>
                     <div class="contentRow" v-html="item.resultStringHtml">
-                </div>
-                <div class="operateRow" v-if="item.resultString.length>0">
-                    <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
-                        <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}</span>
                     </div>
-                    <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
-                        <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon"/>
-                        <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
-                    </div>
-                </div>
-                <div v-if="item.isScoreView" class="scoreRow">
-                    <div class="tabsArea">
-                        @* @@click="app.alBtnScoring(index)" *@
-                        <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">AI评分</div>
-                        <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">手动评分</div>
-                    </div>
-                    <div v-if="item.scoreType === '1'" class="alScoreArea">
-                        <div v-for="(elItem,elindex) in item.alResultList" v-key="elindex" class="valFormItem">
-                            <span class="label">{{elItem.label}}</span>
-                            <el-input v-model="elItem.value" clearable placeholder="请输入" class="input"/>
+                    <div class="operateRow" v-if="item.resultString.length>0">
+                        <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
+                            <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}</span>
                         </div>
-                        <div class="aiOperation">
-                            <el-button type="primary" size="mini" @@click="saveManualScore(item)">开始打分</el-button>
-                            <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
+                        <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
+                            <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span :class="checkUseRed(item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
                         </div>
                     </div>
-                    <div v-if="item.scoreType === '2'" class="manualScoreArea">
-                        <div class="sliderTextRow">
-                            <span>0.0</span>
-                            <span>10.0</span>
+                    <div v-if="item.isScoreView" class="scoreRow">
+                        <div class="tabsArea">
+                            @* @@click="app.alBtnScoring(index)" *@
+                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">AI评分</div>
+                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">手动评分</div>
                         </div>
-                        <div class="my-slider">
-                            <div class="my-slider__tooltip" :style="style(item.scoreVal)">
-                                <el-tag
-                                    class="my-slider__tooltip-wrapper"
-                                    size="mini"
-                                    effect="plain"
-                                    type="info"
-                                >
-                                    {{ formatTooltip(item.scoreVal) }}
-                                </el-tag>
+                        <div v-if="item.scoreType === '1'" class="alScoreArea">
+                            <div v-for="(elItem,elindex) in item.alResultList" v-key="elindex" class="valFormItem">
+                                <span class="label">{{elItem.label}}</span>
+                                <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
                             </div>
-                            <el-slider
-                                v-model="item.scoreVal"
-                                :show-tooltip="false"
-                                :min="0" :max="10" :step="0.1"
-                            ></el-slider>
+                            <div class="aiOperation">
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">开始打分</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
+                            </div>
                         </div>
-                        @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
-                        <div class="manualOperation">
-                            <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
+                        <div v-if="item.scoreType === '2'" class="manualScoreArea">
+                            <div class="sliderTextRow">
+                                <span>0.0</span>
+                                <span>10.0</span>
+                            </div>
+                            <div class="my-slider">
+                                <div class="my-slider__tooltip" :style="style(item.scoreVal)">
+                                    <el-tag class="my-slider__tooltip-wrapper"
+                                            size="mini"
+                                            effect="plain"
+                                            type="info">
+                                        {{ formatTooltip(item.scoreVal) }}
+                                    </el-tag>
+                                </div>
+                                <el-slider v-model="item.scoreVal"
+                                           :show-tooltip="false"
+                                           :min="0" :max="10" :step="0.1"></el-slider>
+                            </div>
+                            @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
+                            <div class="manualOperation">
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-if="outputList.length===0" class="emptyDataArea">
-                暂无生成结果
+                <div v-if="outputList.length===0" class="emptyDataArea">
+                    暂无生成结果
+                </div>
             </div>
         </div>
-    </div>
-    @*分数趋势图*@
-    <div class="boxCard analysisArea">
-        <div class="titleRow">
-            <div class="titleRow_leftBox">
-                <img src="~/image/PromptRange/prompt_chart.svg" alt="" class="imgIcon"/>
+        @*分数趋势图*@
+        <div class="boxCard analysisArea">
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
                     <div class="titleContent">
                         分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个数构成的折线" effect="dark" placement="top">
                             <i class="el-icon-warning-outline" style="color:#f00"></i>
                         </el-tooltip>
                     </div>
-                <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">平均分</el-radio>
-                <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
-            </div>
-        </div>
-        <div id="promptPage_scoreChart" key="myCharts" v-if="promptid&&promptid!==''&&chartData.length!==0" class="echartsBox">
-        </div>
-        <div  v-else class="echartsBox">
-            <div class="emptyDataArea">
-                暂无数据
-            </div>
-        </div>
-        
-
-    </div>
-</div>
-@*版本记录-抽屉 drawer*@
-<div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">版本记录</div>
-<el-drawer :visible.sync="versionDrawer" direction="rtl" title="版本记录" :with-header="false" @@close="versionDrawerClose">
-    <div class="versionDrawerArea">
-        <div class="versionDrawerArea_titleRow">
-            <span>版本记录</span>
-            <img src="~/image/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false"/>
-        </div>
-
-        <el-input v-model="versionSearchVal" size="mini" placeholder="请输入名称" class="versionDrawerArea_inputRow">
-            <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
-        </el-input>
-
-        <div class="versionDrawerArea_contentRow">
-            <el-tree ref="versionTree"
-                     default-expand-all
-                     :props="versionTreeProps"
-                     :data="versionTreeData"
-                     :filter-node-method="versionTreeFilterNode"
-                     node-key="id"
-                     :expand-on-click-node="false"
-                     class="filter-tree">
-                <div class="custom-tree-node" slot-scope="{ node, data }">
-                    <div class="treeLabelBox">{{ node.label }}</div>
-                    <el-popover popper-class="versionTreeMorePopover" placement="left" width="118" trigger="hover">
-                        <div class="operateArea">
-                            <div class="operateItem">
-                                <span style="margin-right:5px;">是否公开</span>
-                                <el-switch v-model="data.isPublic" disabled="true" :width="34" @@change="versionRecordIsPublic(data)">
-                                </el-switch>
-                            </div>
-                            <div class="operateItem" @@click="versionRecordEdit(data)">编辑</div>
-                            <div class="operateItem" @@click="versionRecordGenerateCode(data)">生成代码</div>
-                            @* <div class="operateItem" @@click="versionRecordViewNotes(data)">查看备注</div> *@
-                            <div class="operateItem" @@click="versionRecordDelete(data)">删除</div>
-                        </div>
-                        <img slot="reference" src="~/image/PromptRange/prompt_moreDot.svg" class="treeMoreIcon"/>
-                    </el-popover>
+                    <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">平均分</el-radio>
+                    <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
                 </div>
-            </el-tree>
+            </div>
+            <div id="promptPage_scoreChart" key="myCharts" v-if="promptid&&promptid!==''&&chartData.length!==0" class="echartsBox">
+            </div>
+            <div v-else class="echartsBox">
+                <div class="emptyDataArea">
+                    暂无数据
+                </div>
+            </div>
+
+
         </div>
     </div>
-</el-drawer>
-@*战术选择 dialog*@
-<el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
+    @*版本记录-抽屉 drawer*@
+    <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">版本记录</div>
+    <el-drawer :visible.sync="versionDrawer" direction="rtl" title="版本记录" :with-header="false" @@close="versionDrawerClose">
+        <div class="versionDrawerArea">
+            <div class="versionDrawerArea_titleRow">
+                <span>版本记录</span>
+                <img src="~/image/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false" />
+            </div>
+
+            <el-input v-model="versionSearchVal" size="mini" placeholder="请输入名称" class="versionDrawerArea_inputRow">
+                <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
+            </el-input>
+
+            <div class="versionDrawerArea_contentRow">
+                <el-tree ref="versionTree"
+                         default-expand-all
+                         :props="versionTreeProps"
+                         :data="versionTreeData"
+                         :filter-node-method="versionTreeFilterNode"
+                         node-key="id"
+                         :expand-on-click-node="false"
+                         class="filter-tree">
+                    <div class="custom-tree-node" slot-scope="{ node, data }">
+                        <div class="treeLabelBox">{{ node.label }}</div>
+                        <el-popover popper-class="versionTreeMorePopover" placement="left" width="118" trigger="hover">
+                            <div class="operateArea">
+                                <div class="operateItem">
+                                    <span style="margin-right:5px;">是否公开</span>
+                                    <el-switch v-model="data.isPublic" disabled="true" :width="34" @@change="versionRecordIsPublic(data)">
+                                    </el-switch>
+                                </div>
+                                <div class="operateItem" @@click="versionRecordEdit(data)">编辑</div>
+                                <div class="operateItem" @@click="versionRecordGenerateCode(data)">生成代码</div>
+                                @* <div class="operateItem" @@click="versionRecordViewNotes(data)">查看备注</div> *@
+                                <div class="operateItem" @@click="versionRecordDelete(data)">删除</div>
+                            </div>
+                            <img slot="reference" src="~/image/PromptRange/prompt_moreDot.svg" class="treeMoreIcon" />
+                        </el-popover>
+                    </div>
+                </el-tree>
+            </div>
+        </div>
+    </el-drawer>
+    @*战术选择 dialog*@
+    <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
-        <el-form-item label="战术" prop="tactics">
-            <el-radio-group v-model="tacticalForm.tactics">
+            <el-form-item label="战术" prop="tactics">
+                <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
                         <div>创建顶级战术</div>
                         <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
@@ -494,7 +490,7 @@
                             </div>
                         </div>
                     </el-radio>
-                <el-radio label="重新瞄准">
+                    <el-radio label="重新瞄准">
                         <div>重新瞄准</div>
                         <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
                             <span>示例：</span>
@@ -503,89 +499,89 @@
                                 <div>T1.2.3-A2 (new)</div>
                             </div>
                         </div>
-                </el-radio>
-            </el-radio-group>
-        </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
-        @* v-loading="tacticalFormSubmitLoading" *@
-        <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
-    </div>
-</el-dialog>
-@*新增模型 dialog*@
-<el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
-    <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
-        <el-form-item label="模型类型" prop="modelType" label-width="130px">
-            <el-select v-model="modelForm.modelType" placeholder="请选择模型类型">
-                <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="模型别名" prop="alias" label-width="130px">
-            <el-input v-model="modelForm.alias" autocomplete="off" placeholder="请输入模型别名"></el-input>
-        </el-form-item>
-        <el-form-item label="模型名称" prop="deploymentName" label-width="130px">
-            <el-input v-model="modelForm.deploymentName" autocomplete="off" placeholder="请输入模型名称"></el-input>
-        </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">
-            <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
-        </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='8'||modelForm.modelType==='4'" label="API key" prop="apiKey" label-width="130px">
-            <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" placeholder="请输入API key"></el-input>
-        </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'||modelForm.modelType==='32'" label="End Point" prop="endpoint" label-width="130px">
-            <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
-        </el-form-item>
-        <el-form-item v-if="modelForm.modelType==='8'" label="Organization Id" prop="organizationId" label-width="130px">
-            <el-input v-model="modelForm.organizationId" autocomplete="off" placeholder="请输入Organization Id"></el-input>
-        </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-        <el-button @@click="modelFormVisible = false">取 消</el-button>
-        @* v-loading="modelFormSubmitLoading" *@
-        <el-button type="primary" @@click="modelFormSubmitBtn">确 定</el-button>
-    </div>
-</el-dialog>
-@*新增靶场 dialog*@
-<el-dialog title="新增靶场" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
-    <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
-        <el-form-item label="靶场名称" prop="alias" label-width="130px">
-            <el-input v-model="fieldForm.alias" autocomplete="off" placeholder="请输入靶场名称"></el-input>
-        </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-        <el-button @@click="fieldFormVisible = false">取 消</el-button>
-        <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">确 定</el-button>
-    </div>
-</el-dialog>
-@*ai评分标准 dialog @@close="aiScoreFormCloseDialog" *@
-<el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center>
-    <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
+                    </el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
+            @* v-loading="tacticalFormSubmitLoading" *@
+            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
+        </div>
+    </el-dialog>
+    @*新增模型 dialog*@
+    <el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
+        <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
+            <el-form-item label="模型类型" prop="modelType" label-width="130px">
+                <el-select v-model="modelForm.modelType" placeholder="请选择模型类型">
+                    <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="模型别名" prop="alias" label-width="130px">
+                <el-input v-model="modelForm.alias" autocomplete="off" placeholder="请输入模型别名"></el-input>
+            </el-form-item>
+            <el-form-item label="模型名称" prop="deploymentName" label-width="130px">
+                <el-input v-model="modelForm.deploymentName" autocomplete="off" placeholder="请输入模型名称"></el-input>
+            </el-form-item>
+            <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">
+                <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
+            </el-form-item>
+            <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='8'||modelForm.modelType==='4'" label="API key" prop="apiKey" label-width="130px">
+                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" placeholder="请输入API key"></el-input>
+            </el-form-item>
+            <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'||modelForm.modelType==='32'" label="End Point" prop="endpoint" label-width="130px">
+                <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
+            </el-form-item>
+            <el-form-item v-if="modelForm.modelType==='8'" label="Organization Id" prop="organizationId" label-width="130px">
+                <el-input v-model="modelForm.organizationId" autocomplete="off" placeholder="请输入Organization Id"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="modelFormVisible = false">取 消</el-button>
+            @* v-loading="modelFormSubmitLoading" *@
+            <el-button type="primary" @@click="modelFormSubmitBtn">确 定</el-button>
+        </div>
+    </el-dialog>
+    @*新增靶场 dialog*@
+    <el-dialog title="新增靶场" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
+        <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
+            <el-form-item label="靶场名称" prop="alias" label-width="130px">
+                <el-input v-model="fieldForm.alias" autocomplete="off" placeholder="请输入靶场名称"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="fieldFormVisible = false">取 消</el-button>
+            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">确 定</el-button>
+        </div>
+    </el-dialog>
+    @*ai评分标准 dialog @@close="aiScoreFormCloseDialog" *@
+    <el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center>
+        <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
             <div v-for="(item,index) in aiScoreForm.resultList" v-key="index" class="targetShootBtnRow">
-            @* :rules="rules.aiResultVal" *@
+                @* :rules="rules.aiResultVal" *@
                 <el-form-item :label="`${item.label}${index+1}`" :prop="'resultList.' + index + '.value'" label-width="100px">
-                @* <el-input v-model="item.value" autocomplete="off" placeholder="请输入期望结果"></el-input> *@
+                    @* <el-input v-model="item.value" autocomplete="off" placeholder="请输入期望结果"></el-input> *@
                     @* resize="none"
                     maxlength="200"
                     show-word-limit *@
                     <el-input v-model="item.value" type="textarea" :rows="2" placeholder="请输入期望结果" style="width:430px;">
                     </el-input>
-            </el-form-item>
+                </el-form-item>
                 <i slot="reference" class="el-icon-delete deleteIcon" @@click="deleteAiScoreBtn(index)"></i>
-            
-        </div>
-        <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
-        <div class="warnRow" style="margin-top:20px;">注意：设置预期结果后，将会根据预期结果自动进行AI评分。</div>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
+
+            </div>
+            <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
+            <div class="warnRow" style="margin-top:20px;">注意：设置预期结果后，将会根据预期结果自动进行AI评分。</div>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
             <el-button @@click="aiScoreFormClose">关闭</el-button>
-        @* v-loading="aiScoreFormSubmitLoading" *@
-        @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button> *@
-    </div>
-</el-dialog>
-@* 导入plugin *@
-<el-dialog title="导入 plugin 文件夹" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
+            @* v-loading="aiScoreFormSubmitLoading" *@
+            @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">保 存</el-button> *@
+        </div>
+    </el-dialog>
+    @* 导入plugin *@
+    <el-dialog title="导入 plugin 文件夹" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
         <div class="">
             @* 提示 *@
             <div class="tipsRow">
@@ -614,35 +610,35 @@
             <el-button type="primary" @@click="submitUploadPlugins">上 传</el-button>
         </div>
     </el-dialog>
- @* 导出plugin *@
-<el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
+    @* 导出plugin *@
+    <el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
-@*             <el-form-item label="靶场" prop="rangeId" label-width="130px">
-                <el-select v-model="expectedPluginFoem.rangeId" multiple
-                           collapse-tags placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
-                    <el-option v-for="item in promptFieldOpt"
-                               v-key="item.id"
-                               :label="item.label"
-                               :value="item.value"
-                               :disabled="item.disabled">
-                    </el-option>
-                </el-select>
+            @*             <el-form-item label="靶场" prop="rangeId" label-width="130px">
+            <el-select v-model="expectedPluginFoem.rangeId" multiple
+            collapse-tags placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
+            <el-option v-for="item in promptFieldOpt"
+            v-key="item.id"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.disabled">
+            </el-option>
+            </el-select>
             </el-form-item> *@
             <el-form-item label="靶场和靶道" prop="checkList" label-width="130px">
                 @* <el-select v-model="expectedPluginFoem.promptIdList" :disabled="!expectedPluginFoem.rangeId"
-                           multiple
-                           collapse-tags
-                           placeholder="请选择靶道" class="selectRow" @@change="handleCheckedChange">
-                    <el-option v-for="item in expectedPluginFieldList"
-                               v-key="item.id"
-                               :label="item.label"
-                               :value="item.value"
-                               :disabled="item.disabled">
-                    </el-option>
+                multiple
+                collapse-tags
+                placeholder="请选择靶道" class="selectRow" @@change="handleCheckedChange">
+                <el-option v-for="item in expectedPluginFieldList"
+                v-key="item.id"
+                :label="item.label"
+                :value="item.value"
+                :disabled="item.disabled">
+                </el-option>
                 </el-select>
-               <div>
-                    全选： <el-checkbox :disabled="!expectedPluginFoem.rangeId" :indeterminate="isIndeterminate" v-model="checkAll" @@change="handleCheckAllChange">全选</el-checkbox>
-               </div> *@
+                <div>
+                全选： <el-checkbox :disabled="!expectedPluginFoem.rangeId" :indeterminate="isIndeterminate" v-model="checkAll" @@change="handleCheckAllChange">全选</el-checkbox>
+                </div> *@
                 @* 默认展开 :default-expanded-keys="[2, 3]" *@
                 <div class="expectedPluginTreeBox">
                     <el-tree ref="expectedPluginTree" :data="expectedPluginFieldList" show-checkbox node-key="idkey" :props="defaultProps" @@check-change="treeCheckChange">
