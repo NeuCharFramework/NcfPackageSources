@@ -1193,6 +1193,7 @@ var app = new Vue({
             // 把结果复制到剪切板
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
+            input.style.display = 'none';  
             input.setAttribute('value', fullVersion)
             document.body.appendChild(input)
             input.select()
@@ -2842,6 +2843,7 @@ var app = new Vue({
             try {
                 const input = document.createElement('input');
                 input.setAttribute('readonly', 'readonly');
+                input.style.display = 'none';  
                 input.setAttribute('value', rawResult ? item.resultString : item.resultStringHtml);
                 document.body.appendChild(input);
                 input.select();
