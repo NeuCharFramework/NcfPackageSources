@@ -1015,23 +1015,37 @@
                 background-color: #F3F4F6;
             }
 
+.promptResult_Item_Title {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    line-height: 20px;
+}
+
+    .promptResult_Item_Title .promptReultTimeArea {
+        color: #6f6f6f;
+        font-size: 12px;
+    }
 
 .copyButtonArea {
     text-align: right;
     clear: both;
-    overflow: hidden;
-    margin-bottom: 10px;
     font-size: 11px;
+    float: right;
 }
 
     .copyButtonArea a {
         border: 1px solid #aaa;
         border-radius: 5px;
+        padding: 2px 4px;
+        display: inline-block;
+        padding: 0px 5px;
     }
 
         .copyButtonArea a:hover {
-            background-color: #c561ea;
+            background-color: rgb(38 169 233);
             color: #fff;
-            border-color: #c561ea;
-            box-shadow: 0 0 5px rgba(56, 20, 200, 0.5);
+            border-color: rgb(38 169 233);
+            box-shadow: 0 0 5px rgb(38 169 233 / 87%);
+            padding: 0px 5px;
         }
