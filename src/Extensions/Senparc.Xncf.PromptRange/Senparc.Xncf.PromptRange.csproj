@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 		<PropertyGroup>
 				<TargetFramework>net8.0</TargetFramework>
-				<Version>0.10.1.1-preview1</Version>
+				<Version>0.10.2-preview1</Version>
 				<!--<TargetFramework>net5.0</TargetFramework>-->
 				<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 				<LangVersion>10.0</LangVersion>
@@ -39,6 +39,7 @@
 			[2024-08-29] v0.9.9.0-preview1 更新首页统计
 			[2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示
 			[2024-09-03] v0.10.1-preview1 PromptRange 结果提供“复制”功能
+			[2024-09-04] v0.10.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
 </PackageReleaseNotes>
 				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 				<Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
