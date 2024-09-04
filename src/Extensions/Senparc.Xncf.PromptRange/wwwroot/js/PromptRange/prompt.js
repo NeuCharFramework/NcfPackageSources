@@ -1193,7 +1193,6 @@ var app = new Vue({
             // 把结果复制到剪切板
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
-            input.style.display = 'none';  
             input.setAttribute('value', fullVersion)
             document.body.appendChild(input)
             input.select()
@@ -1202,7 +1201,7 @@ var app = new Vue({
                 document.execCommand('copy')
                 this.$message.success(`复制【${fullVersion}】成功`)
             }
-
+            input.style.display = 'none';
         },
         // 格式化时间
         formatDate(d) {
@@ -2843,7 +2842,6 @@ var app = new Vue({
             try {
                 const input = document.createElement('input');
                 input.setAttribute('readonly', 'readonly');
-                input.style.display = 'none';  
                 input.setAttribute('value', rawResult ? item.resultString : item.resultStringHtml);
                 document.body.appendChild(input);
                 input.select();
@@ -2854,6 +2852,7 @@ var app = new Vue({
                 } else {
                     this.$message.error(`复制失败`);
                 }
+                input.style.display = 'none';
             } catch (err) {
                 console.error('Oops, unable to copy', err);
             }
