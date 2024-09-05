@@ -1201,7 +1201,7 @@ var app = new Vue({
                 document.execCommand('copy')
                 this.$message.success(`复制【${fullVersion}】成功`)
             }
-
+            input.style.display = 'none';
         },
         // 格式化时间
         formatDate(d) {
@@ -2852,6 +2852,7 @@ var app = new Vue({
                 } else {
                     this.$message.error(`复制失败`);
                 }
+                input.style.display = 'none';
             } catch (err) {
                 console.error('Oops, unable to copy', err);
             }
