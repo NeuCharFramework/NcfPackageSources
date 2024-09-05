@@ -2840,22 +2840,22 @@ var app = new Vue({
 
             // 把结果复制到剪切板
             try {
-                const input = document.createElement('input');
-                input.setAttribute('readonly', 'readonly');
-                input.setAttribute('value', rawResult ? item.resultString : item.resultStringHtml);
-                document.body.appendChild(input);
-                input.select();
-                input.setSelectionRange(0, 9999);
+                const textarea = document.createElement('textarea');
+                textarea.setAttribute('readonly', 'readonly');
+                textarea.value = rawResult ? item.resultString : item.resultStringHtml;
+                document.body.appendChild(textarea);
+                textarea.select();
+                textarea.setSelectionRange(0, 9999);
                 if (document.execCommand('copy')) {
                     document.execCommand('copy');
-                    this.$message.success(`复制成功`);
+                    this.$message.success('复制成功');
                 } else {
-                    this.$message.error(`复制失败`);
+                    this.$message.error('复制失败');
                 }
-                input.style.display = 'none';
+                textarea.style.display = 'none';
             } catch (err) {
                 console.error('Oops, unable to copy', err);
-            }
+            }  
         }
     }
 });
