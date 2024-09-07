@@ -139,7 +139,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                  * 3、满足上述任意条件后（都可能多个），在相关记录内，找到评分最高的一个
                                  */
 
-                                Dictionary<string, PromptItem> filteredPromptItems = null;
+                                Dictionary<string, PromptItem> filteredPromptItems = new Dictionary<string, PromptItem>();
 
                                 foreach (var functionName in functionNames)
                                 {
@@ -161,7 +161,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                     }
 
                                     //选择最佳结果
-                                    if (filteredItems.Count != 0)
+                                    if (filteredItems?.Count != 0)
                                     {
                                         var theBestItem = filteredItems.OrderByDescending(z => z.EvalMaxScore).FirstOrDefault();
                                         if (theBestItem != null)
