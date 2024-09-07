@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 		<PropertyGroup>
 				<TargetFramework>net8.0</TargetFramework>
-				<Version>0.5.3.1-preview1</Version>
+				<Version>0.5.3.2-preview1</Version>
 				<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 				<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 				<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -26,6 +26,7 @@
 			[2024-09-04] v0.5.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
 			[2024-09-07] v0.5.3-preview1 XncfBuilder 更新默认 Prompt
 			[2024-09-07] v0.5.3.1-preview1 更新 PromptRange 中代码自动生成的 Prompt
+			[2024-09-07] v0.5.3.2-preview1 PromptRange 优化输出格式
 </PackageReleaseNotes>
 				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 				<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

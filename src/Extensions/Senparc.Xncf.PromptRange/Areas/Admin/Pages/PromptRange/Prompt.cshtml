@@ -323,8 +323,7 @@
                 <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
-                            <span>打靶时间: {{item.addTime}}</span> | 
-                            <span>耗时(毫秒): {{item.costTime}}</span>
+                            <span>{{item.addTime}} (耗时(毫秒):{{item.costTime}})</span>
                         </div>
                         <div class="copyButtonArea">
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
