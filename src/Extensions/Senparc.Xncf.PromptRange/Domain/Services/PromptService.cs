@@ -175,21 +175,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                             filteredPromptItems.Add(functionName, theBestItem);
 
                                             #region 使用当前制定的 AI 模型进行生成
-                                            try
+                                            if (senparcAiSetting == null)
                                             {
-                                                var aiModel = await _aiModelService.GetObjectAsync(z => z.Id == theBestItem.ModelId);
-                                                var aiModelDto = _aiModelService.Mapping<AIModelDto>(aiModel);
-                                                var newAiSetting = _aiModelService.BuildSenparcAiSetting(aiModelDto);
-                                                iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(newAiSetting);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                SenparcTrace.BaseExceptionLog(ex);
-                                                if (iWantToRun.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting == null)
+                                                try
                                                 {
-                                                    SenparcTrace.BaseExceptionLog(new Exception("AI 模型配置错误，将使用系统默认配置进行覆盖！"));
-                                                    //采用默认配置覆盖
-                                                    iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(Senparc.AI.Config.SenparcAiSetting);
+                                                    var aiModel = await _aiModelService.GetObjectAsync(z => z.Id == theBestItem.ModelId);
+                                                    var aiModelDto = _aiModelService.Mapping<AIModelDto>(aiModel);
+                                                    var newAiSetting = _aiModelService.BuildSenparcAiSetting(aiModelDto);
+                                                    iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(newAiSetting);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    SenparcTrace.BaseExceptionLog(ex);
+                                                    if (iWantToRun.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting == null)
+                                                    {
+                                                        SenparcTrace.BaseExceptionLog(new Exception("AI 模型配置错误，将使用系统默认配置进行覆盖！"));
+                                                        //采用默认配置覆盖
+                                                        iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(Senparc.AI.Config.SenparcAiSetting);
+                                                    }
                                                 }
                                             }
 

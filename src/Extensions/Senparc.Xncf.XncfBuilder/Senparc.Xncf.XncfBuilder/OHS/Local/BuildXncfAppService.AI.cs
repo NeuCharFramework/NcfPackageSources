@@ -62,6 +62,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         await _xncfModuleService.SaveObjectAsync(promptRangeModule);
                     }
 
+                    aiSetting = null;//使用 PromptRange 时不需要指定 AI 模型
+
                     //检查是否已经初始化
                     var promptRangeInitResult = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", false, aiModelSelected);
                     logger.Append("PromptRange 初始化：" + promptRangeInitResult);
