@@ -169,7 +169,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     };
                     break;
                 default:
-                    throw new NcfExceptionBase($"Xncf.AIKernel 暂时不支持 {aiSettings.AiPlatform} 类型");
+                    throw new NcfExceptionBase($"Senparc.Xncf.AIKernel 暂时不支持 {aiSettings.AiPlatform} 类型");
             }
 
 

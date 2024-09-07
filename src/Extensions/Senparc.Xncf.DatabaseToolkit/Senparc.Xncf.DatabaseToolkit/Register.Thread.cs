@@ -46,7 +46,11 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 if (SystemTime.NowDiff(lastAlertTime) > TimeSpan.FromMinutes(10))
                                 {
                                     lastAlertTime = SystemTime.Now.DateTime;
-                                    throw new NcfModuleException($"{this.MenuName} 模块当前不可用或未启用，跳过数据库自动备份轮询");
+                                    var msg = $"[{this.MenuName}] 模块当前不可用或未启用，跳过数据库自动备份轮询";
+                                    SenparcTrace.SendCustomLog("数据库自动备份", msg);
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine($"提醒：{msg}");
+                                    Console.ResetColor();
                                 }
                                 else
                                 {
