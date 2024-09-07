@@ -1,92 +1,92 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-		<PropertyGroup>
-				<TargetFramework>net8.0</TargetFramework>
-				<!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
-				<!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
+		<!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-				<Version>0.23.3-preview1</Version>
-				<AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
-				<RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
-				<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-				<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-				<Description>Senparc.Xncf.DatabaseToolkit 修改命名空间</Description>
-				<Copyright>NeuCharFramework</Copyright>
-				<PackageTags>NeuCharFramework,NCF,Senparc.Xncf.DatabaseToolkit</PackageTags>
-				<Authors>NeuCharFramework</Authors>
-				<Owners>NeuCharFramework</Owners>
-				<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-				<Title>XNCF 数据库工具包模块</Title>
-				<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-				<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-				<PackageIcon>icon.jpg</PackageIcon>
-				<PackageReleaseNotes>
-		v0.1.0 创世
-		v0.1.101 添加 Migrate 数据库功能
-		v0.1.102 添加备份数据库功能
-		v0.1.103 添加检查数据库功能
-		v0.1.106 添加导出数据库功能
-		v0.5.0 添加可配置备份路径、周期，及自动备份功能
-		v0.11.0 重构 DDD 文件结构
-		v0.12 升级到 FunctionRender
-		v0.16.5.1 添加 Oracle 数据库迁移代码
-		v0.16.8 备份文件重名自动删除
-		v0.23.0 更新 DatabaseToolkitSenparcEntities 命名
+		<Version>0.23.3.1-preview1</Version>
+		<AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
+		<RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+		<Description>Senparc.Xncf.DatabaseToolkit 修改命名空间</Description>
+		<Copyright>NeuCharFramework</Copyright>
+		<PackageTags>NeuCharFramework,NCF,Senparc.Xncf.DatabaseToolkit</PackageTags>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Title>XNCF 数据库工具包模块</Title>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
+			v0.1.0 创世
+			v0.1.101 添加 Migrate 数据库功能
+			v0.1.102 添加备份数据库功能
+			v0.1.103 添加检查数据库功能
+			v0.1.106 添加导出数据库功能
+			v0.5.0 添加可配置备份路径、周期，及自动备份功能
+			v0.11.0 重构 DDD 文件结构
+			v0.12 升级到 FunctionRender
+			v0.16.5.1 添加 Oracle 数据库迁移代码
+			v0.16.8 备份文件重名自动删除
+			v0.23.0 更新 DatabaseToolkitSenparcEntities 命名
 			[2024-09-07] v0.23.3-preview1 优化数据库模块的数据库自动备份提示，不再标记为异常，同时向控制台输出警告信息
-</PackageReleaseNotes>
-				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-				<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-		</PropertyGroup>
-		<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-				<OutputPath>..\..\..\BuildOutPut</OutputPath>
-				<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.DatabaseToolkit.XML</DocumentationFile>
-				<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-				<Optimize>true</Optimize>
-				<DebugType>pdbonly</DebugType>
-				<ErrorReport>prompt</ErrorReport>
-				<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-				<OutputPath>..\..\..\BuildOutPut</OutputPath>
-				<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.DatabaseToolkit.XML</DocumentationFile>
-				<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-				<Optimize>true</Optimize>
-				<DebugType>pdbonly</DebugType>
-				<ErrorReport>prompt</ErrorReport>
-				<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		</PropertyGroup>
-		<ItemGroup>
-				<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-		</ItemGroup>
-		<ItemGroup>
-				<Compile Remove="..ACL\**" />
-				<Compile Remove="OHS\Remote\**" />
-				<EmbeddedResource Remove="..ACL\**" />
-				<EmbeddedResource Remove="OHS\Remote\**" />
-				<None Remove="..ACL\**" />
-				<None Remove="OHS\Remote\**" />
-		</ItemGroup>
-		<ItemGroup>
-				<!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
-		</ItemGroup>
-		<ItemGroup>
-				<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.2" />
-				<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-				<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-		</ItemGroup>
-		<ItemGroup>
-				<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-		</ItemGroup>
-		<!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
-		<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-				<PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.90" />
-				<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
-				<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
-		</ItemGroup>
-		<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-				<PackageReference Include="Oracle.EntityFrameworkCore" Version="8.21.121" />
-				<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
-				<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
-				<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-		</ItemGroup>
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.DatabaseToolkit.XML</DocumentationFile>
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+		<Optimize>true</Optimize>
+		<DebugType>pdbonly</DebugType>
+		<ErrorReport>prompt</ErrorReport>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.DatabaseToolkit.XML</DocumentationFile>
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+		<Optimize>true</Optimize>
+		<DebugType>pdbonly</DebugType>
+		<ErrorReport>prompt</ErrorReport>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="..ACL\**" />
+		<Compile Remove="OHS\Remote\**" />
+		<EmbeddedResource Remove="..ACL\**" />
+		<EmbeddedResource Remove="OHS\Remote\**" />
+		<None Remove="..ACL\**" />
+		<None Remove="OHS\Remote\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.2" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+	</ItemGroup>
+	<!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+		<PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.90" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Oracle.EntityFrameworkCore" Version="8.21.121" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+	</ItemGroup>
 </Project>
