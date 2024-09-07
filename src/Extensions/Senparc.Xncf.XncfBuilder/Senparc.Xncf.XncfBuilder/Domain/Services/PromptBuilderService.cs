@@ -516,7 +516,8 @@ className:{{$className}}
                     //添加 PromptItem-Pluralize
                     promptItemDto.NickName = "Pluralize";
                     promptItemDto.Content = @"[要求]
-请根据要求，将 INPUT 中提供的单词转换为复数，在 OUTPUT 中输出。
+1. 请根据要求，将 INPUT 中提供的单词转换为复数，在 [输出] 中的 OUTPUT 后输出。
+2. 注意：不需要输出开头的 ""OUTPUT:""。
 
 [示例]
 INPUT: Entity
