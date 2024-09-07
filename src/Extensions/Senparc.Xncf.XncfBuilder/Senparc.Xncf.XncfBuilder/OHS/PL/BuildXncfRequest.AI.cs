@@ -63,17 +63,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  new SelectionItem("CreateAppService","创建 AppService","创建和实体匹配的 Service",false)
             });
 
-        [Description("AI 模型||请选择生成代码所使用的 AI 模型")]
-        public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
-        {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
-        });
-
-        [Description("使用数据库 Prompt||指定 Prompt 来源。如果选中，系统将自动安装 PromptRange 模块并初始化 Prompt，全程无需任何人为干预；如不选中此选项，请在运行项目下 Domain/PromptPlugins/ 文件夹下存放 XncfBuilderPlugin 文件夹及所有文件内容。")]
+        [Description("使用 PromptRange ||指定 Prompt 来源。如果选中，系统将自动安装 PromptRange 模块并初始化 Prompt（此时需要提前配置好系统默认 AI 模型），全程无需任何人为干预；如不选中此选项，请在运行项目下 Domain/PromptPlugins/ 文件夹下存放 XncfBuilderPlugin 文件夹及所有文件内容。")]
         public SelectionList UseDatabasePrompt { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("1","是","",true)
         });
 
+        [Description("AI 模型||当不使用 PromptRange 时，需要选择生成代码所使用的 AI 模型")]
+        public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
+        {
+            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+        });
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
