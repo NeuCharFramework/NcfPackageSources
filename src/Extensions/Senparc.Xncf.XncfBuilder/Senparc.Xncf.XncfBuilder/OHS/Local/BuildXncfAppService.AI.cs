@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI.Interfaces;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -39,7 +40,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
 
                 #region PromptRange 是否已经初始化
-                if (request.UseDatabasePrompt.SelectedValues.FirstOrDefault() == "1")
+                if (request.UseDatabasePrompt.IsSelected("1"))
                 {
                     var promptRangeRegister = new Xncf.PromptRange.Register();
                     var promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
@@ -78,20 +79,26 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var @namespace = Path.GetFileName(projectPath) + ".Models.DatabaseModel";
 
-                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                if (aiModelSelected != "Default")
-                {
-                    int.TryParse(aiModelSelected, out int aiModelId);
-                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
-                    if (aiModel == null)
-                    {
-                        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
-                    }
+                ISenparcAiSetting aiSetting = null;//将采用 PromptRange 中已经设置好的模型  // Senparc.AI.Config.SenparcAiSetting;
+                //if (aiModelSelected != "Default")
+                //{
+                //    int.TryParse(aiModelSelected, out int aiModelId);
+                //    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+                //    if (aiModel == null)
+                //    {
+                //        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
+                //    }
 
-                    var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+                //    var aiModelDto = _aIModelService.Mapping<AIModelDto>(aiModel);
 
-                    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
-                }
+                //    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
+                //    logger.Append($"即将使用模型 [{aiSetting.AiPlatform} - {aiSetting.ModelName.Chat}] 生成(AiModel ID:{aiModelId})");
+                //}
+                //else
+                //{
+                //    logger.Append($"当前选中模型: Default");
+                //}
+
 
                 #region 生成实体
 
@@ -245,7 +252,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
         //public async Task<StringAppResponse> CreateAppService()
         //{ 
-        
+
         //}
     }
 }

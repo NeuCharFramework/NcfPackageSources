@@ -14,7 +14,10 @@ using Senparc.AI.Kernel.Entities;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -24,19 +27,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private readonly SemanticAiHandler _aiHandler;
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptItemService _promptItemService;
+        private readonly AIModelService _aiModelService;
         private readonly ISenparcAiSetting _senparcAiSetting;
 
         public IWantToRun IWantToRun { get; set; }
 
         private string _userId = "XncfBuilder"; //区分用户
 
-        public PromptService(PromptRangeService promptRangeService, PromptItemService promptItemService, ISenparcAiSetting senparcAiSetting = null)
+        public PromptService(PromptRangeService promptRangeService, PromptItemService promptItemService, ISenparcAiSetting senparcAiSetting = null, AIModelService aiModelService = null)
         {
             this._promptRangeService = promptRangeService;
             this._promptItemService = promptItemService;
             this._senparcAiSetting = senparcAiSetting ?? Senparc.AI.Config.SenparcAiSetting;
             this._aiHandler = new SemanticAiHandler(this._senparcAiSetting);
             ReBuildKernel(this._senparcAiSetting);
+            _aiModelService = aiModelService;
         }
 
         public IWantToRun ReBuildKernel(ISenparcAiSetting senparcAiSetting = null, string userId = null, string modelName = null)
@@ -169,6 +174,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                             //加入当前 functionName 的最佳结果
                                             filteredPromptItems.Add(functionName, theBestItem);
 
+                                            #region 使用当前制定的 AI 模型进行生成
+                                            try
+                                            {
+                                                var aiModel = await _aiModelService.GetObjectAsync(z => z.Id == theBestItem.ModelId);
+                                                var aiModelDto = _aiModelService.Mapping<AIModelDto>(aiModel);
+                                                var newAiSetting = _aiModelService.BuildSenparcAiSetting(aiModelDto);
+                                                iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(newAiSetting);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                SenparcTrace.BaseExceptionLog(ex);
+                                                if (iWantToRun.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting == null)
+                                                {
+                                                    SenparcTrace.BaseExceptionLog(new Exception("AI 模型配置错误，将使用系统默认配置进行覆盖！"));
+                                                    //采用默认配置覆盖
+                                                    iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(Senparc.AI.Config.SenparcAiSetting);
+                                                }
+                                            }
+
+                                            #endregion
 
                                             PromptTemplateConfig promptTemplateConfig = new PromptTemplateConfig()
                                             {
