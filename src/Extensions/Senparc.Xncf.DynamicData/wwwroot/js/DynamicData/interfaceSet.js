@@ -81,7 +81,8 @@ var app = new Vue({
         },
         // 创建布局 
         createLayout() {
-            // todo 跳转
+            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            window.open('/Admin/DynamicData/LayoutSet')
         },
         // 复制布局
         copyLayout(item) {
@@ -111,6 +112,8 @@ var app = new Vue({
             if (!item) return
             item.operationVisible = false
             // todo 调用接口
+            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            window.open('/Admin/DynamicData/LayoutSet')
         },
         // 删除布局
         deleteLayout(item) {

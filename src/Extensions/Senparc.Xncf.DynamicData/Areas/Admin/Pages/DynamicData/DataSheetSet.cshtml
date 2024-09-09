@@ -168,7 +168,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="颜色" prop="color">
-                    <el-input type="color" v-model="newFieldForm.color"></el-input>
+                    @* <el-input type="color" v-model="newFieldForm.color"></el-input> *@
+                    <el-color-picker v-model="newFieldForm.color"></el-color-picker>
                 </el-form-item>
                 <el-form-item label="描述" prop="description">
                     <el-input type="textarea" v-model="newFieldForm.description" placeholder="字段描述"></el-input>
