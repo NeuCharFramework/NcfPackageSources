@@ -3,7 +3,7 @@
 		<PropertyGroup>
 				<TargetFramework>net8.0</TargetFramework>
 				<!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-				<Version>0.21.8-preview1</Version>
+				<Version>0.21.9-preview1</Version>
 				<LangVersion>10.0</LangVersion>
 				<AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
 				<RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -44,6 +44,7 @@
             [2024-08-28] v0.21.6.1-preview1 更新 Function 的 Password 类型，并将 MaxLength 参数传送到前端 UI
 			[2024-08-29] v0.21.7-preview1 完成 Password 类型的 Function 参数编辑功能
 			[2024-08-29] v0.21.8-preview1 完成 Password 类型的 Function 参数编辑功能
+			[2024-09-10] v0.21.9-preview1 升级缓存基础库
 </PackageReleaseNotes>
 				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 				<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
