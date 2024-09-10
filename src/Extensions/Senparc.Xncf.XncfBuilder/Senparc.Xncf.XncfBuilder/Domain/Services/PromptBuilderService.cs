@@ -278,11 +278,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         ModelId = aiModelId,
                         TopP = 1,
                         Temperature = 0.2f,
-                        MaxToken = 5000,
+                        MaxToken = 4500,
                         FrequencyPenalty = 0,
                         PresencePenalty = 0,
                         StopSequences = "[\"#JsonResultEnd\"]",
-                        FullVersion = "2024.05.12.1-T1-A1",
+                        FullVersion = "2024.05.12.1-T1-A1",//注意：仍然会被自动重置
                         Prefix = "{{$",
                         Suffix = "}}",
                         VariableDictJson = @"{""namespace"":"""",""input"":"""",""className"":""""}",
@@ -505,7 +505,7 @@ className:{{$className}}
 #JsonResultStart
 ";
                     promptItemDto.Tactic = "2";
-                    promptItemDto.FullVersion = "2024.05.12.1-T2-A1";
+                    promptItemDto.FullVersion = "2024.05.12.1-T2-A1";//注意：仍然会被自动重置
                     promptItemDto.StopSequences = "[\"#JsonResultEnd\"]";
                     promptItemDto.VariableDictJson = @"{""className"":"""",""namespace"":"""",""input"":""""}";
                     promptItemDto.Note = "生成 DTO Entity 类的内容";
@@ -516,23 +516,25 @@ className:{{$className}}
                     //添加 PromptItem-Pluralize
                     promptItemDto.NickName = "Pluralize";
                     promptItemDto.Content = @"[要求]
-请根据要求，将 INPUT 中提供的单词转换为复数，在 OUTPUT 中输出。
+[要求]
+请将 INPUT: 中提供的单词转换为复数，在 [输出] 跟着输出结果。
 
 [示例]
-INPUT: Entity
-OUTPUT: Entities #END
+Entity
+> Entities #END
 
-INPUT: Apple
-OUTPUT: Apples #END
+Apple
+> Apples #END
 
 [输出]
-INPUT:{{$input}}
-OUTPUT:";
+{{$input}}
+>";
                     promptItemDto.Tactic = "3";
-                    promptItemDto.FullVersion = "2024.05.12.1-T3-A1";
+                    promptItemDto.FullVersion = "2024.05.12.1-T3-A1";//注意：仍然会被自动重置
                     promptItemDto.StopSequences = "[\"INPUT\",\"OUTPUT\",\" #END\"]";
                     promptItemDto.VariableDictJson = @"{""input"":""""}";
                     promptItemDto.Note = "将单词转换为复数";
+                    promptItemDto.MaxToken = 200;
                     var promptItemPluralize = new PromptItem(promptItemDto);
                     await this._promptItemService.SaveObjectAsync(promptItemPluralize);
                     log.AppendLine($"完成 {promptRangeName}-{promptItemDto.NickName} 添加");

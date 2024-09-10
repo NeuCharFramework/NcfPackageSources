@@ -34,11 +34,11 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Uid => "796D12D8-580B-40F3-A6E8-A5D9D2EABB69";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "5.0.0";//必须填写版本号
+        public override string Version => "5.0.1";//必须填写版本号
 
         public override string MenuName => "AI 核心模块";
 
-        public override string Icon => "fa  fa-lightbulb";
+        public override string Icon => "fa  fa-magic";
 
         public override string Description => "AI 核心模块，基于 Senparc.AI 为所有 AI 项目提供基础能力";
 

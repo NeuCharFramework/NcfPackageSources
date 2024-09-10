@@ -17,10 +17,10 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
@@ -53,6 +53,17 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
                     b.Property<string>("MchKey")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("NeuCharAppKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("NeuCharAppSecret")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<int>("NeuCharDeveloperId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -81,7 +92,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("NUMBER(10)");

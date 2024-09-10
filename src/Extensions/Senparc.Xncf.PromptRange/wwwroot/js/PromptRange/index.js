@@ -20,6 +20,16 @@ var app = new Vue({
                 modelAPI: '',
                 modelAPIkey: ''
             },
+            topPrompts: [
+                { text: "生成风景图片", usageCount: 120 },
+                { text: "编写故事", usageCount: 110 },
+                { text: "自动生成摘要", usageCount: 90 },
+            ],
+            topModels: [
+                { name: "GPT-4", usageCount: 150 },
+                { name: "DALL-E", usageCount: 140 },
+                { name: "Stable Diffusion", usageCount: 130 },
+            ],
             rules: {
                 modelName: [
                     { required: true, message: '请输入模型名称', trigger: 'blur' }
@@ -32,6 +42,49 @@ var app = new Vue({
                 ]
             }
         };
+    },
+    mounted() {
+        var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                show: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: '使用次数',
+                    data: [150, 230, 224, 218, 135, 147, 260],
+                    type: 'line'
+                }
+            ]
+        };
+
+        myChart.setOption(option);
+        return {
+            topPrompts: [
+                { text: "生成风景图片", usageCount: 120 },
+                { text: "编写故事", usageCount: 110 },
+                { text: "自动生成摘要", usageCount: 90 },
+            ],
+                topModels: [
+                    { name: "GPT-4", usageCount: 150 },
+                    { name: "DALL-E", usageCount: 140 },
+                    { name: "Stable Diffusion", usageCount: 130 },
+                ],
+        };
+        
     },
     watch: {
         //'isExtend': {
