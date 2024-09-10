@@ -49,7 +49,6 @@
 		</PackageReference>
 		<PackageReference Include="Moq" Version="4.20.69" />
 		<PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="4.2.5" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
