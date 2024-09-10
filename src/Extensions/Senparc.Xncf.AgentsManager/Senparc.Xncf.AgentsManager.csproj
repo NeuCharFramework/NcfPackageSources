@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 		<PropertyGroup>
 				<TargetFramework>net8.0</TargetFramework>
-				<Version>0.5.5.2-preview1</Version>
+				<Version>0.5.6-preview1</Version>
 				<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 				<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 				<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -33,6 +33,7 @@
 			[2024-09-07] v0.5.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
 			[2024-09-07] v0.5.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
 			[2024-09-08] v0.5.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
+			[2024-09-10] v0.5.6-preview1 升级缓存基础库
 </PackageReleaseNotes>
 				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 				<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -43,7 +44,7 @@
 		<ItemGroup>
 				<PackageReference Include="Senparc.AI.Agents" Version="0.2.0" />
 				<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.2" />
-				<PackageReference Include="Senparc.Weixin.Work" Version="3.22.2" />
+				<PackageReference Include="Senparc.Weixin.Work" Version="3.22.3" />
 		</ItemGroup>
 		<!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
