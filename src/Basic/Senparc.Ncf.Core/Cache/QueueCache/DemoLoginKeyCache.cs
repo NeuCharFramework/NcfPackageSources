@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -29,10 +30,29 @@ namespace Senparc.Ncf.Core.Cache
     {
         private const string cacheKey = "DemoLoginKeyCache";
         private const int timeoutSeconds = 5 * 60;
-        public DemoLoginKeyCache()
-            : base(cacheKey, timeoutSeconds)
+        private DemoLoginKeyCache()
+         : base(cacheKey, timeoutSeconds)
         {
+        }
 
+        public static async Task<DemoLoginKeyCache> CreateAsync()
+        {
+            var instance = new DemoLoginKeyCache();
+
+            // 初始化父类中的异步初始化操作  
+            await instance.InitializeAsync();
+
+            return instance;
+        }
+
+        private async Task InitializeAsync()
+        {
+            // 调用父类的静态工厂方法进行异步初始化  
+            var queueCache = await QueueCache<DemoLoginKeyCacheData>.CreateAsync(cacheKey, timeoutSeconds);
+
+            // 将初始化的结果赋值给当前实例  
+            this.MessageQueue = queueCache.MessageQueue;
+            this.MessageCollection = queueCache.MessageCollection;
         }
 
         public override QueueCacheData<DemoLoginKeyCacheData> Get(string key, bool removeDataWhenExist = true)

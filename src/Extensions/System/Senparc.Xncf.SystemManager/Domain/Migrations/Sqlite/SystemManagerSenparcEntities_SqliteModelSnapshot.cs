@@ -15,7 +15,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {
@@ -46,6 +46,17 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
                     b.Property<string>("MchKey")
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("NeuCharAppKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NeuCharAppSecret")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NeuCharDeveloperId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)

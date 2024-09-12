@@ -40,6 +40,9 @@ public class PromptItem : EntityBase<int>
 
     #region 模型参数
 
+    /// <summary>
+    /// AI 模型的 AiModel.Id
+    /// </summary>
     [Required]
     public int ModelId { get; private set; }
 

@@ -4,6 +4,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 //using WURFL;
@@ -233,6 +234,14 @@ namespace Senparc.Ncf.Core.Models
         [AutoSetCache]
         public bool? HideModuleManager { get; set; }
 
+        [AutoSetCache]
+        public int NeuCharDeveloperId { get; set; }
+
+        [AutoSetCache]
+        public string NeuCharAppKey { get; set; }
+
+        [AutoSetCache]
+        public string NeuCharAppSecret { get; set; }
 
         public override void CreateEntity(SystemConfig entity)
         {

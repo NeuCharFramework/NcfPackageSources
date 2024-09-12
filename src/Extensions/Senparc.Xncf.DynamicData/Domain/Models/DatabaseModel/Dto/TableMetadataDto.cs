@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
 {
-    public class TableMetadataDto : DtoBase
+    public class TableMetadataDto : DtoBase<int>
     {
         /// <summary>  
         /// 表格名称。  
         /// </summary>  
         [Required]
         [MaxLength(255)]
-        public string TableName { get; private set; }
+        public string TableName { get; set; }
 
         /// <summary>  
         /// 表格描述。  
         /// </summary>  
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         /// <summary>  
         /// 关联的列元数据集合。  
@@ -33,6 +33,6 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         public ICollection<TableDataDto> TableDatas { get; set; }
 
 
-        private TableMetadataDto() { }
+        public TableMetadataDto() { }
     }
 }

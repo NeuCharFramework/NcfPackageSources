@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -201,6 +202,8 @@ namespace Senparc.Ncf.UnitTestExtension
                 //初始化对象
                 var options = new DbContextOptionsBuilder<NcfUnitTestEntities>()
                                     .UseInMemoryDatabase(databaseName: "UnitTestDb")
+                                    //InMemory 不支持事务，如果不希望抛错，则忽略警告
+                                    .ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                                     .Options;
                 var dbContext = new NcfUnitTestEntities(options, s, dataLists);
 
@@ -227,11 +230,11 @@ namespace Senparc.Ncf.UnitTestExtension
                  * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
                 /* 2、如需手动修改，可以通过下方 SetConfigurationOption 方法手动设置 Redis 链接信息（仅修改配置，不立即启用）
                  */
-                Senparc.CO2NET.Cache.Redis.Register.SetConfigurationOption(redisConfigurationStr);
+                Senparc.CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
                 Console.WriteLine("完成 Redis 设置");
 
                 //以下会立即将全局缓存设置为 Redis
-                Senparc.CO2NET.Cache.Redis.Register.UseKeyValueRedisNow();//键值对缓存策略（推荐）
+                Senparc.CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow();//键值对缓存策略（推荐）
                 Console.WriteLine("启用 Redis UseKeyValue 策略");
 
                 //Senparc.CO2NET.Cache.Redis.Register.UseHashRedisNow();//HashSet储存格式的缓存策略

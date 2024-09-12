@@ -6,6 +6,25 @@ namespace Senparc.Ncf.Core.Models
     /// <summary>
     /// 数据库 Dto 基类
     /// </summary>
+    public class DtoBase<T> : DtoBase
+        where T : struct
+    {
+        public T Id { get; set; }
+    }
+
+    /// <summary>
+    /// 数据库 Dto 基类
+    /// </summary>
+    public class DtoBase<T, TID> : DtoBase
+    where T : EntityBase<TID>
+    {
+        public TID Id { get; set; }
+    }
+
+
+    /// <summary>
+    /// 数据库 Dto 基类
+    /// </summary>
     public class DtoBase : IDtoBase
     {
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Senparc.CO2NET.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -33,14 +34,27 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <param name="timeoutSeconds">小于等于0则没有过期时间</param>
-        public QueueCache(string cacheKey, int timeoutSeconds)
+        protected QueueCache(string cacheKey, int timeoutSeconds)
         {
             _cacheKey = cacheKey;
             _timeoutSeconds = timeoutSeconds;
-            MessageQueue = MethodCache.GetMethodCache(_cacheKey + "Queue", () => new List<QueueCacheData<T>>(), 9999999);
-            MessageCollection = MethodCache.GetMethodCache(_cacheKey + "Collection", () => new Dictionary<string, QueueCacheData<T>>(StringComparer.OrdinalIgnoreCase), 9999999);
         }
 
+        public static async Task<QueueCache<T>> CreateAsync(string cacheKey, int timeoutSeconds)
+        {
+            var instance = new QueueCache<T>(cacheKey, timeoutSeconds);
+            instance.MessageQueue = await MethodCache.GetMethodCacheAsync(
+                cacheKey + "Queue",
+                 () => Task.FromResult(new List<QueueCacheData<T>>()),
+                timeoutSeconds);
+
+            instance.MessageCollection = await MethodCache.GetMethodCacheAsync(
+                cacheKey + "Collection",
+                 () => Task.FromResult(new Dictionary<string, QueueCacheData<T>>(StringComparer.OrdinalIgnoreCase)),
+                timeoutSeconds);
+
+            return instance;
+        }
 
         /// <summary>
         /// 获取MessageContext，如果不存在，返回null

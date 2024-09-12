@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,7 +88,7 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <param name="env"></param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="dllFilePatterns">被包含的 dll 的文件名， “.Xncf.”会被必定包含在里面</param>
         /// <returns></returns>
         public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env, string[] dllFilePatterns)
         {
@@ -181,19 +182,27 @@ namespace Senparc.Ncf.XncfBase
                                     }
                                 }
 
-                                if (hasFunctionMethod)
-                                {
-                                    services.AddScoped(t);
-                                }
+                                services.AddScoped(t);
                             }
 
                             //配置 ServiceBase
-                            if (t.IsSubclassOf(typeof(ServiceBase<>))
-                                || t.IsSubclassOf(typeof(AppServiceBase))
+                            if (
+                                !t.IsAbstract && (
+
+                                //由于泛型是在编译时确定的，所以不能直接使用IsSubclassOf方法来判断一个类是否为一个带泛型的类的基类。需要使用GetGenericTypeDefinition方法来获取泛型的基类，然后进行比较。
+                                (t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(ServiceBase<>))
+                                || t.IsSubclassOf(typeof(ServiceDataBase))
+                                //|| t.IsSubclassOf(typeof(AppServiceBase))
                                 //|| t.IsInstanceOfType(typeof(IServiceDataBase))
                                 )
+                                )
                             {
-                                services.AddScoped(t);
+                                if (t != typeof(ServiceBase<>))
+                                {
+                                    //Console.WriteLine("------------> Add Scope:" + t.FullName);
+                                    services.AddScoped(t);
+                                }
+
                             }
                         }
                     }, true);

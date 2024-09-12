@@ -17,7 +17,7 @@ namespace Senparc.Ncf.Core.Tests
     [TestClass]
     public abstract class TestBase : BaseNcfUnitTest
     {
-        public TestBase(Action<IServiceCollection> servicesRegister = null, Action<DataList> initSeedData = null) : base(servicesRegister, initSeedData)
+        public TestBase(Action<IServiceCollection> servicesRegister = null, UnitTestSeedDataBuilder seedDataBuilder = null) : base(servicesRegister, seedDataBuilder)
         {
    
         }
