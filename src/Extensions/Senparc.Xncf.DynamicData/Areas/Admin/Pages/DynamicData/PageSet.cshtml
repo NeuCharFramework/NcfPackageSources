@@ -6,8 +6,8 @@
 }
 
 @section Style {
-    @* <link href="~/css/DynamicData/interfaceSet.css" rel="stylesheet" /> *@
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link href="~/css/DynamicData/interfaceSet.css" rel="stylesheet" />
+    @* <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> *@
 }
 
 @section breadcrumbs {
@@ -16,17 +16,36 @@
     <el-breadcrumb-item>界面设置</el-breadcrumb-item>
 }
 
-<div>
-    界面设置
+<div class="interfaceSet-page">
+    <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout">添加</el-button>
+    <section class="df flex-as flex-js cardArea">
+        <div v-for="item in layoutList" :key="item.id" class="df-wn flex-dc flex-ac cardItem">
+            <img :src="item.thumbnail" alt="缩略图" class="cardItem_thumbnail" />
+            <div class="cardItem_title">
+                {{ item.name }}
+            </div>
+            <div class="cardItem_description" :title="item.description">
+                {{ item.description }}
+            </div>
+            <div class="df-wn flex-jsb cardItem_operation">
+                <span class="cardItem_operation_state" :class="[getStateClass(item.state)]">
+                    {{ getStateText(item.state) }}
+                </span>
+                <el-popover placement="bottom-end" width="80" v-model="item.operationVisible">
+                    <div class="cardItem_operation_popover">
+                        <div class="cardItem_operation_popover-item" @@click="copyLayout(item)">复制布局</div>
+                        <div class="cardItem_operation_popover-item" @@click="viewLayout(item)">查看布局</div>
+                        <div class="cardItem_operation_popover-item" @@click="deleteLayout(item)">删除布局</div>
+                    </div>
+                    <i slot="reference" class="el-icon-more df flex-ac flex-jc stateColor-grey cardItem_operation_operationBtn"></i>
+                </el-popover>
+            </div>
+        </div>
+    </section>
 </div>
 
  @section scripts {
-     <script>
-         var app = new Vue({
-             el: "#app",
-         });
-     </script>
-   @*  <script src="~/js/DynamicData/lib/axios.min.js"></script>
+    <script src="~/js/DynamicData/lib/axios.min.js"></script>
     <script src="~/js/DynamicData/axios.js"></script>
-    <script src="~/js/DynamicData/interfaceSet.js"></script> *@
+    <script src="~/js/DynamicData/interfaceSet.js"></script>
 }

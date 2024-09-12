@@ -68,5 +68,13 @@ namespace Senparc.Ncf.Service
         Task SaveChangesAsync();
         Task SaveObjectListAsync(IEnumerable<T> objs);
         void TryDetectChange(T obj);
+
+        /// <summary>
+        /// 使用 Mapper.Map&lt;TDto&gt;(entity) 快速返回
+        /// </summary>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        TDto Mapping<TDto>(T entity);
     }
 }

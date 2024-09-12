@@ -1,0 +1,476 @@
+* {
+    box-sizing: border-box;
+}
+
+.ifram-wrapper {
+    min-height: calc(100vh - 120px);
+    width: 100%;
+    height: 100%;
+}
+
+/*标题区域*/
+.layoutSet-nav {
+    height: 70px;
+    background: rgba(255, 255, 255, 1);
+    border-bottom: 1px solid #ebedf1;
+}
+    .layoutSet-nav .nav-titlebox {
+        flex: 1;
+    }
+        .layoutSet-nav .nav-titlebox .title-text {
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(166, 166, 166, 1);
+        }
+        .layoutSet-nav .nav-titlebox .editLayoutName-btn {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: rgba(166, 166, 166, 1);
+        }
+        .layoutSet-nav .nav-titlebox .title-text_value {
+            color: rgba(48, 65, 86, 1);
+        }
+        
+    .layoutSet-nav .nav-btnbox {
+    flex-shrink: 0;
+    width: 350px;
+    }
+
+/* 主要内容区域 */
+    .layoutSet-main {
+        flex: 1;
+        padding: 20px 20px 0px 20px;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-basis: auto;
+        flex-direction: column;
+        min-width: 300px;
+    }
+    /*菜单区域*/
+    .layoutSet-main .main_header {
+        flex-shrink: 0;
+        height: 50px;
+        overflow: hidden;
+        position: relative;
+        background: rgba(243, 244, 247, 1);
+        border-bottom: 1px solid #ebedf1;
+    }
+        .layoutSet-main .main_header .menu-area {
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .layoutSet-main .main_header .menu-area .menu-list {
+
+        }
+
+        .layoutSet-main .main_header .menu-list .menu-item {
+            height: 100%;
+            padding: 0px 20px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 1);
+            line-height: 50px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(56, 56, 56, 1);
+            border-left: 1px solid #f3f4f7;
+            border-right: 1px solid #f3f4f7;
+        }
+
+            .layoutSet-main .main_header .menu-list .menu-item .editMenuName-btn {
+                margin-left: 10px;
+                cursor: pointer;
+                font-size: 12px;
+                color: rgba(56, 56, 56, 1);
+            }
+
+        .layoutSet-main .main_header .menu-newbtn {
+            height: 100%;
+            padding: 0px 20px;
+            cursor: pointer;
+            line-height: 50px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(128, 128, 128, 1);
+        }
+        /*组件内容区域*/
+        .layoutSet-main .main_content {
+            flex: 1;
+            background: rgba(255, 255, 255, 1);
+        }
+            .layoutSet-main .main_content .icon-select {
+                flex-shrink:0;
+                width: 12px;
+                height: 12px;
+            }
+/*组件提示*/
+.layoutSet-main .main_content .add-Component_Tips {
+    margin:30px 0px;
+    height: 60px;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(166, 166, 166, 1);
+    border: 1px solid #e5e5e5;
+    position: relative;
+}
+               /* .layoutSet-main .main_content .add-Component_Tips:hover {
+                    border-color: #5a9de9;
+                }
+                    .layoutSet-main .main_content .add-Component_Tips:hover .upper_add-Component {
+                        display: block;
+                    }
+                    .layoutSet-main .main_content .add-Component_Tips:hover .down_add-Component {
+                        display:block;
+                    }
+                .layoutSet-main .main_content .add-Component_Tips .upper_add-Component {
+                    display: none;
+                    position: absolute;
+                    top: -9px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    cursor: pointer;
+                    color: #5a9de9;
+                    font-size: 16px;
+                    z-index: 13;
+                }
+                .layoutSet-main .main_content .add-Component_Tips .down_add-Component {
+                    display: none;
+                    position: absolute;
+                    bottom: -9px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    cursor: pointer;
+                    color: #5a9de9;
+                    font-size: 16px;
+                    z-index: 13;
+                }*/
+            /*组件占位区域*/
+            .layoutSet-main .main_content .component-area {
+                margin-bottom:20px;
+            }
+                .layoutSet-main .main_content .component-area .occupant-area {
+                    height: 60px;
+                    gap: 10px;
+                    background: rgba(251, 251, 252, 1);
+                    border: 1px dashed rgba(222, 222, 222, 1);
+                    font-size: 14px;
+                    font-weight: 400;
+                    letter-spacing: 0px;
+                    color: rgba(42, 130, 228, 1);
+                }
+/* 侧边栏 */
+.layoutSet-aside {
+    width: 350px;
+    /*height: 100%;*/
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: rgb(255, 255, 255,1);
+}
+
+/*提示*/
+.tips-container {
+    margin-top: 20px;
+    gap: 5px;
+    padding: 8px 20px;
+    font-size: 14px;
+    color: rgba(255, 185, 99, 1);
+    border-radius: 4px;
+    background: rgba(254, 243, 230, 1);
+    border: 1px solid rgba(255, 185, 99, 1);
+}
+    .tips-container .tipsText {
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(51, 51, 51, 1);
+        text-align: left;
+    }
+/*操作区域*/
+.operation-area {
+}
+
+.operation-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0px;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.operation-area {
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.btn-iconImg {
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+}
+
+.assembBtn {
+    gap: 5px;
+    width: 150px;
+    height: 38px;
+    line-height: 38px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(232, 234, 237, 1);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(128, 128, 128, 1);
+    cursor: pointer;
+}
+
+.assembBtn:hover {
+        color: rgba(51, 52, 50, 1);
+        border: 1px solid rgba(42, 130, 228, 1);
+}
+
+.assembBtn-active {
+    color: rgba(51, 52, 50, 1);
+    border: 1px solid rgba(42, 130, 228, 1);
+}
+
+.assembBtn-disable {
+    cursor: not-allowed;
+}
+/*分段器*/
+.subsection-container {
+    padding: 4px;
+    border-radius: 4px;
+    background: rgba(243, 244, 247, 1);
+}
+
+    .subsection-container .subsection-item {
+        flex-grow: 1;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(89, 103, 120, 1);
+        cursor: pointer;
+    }
+
+    .subsection-container .subsection-item_avtive {
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.8);
+        background-color: #ffffff;
+    }
+/*表单区域*/
+.form-container{
+    margin-top:15px;
+}
+    .form-container .el-form-item__label {
+        line-height:normal;
+    }
+/*table区域*/
+.table-container {
+    width: 100%;
+    border: 1px solid rgba(228, 230, 234, 1);
+    text-align: left;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    line-height: 36px;
+}
+    .table-container .table-head {
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(48, 65, 86, 0.8);
+        background: rgba(243, 244, 247, 1);
+    }
+        .table-container .table-head .el-checkbox__label {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(48, 65, 86, 0.8);
+        }
+        .table-container .table-head tr th {
+            font-weight: 400;
+            padding: 0px 10px;
+        }
+
+    .table-container .table-body {
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(56, 56, 56, 1);
+        text-align: left;
+    }
+        .table-container .table-body .el-checkbox__label {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(56, 56, 56, 1);
+            text-align: left;
+        }
+        .table-container .table-body tr {
+            border-top: 1px solid rgba(228, 230, 234, 1);
+        }
+        .table-container .table-body .addColumn-btn {
+            color: rgba(42, 130, 228, 1);
+            cursor: pointer;
+        }
+        .table-container .table-body tr td {
+            font-weight: 400;
+            padding: 0px 10px;
+        }
+
+/*筛选盒子*/
+.filterCriteria-box {
+    gap: 10px;
+    padding: 0px 10px;
+    height: 38px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(228, 230, 234, 1);
+}
+    .filterCriteria-box .showText {
+        flex:1;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(166, 166, 166, 1);
+        text-align: left;
+        vertical-align: top;
+    }
+/*添加排序*/
+.addsort-box {
+    gap: 5px;
+    color: #2a82e4;
+    cursor:pointer;
+}
+
+/*排序展示列表*/
+.sortList-box {
+    margin-bottom:10px;
+    gap: 12px;
+}
+    .sortList-box .sortitem-box {
+        width: 100%;
+        height: 30px;
+        gap: 10px;
+    }
+
+        .sortList-box .sortitem-box .sortitemtext {
+            flex: 1;
+            padding:0px 20px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height:30px;
+            color: rgba(0, 0, 0, 1);
+            text-align: left;
+            vertical-align: top;
+            background: rgba(239, 240, 242, 1);
+        }
+/*筛选条件设置*/
+.popover-bodyBox {
+    
+}
+    .popover-bodyBox .popover-title {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0px;
+        color: rgba(0, 0, 0, 0.8);
+        text-align: left;
+        vertical-align: top;
+    }
+    .popover-bodyBox .popover-list {
+        margin-top:10px;
+        gap: 5px;
+    }
+        .popover-bodyBox .popover-list .popover-list-item {
+            gap:5px;
+        }
+            .popover-bodyBox .popover-list .popover-list-item .line-label {
+                white-space:nowrap;
+                font-size: 14px;
+                font-weight: 400;
+                letter-spacing: 0px;
+                color: rgba(48, 65, 86, 0.8);
+                text-align: left;
+                vertical-align: top;
+            }
+.popover-bodyBox .popover-addbox {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(42, 130, 228, 1);
+    text-align: left;
+    vertical-align: top;
+    cursor: pointer;
+}
+/* 以下 修改el组件样式 */
+.el-main {
+    padding: 0px;
+}
+.el-tabs--top .el-tabs__item.is-top:nth-child(2){
+    padding-left:20px;
+}
+
+/* 以下 自定义公用样式 */
+.tabpane {
+    padding: 0px 20px;
+}
+.moveIcon {
+    width:7px;
+    height:13px;
+    cursor:move;
+}
+.cursorPointer {
+    cursor: pointer;
+}
+
+.df {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.df-wn {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.flex-dc {
+    flex-direction: column;
+}
+
+.flex-ac {
+    align-items: center;
+}
+
+.flex-as {
+    align-items: flex-start;
+}
+
+.flex-ae {
+    align-items: flex-end;
+}
+
+.flex-jc {
+    justify-content: center;
+}
+
+.flex-js {
+    justify-content: flex-start;
+}
+
+.flex-je {
+    justify-content: flex-end;
+}
+
+.flex-jsb {
+    justify-content: space-between;
+}

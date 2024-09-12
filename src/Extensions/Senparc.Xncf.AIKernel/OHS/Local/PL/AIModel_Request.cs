@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -173,5 +174,13 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// 是否共享
         /// </summary>
         public bool IsShared { get; set; }
+    }
+
+    public class AIModel_UpdateNeuCharModelsRequest
+    {
+        [Required]
+        public int DeveloperId { get; set; }
+        [Required]
+        public string ApiKey { get; set; }
     }
 }

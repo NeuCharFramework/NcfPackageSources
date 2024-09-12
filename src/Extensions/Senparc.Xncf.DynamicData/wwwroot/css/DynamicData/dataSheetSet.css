@@ -1,2 +1,252 @@
-﻿body {
+﻿* {
+    box-sizing: border-box;
+}
+.ifram-wrapper {
+    min-height: calc(100vh - 160px);
+    width:100%;
+    height:100%;
+}
+
+/* 侧边栏 */
+.dataSheetSet-aside {
+    width: 275px;
+    /*height: 100%;*/
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: rgb(255, 255, 255,1);
+}
+    .dataSheetSet-aside .aside_title {
+        padding: 15px 24px 0px;
+        height: 50px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(48, 65, 86, 1);
+        text-align: left;
+        vertical-align: top;
+    }
+    .dataSheetSet-aside .aside_list {
+        overflow-x: hidden;
+        overflow-y: auto;
+        /* 160 88 = 248*/
+        max-height: calc(100vh - 248px);
+        min-height:300px;
+    }
+        .dataSheetSet-aside .aside_list .aside_list_item {
+            padding: 7px 24px;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(128, 128, 128, 1);
+            text-align: left;
+            vertical-align: top;
+            cursor: pointer;
+            /* 单行 溢出隐藏 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+            .dataSheetSet-aside .aside_list .aside_list_item:hover {
+                background: rgba(166, 166, 166, 0.1);
+            }
+
+    .dataSheetSet-aside .aside_newbtn {
+        padding: 0px 24px;
+        height:38px;
+        line-height:38px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(42, 130, 228, 1);
+        text-align: left;
+        vertical-align: top;
+        cursor: pointer;
+    }
+        .dataSheetSet-aside .aside_newbtn:hover {
+            background: rgba(166, 166, 166, 0.1);
+        }
+    .dataSheetSet-aside .aside_select {
+        background: rgba(42, 130, 228, 0.05);
+    }
+    .dataSheetSet-aside .aside_list .aside_select {
+        background: rgba(42, 130, 228, 0.05);
+        color: rgba(42, 130, 228, 1);
+    }
+    /* 主要内容区域 */
+    .dataSheetSet-main {
+        flex: 1;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-basis: auto;
+        flex-direction: column;
+        gap: 25px;
+        min-width: 300px;
+    }
+    .dataSheetSet-main .main_header {
+        flex-shrink: 0;
+        height: 50px;
+        overflow: hidden;
+        position: relative;
+    }
+    .dataSheetSet-main .main_content {
+        /*flex: 1;*/
+        background: rgba(255, 255, 255, 1);
+    }
+        .dataSheetSet-main .main_content .sheetForm-inline {
+            padding:20px 30px;
+        }
+            .dataSheetSet-main .main_content .sheetForm-inline .formValueText {
+                width: 200px;
+                font-size: 14px;
+                font-weight: 400;
+                letter-spacing: 0px;
+                color: #606266;
+                text-align: left;
+                vertical-align: top;
+                /*cursor: pointer;*/
+                /*height: 40px;*/
+                padding: 0 15px;
+                border-radius: 4px;
+                border: 1px solid #DCDFE6;
+                /* 单行 溢出隐藏 */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+.dataSheetSet-main .main_content .tips-dataSheet {
+    margin-top: 40px;
+    margin-bottom: 80px;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(128, 128, 128, 1);
+    text-align: center;
+    vertical-align: top;
+}
+.drawerRtl {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.drawerRtl__header {
+    flex: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    border-bottom: 1px solid #d3d4d5;
+}
+.drawerRtl__header__title {
+    flex: auto;
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: #333333;
+    letter-spacing: 0;
+}
+
+.drawerRtl__header__close {
+    color: #979797;
+    font-size: 22px;
+    flex: none;
+    cursor: pointer;
+}
+
+.drawerRtl__body {
+    flex: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 15px 20px;
+}
+
+.drawerRtl__footer {
+    flex: none;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    border-top: 1px solid #d3d4d5;
+    /*background: #f9f8f8;*/
+    /*border-top: 1px solid #ededed;*/
+    /*box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.14);*/
+}
+
+.newFieldForm-container{
+    padding:0px 20px;
+
+}
+    .newFieldForm-container .inputAppendIdBox {
+        /*background-color: #F5F7FA;
+        color: #909399;
+        position: relative;
+        border: 1px solid #DCDFE6;
+        border-radius: 4px;
+        width: 1px;
+        white-space: nowrap;*/
+        height:32px;
+        line-height:32px;
+        padding: 0 20px;
+        cursor: pointer;
+    }
+    .newFieldForm-container .inputIdTips {
+        display: block;
+        font-size: 14px;
+        color: #606266;
+    }
+    .newFieldForm-container .formitem-labelText {
+        white-space:nowrap;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 14px;
+        line-height: 36px;
+        color: #606266;
+        padding: 0 12px 0 0;
+    }
+/* 以下 修改el组件样式 */
+.el-input-group__append {
+    padding: 0;
+}
+/* 以下 自定义公用样式 */
+.text-right{
+    text-align:right;
+}
+.df {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.df-wn {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.flex-dc {
+    flex-direction: column;
+}
+
+.flex-ac {
+    align-items: center;
+}
+
+.flex-as {
+    align-items: flex-start;
+}
+
+.flex-ae {
+    align-items: flex-end;
+}
+
+.flex-jc {
+    justify-content: center;
+}
+
+.flex-js {
+    justify-content: flex-start;
+}
+
+.flex-je {
+    justify-content: flex-end;
+}
+
+.flex-jsb {
+    justify-content: space-between;
 }

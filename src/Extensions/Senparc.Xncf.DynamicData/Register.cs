@@ -93,6 +93,7 @@ namespace Senparc.Xncf.DynamicData
                 z.CreateMap<Color, ColorDto>().ReverseMap();
                 z.CreateMap<TableMetadata, TableMetadataDto>().ReverseMap();
                 z.CreateMap<ColumnMetadata, ColumnMetadataDto>().ReverseMap();
+                //z.CreateMap<List<ColumnMetadata>, List<ColumnMetadataDto>>().ReverseMap();
                 z.CreateMap<TableData, TableDataDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);

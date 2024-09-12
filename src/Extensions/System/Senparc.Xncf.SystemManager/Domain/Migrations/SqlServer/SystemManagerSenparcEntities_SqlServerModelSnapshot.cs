@@ -17,10 +17,10 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
@@ -53,6 +53,17 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
                     b.Property<string>("MchKey")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("NeuCharAppKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NeuCharAppSecret")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NeuCharDeveloperId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -81,7 +92,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
