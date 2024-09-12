@@ -1,51 +1,50 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-		<PropertyGroup>
-				<TargetFramework>net8.0</TargetFramework>
-				<Version>0.19.4-preview1</Version>
-				<AssemblyName>Senparc.Xncf.Terminal</AssemblyName>
-				<RootNamespace>Senparc.Xncf.Terminal</RootNamespace>
-				<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-				<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-				<Description>Senparc.Xncf.Terminal 此模块提供给开发者一个可以直接使用终端命令控制系统的模块</Description>
-				<Copyright>NeuCharFramework</Copyright>
-				<PackageTags>NeuCharFramework,NCF,Senparc.Xncf.Terminal</PackageTags>
-				<Authors>NeuCharFramework</Authors>
-				<Owners>NeuCharFramework</Owners>
-				<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-				<Title>XNCF 终端命令模块</Title>
-				<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-				<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-				<PackageIcon>icon.jpg</PackageIcon>
-				<PackageReleaseNotes>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.19.4.1-preview1</Version>
+    <AssemblyName>Senparc.Xncf.Terminal</AssemblyName>
+    <RootNamespace>Senparc.Xncf.Terminal</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>Senparc.Xncf.Terminal 此模块提供给开发者一个可以直接使用终端命令控制系统的模块</Description>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.Terminal</PackageTags>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>XNCF 终端命令模块</Title>
+    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世
 			[2024-09-10] v0.19.4-preview1 升级缓存基础库
 </PackageReleaseNotes>
-				<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-				<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-		</PropertyGroup>
-		<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-				<OutputPath>..\..\BuildOutPut</OutputPath>
-				<DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.Terminal.XML</DocumentationFile>
-				<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-				<Optimize>true</Optimize>
-				<DebugType>pdbonly</DebugType>
-				<ErrorReport>prompt</ErrorReport>
-				<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-				<OutputPath>..\..\BuildOutPut</OutputPath>
-				<DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.Terminal.XML</DocumentationFile>
-				<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-				<Optimize>true</Optimize>
-				<DebugType>pdbonly</DebugType>
-				<ErrorReport>prompt</ErrorReport>
-				<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		</PropertyGroup>
-		<ItemGroup>
-				<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-		</ItemGroup>
-		<ItemGroup>
-				<ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-		</ItemGroup>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.Terminal.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.Terminal.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
 </Project>
