@@ -64,6 +64,25 @@
                 </div>
                 @* 组件区域 *@
                 <div v-for="(item,index) in layoutComponentsList" :key="index" class="component-area">
+                    <div class="w-table" :class="{'w-table_moving': tableDragState.dragging}">
+                        @* :height="item.tableConfig.height"
+                        :max-height="item.tableConfig.maxHeight"
+                        :style="{ width: parseInt(item.tableConfig.width)+'px' }"*@
+                        <el-table :data="item.tableMockData"
+                                  :border="item.tableConfig.border" :cell-class-name="cellClassName"
+                                  :header-cell-class-name="headerCellClassName">
+                            <el-table-column v-for="(col, index) in item.tableColumn" :key="index"
+                                             :prop="col.prop"
+                                             :label="col.label"
+                                             :width="col.width"
+                                             :min-width="col.minWidth"
+                                             :type="col.type"
+                                             :header-align="col.headerAlign"
+                                             :column-key="index.toString()"
+                                             :render-header="renderHeader">
+                            </el-table-column>
+                        </el-table>
+                    </div>
                     @* 组件占位 *@
                     <div class="occupant-area df-wn flex-ac flex-jc">
                         <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
@@ -139,7 +158,9 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table-body">
-                                            <tr v-for="(tbody_td,tr) in columnForm.columnData" :key="'tbody-tr-'+tr">
+                                            <tr v-for="(tbody_td,tr) in columnForm.columnData" :key="'tbody-tr-'+tr" style="transition: transform .3s;" :draggable="true" @@dragstart="columnDragstart(tr)"
+                                                @@dragenter="columnDragenter($event, tr)"
+                                                @@dragover="columnDragover($event, tr)">
                                                 <template v-if="tbody_td.iscustom">
                                                     <td colspan="2" style="width:150px;">
                                                         <el-checkbox v-model="tbody_td.checked" @@change="handleColumnCheckedChange">{{ tbody_td.name }}</el-checkbox>
@@ -301,7 +322,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div slot="reference" class="sortList-box df-wn flex-dc">
+                                        <div slot="reference" class="sortList-box df-wn flex-dc" style="transition: transform .3s;" :draggable="true" @@dragstart="sortingRulesDragstart(index)"
+                                             @@dragenter="sortingRulesDragenter($event, index)"
+                                             @@dragover="sortingRulesDragover($event, index)">
                                             <div class="sortitem-box df-wn flex-ac">
                                                 <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
                                                 <div class="sortitemtext">{{ item.field ? `${item.field}-${item.sort}` : '请选择排序字段' }}</div>
