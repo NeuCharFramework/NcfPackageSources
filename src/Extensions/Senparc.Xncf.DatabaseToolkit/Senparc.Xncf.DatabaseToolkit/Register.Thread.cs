@@ -52,10 +52,8 @@ namespace Senparc.Xncf.DatabaseToolkit
                                     Console.WriteLine($"提醒：{msg}");
                                     Console.ResetColor();
                                 }
-                                else
-                                {
-                                    return;
-                                }
+
+                                return;
                             }
 
                             //初始化数据库备份方法
