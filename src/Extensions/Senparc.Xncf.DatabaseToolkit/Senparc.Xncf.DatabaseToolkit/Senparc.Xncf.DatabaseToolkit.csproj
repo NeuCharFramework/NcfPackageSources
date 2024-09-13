@@ -34,7 +34,6 @@
 			v0.23.0 更新 DatabaseToolkitSenparcEntities 命名
 			[2024-09-07] v0.23.3-preview1 优化数据库模块的数据库自动备份提示，不再标记为异常，同时向控制台输出警告信息
 			[2024-09-10] v0.23.4-preview1 升级缓存基础库
-			[2024-09-13] v0.23.6-preview1 优化当未安装或启用 DatabaseToolkit 模块时的跳过和提示操作
 			[2024-09-13] v0.23.7-preview1 优化当未安装或启用 DatabaseToolkit 模块时的跳过和提示操作
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
