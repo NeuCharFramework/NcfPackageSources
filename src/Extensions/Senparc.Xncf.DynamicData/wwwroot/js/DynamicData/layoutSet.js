@@ -65,7 +65,8 @@ function deepClone(source) {
  * @param {*} val 需要判断的变量
  */
 function isNumber(val) {
-    return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
+    // return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
+    return !isNaN(val) && val !== '' && (typeof val === 'number' || !isNaN(Number())) 
 }
 
 /**
@@ -96,14 +97,7 @@ var app = new Vue({
             ],
             // 布局组件区域列表
             layoutComponentsList: [],
-            tableColumnActive: '',
-            tableDragState: {
-                active: '', // 选中的列 index
-                start: -9, // 起始元素的 index
-                end: -9, // 移动鼠标时所覆盖的元素 index
-                dragging: false, // 是否正在拖动
-                direction: undefined // 拖动方向
-            },
+            tableColumnActive: '', // table 列选中
             // 侧边菜单 切换
             tabsOverallActiveName: 'first', //tabs 类别 添加:first 设置:second
             setUpActiveName: 'first', // 设置 tabs 类别 属性:first 样式:second
@@ -196,8 +190,6 @@ var app = new Vue({
     watch: {
         columnForm: {
             handler: function (val, oldVal) {
-                console.log('watch columnForm:', isNumber(this.layoutComponentActive));
-
                 // 选择组件 后变化后修改对应的
                 if (isNumber(this.layoutComponentActive)) {
                     // 当前组件
@@ -209,9 +201,11 @@ var app = new Vue({
                     const tableMockItem = {}
                     columnData.forEach(item => {
                         if (item.checked) {
-                            tableColumn.push(item)
+                            tableColumn.push({
+                                columnkey: this.layoutComponentActive,
+                                ...item
+                            })
                             tableMockItem[item.field] = '模拟数据'
-                            tableMockItem.componentActive = this.layoutComponentActive
                         }
                     })
                     if (!isObjEmpty(tableMockItem)) {
@@ -227,6 +221,16 @@ var app = new Vue({
                             ...val
                         }
                     }
+
+                    const tableStyleColumn = tableColumn.map(item=>{
+                        if (item){
+                            item.checked = false
+                            item.fixed = 'left'
+                        }
+                        return item
+                    })
+
+                    this.$set(this.tableStyleForm,'columnData',tableStyleColumn)
                     this.setMeunOrComponentData(newLayoutComponentItem)
                 }
             },
@@ -318,15 +322,24 @@ var app = new Vue({
     methods: {
         // 添加组件按钮 禁用
         addAssembBtnDisabled(addType) {
-            // 没有选中的菜单则禁用
-            // return !this.layoutComponentActive
-            // 当前组件
-            const layoutComponentItem = isNumber(this.layoutComponentActive) ? this.layoutComponentsList[this.layoutComponentActive] : ''
-
-            if (layoutComponentItem) {
-                return addType !== layoutComponentItem.componentType
+            if (isNumber(this.layoutComponentActive)) {
+                const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
+                if (layoutComponentItem && layoutComponentItem.componentType) {
+                    return addType !== layoutComponentItem.componentType
+                }
+                return false
             }
-            return false
+            return true
+        },
+        // 设置菜单和组件列表的值
+        setMeunOrComponentData(newComponent) {
+            // 修改对应组件
+            this.$set(this.layoutComponentsList, this.layoutComponentActive, deepClone(newComponent))
+            // 当前菜单
+            const menuItem = this.layoutMenuList[this.layoutMenuActive]
+            menuItem.layoutList = deepClone(this.layoutComponentsList)
+            // 修改对应菜单
+            this.$set(this.layoutMenuList, this.layoutMenuActive, deepClone(menuItem))
         },
         // 代码查看
         handleCodeView() { },
@@ -334,6 +347,7 @@ var app = new Vue({
         handlePreview() { },
         // 发布
         handleRelease() { },
+        
         // 布局名称 编辑
         handleEditLayoutName() {
             this.isEditLayoutName = true
@@ -346,6 +360,7 @@ var app = new Vue({
         handleBlurLayoutName() {
             this.isEditLayoutName = false
         },
+
         // 新增菜单
         handleAddMenu() {
             if (this.loadingAddMenu) return
@@ -385,38 +400,7 @@ var app = new Vue({
         handleBlurMenuName(item) {
             item.isEditName = false
         },
-        // 添加组件区域
-        // handleAddComponentArea() {},
-        // 切换 tabs
-        handleTabsLeave(activeName, oldActiveName) {
-            // 没有选中的菜单则禁用
-            if (activeName === 'second' && !isNumber(this.layoutComponentActive)) {
-                return false
-            }
-            return true
-        },
-        // 右侧Tabs 整体组件 添加 设置
-        handleTabsClickOverall(tab, event) {
-            console.log(tab, event);
-        },
-        // 添加 组件
-        handleAddComponent(addType) {
-            if (this.addAssembBtnDisabled()) return
-            let addComponentObj = {
-                name: '',
-                componentType: addType
-            }
-            // if (addType === 'table') { }
-            // if (addType === 'form') { }
-            // if (addType === 'btn') { }
-            // 未禁用 允许添加组件
-            this.layoutComponentsList.push(addComponentObj)
-            this.layoutComponentActive = this.layoutComponentsList.length - 1
-            this.tabsOverallActiveName = 'second' //tabs 类别 添加:first 设置:second
-            this.setUpActiveName = 'first' // 设置 tabs 类别 属性:first 样式:second
-            // 重置 中间|右侧 配置
-            this.resetItemsConfig()
-        },
+
         // 重置各项 配置
         resetItemsConfig() {
             this.$options.data.call(this).columnForm // 列管理
@@ -427,23 +411,15 @@ var app = new Vue({
             this.sortingRulesDragEnterIndex = '' // 排序规则拖拽 结束 index
             this.$options.data.call(this).tableStyleForm // 表格样式设置
             this.$options.data.call(this).paginationForm // 分页设置
-        },
-        // 设置菜单和组件列表的值
-        setMeunOrComponentData(newComponent) {
-            // 修改对应组件
-            this.$set(this.layoutComponentsList, this.layoutComponentActive, deepClone(newComponent))
-            // 当前菜单
-            const menuItem = this.layoutMenuList[this.layoutMenuActive]
-            menuItem.layoutList = deepClone(this.layoutComponentsList)
-            // 修改对应菜单
-            this.$set(this.layoutMenuList, this.layoutMenuActive, deepClone(menuItem))
-            console.log('setMeunOrComponentData:', newComponent, 'this.layoutComponentsList', this.layoutComponentsList, 'this.layoutMenuList', this.layoutMenuList);
+            this.$options.data.call(this).addColumnForm // 添加列
+            
         },
         // 处理 选中组件事件
-        handleSelectComponent(item, index) {
+        handleSelectComponent(item, index = '') {
+            this.tableColumnActive = ''
+            if(this.layoutComponentActive === index) return
             // 重置 中间|右侧 配置
             this.resetItemsConfig()
-            // item,index
             this.layoutComponentActive = index
             // 数据回显
             if (item.componentType === 'table') {
@@ -463,18 +439,15 @@ var app = new Vue({
             }
             if (item.componentType === 'form') { }
             if (item.componentType === 'btn') { }
-            this.tabsOverallActiveName = 'second' //tabs 类别 添加:first 设置:second
+            this.tabsOverallActiveName = 'first' // tabs 类别 添加:first 设置:second
         },
-
-
         // table 组件 renderHeader
         renderHeader(createElement, { column, $index }) {
             return createElement(
                 'div', {
                 'class': ['thead-cell'],
                 on: {
-                    mousedown: ($event) => { this.handleMouseDown($event, column, $index) },
-                    // mousemove: ($event) => { this.handleMouseMove($event, column) }
+                    mousedown: ($event) => { this.handleMouseDown($event, column, $index) }
                 }
             }, [
                 // 添加 <a> 用于显示表头 label
@@ -485,92 +458,83 @@ var app = new Vue({
                 // })
             ])
         },
-        // table 组件 列 按下鼠标开始拖动
+        // table 组件 列 鼠标按下
         handleMouseDown(e, column, columnIndex) {
-            console.log('handleMouseDown', column);
+            e.preventDefault();
+            // column.columnKey
+            const currentComponentItem = this.layoutComponentsList[column.columnKey]
+            // 数据 回显
+            const addColumnForm = currentComponentItem.columnConfig.columnData[columnIndex]
+
+            this.$set(this,'addColumnForm',deepClone(addColumnForm))
+            // tabs 切换
             this.tableColumnActive = columnIndex
-            // this.tableDragState.dragging = true
-            // this.tableDragState.start = parseInt(column.columnKey)
-            // 给拖动时的虚拟容器添加宽高
-            // let table = document.getElementsByClassName('w-table')[0]
-            // let virtual = document.getElementsByClassName('virtual')
-            // for (let item of virtual) {
-            //     item.style.height = table.clientHeight - 1 + 'px'
-            //     item.style.width = item.parentElement.parentElement.clientWidth + 'px'
-            // }
-            // document.addEventListener('mouseup', this.handleMouseUp);
+            this.tabsOverallActiveName = 'second'  // 添加:first 设置:second
+            this.handleSwitchSubsection('setUpActiveName','first')
         },
         // table 组件 选中 heade列样式
         headerCellClassName({ row, column, columnIndex }) {
-            if (this.layoutComponentActive === row.componentActive) {
-                return this.tableColumnActive === columnIndex ? 'column_active' : ''
+            if (this.layoutComponentActive === column.columnKey) {
+                return this.tableColumnActive === columnIndex ? 'column_active_th' : ''
             }
             return ''
-            // let active = columnIndex - 1 === this.tableDragState.end ? `darg_active_${this.tableDragState.direction}` : ''
-            // let start = columnIndex - 1 === this.tableDragState.start ? `darg_start` : ''
-            // return `${active} ${start}`
         },
         // table 组件 选中 heade列样式
-        cellClassName({ row,column, columnIndex }) {
-            // return (columnIndex - 1 === this.tableDragState.start ? `darg_start` : '')
-            if (this.layoutComponentActive === row.componentActive) {
-                return this.tableColumnActive === columnIndex ? 'column_active' : ''
+        cellClassName({ row, column, columnIndex }) {
+            if (this.layoutComponentActive === column.columnKey) {
+                return this.tableColumnActive === columnIndex ? 'column_active_td' : ''
             }
             return ''
         },
-        // table 组件 列 鼠标放开结束拖动
-        handleMouseUp() {
-            this.dragColumn(this.tableDragState)
-            // 初始化拖动状态
-            this.tableDragState = {
-                start: -9,
-                end: -9,
-                dragging: false,
-                direction: undefined
-            }
-            document.removeEventListener('mouseup', this.handleMouseUp);
-        },
-        // table 组件 列 拖动中
-        handleMouseMove(e, column) {
-            if (this.tableDragState.dragging) {
-                let index = parseInt(column.columnKey) // 记录起始列
-                if (index - this.tableDragState.start !== 0) {
-                    this.tableDragState.direction = index - this.tableDragState.start < 0 ? 'left' : 'right' // 判断拖动方向
-                    this.tableDragState.end = parseInt(column.columnKey)
-                } else {
-                    this.tableDragState.direction = undefined
-                }
-            } else {
+
+        // 切换 tabs
+        handleTabsLeave(activeName, oldActiveName) {
+            // 没有选中的菜单则禁用
+            if (activeName === 'second' && !isNumber(this.layoutComponentActive)) {
                 return false
             }
+            return true
         },
-        // table 组件 列 拖动易位
-        dragColumn({ start, end, direction }) {
-            let tempData = []
-            let left = direction === 'left'
-            let min = left ? end : start - 1
-            let max = left ? start + 1 : end
-            // layoutComponentsList layoutComponentActive tableColumn
-            const layComActiveItem = this.layoutComponentsList[layoutComponentActive]?.tableColumn ?? []
-            for (let i = 0; i < layComActiveItem.length; i++) {
-                if (i === end) {
-                    tempData.push(layComActiveItem[start])
-                } else if (i > min && i < max) {
-                    tempData.push(layComActiveItem[left ? i - 1 : i + 1])
-                } else {
-                    tempData.push(layComActiveItem[i])
-                }
+        // 右侧Tabs 整体组件 添加 设置
+        handleTabsClickOverall(tab, event) {
+            // console.log(tab, event);
+        },
+        // 添加 组件
+        handleAddComponent(addType = '') {
+            let addComponentObj = {
+                name: '',
+                componentType: addType
             }
-            this.layoutComponentsList[layoutComponentActive].tableColumn = tempData
+            const addTypeList = ['table', 'form', 'btn']
+            if (addTypeList.includes(addType)) {
+                if (this.addAssembBtnDisabled()) return
+                // 重置 中间|右侧 配置
+                this.resetItemsConfig()
+                // tabs 类别切换
+                this.tabsOverallActiveName = 'second'  // 添加:first 设置:second
+                this.setUpActiveName = 'first' // 属性:first 样式:second
+                // 添加 组件 数据类型
+                const currentItem = this.layoutComponentsList[this.layoutComponentActive]
+                currentItem.componentType = addType
+                this.$set(this.layoutComponentsList, this.layoutComponentActive, currentItem)
+            } else if (isNumber(addType) && Number(addType) < this.layoutComponentsList.length) {
+                this.layoutComponentsList.splice(Number(addType), 0, addComponentObj)
+            } else {
+                this.layoutComponentsList.push(addComponentObj)
+            }
+            // 当前菜单
+            const menuItem = this.layoutMenuList[this.layoutMenuActive]
+            menuItem.layoutList = deepClone(this.layoutComponentsList)
+            // 修改对应菜单 数据
+            this.$set(this.layoutMenuList, this.layoutMenuActive, deepClone(menuItem))
         },
-
-
 
         // 切换设置类别
         handleSwitchSubsection(dataName, upData) {
-            if (!dataName) {
+            if (!dataName || this.tableColumnActive !== '') {
                 return
             }
+
             if (dataName.includes('.')) {
                 const dataNameArr = dataName.split('.')
                 this.$set(this[dataNameArr[0]], `${dataNameArr[1]}`, upData)

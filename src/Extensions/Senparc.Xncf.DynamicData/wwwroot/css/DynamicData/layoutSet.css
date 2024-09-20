@@ -162,6 +162,7 @@
 /*组件占位区域*/
 .layoutSet-main .main_content .component-area {
     margin-bottom: 20px;
+    padding: 20px;
 }
 
 .layoutSet-main .main_content .component-area .occupant-area {
@@ -457,34 +458,14 @@
 }
 
 /* 以下 自定义公用样式 */
-.column_active {
-    background-color: #2a82e4;
-    /* position: fixed;
-    display: block;
-    width: 0;
-    height: 0;
-    margin-left: -10px;
-    background: none;
-    border: none; */
+.column_active_th {
+    background-color: #f3f3f3 !important;
+    border-color: 1px solid #f3f3f3 !important;
 }
 
-/* .thead-cell {
-    padding: 0;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: left;
-    cursor: pointer;
-    overflow: initial;
+.column_active_td {
+    background-color: #f3f3f3 !important;
 }
-
-.thead-cell:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-} */
 
 .tabpane {
     padding: 0px 20px;

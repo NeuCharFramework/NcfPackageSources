@@ -69,61 +69,64 @@
                     <div class="globalButton-area"></div>
                 </template>
                 @* 组件区域 *@
-                @*
-                                                @@dragstart="columnDragstart(tr)"
-                                                @@dragenter="columnDragenter($event, tr)"
-                                                @@dragover="columnDragover($event, tr)" *@
-                <div v-for="(item,index) in layoutComponentsList" :key="index" :draggable="true" class="component-area" :class="{activeComponentArea:index === layoutComponentActive}" @@click="handleSelectComponent(item,index)">
-                    <div v-if="item.tableColumn&&item.tableColumn.length" class="w-table"
-                        :class="{'w-table_moving': tableDragState.dragging}">
+                @* @@dragstart="columnDragstart(tr)" @@dragenter="columnDragenter($event, tr)"
+                @@dragover="columnDragover($event, tr)" *@
+                <div v-for="(item,index) in layoutComponentsList" :key="index" :draggable="true" class="component-area"
+                    :class="{activeComponentArea:index === layoutComponentActive}"
+                    @@click="handleSelectComponent(item,index)">
+                    <div v-if="item.tableColumn&&item.tableColumn.length" class="w-table" @@click.stop>
                         @* :height="item.tableConfig.height"
                         :max-height="item.tableConfig.maxHeight"
-                        :style="{ width: parseInt(item.tableConfig.width)+'px' }"*@
-                        <el-table :data="item.tableMockData" :border="item.tableConfig ? item.tableConfig.border : false"
+                        :style="{ width: parseInt(item.tableConfig.width)+'px' }" *@
+                        <el-table :data="item.tableMockData"
+                            :border="item.tableConfig ? item.tableConfig.border : false"
                             :cell-class-name="cellClassName" :header-cell-class-name="headerCellClassName">
-                            <el-table-column v-for="(col, index) in item.tableColumn" :key="index" :prop="col.field"
-                                :label="col.name" :width="col.columnWidth"
+                            <el-table-column v-for="(col, index) in item.tableColumn" :key="index"
+                                :column-key="col.columnkey" :prop="col.field" :label="col.name" :width="col.columnWidth"
                                 :render-header="renderHeader">
+                                @* 操作列 按钮 *@
                             </el-table-column>
                         </el-table>
                     </div>
                     @* 组件占位 *@
-                    <div class="occupant-area df-wn flex-ac flex-jc">
+                    <div v-else class="occupant-area df-wn flex-ac flex-jc">
                         <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
                         <span style="user-select:none;">点击右侧添加属性</span>
                     </div>
                     @* 上下移动 *@
-                    @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent('upper')"></i>
-                    <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent('down')"></i> *@
+                    @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent(index)"></i>
+                    <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent(index+1)"></i> *@
                 </div>
 
-                @* 添加组件提示 @@click="handleAddComponentArea" *@
-                <div class="add-Component_Tips df-wn flex-ac flex-jc">
+                @* 添加组件提示 *@
+                <div class="add-Component_Tips df-wn flex-ac flex-jc" @@click="handleAddComponent()">
                     <img src="/image/DynamicData/icon-select.png" alt="" class="icon-select" />
                     <span style="user-select:none;">点击右侧添加组件</span>
-                    @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent('upper')"></i>
-                    <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent('down')"></i> *@
                 </div>
             </div>
         </div>
         @* 侧边栏 *@
         <div class="layoutSet-aside">
-            <el-tabs v-model="tabsOverallActiveName" :before-leave="handleTabsLeave" @@tab-click="handleTabsClickOverall">
+            <el-tabs v-model="tabsOverallActiveName" :before-leave="handleTabsLeave"
+                @@tab-click="handleTabsClickOverall">
                 <el-tab-pane label="添加" name="first">
                     <div class="tabpane">
                         <div class="operation-title">组件</div>
                         <div class="operation-area df flex-ac">
-                            <div class="assembBtn df-wn flex-ac flex-jc" :class="{'btnDisabled':addAssembBtnDisabled('table')}"
+                            <div class="assembBtn df-wn flex-ac flex-jc"
+                                :class="{'btnDisabled':addAssembBtnDisabled('table')}"
                                 @@click="handleAddComponent('table')">
                                 <img src="/image/DynamicData/icon-table.png" alt="" class="btn-iconImg" />
                                 <span>数据表格</span>
                             </div>
-                            <div class="assembBtn df-wn flex-ac flex-jc" :class="{'btnDisabled':addAssembBtnDisabled('form')}"
+                            <div class="assembBtn df-wn flex-ac flex-jc"
+                                :class="{'btnDisabled':addAssembBtnDisabled('form')}"
                                 @@click="handleAddComponent('form')">
                                 <img src="/image/DynamicData/icon-form.png" alt="" class="btn-iconImg" />
                                 <span>数据详情</span>
                             </div>
-                            <div class="assembBtn df-wn flex-ac flex-jc" :class="{'btnDisabled':addAssembBtnDisabled('btn')}"
+                            <div class="assembBtn df-wn flex-ac flex-jc"
+                                :class="{'btnDisabled':addAssembBtnDisabled('btn')}"
                                 @@click="handleAddComponent('btn')">
                                 <span>自定义按钮</span>
                             </div>
@@ -140,8 +143,8 @@
                                 :class="{'subsection-item_avtive':setUpActiveName === 'second'}"
                                 @@click="handleSwitchSubsection('setUpActiveName','second')">样式</div>
                         </div>
-                        @* 属性 设置 *@
-                        <template v-if="setUpActiveName === 'first'">
+                        @* 表格 整体属性 设置 *@
+                        <template v-if="setUpActiveName === 'first'&&tableColumnActive === ''">
                             @* 表格提示 *@
                             <div v-if="!columnForm.dataSheet" class="tips-container df-wn flex-ac">
                                 <i class="el-icon-warning-outline"></i>
@@ -451,6 +454,62 @@
                                         <el-option label="全部字段" value="shanghai"></el-option>
                                         <el-option label="表格列字段" value="beijing"></el-option>
                                     </el-select>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                        @* 表格 普通列属性 设置 *@
+                        <template v-if="setUpActiveName === 'first'&&tableColumnActive >= 0">
+                            @* 列管理 *@
+                            <div class="operation-title" style="margin-top:20px;">列属性设置</div>
+                            <el-form ref="ordinaryColumnElForm" :model="addColumnForm" :rules="addColumnFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
+                                <el-form-item label="列标题">
+                                    <el-input v-model.trim="addColumnForm.name" :size="elSize"
+                                        placeholder="请输入列标题"></el-input>
+                                </el-form-item>
+                                <el-form-item label="绑定字段">
+                                    <el-select v-model="addColumnForm.field" style="width:100%" placeholder="请选择绑定字段">
+                                        <el-option label="绑定字段文本" value="shanghai"></el-option>
+                                        <el-option label="绑定字段文本1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="展示内容">
+                                    <el-select v-model="addColumnForm.displayContent" style="width:100%"
+                                        placeholder="请选择展示内容">
+                                        <el-option label="展示内容文本" value="shanghai"></el-option>
+                                        <el-option label="展示内容文本1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="数据格式">
+                                    <el-select v-model="addColumnForm.dataType" style="width:100%"
+                                        placeholder="请选择数据格式">
+                                        <el-option label="数据格式文本" value="shanghai"></el-option>
+                                        <el-option label="数据格式文本1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="列宽">
+                                    <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
+                                        placeholder="请输入列宽"></el-input>
+                                    @* <el-select v-model="addColumnForm.columnWidth"
+                                    style="width:100%" placeholder="请选择列宽">
+                                    <el-option label="数据表文本"
+                                    value="shanghai"></el-option>
+                                    <el-option label="数据表文本1"
+                                    value="beijing"></el-option>
+                                    </el-select> *@
+                                </el-form-item>
+                                <el-form-item label="对齐方式">
+                                    <el-select v-model="addColumnForm.alignment" style="width:100%"
+                                        placeholder="请选择对齐方式">
+                                        <el-option label="左对齐" value="shanghai"></el-option>
+                                        <el-option label="右对齐" value="beijing"></el-option>
+                                        <el-option label="中间对齐1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-checkbox v-model="addColumnForm.isSort">允许排序</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isExport">允许导出</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isEdit">允许编辑</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isDelete">允许删除</el-checkbox>
                                 </el-form-item>
                             </el-form>
                         </template>
