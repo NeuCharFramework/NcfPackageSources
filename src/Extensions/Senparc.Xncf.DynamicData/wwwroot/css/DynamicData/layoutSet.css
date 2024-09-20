@@ -457,6 +457,15 @@
     padding-left: 20px;
 }
 
+.el-table__header th {
+    background: #f5f7fa;
+}
+.el-table--enable-row-hover .el-table__body tr:hover > td {
+    background-color: transparent;
+}
+.el-table--enable-row-hover .el-table__body tr:hover > .column_active_td {
+    background-color: #f3f3f3 !important;
+}
 /* 以下 自定义公用样式 */
 .column_active_th {
     background-color: #f3f3f3 !important;
