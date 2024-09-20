@@ -5,6 +5,7 @@
     Layout = "_Layout_Vue";
 }
 @section Style{
+    <link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
     <link href="~/css/PromptRange/index.css" rel="stylesheet" />
 }
 @section breadcrumbs{
@@ -30,8 +31,7 @@
         <img src="~/image/PromptRange/index_headRight3.png" class="headRightIcon3" />
     </div>
     <div class="mainBox">
-        <div class="leftBox cardBox">
-            <div class="title"></div>
+        <div class="leftBox cardBox"> 
             <div id="rank">
                 <h1>热门 Prompt 和 模型 排行榜</h1>
                 <div class="ranking-container">
@@ -61,16 +61,23 @@
         </div>
         <div class="rightBox">
             <div class="cardBox">
-                <div class="title">
-                    <span class="activeText">已测试Prompt</span>
-                    <span class="">已使用模型</span>
+                @* <div id="chart">
+                    <h1>模型使用次数</h1>
+                    <el-date-picker v-model="dateRange"
+                                    type="daterange"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    v-on:change="updateChart"
+                                    style="margin-bottom: 20px;" >
+                    </el-date-picker>
+                    <div ref="chart" id="chart2" ></div>
+                </div> *@
+                <div class="usetimes">
+                    <h1 class="title">模型使用次数</h1>
+                    <div id="main"></div>
+                    <div class="hotMainBox"></div>
                 </div>
-                <div id="main"></div>
-                <div class="hotMainBox"></div>
-            </div>
-            <div class="cardBox">
-                <div class="title">模型使用次数</div>
-                <div class="hotMainBox"></div>
             </div>
         </div>
     </div>
@@ -80,4 +87,6 @@
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
     <script src="~/js/PromptRange/index.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/vue@2"></script>
 }
