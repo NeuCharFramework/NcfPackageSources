@@ -59,6 +59,22 @@ function deepClone(source) {
     })
     return targetObj
 }
+
+/**
+ * 判断值是否 数字
+ * @param {*} val 需要判断的变量
+ */
+function isNumber(val) {
+    return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
+}
+
+/**
+ * 判断值是否是 空对象
+ * @param {*} val 需要判断的变量
+ */
+function isObjEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
 var app = new Vue({
     el: "#app",
     data() {
@@ -80,7 +96,9 @@ var app = new Vue({
             ],
             // 布局组件区域列表
             layoutComponentsList: [],
+            tableColumnActive: '',
             tableDragState: {
+                active: '', // 选中的列 index
                 start: -9, // 起始元素的 index
                 end: -9, // 移动鼠标时所覆盖的元素 index
                 dragging: false, // 是否正在拖动
@@ -174,26 +192,120 @@ var app = new Vue({
         };
     },
     computed: {
-        // 是否禁用 添加table组件
-        addTableDisabled() {
-            return false
-        },
-        // 是否禁用 添加Form组件
-        addFormDisabled() {
-            return false
-        },
-        // 是否禁用 添加Btn组件
-        addBtnDisabled() {
-            return false
-        },
     },
     watch: {
-        //'isExtend': {
-        //    handler: function (val, oldVal) {
-        //    },
-        //    immediate: true,
-        //    //deep:true
-        //}
+        columnForm: {
+            handler: function (val, oldVal) {
+                console.log('watch columnForm:', isNumber(this.layoutComponentActive));
+
+                // 选择组件 后变化后修改对应的
+                if (isNumber(this.layoutComponentActive)) {
+                    // 当前组件
+                    const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
+                    // 处理数据
+                    const { dataSheet = '', columnData = [] } = val ?? {}
+                    const tableColumn = []
+                    const tableMockData = []
+                    const tableMockItem = {}
+                    columnData.forEach(item => {
+                        if (item.checked) {
+                            tableColumn.push(item)
+                            tableMockItem[item.field] = '模拟数据'
+                            tableMockItem.componentActive = this.layoutComponentActive
+                        }
+                    })
+                    if (!isObjEmpty(tableMockItem)) {
+                        tableMockData.push(tableMockItem)
+                    }
+
+                    const newLayoutComponentItem = {
+                        ...layoutComponentItem,
+                        dataSheet,
+                        tableMockData,
+                        tableColumn,
+                        columnConfig: {
+                            ...val
+                        }
+                    }
+                    this.setMeunOrComponentData(newLayoutComponentItem)
+                }
+            },
+            // immediate: true,
+            deep: true
+        },
+        dataSetForm: {
+            handler: function (val, oldVal) {
+                // 选择组件 后变化后修改对应的
+                if (isNumber(this.layoutComponentActive)) {
+                    // 当前组件
+                    const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
+                    // 处理数据
+                    const newLayoutComponentItem = {
+                        ...layoutComponentItem,
+                        filterConfig: {
+                            ...val
+                        }
+                    }
+                    this.setMeunOrComponentData(newLayoutComponentItem)
+                }
+            },
+            // immediate: true,
+            deep: true
+        },
+        tableStyleForm: {
+            handler: function (val, oldVal) {
+                // 选择组件 后变化后修改对应的
+                if (isNumber(this.layoutComponentActive)) {
+                    // 当前组件
+                    const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
+                    // 处理数据
+                    const { columnData = [] } = val ?? {}
+                    const tableColumnFixed = {}
+                    columnData.forEach(item => {
+                        if (item.checked) {
+                            tableColumnFixed[item.field] = item.fixed
+                        }
+                    })
+                    const newLayoutComponentItem = {
+                        ...layoutComponentItem,
+                        tableColumnFixed,
+                        tableConfig: {
+                            ...val
+                        }
+                    }
+                    this.setMeunOrComponentData(newLayoutComponentItem)
+                }
+            },
+            // immediate: true,
+            deep: true
+        },
+        paginationForm: {
+            handler: function (val, oldVal) {
+                // 选择组件 后变化后修改对应的
+                if (isNumber(this.layoutComponentActive)) {
+                    // 当前组件
+                    const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
+                    // 处理数据
+                    const { layout = [] } = val ?? {}
+                    const layoutStrArr = []
+                    layout.forEach(item => {
+                        if (item.checked) {
+                            layoutStrArr.push(item.name)
+                        }
+                    })
+                    const newLayoutComponentItem = {
+                        ...layoutComponentItem,
+                        pagConfig: {
+                            ...val,
+                            layoutStr: layoutStrArr.join(','),
+                        }
+                    }
+                    this.setMeunOrComponentData(newLayoutComponentItem)
+                }
+            },
+            // immediate: true,
+            deep: true
+        },
     },
     created() {
     },
@@ -204,6 +316,18 @@ var app = new Vue({
 
     },
     methods: {
+        // 添加组件按钮 禁用
+        addAssembBtnDisabled(addType) {
+            // 没有选中的菜单则禁用
+            // return !this.layoutComponentActive
+            // 当前组件
+            const layoutComponentItem = isNumber(this.layoutComponentActive) ? this.layoutComponentsList[this.layoutComponentActive] : ''
+
+            if (layoutComponentItem) {
+                return addType !== layoutComponentItem.componentType
+            }
+            return false
+        },
         // 代码查看
         handleCodeView() { },
         // 预览
@@ -234,8 +358,13 @@ var app = new Vue({
             this.loadingAddMenu = false
         },
         // 切换菜单
-        handleSwitchMenu() {
-            //this.layoutComponentsList = []
+        handleSwitchMenu(index) {
+            // 当前选中的菜单
+            this.layoutMenuActive = index
+            // 当前选中的组件
+            this.layoutComponentActive = ''
+            // 布局组件区域列表
+            this.layoutComponentsList = this.layoutMenuList[index]?.layoutList ?? []
             // 重置 中间|右侧 配置
             this.resetItemsConfig()
         },
@@ -258,101 +387,136 @@ var app = new Vue({
         },
         // 添加组件区域
         // handleAddComponentArea() {},
+        // 切换 tabs
+        handleTabsLeave(activeName, oldActiveName) {
+            // 没有选中的菜单则禁用
+            if (activeName === 'second' && !isNumber(this.layoutComponentActive)) {
+                return false
+            }
+            return true
+        },
         // 右侧Tabs 整体组件 添加 设置
         handleTabsClickOverall(tab, event) {
             console.log(tab, event);
         },
         // 添加 组件
         handleAddComponent(addType) {
+            if (this.addAssembBtnDisabled()) return
             let addComponentObj = {
-                name: ''
+                name: '',
+                componentType: addType
             }
-            if (addType === 'table' && this.addTableDisabled) {
-                return
-            } else if (addType === 'table') {
-                addComponentObj = {
-                    dataSheet: '', // 数据表
-                    tableMockData:[], // 模拟数据
-                    tableColumn: [], // table 列 
-                    // table 配置
-                    tableConfig: {
-                        stripe: false, // 是否 斑马纹
-                        border: false, // 是否 边框
-                        showHeader: true, // 是否显示表头
-                        height: '', // 表格高度 固定高度
-                        size: 'medium', // Table 的尺寸 medium / small / mini
-                        fixedColumn: [] // 固定列 数据
-                    },
-                    // 筛选配置
-                    filterConfig: {
-                        filterCriteria: [], // 筛选条件 field symbol condition 
-                        sortingRules: [],// 排序规则
-                        filterFieldList: [],// 筛选字段
-                        queryScope: '', // 字段查询范围
-                    },
-                    // 分页配置
-                    pagConfig: {
-                        enable: false, // 是否启用分页
-                        small: false, // 是否使用小型分页样式
-                        background: false, // 是否为分页按钮添加背景色
-                        hideOnSinglePage: false, // 只有一页时是否隐藏
-                        pagerCount: '', // 设置最大页码按钮数 默认7
-                        pageSizes: [], // 每页显示个数
-                        position: '', // 位置
-                        layout: [] // 分页子组件
-                    }
-                }
-            }
-            if (addType === 'form' && this.addFormDisabled) {
-                return
-            } else if (addType === 'form') {
-
-            }
-            if (addType === 'btn' && this.addBtnDisabled) {
-                return
-            } else if (addType === 'btn') {
-
-            }
+            // if (addType === 'table') { }
+            // if (addType === 'form') { }
+            // if (addType === 'btn') { }
             // 未禁用 允许添加组件
             this.layoutComponentsList.push(addComponentObj)
+            this.layoutComponentActive = this.layoutComponentsList.length - 1
+            this.tabsOverallActiveName = 'second' //tabs 类别 添加:first 设置:second
+            this.setUpActiveName = 'first' // 设置 tabs 类别 属性:first 样式:second
             // 重置 中间|右侧 配置
             this.resetItemsConfig()
         },
         // 重置各项 配置
         resetItemsConfig() {
-
+            this.$options.data.call(this).columnForm // 列管理
+            this.columnDragStarIndex = '' // 拖拽 开始 index
+            this.columnDragEnterIndex = '' // 拖拽 结束 index
+            this.$options.data.call(this).dataSetForm // 数据设置
+            this.sortingRulesDragStarIndex = '' // 排序规则拖拽 开始 index
+            this.sortingRulesDragEnterIndex = '' // 排序规则拖拽 结束 index
+            this.$options.data.call(this).tableStyleForm // 表格样式设置
+            this.$options.data.call(this).paginationForm // 分页设置
+        },
+        // 设置菜单和组件列表的值
+        setMeunOrComponentData(newComponent) {
+            // 修改对应组件
+            this.$set(this.layoutComponentsList, this.layoutComponentActive, deepClone(newComponent))
+            // 当前菜单
+            const menuItem = this.layoutMenuList[this.layoutMenuActive]
+            menuItem.layoutList = deepClone(this.layoutComponentsList)
+            // 修改对应菜单
+            this.$set(this.layoutMenuList, this.layoutMenuActive, deepClone(menuItem))
+            console.log('setMeunOrComponentData:', newComponent, 'this.layoutComponentsList', this.layoutComponentsList, 'this.layoutMenuList', this.layoutMenuList);
+        },
+        // 处理 选中组件事件
+        handleSelectComponent(item, index) {
+            // 重置 中间|右侧 配置
+            this.resetItemsConfig()
+            // item,index
+            this.layoutComponentActive = index
+            // 数据回显
+            if (item.componentType === 'table') {
+                const { columnConfig, filterConfig, tableConfig, pagConfig } = item
+                if (columnConfig) {
+                    this.columnForm = deepClone(columnConfig)  // 列管理
+                }
+                if (filterConfig) {
+                    this.dataSetForm = deepClone(filterConfig) // 数据设置
+                }
+                if (tableConfig) {
+                    this.tableStyleForm = deepClone(tableConfig) // 表格样式设置
+                }
+                if (pagConfig) {
+                    this.paginationForm = deepClone(pagConfig)  // 分页设置
+                }
+            }
+            if (item.componentType === 'form') { }
+            if (item.componentType === 'btn') { }
+            this.tabsOverallActiveName = 'second' //tabs 类别 添加:first 设置:second
         },
 
+
         // table 组件 renderHeader
-        renderHeader(createElement, { column }) {
+        renderHeader(createElement, { column, $index }) {
             return createElement(
                 'div', {
                 'class': ['thead-cell'],
                 on: {
-                    mousedown: ($event) => { this.handleMouseDown($event, column) },
-                    mousemove: ($event) => { this.handleMouseMove($event, column) }
+                    mousedown: ($event) => { this.handleMouseDown($event, column, $index) },
+                    // mousemove: ($event) => { this.handleMouseMove($event, column) }
                 }
             }, [
                 // 添加 <a> 用于显示表头 label
                 createElement('a', column.label),
                 // 添加一个空标签用于显示拖动动画
-                createElement('span', {
-                    'class': ['virtual']
-                })
+                // createElement('span', {
+                //     'class': ['virtual']
+                // })
             ])
         },
         // table 组件 列 按下鼠标开始拖动
-        handleMouseDown(e, column) {
-            this.tableDragState.dragging = true
-            this.tableDragState.start = parseInt(column.columnKey)
+        handleMouseDown(e, column, columnIndex) {
+            console.log('handleMouseDown', column);
+            this.tableColumnActive = columnIndex
+            // this.tableDragState.dragging = true
+            // this.tableDragState.start = parseInt(column.columnKey)
             // 给拖动时的虚拟容器添加宽高
-            let table = document.getElementsByClassName('w-table')[0]
-            let virtual = document.getElementsByClassName('virtual')
-            for (let item of virtual) {
-                item.style.height = table.clientHeight - 1 + 'px'
-                item.style.width = item.parentElement.parentElement.clientWidth + 'px'
+            // let table = document.getElementsByClassName('w-table')[0]
+            // let virtual = document.getElementsByClassName('virtual')
+            // for (let item of virtual) {
+            //     item.style.height = table.clientHeight - 1 + 'px'
+            //     item.style.width = item.parentElement.parentElement.clientWidth + 'px'
+            // }
+            // document.addEventListener('mouseup', this.handleMouseUp);
+        },
+        // table 组件 选中 heade列样式
+        headerCellClassName({ row, column, columnIndex }) {
+            if (this.layoutComponentActive === row.componentActive) {
+                return this.tableColumnActive === columnIndex ? 'column_active' : ''
             }
-            document.addEventListener('mouseup', this.handleMouseUp);
+            return ''
+            // let active = columnIndex - 1 === this.tableDragState.end ? `darg_active_${this.tableDragState.direction}` : ''
+            // let start = columnIndex - 1 === this.tableDragState.start ? `darg_start` : ''
+            // return `${active} ${start}`
+        },
+        // table 组件 选中 heade列样式
+        cellClassName({ row,column, columnIndex }) {
+            // return (columnIndex - 1 === this.tableDragState.start ? `darg_start` : '')
+            if (this.layoutComponentActive === row.componentActive) {
+                return this.tableColumnActive === columnIndex ? 'column_active' : ''
+            }
+            return ''
         },
         // table 组件 列 鼠标放开结束拖动
         handleMouseUp() {
@@ -399,16 +563,8 @@ var app = new Vue({
             }
             this.layoutComponentsList[layoutComponentActive].tableColumn = tempData
         },
-        // table 组件 选中 heade列样式
-        headerCellClassName({ column, columnIndex }) {
-            let active = columnIndex - 1 === this.tableDragState.end ? `darg_active_${this.tableDragState.direction}` : ''
-            let start = columnIndex - 1 === this.tableDragState.start ? `darg_start` : ''
-            return `${active} ${start}`
-        },
-        // table 组件 选中 heade列样式
-        cellClassName({ column, columnIndex }) {
-            return (columnIndex - 1 === this.tableDragState.start ? `darg_start` : '')
-        },
+
+
 
         // 切换设置类别
         handleSwitchSubsection(dataName, upData) {
