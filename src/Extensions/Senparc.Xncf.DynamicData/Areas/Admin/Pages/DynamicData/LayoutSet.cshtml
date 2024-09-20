@@ -144,7 +144,7 @@
                                 @@click="handleSwitchSubsection('setUpActiveName','second')">样式</div>
                         </div>
                         @* 表格 整体属性 设置 *@
-                        <template v-if="setUpActiveName === 'first'&&tableColumnActive === ''">
+                        <template v-if="setUpActiveName === 'first' && tableColumnActive === ''">
                             @* 表格提示 *@
                             <div v-if="!columnForm.dataSheet" class="tips-container df-wn flex-ac">
                                 <i class="el-icon-warning-outline"></i>
@@ -458,7 +458,7 @@
                             </el-form>
                         </template>
                         @* 表格 普通列属性 设置 *@
-                        <template v-if="setUpActiveName === 'first'&&tableColumnActive >= 0">
+                        <template v-if="setUpActiveName === 'first' && tableColumnActive !== ''">
                             @* 列管理 *@
                             <div class="operation-title" style="margin-top:20px;">列属性设置</div>
                             <el-form ref="ordinaryColumnElForm" :model="addColumnForm" :rules="addColumnFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
