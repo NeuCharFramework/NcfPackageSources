@@ -66,7 +66,7 @@ function deepClone(source) {
  */
 function isNumber(val) {
     // return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
-    return !isNaN(val) && val !== '' && (typeof val === 'number' || !isNaN(Number())) 
+    return !isNaN(val) && val !== '' && (typeof val === 'number' || !isNaN(Number()))
 }
 
 /**
@@ -97,7 +97,10 @@ var app = new Vue({
             ],
             // 布局组件区域列表
             layoutComponentsList: [],
-            tableColumnActive: '', // table 列选中
+            layoutComponentDragStarIndex: '', // 拖拽 开始 index
+            layoutComponentDragEnterIndex: '', // 拖拽 结束 index
+            tableColumnActiveIndex: '', // table 列选中 index
+            layoutComponentActiveType: '', // 组件 选中类型 normalColumn customColumn columnEditBtn
             // 侧边菜单 切换
             tabsOverallActiveName: 'first', //tabs 类别 添加:first 设置:second
             setUpActiveName: 'first', // 设置 tabs 类别 属性:first 样式:second
@@ -127,6 +130,31 @@ var app = new Vue({
                 isDelete: false,
             },
             addColumnFormRules: [],
+            // 自定义列按钮 
+            customColumnBtnForm: {
+                name: '',
+                property:'',
+                type:'',
+                disable:false,
+                enterID:false,
+                customIDName:false,
+                btnEvent:'',
+                componentType:'',
+                executionMethod:'',
+                interactive:'',
+                page:'',
+                popupForm:{
+                    popupTitleText:'是否确认删除此条数据',
+                    popupCancelText:'取消',
+                    popupConfirmText:'确认',
+                    popupPromptContent:'删除成功',
+                    popupPromptOften:'1600', // ms
+                    popupClosePage:'关闭当前页面'
+                }
+            },
+            customColumnBtnFormRules: [],
+            customColumnBtnDragStarIndex: '', // 排序规则拖拽 开始 index
+            customColumnBtnDragEnterIndex: '',// 排序规则拖拽 结束 index
             // 数据设置
             dataSetForm: {
                 filterCriteriaLen: 0, // 筛选条件个数
@@ -188,6 +216,7 @@ var app = new Vue({
     computed: {
     },
     watch: {
+        // table 配置
         columnForm: {
             handler: function (val, oldVal) {
                 // 选择组件 后变化后修改对应的
@@ -222,15 +251,15 @@ var app = new Vue({
                         }
                     }
 
-                    const tableStyleColumn = tableColumn.map(item=>{
-                        if (item){
+                    const tableStyleColumn = tableColumn.map(item => {
+                        if (item) {
                             item.checked = false
                             item.fixed = 'left'
                         }
                         return item
                     })
 
-                    this.$set(this.tableStyleForm,'columnData',tableStyleColumn)
+                    this.$set(this.tableStyleForm, 'columnData', tableStyleColumn)
                     this.setMeunOrComponentData(newLayoutComponentItem)
                 }
             },
@@ -310,6 +339,33 @@ var app = new Vue({
             // immediate: true,
             deep: true
         },
+        // table 列 配置
+        addColumnForm: {
+            handler: function (val, oldVal) {
+                // 选择组件 和table列 后变化后修改对应的
+                if (isNumber(this.layoutComponentActive) && isNumber(this.tableColumnActiveIndex)) {
+                    // 当前组件
+                    const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
+
+                    // 
+                    const tableColumnItem = layoutComponentItem.tableColumn[this.tableColumnActiveIndex]
+
+                    // 处理数据
+                    const newLayoutComponentItem = {
+                        ...layoutComponentItem
+                    }
+
+                    newLayoutComponentItem.tableColumn[this.tableColumnActiveIndex] = {
+                        ...tableColumnItem,
+                        ...val
+                    }
+
+                    this.setMeunOrComponentData(newLayoutComponentItem)
+                }
+            },
+            // immediate: true,
+            deep: true
+        }
     },
     created() {
     },
@@ -347,7 +403,7 @@ var app = new Vue({
         handlePreview() { },
         // 发布
         handleRelease() { },
-        
+
         // 布局名称 编辑
         handleEditLayoutName() {
             this.isEditLayoutName = true
@@ -403,6 +459,8 @@ var app = new Vue({
 
         // 重置各项 配置
         resetItemsConfig() {
+            this.layoutComponentDragStarIndex = '' // 组件区域 拖拽 开始 index
+            this.layoutComponentDragEnterIndex = '' // 组件区域 拖拽 结束 index
             this.$options.data.call(this).columnForm // 列管理
             this.columnDragStarIndex = '' // 拖拽 开始 index
             this.columnDragEnterIndex = '' // 拖拽 结束 index
@@ -411,13 +469,18 @@ var app = new Vue({
             this.sortingRulesDragEnterIndex = '' // 排序规则拖拽 结束 index
             this.$options.data.call(this).tableStyleForm // 表格样式设置
             this.$options.data.call(this).paginationForm // 分页设置
+
             this.$options.data.call(this).addColumnForm // 添加列
-            
+
+            this.$options.data.call(this).customColumnBtnForm // 自定义列添加按钮
+            this.customColumnBtnDragStarIndex = '' // 排序规则拖拽 开始 index
+            this.customColumnBtnDragEnterIndex = ''// 排序规则拖拽 结束 index
         },
         // 处理 选中组件事件
         handleSelectComponent(item, index = '') {
-            this.tableColumnActive = ''
-            if(this.layoutComponentActive === index) return
+            this.tableColumnActiveIndex = ''
+            this.layoutComponentActiveType = ''
+            if (this.layoutComponentActive === index) return
             // 重置 中间|右侧 配置
             this.resetItemsConfig()
             this.layoutComponentActive = index
@@ -461,35 +524,56 @@ var app = new Vue({
         // table 组件 列 鼠标按下
         handleMouseDown(e, column, columnIndex) {
             e.preventDefault();
+            this.resetItemsConfig()
             // column.columnKey
             const currentComponentItem = this.layoutComponentsList[column.columnKey]
             // 数据 回显
             const addColumnForm = currentComponentItem.columnConfig.columnData[columnIndex]
 
-            this.$set(this,'addColumnForm',deepClone(addColumnForm))
+            this.$set(this, 'addColumnForm', deepClone(addColumnForm))
             // tabs 切换
-            this.tableColumnActive = columnIndex
+            this.tableColumnActiveIndex = columnIndex
+            this.layoutComponentActiveType = addColumnForm.property
             this.tabsOverallActiveName = 'second'  // 添加:first 设置:second
-            this.handleSwitchSubsection('setUpActiveName','first')
+            this.handleSwitchSubsection('setUpActiveName', 'first')
         },
         // table 组件 选中 heade列样式
         headerCellClassName({ row, column, columnIndex }) {
             if (this.layoutComponentActive === column.columnKey) {
-                return this.tableColumnActive === columnIndex ? 'column_active_th' : ''
+                return this.tableColumnActiveIndex === columnIndex ? 'column_active_th' : ''
             }
             return ''
         },
         // table 组件 选中 heade列样式
         cellClassName({ row, column, columnIndex }) {
             if (this.layoutComponentActive === column.columnKey) {
-                return this.tableColumnActive === columnIndex ? 'column_active_td' : ''
+                return this.tableColumnActiveIndex === columnIndex ? 'column_active_td' : ''
             }
             return ''
         },
-
+        layoutComponentDragstart(index) {
+            this.layoutComponentDragStarIndex = index
+        },
+        layoutComponentDragenter(e, index) {
+            e.preventDefault();
+            this.layoutComponentDragEnterIndex = index
+            this.layoutComponentActive = index
+            debounce(() => {
+                if (this.layoutComponentDragStarIndex !== index) {
+                    const source = this.layoutComponentsList[this.layoutComponentDragStarIndex]
+                    this.layoutComponentsList.splice(this.layoutComponentDragStarIndex, 1)
+                    this.layoutComponentsList.splice(index, 0, source)
+                    // 排序变化后目标对象的索引变成源对象的索引
+                    this.layoutComponentDragStarIndex = index;
+                }
+            }, 100)()
+        },
+        layoutComponentDragover(e, index) {
+            e.preventDefault();
+        },
         // 切换 tabs
         handleTabsLeave(activeName, oldActiveName) {
-            // 没有选中的菜单则禁用
+            // 没有选中的菜单则禁用 this.layoutComponentActiveType  ['customColumn','normalColumn']
             if (activeName === 'second' && !isNumber(this.layoutComponentActive)) {
                 return false
             }
@@ -531,7 +615,7 @@ var app = new Vue({
 
         // 切换设置类别
         handleSwitchSubsection(dataName, upData) {
-            if (!dataName || this.tableColumnActive !== '') {
+            if (!dataName || this.tableColumnActiveIndex !== '') {
                 return
             }
 
@@ -555,6 +639,11 @@ var app = new Vue({
         // 确认添加 列
         onConfirmAddColumn() {
             const copyAddColumnForm = JSON.parse(JSON.stringify(this.addColumnForm))
+            // 自定义列 增加按钮列表
+            if (copyAddColumnForm.property === 'customColumn') {
+                copyAddColumnForm.btnList = []
+            }
+
             this.columnForm.columnData.push(copyAddColumnForm)
             this.addColumnForm = {
                 property: '',
@@ -696,6 +785,64 @@ var app = new Vue({
                 return item.checked
             })
             this.paginationForm.allCheckedLayout = isAllChecked
+        },
+
+        // table 自定义列 添加按钮
+        handleAddCustomColumnBtn() {
+            this.addColumnForm.btnList.push({
+                name: '',
+                property:'',
+                type:'',
+                disable:false,
+                enterID:false,
+                customIDName:false,
+                btnEvent:'',
+                componentType:'',
+                executionMethod:'',
+                interactive:'',
+                page:'',
+                popupForm:{
+                    popupTitleText:'是否确认删除此条数据',
+                    popupCancelText:'取消',
+                    popupConfirmText:'确认',
+                    popupPromptContent:'删除成功',
+                    popupPromptOften:'1600', // ms
+                    popupClosePage:'关闭当前页面'
+                }
+            })
+        },
+        // table 自定义列 删除按钮
+        handleDeleteCustomColumnBtn(index) {
+            this.addColumnForm.btnList.splice(index, 1);
+        },
+        // table 自定义列 按钮拖拽 开始
+        customColumnBtnDragstart(index) {
+            this.customColumnBtnDragStarIndex = index
+        },
+        // table 自定义列 按钮拖拽 结束
+        customColumnBtnDragenter(e, index) {
+            e.preventDefault();
+            this.customColumnBtnDragEnterIndex = index
+            debounce(() => {
+                if (this.customColumnBtnDragStarIndex !== index) {
+                    const source = this.addColumnForm.btnList[this.customColumnBtnDragStarIndex]
+                    this.addColumnForm.btnList.splice(this.customColumnBtnDragStarIndex, 1)
+                    this.addColumnForm.btnList.splice(index, 0, source)
+                    // 排序变化后目标对象的索引变成源对象的索引
+                    this.customColumnBtnDragStarIndex = index;
+                }
+            }, 100)()
+        },
+        // table 自定义列 按钮拖拽 移动
+        customColumnBtnDragover(e, index) {
+            e.preventDefault();
+        },
+        // table 自定义列 按钮（选中） 侧边属性编辑
+        customColumnBtnSelect(item) {
+            this.layoutComponentActiveType = 'columnEditBtn'
+            this.customColumnBtnForm = {
+                ...item
+            }
         },
     }
 });

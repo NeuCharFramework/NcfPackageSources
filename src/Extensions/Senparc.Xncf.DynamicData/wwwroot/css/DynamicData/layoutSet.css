@@ -177,7 +177,8 @@
 }
 
 .layoutSet-main .main_content .activeComponentArea {
-    background: #ecf5ff;
+    background: #f0f9eb; 
+    /*#f0f9eb #ecf5ff*/ 
 }
 
 /* 侧边栏 */
@@ -467,13 +468,36 @@
     background-color: #f3f3f3 !important;
 }
 /* 以下 自定义公用样式 */
+.formitem-labelText {
+    white-space:nowrap;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 36px;
+    color: #606266;
+    padding: 0 12px 0 0;
+}
+
+.table_customColumn_btnBox{
+    gap: 10px;
+}
+.table_customColumn_btn{
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    /* line-height: 20.27px; */
+    color: rgba(42, 130, 228, 1);
+    text-align: left;
+    vertical-align: top;
+    cursor: pointer;
+}
 .column_active_th {
-    background-color: #f3f3f3 !important;
-    border-color: 1px solid #f3f3f3 !important;
+    background-color: #ecf5ff !important;
+    border-color: 1px solid #ecf5ff !important;
 }
 
 .column_active_td {
-    background-color: #f3f3f3 !important;
+    background-color: #ecf5ff !important;
 }
 
 .tabpane {
