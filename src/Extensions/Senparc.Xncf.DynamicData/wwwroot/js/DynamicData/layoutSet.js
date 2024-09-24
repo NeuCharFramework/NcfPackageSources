@@ -166,8 +166,6 @@ var app = new Vue({
                 queryScope: '', // 字段查询范围
             },
             dataSetFormRules: [],
-            sortingRulesDragStarIndex: '', // 排序规则拖拽 开始 index
-            sortingRulesDragEnterIndex: '',// 排序规则拖拽 结束 index
             // 表格样式设置
             tableStyleForm: {
                 stripe: false, // 是否 斑马纹
@@ -707,6 +705,14 @@ var app = new Vue({
                 this[dataName] = upData
             }
         },
+        //切换宽度占比
+        handleSwitchSubformstyle(field, value) {
+            console.log(111, field, value)
+         
+            
+            this.$set(this.sheetSettingForm, field, value);
+            console.log(this.sheetSettingForm.size)
+        },
         // 添加列
         handleAddColumn() {
             this.columnForm.columnData.push({
@@ -809,31 +815,6 @@ var app = new Vue({
         // 删除 排序规则
         handleDeleteSortingRules(index) {
             this.dataSetForm.sortingRules.splice(index, 1);
-        },
-        // 列拖拽 开始
-        sortingRulesDragstart(index) {
-            //console.log('start index ===>>> ', index)
-            this.sortingRulesDragStarIndex = index
-        },
-        // 列拖拽 结束
-        sortingRulesDragenter(e, index) {
-            e.preventDefault();
-            //console.log('end index ===>>> ', index)
-            this.sortingRulesDragEnterIndex = index
-            debounce(() => {
-                if (this.sortingRulesDragStarIndex !== index) {
-                    const source = this.dataSetForm.sortingRules[this.sortingRulesDragStarIndex]
-                    this.dataSetForm.sortingRules.splice(this.sortingRulesDragStarIndex, 1)
-                    this.dataSetForm.sortingRules.splice(index, 0, source)
-                    // 排序变化后目标对象的索引变成源对象的索引
-                    this.sortingRulesDragStarIndex = index;
-                }
-                //console.log('结果 columnData', this.dataSetForm.sortingRules)
-            }, 100)()
-        },
-        // 列拖拽 移动
-        sortingRulesDragover(e, index) {
-            e.preventDefault();
         },
         // 筛选器 table 全选
         handleFilterAllCheckedChange(val) {
