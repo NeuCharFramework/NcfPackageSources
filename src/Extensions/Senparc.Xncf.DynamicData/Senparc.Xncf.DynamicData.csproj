@@ -41,6 +41,7 @@
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
     <Content Remove="App_Data\Database\SenparcConfig.config" />
+    <Content Remove="wwwroot\css\dynamicdata\renderLayoutPage.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\js\Admin\DynamicData\axios.js" />
@@ -53,6 +54,7 @@
     <Content Remove="wwwroot\js\Admin\DynamicData\dataSheetSet.js" />
     <Content Remove="wwwroot\js\Admin\DynamicData\interfaceSet.js" />
     <Content Remove="wwwroot\js\Admin\DynamicData\layoutSet.js" />
+    <Content Remove="wwwroot\js\dynamicdata\renderLayoutPage.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
