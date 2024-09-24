@@ -22,7 +22,8 @@
     <div class="layoutSet-nav df-wn flex-ac">
         <div class="nav-titlebox df-wn flex-ac flex-jc">
             <template v-if="isEditLayoutName">
-                <el-input ref="inputLayoutName" v-model.trim="layoutName" :size="elSize" placeholder="请输入布局名称" style="width:310px" @@blur="handleBlurLayoutName"></el-input>
+                <el-input ref="inputLayoutName" v-model.trim="layoutName" :size="elSize" placeholder="请输入布局名称"
+                    style="width:310px" @@blur="handleBlurLayoutName"></el-input>
             </template>
             <template v-else>
                 <span class="title-text" :class="{'title-text_value':!!layoutName}">{{ layoutName || '请输入布局名称' }}</span>
@@ -42,13 +43,17 @@
             <div class="main_header df-wn flex-ac">
                 <div class="menu-area">
                     <div class="menu-list df-wn flex-ac">
-                        <div v-for="(item,index) in layoutMenuList" :key="index" class="menu-item">
+                        <div v-for="(item,index) in layoutMenuList" :key="index" class="menu-item"
+                            @@click.self="handleSwitchMenu(index)">
                             <template v-if="item.isEditName">
-                                <el-input ref="inputMenuName" v-model.trim="item.name" :size="elSize" placeholder="请输入菜单名称" style="width:100px" @@blur="handleBlurMenuName(item)"></el-input>
+                                <el-input ref="inputMenuName" v-model.trim="item.name" :size="elSize"
+                                    placeholder="请输入菜单名称" style="width:100px"
+                                    @@blur="handleBlurMenuName(item)"></el-input>
                             </template>
                             <template v-else>
                                 <span class="title-text">{{ item.name }}</span>
-                                <i class="el-icon-edit editMenuName-btn" @@click="handleEditMenuName(item,index)"></i>
+                                <i class="el-icon-edit editMenuName-btn"
+                                    @@click.stop="handleEditMenuName(item,index)"></i>
                             </template>
                         </div>
                     </div>
@@ -60,41 +65,75 @@
             @* 主体操作区域 *@
             <div class="main_content">
                 @* 全局按钮 *@
-                <div class="globalButton-area">
-                </div>
+                <template>
+                    <div class="globalButton-area"></div>
+                </template>
                 @* 组件区域 *@
-                <div v-for="(item,index) in layoutComponentsList" :key="index" class="component-area">
-                    @* 组件占位 *@
-                    <div class="occupant-area df-wn flex-ac flex-jc">
-                        <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
-                        <span style="user-select:none;">点击右侧添加组件</span>
+                <div v-for="(item,index) in layoutComponentsList" :key="index" class="component-area"
+                    :class="{activeComponentArea:index === layoutComponentActive}" :draggable="true"
+                    @@dragstart="layoutComponentDragstart(index)" @@dragenter="layoutComponentDragenter($event, index)"
+                    @@dragover="layoutComponentDragover($event, index)" @@click="handleSelectComponent(item,index)">
+                    <div v-if="item.tableColumn&&item.tableColumn.length" class="w-table" @@click.stop>
+                        @* :height="item.tableConfig.height"
+                        :max-height="item.tableConfig.maxHeight"
+                        :style="{ width: parseInt(item.tableConfig.width)+'px' }" *@
+                        <el-table :data="item.tableMockData"
+                            :border="item.tableConfig ? item.tableConfig.border : false"
+                            :cell-class-name="cellClassName" :header-cell-class-name="headerCellClassName">
+                            <el-table-column v-for="(col, index) in item.tableColumn" :key="index"
+                                :column-key="col.columnkey" :prop="col.field" :label="col.name" :width="col.columnWidth"
+                                :render-header="renderHeader">
+                                @* 自定义列 按钮 *@
+                                <div v-if="col.property === 'customColumn'"
+                                    class="df flex-as table_customColumn_btnBox">
+                                    <span v-for="(btn,bindex) in col.btnList" class="table_customColumn_btn"
+                                        @@click="customColumnBtnSelect(btn,bindex)">
+                                        {{ btn.name }}
+                                    </span>
+                                </div>
+                            </el-table-column>
+                        </el-table>
                     </div>
+                    @* 组件占位 *@
+                    <div v-else class="occupant-area df-wn flex-ac flex-jc">
+                        <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
+                        <span style="user-select:none;">点击右侧添加属性</span>
+                    </div>
+                    @* 上下移动 *@
+                    @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent(index)"></i>
+                    <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent(index+1)"></i> *@
                 </div>
-                @* 添加组件提示 @@click="handleAddComponentArea" *@
-                <div class="add-Component_Tips df-wn flex-ac flex-jc">
+
+                @* 添加组件提示 *@
+                <div class="add-Component_Tips df-wn flex-ac flex-jc" @@click="handleAddComponent()">
                     <img src="/image/DynamicData/icon-select.png" alt="" class="icon-select" />
                     <span style="user-select:none;">点击右侧添加组件</span>
-                    @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent('upper')"></i>
-                    <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent('down')"></i> *@
                 </div>
             </div>
         </div>
         @* 侧边栏 *@
         <div class="layoutSet-aside">
-            <el-tabs v-model="tabsOverallActiveName" @@tab-click="handleTabsClickOverall">
+            <el-tabs v-model="tabsOverallActiveName" :before-leave="handleTabsLeave"
+                @@tab-click="handleTabsClickOverall">
                 <el-tab-pane label="添加" name="first">
                     <div class="tabpane">
                         <div class="operation-title">组件</div>
                         <div class="operation-area df flex-ac">
-                            <div class="assembBtn df-wn flex-ac flex-jc" @@click="handleAddComponent('table')">
+                            <div class="assembBtn df-wn flex-ac flex-jc"
+                                :class="{'btnDisabled':addAssembBtnDisabled('table')}"
+                                @@click="handleAddComponent('table')">
                                 <img src="/image/DynamicData/icon-table.png" alt="" class="btn-iconImg" />
                                 <span>数据表格</span>
                             </div>
-                            <div class="assembBtn df-wn flex-ac flex-jc" @@click="handleAddComponent('form')">
+                            <div class="assembBtn df-wn flex-ac flex-jc"
+                                :class="{'btnDisabled':addAssembBtnDisabled('form')}"
+                                @@click="handleAddComponent('form')">
                                 <img src="/image/DynamicData/icon-form.png" alt="" class="btn-iconImg" />
                                 <span>数据详情</span>
                             </div>
-                            <div class="assembBtn df-wn flex-ac flex-jc" @@click="handleAddComponent('btn')">
+                            <div class="assembBtn df-wn flex-ac flex-jc"
+                                :class="{'btnDisabled':addAssembBtnDisabled('btn')}"
+                                @@click="handleAddComponent('btn')">
                                 <span>自定义按钮</span>
                             </div>
                         </div>
@@ -104,11 +143,14 @@
                     @* 表格设置管理 *@
                     <div class="tabpane">
                         <div class="subsection-container df-wn flex-ac flex-jc">
-                            <div class="subsection-item" :class="{'subsection-item_avtive':setUpActiveName === 'first'}" @@click="handleSwitchSubsection('setUpActiveName','first')">属性</div>
-                            <div class="subsection-item" :class="{'subsection-item_avtive':setUpActiveName === 'second'}" @@click="handleSwitchSubsection('setUpActiveName','second')">样式</div>
+                            <div class="subsection-item" :class="{'subsection-item_avtive':setUpActiveName === 'first'}"
+                                @@click="handleSwitchSubsection('setUpActiveName','first')">属性</div>
+                            <div class="subsection-item"
+                                :class="{'subsection-item_avtive':setUpActiveName === 'second'}"
+                                @@click="handleSwitchSubsection('setUpActiveName','second')">样式</div>
                         </div>
-                        @* 属性 设置 *@
-                        <template v-if="setUpActiveName === 'first'">
+                        @* 表格 整体属性 设置 *@
+                        <template v-if="setUpActiveName === 'first' && layoutComponentActiveType === ''">
                             @* 表格提示 *@
                             <div v-if="!columnForm.dataSheet" class="tips-container df-wn flex-ac">
                                 <i class="el-icon-warning-outline"></i>
@@ -118,7 +160,8 @@
                             </div>
                             @* 列管理 *@
                             <div class="operation-title" style="margin-top:20px;">列管理</div>
-                            <el-form ref="columnElForm" :model="columnForm" :rules="columnFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
+                            <el-form ref="columnElForm" :model="columnForm" :rules="columnFormRules" :size="elSize"
+                                label-position="top" label-width="80px" class="form-container">
                                 <el-form-item label="数据表选择" prop="dataSheet">
                                     <el-select v-model="columnForm.dataSheet" style="width:100%" placeholder="请选择数据表">
                                         <el-option label="数据表文本" value="shanghai"></el-option>
@@ -130,7 +173,9 @@
                                         <thead class="table-head">
                                             <tr>
                                                 <th style="width:150px">
-                                                    <el-checkbox v-model="columnForm.allChecked" :disabled="!columnForm.columnData.length" @@change="handleColumnAllCheckedChange">字段</el-checkbox>
+                                                    <el-checkbox v-model="columnForm.allChecked"
+                                                        :disabled="!columnForm.columnData.length"
+                                                        @@change="handleColumnAllCheckedChange">字段</el-checkbox>
                                                 </th>
                                                 <th>
                                                     数据类型
@@ -139,82 +184,116 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table-body">
-                                            <tr v-for="(tbody_td,tr) in columnForm.columnData" :key="'tbody-tr-'+tr">
+                                            <tr v-for="(tbody_td,tr) in columnForm.columnData" :key="'tbody-tr-'+tr"
+                                                style="transition: transform .3s;" :draggable="true"
+                                                @@dragstart="columnDragstart(tr)"
+                                                @@dragenter="columnDragenter($event, tr)"
+                                                @@dragover="columnDragover($event, tr)">
                                                 <template v-if="tbody_td.iscustom">
                                                     <td colspan="2" style="width:150px;">
-                                                        <el-checkbox v-model="tbody_td.checked" @@change="handleColumnCheckedChange">{{ tbody_td.name }}</el-checkbox>
+                                                        <el-checkbox v-model="tbody_td.checked"
+                                                            @@change="handleColumnCheckedChange">{{ tbody_td.name
+                                                            }}</el-checkbox>
                                                     </td>
                                                     <td style="width:30px">
-                                                        <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
+                                                        <img src="/image/DynamicData/icon-move.png" alt=""
+                                                            class="moveIcon" />
                                                 </template>
                                                 <template v-else>
                                                     <td style="width:150px;">
-                                                        <el-checkbox v-model="tbody_td.checked" @@change="handleColumnCheckedChange">{{ tbody_td.name }}</el-checkbox>
+                                                        <el-checkbox v-model="tbody_td.checked"
+                                                            @@change="handleColumnCheckedChange">{{ tbody_td.name
+                                                            }}</el-checkbox>
                                                     </td>
                                                     <td>{{ tbody_td.dataType }}</td>
                                                     <td style="width:30px">
-                                                        <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
+                                                        <img src="/image/DynamicData/icon-move.png" alt=""
+                                                            class="moveIcon" />
                                                     </td>
                                                 </template>
                                             </tr>
                                             <tr class="addColumn-btn">
                                                 @* @@click="handleAddColumn" *@
                                                 <td colspan="3" style="position:relative;">
-                                                    <el-popover placement="left"
-                                                                width="400"
-                                                                trigger="click" v-model="addColumnVisible">
+                                                    <el-popover placement="left" width="400" trigger="click"
+                                                        v-model="addColumnVisible">
                                                         <div class="popover-bodyBox">
                                                             <div class="popover-title">添加列</div>
-                                                            <el-form ref="addColumnElForm" :model="addColumnForm" :rules="addColumnFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
+                                                            <el-form ref="addColumnElForm" :model="addColumnForm"
+                                                                :rules="addColumnFormRules" :size="elSize"
+                                                                label-position="top" label-width="80px"
+                                                                class="form-container">
                                                                 <el-form-item label="列属性">
-                                                                    <el-select v-model="addColumnForm.property" style="width:100%" placeholder="请选择">
-                                                                        <el-option label="普通列" value="shanghai"></el-option>
-                                                                        <el-option label="操作列" value="beijing"></el-option>
+                                                                    <el-select v-model="addColumnForm.property"
+                                                                        style="width:100%" placeholder="请选择">
+                                                                        <el-option label="普通列"
+                                                                            value="normalColumn"></el-option>
+                                                                        <el-option label="操作列"
+                                                                            value="customColumn"></el-option>
                                                                     </el-select>
                                                                 </el-form-item>
                                                                 <el-form-item label="列标题">
-                                                                    <el-input v-model.trim="addColumnForm.name" :size="elSize" placeholder="请输入列标题"></el-input>
+                                                                    <el-input v-model.trim="addColumnForm.name"
+                                                                        :size="elSize" placeholder="请输入列标题"></el-input>
                                                                 </el-form-item>
                                                                 <el-form-item label="绑定字段">
-                                                                    <el-select v-model="addColumnForm.field" style="width:100%" placeholder="请选择绑定字段">
-                                                                        <el-option label="绑定字段文本" value="shanghai"></el-option>
-                                                                        <el-option label="绑定字段文本1" value="beijing"></el-option>
+                                                                    <el-select v-model="addColumnForm.field"
+                                                                        style="width:100%" placeholder="请选择绑定字段">
+                                                                        <el-option label="name"
+                                                                            value="name"></el-option>
+                                                                        <el-option label="age" value="age"></el-option>
                                                                     </el-select>
                                                                 </el-form-item>
                                                                 <el-form-item label="展示内容">
-                                                                    <el-select v-model="addColumnForm.displayContent" style="width:100%" placeholder="请选择展示内容">
-                                                                        <el-option label="展示内容文本" value="shanghai"></el-option>
-                                                                        <el-option label="展示内容文本1" value="beijing"></el-option>
+                                                                    <el-select v-model="addColumnForm.displayContent"
+                                                                        style="width:100%" placeholder="请选择展示内容">
+                                                                        <el-option label="姓名" value="姓名"></el-option>
+                                                                        <el-option label="年龄" value="年龄"></el-option>
                                                                     </el-select>
                                                                 </el-form-item>
                                                                 <el-form-item label="数据格式">
-                                                                    <el-select v-model="addColumnForm.dataType" style="width:100%" placeholder="请选择数据格式">
-                                                                        <el-option label="数据格式文本" value="shanghai"></el-option>
-                                                                        <el-option label="数据格式文本1" value="beijing"></el-option>
+                                                                    <el-select v-model="addColumnForm.dataType"
+                                                                        style="width:100%" placeholder="请选择数据格式">
+                                                                        <el-option label="number"
+                                                                            value="number"></el-option>
+                                                                        <el-option label="string"
+                                                                            value="string"></el-option>
                                                                     </el-select>
                                                                 </el-form-item>
                                                                 <el-form-item label="列宽">
-                                                                    <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize" placeholder="请输入列宽"></el-input>
-                                                                    @* <el-select v-model="addColumnForm.columnWidth" style="width:100%" placeholder="请选择列宽">
-                                                                    <el-option label="数据表文本" value="shanghai"></el-option>
-                                                                    <el-option label="数据表文本1" value="beijing"></el-option>
+                                                                    <el-input v-model.trim="addColumnForm.columnWidth"
+                                                                        :size="elSize" placeholder="请输入列宽"></el-input>
+                                                                    @* <el-select v-model="addColumnForm.columnWidth"
+                                                                    style="width:100%" placeholder="请选择列宽">
+                                                                    <el-option label="数据表文本"
+                                                                    value="shanghai"></el-option>
+                                                                    <el-option label="数据表文本1"
+                                                                    value="beijing"></el-option>
                                                                     </el-select> *@
                                                                 </el-form-item>
                                                                 <el-form-item label="对齐方式">
-                                                                    <el-select v-model="addColumnForm.alignment" style="width:100%" placeholder="请选择对齐方式">
-                                                                        <el-option label="左对齐" value="shanghai"></el-option>
-                                                                        <el-option label="右对齐" value="beijing"></el-option>
-                                                                        <el-option label="中间对齐1" value="beijing"></el-option>
+                                                                    <el-select v-model="addColumnForm.alignment"
+                                                                        style="width:100%" placeholder="请选择对齐方式">
+                                                                        <el-option label="左对齐" value="left"></el-option>
+                                                                        <el-option label="右对齐"
+                                                                            value="right"></el-option>
+                                                                        <el-option label="中间对齐1"
+                                                                            value="center"></el-option>
                                                                     </el-select>
                                                                 </el-form-item>
                                                                 <el-form-item>
-                                                                    <el-checkbox v-model="addColumnForm.isSort">允许排序</el-checkbox>
-                                                                    <el-checkbox v-model="addColumnForm.isExport">允许导出</el-checkbox>
-                                                                    <el-checkbox v-model="addColumnForm.isEdit">允许编辑</el-checkbox>
-                                                                    <el-checkbox v-model="addColumnForm.isDelete">允许删除</el-checkbox>
+                                                                    <el-checkbox
+                                                                        v-model="addColumnForm.isSort">允许排序</el-checkbox>
+                                                                    <el-checkbox
+                                                                        v-model="addColumnForm.isExport">允许导出</el-checkbox>
+                                                                    <el-checkbox
+                                                                        v-model="addColumnForm.isEdit">允许编辑</el-checkbox>
+                                                                    <el-checkbox
+                                                                        v-model="addColumnForm.isDelete">允许删除</el-checkbox>
                                                                 </el-form-item>
                                                                 <el-form-item>
-                                                                    <el-button :size="elSize" type="primary" @@click="onConfirmAddColumn">确定</el-button>
+                                                                    <el-button :size="elSize" type="primary"
+                                                                        @@click="onConfirmAddColumn">确定</el-button>
                                                                 </el-form-item>
                                                             </el-form>
                                                         </div>
@@ -232,20 +311,18 @@
                             </el-form>
                             @* 数据设置 *@
                             <div class="operation-title" style="margin-top:20px;">数据设置</div>
-                            <el-form ref="dataSetElForm" :model="dataSetForm" :rules="dataSetFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
+                            <el-form ref="dataSetElForm" :model="dataSetForm" :rules="dataSetFormRules" :size="elSize"
+                                label-position="top" label-width="80px" class="form-container">
                                 <el-form-item label="数据筛选" prop="filterCriteriaLen">
-                                    <el-popover placement="left"
-                                                width="400"
-                                                trigger="click">
+                                    <el-popover placement="left" width="400" trigger="click">
                                         <div class="popover-bodyBox">
                                             <div class="popover-title">筛选条件设置</div>
                                             <div class="popover-list df-wn flex-dc">
-                                                <div v-for="(item,index) in dataSetForm.filterCriteria" :key="index" class="popover-list-item df-wn flex-ac">
+                                                <div v-for="(item,index) in dataSetForm.filterCriteria" :key="index"
+                                                    class="popover-list-item df-wn flex-ac">
                                                     <el-select v-model="item.field" placeholder="请选择">
                                                         <el-option v-for="citem in columnForm.columnData"
-                                                                   :key="citem.field"
-                                                                   :label="citem.name"
-                                                                   :value="citem.field">
+                                                            :key="citem.field" :label="citem.name" :value="citem.field">
                                                         </el-option>
                                                     </el-select>
                                                     <el-select v-model="item.symbol" placeholder="请选择">
@@ -257,7 +334,8 @@
                                                         </el-option>
                                                     </el-select>
                                                     <el-input v-model="item.condition" placeholder="请输入"></el-input>
-                                                    <i class="el-icon-close cursorPointer" @@click="handleDeleteFilterCondition(index)"></i>
+                                                    <i class="el-icon-close cursorPointer"
+                                                        @@click="handleDeleteFilterCondition(index)"></i>
                                                 </div>
                                             </div>
                                             <div class="popover-addbox" @@click="handleAddFilterCondition">
@@ -274,9 +352,8 @@
                                     </el-popover>
                                 </el-form-item>
                                 <el-form-item label="排序" prop="columnData">
-                                    <el-popover v-for="(item,index) in dataSetForm.sortingRules" :key="index" placement="left"
-                                                width="400"
-                                                trigger="click">
+                                    <el-popover v-for="(item,index) in dataSetForm.sortingRules" :key="index"
+                                        placement="left" width="400" trigger="click">
                                         <div class="popover-bodyBox">
                                             <div class="popover-title">排序设置</div>
                                             <div class="popover-list df-wn flex-dc">
@@ -284,9 +361,7 @@
                                                     <div class="line-label">排序字段</div>
                                                     <el-select v-model="item.field" placeholder="请选择">
                                                         <el-option v-for="citem in columnForm.columnData"
-                                                                   :key="citem.field"
-                                                                   :label="citem.name"
-                                                                   :value="citem.field">
+                                                            :key="citem.field" :label="citem.name" :value="citem.field">
                                                         </el-option>
                                                     </el-select>
                                                 </div>
@@ -301,11 +376,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div slot="reference" class="sortList-box df-wn flex-dc">
+                                        <div slot="reference" class="sortList-box df-wn flex-dc"
+                                            style="transition: transform .3s;" :draggable="true"
+                                            @@dragstart="sortingRulesDragstart(index)"
+                                            @@dragenter="sortingRulesDragenter($event, index)"
+                                            @@dragover="sortingRulesDragover($event, index)">
                                             <div class="sortitem-box df-wn flex-ac">
                                                 <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
-                                                <div class="sortitemtext">{{ item.field ? `${item.field}-${item.sort}` : '请选择排序字段' }}</div>
-                                                <i class="el-icon-remove-outline" style="cursor:pointer;color:#a6a6a6;" @@click.stop="handleDeleteSortingRules(index)"></i>
+                                                <div class="sortitemtext">{{ item.field ? `${item.field}-${item.sort}` :
+                                                    '请选择排序字段' }}</div>
+                                                <i class="el-icon-remove-outline" style="cursor:pointer;color:#a6a6a6;"
+                                                    @@click.stop="handleDeleteSortingRules(index)"></i>
                                             </div>
                                         </div>
                                     </el-popover>
@@ -317,16 +398,16 @@
                                     </div>
                                 </el-form-item>
                                 <el-form-item label="筛选器" prop="columnData">
-                                    <el-popover placement="left"
-                                                width="400"
-                                                trigger="click">
+                                    <el-popover placement="left" width="400" trigger="click">
                                         <div class="popover-bodyBox">
                                             <div class="popover-title">筛选器设置</div>
                                             <table class="table-container" style="margin-top:20px;">
                                                 <thead class="table-head">
                                                     <tr>
                                                         <th style="width:150px">
-                                                            <el-checkbox v-model="columnForm.allChecked" :disabled="!dataSetForm.filterFieldList.length" @@change="handleFilterAllCheckedChange">字段</el-checkbox>
+                                                            <el-checkbox v-model="columnForm.allChecked"
+                                                                :disabled="!dataSetForm.filterFieldList.length"
+                                                                @@change="handleFilterAllCheckedChange">字段</el-checkbox>
                                                         </th>
                                                         <th>
                                                             数据类型
@@ -335,21 +416,28 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="table-body">
-                                                    <tr v-for="(tbody_td,tr) in dataSetForm.filterFieldList" :key="'tbody-tr-'+tr">
+                                                    <tr v-for="(tbody_td,tr) in dataSetForm.filterFieldList"
+                                                        :key="'tbody-tr-'+tr">
                                                         <template v-if="tbody_td.iscustom">
                                                             <td colspan="2" style="width:150px;">
-                                                                <el-checkbox v-model="tbody_td.checked" @@change="handleFilterCheckedChange">{{ tbody_td.name }}</el-checkbox>
+                                                                <el-checkbox v-model="tbody_td.checked"
+                                                                    @@change="handleFilterCheckedChange">{{
+                                                                    tbody_td.name }}</el-checkbox>
                                                             </td>
                                                             <td style="width:30px">
-                                                                <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
+                                                                <img src="/image/DynamicData/icon-move.png" alt=""
+                                                                    class="moveIcon" />
                                                         </template>
                                                         <template v-else>
                                                             <td style="width:150px;">
-                                                                <el-checkbox v-model="tbody_td.checked" @@change="handleFilterCheckedChange">{{ tbody_td.name }}</el-checkbox>
+                                                                <el-checkbox v-model="tbody_td.checked"
+                                                                    @@change="handleFilterCheckedChange">{{
+                                                                    tbody_td.name }}</el-checkbox>
                                                             </td>
                                                             <td>{{ tbody_td.dataType }}</td>
                                                             <td style="width:30px">
-                                                                <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
+                                                                <img src="/image/DynamicData/icon-move.png" alt=""
+                                                                    class="moveIcon" />
                                                             </td>
                                                         </template>
                                                     </tr>
@@ -363,7 +451,8 @@
                                     </el-popover>
                                 </el-form-item>
                                 <el-form-item label="字段查询范围" prop="columnData">
-                                    <el-select v-model="dataSetForm.queryScope" style="width:100%" placeholder="请选择数据类型">
+                                    <el-select v-model="dataSetForm.queryScope" style="width:100%"
+                                        placeholder="请选择数据类型">
                                         <el-option label="全部字段" value="shanghai"></el-option>
                                         <el-option label="表格列字段" value="beijing"></el-option>
                                     </el-select>
@@ -759,15 +848,23 @@
                                 </el-form-item>
                             </el-form>
                         </template>
-                        @* 样式 设置 *@
+                        @* 表格 整体样式 设置 *@
                         <template v-if="setUpActiveName === 'second'">
                             <div class="operation-title" style="margin-top:20px;">表格样式设置</div>
-                            <el-form ref="tableStyleElForm" :model="tableStyleForm" :rules="tableStyleFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
+                            <el-form ref="tableStyleElForm" :model="tableStyleForm" :rules="tableStyleFormRules"
+                                :size="elSize" label-position="top" label-width="80px" class="form-container">
                                 <el-form-item label="表格尺寸">
                                     <div class="subsection-container df-wn flex-ac flex-jc">
-                                        <div class="subsection-item" :class="{'subsection-item_avtive':tableStyleForm.size === 'medium'}" @@click="handleSwitchSubsection('tableStyleForm.size','medium')">medium</div>
-                                        <div class="subsection-item" :class="{'subsection-item_avtive':tableStyleForm.size === 'small'}" @@click="handleSwitchSubsection('tableStyleForm.size','small')">small</div>
-                                        <div class="subsection-item" :class="{'subsection-item_avtive':tableStyleForm.size === 'mini'}" @@click="handleSwitchSubsection('tableStyleForm.size','mini')">mini</div>
+                                        <div class="subsection-item"
+                                            :class="{'subsection-item_avtive':tableStyleForm.size === 'medium'}"
+                                            @@click="handleSwitchSubsection('tableStyleForm.size','medium')">medium
+                                        </div>
+                                        <div class="subsection-item"
+                                            :class="{'subsection-item_avtive':tableStyleForm.size === 'small'}"
+                                            @@click="handleSwitchSubsection('tableStyleForm.size','small')">small</div>
+                                        <div class="subsection-item"
+                                            :class="{'subsection-item_avtive':tableStyleForm.size === 'mini'}"
+                                            @@click="handleSwitchSubsection('tableStyleForm.size','mini')">mini</div>
                                     </div>
                                 </el-form-item>
                                 <el-form-item>
@@ -792,9 +889,11 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table-body">
-                                            <tr v-for="(tbody_td,tr) in tableStyleForm.columnData" :key="'tbody-tr-'+tr">
+                                            <tr v-for="(tbody_td,tr) in tableStyleForm.columnData"
+                                                :key="'tbody-tr-'+tr">
                                                 <td style="width:150px;">
-                                                    <el-checkbox v-model="tbody_td.checked">{{ tbody_td.name }}</el-checkbox>
+                                                    <el-checkbox v-model="tbody_td.checked">{{ tbody_td.name
+                                                        }}</el-checkbox>
                                                 </td>
                                                 <td>
                                                     <el-radio-group v-model="tbody_td.fixed">
@@ -809,7 +908,8 @@
                             </el-form>
                             @* 分页设置 *@
                             <div class="operation-title" style="margin-top:20px;">分页设置</div>
-                            <el-form ref="paginationElForm" :model="paginationForm" :rules="paginationFormRules" :size="elSize" label-position="top" label-width="80px" class="form-container">
+                            <el-form ref="paginationElForm" :model="paginationForm" :rules="paginationFormRules"
+                                :size="elSize" label-position="top" label-width="80px" class="form-container">
                                 <el-form-item>
                                     <el-checkbox v-model="paginationForm.small">是否使用小型分页</el-checkbox>
                                 </el-form-item>
@@ -824,7 +924,8 @@
                                         <thead class="table-head">
                                             <tr>
                                                 <th>
-                                                    <el-checkbox v-model="paginationForm.allChecked" @@change="handlePaginationAllCheckedChange">子组件</el-checkbox>
+                                                    <el-checkbox v-model="paginationForm.allChecked"
+                                                        @@change="handlePaginationAllCheckedChange">子组件</el-checkbox>
                                                 </th>
                                                 <th style="width:30px"></th>
                                             </tr>
@@ -832,10 +933,13 @@
                                         <tbody class="table-body">
                                             <tr v-for="(tbody_td,tr) in paginationForm.layout" :key="'tbody-tr-'+tr">
                                                 <td>
-                                                    <el-checkbox v-model="tbody_td.checked" @@change="handlePaginationCheckedChange">{{ tbody_td.name }}</el-checkbox>
+                                                    <el-checkbox v-model="tbody_td.checked"
+                                                        @@change="handlePaginationCheckedChange">{{ tbody_td.name
+                                                        }}</el-checkbox>
                                                 </td>
                                                 <td style="width:30px">
-                                                    <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
+                                                    <img src="/image/DynamicData/icon-move.png" alt=""
+                                                        class="moveIcon" />
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -845,32 +949,281 @@
                                     <el-input v-model="paginationForm.pagerCount" placeholder="最大页码按钮数"></el-input>
                                 </el-form-item>
                                 <el-form-item label="每页显示个数">
-                                    <el-select v-model="paginationForm.pageSizes"
-                                               multiple
-                                               filterable
-                                               allow-create
-                                               default-first-option
-                                               placeholder="请选择每页显示个数">
-                                        <el-option v-for="item in pageSizesOpt"
-                                                   :key="item"
-                                                   :label="item"
-                                                   :value="item">
+                                    <el-select v-model="paginationForm.pageSizes" multiple filterable allow-create
+                                        default-first-option placeholder="请选择每页显示个数">
+                                        <el-option v-for="item in pageSizesOpt" :key="item" :label="item" :value="item">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="位置">
-                                    <el-select v-model="paginationForm.position"
-                                               filterable
-                                               placeholder="请选择位置">
-                                        <el-option v-for="item in pageSizesPositionOpt"
-                                                   :key="item"
-                                                   :label="item"
-                                                   :value="item">
+                                    <el-select v-model="paginationForm.position" filterable placeholder="请选择位置">
+                                        <el-option v-for="item in pageSizesPositionOpt" :key="item" :label="item"
+                                            :value="item">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-form>
                         </template>
+
+                        @* 表格 普通列属性 设置 *@
+                        <template v-if="setUpActiveName === 'first' && layoutComponentActiveType === 'normalColumn'">
+                            @* 列管理 *@
+                            <div class="operation-title" style="margin-top:20px;">列属性设置</div>
+                            <el-form ref="normalColumElForm" :model="addColumnForm" :rules="addColumnFormRules"
+                                :size="elSize" label-position="top" label-width="80px" class="form-container">
+                                <el-form-item label="列标题">
+                                    <el-input v-model.trim="addColumnForm.name" :size="elSize"
+                                        placeholder="请输入列标题"></el-input>
+                                </el-form-item>
+                                <el-form-item label="绑定字段">
+                                    <el-select v-model="addColumnForm.field" style="width:100%" placeholder="请选择绑定字段">
+                                        <el-option label="绑定字段文本" value="shanghai"></el-option>
+                                        <el-option label="绑定字段文本1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="展示内容">
+                                    <el-select v-model="addColumnForm.displayContent" style="width:100%"
+                                        placeholder="请选择展示内容">
+                                        <el-option label="展示内容文本" value="shanghai"></el-option>
+                                        <el-option label="展示内容文本1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="数据格式">
+                                    <el-select v-model="addColumnForm.dataType" style="width:100%"
+                                        placeholder="请选择数据格式">
+                                        <el-option label="数据格式文本" value="shanghai"></el-option>
+                                        <el-option label="数据格式文本1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="列宽">
+                                    <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
+                                        placeholder="请输入列宽"></el-input>
+                                    @* <el-select v-model="addColumnForm.columnWidth"
+                                    style="width:100%" placeholder="请选择列宽">
+                                    <el-option label="数据表文本"
+                                    value="shanghai"></el-option>
+                                    <el-option label="数据表文本1"
+                                    value="beijing"></el-option>
+                                    </el-select> *@
+                                </el-form-item>
+                                <el-form-item label="对齐方式">
+                                    <el-select v-model="addColumnForm.alignment" style="width:100%"
+                                        placeholder="请选择对齐方式">
+                                        <el-option label="左对齐" value="shanghai"></el-option>
+                                        <el-option label="右对齐" value="beijing"></el-option>
+                                        <el-option label="中间对齐1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-checkbox v-model="addColumnForm.isSort">允许排序</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isExport">允许导出</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isEdit">允许编辑</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isDelete">允许删除</el-checkbox>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                        @* 表格 普通列样式 设置 *@
+
+                        @* 表格 自定义列属性 设置 *@
+                        <template v-if="setUpActiveName === 'first' && layoutComponentActiveType === 'customColumn'">
+                            @* 自定义列管理 *@
+                            <div class="operation-title" style="margin-top:20px;">自定义列设置</div>
+                            <el-form ref="customColumnElForm" :model="addColumnForm" :rules="addColumnFormRules"
+                                :size="elSize" label-position="top" label-width="80px" class="form-container">
+                                @* <el-form-item label="列属性">
+                                <el-select v-model="addColumnForm.property" style="width:100%" placeholder="请选择">
+                                <el-option label="普通列" value="normalColumn"></el-option>
+                                <el-option label="操作列" value="customColumn"></el-option>
+                                </el-select>
+                                </el-form-item> *@
+                                <el-form-item label="列标题">
+                                    <el-input v-model.trim="addColumnForm.name" :size="elSize"
+                                        placeholder="请输入列标题"></el-input>
+                                </el-form-item>
+                                <el-form-item label="按钮">
+                                    <el-popover v-for="(bitem,bindex) in addColumnForm.btnList" :key="bindex"
+                                        placement="left" width="400" trigger="click">
+                                        <div class="popover-bodyBox">
+                                            <div class="popover-title">按钮设置</div>
+                                            <div class="popover-list df-wn flex-dc">
+                                                <div class="popover-list-item df-wn flex-ac">
+                                                    <div class="line-label">按钮名称</div>
+                                                    <el-input v-model.trim="bitem.name" :size="elSize"
+                                                        placeholder="请输入按钮名称"></el-input>
+                                                </div>
+                                                <div class="popover-list-item df-wn flex-ac">
+                                                    <div class="line-label">按钮属性</div>
+                                                    <el-select v-model="bitem.property" :size="elSize"
+                                                        placeholder="请选择按钮属性">
+                                                        <el-option label="编辑" value="edit"></el-option>
+                                                        <el-option label="删除" value="delete"></el-option>
+                                                        <el-option label="详情" value="details"></el-option>
+                                                        <el-option label="新增" value="new"></el-option>
+                                                    </el-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div slot="reference" class="sortList-box df-wn flex-dc"
+                                            style="transition: transform .3s;" :draggable="true"
+                                            @@dragstart="customColumnBtnDragstart(bindex)"
+                                            @@dragenter="customColumnBtnDragenter($event, bindex)"
+                                            @@dragover="customColumnBtnDragover($event, bindex)">
+                                            <div class="sortitem-box df-wn flex-ac">
+                                                <img src="/image/DynamicData/icon-move.png" alt="" class="moveIcon" />
+                                                <div class="sortitemtext">
+                                                    {{ bitem.name || '请命名' }}</div>
+                                                <i class="el-icon-remove-outline" style="cursor:pointer;color:#a6a6a6;"
+                                                    @@click.stop="handleDeleteCustomColumnBtn(bindex)"></i>
+                                            </div>
+                                        </div>
+                                    </el-popover>
+                                    <div class="addsort-box df-wn flex-ac" @@click="handleAddCustomColumnBtn">
+                                        <i class="el-icon-circle-plus-outline"></i>
+                                        <span class="tipsText">
+                                            添加按钮
+                                        </span>
+                                    </div>
+                                </el-form-item>
+                                <el-form-item label="列宽">
+                                    <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
+                                        placeholder="请输入列宽"></el-input>
+                                </el-form-item>
+                                <el-form-item label="对齐方式">
+                                    <el-select v-model="addColumnForm.alignment" style="width:100%"
+                                        placeholder="请选择对齐方式">
+                                        <el-option label="左对齐" value="shanghai"></el-option>
+                                        <el-option label="右对齐" value="beijing"></el-option>
+                                        <el-option label="中间对齐1" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                @* <el-form-item>
+                                <el-checkbox v-model="addColumnForm.isSort">显示列</el-checkbox>
+                                </el-form-item>
+                                <el-form-item>
+                                <el-checkbox v-model="addColumnForm.isSort">固定列</el-checkbox>
+                                </el-form-item> *@
+                            </el-form>
+                        </template>
+                        @* 表格 自定义列样式 设置 *@
+
+                        @* 表格 自定义列按钮属性 设置 *@
+                        <template v-if="setUpActiveName === 'first' && layoutComponentActiveType === 'columnEditBtn'">
+                            @* 自定义列按钮属性 *@
+                            <div class="operation-title" style="margin-top:20px;">按钮设置</div>
+                            <el-form ref="customColumnBtnElForm" :model="customColumnBtnForm"
+                                :rules="customColumnBtnFormRules" :size="elSize" label-position="top" label-width="80px"
+                                class="form-container">
+                                <el-form-item label="按钮名称">
+                                    <el-input v-model.trim="customColumnBtnForm.name" :size="elSize"
+                                        placeholder="请输入按钮名称"></el-input>
+                                </el-form-item>
+                                <el-form-item label="按钮属性">
+                                    <el-select v-model="customColumnBtnForm.property" style="width:100%"
+                                        placeholder="请选择按钮属性">
+                                        <el-option label="编辑" value="edit"></el-option>
+                                        <el-option label="删除" value="delete"></el-option>
+                                        <el-option label="详情" value="details"></el-option>
+                                        <el-option label="新增" value="new"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="按钮类型">
+                                    <el-select v-model="customColumnBtnForm.type" style="width:100%"
+                                        placeholder="请选择按钮类型">
+                                        <el-option label="填充" value="fill"></el-option>
+                                        <el-option label="描边" value="stroke"></el-option>
+                                        <el-option label="文字" value="text"></el-option>
+                                        <el-option label="链接" value="link"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-checkbox v-model="customColumnBtnForm.disable">禁用</el-checkbox>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-checkbox v-model="customColumnBtnForm.enterID">带入id</el-checkbox>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-checkbox v-model="customColumnBtnForm.customIDName">自定义ID名称</el-checkbox>
+                                </el-form-item>
+                            </el-form>
+                            @* 自定义列按钮事件 *@
+                            <div class="operation-title" style="margin-top:20px;">事件设置</div>
+                            <el-form ref="customColumnBtnElForm" :model="customColumnBtnForm"
+                                :rules="customColumnBtnFormRules" :size="elSize" label-position="top" label-width="80px"
+                                class="form-container">
+                                <el-form-item label="按钮事件">
+                                    <el-select v-model="customColumnBtnForm.btnEvent" style="width:100%"
+                                        placeholder="请选择按钮事件">
+                                        <el-option label="点击" value="edit"></el-option>
+                                        <el-option label="双击" value="delete"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="选择交互">
+                                    <el-select v-model="customColumnBtnForm.interactive" style="width:100%"
+                                        placeholder="请选择交互">
+                                        <el-option label="打开页面" value="openPage"></el-option>
+                                        <el-option label="跳转链接" value="jumpLink"></el-option>
+                                        <el-option label="打开弹框" value="openPopUpBox"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="组件名称">
+                                    <el-select v-model="customColumnBtnForm.componentType" style="width:100%"
+                                        placeholder="请选择组件名称">
+                                        <el-option label="表格" value="table"></el-option>
+                                        <el-option label="表单" value="form"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="执行方法">
+                                    <el-select v-model="customColumnBtnForm.executionMethod" style="width:100%"
+                                        placeholder="请选择组件名称">
+                                        <el-option label="删除单条" value="deleteSingleBar"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="选择页面">
+                                    <el-select v-model="customColumnBtnForm.page" style="width:100%"
+                                        placeholder="请选择页面">
+                                        <el-option label="编辑页面" value="visitorEditPage"></el-option>
+                                        <el-option label="新增页面" value="userEdit"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="弹框设置">
+                                    <div :span="12" class="df-wn flex-ac flex-as">
+                                        <span class="formitem-labelText">标题文字</span>
+                                        <el-input v-model.trim="customColumnBtnForm.popupTitleText" :size="elSize"
+                                        placeholder="请输入标题文字"></el-input>
+                                    </div>
+                                    <div :span="12" class="df-wn flex-ac flex-as">
+                                        <span class="formitem-labelText">取消按钮文字</span>
+                                        <el-input v-model.trim="customColumnBtnForm.popupCancelText" :size="elSize"
+                                        placeholder="请输入取消按钮文字"></el-input>
+                                    </div>
+                                    <div :span="12" class="df-wn flex-ac flex-as">
+                                        <span class="formitem-labelText">确认按钮文字</span>
+                                        <el-input v-model.trim="customColumnBtnForm.popupConfirmText" :size="elSize"
+                                        placeholder="请输入确认按钮文字"></el-input>
+                                    </div>
+                                </el-form-item>
+                                <el-form-item label="确认操作设置">
+                                    <div :span="12" class="df-wn flex-ac flex-as">
+                                        <span class="formitem-labelText">提示内容</span>
+                                        <el-input v-model.trim="customColumnBtnForm.popupPromptContent" :size="elSize"
+                                        placeholder="请输入提示内容"></el-input>
+                                    </div>
+                                    <div :span="12" class="df-wn flex-ac flex-as">
+                                        <span class="formitem-labelText">提示时常</span>
+                                        <el-input v-model.trim="customColumnBtnForm.popupPromptOften" :size="elSize"
+                                        placeholder="请输入提示时常"></el-input>
+                                    </div>
+                                </el-form-item>
+                                <el-form-item label="取消操作设置">
+                                    <div :span="12" class="df-wn flex-ac flex-as">
+                                        <span class="formitem-labelText">关闭页面</span>
+                                        <el-input v-model.trim="customColumnBtnForm.popupClosePage" :size="elSize"
+                                        placeholder="请输入关闭页面"></el-input>
+                                    </div>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                        @* 表格 自定义列样式 设置 *@
                     </div>
                     @* 表单设置管理 *@
                     @* 按钮设置管理 *@

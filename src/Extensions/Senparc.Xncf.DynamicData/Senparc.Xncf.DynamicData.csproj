@@ -1,8 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.2.3-preview1.7</Version>
+    <Version>0.2.3.1-preview1.7</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +16,8 @@
     <Title>动态数据基础模块</Title>
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
-				<PackageIcon>icon.jpg</PackageIcon>
-				<PackageReleaseNotes>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世
             [2024-08-11] v0.1.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
             [2024-08-12] v0.1.3-preview1 添加 TableData 的数据插入方法，通过单元测试
