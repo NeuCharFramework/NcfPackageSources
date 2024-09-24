@@ -155,6 +155,51 @@ var app = new Vue({
             customColumnBtnFormRules: [],
             customColumnBtnDragStarIndex: '', // 排序规则拖拽 开始 index
             customColumnBtnDragEnterIndex: '',// 排序规则拖拽 结束 index
+            addColumnFormRules: [],
+            columnFormRules: [],
+            //自定义列设置
+            customSetForm: {
+                columnAttribute: '', //自定义列属性
+                columnTitle: '',  //自定义列标题
+                btnList: [], //按钮列表
+                displayColumn: false,//显示列
+                fixedColumn: true,//固定列
+            },
+            customSetFormRules: [],
+            //列属性设置
+            ColumnAttributeSetForm: {
+                columnTitle: '',//列标题
+                boundField: '',//绑定字段
+                displayContent: '',//展示内容
+                dataFormat: '',//数据格式
+                colWidth: '',//列宽
+                alignment: '',//对齐方式
+                sortEnable: false,//允许排序
+                exportEnable: false,//允许导出
+                editEnable: false,//允许编辑
+                deleteEnable: false,//允许删除
+            },
+            ColumnAttributeSetFormRules: [],
+            //按钮设置
+            ButtonSettingForm:{
+                buttonName: '',//按钮名称
+                buttonAttribute: '',//按钮属性
+                buttonType: '',//按钮类型
+                disableId: false,//禁用
+                bringinId: false,//带入id
+                customIdname: false//自定义id名称
+            },
+            ButtonSettingFormRules: [],
+            //事件设置
+            eventSettingForm: {
+                buttonEvent: '',//按钮事件
+                moduleName: '',//组件名称
+                mannerExecution: '',//执行方法
+                selectInteraction: '',//选择交互
+                selectPage: '',//选择页面
+                calldataMethod:'',//选择数据源
+            },
+            eventSettingFormRules:[],
             // 数据设置
             dataSetForm: {
                 filterCriteriaLen: 0, // 筛选条件个数
@@ -166,6 +211,31 @@ var app = new Vue({
                 queryScope: '', // 字段查询范围
             },
             dataSetFormRules: [],
+            //表单属性设置
+            sheetSettingForm: {
+                boundField: '',//绑定字段
+                selectComponent: '',//选择组件
+                fieldName: '',//字段名称
+                tipText:'',//提示文字
+                defaultValue: '',//默认值
+                formType:'1',//类型
+                mustFillin: '',//必填
+                notReuse: '',//不允许重复输入
+                finiteWord: '',//限制字数
+                maxWord: '',//最大字数
+                miniWord:'',//最小字数
+                finiteFormat: '',//限定输入格式
+                size: '1/4',//表单尺寸
+                displayUsage:'',//显示方式
+                dateType: '',//日期类型
+                timeType:'',//时间类型
+                dateFormat: '',//日期格式
+                readOnly: '',//只读
+                conCeal: '',//隐藏
+                optionList: [], //选项列表
+                customData:'',//自定义数据集
+            },
+            sheetSettingFormRules: [],
             // 表格样式设置
             tableStyleForm: {
                 stripe: false, // 是否 斑马纹
@@ -816,6 +886,17 @@ var app = new Vue({
         handleDeleteSortingRules(index) {
             this.dataSetForm.sortingRules.splice(index, 1);
         },
+        // 添加 按钮列表
+        handleAddBtnList() {
+            this.customSetForm.btnList.push({
+                btntext: '',
+               
+            })
+        },
+        // 删除 按钮列表
+        handleDeleteBtnList(index) {
+            this.customSetForm.btnList.splice(index, 1);
+        },
         // 筛选器 table 全选
         handleFilterAllCheckedChange(val) {
             this.dataSetForm.filterFieldList.forEach(item => {
@@ -905,6 +986,17 @@ var app = new Vue({
             this.customColumnBtnForm = {
                 ...item
             }
+        },
+        //添加选项列表
+        handleAddOptionList() {
+            this.sheetSettingForm.optionList.push({
+                optionName: '',
+
+            })
+        },
+        // 删除 选项列表
+        handleDeleteOptionList(index) {
+            this.sheetSettingForm.optionList.splice(index, 1);
         },
     }
 });
