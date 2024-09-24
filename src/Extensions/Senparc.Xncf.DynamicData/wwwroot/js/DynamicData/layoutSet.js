@@ -133,23 +133,23 @@ var app = new Vue({
             // 自定义列按钮 
             customColumnBtnForm: {
                 name: '',
-                property:'',
-                type:'',
-                disable:false,
-                enterID:false,
-                customIDName:false,
-                btnEvent:'',
-                componentType:'',
-                executionMethod:'',
-                interactive:'',
-                page:'',
-                popupForm:{
-                    popupTitleText:'是否确认删除此条数据',
-                    popupCancelText:'取消',
-                    popupConfirmText:'确认',
-                    popupPromptContent:'删除成功',
-                    popupPromptOften:'1600', // ms
-                    popupClosePage:'关闭当前页面'
+                property: '',
+                type: '',
+                disable: false,
+                enterID: false,
+                customIDName: false,
+                btnEvent: '',
+                componentType: '',
+                executionMethod: '',
+                interactive: '',
+                page: '',
+                popupForm: {
+                    popupTitleText: '是否确认删除此条数据',
+                    popupCancelText: '取消',
+                    popupConfirmText: '确认',
+                    popupPromptContent: '删除成功',
+                    popupPromptOften: '1600', // ms
+                    popupClosePage: '关闭当前页面'
                 }
             },
             customColumnBtnFormRules: [],
@@ -186,7 +186,7 @@ var app = new Vue({
                 hideOnSinglePage: false, // 只有一页时是否隐藏
                 pagerCount: '', // 设置最大页码按钮数 默认7
                 pageSizes: [], // 每页显示个数
-                position: '', // 位置
+                position: 'bottom-end', // 位置
                 allCheckedLayout: false,
                 layout: [{
                     name: 'total',
@@ -210,7 +210,68 @@ var app = new Vue({
             },
             paginationFormRules: [],
             pageSizesOpt: [10, 20, 30, 40, 50, 100],
+            positionClassOpt: {
+                'top': 'flex-jc',
+                'top-start': 'flex-js',
+                'top-end': 'flex-je',
+                'bottom': 'flex-jc',
+                'bottom-start': 'flex-js',
+                'bottom-end': 'flex-je'
+            },
             pageSizesPositionOpt: ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end'],
+            // input switch select time-select time-picker date-picker checkbox radio
+            formItemData: [{
+                formType: '',
+                label:'',
+                prop:'',
+                value:'',
+                placeholder:'',
+                disabled: false, // 是否禁用
+                // width:'', // 宽带
+                size:'medium', //尺寸 medium / small / mini
+                // input 
+                inputType: '', // 输入框类型 text、textarea、number
+                clearable: false, // 是否可清除
+                showPassword: false, // 是否是密码框
+                prefixIcon: '', // 首部 显示图标
+                suffixIcon: '', // 尾部 显示图标
+                maxlength: 10, // 限制输入框的字符长度
+                // input text 或 textarea
+                showWordLimit: false, // 展示字数统计 text 或 textarea
+                // input textarea
+                rows: 2,
+                autosizeEnable: false,
+                autosize: {
+                    minRows: 2,
+                    maxRows: 4
+                },
+                // switch
+                enableColor: false,
+                activeColor: "#13ce66",
+                inactiveColor: "#ff4949",
+                enableText: false,
+                activeText: "按月付费",
+                inactiveText: "按年付费",
+                enableValue: false,
+                activeValue: "100",
+                inactiveValue: "0",
+                // select
+                selectOptions:[],
+                // time-select
+                pickerOptions: {
+                    start: '08:30',
+                    step: '00:15',
+                    end: '18:30'
+                },
+                // time-picker
+                clearable: false, // 是否可清除
+                editable:false, // 是否可输入
+                enableRange:false, // 是否为时间范围选择
+                startPlaceholder:'',
+                endPlaceholder:'',
+                rangeSeparator:'-',
+                valueFormat:'', // 
+            }]
         };
     },
     computed: {
@@ -376,6 +437,19 @@ var app = new Vue({
 
     },
     methods: {
+        // 组件占位
+        componentOccupantShow(item) {
+            if (!item.componentType) return true
+            if (item.componentType === 'table') {
+                return (!item.tableColumn || !item.tableColumn.length) && (!item.pagConfig || !item.pagConfig.enable)
+            }
+            if (item.componentType === 'form') {
+                return false
+            }
+            if (item.componentType === 'btn') {
+                return false
+            }
+        },
         // 添加组件按钮 禁用
         addAssembBtnDisabled(addType) {
             if (isNumber(this.layoutComponentActive)) {
@@ -561,6 +635,13 @@ var app = new Vue({
             debounce(() => {
                 if (this.layoutComponentDragStarIndex !== index) {
                     const source = this.layoutComponentsList[this.layoutComponentDragStarIndex]
+                    // table
+                    if (source.componentType && source.componentType === 'table') {
+                        source?.tableColumn?.forEach(item => {
+                            item.columnkey = index
+                        })
+                    }
+                    // 
                     this.layoutComponentsList.splice(this.layoutComponentDragStarIndex, 1)
                     this.layoutComponentsList.splice(index, 0, source)
                     // 排序变化后目标对象的索引变成源对象的索引
@@ -791,23 +872,23 @@ var app = new Vue({
         handleAddCustomColumnBtn() {
             this.addColumnForm.btnList.push({
                 name: '',
-                property:'',
-                type:'',
-                disable:false,
-                enterID:false,
-                customIDName:false,
-                btnEvent:'',
-                componentType:'',
-                executionMethod:'',
-                interactive:'',
-                page:'',
-                popupForm:{
-                    popupTitleText:'是否确认删除此条数据',
-                    popupCancelText:'取消',
-                    popupConfirmText:'确认',
-                    popupPromptContent:'删除成功',
-                    popupPromptOften:'1600', // ms
-                    popupClosePage:'关闭当前页面'
+                property: '',
+                type: '',
+                disable: false,
+                enterID: false,
+                customIDName: false,
+                btnEvent: '',
+                componentType: '',
+                executionMethod: '',
+                interactive: '',
+                page: '',
+                popupForm: {
+                    popupTitleText: '是否确认删除此条数据',
+                    popupCancelText: '取消',
+                    popupConfirmText: '确认',
+                    popupPromptContent: '删除成功',
+                    popupPromptOften: '1600', // ms
+                    popupClosePage: '关闭当前页面'
                 }
             })
         },

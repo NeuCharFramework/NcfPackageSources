@@ -163,6 +163,7 @@
 .layoutSet-main .main_content .component-area {
     margin-bottom: 20px;
     padding: 20px;
+    cursor: move;
 }
 
 .layoutSet-main .main_content .component-area .occupant-area {
