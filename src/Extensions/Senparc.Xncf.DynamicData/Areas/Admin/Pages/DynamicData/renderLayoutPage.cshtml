@@ -28,7 +28,7 @@
             </div>
         </div>
         @* <div class="menu-newbtn" @@click="handleAddMenu">
-            <i class="el-icon-plus"></i>新增菜单
+        <i class="el-icon-plus"></i>新增菜单
         </div> *@
     </div>
     @* 主体操作区域 *@
@@ -75,42 +75,51 @@
             </template>
             <template v-if="item.componentType === 'form'">
                 @* ref="ruleForm" :rules="rules" *@
-                <el-form :model="ruleForm" label-width="100px" class="demo-ruleForm">
-                    <el-form-item v-for="(fItem,fIndex) in item.formItemList" :key="fIndex" :label="fItem.label" :prop="fItem.prop">
+                <el-form v-if="item.columnData&&item.columnData.length"
+                    :label-position="item.formConfig ? item.formConfig.labelPosition : 'left'" label-width="100px"
+                    class="demo-ruleForm">
+                    <el-form-item v-for="(fItem,fIndex) in item.columnData" :key="fIndex" :label="fItem.name"
+                        :prop="fItem.field" @@click.native.stop="handleFormItemMouseDown(index,fIndex)">
                         @* 输入框 *@
-                        <el-input :type="fItem.inputType" v-model="fItem.value"
+                        <el-input v-if="fItem.formItemType === 'input'" :type="fItem.type" v-model="fItem.value"
                             :placeholder="fItem.placeholder"></el-input>
                         @* 开关 *@
-                        <el-switch v-model="fItem.value"></el-switch>
+                        <el-switch v-if="fItem.formItemType === 'switch'" v-model="fItem.value"></el-switch>
                         @* 下拉选择 *@
-                        <el-select v-model="fItem.value" :placeholder="fItem.placeholder">
-                            <el-option v-for="(optItem,optIndex) in fItem.selectOptions" :key="optIndex"
+                        <el-select v-if="fItem.formItemType === 'select'" v-model="fItem.value"
+                            :placeholder="fItem.placeholder">
+                            <el-option v-for="(optItem,optIndex) in fItem.optionData" :key="optIndex"
                                 :label="optItem.label" :value="optItem.value"></el-option>
                         </el-select>
                         @* 固定时间点 *@
-                        <el-time-select v-model="fItem.value" :picker-options="fItem.pickerOptions"
-                            :placeholder="fItem.placeholder">
+                        <el-time-select v-if="fItem.formItemType === 'timeSelect'" v-model="fItem.value"
+                            :picker-options="fItem.pickerOptions" :placeholder="fItem.placeholder">
                         </el-time-select>
                         @* 任意时间点 *@
-                        <el-time-picker v-model="fItem.value" :placeholder="fItem.placeholder"></el-time-picker>
+                        <el-time-picker v-if="fItem.formItemType === 'timePicker'" v-model="fItem.value"
+                            :placeholder="fItem.placeholder"></el-time-picker>
                         @* 日期 时间 *@
-                        <el-date-picker type="date" v-model="fItem.value"
+                        <el-date-picker v-if="fItem.formItemType === 'date'" :type="fItem.type" v-model="fItem.value"
                             :placeholder="fItem.placeholder"></el-date-picker>
                         @* 复选框 *@
-                        <el-checkbox-group v-model="fItem.value">
-                            <el-checkbox v-for="(checkItem,checkIndex) in fItem.checkboxGroup" :label="checkItem.value"
-                                :key="checkIndex">{{checkItem.label}}</el-checkbox>
+                        <el-checkbox-group v-if="fItem.formItemType === 'checkbox'" v-model="fItem.value">
+                            <el-checkbox v-for="(checkItem,checkIndex) in fItem.optionData" :label="checkItem.value"
+                                :key="checkIndex">
+                                {{ checkItem.label }}
+                            </el-checkbox>
                         </el-checkbox-group>
                         @* 单选框 *@
-                        <el-radio-group v-model="fItem.value">
-                            <el-radio v-for="(radioItem,radioIndex) in fItem.radioGroup" :label="radioItem.value"
-                                :key="radioIndex">{{radioItem.label}}</el-radio>
+                        <el-radio-group v-if="fItem.formItemType === 'radio'" v-model="fItem.value">
+                            <el-radio v-for="(radioItem,radioIndex) in fItem.optionData" :label="radioItem.value"
+                                :key="radioIndex">
+                                {{ radioItem.label }}
+                            </el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    @* <el-form-item>
-                    <el-button type="primary" @@click="submitForm('ruleForm')">立即创建</el-button>
-                    <el-button @@click="resetForm('ruleForm')">重置</el-button>
-                    </el-form-item> *@
+                    <el-form-item>
+                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">提交</el-button>
+                        @* <el-button @@click="resetForm('ruleForm')">重置</el-button> *@
+                    </el-form-item>
                 </el-form>
             </template>
         </div>
