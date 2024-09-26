@@ -38,12 +38,6 @@
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Domain\Migrations\Oracle\**" />
-    <Content Remove="Domain\Migrations\Oracle\**" />
-    <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
-    <None Remove="Domain\Migrations\Oracle\**" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
