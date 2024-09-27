@@ -16,6 +16,10 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.DynamicData.Models.DatabaseModel.Dto;
 using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.DynamicData.Domain.Services;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace Senparc.Xncf.DynamicData
 {
@@ -34,7 +38,7 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => "动态数据基础模块，用于创建和管理动态数据";
+        public override string Description => "动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -93,6 +97,14 @@ namespace Senparc.Xncf.DynamicData
                 z.CreateMap<TableData, TableDataDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
+        }
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
         }
     }
 }

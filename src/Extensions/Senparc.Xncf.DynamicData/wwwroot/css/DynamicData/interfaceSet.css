@@ -1,0 +1,165 @@
+﻿* {
+    box-sizing: border-box;
+}
+.interfaceSet-page {
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+    .interfaceSet-page .cardArea {
+        margin-top: 25px;
+        gap: 25px 20px;
+        /*display: grid;
+        grid-template-columns: repeat(auto-fill, 350px);*/
+    }
+        .interfaceSet-page .cardArea .cardItem {
+            width: 350px;
+            height: 345px;
+            padding-top: 18px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 1);
+        }
+            .interfaceSet-page .cardArea .cardItem .cardItem_thumbnail {
+                width: 308px;
+                height: 154px;
+                background: rgba(204, 204, 204, 1);
+            }
+            .interfaceSet-page .cardArea .cardItem .cardItem_title {
+                margin-top: 16px;
+                width: 308px;
+                /* 文本 */
+                font-size: 16px;
+                font-weight: 400;
+                letter-spacing: 0px;
+                color: rgba(0, 0, 0, 1);
+                text-align: left;
+                vertical-align: top;
+                /* 单行 溢出隐藏 */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .interfaceSet-page .cardArea .cardItem .cardItem_description {
+                margin-top: 14px;
+                width: 308px;
+                height: 3em; /* 限制最大高度，以适应两行文本 */
+                /* 文本 */
+                font-size: 16px;
+                font-weight: 400;
+                letter-spacing: 0px;
+                line-height: 1.5;
+                color: rgba(128, 128, 128, 1);
+                text-align: left;
+                vertical-align: top;
+                /* 多行 溢出隐藏 */
+                white-space: normal;
+                word-break: break-all;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+            .interfaceSet-page .cardArea .cardItem .cardItem_operation {
+                margin-top:25px;
+                width: 308px;
+            }
+
+.cardItem_operation_state {
+    flex-shrink: 0;
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 2px;
+    /* 文本 */
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0px;
+}
+.cardItem_operation_popover {
+    flex-shrink: 0;
+    margin:-12px;
+}
+.cardItem_operation_popover-item {
+    text-align: center;
+    line-height: 2.3;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(56, 56, 56, 1);
+    cursor:pointer;
+}
+    .cardItem_operation_popover-item:hover {
+        background: rgba(166, 166, 166, 0.1);
+    }
+
+.cardItem_operation_operationBtn {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 2px;
+    background: rgba(241, 242, 243, 1);
+    cursor: pointer;
+}
+
+/* 以下 修改el组件样式 */
+.el-popover {
+    min-width: auto !important;
+}
+
+/* 以下 自定义公用样式 */
+.stateColor-green {
+    color: rgba(44, 185, 88, 1);
+    background: rgba(44, 185, 88, 0.1);
+}
+
+.stateColor-orange {
+    color: rgba(255, 146, 51, 1);
+    background: rgba(255, 146, 51, 0.1);
+}
+
+.stateColor-grey {
+    color: rgba(166, 166, 166, 1);
+    background: rgba(166, 166, 166, 0.1);
+}
+
+.df {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.df-wn {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.flex-dc{
+    flex-direction:column;
+}
+
+.flex-ac {
+    align-items: center;
+}
+
+.flex-as {
+    align-items: flex-start;
+}
+
+.flex-ae {
+    align-items: flex-end;
+}
+
+.flex-jc {
+    justify-content: center;
+}
+
+.flex-js {
+    justify-content: flex-start;
+}
+
+.flex-je {
+    justify-content: flex-end;
+}
+
+.flex-jsb {
+    justify-content: space-between;
+}

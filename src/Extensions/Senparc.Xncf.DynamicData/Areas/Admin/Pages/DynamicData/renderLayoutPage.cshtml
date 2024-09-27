@@ -1,0 +1,133 @@
+﻿@page
+@model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.renderLayoutPageModel
+@{
+    ViewData["Title"] = "DynamicData 渲染布局页面";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/DynamicData/renderLayoutPage.css" rel="stylesheet" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
+    <el-breadcrumb-item>渲染布局页面</el-breadcrumb-item>
+}
+
+<el-container>
+    @* 菜单 *@
+    <div class="main_header df-wn flex-ac">
+        <div class="menu-area">
+            <div class="menu-list df-wn flex-ac">
+                <div v-for="(item,index) in layoutMenuList" :key="index" class="menu-item"
+                    @@click.self="handleSwitchMenu(index)">
+                    {{ item.name }}
+                </div>
+            </div>
+        </div>
+        @* <div class="menu-newbtn" @@click="handleAddMenu">
+        <i class="el-icon-plus"></i>新增菜单
+        </div> *@
+    </div>
+    @* 主体操作区域 *@
+    <div class="main_content">
+        @* 全局按钮 *@
+        <template>
+            <div class="globalButton-area df flex-ac flex-js"></div>
+        </template>
+        @* 组件区域 *@
+        <div v-for="(item,index) in layoutComponentsList" :key="index" class="component-area">
+            <template v-if="item.componentType === 'table'">
+                <div v-if="item.pagConfig&&item.pagConfig.enable&&item.pagConfig.position.includes('top')"
+                    class="df-wn flex-ac" :class="[positionClassOpt[item.pagConfig.position]]">
+                    <el-pagination :pager-count="item.pagConfig.pagerCount" :page-sizes="item.pagConfig.pageSizes"
+                        :page-size="item.pagConfig.pageSizes[0]" :layout="item.pagConfig.layoutStr" :current-page="1"
+                        :total="100">
+                    </el-pagination>
+                </div>
+                <div v-if="item.tableColumn&&item.tableColumn.length" class="w-table" @@click.stop>
+                    @* :height="item.tableConfig.height"
+                    :max-height="item.tableConfig.maxHeight"
+                    :style="{ width: parseInt(item.tableConfig.width)+'px' }" *@
+                    <el-table :data="item.tableMockData" :border="item.tableConfig ? item.tableConfig.border : false"
+                        :cell-class-name="cellClassName" :header-cell-class-name="headerCellClassName">
+                        <el-table-column v-for="(col, index) in item.tableColumn" :key="index"
+                            :column-key="col.columnkey" :prop="col.field" :label="col.name" :width="col.columnWidth">
+                            @* 自定义列 按钮 *@
+                            <div v-if="col.property === 'customColumn'" class="df flex-as table_customColumn_btnBox">
+                                <span v-for="(btn,bindex) in col.btnList" class="table_customColumn_btn"
+                                    @@click="customColumnBtnSelect(btn,bindex)">
+                                    {{ btn.name }}
+                                </span>
+                            </div>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="item.pagConfig&&item.pagConfig.enable&&item.pagConfig.position.includes('bottom')"
+                    class="df-wn flex-ac" :class="[positionClassOpt[item.pagConfig.position]]">
+                    <el-pagination :pager-count="item.pagConfig.pagerCount" :page-sizes="item.pagConfig.pageSizes"
+                        :page-size="item.pagConfig.pageSizes[0]" :layout="item.pagConfig.layoutStr" :current-page="1"
+                        :total="100">
+                    </el-pagination>
+                </div>
+            </template>
+            <template v-if="item.componentType === 'form'">
+                @* ref="ruleForm" :rules="rules" *@
+                <el-form v-if="item.columnData&&item.columnData.length"
+                    :label-position="item.formConfig ? item.formConfig.labelPosition : 'left'" label-width="100px"
+                    class="demo-ruleForm">
+                    <el-form-item v-for="(fItem,fIndex) in item.columnData" :key="fIndex" :label="fItem.name"
+                        :prop="fItem.field" @@click.native.stop="handleFormItemMouseDown(index,fIndex)">
+                        @* 输入框 *@
+                        <el-input v-if="fItem.formItemType === 'input'" :type="fItem.type" v-model="fItem.value"
+                            :placeholder="fItem.placeholder"></el-input>
+                        @* 开关 *@
+                        <el-switch v-if="fItem.formItemType === 'switch'" v-model="fItem.value"></el-switch>
+                        @* 下拉选择 *@
+                        <el-select v-if="fItem.formItemType === 'select'" v-model="fItem.value"
+                            :placeholder="fItem.placeholder">
+                            <el-option v-for="(optItem,optIndex) in fItem.optionData" :key="optIndex"
+                                :label="optItem.label" :value="optItem.value"></el-option>
+                        </el-select>
+                        @* 固定时间点 *@
+                        <el-time-select v-if="fItem.formItemType === 'timeSelect'" v-model="fItem.value"
+                            :picker-options="fItem.pickerOptions" :placeholder="fItem.placeholder">
+                        </el-time-select>
+                        @* 任意时间点 *@
+                        <el-time-picker v-if="fItem.formItemType === 'timePicker'" v-model="fItem.value"
+                            :placeholder="fItem.placeholder"></el-time-picker>
+                        @* 日期 时间 *@
+                        <el-date-picker v-if="fItem.formItemType === 'date'" :type="fItem.type" v-model="fItem.value"
+                            :placeholder="fItem.placeholder"></el-date-picker>
+                        @* 复选框 *@
+                        <el-checkbox-group v-if="fItem.formItemType === 'checkbox'" v-model="fItem.value">
+                            <el-checkbox v-for="(checkItem,checkIndex) in fItem.optionData" :label="checkItem.value"
+                                :key="checkIndex">
+                                {{ checkItem.label }}
+                            </el-checkbox>
+                        </el-checkbox-group>
+                        @* 单选框 *@
+                        <el-radio-group v-if="fItem.formItemType === 'radio'" v-model="fItem.value">
+                            <el-radio v-for="(radioItem,radioIndex) in fItem.optionData" :label="radioItem.value"
+                                :key="radioIndex">
+                                {{ radioItem.label }}
+                            </el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">提交</el-button>
+                        @* <el-button @@click="resetForm('ruleForm')">重置</el-button> *@
+                    </el-form-item>
+                </el-form>
+            </template>
+        </div>
+    </div>
+</el-container>
+
+@section scripts {
+    <script src="~/js/DynamicData/lib/axios.min.js"></script>
+    <script src="~/js/DynamicData/axios.js"></script>
+    <script src="~/js/DynamicData/renderLayoutPage.js"></script>
+}
