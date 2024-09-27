@@ -16,6 +16,10 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.DynamicData.Models.DatabaseModel.Dto;
 using Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.DynamicData.Domain.Services;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace Senparc.Xncf.DynamicData
 {
@@ -93,6 +97,14 @@ namespace Senparc.Xncf.DynamicData
                 z.CreateMap<TableData, TableDataDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
+        }
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
         }
     }
 }

@@ -16,12 +16,19 @@ namespace Senparc.Xncf.DynamicData
     {
         #region IAreaRegister 接口
 
-        public string HomeUrl => "/Admin/DynamicData/Index";
+      //  public string HomeUrl => "/Admin/DynamicData/Index";
+
+      //  public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
+      //                   new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+			 		//	 new AreaPageMenuItem(GetAreaUrl($"/Admin/DynamicData/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+			 		//};
+
+        public string HomeUrl => "/Admin/DynamicData/";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/DynamicData/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
-			 		};
+                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"),"界面设置","fa fa-laptop"),
+                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"),"数据库表设置","fa fa-laptop")
+                     };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
