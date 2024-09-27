@@ -15,6 +15,16 @@ var app = new Vue({
             dialogFormVisible: false,
             dialogFormTitle: '新增模型',
             formLabelWidth: '',
+            dateRange: [],
+            usageData: [
+                { date: '2024-08-01', usage: 100 },
+                { date: '2024-08-02', usage: 120 },
+                { date: '2024-08-03', usage: 90 },
+                { date: '2024-08-04', usage: 110 },
+                { date: '2024-08-05', usage: 150 },
+                { date: '2024-08-06', usage: 80 },
+                { date: '2024-08-07', usage: 130 },
+            ],
             newModelForm: {
                 modelName: '',
                 modelAPI: '',
@@ -46,6 +56,7 @@ var app = new Vue({
     mounted() {
         var chartDom = document.getElementById('main');
         var myChart = echarts.init(chartDom);
+        
         var option;
 
         option = {
@@ -70,9 +81,19 @@ var app = new Vue({
                 }
             ]
         };
-
         myChart.setOption(option);
+        this.initChart();
         return {
+            dateRange: [],
+            usageData: [
+                { date: '2024-08-01', usage: 100 },
+                { date: '2024-08-02', usage: 120 },
+                { date: '2024-08-03', usage: 90 },
+                { date: '2024-08-04', usage: 110 },
+                { date: '2024-08-05', usage: 150 },
+                { date: '2024-08-06', usage: 80 },
+                { date: '2024-08-07', usage: 130 },
+            ],
             topPrompts: [
                 { text: "生成风景图片", usageCount: 120 },
                 { text: "编写故事", usageCount: 110 },
@@ -84,6 +105,8 @@ var app = new Vue({
                     { name: "Stable Diffusion", usageCount: 130 },
                 ],
         };
+        
+        
         
     },
     watch: {
@@ -99,6 +122,45 @@ var app = new Vue({
         this.getList();
     },
     methods: {
+        initChart() {
+            this.chart = echarts.init(this.$refs.chart);
+            this.updateChart();
+        },
+        updateChart() {
+            var filteredData = this.filterDataByDateRange(this.dateRange);
+            var dates = filteredData.map(item => item.date);
+            var usageCounts = filteredData.map(item => item.usage);
+            this.chart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                },
+                yAxis: {
+                    type: 'value',
+                },
+                series: [
+                    {
+                        data: usageCounts,
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {},
+                    },
+                ],
+                color: ['#409EFF'],
+            });
+        },
+        filterDataByDateRange(dateRange) {
+            if (dateRange.length === 0) {
+                return this.usageData;
+            }
+            const [start, end] = dateRange;
+            return this.usageData.filter(item => {
+                return new Date(item.date) >= new Date(start) && new Date(item.date) <= new Date(end);
+            });
+        },//echarts表格
         closeDialog() {
             this.$refs.newDialogModelForm.resetFields();
         },
