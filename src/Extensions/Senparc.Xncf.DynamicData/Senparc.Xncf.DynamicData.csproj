@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.2.3.1-preview1.7</Version>
+    <Version>0.2.4-pre-alpha.1</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -24,6 +24,7 @@
             [2024-08-12] v0.1.4-preview1 优化 DynamicData Service,重构封装 DataTemplate、ColumnTemplate 对象
             [2024-08-13] v0.2.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
 			[2024-09-10] v0.2.3-preview1 升级缓存基础库
+			[2024-09-27] v0.2.4-pre-alpha.1 完善 DynamicData 早期图形界面
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -38,7 +38,7 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => "动态数据基础模块，用于创建和管理动态数据";
+        public override string Description => "动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
