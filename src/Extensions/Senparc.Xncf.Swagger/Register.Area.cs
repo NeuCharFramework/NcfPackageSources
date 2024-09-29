@@ -28,9 +28,13 @@ namespace Senparc.Xncf.Swagger
                 .AddCookie(Utils.ConfigurationHelper.SWAGGER_ATUH_COOKIE, options =>
                 {
                     if (Utils.ConfigurationHelper.CustsomSwaggerOptions.UseAdminAuth)
+                    {
                         options.LoginPath = "/Admin/Login/";
+                    }
                     else
+                    { 
                         options.LoginPath = $"/{Utils.ConfigurationHelper.CustsomSwaggerOptions.RoutePrefix}/login.html";
+                    }
                     options.Cookie.HttpOnly = false;
                 });
 
