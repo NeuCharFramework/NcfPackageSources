@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.10.4.1-preview1</Version>
+    <Version>0.10.5-preview1</Version>
     <AssemblyName>Senparc.Xncf.SmsExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.SmsExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
