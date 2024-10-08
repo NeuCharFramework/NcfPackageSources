@@ -4,40 +4,168 @@
     ViewData["Title"] = "AgentsManager 首页";
     Layout = "_Layout_Vue";
 }
+@section Style {
+    <link href="~/css/AgentsManager/index.css" rel="stylesheet" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+}
 
-@section breadcrumbs{
+@section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>Agents 管理模块</el-breadcrumb-item>
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div>
-    <el-container>
-        <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
-        </el-header>
+<el-tabs v-model="tabsActiveName" class="pageTabs" @@tab-click="handleTabsClick">
+    <el-tab-pane label="智能体" name="first">
+        <div class="tabPane-container">
+            @* 侧边 *@
+            <div class="sidebar-container">
+                <div class="sidebar-head-container">
+                    <div class="df-wn flex-ac flex-jsb sidebar-title-row">
+                        <div class="sidebar-titleRow-title text-ellipsis">智能体列表</div>
+                        <div class="sidebar-titleRow-icon df-wn flex-ac flex-jc" @@click="handleDrawerOpenBtn('agent')">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </div>
+                    <div class="df-wn flex-ac flex-jsb sidebar-search-row">
+                        <el-input v-model="agentQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                            class="sidebar-searchRow-input"></el-input>
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="agentFCPVisible">
+                            <div class="popover-filterCriteria">
+                                <div class="sortRow" @@click="handleFilterCriteria('agent','timeSort')">
+                                    <span class="sortRowText">按时间排序</span>
+                                    <div class="sortRowIconBox">
+                                        <i class="el-icon-caret-top sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':agentQueryList.timeSort}"></i>
+                                        <i class="el-icon-caret-bottom sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':!agentQueryList.timeSort}"></i>
+                                    </div>
+                                </div>
+                                <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
+                                    <span class="sortRowText">选择状态</span>
+                                </div>
+                                <div v-for="(fitem,findex) in agentFilterCriteria" :key="findex" class="sortRow"
+                                    @@click="handleFilterCriteria('agent',fitem.value)">
+                                    <span class="sortRowText">{{ fitem.label }}</span>
+                                    <i v-if="fitem.checked" class="el-icon-check sortRowIcon"></i>
+                                </div>
+                            </div>
+                            <i slot="reference" class="el-icon-more sidebar-searchRow-icon"></i>
+                            @* <img slot="reference" src="~/image/AgentsManager/icon-setEllipsis.png" alt=""
+                            class="sidebar-searchRow-icon"> *@
+                        </el-popover>
+                    </div>
+                </div>
+                <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
+                    <template v-if="agentList&&agentList.length">
+                        <div class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarAgentIndex === ''}"
+                            @@click="handleAgentViewAll">
+                            全部智能体
+                        </div>
+                        <div v-for="(item,index) in agentList" :key="index" class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarAgentIndex === index}" :title="item.name"
+                            @@click="handleAgentView(item,index)">
+                            {{ item.name }}
+                        </div>
+                    </template>
+                </el-scrollbar>
+            </div>
+            @* 主体内容 *@
+            <div class="main-container agent-container">
+                <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
+                    <div class="agent-listWrap">
+                        <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
+                            <div class="agentCard-statebox" :class="[agentStateColor[aitem.state]]">{{
+                                agentStateText[aitem.state] }}
+                            </div>
+                            <div class="agentCard-upperHalfbox">
+                                <img :src="aitem.avatar" alt="" class="upperHalfbox_avatar">
+                                <div class="upperHalfbox_describe">
+                                    <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
+                                        aitem.name }}</div>
+                                    <div class="upperHalfbox_describe_introduce text-ellipsis-2line"
+                                        :title="aitem.introduction">{{
+                                        aitem.introduction }}</div>
+                                </div>
+                            </div>
+                            <div class="agentCard-lowerHalfbox">
+                                <div class="lowerHalfbox_label">参加中</div>
+                                <div class="lowerHalfbox_quantity">{{ aitem.numberParticipants }}</div>
+                                <div class="lowerHalfbox_label">评分</div>
+                                <div class="lowerHalfbox_score">{{ aitem.score }}</div>
+                                <div class="lowerHalfbox_operation">编辑</div>
+                                <div class="lowerHalfbox_operation">详情</div>
+                            </div>
+                        </div>
+                    </div>
+                </el-scrollbar>
+                @* 分页 *@
+                <el-pagination style="margin-top: 20px;padding: 0px;" background layout="prev, pager, next"
+                    :total="1000"></el-pagination>
+            </div>
+        </div>
+    </el-tab-pane>
+    <el-tab-pane label="组" name="second">组</el-tab-pane>
+    <el-tab-pane label="任务" name="third">任务</el-tab-pane>
+</el-tabs>
 
-        <!-- 此处也可以加 SideMenu -->
-        @*<el-aside width="200px">
-            <el-menu background-color="#304156" default-active="1"
-                        text-color="#bfcbd9" active-text-color="#409eff">
-                @(await Html.PartialAsync("_SideMenu"))
-            </el-menu>
-        </el-aside>*@
-        <el-main>
-            <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
-            <h4>@Model.XncfRegister.Description</h4>
-            <br />
-            <i>当前模块为自动生成模块</i>
-        </el-main>
-    </el-container>
-</div>
+@* 抽屉 新增智能体 *@
+<el-drawer :visible.sync="drawerVisible.agent" direction="rtl" :with-header="false" size="540px">
+    <div class="drawerRtl">
+        @* 内容中的头（包括标题和关闭图标） *@
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title">新增智能体</div>
+            <div class="drawerRtl__header__close" @@click="handleDrawerClose('agent')">&times;</div>
+        </div>
+        @* 内容中的主体内容 *@
+        <div class="drawerRtl__body">
+            <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize"
+                label-position="left" label-width="80px" class="agentForm-container">
+                <el-form-item label="智能体名称" prop="name">
+                    <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="SystemMessage" required>
+                    <el-radio-group v-model="agentForm.systemMessageType">
+                        <el-radio label="1" border>自选</el-radio>
+                        <el-radio label="2" border disabled>手动</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessageId">
+                    <el-select v-model="agentForm.systemMessageId" style="width:100%" placeholder="请选择">
+                        <el-option label="SystemMessage1" value="SystemMessage1"></el-option>
+                        <el-option label="SystemMessage2" value="SystemMessage2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessageInput">
+                    <el-input v-model="agentForm.systemMessageInput" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="说明" prop="introduction">
+                    <el-input type="textarea" v-model="agentForm.introduction" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="外接平台" prop="platform">
+                    <el-select v-model="agentForm.platform" style="width:100%" placeholder="请选择">
+                        <el-option label="外接平台1" value="外接平台1"></el-option>
+                        <el-option label="外接平台2" value="外接平台2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="外接平台参数" prop="parameter">
+                    <el-input v-model="agentForm.parameter" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="agent头像" prop="avatar">
+                </el-form-item>
+            </el-form>
+        </div>
+        @* 内容中固定的footer *@
+        <div class="drawerRtl__footer text-right">
+            <el-button :size="elSize" @@click="handleDrawerClose('agent')">取消</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleDrawerSubmit('agent')">确认</el-button>
+        </div>
+    </div>
+</el-drawer>
 
-
-@section scripts{
-    <script>
-        new Vue({
-            el: "#app"
-        });
-    </script>
+@section scripts {
+    <script src="~/js/AgentsManager/lib/axios.min.js"></script>
+    <script src="~/js/AgentsManager/axios.js"></script>
+    <script src="~/js/AgentsManager/index.js"></script>
 }
