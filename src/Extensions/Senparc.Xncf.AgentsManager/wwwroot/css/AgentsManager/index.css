@@ -69,26 +69,26 @@
     gap: 10px;
 }
 
-    .sidebar-head-container .sidebar-title-row .sidebar-titleRow-title {
-        flex-grow: 1;
-        font-size: 16px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: rgba(56, 56, 56, 1);
-    }
+.sidebar-head-container .sidebar-title-row .sidebar-titleRow-title {
+    flex-grow: 1;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(56, 56, 56, 1);
+}
 
-    .sidebar-head-container .sidebar-title-row .sidebar-titleRow-icon {
-        flex-shrink: 0;
-        width: 27px;
-        height: 18px;
-        border-radius: 4px;
-        color: #fff;
-        background: rgba(42, 130, 228, 1);
-        font-size: 12px;
-        font-weight: 400;
-        white-space: nowrap;
-        cursor: pointer;
-    }
+.sidebar-head-container .sidebar-title-row .sidebar-titleRow-icon {
+    flex-shrink: 0;
+    width: 27px;
+    height: 18px;
+    border-radius: 4px;
+    color: #fff;
+    background: rgba(42, 130, 228, 1);
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    cursor: pointer;
+}
 
 /* 搜索区域 */
 .sidebar-head-container .sidebar-search-row {
@@ -96,19 +96,19 @@
     /* gap: 20px; */
 }
 
-    .sidebar-head-container .sidebar-search-row .sidebar-searchRow-input {
-        width: 166px;
-    }
+.sidebar-head-container .sidebar-search-row .sidebar-searchRow-input {
+    width: 166px;
+}
 
-    .sidebar-head-container .sidebar-search-row .sidebar-searchRow-icon {
-        flex-shrink: 0;
-        /* width: 3px;
+.sidebar-head-container .sidebar-search-row .sidebar-searchRow-icon {
+    flex-shrink: 0;
+    /* width: 3px;
   height: 16px; */
-        color: rgba(166, 166, 166, 1);
-        cursor: pointer;
-        font-size: 18px;
-        transform: rotate(90deg);
-    }
+    color: rgba(166, 166, 166, 1);
+    cursor: pointer;
+    font-size: 18px;
+    transform: rotate(90deg);
+}
 
 /* 筛选条件 popover */
 .popover-filterCriteria {
@@ -118,53 +118,53 @@
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-    .popover-filterCriteria .sortRow {
-        height: 27px;
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 6px;
-        overflow: hidden;
-        cursor: pointer;
-    }
+.popover-filterCriteria .sortRow {
+    height: 27px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    overflow: hidden;
+    cursor: pointer;
+}
 
-    .popover-filterCriteria .sortRowDivision {
-        border-top: 1px solid rgba(229, 229, 229, 1);
-    }
+.popover-filterCriteria .sortRowDivision {
+    border-top: 1px solid rgba(229, 229, 229, 1);
+}
 
-    .popover-filterCriteria .sortRow .sortRowText {
-        flex-grow: 1;
-        font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: rgba(128, 128, 128, 1);
-        text-align: left;
-        /* vertical-align: top; */
-    }
+.popover-filterCriteria .sortRow .sortRowText {
+    flex-grow: 1;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(128, 128, 128, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
 
-    .popover-filterCriteria .sortRow .sortRowIcon {
-        font-size: 16px;
-        color: rgba(42, 130, 228, 1);
-    }
+.popover-filterCriteria .sortRow .sortRowIcon {
+    font-size: 16px;
+    color: rgba(42, 130, 228, 1);
+}
 
-    .popover-filterCriteria .sortRow .sortRowIconBox {
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        /* gap: 3px; */
-    }
+.popover-filterCriteria .sortRow .sortRowIconBox {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* gap: 3px; */
+}
 
-        .popover-filterCriteria .sortRow .sortRowIconBox .sortRowIconTriangle {
-            font-size: 13px;
-            color: rgba(204, 204, 204, 1);
-        }
+.popover-filterCriteria .sortRow .sortRowIconBox .sortRowIconTriangle {
+    font-size: 13px;
+    color: rgba(204, 204, 204, 1);
+}
 
-        .popover-filterCriteria .sortRow .sortRowIconBox .sortRowIconActive {
-            color: rgba(42, 130, 228, 1)
-        }
+.popover-filterCriteria .sortRow .sortRowIconBox .sortRowIconActive {
+    color: rgba(42, 130, 228, 1)
+}
 
 /* 智能体 侧边列表 item */
 .sidebar-agentitem {
@@ -192,9 +192,13 @@
     background: rgba(255, 255, 255, 1);
 }
 
-/* 滚动区域 215 40 20 28  */
+.agent-container .el-scrollbar__wrap {
+    overflow-x: hidden;
+}
+
+/* 滚动区域 215 40 20 28 = 303 */
 .sidebar-agent-container {
-    height: calc(100vh - 303px);
+    height: calc(100vh - 255px);
 }
 
 .agent-listWrap {
@@ -238,41 +242,41 @@
     gap: 20px;
 }
 
-    .agentCard-upperHalfbox .upperHalfbox_avatar {
-        flex-shrink: 0;
-        width: 84px;
-        height: 84px;
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(229, 229, 229, 1);
-        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
-    }
+.agentCard-upperHalfbox .upperHalfbox_avatar {
+    flex-shrink: 0;
+    width: 84px;
+    height: 84px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(229, 229, 229, 1);
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+}
 
-    .agentCard-upperHalfbox .upperHalfbox_describe {
-        height: 84px;
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+.agentCard-upperHalfbox .upperHalfbox_describe {
+    height: 84px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-        .agentCard-upperHalfbox .upperHalfbox_describe .upperHalfbox_describe_title {
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            color: rgba(56, 56, 56, 1);
-            text-align: left;
-            /* vertical-align: top; */
-        }
+.agentCard-upperHalfbox .upperHalfbox_describe .upperHalfbox_describe_title {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(56, 56, 56, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
 
-        .agentCard-upperHalfbox .upperHalfbox_describe .upperHalfbox_describe_introduce {
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            color: rgba(128, 128, 128, 1);
-            text-align: left;
-            /* vertical-align: top; */
-        }
+.agentCard-upperHalfbox .upperHalfbox_describe .upperHalfbox_describe_introduce {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(128, 128, 128, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
 
 .agentCard-lowerHalfbox {
     padding: 12px 20px;
@@ -284,58 +288,206 @@
     gap: 15px;
 }
 
-    .agentCard-lowerHalfbox .lowerHalfbox_label {
-        flex-shrink: 0;
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: rgba(56, 56, 56, 1);
-        text-align: left;
-        /* vertical-align: top; */
-    }
+.agentCard-lowerHalfbox .lowerHalfbox_label {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(56, 56, 56, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
 
-    .agentCard-lowerHalfbox .lowerHalfbox_quantity {
-        flex-grow: 1;
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: rgba(255, 141, 26, 1);
-        text-align: left;
-        /* vertical-align: top; */
-    }
+.agentCard-lowerHalfbox .lowerHalfbox_quantity {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(255, 141, 26, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
 
-    .agentCard-lowerHalfbox .lowerHalfbox_score {
-        flex-grow: 1;
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: rgba(255, 87, 51, 1);
-        text-align: left;
-        /* vertical-align: top; */
-    }
+.agentCard-lowerHalfbox .lowerHalfbox_score {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(255, 87, 51, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
 
-    .agentCard-lowerHalfbox .lowerHalfbox_operation {
-        flex-shrink: 0;
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: rgba(64, 158, 255, 1);
-        text-align: left;
-        cursor: pointer;
-        /* vertical-align: top; */
-    }
+.agentCard-lowerHalfbox .lowerHalfbox_operation {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(64, 158, 255, 1);
+    text-align: left;
+    cursor: pointer;
+    /* vertical-align: top; */
+}
 
-/* 新增agent 表单容器 */
-.agentForm-container {
+/* 组侧边 tree node */
+.group-tree .el-tree-node__content {
+    height: 34px;
+}
+
+.customGroupTreeNode {
+    flex-grow: 1;
+    gap: 10px;
+}
+
+.customGroupTreeNode .groupTreeNodeText {
+    flex-grow: 1;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(56, 56, 56, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
+
+/* 组 主体内容 */
+.group-container {
+    padding: 20px;
+    background: rgba(255, 255, 255, 1);
+}
+
+.groupInfoRow {
+    margin-bottom: 10px;
+    height: 35px;
+}
+
+.groupInfoRow .groupInfoRow-name {
+    /* min-width: 150px; */
+    /* flex-basis: 160px; */
+    margin-right: 60px;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0px;
+    color: rgba(0, 0, 0, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
+
+.groupInfoRow .groupInfoRow-info {
+    margin-right: 20px;
+    flex-grow: 1;
+    gap: 60px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(0, 0, 0, 1);
+    text-align: left;
+    white-space: nowrap;
+    /* vertical-align: top; */
+}
+
+.groupInfoRow .groupInfoRow-operation {
+    flex-shrink: 0;
+}
+
+
+/* 抽屉 表单容器 */
+.drawerForm-container {
     padding: 0px 20px;
 }
 
+.drawerForm-container .agentForm-agentAvatarBox {
+    gap: 10px;
+}
+
+.drawerForm-container .agentAvatarBoxItem {
+    flex-shrink: 0;
+    width: 58px;
+    height: 55px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(229, 229, 229, 1);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.drawerForm-container .agentAvatarBoxItem img {
+    flex-shrink: 0;
+    width: 35px;
+    height: auto;
+    /* height: 30px; */
+}
+
+.drawerForm-container .agentAvatarBoxItem-active {
+    border-color: rgba(42, 130, 228, 1);
+}
+
+.drawerForm-container .agentAvatarBoxItem-active img {
+    transform: translateY(-60px);
+    /* //颜色、x轴偏移量、y轴偏移量, */
+    filter: drop-shadow(#409eff 0 60px)
+        /* background-image: url(''), linear-gradient(#409eff, #409eff);
+    background-blend-mode: lighten;
+    background-size: cover; */
+}
+
+/* 组成员 */
+.groupFMB {
+    line-height: normal;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(229, 229, 229, 1);
+}
+
+.groupFMB_filter_addBtn {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(64, 158, 255, 1);
+    text-align: left;
+    /* vertical-align: top; */
+    cursor: pointer;
+}
+
+.groupFMB_ma_label {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(166, 166, 166, 1);
+    text-align: left;
+    /* vertical-align: top; */
+}
+
+.groupFMB_ma_list {
+    flex-grow: 1;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.groupFMB_ma_list .groupFMB_ma_list_item {
+    gap: 10px;
+    padding: 5px 10px;
+    border: 1px solid rgba(229, 229, 229, 1);
+    white-space: nowrap;
+}
+
+.groupFMB_ma_list .groupFMB_ma_list_item .groupFMB_ma_list_item_text {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(42, 130, 228, 1);
+    text-align: left;
+    vertical-align: top;
+}
 
 /* 抽屉 右侧自定义 */
 .drawerRtl {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* height: 100%; */
+    height: 100vh;
 }
 
 .drawerRtl__header {
@@ -391,10 +543,6 @@
     padding: 0px;
 }
 
-.el-scrollbar__wrap {
-    overflow-x: hidden;
-}
-
 
 /* 以下 自定义公用样式 */
 .mT20 {
@@ -426,6 +574,10 @@
 
 .cursorMove {
     cursor: move;
+}
+
+.text-right {
+    text-align: right;
 }
 
 .text-ellipsis {
