@@ -30,7 +30,7 @@
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="agentQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
-                            class="sidebar-searchRow-input"></el-input>
+                            class="sidebar-searchRow-input" @@change="handleFilterChange($event,'agent')"></el-input>
                         <el-popover placement="bottom" width="90" trigger="click" v-model="agentFCPVisible">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('agent','timeSort')">
@@ -84,7 +84,9 @@
                                     agentStateText[aitem.state] }}
                                 </div>
                                 <div class="agentCard-upperHalfbox">
-                                    <img :src="aitem.avatar" alt="" class="upperHalfbox_avatar">
+                                    <div class="df-wn flex-ac flex-jc avatarBox">
+                                        <img :src="aitem.avatar" alt="" class="upperHalfbox_avatar">
+                                    </div>
                                     <div class="upperHalfbox_describe">
                                         <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
                                             aitem.name }}</div>
@@ -169,7 +171,7 @@
                                     <div class="agentDetails-main-left-list">
                                         <div class="agentDetails-main-left-list-filter">
                                             <el-input v-model="agentDetailsGroupQueryList.filter" placeholder="请输入名称搜索"
-                                                suffix-icon="el-icon-search"></el-input>
+                                                suffix-icon="el-icon-search" @@change="handleFilterChange($event,'agentGroup')"></el-input>
                                         </div>
                                         <el-scrollbar class="sidebar-agentDetails-main-left"
                                             wrap-class="scrollbar-wrapper">
@@ -198,7 +200,7 @@
                                     <div class="agentDetails-main-left-list">
                                         <div class="agentDetails-main-left-list-filter">
                                             <el-input v-model="agentDetailsTaskQueryList.filter" placeholder="请输入名称搜索"
-                                                suffix-icon="el-icon-search"></el-input>
+                                                suffix-icon="el-icon-search" @@change="handleFilterChange($event,'agentTask')"></el-input>
                                         </div>
                                         <el-scrollbar class="sidebar-agentDetails-main-left"
                                             wrap-class="scrollbar-wrapper">
@@ -417,7 +419,7 @@
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="groupQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
-                            class="sidebar-searchRow-input"></el-input>
+                            class="sidebar-searchRow-input" @@change="handleFilterChange($event,'group')"></el-input>
                         <el-popover placement="bottom" width="90" trigger="click" v-model="groupFCPVisible">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('group','timeSort')">
@@ -585,14 +587,13 @@
                 <div class="sidebar-head-container">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
                         <div class="sidebar-titleRow-title text-ellipsis">任务列表</div>
-
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="taskQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
-                            class="sidebar-searchRow-input"></el-input>
+                            class="sidebar-searchRow-input" @@change="handleFilterChange($event,'task')"></el-input>
                         <el-popover placement="bottom" width="90" trigger="click" v-model="taskFCPVisible">
                             <div class="popover-filterCriteria">
-                                <div class="sortRow" @@click="handleFilterCriteria('agentTask','timeSort')">
+                                <div class="sortRow" @@click="handleFilterCriteria('task','timeSort')">
                                     <span class="sortRowText">按时间排序</span>
                                     <div class="sortRowIconBox">
                                         <i class="el-icon-caret-top sortRowIconTriangle"
@@ -605,7 +606,7 @@
                                     <span class="sortRowText">选择状态</span>
                                 </div>
                                 <div v-for="(fitem,findex) in taskFilterCriteria" :key="findex" class="sortRow"
-                                    @@click="handleFilterCriteria('agent',fitem.value)">
+                                    @@click="handleFilterCriteria('task',fitem.value)">
                                     <span class="sortRowText">{{ fitem.label }}</span>
                                     <i v-if="fitem.checked" class="el-icon-check sortRowIcon"></i>
                                 </div>
@@ -766,7 +767,7 @@
                             <div class="df-wn flex-ac" style="gap: 10px;">
                                 <el-input v-model="groupAgentQueryList.filter" size="small"
                                     placeholder="请填写"></el-input>
-                                <el-button size="small" icon="el-icon-search">搜索</el-button>
+                                <el-button size="small" icon="el-icon-search" @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
                             </div>
                             <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('agentDialog')">
                                 新增智能体

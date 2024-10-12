@@ -76,6 +76,7 @@ function isNumber(val) {
 function isObjEmpty(obj) {
     return Object.keys(obj).length === 0;
 }
+
 /**
  *Created by PanJiaChen on 16/11/29.
  * @param {Sting} url
@@ -402,6 +403,21 @@ var app = new Vue({
     },
     beforeDestroy() { },
     methods: {
+        // 跳转 prompt
+        jumpPromptRange(urlType) {
+            let url = ''
+            if (urlType === 'promptRange') {
+                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+            }
+            if (urlType === 'model') {
+                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
+            }
+            if (urlType === 'modelParameter') {
+                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+            }
+            if (!url) return
+            simulationAELOperation(url)
+        },
         // 切换 智能体详情 tabs 页面
         handleAgentDetailsTabsClick(tab, event) {
             if (this.agentDetailsTabsActiveName === 'first') {
@@ -513,21 +529,9 @@ var app = new Vue({
             if (!refName) return
             this.$refs[refName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
                     const submitForm = this[formName] ?? {}
-                    if (btnType === 'agent' || btnType === 'agentDialog') {
-                        // submitForm
-                        // to do 调用接口
-                    }
-                    if (btnType === 'group') {
-                        // submitForm
-                        // to do 调用接口
-                    }
-                    if (btnType === 'groupStart') {
-                        // submitForm
-                        // to do 调用接口
-                    }
-                    this.visible[btnType] = false
+                    this.saveSubmitFormData(btnType, submitForm)
+                    // this.visible[btnType] = false
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -539,6 +543,34 @@ var app = new Vue({
             // this[formName][propName] = item
             this.$set(this[formName], `${propName}`, item)
             this.$refs[refFormEL]?.validateField('avatar', () => { })
+        },
+        // 筛选输入变化
+        handleFilterChange(value, filterType) {
+            console.log('handleFilterChange', filterType, value)
+            if (filterType === 'agent') {
+                this.agentQueryList.filter = value
+                this.getAgentListData(1, 'agent')
+            }
+            if (filterType === 'agentGroup') {
+                this.agentDetailsGroupQueryList.filter = value
+                this.getGroupListData(1, 'agentGroup')
+            }
+            if (filterType === 'agentTask') {
+                this.agentDetailsTaskQueryList.filter = value
+                this.gettaskListData(1, 'agentTask')
+            }
+            if (filterType === 'group') {
+                this.groupQueryList.filter = value
+                this.getGroupListData(1, 'group')
+            }
+            if (filterType === 'groupAgent') {
+                this.groupAgentQueryList.filter = value
+                this.getAgentListData(1, 'groupAgent')
+            }
+            if (filterType === 'task') {
+                this.taskQueryList.filter = value
+                this.gettaskListData(1, 'task')
+            }
         },
         // 筛选条件事件 agent  group task
         handleFilterCriteria(filterType, fieldType) {
@@ -744,13 +776,16 @@ var app = new Vue({
             console.log('groupMembersCancel', item)
         },
         // 获取 智能体 数据
-        getAgentListData(page, queryType) {
+        async getAgentListData(page, queryType) {
             // console.log('getAgentListData',page,queryType);
+            const queryList = {}
             if (queryType === 'agent') {
                 this.agentQueryList.page = page ?? 1
+                Object.assign(queryList, this.agentQueryList)
             }
             if (queryType === 'groupAgent') {
                 this.groupAgentQueryList.page = page ?? 1
+                Object.assign(queryList, this.groupAgentQueryList)
             }
             // 模拟数据
             const _agentList = []
@@ -784,15 +819,37 @@ var app = new Vue({
                 this.groupAgentList = _agentList
                 this.groupAgentTotal = _agentList.length
             }
+            // return await serviceAM.post('', queryList)
+            //     .then(res => {
+            //         if (res.data.success) {
+            //             const agentData = res?.data?.data ?? []
+            //             if (queryType === 'agent') {
+            //                 this.agentList = agentData
+            //             }
+            //             if (queryType === 'groupAgent') {
+            //                 this.groupAgentList = agentData
+            //                 this.groupAgentTotal = agentData.length
+            //             }
+            //         } else {
+            //             app.$message({
+            //                 message: res.data.errorMessage || res.data.data || 'Error',
+            //                 type: 'error',
+            //                 duration: 5 * 1000
+            //             })
+            //         }
+            //     })
         },
         // 获取 组 数据
-        getGroupListData(page, queryType) {
+        async getGroupListData(page, queryType) {
             // console.log('getGroupListData',page,queryType);
+            const queryList = {}
             if (queryType === 'group') {
                 this.groupQueryList.page = page ?? 1
+                Object.assign(queryList, this.groupQueryList)
             }
             if (queryType === 'agentGroup') {
                 this.agentDetailsGroupQueryList.page = page ?? 1
+                Object.assign(queryList, this.agentDetailsGroupQueryList)
             }
             // 模拟数据
             const _groupList = []
@@ -897,7 +954,6 @@ var app = new Vue({
                     }]
                 })
             }
-            // to do 模拟接口
             if (queryType === 'group') {
                 this.groupTreeData = [{
                     id: '0',
@@ -914,15 +970,46 @@ var app = new Vue({
                 }]
                 this.agentDetailsGroupList = _groupList
             }
-
+            // to do 接口对接
+            // return await serviceAM.post('', queryList)
+            // .then(res => {
+            //     if (res.data.success) {
+            //         const groupData = res?.data?.data ?? []
+            //         if (queryType === 'group') {
+            //             this.groupTreeData = [{
+            //                 id: '0',
+            //                 name: '全部组',
+            //                 children: groupData
+            //             }]
+            //             this.groupList = groupData
+            //         }
+            //         if (queryType === 'agentGroup') {
+            //             this.agentDetailsGroupTreeData = [{
+            //                 id: '0',
+            //                 name: '全部组',
+            //                 children: groupData
+            //             }]
+            //             this.agentDetailsGroupList = groupData
+            //         }
+            //     } else {
+            //         app.$message({
+            //             message: res.data.errorMessage || res.data.data || 'Error',
+            //             type: 'error',
+            //             duration: 5 * 1000
+            //         })
+            //     }
+            // })
         },
-        // 获取任务列表
-        gettaskListData(page, queryType) {
+        // 获取 任务 数据
+        async gettaskListData(page, queryType) {
+            const queryList = {}
             if (queryType === 'task') {
                 this.taskQueryList.page = page ?? 1
+                Object.assign(queryList, this.taskQueryList)
             }
             if (queryType === 'agentTask') {
                 this.agentDetailsTaskQueryList.page = page ?? 1
+                Object.assign(queryList, this.agentDetailsTaskQueryList)
             }
             // 模拟数据
             const _taskList = []
@@ -973,7 +1060,7 @@ var app = new Vue({
                     }]
                 })
             }
-            // to do 模拟接口
+
             if (queryType === 'task') {
                 this.taskList = _taskList
                 this.taskDetails = _taskList.length ? _taskList[0] : ''
@@ -982,21 +1069,65 @@ var app = new Vue({
                 this.agentDetailsTaskList = _taskList
                 this.agentDetailsTaskDetails = _taskList.length ? _taskList[0] : ''
             }
+            // to do 接口对接
+            // return await serviceAM.post('', queryList)
+            // .then(res => {
+            //     if (res.data.success) {
+            //         const taskData = res?.data?.data ?? []
+            //         if (queryType === 'task') {
+            //             this.taskList = taskData
+            //             this.taskDetails = taskData.length ? taskData[0] : ''
+            //         }
+            //         if (queryType === 'agentTask') {
+            //             this.agentDetailsTaskList = taskData
+            //             this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
+            //         }
+            //     } else {
+            //         app.$message({
+            //             message: res.data.errorMessage || res.data.data || 'Error',
+            //             type: 'error',
+            //             duration: 5 * 1000
+            //         })
+            //     }
+            // })
         },
-        // 跳转 prompt
-        jumpPromptRange(urlType) {
-            let url = ''
-            if (urlType === 'promptRange') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+        // 保存 submitForm 数据
+        async saveSubmitFormData(btnType, serviceForm = {}) {
+            let serviceURL = ''
+            if (btnType === 'agent' || btnType === 'agentDialog') {
+                serviceURL = ''
             }
-            if (urlType === 'model') {
-                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
+            if (btnType === 'group') {
+                serviceURL = ''
             }
-            if (urlType === 'modelParameter') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+            if (btnType === 'groupStart') {
+                serviceURL = ''
             }
-            if (!url) return
-            simulationAELOperation(url)
+            if (!serviceURL) return
+            if (serviceForm.id) {
+                serviceURL += `?id=${serviceForm.id}`
+            }
+            return await serviceAM.post(serviceURL, serviceForm)
+                .then(res => {
+                    if (res.data.success) {
+                        this.visible[btnType] = false
+                        if (btnType === 'agent') {
+                            this.getAgentListData(1, 'agent')
+                        }
+                        if (btnType === 'agentDialog') {
+                            this.getAgentListData(1, 'groupAgent')
+                        }
+                        if (btnType === 'group' || btnType === 'groupStart') {
+                            this.getGroupListData(1, 'group')
+                        }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
         }
     }
 });

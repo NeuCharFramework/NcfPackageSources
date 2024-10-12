@@ -252,7 +252,7 @@
     gap: 20px;
 }
 
-.agentCard-upperHalfbox .upperHalfbox_avatar {
+/* .agentCard-upperHalfbox .upperHalfbox_avatar {
     flex-shrink: 0;
     width: 84px;
     height: 84px;
@@ -260,6 +260,30 @@
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(229, 229, 229, 1);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+} */
+.agentCard-upperHalfbox>.avatarBox {
+    flex-shrink: 0;
+    width: 84px;
+    height: 84px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(229, 229, 229, 1);
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+    /* cursor: pointer; */
+    overflow: hidden;
+}
+
+.agentCard-upperHalfbox>.avatarBox>img {
+    flex-shrink: 0;
+    width: 60px;
+    height: auto;
+    transform: translateY(-100px);
+    /* //颜色、x轴偏移量、y轴偏移量, */
+    filter: drop-shadow(#409eff 0 100px);
+    /* background-image: url(''), linear-gradient(#409eff, #409eff);
+    background-blend-mode: lighten;
+    background-size: cover; */
+    /* height: 30px; */
 }
 
 .agentCard-upperHalfbox .upperHalfbox_describe {
