@@ -1,0 +1,1059 @@
+{
+  "agents": [
+    {
+      "id": 1,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "首席执行官（CEO）",
+      "description": "公司整体运营的负责人，制定战略和业务计划，确保公司目标的实现。",
+      "numberParticipants": "50",
+      "participationGroup": "10",
+      "participationInTasks": "15",
+      "runTask": "20",
+      "score": "9.8",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar1.png"
+    },
+    {
+      "id": 2,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "市场总监",
+      "description": "负责公司品牌推广、市场战略及客户关系维护。",
+      "numberParticipants": "48",
+      "participationGroup": "9",
+      "participationInTasks": "13",
+      "runTask": "17",
+      "score": "9.6",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar2.png"
+    },
+    {
+      "id": 3,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "行为分析师（BCBA/ABA）",
+      "description": "提供基于应用行为分析（ABA）疗法的治疗，评估患者行为并制定干预计划。",
+      "numberParticipants": "47",
+      "participationGroup": "8",
+      "participationInTasks": "12",
+      "runTask": "16",
+      "score": "9.4",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar3.png"
+    },
+    {
+      "id": 4,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "心理学家（临床或教育心理学家）",
+      "description": "进行诊断评估、心理干预及治疗。",
+      "numberParticipants": "46",
+      "participationGroup": "7",
+      "participationInTasks": "11",
+      "runTask": "15",
+      "score": "9.5",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar4.png"
+    },
+    {
+      "id": 5,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "语言治疗师",
+      "description": "帮助自闭症患者提高语言和沟通技能。",
+      "numberParticipants": "45",
+      "participationGroup": "8",
+      "participationInTasks": "12",
+      "runTask": "14",
+      "score": "9.3",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar5.png"
+    },
+    {
+      "id": 6,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "职业治疗师",
+      "description": "帮助患者提高日常生活技能，提供感官整合疗法。",
+      "numberParticipants": "43",
+      "participationGroup": "7",
+      "participationInTasks": "11",
+      "runTask": "13",
+      "score": "9.2",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 3,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar1.png"
+    },
+    {
+      "id": 7,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "物理治疗师",
+      "description": "处理运动和身体协调问题。",
+      "numberParticipants": "42",
+      "participationGroup": "6",
+      "participationInTasks": "10",
+      "runTask": "12",
+      "score": "9.1",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar2.png"
+    },
+    {
+      "id": 8,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "特殊教育老师",
+      "description": "为患有自闭症的儿童和青少年设计和实施个性化教育计划（IEP）。",
+      "numberParticipants": "40",
+      "participationGroup": "6",
+      "participationInTasks": "9",
+      "runTask": "11",
+      "score": "9.0",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar3.png"
+    },
+    {
+      "id": 9,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "社工",
+      "description": "为家庭提供支持，帮助处理社交和心理方面的问题，连接资源。",
+      "numberParticipants": "39",
+      "participationGroup": "5",
+      "participationInTasks": "8",
+      "runTask": "10",
+      "score": "8.9",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 3,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar4.png"
+    },
+    {
+      "id": 10,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "康复顾问",
+      "description": "帮助患者通过康复计划提高独立生活能力。",
+      "numberParticipants": "38",
+      "participationGroup": "5",
+      "participationInTasks": "8",
+      "runTask": "9",
+      "score": "9.1",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar5.png"
+    },
+    {
+      "id": 11,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "客户服务经理",
+      "description": "处理患者及其家属的咨询、投诉和建议，确保客户体验顺畅。",
+      "numberParticipants": "37",
+      "participationGroup": "5",
+      "participationInTasks": "7",
+      "runTask": "8",
+      "score": "9.0",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar1.png"
+    },
+    {
+      "id": 12,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "家庭支持专家",
+      "description": "为自闭症患者的家庭提供支持和教育，帮助他们应对挑战。",
+      "numberParticipants": "36",
+      "participationGroup": "4",
+      "participationInTasks": "7",
+      "runTask": "8",
+      "score": "8.9",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar2.png"
+    },
+    {
+      "id": 13,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "病患福利顾问",
+      "description": "为患者家庭提供福利、医疗保险等方面的信息和建议。",
+      "numberParticipants": "35",
+      "participationGroup": "4",
+      "participationInTasks": "7",
+      "runTask": "8",
+      "score": "8.8",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 3,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar3.png"
+    },
+    {
+      "id": 14,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "培训经理",
+      "description": "为员工提供专业培训，确保他们具备最新的自闭症干预技能和知识。",
+      "numberParticipants": "34",
+      "participationGroup": "4",
+      "participationInTasks": "6",
+      "runTask": "7",
+      "score": "8.7",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar4.png"
+    },
+    {
+      "id": 15,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "IT经理",
+      "description": "负责公司内部系统和技术支持，确保临床记录、预约系统等信息化管理顺利进行。",
+      "numberParticipants": "33",
+      "participationGroup": "3",
+      "participationInTasks": "6",
+      "runTask": "7",
+      "score": "8.6",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar5.png"
+    },
+    {
+      "id": 16,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "数据分析师",
+      "description": "分析患者进展和治疗效果，帮助优化干预措施和公司服务。",
+      "numberParticipants": "32",
+      "participationGroup": "3",
+      "participationInTasks": "5",
+      "runTask": "6",
+      "score": "8.7",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 3,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar1.png"
+    },
+    {
+      "id": 17,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "软件开发人员",
+      "description": "开发和维护适合自闭症人群使用的应用程序和技术工具。",
+      "numberParticipants": "31",
+      "participationGroup": "3",
+      "participationInTasks": "5",
+      "runTask": "6",
+      "score": "8.5",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar2.png"
+    },
+    {
+      "id": 18,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "行政助理",
+      "description": "支持管理层的日常运营，包括安排会议、文件管理等。",
+      "numberParticipants": "30",
+      "participationGroup": "3",
+      "participationInTasks": "5",
+      "runTask": "6",
+      "score": "8.4",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar3.png"
+    },
+    {
+      "id": 19,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "办公室经理",
+      "description": "负责办公环境和后勤管理，确保日常运作顺畅。",
+      "numberParticipants": "29",
+      "participationGroup": "2",
+      "participationInTasks": "4",
+      "runTask": "5",
+      "score": "8.5",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 3,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar4.png"
+    },
+    {
+      "id": 20,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "财务助理",
+      "description": "协助处理财务报告、付款和账单管理。",
+      "numberParticipants": "28",
+      "participationGroup": "2",
+      "participationInTasks": "4",
+      "runTask": "5",
+      "score": "8.6",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar5.png"
+    },
+    {
+      "id": 21,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "人力资源经理",
+      "description": "负责招聘、员工培训、绩效管理和公司文化建设。",
+      "numberParticipants": "27",
+      "participationGroup": "2",
+      "participationInTasks": "3",
+      "runTask": "4",
+      "score": "8.4",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar1.png"
+    },
+    {
+      "id": 22,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "法律顾问",
+      "description": "处理公司合规问题、合同管理和法律风险。",
+      "numberParticipants": "26",
+      "participationGroup": "2",
+      "participationInTasks": "3",
+      "runTask": "4",
+      "score": "8.3",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 3,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar2.png"
+    },
+    {
+      "id": 23,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "市场营销专员",
+      "description": "制定推广计划，增加公司服务的曝光率。",
+      "numberParticipants": "25",
+      "participationGroup": "1",
+      "participationInTasks": "3",
+      "runTask": "4",
+      "score": "8.2",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 1,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar3.png"
+    },
+    {
+      "id": 24,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "公关社交经理",
+      "description": "管理公司在社交媒体平台上的形象和互动，推广服务和成功案例。",
+      "numberParticipants": "24",
+      "participationGroup": "1",
+      "participationInTasks": "2",
+      "runTask": "3",
+      "score": "8.1",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "state": 2,
+      "modelScore": "9.8",
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar4.png"
+    },
+    {
+      "id": 25,
+      "systemMessageType": "1",
+      "systemMessageId": "",
+      "systemMessageInput": "",
+      "name": "志愿者协调员",
+      "description": "招募并培训志愿者，安排他们参与不同的服务和活动。",
+      "numberParticipants": "23",
+      "participationGroup": "1",
+      "participationInTasks": "2",
+      "runTask": "3",
+      "score": "8.0",
+      "shootingRange": "plugin 测试",
+      "targetPath": "靶道",
+      "modelName": "AQOAP-trte",
+      "modelScore": "9.8",
+      "state": 1,
+      "platform": "",
+      "parameter": "",
+      "avatar": "/images/AgentsManager/avatar/avatar5.png"
+    }
+  ],
+  "group": [
+    {
+      "id": 1,
+      "name": "关于孤独症全程支持政策的讨论",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:03",
+      "groupLeader": "子轩",
+      "dockingPerson": "项目经理",
+      "description": "关于孤独症全程支持政策的讨论",
+      "state": 1
+    },
+    {
+      "id": 2,
+      "name": "讨论个性化干预计划的制定与家长培训",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:08",
+      "groupLeader": "雅馨",
+      "dockingPerson": "项目经理",
+      "description": "讨论个性化干预计划的制定与家长培训",
+      "state": 1
+    },
+    {
+      "id": 3,
+      "name": "提供心理支持方案与家庭咨询",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:13",
+      "groupLeader": "宇辰",
+      "dockingPerson": "项目经理",
+      "description": "提供心理支持方案与家庭咨询",
+      "state": 1
+    },
+    {
+      "id": 4,
+      "name": "讨论提升孤独症儿童语言能力的方案",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:18",
+      "groupLeader": "晨曦",
+      "dockingPerson": "项目经理",
+      "description": "讨论提升孤独症儿童语言能力的方案",
+      "state": 1
+    },
+    {
+      "id": 5,
+      "name": "讨论提升日常生活技能与托养模式",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:23",
+      "groupLeader": "梦婷",
+      "dockingPerson": "项目经理",
+      "description": "讨论提升日常生活技能与托养模式",
+      "state": 1
+    },
+    {
+      "id": 6,
+      "name": "讨论政府补贴与医保报销流程",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:28",
+      "groupLeader": "俊熙",
+      "dockingPerson": "项目经理",
+      "description": "讨论政府补贴与医保报销流程",
+      "state": 1
+    },
+    {
+      "id": 7,
+      "name": "讨论社区资源与家庭支持方案",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:33",
+      "groupLeader": "依诺",
+      "dockingPerson": "项目经理",
+      "description": "讨论社区资源与家庭支持方案",
+      "state": 1
+    },
+    {
+      "id": 8,
+      "name": "讨论个性化教育计划的制定与调整",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:38",
+      "groupLeader": "昊天",
+      "dockingPerson": "项目经理",
+      "description": "讨论个性化教育计划的制定与调整",
+      "state": 1
+    },
+    {
+      "id": 9,
+      "name": "讨论进展数据的跟踪与分析",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:43",
+      "groupLeader": "雨婷",
+      "dockingPerson": "项目经理",
+      "description": "讨论进展数据的跟踪与分析",
+      "state": 1
+    },
+    {
+      "id": 10,
+      "name": "讨论家长培训课程的内容与安排",
+      "numberTasks": "2",
+      "lastRunningTime": "2024-10-12 10:48",
+      "groupLeader": "皓宇",
+      "dockingPerson": "项目经理",
+      "description": "讨论家长培训课程的内容与安排",
+      "state": 1
+    }
+  ],
+  "task": [
+    {
+      "id": 2,
+      "name": "讨论个性化干预计划",
+      "startTime": "2024-10-12 10:05:00",
+      "duration": "5分钟",
+      "modelName": "行为分析讨论模型",
+      "description": "讨论个性化干预计划",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "2-1",
+          "sender": "行为分析师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:06",
+          "sendContent": "我将为孩子制定个性化的行为干预计划，使用应用行为分析（ABA）方法，帮助孩子在社交和日常生活中取得进展。"
+        },
+        {
+          "id": "2-2",
+          "sender": "行为分析师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:06",
+          "sendContent": "同时，我会培训家长，帮助您在家庭中有效地应用干预策略。"
+        },
+        {
+          "id": "4-2",
+          "sender": "语言治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:06",
+          "sendContent": "配合‘助教陪读教师’，确保孩子在课堂上得到充分支持。"
+        },
+        {
+          "id": "3-1",
+          "sender": "心理学家",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:07",
+          "sendContent": "我建议进行全面的心理评估，以识别孩子的情绪和行为问题，帮助他建立良好的情感管理能力。"
+        },
+        {
+          "id": "1-2",
+          "sender": "财务助理",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:07",
+          "sendContent": "我们将确保服务与政策衔接，帮助家长申请政府补贴和医保报销，减轻经济负担。"
+        },
+        {
+          "id": "6-1",
+          "sender": "财务助理",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:07",
+          "sendContent": "深圳市计划将更多康复训练项目纳入医保报销范围。我们会协助您申请补贴，减轻经济负担。"
+        },
+        {
+          "id": "10-1",
+          "sender": "培训经理",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:07",
+          "sendContent": "我建议您参加家长培训课程，学习如何有效支持孩子的干预。"
+        },
+        {
+          "id": "10-2",
+          "sender": "培训经理",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:08",
+          "sendContent": "课程内容将涵盖行为管理、情感支持等多方面，确保家长能够参与到孩子的干预中。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "bcba1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "行为分析师"
+        },
+        {
+          "id": "psychologist1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "心理学家"
+        },
+        {
+          "id": "speechTherapist1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "语言治疗师"
+        },
+        {
+          "id": "financialAssistant1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "财务助理"
+        },
+        {
+          "id": "trainingManager1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "培训经理"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "讨论儿童观察和初步评估",
+      "startTime": "2024-10-14 09:00:00",
+      "duration": "10分钟",
+      "modelName": "儿童行为观察与治疗模型",
+      "description": "对孩子的语言、行为进行观察和初步评估，并提出治疗建议",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "4-1",
+          "sender": "家长",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:01",
+          "sendContent": "对参与人员讲出孩子的历史异常状态，包括从语言、动作、眼神等方面，对病情进行一一介绍。"
+        },
+        {
+          "id": "4-2",
+          "sender": "行为分析师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:02",
+          "sendContent": "我现在将调用摄像头，直接现场对孩子进行观察，结合临床经验和专业知识，对患者的行为做出初步的评估。"
+        },
+        {
+          "id": "4-3",
+          "sender": "行为分析师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:03",
+          "sendContent": "摄像头调用成功，我将把数据上传到数据库供其他成员查看使用。"
+        },
+        {
+          "id": "4-4",
+          "sender": "语言治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:04",
+          "sendContent": "我将直接调用麦克风，直接现场对孩子进行观察，结合临床经验和专业知识，对患者的语言做出初步的评估。"
+        },
+        {
+          "id": "4-5",
+          "sender": "语言治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:05",
+          "sendContent": "麦克风调用成功，我将把数据上传到数据库供其他成员查看使用。"
+        },
+        {
+          "id": "4-6",
+          "sender": "自闭症专家医生",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:06",
+          "sendContent": "我将从数据库中调用孩子的信息，使用量表配合玩具和教具对患者进行初步的观察和筛查，并填写量表。"
+        },
+        {
+          "id": "4-7",
+          "sender": "自闭症专家医生",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:07",
+          "sendContent": "量表填写完毕，将量表最后计算出的结果上传数据库。"
+        },
+        {
+          "id": "4-8",
+          "sender": "职业治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:08",
+          "sendContent": "我收到行为分析师和语言治疗师、自闭症专家医生的数据，结合临床经验和专业知识。"
+        },
+        {
+          "id": "4-9",
+          "sender": "职业治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:09",
+          "sendContent": "将初步治疗方案上传数据库供自闭症专家医生查看审核。"
+        },
+        {
+          "id": "4-10",
+          "sender": "自闭症专家医生",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-14 09:10",
+          "sendContent": "收到职业治疗师的初步治疗方案，可以提供给患者使用。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "parent1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "家长"
+        },
+        {
+          "id": "analyst1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "行为分析师"
+        },
+        {
+          "id": "therapist1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "语言治疗师"
+        },
+        {
+          "id": "doctor1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "自闭症专家医生"
+        },
+        {
+          "id": "therapist2",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "职业治疗师"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "讨论语言能力提升方案",
+      "startTime": "2024-10-12 10:15:00",
+      "duration": "5分钟",
+      "modelName": "语言治疗讨论模型",
+      "description": "讨论语言能力提升方案",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "4-1",
+          "sender": "语言治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:16",
+          "sendContent": "我们将为孩子进行语言评估，并制定相应的干预计划，帮助他提高语言和沟通能力。"
+        },
+        {
+          "id": "4-2",
+          "sender": "语言治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:18",
+          "sendContent": "配合‘助教陪读教师’，确保孩子在课堂上得到充分支持。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "speechTherapist1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "语言治疗师"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "讨论日常生活技能提升方案",
+      "startTime": "2024-10-12 10:20:00",
+      "duration": "5分钟",
+      "modelName": "职业治疗讨论模型",
+      "description": "讨论日常生活技能提升方案",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "5-1",
+          "sender": "职业治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:21",
+          "sendContent": "我将帮助孩子提升感官整合能力和自理能力，为未来的托养计划做好准备。"
+        },
+        {
+          "id": "5-2",
+          "sender": "职业治疗师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:23",
+          "sendContent": "我们将探索社区寄宿制托养模式，以帮助孤独症人士提高独立生活能力。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "occupationalTherapist1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "职业治疗师"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "讨论政府补贴与医保报销",
+      "startTime": "2024-10-12 10:25:00",
+      "duration": "5分钟",
+      "modelName": "财务支持讨论模型",
+      "description": "讨论政府补贴与医保报销",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "6-1",
+          "sender": "财务助理",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:26",
+          "sendContent": "深圳市计划将更多康复训练项目纳入医保报销范围。我们会协助您申请补贴，减轻经济负担。"
+        },
+        {
+          "id": "6-2",
+          "sender": "财务助理",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:28",
+          "sendContent": "我们会准备所需材料，并协助您完成申请流程。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "financialAssistant1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "财务助理"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "讨论社区资源连接与家庭支持",
+      "startTime": "2024-10-12 10:30:00",
+      "duration": "5分钟",
+      "modelName": "社会支持讨论模型",
+      "description": "讨论社区资源连接与家庭支持",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "7-1",
+          "sender": "社工",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:31",
+          "sendContent": "我会帮助您连接社区资源，确保您在家庭支持方面得到帮助。"
+        },
+        {
+          "id": "7-2",
+          "sender": "社工",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:33",
+          "sendContent": "我们建议您参加家庭支持小组，以分享经验和获得支持。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "socialWorker1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "社工"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "讨论个性化教育计划",
+      "startTime": "2024-10-12 10:35:00",
+      "duration": "5分钟",
+      "modelName": "特殊教育讨论模型",
+      "description": "讨论个性化教育计划",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "8-1",
+          "sender": "特殊教育老师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:36",
+          "sendContent": "我们将与学校合作，为孩子制定个性化教育计划（IEP），确保他在学习中获得最大支持。"
+        },
+        {
+          "id": "8-2",
+          "sender": "特殊教育老师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:38",
+          "sendContent": "定期与家长沟通孩子的学习进展，并根据需要调整IEP。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "specialEducationTeacher1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "特殊教育老师"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "讨论进展数据跟踪与分析",
+      "startTime": "2024-10-12 10:40:00",
+      "duration": "5分钟",
+      "modelName": "数据分析讨论模型",
+      "description": "讨论进展数据跟踪与分析",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "9-1",
+          "sender": "数据分析师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:41",
+          "sendContent": "我们将定期跟踪和分析孩子的进展数据，确保干预措施的有效性。"
+        },
+        {
+          "id": "9-2",
+          "sender": "数据分析师",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sendTime": "2024-10-12 10:43",
+          "sendContent": "我们会在每个阶段为家长提供进展报告，确保他们了解孩子的发展情况。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "dataAnalyst1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "数据分析师"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "讨论家长培训课程",
+      "startTime": "2024-10-12 10:45:00",
+      "duration": "5分钟",
+      "modelName": "培训讨论模型",
+      "description": "讨论家长培训课程",
+      "state": 1,
+      "recordList": [
+        {
+          "id": "10-1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sender": "培训经理",
+          "sendTime": "2024-10-12 10:46",
+          "sendContent": "我建议您参加家长培训课程，学习如何有效支持孩子的干预。"
+        },
+        {
+          "id": "10-2",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "sender": "培训经理",
+          "sendTime": "2024-10-12 10:48",
+          "sendContent": "课程内容将涵盖行为管理、情感支持等多方面，确保家长能够参与到孩子的干预中。"
+        }
+      ],
+      "memberList": [
+        {
+          "id": "trainingManager1",
+          "avatar": "/images/AgentsManager/avatar/avatar1.png",
+          "name": "培训经理"
+        }
+      ]
+    }
+  ]
+}

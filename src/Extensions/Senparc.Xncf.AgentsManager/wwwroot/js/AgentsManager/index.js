@@ -116,6 +116,16 @@ function simulationAELOperation(url = '', name = '') {
     link.remove()
 }
 
+function FuncMockJson() {
+    return fetch("/json/AgentsManager/data.json")
+        .then((res) => {
+            return res.json();
+        })
+    // .then((data) => {
+    //     // console.log('Func', data)
+    // });
+}
+
 var app = new Vue({
     el: "#app",
     data() {
@@ -199,6 +209,7 @@ var app = new Vue({
             agentDetailsGroupTreeData: [],
             agentDetailsGroupList: [],
             agentDetailsGroupShowType: '1', // 1:组列表 2:组详情 3:任务详情
+            agentDetailsGroupIndex: 0, // 侧边组index 默认全部
             agentDetailsGroupDetails: '',
             // 智能体详情 任务
             agentDetailsTaskQueryList: {
@@ -253,6 +264,7 @@ var app = new Vue({
             groupTreeData: [],
             groupList: [],
             groupShowType: '1', // 1:组列表 2:组详情 3:任务详情
+            scrollbarGroupIndex: '', // 侧边任务index 默认全部
             groupDetails: '',
             // 组 新增|编辑 智能体
             groupAgentQueryList: {
@@ -388,8 +400,7 @@ var app = new Vue({
     computed: {
     },
     watch: {},
-    created() {
-    },
+    created() { },
     mounted() {
         if (this.tabsActiveName === 'first') {
             this.getAgentListData(1, 'agent')
@@ -468,6 +479,7 @@ var app = new Vue({
             // 组 启动
             if (btnType === 'groupStart') {
                 this.groupStartForm.groupName = formData?.name ?? ''
+                // this.groupStartForm.groupId =  formData?.id ?? ''
             }
             if (btnType === 'group') {
                 this.getAgentListData(1, 'groupAgent')
@@ -664,7 +676,8 @@ var app = new Vue({
         resetAgentDetailsQuery() {
             this.agentDetailsGroupTreeData = []
             this.agentDetailsGroupList = []
-            this.agentDetailsGroupShowType = '1'
+            this.agentDetailsGroupShowType = '2'
+            this.agentDetailsGroupIndex = 0
             this.agentDetailsGroupDetails = ''
             this.agentDetailsTaskIndex = 0
             this.agentDetailsTaskList = []
@@ -734,8 +747,8 @@ var app = new Vue({
             }
         },
         // 组 查看详情
-        handleGroupView(row, clickType) {
-            // console.log('handleGroupView', row)
+        handleGroupDetail(row, clickType) {
+            // console.log('handleGroupDetail', row)
             if (clickType === 'agentGroup') {
                 this.agentDetailsGroupShowType = '2'
                 this.agentDetailsGroupDetails = deepClone(row)
@@ -745,8 +758,49 @@ var app = new Vue({
                 this.groupDetails = deepClone(row)
             }
         },
+        // 组 查看全部 列表 
+        handleGroupViewAll() {
+            this.groupShowType = '1'
+            this.scrollbarGroupIndex = '' // 清空索引
+            this.groupDetails = '' // 清空详情数据
+        },
+        // 组 查看列表 详情 
+        handleGroupView(clickType, item, index = 0) {
+            console.log('handleGroupView',clickType, item, index);
+            
+            if (clickType === 'agentGroup' || clickType === 'agentGroupTable') {
+                this.agentDetailsGroupShowType = '2'
+                if(clickType === 'agentGroupTable'){
+                    const { page,size } = this.agentDetailsGroupQueryList
+                    this.agentDetailsGroupIndex = page > 1 ? page * size + index : index 
+                }else{
+                    this.agentDetailsGroupIndex = index ?? 0
+                }
+                this.agentDetailsGroupDetails = deepClone(item)
+            }
+            if (clickType === 'agentGroupTask') {
+                this.agentDetailsGroupShowType = '3'
+                this.agentDetailsGroupDetails = deepClone(item)
+            }
+            if (clickType === 'group' || clickType === 'groupTable') {
+                this.groupShowType = '2'
+                if(clickType === 'groupTable'){
+                    const { page,size } = this.groupQueryList
+                    this.scrollbarGroupIndex = page > 1 ? page * size + index : index 
+                }else{
+                    this.scrollbarGroupIndex = index ?? 0
+                }
+                this.scrollbarGroupIndex = index ?? ''
+                this.groupDetails = deepClone(item)
+            }
+            if (clickType === 'groupTask') {
+                this.groupShowType = '3'
+                this.groupDetails = deepClone(item)
+            }
+        },
+
         // 查看 任务详情
-        handleTaskView(item, index, clickType) {
+        handleTaskView(clickType, item, index = 0) {
             if (clickType === 'agentTask') {
                 this.agentDetailsTaskIndex = index ?? ''
                 this.agentDetailsTaskDetails = item
@@ -775,6 +829,21 @@ var app = new Vue({
         groupMembersCancel(item) {
             console.log('groupMembersCancel', item)
         },
+        // 返回组详情页面
+        returnGroup(clickType){
+            if (clickType === 'agentGroupTask') {
+                this.agentDetailsGroupShowType = '2'
+                const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
+                // this.agentDetailsGroupIndex = index ?? 0
+                this.agentDetailsGroupDetails = deepClone(item)
+            }
+            if (clickType === 'groupTask') {
+                this.groupShowType = '2'
+                const item = this.groupList[this.scrollbarGroupIndex]
+                // this.scrollbarGroupIndex = index ?? ''
+                this.groupDetails = deepClone(item)
+            }
+        },
         // 获取 智能体 数据
         async getAgentListData(page, queryType) {
             // console.log('getAgentListData',page,queryType);
@@ -788,37 +857,20 @@ var app = new Vue({
                 Object.assign(queryList, this.groupAgentQueryList)
             }
             // 模拟数据
-            const _agentList = []
-            for (let index = 0; index < 15; index++) {
-                _agentList.push({
-                    id: index + 1,
-                    systemMessageType: '1',
-                    systemMessageId: '',
-                    systemMessageInput: '',
-                    name: '盛派设计师',
-                    description: '资深设计师，精通平面设计和交互设计，能够根据项目需求进行全面的用户需求分析，确保设计方案不仅美观，同时也符合用户体验和功能需求。',
-                    numberParticipants: '49',
-                    participationGroup: '10',
-                    participationInTasks: '13',
-                    runTask: '12',
-                    score: '9.7',
-                    shootingRange: 'plugin 测试',
-                    targetPath: '靶道',
-                    modelName: 'AQOAP-trte',
-                    state: 1, // 1\2\3
-                    platform: '',
-                    parameter: '',
-                    avatar: '/images/AgentsManager/avatar/avatar1.png',
-                })
-            }
+            // console.log('FuncMockJson()',);
+            FuncMockJson().then((data) => {
+                // console.log('Func', data)
+                const { agents = [] } = data
+                if (queryType === 'agent') {
+                    this.agentList = agents
+                }
+                if (queryType === 'groupAgent') {
+                    this.groupAgentList = agents
+                    this.groupAgentTotal = agents.length
+                }
+            })
+
             // to do 接口对接
-            if (queryType === 'agent') {
-                this.agentList = _agentList
-            }
-            if (queryType === 'groupAgent') {
-                this.groupAgentList = _agentList
-                this.groupAgentTotal = _agentList.length
-            }
             // return await serviceAM.post('', queryList)
             //     .then(res => {
             //         if (res.data.success) {
@@ -852,124 +904,34 @@ var app = new Vue({
                 Object.assign(queryList, this.agentDetailsGroupQueryList)
             }
             // 模拟数据
-            const _groupList = []
-            for (let index = 0; index < 15; index++) {
-                _groupList.push({
-                    id: index + 1,
-                    name: `运营部门${index + 1}`,
-                    numberTasks: '6',
-                    lastRunningTime: '2024-10-9 17:11:20',
-                    groupLeader: '张三',
-                    dockingPerson: '项目经理',
-                    description: '',
-                    state: 1, // 1\2\3
-                    children: [{
-                        id: `${index + 1}.1`,
-                        name: '用户满意度调查',
-                        startTime: '2024-10-9 17:11:20',
-                        duration: '1分钟',
-                        modelName: '测试模型1',
-                        description: '这是一个测试任务',
-                        numberParticipants: '49',
-                        score: '9.7',
-                        state: 1, // 1\2\3
-                        recordList: [{
-                            id: 'asdsdddd',
-                            sender: '项目经理',
-                            sendTime: '2024-10-11 11:27',
-                            sendContent: `AI是“人工智能”（Artificial
-                                        Intelligence）的缩写，指的是由人造系统所表现出来的智能行为。这种智能行为通常与人类或动物的认知功能相似，比如学习、理解、推理、解决问题、感知环境、语言识别和处理等。`,
-                        }, {
-                            id: 'asdsd',
-                            sender: '项目经理',
-                            sendTime: '2024-10-11 11:27',
-                            sendContent: `人工智能可以分为两类：
-                                        /n
-                                        1./n
-                                        弱人工智能（Narrow AI）：这类AI专注于特定任务，例如语音识别、图像识别、推荐系统等。它们在特定领域内表现得非常好，但并不具备跨领域的通用智能。/n
-                                        2./n
-                                        强人工智能（General AI）：也称为通用人工智能，指的是在多个领域内都能像人类一样表现的AI系统。目前，强人工智能还处于理论和研究阶段，并未实现。/n
-                                        人工智能的实现方式包括但不限于以下几种：
-/n
-                                        机器学习：通过算法让机器从数据中学习规律，并据此做出决策或预测。/n
-                                        深度学习：一种特殊的机器学习方法，通过构建深层神经网络模拟人脑处理信息的方式。/n
-                                        自然语言处理（NLP）：使计算机能够理解、解释和生成人类语言的技术。/n
-                                        计算机视觉：使计算机能够“看”和理解图像和视频内容的技术。/n
-                                        人工智能的应用非常广泛，包括但不限于医疗诊断、自动驾驶汽车、语音助手、个性化推荐、机器人技术、金融分析等领域。随着技术的不断进步，AI在提高效率、解决复杂问题以及创新方面发挥着越来越重要的作用。`,
-                        }],
-                        memberList: [{
-                            id: 'asdsdsd',
-                            name: '项目经理',
-                        }, {
-                            id: 'asdsdsd',
-                            name: '项目经理',
-                        }, {
-                            id: 'asdsdsd',
-                            name: '项目经理',
-                        }]
-                    }, {
-                        id: `${index + 1}.2`,
-                        name: '大运营部门',
-                        startTime: '2024-10-9 17:11:20',
-                        duration: '1分钟',
-                        modelName: '测试模型1',
-                        description: '这是一个测试任务',
-                        numberParticipants: '49',
-                        score: '9.7',
-                        state: 1, // 1\2\3
-                        recordList: [{
-                            id: 'asdsdddd',
-                            sender: '项目经理',
-                            sendTime: '2024-10-11 11:27',
-                            sendContent: `AI是“人工智能”（Artificial
-                                        Intelligence）的缩写，指的是由人造系统所表现出来的智能行为。这种智能行为通常与人类或动物的认知功能相似，比如学习、理解、推理、解决问题、感知环境、语言识别和处理等。`,
-                        }, {
-                            id: 'asdsd',
-                            sender: '项目经理',
-                            sendTime: '2024-10-11 11:27',
-                            sendContent: `人工智能可以分为两类：
-                                        /n
-                                        1./n
-                                        弱人工智能（Narrow AI）：这类AI专注于特定任务，例如语音识别、图像识别、推荐系统等。它们在特定领域内表现得非常好，但并不具备跨领域的通用智能。/n
-                                        2./n
-                                        强人工智能（General AI）：也称为通用人工智能，指的是在多个领域内都能像人类一样表现的AI系统。目前，强人工智能还处于理论和研究阶段，并未实现。/n
-                                        人工智能的实现方式包括但不限于以下几种：
-/n
-                                        机器学习：通过算法让机器从数据中学习规律，并据此做出决策或预测。/n
-                                        深度学习：一种特殊的机器学习方法，通过构建深层神经网络模拟人脑处理信息的方式。/n
-                                        自然语言处理（NLP）：使计算机能够理解、解释和生成人类语言的技术。/n
-                                        计算机视觉：使计算机能够“看”和理解图像和视频内容的技术。/n
-                                        人工智能的应用非常广泛，包括但不限于医疗诊断、自动驾驶汽车、语音助手、个性化推荐、机器人技术、金融分析等领域。随着技术的不断进步，AI在提高效率、解决复杂问题以及创新方面发挥着越来越重要的作用。`,
-                        }],
-                        memberList: [{
-                            id: 'asdsdsd',
-                            name: '项目经理',
-                        }, {
-                            id: 'asdsdsd',
-                            name: '项目经理',
-                        }, {
-                            id: 'asdsdsd',
-                            name: '项目经理',
-                        }]
-                    }]
+            FuncMockJson().then((data) => {
+                // console.log('Func', data)
+                const { group, task = [] } = data
+                const _groupList = group.map(item => {
+                    return {
+                        ...item,
+                        children: task
+                    }
                 })
-            }
-            if (queryType === 'group') {
-                this.groupTreeData = [{
-                    id: '0',
-                    name: '全部组',
-                    children: _groupList
-                }]
-                this.groupList = _groupList
-            }
-            if (queryType === 'agentGroup') {
-                this.agentDetailsGroupTreeData = [{
-                    id: '0',
-                    name: '全部组',
-                    children: _groupList
-                }]
-                this.agentDetailsGroupList = _groupList
-            }
+                if (queryType === 'group') {
+                    this.groupTreeData = [{
+                        id: '0',
+                        name: '全部组',
+                        children: _groupList
+                    }]
+                    this.groupList = _groupList
+                }
+                if (queryType === 'agentGroup') {
+                    this.agentDetailsGroupTreeData = [{
+                        id: '0',
+                        name: '全部组',
+                        children: _groupList
+                    }]
+                    this.agentDetailsGroupList = _groupList
+                    const groupIndex = this.agentDetailsGroupIndex ?? 0
+                    this.handleGroupView(queryType, _groupList[groupIndex], groupIndex)
+                }
+            })
             // to do 接口对接
             // return await serviceAM.post('', queryList)
             // .then(res => {
@@ -1012,63 +974,25 @@ var app = new Vue({
                 Object.assign(queryList, this.agentDetailsTaskQueryList)
             }
             // 模拟数据
-            const _taskList = []
-            for (let index = 0; index < 15; index++) {
-                _taskList.push({
-                    id: index + 1,
-                    name: '大运营部门',
-                    startTime: '2024-10-9 17:11:20',
-                    duration: '1分钟',
-                    modelName: '测试模型1',
-                    description: '这是一个测试任务',
-                    numberParticipants: '49',
-                    score: '9.7',
-                    state: 1, // 1\2\3
-                    recordList: [{
-                        id: 'asdsdddd',
-                        sender: '项目经理',
-                        sendTime: '2024-10-11 11:27',
-                        sendContent: `AI是“人工智能”（Artificial
-                                        Intelligence）的缩写，指的是由人造系统所表现出来的智能行为。这种智能行为通常与人类或动物的认知功能相似，比如学习、理解、推理、解决问题、感知环境、语言识别和处理等。`,
-                    }, {
-                        id: 'asdsd',
-                        sender: '项目经理',
-                        sendTime: '2024-10-11 11:27',
-                        sendContent: `人工智能可以分为两类：
-                                        /n
-                                        1./n
-                                        弱人工智能（Narrow AI）：这类AI专注于特定任务，例如语音识别、图像识别、推荐系统等。它们在特定领域内表现得非常好，但并不具备跨领域的通用智能。/n
-                                        2./n
-                                        强人工智能（General AI）：也称为通用人工智能，指的是在多个领域内都能像人类一样表现的AI系统。目前，强人工智能还处于理论和研究阶段，并未实现。/n
-                                        人工智能的实现方式包括但不限于以下几种：
-/n
-                                        机器学习：通过算法让机器从数据中学习规律，并据此做出决策或预测。/n
-                                        深度学习：一种特殊的机器学习方法，通过构建深层神经网络模拟人脑处理信息的方式。/n
-                                        自然语言处理（NLP）：使计算机能够理解、解释和生成人类语言的技术。/n
-                                        计算机视觉：使计算机能够“看”和理解图像和视频内容的技术。/n
-                                        人工智能的应用非常广泛，包括但不限于医疗诊断、自动驾驶汽车、语音助手、个性化推荐、机器人技术、金融分析等领域。随着技术的不断进步，AI在提高效率、解决复杂问题以及创新方面发挥着越来越重要的作用。`,
-                    }],
-                    memberList: [{
-                        id: 'asdsdsd',
-                        name: '项目经理',
-                    }, {
-                        id: 'asdsdsd',
-                        name: '项目经理',
-                    }, {
-                        id: 'asdsdsd',
-                        name: '项目经理',
-                    }]
-                })
-            }
+            // console.log('FuncMockJson()',);
+            FuncMockJson().then((data) => {
+                // console.log('Func', data)
+                const { task = [] } = data
+                if (queryType === 'task') {
+                    this.taskList = task
+                    const taskIndex = this.scrollbarTaskIndex ?? 0
+                    this.handleTaskView(queryType, task[taskIndex], taskIndex)
+                    // this.taskDetails = task.length ? task[0] : ''
+                }
+                if (queryType === 'agentTask') {
+                    this.agentDetailsTaskList = task
+                    const taskIndex = this.agentDetailsTaskIndex ?? 0
+                    this.handleTaskView(queryType, task[taskIndex], taskIndex)
+                    // this.agentDetailsTaskDetails = task.length ? task[0] : ''
+                }
+            })
 
-            if (queryType === 'task') {
-                this.taskList = _taskList
-                this.taskDetails = _taskList.length ? _taskList[0] : ''
-            }
-            if (queryType === 'agentTask') {
-                this.agentDetailsTaskList = _taskList
-                this.agentDetailsTaskDetails = _taskList.length ? _taskList[0] : ''
-            }
+
             // to do 接口对接
             // return await serviceAM.post('', queryList)
             // .then(res => {

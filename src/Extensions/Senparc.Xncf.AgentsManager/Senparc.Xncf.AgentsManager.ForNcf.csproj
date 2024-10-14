@@ -105,5 +105,8 @@
     <EmbeddedResource Update="wwwroot\images\AgentsManager\avatar\avatar5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Update="wwwroot\json\AgentsManager\data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
