@@ -3,11 +3,11 @@
  * 请求拦截、响应拦截、错误统一处理
  */
 // 创建一个axios实例
-var servicePR = axios.create({
-    timeout: 100000 // request timeout
+var serviceAM = axios.create({
+    timeout:  1000 * 60 * 10  // request timeout
 });
 // 请求拦截
-servicePR.interceptors.request.use(
+serviceAM.interceptors.request.use(
     config => {
         if (config.method.toUpperCase() === 'POST') {
             config.headers['RequestVerificationToken'] = window.document.getElementsByName('__RequestVerificationToken')[0].value;
@@ -21,26 +21,9 @@ servicePR.interceptors.request.use(
     }
 );
 // 响应拦截器
-servicePR.interceptors.response.use(
+serviceAM.interceptors.response.use(
     response => {
         //console.log('response', response)
-        // 二进制数据处理
-        //if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-        //    if (response.data.type === 'application/json') {
-        //        const reader = new FileReader();
-        //        reader.onload = () => {
-        //            app.$message({
-        //                message: `Error: ${JSON.parse(reader.result).message}！` || 'Error',
-        //                type: 'error',
-        //                duration: 5 * 1000
-        //            });
-        //        };
-        //        reader.readAsText(res.data);
-        //        return Promise.reject(response);
-        //    } else {
-        //        return Promise.resolve(response);
-        //    }
-        //} else
         if (response.status === 200) {
             if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
                 // console.log('文件流：', response)
