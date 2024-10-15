@@ -34,9 +34,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public MessageType MessageType { get; private set; }
 
+        public Status Status { get; private set; }
+
         private ChatGroupHistoryDto() { }
 
-        public ChatGroupHistoryDto(int chatGroupId, ChatGroup chatGroup, int fromAgentTemplateId, AgentTemplate fromAgentTemplate, int toAgentTemplateId, AgentTemplate toAgentTemplate, /*int fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType)
+        public ChatGroupHistoryDto(int chatGroupId, ChatGroup chatGroup, int fromAgentTemplateId, AgentTemplate fromAgentTemplate, int toAgentTemplateId, AgentTemplate toAgentTemplate, /*int fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {
             ChatGroupId = chatGroupId;
             ChatGroup = chatGroup;
@@ -50,6 +52,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             //ToChatGroupMember = toChatGroupMember;
             Message = message;
             MessageType = messageType;
+            Status = status;
         }
 
         public ChatGroupHistoryDto(ChatGroupHistory chatGroupHistory)
@@ -66,6 +69,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             //ToChatGroupMember = chatGroupHistory.ToChatGroupMember;
             Message = chatGroupHistory.Message;
             MessageType = chatGroupHistory.MessageType;
+            Status = chatGroupHistory.Status;
         }
     }
 }
