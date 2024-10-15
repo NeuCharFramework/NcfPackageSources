@@ -697,8 +697,9 @@
 
 .groupFMB_ma_list {
     flex-grow: 1;
-    overflow-y: hidden;
-    overflow-x: auto;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .groupFMB_ma_list .groupFMB_ma_list_item {

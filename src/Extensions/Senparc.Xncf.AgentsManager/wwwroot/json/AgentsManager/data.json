@@ -535,7 +535,8 @@
       "groupLeader": "子轩",
       "dockingPerson": "项目经理",
       "description": "关于孤独症全程支持政策的讨论",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 2,
@@ -545,7 +546,8 @@
       "groupLeader": "雅馨",
       "dockingPerson": "项目经理",
       "description": "讨论个性化干预计划的制定与家长培训",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 3,
@@ -555,7 +557,8 @@
       "groupLeader": "宇辰",
       "dockingPerson": "项目经理",
       "description": "提供心理支持方案与家庭咨询",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 4,
@@ -565,7 +568,8 @@
       "groupLeader": "晨曦",
       "dockingPerson": "项目经理",
       "description": "讨论提升孤独症儿童语言能力的方案",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 5,
@@ -575,7 +579,8 @@
       "groupLeader": "梦婷",
       "dockingPerson": "项目经理",
       "description": "讨论提升日常生活技能与托养模式",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 6,
@@ -585,7 +590,8 @@
       "groupLeader": "俊熙",
       "dockingPerson": "项目经理",
       "description": "讨论政府补贴与医保报销流程",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 7,
@@ -595,7 +601,8 @@
       "groupLeader": "依诺",
       "dockingPerson": "项目经理",
       "description": "讨论社区资源与家庭支持方案",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 8,
@@ -605,7 +612,8 @@
       "groupLeader": "昊天",
       "dockingPerson": "项目经理",
       "description": "讨论个性化教育计划的制定与调整",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 9,
@@ -615,7 +623,8 @@
       "groupLeader": "雨婷",
       "dockingPerson": "项目经理",
       "description": "讨论进展数据的跟踪与分析",
-      "state": 1
+      "state": 1,
+      "members": []
     },
     {
       "id": 10,
@@ -625,7 +634,8 @@
       "groupLeader": "皓宇",
       "dockingPerson": "项目经理",
       "description": "讨论家长培训课程的内容与安排",
-      "state": 1
+      "state": 1,
+      "members": []
     }
   ],
   "task": [

@@ -126,6 +126,191 @@ function FuncMockJson() {
     // });
 }
 
+// 注册一个全局自定义指令 v-el-select-loadmore
+Vue.directive('el-select-loadmore', {
+    bind(el, binding, vnode) {
+        // 获取element-ui定义好的scroll盒子
+        const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+        SELECTWRAP_DOM.addEventListener('scroll', function () {
+            /**
+            * scrollHeight 获取元素内容高度(只读)
+            * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
+            * clientHeight 读取元素的可见高度(只读)
+            * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+            * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+            */
+            const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
+            if (condition) {
+                binding.value()
+            }
+        })
+    }
+})
+// 
+Vue.component('load-more-select', {
+    template: `<el-select ref="elSelectLoadMore" v-model="selectVal" v-el-select-loadmore="interestsLoadmore" :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" clearable style="width:100%" @focus="remoteMethod('',true)" @change="handleChange" @visible-change="reverseArrow">
+    <el-option v-for="(item,index) in interestsOptions" :key="index" :label="item.key" :value="item.value"></el-option></el-select>`,
+    props: {
+        // eslint-disable-next-line vue/require-prop-types
+        value: {
+            // type: [Array, String, Number],
+            required: true
+        },
+        selectKey: {
+            type: String,
+            // required: true,
+            default: ''
+        },
+        placeholder: {
+            type: String,
+            default: ''
+        },
+        multipleChoice: {
+            type: Boolean,
+            default: false
+        },
+        serviceType: {
+            type: String,
+            default: '' // 默认使用公共 
+        },
+        misiptvId: {
+            type: [String, Number],
+            default: ''
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data: function () {
+        return {
+            optionVisible: false,
+            interestsOptions: [], //  接口返回数据
+            interesLoading: false,
+            currentPageSize: 0,
+            listQuery: {
+                page: 1,
+                size: 100,
+                // key: '',
+                filter: ''
+            }
+        }
+    },
+    computed: {
+        selectVal: {
+            get() {
+                if (this.multipleChoice) {
+                    return [...this.value]
+                } else {
+                    return this.value ?? ''
+                }
+            },
+            set(val) {
+                if (this.multipleChoice) {
+                    this.$emit('input', [...val])
+                } else {
+                    this.$emit('input', val)
+                }
+            }
+        }
+    },
+    watch: {
+        // selectKey: {
+        //     handler(val = '') {
+        //         this.listQuery.key = val
+        //     },
+        //     immediate: true
+        // }
+    },
+    mounted() {
+        // 找到dom
+        const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
+            '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
+        )
+        // 对dom新增class
+        rulesDom?.classList.add('el-icon-arrow-up')
+    },
+    methods: {
+        reverseArrow(flag) {
+            this.optionVisible = flag
+            // 找到dom
+            const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
+                '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
+            )
+            if (flag) {
+                rulesDom.classList.add('is-reverse') // 对dom新增class
+            } else {
+                rulesDom.classList.remove('is-reverse') // 对dom新增class
+            }
+        },
+        handleChange(e) {
+            if (this.multipleChoice) {
+                const filterItem = this.interestsOptions.filter((item) => {
+                    return e.includes(item.value)
+                })
+                this.$emit('change', filterItem)
+            } else {
+                const fintItem = this.interestsOptions.find((item) => item.value === e)
+                this.$emit('change', fintItem)
+            }
+        },
+        // 远程搜索
+        remoteMethod(query, isfocus) {
+            // console.log(query, 8888, this.optionVisible,isfocus)
+            if (this.optionVisible && isfocus) return
+            this.listQuery.filter = query ?? ''
+            this.listQuery.page = 1
+            this.interestsOptions = []
+            this.interesLoading = true
+            this.managementListOption() // 请求接口
+        },
+        interestsLoadmore() {
+            setTimeout(() => {
+                this.listQuery.page = this.listQuery.page + 1
+                if (this.listQuery.size > this.currentPageSize) {
+                    this.listQuery.page = this.listQuery.page - 1
+                    return
+                }
+                this.managementListOption()
+            }, 1000)
+        },
+        // 调用接口
+        managementListOption() {
+            let serviceURL = ''
+            if (this.serviceType === 'agent') {
+                serviceURL = ''
+            } else if (this.serviceType === 'model') {
+                serviceURL = ''
+            } else if (this.serviceType === 'modelC') {
+                serviceURL = ''
+            }
+            if (!serviceURL) return
+            // if (serviceForm.id) {
+            //     serviceURL += `?id=${serviceForm.id}`
+            // }
+            // 获取列表接口
+            serviceAM.post('', this.listQuery).then(res => {
+                const data = res?.data ?? {}
+                if (data.errorMessage) {
+                    this.$message.error(data.errorMessage)
+                }
+                const {
+                    items = []
+                    // total = 0
+                } = data
+                this.interesLoading = false
+                this.currentPageSize = items?.length ?? 0
+                const listData = this.interestsOptions.concat(items)
+                this.interestsOptions = listData // [...this.interestsOptions, ...items]
+                // console.log(this.interestsOptions, 888)
+            }).catch((err) => {
+                console.log('err', err)
+            })
+                .finally(() => { })
+        }
+    },
+})
+
 var app = new Vue({
     el: "#app",
     data() {
@@ -278,6 +463,7 @@ var app = new Vue({
             },
             groupAgentList: [], // 组新增时的智能体列表
             groupAgentTotal: 0,
+
             // 任务 task
             taskQueryList: {
                 page: 1,
@@ -766,14 +952,14 @@ var app = new Vue({
         },
         // 组 查看列表 详情 
         handleGroupView(clickType, item, index = 0) {
-            console.log('handleGroupView',clickType, item, index);
-            
+            console.log('handleGroupView', clickType, item, index);
+
             if (clickType === 'agentGroup' || clickType === 'agentGroupTable') {
                 this.agentDetailsGroupShowType = '2'
-                if(clickType === 'agentGroupTable'){
-                    const { page,size } = this.agentDetailsGroupQueryList
-                    this.agentDetailsGroupIndex = page > 1 ? page * size + index : index 
-                }else{
+                if (clickType === 'agentGroupTable') {
+                    const { page, size } = this.agentDetailsGroupQueryList
+                    this.agentDetailsGroupIndex = page > 1 ? page * size + index : index
+                } else {
                     this.agentDetailsGroupIndex = index ?? 0
                 }
                 this.agentDetailsGroupDetails = deepClone(item)
@@ -784,10 +970,10 @@ var app = new Vue({
             }
             if (clickType === 'group' || clickType === 'groupTable') {
                 this.groupShowType = '2'
-                if(clickType === 'groupTable'){
-                    const { page,size } = this.groupQueryList
-                    this.scrollbarGroupIndex = page > 1 ? page * size + index : index 
-                }else{
+                if (clickType === 'groupTable') {
+                    const { page, size } = this.groupQueryList
+                    this.scrollbarGroupIndex = page > 1 ? page * size + index : index
+                } else {
                     this.scrollbarGroupIndex = index ?? 0
                 }
                 this.scrollbarGroupIndex = index ?? ''
@@ -823,14 +1009,43 @@ var app = new Vue({
         },
         // 组 新增|编辑 智能体table 选中变化
         handleSelectionChange(val) {
-            this.groupForm.members = val;
+            // console.log('handleSelectionChange',val);
+            // this.groupAgentList val
+            // const members = deepClone(this.groupForm.members)
+            if (val && val.length) {
+                this.groupAgentList.forEach(i => {
+                    const vFindIndex = val.findIndex(item => item.id === i.id)
+                    if (vFindIndex === -1) {
+                        const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
+                        if (findIndex !== -1) {
+                            this.groupForm.members.splice(findIndex, 1);
+                        }
+                    } else {
+                        const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
+                        if (findIndex === -1) {
+                            this.groupForm.members.push(i)
+                        }
+                    }
+                })
+            } else {
+                this.groupAgentList.forEach(i => {
+                    const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
+                    if (findIndex !== -1) {
+                        this.groupForm.members.splice(findIndex, 1);
+                    }
+                })
+            }
         },
         // 组 新增|编辑 智能体 成员取消选中
-        groupMembersCancel(item) {
-            console.log('groupMembersCancel', item)
+        groupMembersCancel(item, index) {
+            const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
+            if (findIndex !== -1) {
+                this.toggleSelection([this.groupAgentList[findIndex]])
+            }
+            this.groupForm.members.splice(index, 1);
         },
         // 返回组详情页面
-        returnGroup(clickType){
+        returnGroup(clickType) {
             if (clickType === 'agentGroupTask') {
                 this.agentDetailsGroupShowType = '2'
                 const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
@@ -867,6 +1082,13 @@ var app = new Vue({
                 if (queryType === 'groupAgent') {
                     this.groupAgentList = agents
                     this.groupAgentTotal = agents.length
+                    const filterList = this.groupAgentList.filter(i => {
+                        if (this.groupForm.members) {
+                            return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
+                        }
+                        return false
+                    })
+                    this.toggleSelection(filterList)
                 }
             })
 
