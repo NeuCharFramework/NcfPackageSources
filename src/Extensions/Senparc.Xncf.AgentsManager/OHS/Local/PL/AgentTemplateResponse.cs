@@ -17,4 +17,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         public AgentTemplateDto AgentTemplate { get; set; }
     }
+
+    public class AgentTemplate_GetItemStatusResponse
+    {
+        public AgentTemplateStatusDto AgentTemplateStatus { get; set; }
+    }
 }

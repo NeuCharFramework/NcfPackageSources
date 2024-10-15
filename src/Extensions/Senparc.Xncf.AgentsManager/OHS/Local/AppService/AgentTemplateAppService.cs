@@ -5,7 +5,9 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
 using System.Linq;
@@ -18,11 +20,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     {
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly PromptItemService _promptItemService;
+        private readonly PromptRangeService _promptRangeService;
 
-        public AgentTemplateAppService(IServiceProvider serviceProvider, AgentsTemplateService agentsTemplateService, PromptItemService promptItemService) : base(serviceProvider)
+        public AgentTemplateAppService(IServiceProvider serviceProvider, AgentsTemplateService agentsTemplateService, PromptItemService promptItemService, PromptRangeService promptRangeService) : base(serviceProvider)
         {
             this._agentsTemplateService = agentsTemplateService;
             this._promptItemService = promptItemService;
+            this._promptRangeService = promptRangeService;
         }
 
         //[ApiBind]
@@ -75,7 +79,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var list = await this._agentsTemplateService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 var listDto = new PagedList<AgentTemplateDto>(list.Select(z => _agentsTemplateService.Mapping<AgentTemplateDto>(z)).ToList(), list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
-                
+
                 var result = new AgentTemplate_GetListResponse()
                 {
                     List = listDto
@@ -94,12 +98,52 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AgentTemplate_GetItemResponse>(async (response, logger) =>
             {
-                var agentTemplate = await this._agentsTemplateService.GetObjectAsync( z => z.Id==id, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+                var agentTemplate = await this._agentsTemplateService.GetObjectAsync(z => z.Id == id, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 var dto = this._agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
-                var result = new  AgentTemplate_GetItemResponse()
+                var result = new AgentTemplate_GetItemResponse()
                 {
                     AgentTemplate = dto
+                };
+
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 获取带状态的 AgentTemplate 的详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<AgentTemplate_GetItemStatusResponse>> GetItemStatus(int id)
+        {
+            return await this.GetResponseAsync<AgentTemplate_GetItemStatusResponse>(async (response, logger) =>
+            {
+                var agentTemplate = await this._agentsTemplateService.GetObjectAsync(z => z.Id == id, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                var agentTemplateDto = this._agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
+
+                var promptCode = agentTemplateDto.PromptCode;
+                var version = PromptItem.GetVersionObject(promptCode);
+                var promptItem = await this._promptItemService.GetObjectAsync(z =>
+                        z.RangeName == version.RangeName
+                        && z.Tactic == version.Tactic
+                        && z.Aiming == version.Aim);
+                var promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
+
+                var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
+                promptItemDto.PromptRange = promptRangeDto;
+
+
+                var result = new AgentTemplate_GetItemStatusResponse()
+                {
+                    AgentTemplateStatus = new AgentTemplateStatusDto()
+                    {
+                        AgentTemplateDto = agentTemplateDto,
+                        PromptItemDto = promptItemDto,
+                        PromptRangeDto = promptRangeDto
+                    }
                 };
 
                 return result;

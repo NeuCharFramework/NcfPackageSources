@@ -1,5 +1,7 @@
+using Microsoft.Identity.Client;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,7 +35,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// <summary>
         /// PromptRange 的代号
         /// </summary>
-        public string PromptCode { get;private set; }
+        public string PromptCode { get; private set; }
 
         /// <summary>
         /// 第三方机器人平台类型
@@ -57,5 +59,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
         }
+    }
+
+    public class AgentTemplateStatusDto
+    {
+        public AgentTemplateDto AgentTemplateDto { get; set; }
+
+        public PromptItemDto PromptItemDto { get; set; }
+        public PromptRangeDto PromptRangeDto { get; set; }
     }
 }
