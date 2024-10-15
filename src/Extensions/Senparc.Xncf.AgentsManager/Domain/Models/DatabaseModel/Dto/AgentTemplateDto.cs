@@ -8,7 +8,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     /// <summary>
     /// Agent模板信息
     /// </summary>
-    public class AgentTemplateDto : DtoBase
+    public class AgentTemplateDto : DtoBase<int>
     {
         /// <summary>
         /// 名称

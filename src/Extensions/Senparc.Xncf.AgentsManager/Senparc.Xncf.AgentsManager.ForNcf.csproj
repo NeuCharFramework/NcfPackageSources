@@ -17,6 +17,7 @@
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
+    <DocumentationFile>../../../../../NCF/src/back-end/Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.AgentsManager.XML</DocumentationFile>
     <PackageReleaseNotes>
 			v0.1.0 创世
             [2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
