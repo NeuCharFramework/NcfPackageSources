@@ -19,6 +19,79 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("AiModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChatGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("HookPlatform")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HookPlatformParameter")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsPersonality")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("PromptCommand")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("ResultComment")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Score")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AgentsManager_ChatTask");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", b =>
                 {
                     b.Property<int>("Id")
@@ -31,6 +104,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
+
+                    b.Property<string>("Avastar")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
@@ -143,6 +219,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.Property<int>("ChatGroupId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ChatTaskId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
 
@@ -157,6 +236,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                         .HasColumnType("longtext");
 
                     b.Property<int>("MessageType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MyProperty")
                         .HasColumnType("int");
 
                     b.Property<string>("Remark")
@@ -175,6 +257,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.HasKey("Id");
 
                     b.HasIndex("ChatGroupId");
+
+                    b.HasIndex("ChatTaskId");
 
                     b.HasIndex("FromAgentTemplateId");
 
@@ -254,17 +338,26 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", "ChatTask")
+                        .WithMany()
+                        .HasForeignKey("ChatTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManage~1");
+
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "FromAgentTemplate")
                         .WithMany("FromChatGroupHistories")
                         .HasForeignKey("FromAgentTemplateId")
-                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManage~1");
+                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManage~2");
 
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "ToAgentTemplate")
                         .WithMany("ToChatGroupHistoies")
                         .HasForeignKey("ToAgentTemplateId")
-                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManage~2");
+                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManage~3");
 
                     b.Navigation("ChatGroup");
+
+                    b.Navigation("ChatTask");
 
                     b.Navigation("FromAgentTemplate");
 

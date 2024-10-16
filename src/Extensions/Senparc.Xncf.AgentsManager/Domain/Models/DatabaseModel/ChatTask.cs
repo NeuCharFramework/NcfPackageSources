@@ -26,6 +26,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         [Required]
         public bool IsPersonality { get; private set; }
 
+        public bool Score { get; private set; }
+
+        [Required]
+        public DateTime StartTime { get; private set; }
+        [Required]
+        public DateTime EndTime { get; private set; }
+
+        /// <summary>
+        /// 对于对话结果的评价
+        /// </summary>
+        public string ResultComment { get; private set; }
+
+
         /// <summary>
         /// 进行 WebHook 的平台
         /// </summary>
@@ -80,8 +93,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         /// <summary>
         /// 
         /// </summary>
-        None=0,
-        WeChat_MP=1,
-        WeChat_Work=2
+        None = 0,
+        WeChat_MP = 1,
+        WeChat_Work = 2
     }
 }
