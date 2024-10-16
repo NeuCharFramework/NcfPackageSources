@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.14.7-preview1</Version>
+		<Version>0.14.8-preview1</Version>
 		<!--<LangVersion>lastest</LangVersion>-->
 		<LangVersion>preview</LangVersion>
 		<AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -24,6 +24,7 @@
 			[2024-09-10] v0.14.4-preview1 升级缓存基础库
 			[2024-10-09] v0.14.6-preview1 升级基础库
 			[2024-10-09] v0.14.7-preview1 升级基础库
+			[2024-10-16] v0.14.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test</Configurations>

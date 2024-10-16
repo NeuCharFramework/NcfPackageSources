@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.10.6-preview1</Version>
+		<Version>0.10.7-preview1</Version>
 		<AssemblyName>Senparc.Xncf.SystemPermission</AssemblyName>
 		<RootNamespace>Senparc.Xncf.SystemPermission</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -21,6 +21,7 @@
 			v0.3.3.1 添加 Oracle 数据库迁移代码
 			[2024-09-10] v0.10.4-preview1 升级缓存基础库
 			[2024-10-09] v0.10.6-preview1 升级基础库
+			[2024-10-16] v0.10.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

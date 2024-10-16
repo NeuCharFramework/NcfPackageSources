@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.5.9-preview1</Version>
+		<Version>0.5.10-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -35,19 +35,20 @@
 			[2024-09-10] v0.5.6-preview1 升级缓存基础库
 			[2024-10-09] v0.5.8-preview1 升级基础库
 			[2024-10-09] v0.5.9-preview1 升级基础库
+			[2024-10-16] v0.5.10-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.AI.Agents" Version="0.2.0" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.23.2" />
-  </ItemGroup>
-  <!--<ItemGroup>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Senparc.AI.Agents" Version="0.2.0" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
+		<PackageReference Include="Senparc.Weixin.Work" Version="3.23.2" />
+	</ItemGroup>
+	<!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.17.3.1-preview1" />
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.15.2-preview1+37312e28c788cba6605dfcc00947f80a36023b86" />

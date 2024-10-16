@@ -18,7 +18,7 @@ namespace Senparc.Ncf.Core.Models
     /// 分页
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PagedList<T> : List<T> where T : class /*,new()*/
+    public class PagedList<T> : List<T> //where T : class /*,new()*/
     {
         public PagedList(List<T> list, int pageIndex, int pageCount, int totalCount) : this(list, pageIndex, pageCount, totalCount, null) { }
 

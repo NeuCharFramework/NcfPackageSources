@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.9.5-preview1</Version>
+		<Version>0.9.6-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -37,21 +37,22 @@
 			[2024-09-07] v0.9.2-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
 			[2024-09-10] v0.9.3-preview1 升级缓存基础库
 			[2024-10-09] v0.9.5-preview1 升级基础库
+			[2024-10-16] v0.9.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.18.0" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.6-beta1+d29af850107e637cc591f6da9b086e8fa73ec9ac" />
+		<PackageIcon>icon.jpg</PackageIcon>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.18.0" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.14.1.6-beta1+d29af850107e637cc591f6da9b086e8fa73ec9ac" />
     <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.13.1-beta1+d29af850107e637cc591f6da9b086e8fa73ec9ac" />-->
 		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>

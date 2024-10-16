@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.10.6-preview1</Version>
+		<Version>0.10.7-preview1</Version>
 		<AssemblyName>Senparc.Xncf.Menu</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Menu</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -21,6 +21,7 @@
 		v0.3.3.1 添加 Oracle 数据库迁移代码
 			[2024-09-10] v0.10.4-preview1 升级缓存基础库
 			[2024-10-09] v0.10.6-preview1 升级基础库
+			[2024-10-16] v0.10.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -33,34 +34,34 @@
 		<DebugType>pdbonly</DebugType>
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Domain\Migrations\Oracle\**" />
-    <Content Remove="Domain\Migrations\Oracle\**" />
-    <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
-    <None Remove="Domain\Migrations\Oracle\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />-->
-    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.32" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-  </ItemGroup>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="App_Data\SenparcTraceLog\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Domain\Migrations\Oracle\**" />
+		<Content Remove="Domain\Migrations\Oracle\**" />
+		<EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
+		<None Remove="Domain\Migrations\Oracle\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />-->
+		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
+		<!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.32" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	</ItemGroup>
 </Project>

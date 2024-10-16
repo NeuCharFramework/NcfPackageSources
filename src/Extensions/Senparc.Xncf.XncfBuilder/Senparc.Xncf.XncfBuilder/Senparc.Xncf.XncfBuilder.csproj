@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.30.8-preview1</Version>
+		<Version>0.30.9-preview1</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -53,6 +53,7 @@
 			[2024-09-08] v0.30.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
 			[2024-09-10] v0.30.6-preview1 升级缓存基础库
 			[2024-10-09] v0.30.8-preview1 升级基础库
+			[2024-10-16] v0.30.9-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
