@@ -9,9 +9,9 @@ var serviceAM = axios.create({
 // 请求拦截
 serviceAM.interceptors.request.use(
     config => {
-        if (config.method.toUpperCase() === 'POST') {
-            config.headers['RequestVerificationToken'] = window.document.getElementsByName('__RequestVerificationToken')[0].value;
-        }
+        // if (config.method.toUpperCase() === 'POST') {
+        //     config.headers['RequestVerificationToken'] = window.document.getElementsByName('__RequestVerificationToken')[0].value;
+        // }
         config.headers['x-requested-with'] = 'XMLHttpRequest';
         return config;
     },
