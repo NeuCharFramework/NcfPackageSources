@@ -6,6 +6,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
@@ -89,6 +90,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 获取 PromptRange 的树状结构
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<PromptItemTreeList>> GetPromptRangeTree()
+        {
+            return await this.GetResponseAsync<PromptItemTreeList>(async (response, logger) =>
+           {
+               var items = await _promptItemService.GetPromptRangeTreeList(true, true);
+               return items;
+           });
+        }
+
+        /// <summary>
         /// 创建或更新 AgentTemplate
         /// </summary>
         /// <returns></returns>
@@ -97,7 +112,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AgentTemplateDto>(async (response, logger) =>
             {
-               var newDto=  await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id,agentTemplateDto);
+                var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
                 return newDto;
             });
         }
