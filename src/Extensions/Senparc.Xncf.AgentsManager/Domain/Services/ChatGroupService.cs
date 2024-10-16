@@ -33,7 +33,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
         }
 
-        public async Task<IEnumerable<IMessage>> RunGroup(AppServiceLogger logger, int groupId, string userCommand, ISenparcAiSetting senparcAiSetting, bool individuation)
+        /// <summary>
+        /// 运行 ChatGroup（等待运行完成）
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="groupId"></param>
+        /// <param name="userCommand"></param>
+        /// <param name="senparcAiSetting"></param>
+        /// <param name="individuation"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<IMessage>> RunChatGroup(AppServiceLogger logger, int groupId, string userCommand, ISenparcAiSetting senparcAiSetting, bool individuation)
         {
             var chatGroupMemberService = base._serviceProvider.GetService<ServiceBase<ChatGroupMember>>();
             var agentTemplateService = base._serviceProvider.GetService<AgentsTemplateService>();
@@ -172,6 +181,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// 在独立进程中运行 ChatGroup
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="userCommand"></param>
+        /// <param name="senparcAiSetting"></param>
+        /// <param name="individuation"></param>
+        /// <returns></returns>
+        public async Task RunChatGroupInThread(int groupId, string userCommand, ISenparcAiSetting senparcAiSetting, bool individuation)
+        { 
+        //var chatGroupHistoryDto = new ChatGroupHistory(groupId,null, )
         }
     }
 }

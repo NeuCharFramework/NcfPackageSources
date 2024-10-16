@@ -27,7 +27,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         /// <param name="id"></param>
         /// <param name="agentTemplateDto"></param>
         /// <returns></returns>
-        public async Task UpdateAgentTemplateAsync(int id, AgentTemplateDto agentTemplateDto)
+        public async Task<AgentTemplateDto> UpdateAgentTemplateAsync(int id, AgentTemplateDto agentTemplateDto)
         {
             AgentTemplate agentTemplate = null;
 
@@ -41,9 +41,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 agentTemplate = base.Mapper.Map<AgentTemplate>(agentTemplateDto);
             }
 
-            agentTemplate.EnableAgent();
+            //agentTemplate.EnableAgent();
 
             await base.SaveObjectAsync(agentTemplate);
+
+            var newAgentTemplateDto = base.Mapping<AgentTemplateDto>(agentTemplate);
+            return newAgentTemplateDto;
         }
 
     }

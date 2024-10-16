@@ -46,9 +46,12 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [Required]
         public MessageType MessageType { get; private set; }
 
+        [Required,DeniedValues(Status.Waiting)]
+        public Status Status { get;private set; }
+
         private ChatGroupHistory() { }
 
-        public ChatGroupHistory(int chatGroupId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType)
+        public ChatGroupHistory(int chatGroupId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {
             ChatGroupId = chatGroupId;
             ChatGroup = chatGroup;
@@ -62,6 +65,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             //ToChatGroupMember = toChatGroupMember;
             Message = message;
             MessageType = messageType;
+            Status = status;
         }
 
         public ChatGroupHistory(ChatGroupHistoryDto chatGroupHistoryDto)
@@ -78,6 +82,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             //ToChatGroupMember = chatGroupHistoryDto.ToChatGroupMember;
             Message = chatGroupHistoryDto.Message;
             MessageType = chatGroupHistoryDto.MessageType;
+            Status = chatGroupHistoryDto.Status;
         }
     }
 
@@ -87,5 +92,14 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         Image,
         Voice,
         Video
+    }
+
+    public enum Status
+    { 
+        Waiting=0,
+        Chatting=1,
+        Paused=2,
+        Finished=3,
+        Cancelled=4,
     }
 }

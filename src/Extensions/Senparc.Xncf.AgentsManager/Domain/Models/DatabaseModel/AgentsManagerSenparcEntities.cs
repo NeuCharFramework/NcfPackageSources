@@ -5,6 +5,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.AgentsManager.Models
 {
@@ -21,6 +22,8 @@ namespace Senparc.Xncf.AgentsManager.Models
         public DbSet<ChatGroupMember> ChatGroupMembers { get; set; }
 
         public DbSet<ChatGroupHistory> ChatGroupHistories { get; set; }
+
+        public DbSet<ChatTask> ChatTasks { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
