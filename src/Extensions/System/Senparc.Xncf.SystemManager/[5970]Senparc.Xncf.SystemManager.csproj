@@ -1,61 +1,59 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.11.3.1-preview1</Version>
-    <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
-    <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>系统菜单管理</Description>
-    <Copyright>NeuCharFramework</Copyright>
-    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.SystemManager</PackageTags>
-    <Authors>NeuCharFramework</Authors>
-    <Owners>NeuCharFramework</Owners>
-    <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
-    <Title>菜单管理</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.3.3.1 添加 Oracle 数据库迁移代码 v0.3.3.1 添加 Oracle 数据库迁移代码
-			v0.11.0 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
-			[2024-08-28] v0.11.1.5-preview1 完善 NeuChar AI 云端模型自动载入
-			[2024-08-28] v0.11.1.6-preview1 更新 Function 的 Password 类型，并将 MaxLength 参数传送到前端 UI
-			[2024-08-29] v0.11.2-preview1 完成 Password 类型的 Function 参数编辑功能
-					[2024-09-10] v0.11.3-preview1 升级缓存基础库
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Version>0.11.8-preview1</Version>
+		<AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
+		<RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+		<Description>系统菜单管理</Description>
+		<Copyright>NeuCharFramework</Copyright>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.SystemManager</PackageTags>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
+		<!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
+		<Title>菜单管理</Title>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
+		v0.1.0 创世
+		v0.3.3.1 添加 Oracle 数据库迁移代码 v0.3.3.1 添加 Oracle 数据库迁移代码
+		v0.11.0 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
+		[2024-08-28] v0.11.1.5-preview1 完善 NeuChar AI 云端模型自动载入
+		[2024-08-28] v0.11.1.6-preview1 更新 Function 的 Password 类型，并将 MaxLength 参数传送到前端 UI
+		[2024-08-29] v0.11.2-preview1 完成 Password 类型的 Function 参数编辑功能
+		[2024-09-10] v0.11.3-preview1 升级缓存基础库
+		[2024-09-27] v0.11.4-preview1 SystemManager 模块添加 MySql 的 Add_NeuCharAccountInfo_To_SystemConfig 迁移
+		[2024-10-09] v0.11.6-preview1 升级基础库
+		[2024-10-09] v0.11.7-preview1 升级基础库
+		[2024-10-16] v0.11.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 </PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.SystemManager.XML</DocumentationFile>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.SystemManager.XML</DocumentationFile>
 		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
 		<Optimize>true</Optimize>
 		<DebugType>pdbonly</DebugType>
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Domain\Migrations\Oracle\**" />
-    <Content Remove="Domain\Migrations\Oracle\**" />
-    <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
-    <None Remove="Domain\Migrations\Oracle\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.3" />
-    <PackageReference Include="Senparc.NeuChar.App" Version="1.4.3" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-  </ItemGroup>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
+		<PackageReference Include="Senparc.NeuChar.App" Version="1.4.3" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+	</ItemGroup>
 </Project>

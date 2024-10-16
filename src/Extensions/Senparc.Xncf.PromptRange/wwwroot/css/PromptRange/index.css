@@ -4,6 +4,10 @@
     overflow:auto;
 
 }
+#chart2 {
+    width: 400px;
+    height: 400px;
+}
     .indexPage > .headRow {
         min-width: 1381px;
         height: 182px;
@@ -93,9 +97,9 @@
     overflow:auto;
     flex-shrink: 0;
 }
-    .mainBox>.rightBox {
+    .mainBox > .rightBox {
         width: 47%;
-        height: 340px;
+        height: 500px;
     }
     .mainBox .cardBox {
         position: relative;
@@ -103,16 +107,23 @@
         border-radius: 10px;
         background: #FFF;
     }
-    .mainBox .cardBox .title {
-        position: relative;
-        word-break: break-all;
-        color: #333;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-        .mainBox .cardBox .title::before {
+ .usetimes {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+    background-color: #f0f2f5;
+    min-height: 400px;
+}
+        .mainBox >.cardBox> .usetimes >.title  {
+            color: #303133;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        .mainBox >.rightBox >.cardBox>#main{
+            width: 43%;
+            height: 500px;
+        }
+        /*.mainBox .cardBox .title::before {
             content: '';
             margin-right:6px;
             display: inline-block;
@@ -120,7 +131,7 @@
             height: 12px;
             border-radius: 4px;
             background: var(--4, linear-gradient(118deg, #3EC5AF 1.51%, #0080FF 81.2%));
-        }
+        }*/
         .mainBox .cardBox .title .activeText {
             position: relative;
             color: #0083FF;
@@ -137,16 +148,25 @@
                 border-radius: 4px;
                 background: #0083FF;
             }
-#main {
-    width: 400px;
-    height: 500px;
+#main{
+    width: 100%;
+    height: 54vh;
 }
+.mainBox > .rightBox > .cardBox > #main {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    width: 47%;
+    height: 400px;
+}
+
 #rank {
     text-align: center;
     font-family: 'Roboto', sans-serif;
     padding: 20px;
     background-color: #f0f2f5;
-    min-height: 100vh;
+    height: 93.8%;
 }
 
 h1 {

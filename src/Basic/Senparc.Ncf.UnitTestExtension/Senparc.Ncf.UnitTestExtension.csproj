@@ -1,8 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.2.2-preview1</Version>
+		<Version>0.2.4-preview1</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -25,7 +24,9 @@
 			v0.2.0 提供 UnitTestSeedDataBuilder 类，用于创建种子数据
 			[2024-08-12] v0.2.1-preview1 添加 TableData 的数据插入方法，通过单元测试
 			[2024-09-10] v0.2.2-preview1 升级缓存基础库
-		</PackageReleaseNotes>
+					[2024-10-09] v0.2.3-preview1 升级基础库
+			[2024-10-16] v0.2.4-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>

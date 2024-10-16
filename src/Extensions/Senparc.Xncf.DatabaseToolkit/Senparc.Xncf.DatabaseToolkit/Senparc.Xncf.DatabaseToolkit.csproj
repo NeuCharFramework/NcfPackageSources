@@ -1,11 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
 		<!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-		<Version>0.23.7-preview1</Version>
+		<Version>0.23.9-preview1</Version>
 		<AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
 		<RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,7 +34,8 @@
 			[2024-09-07] v0.23.3-preview1 优化数据库模块的数据库自动备份提示，不再标记为异常，同时向控制台输出警告信息
 			[2024-09-10] v0.23.4-preview1 升级缓存基础库
 			[2024-09-13] v0.23.7-preview1 优化当未安装或启用 DatabaseToolkit 模块时的跳过和提示操作
-		</PackageReleaseNotes>
+			[2024-10-09] v0.23.9-preview1 升级基础库
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
@@ -72,7 +72,7 @@
 		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.6.3" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
 		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 	</ItemGroup>

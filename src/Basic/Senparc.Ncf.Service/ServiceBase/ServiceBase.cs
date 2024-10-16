@@ -576,6 +576,18 @@ namespace Senparc.Ncf.Service
             return Mapper.Map<TDto>(entity);
         }
 
+        /// <summary>
+        /// 将 PageList 转为 DTO 对象
+        /// </summary>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="pagedList"></param>
+        /// <returns></returns>
+        public PagedList<TDto> Mapping<TDto>(PagedList<T> pagedList)
+        {
+            var dtoList = pagedList.Select(Mapper.Map<TDto>).ToList();
+            return new PagedList<TDto>(dtoList, pagedList.PageIndex, pagedList.PageCount, pagedList.TotalCount, pagedList.SkipCount);
+        }
+
         #endregion
     }
 }
