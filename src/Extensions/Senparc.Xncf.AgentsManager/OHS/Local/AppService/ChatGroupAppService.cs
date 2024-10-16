@@ -134,7 +134,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 foreach (var chatGroupId in request.ChatGroups.SelectedValues.Select(z => int.Parse(z)))
                 {
-                    var task = _chatGroupService.RunGroup(logger, chatGroupId, request.Command, aiSetting, request.Individuation.IsSelected("1"));
+                    var task = _chatGroupService.RunChatGroup(logger, chatGroupId, request.Command, aiSetting, request.Individuation.IsSelected("1"));
                     tasks.Add(task);
                 }
 
@@ -211,6 +211,23 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
+        ///// 创建或设置 ChatGroup
+        ///// </summary>
+        ///// <param name="chatGroupDto">ChatGroup 信息></param>
+        ///// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        ///// <returns></returns>
+        //[ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        //public async Task<AppResponseBase<List<ChatGroupDto>> GetChatGroupList(int pageIndex,int pageSize)
+        //{
+        //    return await this.GetResponseAsync<ChatGroup_SetGroupChatResponse>(async (response, logger) =>
+        //    {
+                
+        //    });
+        //}
+
+
+
+        /// <summary>
         /// 运行智能体
         /// </summary>
         /// <param name="request"></param>
@@ -238,7 +255,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 List<Task> tasks = new List<Task>();
 
                 //TODO: 使用线程进行维护
-                var task = _chatGroupService.RunGroup(logger, request.ChatGroupId, request.Command, aiSetting, request.Personality);
+                var task = _chatGroupService.RunChatGroup(logger, request.ChatGroupId, request.PromptCommand, aiSetting, request.Personality);
                 tasks.Add(task);
 
                 Task.WaitAll(tasks.ToArray());

@@ -18,7 +18,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string Name { get; private set; }
 
         /// <summary>
-        /// 系统消息
+        /// 系统消息（PromptCode）
         /// </summary>
         public string SystemMessage { get; private set; }
 
