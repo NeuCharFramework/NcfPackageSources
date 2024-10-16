@@ -70,6 +70,12 @@
 
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="ncf_obj\**" />
+    <Content Remove="ncf_obj\**" />
+    <EmbeddedResource Remove="ncf_obj\**" />
+    <None Remove="ncf_obj\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Domain\Migrations\" />
     <Folder Include="wwwroot\css\AgentsManager\" />
     <Folder Include="wwwroot\images\AgentsManager\" />
