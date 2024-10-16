@@ -1,4 +1,5 @@
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -16,8 +17,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [Required]
         public int ChatGroupId { get; private set; }
 
-        [Required]
         public ChatGroup ChatGroup { get; private set; }
+
+
+        [Required]
+        public int ChatTaskId { get; private set; }
+        public ChatTask ChatTask { get; private set; }
+
 
         [ForeignKey(nameof(FromAgentTemplate))]
         public int? FromAgentTemplateId { get; private set; }
@@ -48,6 +54,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         [Required,DeniedValues(Status.Waiting)]
         public Status Status { get;private set; }
+
+        public int MyProperty { get; set; }
 
         private ChatGroupHistory() { }
 
