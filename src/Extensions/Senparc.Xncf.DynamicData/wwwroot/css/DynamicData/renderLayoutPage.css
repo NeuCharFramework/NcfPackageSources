@@ -1,0 +1,108 @@
+.main_header {
+  flex-shrink: 0;
+  height: 50px;
+  overflow: hidden;
+  position: relative;
+  background: rgba(243, 244, 247, 1);
+  border-bottom: 1px solid #ebedf1;
+}
+
+.main_header .menu-area {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* .main_header .menu-area .menu-list {} */
+.main_header .menu-list .menu-item {
+  height: 100%;
+  padding: 0px 20px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 1);
+  line-height: 50px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0px;
+  color: rgba(56, 56, 56, 1);
+  border-left: 1px solid #f3f4f7;
+  border-right: 1px solid #f3f4f7;
+}
+
+
+
+/*组件内容区域*/
+.main_content {
+  flex: 1;
+  background: rgba(255, 255, 255, 1);
+}
+
+.main_content .globalButton-area{
+  gap: 20px;
+}
+
+.main_content .component-area {
+  margin-bottom: 20px;
+  padding: 20px;
+  cursor: move;
+}
+
+
+
+/* 以下 自定义公用样式 */
+.marginTop{
+  margin-top: 20px;
+}
+
+.marginBottom{
+  margin-bottom: 20px;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.cursorMove {
+  cursor: move;
+}
+
+.df {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.df-wn {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.flex-dc {
+  flex-direction: column;
+}
+
+.flex-ac {
+  align-items: center;
+}
+
+.flex-as {
+  align-items: flex-start;
+}
+
+.flex-ae {
+  align-items: flex-end;
+}
+
+.flex-jc {
+  justify-content: center;
+}
+
+.flex-js {
+  justify-content: flex-start;
+}
+
+.flex-je {
+  justify-content: flex-end;
+}
+
+.flex-jsb {
+  justify-content: space-between;
+}
