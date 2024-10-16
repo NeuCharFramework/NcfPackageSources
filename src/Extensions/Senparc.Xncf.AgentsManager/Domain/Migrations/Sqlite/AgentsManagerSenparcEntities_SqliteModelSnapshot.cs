@@ -17,6 +17,79 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AiModelId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ChatGroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HookPlatform")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("HookPlatformParameter")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPersonality")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PromptCommand")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ResultComment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Score")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AgentsManager_ChatTask");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", b =>
                 {
                     b.Property<int>("Id")
@@ -28,6 +101,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Avastar")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -141,6 +217,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<int>("ChatGroupId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ChatTaskId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
@@ -155,6 +234,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MessageType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MyProperty")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Remark")
@@ -173,6 +255,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.HasIndex("ChatGroupId");
+
+                    b.HasIndex("ChatTaskId");
 
                     b.HasIndex("FromAgentTemplateId");
 
@@ -251,6 +335,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", "ChatTask")
+                        .WithMany()
+                        .HasForeignKey("ChatTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "FromAgentTemplate")
                         .WithMany("FromChatGroupHistories")
                         .HasForeignKey("FromAgentTemplateId");
@@ -260,6 +350,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                         .HasForeignKey("ToAgentTemplateId");
 
                     b.Navigation("ChatGroup");
+
+                    b.Navigation("ChatTask");
 
                     b.Navigation("FromAgentTemplate");
 
