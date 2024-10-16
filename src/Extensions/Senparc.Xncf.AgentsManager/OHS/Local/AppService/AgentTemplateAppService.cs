@@ -89,6 +89,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 创建或更新 AgentTemplate
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AgentTemplateDto>> SetItem(AgentTemplateDto_UpdateOrCreate agentTemplateDto)
+        {
+            return await this.GetResponseAsync<AgentTemplateDto>(async (response, logger) =>
+            {
+               var newDto=  await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id,agentTemplateDto);
+                return newDto;
+            });
+        }
+
+        /// <summary>
         /// 获取 AgentTemplate 的详情
         /// </summary>
         /// <param name="id"></param>

@@ -1,6 +1,4 @@
-﻿using AutoMapper.Execution;
-using log4net.Repository;
-using Senparc.Ncf.Core.AppServices;
+﻿using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Services;
@@ -9,15 +7,11 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
@@ -85,7 +79,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 //添加成员
                 var memberList = new List<ChatGroupMember>();
-                var memberIdList= request.Members.SelectedValues.Select(z => int.Parse(z)).ToList();
+                var memberIdList = request.Members.SelectedValues.Select(z => int.Parse(z)).ToList();
                 //合并“对接人”为成员
                 if (!memberIdList.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
@@ -149,5 +143,64 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
 
+
+        public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(ChatGroupDto chatGroupDto, List<int> memberIds)
+        {
+            return await this.GetResponseAsync<ChatGroup_SetGroupChatResponse>(async (response, logger) =>
+            {
+                //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
+                //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
+
+                SenparcAI_GetByVersionResponse promptResult;
+
+                //TODO:封装到 Service 中
+                ChatGroup chatGroup = null;
+                chatGroupDto.State = ChatGroupState.Unstart;
+                
+                var isNew = false;
+                if (chatGroupDto.Id ==0)
+                {
+                    //新建
+                    chatGroup = new ChatGroup(chatGroupDto);
+                    isNew = false;
+                }
+                else
+                {
+                    chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupDto.Id);
+                    chatGroup.Update(chatGroupDto);
+
+                    //chatGroup = _chatGroupService.Mapper.Map<ChatGroup>(chatGroupDto);
+                }
+
+                await _chatGroupService.SaveObjectAsync(chatGroup);
+
+                logger.Append($"ChatGroup {(isNew ? "新增" : "编辑")} 成功！");
+
+                //添加成员
+                var memberList = new List<ChatGroupMember>();
+                //合并“对接人”为成员
+                if (!memberIds.Contains(chatGroupDto.EnterAgentTemplateId))
+                {
+                    memberIds.Add(chatGroupDto.EnterAgentTemplateId);
+                }
+
+                foreach (var agentId in memberIds)
+                {
+                    var chatGroupMemberDto = new ChatGroupMemberDto(null, chatGroup.Id, agentId);
+                    var member = new ChatGroupMember(chatGroupMemberDto);
+                    member.ResetUID();
+                    memberList.Add(member);
+                }
+                await _chatGroupMemeberService.SaveObjectListAsync(memberList);
+
+                logger.Append($"ChatGroup 成员添加成功！");
+
+                return new ChatGroup_SetGroupChatResponse()
+                {
+                    Logs = logger.ToString(),
+                    ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(chatGroup)
+                };
+            });
+        }
     }
 }

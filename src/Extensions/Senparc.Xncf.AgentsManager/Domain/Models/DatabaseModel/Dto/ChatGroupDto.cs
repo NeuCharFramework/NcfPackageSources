@@ -7,32 +7,32 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     /// <summary>
     /// ChatGroup 数据库实体 DTO
     /// </summary>
-    public class ChatGroupDto : DtoBase
+    public class ChatGroupDto : DtoBase<int>
     {
         /// <summary>
         /// 群名称
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 是否启用
         /// </summary>
-        public bool Enable { get; private set; }
+        public bool Enable { get; set; }
 
         /// <summary>
         /// 状态
         /// </summary>
-        public ChatGroupState State { get; private set; }
+        public ChatGroupState State { get; set; }
 
         /// <summary>
         /// 描述
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// 管理员代理模板Id
         /// </summary>
-        public int AdminAgentTemplateId { get; private set; }
+        public int AdminAgentTemplateId { get; set; }
 
         public AgentTemplate AdminAgentTemplate { get; set; }
 
@@ -40,7 +40,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// 对接人代理模板Id
         /// </summary>
 
-        public int EnterAgentTemplateId { get; private set; }
+        public int EnterAgentTemplateId { get; set; }
 
         public AgentTemplate EnterAgentTemplate { get; set; }
 

@@ -17,7 +17,7 @@
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <DocumentationFile>../../../../../NCF/src/back-end/Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.AgentsManager.XML</DocumentationFile>
+    <DocumentationFile>../../../../NCF/src/back-end/Senparc.Web/App_Data/ApiDocXml/Senparc.Xncf.AgentsManager.XML</DocumentationFile>
     <PackageReleaseNotes>
 			v0.1.0 创世
             [2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
@@ -72,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Migrations\" />
-    <Folder Include="wwwroot\images\AgentsManager\avatar\" />
   </ItemGroup>
   <ItemGroup><!--<ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />-->
@@ -89,25 +88,5 @@
     <Content Update="wwwroot\js\AgentsManager\lib\axios.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="wwwroot\images\AgentsManager\avatar\avatar1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="wwwroot\images\AgentsManager\avatar\avatar2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="wwwroot\images\AgentsManager\avatar\avatar3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="wwwroot\images\AgentsManager\avatar\avatar4.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="wwwroot\images\AgentsManager\avatar\avatar5.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="wwwroot\json\AgentsManager\data.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>
