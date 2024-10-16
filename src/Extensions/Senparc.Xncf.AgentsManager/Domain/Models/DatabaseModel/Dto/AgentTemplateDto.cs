@@ -1,6 +1,7 @@
 using Microsoft.Identity.Client;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -71,5 +72,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public PromptItemDto PromptItemDto { get; set; }
         public PromptRangeDto PromptRangeDto { get; set; }
+
+        public AIModelDto AIModelDto { get; set; }
     }
 }
