@@ -1,5 +1,6 @@
 ﻿@page
 @model Senparc.Xncf.AgentsManager.Areas.AgentsManager.Pages.Index
+@using Senparc.Xncf.AgentsManager.Models.DatabaseModel
 @{
     ViewData["Title"] = "AgentsManager 首页";
     Layout = "_Layout_Vue";
@@ -80,8 +81,11 @@
                     <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div class="agent-listWrap">
                             <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
-                                <div class="agentCard-statebox" :class="[agentStateColor[aitem.state]]">{{
-                                    agentStateText[aitem.state] }}
+                                @* <div class="agentCard-statebox" :class="[agentStateColor[aitem.state]]">{{
+                                agentStateText[aitem.state] }}
+                                </div> *@
+                                <div class="agentCard-statebox">
+                                    {{ aitem.enable ? '启用' : '未启用' }}
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
@@ -111,7 +115,7 @@
                 </template>
                 @* 智能体详情 *@
                 <template v-else>
-                    <div class="df-wn flex-ac flex-js agentDetails-head">
+                    <div v-if="agentDetails" class="df-wn flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-dc flex-ac agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
                                 <img :src="agentDetails.avatar" alt="">
@@ -139,16 +143,19 @@
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item3">
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">靶场:</span>
-                                <span class="value">{{ agentDetails.shootingRange }}</span>
+                                <span class="value">{{ agentDetails.promptRangeDto ?
+                                    agentDetails.promptRangeDto.rangeName : '' }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">靶道:</span>
-                                <span class="value">{{ agentDetails.targetPath }}</span>
+                                <span class="value">{{ agentDetails.promptRangeDto ? agentDetails.promptRangeDto.alias :
+                                    '' }}</span>
                                 <span class="btnText" @@click="jumpPromptRange('promptRange')">打靶</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">模型:</span>
-                                <span class="value">{{ agentDetails.modelName }}</span>
+                                <span class="value">{{ agentDetails.aiModelDto ? agentDetails.aiModelDto.deploymentName
+                                    : '' }}</span>
                                 <span class="btnText" @@click="jumpPromptRange('model')">管理AI模型</span>
                             </div>
                         </div>
@@ -159,11 +166,16 @@
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">模型评分:</span>
-                                <span class="value">{{ agentDetails.modelScore }}</span>
+                                <span class="value">{{ agentDetails.promptItemDto ?
+                                    agentDetails.promptItemDto.evalAvgScore : '' }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">状态:</span>
-                                <span class="value">{{ agentStateText[agentDetails.state] }}</span>
+                                <span class="value">{{
+                                    agentDetails.agentTemplateDto ? agentDetails.agentTemplateDto.enable ? '启用' : '未启用'
+                                    : ''
+                                    }}</span>
+                                @* <span class="value">{{ agentStateText[agentDetails.state] }}</span> *@
                                 <span class="btn" @@click="setAgentState('stop', agentDetails)">停用</span>
                             </div>
                         </div>
@@ -783,32 +795,28 @@
                         <el-radio label="2" border>手动</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessageId">
-                    @* <el-select v-model="agentForm.systemMessageId" style="width:100%" placeholder="请选择">
-                    <el-option label="SystemMessage1" value="SystemMessage1"></el-option>
-                    <el-option label="SystemMessage2" value="SystemMessage2"></el-option>
-                    <el-option label="SystemMessage3" value="SystemMessage3"></el-option>
-                    </el-select> *@
+                <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="agentForm.systemMessageId" placeholder="请选择" serviceType="" />
+                    <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" placeholder="请选择" />
                 </el-form-item>
-                <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessageInput">
-                    <el-input v-model="agentForm.systemMessageInput" placeholder="请填写"></el-input>
+                <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+                    <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="是否启用" prop="enable">
+                    <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
                 </el-form-item>
                 <el-form-item label="说明" prop="description">
                     <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="外接平台" prop="platform">
-                    @* <el-select v-model="agentForm.platform" style="width:100%" placeholder="请选择">
-                    <el-option label="外接平台1" value="外接平台1"></el-option>
-                    <el-option label="外接平台2" value="外接平台2"></el-option>
-                    <el-option label="外接平台3" value="外接平台3"></el-option>
-                    </el-select> *@
-                    @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="agentForm.platform" placeholder="请选择" serviceType="" />
+                <el-form-item label="外接平台" prop="hookRobotType">
+                    <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
+                        <el-option label="None" value="@HookRobotType.None"></el-option>
+                        <el-option label="WeChatMp" value="@HookRobotType.WeChatMp"></el-option>
+                        <el-option label="WeChatWorkRobot" value="@HookRobotType.WeChatWorkRobot"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="外接平台参数" prop="parameter">
-                    <el-input v-model="agentForm.parameter" placeholder="请填写"></el-input>
+                <el-form-item label="外接平台参数" prop="hookRobotParameter">
+                    <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
                 </el-form-item>
                 <el-form-item label="Agent 头像" prop="avatar">
                     <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
@@ -865,7 +873,8 @@
                                     <div v-for="(item,index) in groupForm.members" :key="item.id"
                                         class="df-wn flex-ac groupFMB_ma_list_item">
                                         <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
-                                        <i class="el-icon-close cursorPointer" @@click="groupMembersCancel(item,index)"></i>
+                                        <i class="el-icon-close cursorPointer"
+                                            @@click="groupMembersCancel(item,index)"></i>
                                     </div>
                                 </div>
                             </div>
@@ -894,21 +903,13 @@
                         </el-pagination>
                     </div>
                 </el-form-item>
-                <el-form-item label="群主" prop="groupLeader">
-                    @* <el-select v-model="groupForm.groupLeader" style="width:100%" placeholder="请选择">
-                    <el-option label="张三" value="张三"></el-option>
-                    <el-option label="李四" value="李四"></el-option>
-                    </el-select> *@
+                <el-form-item label="群主" prop="adminAgentTemplateId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupForm.groupLeader" placeholder="请选择" serviceType="" />
+                    <load-more-select v-model="groupForm.adminAgentTemplateId" service-type='agent' placeholder="请选择" />
                 </el-form-item>
-                <el-form-item label="对接人" prop="dockingPerson">
-                    @* <el-select v-model="groupForm.dockingPerson" style="width:100%" placeholder="请选择">
-                    <el-option label="张三" value="张三"></el-option>
-                    <el-option label="李四" value="李四"></el-option>
-                    </el-select> *@
+                <el-form-item label="对接人" prop="enterAgentTemplateId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupForm.dockingPerson" placeholder="请选择" serviceType="" />
+                    <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' placeholder="请选择" />
                 </el-form-item>
                 <el-form-item label="说明">
                     <el-input type="textarea" v-model="groupForm.description" :rows="4" placeholder="请填写"></el-input>
@@ -941,20 +942,20 @@
                 <el-form-item label="任务标题" prop="name">
                     <el-input v-model="groupStartForm.name" placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="选择模型" prop="modelName">
-                    @* <el-select v-model="groupStartForm.modelName" style="width:100%" placeholder="请选择">
-                    <el-option label="模型1" value="模型1"></el-option>
-                    <el-option label="模型2" value="模型2"></el-option>
-                    </el-select> *@
+                <el-form-item label="选择模型" prop="aiModelId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupStartForm.modelName" placeholder="请选择" serviceType="" />
+                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" placeholder="请选择" />
                 </el-form-item>
                 <el-form-item label="个性化智能体" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
                 </el-form-item>
-                <el-form-item label="我能帮你做什么" prop="description">
-                    <el-input type="textarea" v-model="groupStartForm.description" :rows="8" placeholder="请填写"></el-input>
+                <el-form-item label="我能帮你做什么" prop="command">
+                    <el-input type="textarea" v-model="groupStartForm.command" :rows="8" placeholder="请填写"></el-input>
                 </el-form-item>
+                @* <el-form-item label="说明" prop="description">
+                <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
+                placeholder="请填写"></el-input>
+                </el-form-item> *@
             </el-form>
         </div>
         @* 内容中固定的footer *@
@@ -978,32 +979,27 @@
                 <el-radio label="2" border>手动</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessageId">
-            @* <el-select v-model="agentForm.systemMessageId" style="width:100%" placeholder="请选择">
-            <el-option label="SystemMessage1" value="SystemMessage1"></el-option>
-            <el-option label="SystemMessage2" value="SystemMessage2"></el-option>
-            <el-option label="SystemMessage3" value="SystemMessage3"></el-option>
-            </el-select> *@
-            @* @change="handleChange($event,'')" *@
-            <load-more-select v-model="agentForm.systemMessageId" placeholder="请选择" serviceType="" />
+        <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+            <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" placeholder="请选择" />
         </el-form-item>
-        <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessageInput">
-            <el-input v-model="agentForm.systemMessageInput" placeholder="请填写"></el-input>
+        <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+            <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用" prop="enable">
+            <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
         </el-form-item>
         <el-form-item label="说明" prop="description">
             <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
         </el-form-item>
-        <el-form-item label="外接平台" prop="platform">
-            @* <el-select v-model="agentForm.platform" style="width:100%" placeholder="请选择">
-            <el-option label="外接平台1" value="外接平台1"></el-option>
-            <el-option label="外接平台2" value="外接平台2"></el-option>
-            <el-option label="外接平台3" value="外接平台3"></el-option>
-            </el-select> *@
-            @* @change="handleChange($event,'')" *@
-            <load-more-select v-model="agentForm.platform" placeholder="请选择" serviceType="" />
+        <el-form-item label="外接平台" prop="hookRobotType">
+            <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
+                <el-option label="None" value="@HookRobotType.None"></el-option>
+                <el-option label="WeChatMp" value="@HookRobotType.WeChatMp"></el-option>
+                <el-option label="WeChatWorkRobot" value="@HookRobotType.WeChatWorkRobot"></el-option>
+            </el-select>
         </el-form-item>
-        <el-form-item label="外接平台参数" prop="parameter">
-            <el-input v-model="agentForm.parameter" placeholder="请填写"></el-input>
+        <el-form-item label="外接平台参数" prop="hookRobotParameter">
+            <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
         </el-form-item>
         <el-form-item label="Agent 头像" prop="avatar">
             <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
