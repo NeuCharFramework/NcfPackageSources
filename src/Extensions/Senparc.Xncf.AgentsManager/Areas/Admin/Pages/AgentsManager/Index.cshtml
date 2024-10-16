@@ -1,43 +1,1025 @@
 ﻿@page
 @model Senparc.Xncf.AgentsManager.Areas.AgentsManager.Pages.Index
+@using Senparc.Xncf.AgentsManager.Models.DatabaseModel
 @{
     ViewData["Title"] = "AgentsManager 首页";
     Layout = "_Layout_Vue";
 }
+@section Style {
+    <link href="~/css/AgentsManager/index.css" rel="stylesheet" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+}
 
-@section breadcrumbs{
+@section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>Agents 管理模块</el-breadcrumb-item>
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div>
-    <el-container>
-        <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
-        </el-header>
+<el-tabs v-model="tabsActiveName" class="pageTabs" @@tab-click="handleTabsClick">
+    <el-tab-pane label="智能体" name="first">
+        <div class="tabPane-container">
+            @* 侧边 *@
+            <div class="sidebar-container">
+                <div class="sidebar-head-container">
+                    <div class="df-wn flex-ac flex-jsb sidebar-title-row">
+                        <div class="sidebar-titleRow-title text-ellipsis">智能体列表</div>
+                        <div class="sidebar-titleRow-icon df-wn flex-ac flex-jc"
+                            @@click="handleElVisibleOpenBtn('agent')">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </div>
+                    <div class="df-wn flex-ac flex-jsb sidebar-search-row">
+                        <el-input v-model="agentQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                            class="sidebar-searchRow-input" @@change="handleFilterChange($event,'agent')"></el-input>
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="agentFCPVisible">
+                            <div class="popover-filterCriteria">
+                                <div class="sortRow" @@click="handleFilterCriteria('agent','timeSort')">
+                                    <span class="sortRowText">按时间排序</span>
+                                    <div class="sortRowIconBox">
+                                        <i class="el-icon-caret-top sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':agentQueryList.timeSort}"></i>
+                                        <i class="el-icon-caret-bottom sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':!agentQueryList.timeSort}"></i>
+                                    </div>
+                                </div>
+                                <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
+                                    <span class="sortRowText">选择状态</span>
+                                </div>
+                                <div v-for="(fitem,findex) in agentFilterCriteria" :key="findex" class="sortRow"
+                                    @@click="handleFilterCriteria('agent',fitem.value)">
+                                    <span class="sortRowText">{{ fitem.label }}</span>
+                                    <i v-if="fitem.checked" class="el-icon-check sortRowIcon"></i>
+                                </div>
+                            </div>
+                            <i slot="reference" class="el-icon-more sidebar-searchRow-icon"></i>
+                            @* <img slot="reference" src="~/image/AgentsManager/icon-setEllipsis.png" alt=""
+                            class="sidebar-searchRow-icon"> *@
+                        </el-popover>
+                    </div>
+                </div>
+                <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
+                    <template v-if="agentList&&agentList.length">
+                        <div class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarAgentIndex === ''}"
+                            @@click="handleAgentViewAll">
+                            全部智能体
+                        </div>
+                        <div v-for="(item,index) in agentList" :key="index" class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarAgentIndex === index}" :title="item.name"
+                            @@click="handleAgentView(item,index)">
+                            {{ item.name }}
+                        </div>
+                    </template>
+                </el-scrollbar>
+            </div>
+            @* 主体内容 *@
+            <div class="main-container"
+                :class="[scrollbarAgentIndex === ''? 'agent-container':'agentDetails-container']">
+                @* 智能体列表 *@
+                <template v-if="scrollbarAgentIndex === ''">
+                    <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
+                        <div class="agent-listWrap">
+                            <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
+                                @* <div class="agentCard-statebox" :class="[agentStateColor[aitem.state]]">{{
+                                agentStateText[aitem.state] }}
+                                </div> *@
+                                <div class="agentCard-statebox">
+                                    {{ aitem.enable ? '启用' : '未启用' }}
+                                </div>
+                                <div class="agentCard-upperHalfbox">
+                                    <div class="df-wn flex-ac flex-jc avatarBox">
+                                        <img :src="aitem.avatar" alt="" class="upperHalfbox_avatar">
+                                    </div>
+                                    <div class="upperHalfbox_describe">
+                                        <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
+                                            aitem.name }}</div>
+                                        <div class="upperHalfbox_describe_introduce text-ellipsis-2line"
+                                            :title="aitem.description">{{
+                                            aitem.description }}</div>
+                                    </div>
+                                </div>
+                                <div class="agentCard-lowerHalfbox">
+                                    <div class="lowerHalfbox_label">参加中</div>
+                                    <div class="lowerHalfbox_quantity">{{ aitem.numberParticipants }}</div>
+                                    <div class="lowerHalfbox_label">评分</div>
+                                    <div class="lowerHalfbox_score">{{ aitem.score }}</div>
+                                    <div class="lowerHalfbox_operation"
+                                        @@click="handleEditDrawerOpenBtn('agent',aitem)">编辑
+                                    </div>
+                                    <div class="lowerHalfbox_operation" @@click="handleAgentView(aitem,aindex)">详情</div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-scrollbar>
+                </template>
+                @* 智能体详情 *@
+                <template v-else>
+                    <div v-if="agentDetails" class="df-wn flex-ac flex-js agentDetails-head">
+                        <div class="df-wn flex-dc flex-ac agentDetails-head-item1">
+                            <div class="df-wn flex-ac flex-jc avatarBox">
+                                <img :src="agentDetails.avatar" alt="">
+                            </div>
+                            <div class="name text-ellipsis">
+                                {{ agentDetails.name }}
+                            </div>
+                            <i class="el-icon-edit editIcon"
+                                @@click="handleEditDrawerOpenBtn('agent',agentDetails)"></i>
+                        </div>
+                        <div class="df-wn flex-dc flex-jsb agentDetails-head-item2">
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label" style="width: 80px;">参与组</span>
+                                <span class="numerical">{{ agentDetails.participationGroup }}</span>
+                            </div>
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label" style="width: 80px;">参与任务</span>
+                                <span class="numerical">{{ agentDetails.participationInTasks }}</span>
+                            </div>
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label" style="width: 80px;">运行中任务</span>
+                                <span class="numerical">{{ agentDetails.runTask }}</span>
+                            </div>
+                        </div>
+                        <div class="df-wn flex-dc flex-jsb agentDetails-head-item3">
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label">靶场:</span>
+                                <span class="value">{{ agentDetails.promptRangeDto ?
+                                    agentDetails.promptRangeDto.rangeName : '' }}</span>
+                            </div>
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label">靶道:</span>
+                                <span class="value">{{ agentDetails.promptRangeDto ? agentDetails.promptRangeDto.alias :
+                                    '' }}</span>
+                                <span class="btnText" @@click="jumpPromptRange('promptRange')">打靶</span>
+                            </div>
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label">模型:</span>
+                                <span class="value">{{ agentDetails.aiModelDto ? agentDetails.aiModelDto.deploymentName
+                                    : '' }}</span>
+                                <span class="btnText" @@click="jumpPromptRange('model')">管理AI模型</span>
+                            </div>
+                        </div>
+                        <div class="df-wn flex-dc flex-jsb agentDetails-head-item4">
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label">模型参数</span>
+                                <span class="btnText" @@click="jumpPromptRange('modelParameter')">详情</span>
+                            </div>
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label">模型评分:</span>
+                                <span class="value">{{ agentDetails.promptItemDto ?
+                                    agentDetails.promptItemDto.evalAvgScore : '' }}</span>
+                            </div>
+                            <div class="df-wn flex-ac flex-js itemBox">
+                                <span class="label">状态:</span>
+                                <span class="value">{{
+                                    agentDetails.agentTemplateDto ? agentDetails.agentTemplateDto.enable ? '启用' : '未启用'
+                                    : ''
+                                    }}</span>
+                                @* <span class="value">{{ agentStateText[agentDetails.state] }}</span> *@
+                                <span class="btn" @@click="setAgentState('stop', agentDetails)">停用</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="df-wn agentDetails-main">
+                        <div class="agentDetails-main-left">
+                            <el-tabs v-model="agentDetailsTabsActiveName" class="pageTabs"
+                                @@tab-click="handleAgentDetailsTabsClick">
+                                <el-tab-pane label="组" name="first">
+                                    <div class="agentDetails-main-left-list">
+                                        <div class="agentDetails-main-left-list-filter">
+                                            <el-input v-model="agentDetailsGroupQueryList.filter" placeholder="请输入名称搜索"
+                                                suffix-icon="el-icon-search"
+                                                @@change="handleFilterChange($event,'agentGroup')"></el-input>
+                                        </div>
+                                        <el-scrollbar class="sidebar-agentDetails-main-left"
+                                            wrap-class="scrollbar-wrapper">
+                                            <template
+                                                v-if="agentDetailsGroupTreeData&&agentDetailsGroupTreeData.length">
+                                                @* :indent="20" *@
+                                                @* <el-tree ref="agentDetailsGroupElTree"
+                                                :data="agentDetailsGroupTreeData"
+                                                :props="groupTreeDefaultProps" default-expand-all node-key="id"
+                                                :expand-on-click-node="false"
+                                                :filter-node-method="filterGroupTreeNode" class="group-tree">
+                                                <span slot-scope="{ node, data }"
+                                                class="df-wn flex-ac flex-js customGroupTreeNode"
+                                                @@click="handleGroupTreeNodeClick(node,data,'agentGroup')">
+                                                <i v-if="data.state" class="el-icon-success"></i>
+                                                <span class="groupTreeNodeText text-ellipsis"
+                                                :title="node.label">{{
+                                                node.label
+                                                }}</span>
+                                                </span>
+                                                </el-tree> *@
+                                                <div v-for="(item,index) in agentDetailsGroupList" :key="index"
+                                                    class="sidebar-agentitem text-ellipsis"
+                                                    :class="{'sidebar-agentitem_active':agentDetailsGroupIndex === index}"
+                                                    :title="item.name"
+                                                    @@click="handleGroupView('agentGroup',item,index)">
+                                                    {{ item.name }}
+                                                </div>
+                                            </template>
+                                        </el-scrollbar>
+                                    </div>
+                                </el-tab-pane>
+                                <el-tab-pane label="任务" name="second">
+                                    <div class="agentDetails-main-left-list">
+                                        <div class="agentDetails-main-left-list-filter">
+                                            <el-input v-model="agentDetailsTaskQueryList.filter" placeholder="请输入名称搜索"
+                                                suffix-icon="el-icon-search"
+                                                @@change="handleFilterChange($event,'agentTask')"></el-input>
+                                        </div>
+                                        <el-scrollbar class="sidebar-agentDetails-main-left"
+                                            wrap-class="scrollbar-wrapper">
+                                            <template v-if="agentDetailsTaskList&&agentDetailsTaskList.length">
+                                                <div v-for="(item,index) in agentDetailsTaskList" :key="index"
+                                                    class="sidebar-agentitem text-ellipsis"
+                                                    :class="{'sidebar-agentitem_active':agentDetailsTaskIndex === index}"
+                                                    :title="item.name" @@click="handleTaskView('agentTask',item,index)">
+                                                    {{ item.name }}
+                                                </div>
+                                            </template>
+                                        </el-scrollbar>
+                                    </div>
+                                </el-tab-pane>
+                            </el-tabs>
+                        </div>
+                        <div class="agentDetails-main-right">
+                            <template v-if="agentDetailsTabsActiveName === 'first'">
+                                @* 组全部 *@
+                                <template v-if="agentDetailsGroupShowType === '1'">
+                                    <el-table :data="agentDetailsGroupList" :height="`calc(100vh - 440px)`"
+                                        style="width: 100%;">
+                                        <el-table-column prop="name" label="组名称" min-width="170" show-overflow-tooltip>
+                                            <template slot-scope="{ row }">
+                                                <i class="el-icon-success"></i>
+                                                <span>{{ row.name }}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="numberTasks" label="任务数" width="100">
+                                        </el-table-column>
+                                        <el-table-column prop="lastRunningTime" label="最近运行时间" min-width="150">
+                                        </el-table-column>
+                                        <el-table-column prop="groupLeader" label="群主" min-width="100"
+                                            show-overflow-tooltip>
+                                        </el-table-column>
+                                        <el-table-column prop="dockingPerson" label="对接人" min-width="100"
+                                            show-overflow-tooltip>
+                                        </el-table-column>
+                                        <el-table-column fixed="right" label="操作" width="220">
+                                            <template slot-scope="{ row,$index }">
+                                                <el-button type="primary" size="small"
+                                                    @@click="handleElVisibleOpenBtn('groupStart',row)">启动</el-button>
+                                                <el-button type="primary" size="small"
+                                                    @@click="handleEditDrawerOpenBtn('group',row)">编辑</el-button>
+                                                <el-button type="primary" size="small"
+                                                    @@click="handleGroupView('agentGroupTable',row,$index)">详情</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </template>
+                                @* 组详情 *@
+                                <template v-else-if="agentDetailsGroupShowType === '2'">
+                                    <div class="df-wn flex-ac flex-js groupInfoRow">
+                                        <div class="groupInfoRow-name text-ellipsis"
+                                            :title="agentDetailsGroupDetails.name">{{
+                                            agentDetailsGroupDetails.name }}
+                                        </div>
+                                        <div class="df-wn groupInfoRow-info">
+                                            <div>任务数: {{ agentDetailsGroupDetails.numberTasks }}</div>
+                                            <div>群主: {{ agentDetailsGroupDetails.groupLeader }}</div>
+                                            <div>对接人: {{ agentDetailsGroupDetails.dockingPerson }}</div>
+                                        </div>
+                                        <div class="df-wn  groupInfoRow-operation">
+                                            <el-button type="primary" size="small"
+                                                @@click="setAgentState('delete',agentDetailsGroupDetails)">退出组</el-button>
+                                            <el-button type="primary" size="small"
+                                                @@click="handleElVisibleOpenBtn('groupStart',agentDetailsGroupDetails)">启动</el-button>
+                                            <el-button type="primary" size="small"
+                                                @@click="handleEditDrawerOpenBtn('group',agentDetailsGroupDetails)">编辑</el-button>
+                                        </div>
+                                    </div>
+                                    <el-table :data="agentDetailsGroupDetails.children" :height="`calc(100vh - 485px)`"
+                                        style="width: 100%;">
+                                        <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
+                                            <template slot-scope="{ row }">
+                                                <i class="el-icon-success"></i>
+                                                <span>{{ row.name }}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="startTime" label="开始时间" min-width="100"
+                                            show-overflow-tooltip>
+                                        </el-table-column>
+                                        <el-table-column prop="duration" label="持续时长" width="100">
+                                        </el-table-column>
+                                        <el-table-column prop="modelName" label="模型名称" min-width="100"
+                                            show-overflow-tooltip>
+                                        </el-table-column>
+                                        <el-table-column prop="description" label="任务描述" min-width="130"
+                                            show-overflow-tooltip>
+                                        </el-table-column>
+                                        <el-table-column fixed="right" label="操作" width="73">
+                                            <template slot-scope="{ row }">
+                                                <el-button type="text" size="small"
+                                                    @@click="handleGroupView('agentGroupTask',row)">详情</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </template>
+                                @* 任务详情 *@
+                                <template v-else-if="agentDetailsGroupShowType === '3'">
+                                    <div class="df-wn flex-ac flex-jsb task-header">
+                                        <div class="df-wn flex-ac backgroupbox" style="top: -11px;"
+                                            @@click="returnGroup('agentGroupTask')">
+                                            <i class="icon el-icon-back"></i>
+                                            <span class="text">返回</span>
+                                        </div>
+                                        <div class="task-header1 text-ellipsis" :title="agentDetailsGroupDetails.name">
+                                            {{ agentDetailsGroupDetails.name }}
+                                        </div>
+                                        <div class="df-wn flex-ac task-header2">
+                                            <div class="taskheader2-item" style="flex-shrink: 0;">{{
+                                                agentStateText[agentDetailsGroupDetails.state] }}</div>
+                                            <div class="taskheader2-item" style="flex-shrink: 0;">{{
+                                                agentDetailsGroupDetails.modelName }}</div>
+                                            <div class="taskheader2-item text-ellipsis"
+                                                :title="agentDetailsGroupDetails.description">{{
+                                                agentDetailsGroupDetails.description }}
+                                            </div>
+                                        </div>
+                                        <div class="df-wn flex-ac task-header3">
+                                            <div class="taskheader3-item">开始时间：{{ agentDetailsGroupDetails.startTime }}
+                                            </div>
+                                            <div class="taskheader3-item">持续时长：{{ agentDetailsGroupDetails.duration }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="df-wn task-main">
+                                        <div class="taskmain-record">
+                                            <el-scrollbar class="sidebar-taskrecord-container"
+                                                wrap-class="scrollbar-wrapper">
+                                                <div class="df-wn flex-dc taskrecord-listWrap">
+                                                    <div v-for="ritem in agentDetailsGroupDetails.recordList"
+                                                        :key="ritem.id" class="taskrecord-listWrap-item">
+                                                        <div class="taskrecord-listWrap-item-head">
+                                                            <span class="df-wn flex-ac flex-jc avatarBox">
+                                                                <img :src="ritem.avatar" alt="">
+                                                            </span>
+                                                            <span class="name">{{ ritem.sender }}</span>
+                                                            <span class="time">{{ ritem.sendTime }}</span>
+                                                        </div>
+                                                        <div class="taskrecord-listWrap-item-content">
+                                                            {{ ritem.sendContent }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </el-scrollbar>
+                                        </div>
+                                        <div class="taskmain-members">
+                                            <div class="taskmain-members-title">
+                                                机器人·3
+                                            </div>
+                                            <el-scrollbar class="sidebar-taskmembers-container"
+                                                wrap-class="scrollbar-wrapper">
+                                                <div class="df-wn flex-dc taskmain-members-listWrap">
+                                                    <div v-for="mitem in agentDetailsGroupDetails.memberList"
+                                                        :key="mitem.id" class="taskmain-members-listWrap-item">
+                                                        <div class="df-wn flex-ac flex-jc avatarBox">
+                                                            <img :src="mitem.avatar" alt="">
+                                                        </div>
+                                                        <span class="name text-ellipsis">{{ mitem.name }}</span>
+                                                    </div>
+                                                </div>
+                                            </el-scrollbar>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                            <template v-if="agentDetailsTabsActiveName === 'second'">
+                                <div class="df-wn flex-ac flex-jsb task-header">
+                                    <div class="task-header1 text-ellipsis" :title="agentDetailsTaskDetails.name">
+                                        {{ agentDetailsTaskDetails.name }}
+                                    </div>
+                                    <div class="df-wn flex-ac task-header2">
+                                        <div class="taskheader2-item" style="flex-shrink: 0;">{{
+                                            agentStateText[agentDetailsTaskDetails.state] }}</div>
+                                        <div class="taskheader2-item" style="flex-shrink: 0;">{{
+                                            agentDetailsTaskDetails.modelName }}</div>
+                                        <div class="taskheader2-item text-ellipsis"
+                                            :title="agentDetailsTaskDetails.description">{{
+                                            agentDetailsTaskDetails.description }}
+                                        </div>
+                                    </div>
+                                    <div class="df-wn flex-ac task-header3">
+                                        <div class="taskheader3-item">开始时间：{{ agentDetailsTaskDetails.startTime }}
+                                        </div>
+                                        <div class="taskheader3-item">持续时长：{{ agentDetailsTaskDetails.duration }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="df-wn task-main">
+                                    <div class="taskmain-record">
+                                        <el-scrollbar class="sidebar-taskrecord-container"
+                                            wrap-class="scrollbar-wrapper">
+                                            <div class="df-wn flex-dc taskrecord-listWrap">
+                                                <div v-for="ritem in agentDetailsTaskDetails.recordList" :key="ritem.id"
+                                                    class="taskrecord-listWrap-item">
+                                                    <div class="taskrecord-listWrap-item-head">
+                                                        <span class="df-wn flex-ac flex-jc avatarBox">
+                                                            <img :src="ritem.avatar" alt="">
+                                                        </span>
+                                                        <span class="name">{{ ritem.sender }}</span>
+                                                        <span class="time">{{ ritem.sendTime }}</span>
+                                                    </div>
+                                                    <div class="taskrecord-listWrap-item-content">
+                                                        {{ ritem.sendContent }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </el-scrollbar>
+                                    </div>
+                                    <div class="taskmain-members">
+                                        <div class="taskmain-members-title">
+                                            机器人·3
+                                        </div>
+                                        <el-scrollbar class="sidebar-taskmembers-container"
+                                            wrap-class="scrollbar-wrapper">
+                                            <div class="df-wn flex-dc taskmain-members-listWrap">
+                                                <div v-for="mitem in agentDetailsTaskDetails.memberList" :key="mitem.id"
+                                                    class="taskmain-members-listWrap-item">
+                                                    <div class="df-wn flex-ac flex-jc avatarBox">
+                                                        <img :src="mitem.avatar" alt="">
+                                                    </div>
+                                                    <span class="name text-ellipsis">{{ mitem.name }}</span>
+                                                </div>
+                                            </div>
+                                        </el-scrollbar>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </el-tab-pane>
+    <el-tab-pane label="组" name="second">
+        <div class="tabPane-container">
+            @* 侧边 *@
+            <div class="sidebar-container">
+                <div class="sidebar-head-container">
+                    <div class="df-wn flex-ac flex-jsb sidebar-title-row">
+                        <div class="sidebar-titleRow-title text-ellipsis">组列表</div>
+                        <div class="sidebar-titleRow-icon df-wn flex-ac flex-jc"
+                            @@click="handleElVisibleOpenBtn('group')">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </div>
+                    <div class="df-wn flex-ac flex-jsb sidebar-search-row">
+                        <el-input v-model="groupQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                            class="sidebar-searchRow-input" @@change="handleFilterChange($event,'group')"></el-input>
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="groupFCPVisible">
+                            <div class="popover-filterCriteria">
+                                <div class="sortRow" @@click="handleFilterCriteria('group','timeSort')">
+                                    <span class="sortRowText">按时间排序</span>
+                                    <div class="sortRowIconBox">
+                                        <i class="el-icon-caret-top sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':groupQueryList.timeSort}"></i>
+                                        <i class="el-icon-caret-bottom sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':!groupQueryList.timeSort}"></i>
+                                    </div>
+                                </div>
+                                <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
+                                    <span class="sortRowText">选择状态</span>
+                                </div>
+                                <div v-for="(fitem,findex) in groupFilterCriteria" :key="findex" class="sortRow"
+                                    @@click="handleFilterCriteria('group',fitem.value)">
+                                    <span class="sortRowText">{{ fitem.label }}</span>
+                                    <i v-if="fitem.checked" class="el-icon-check sortRowIcon"></i>
+                                </div>
+                            </div>
+                            <i slot="reference" class="el-icon-more sidebar-searchRow-icon"></i>
+                            @* <img slot="reference" src="~/image/AgentsManager/icon-setEllipsis.png" alt=""
+                            class="sidebar-searchRow-icon"> *@
+                        </el-popover>
+                    </div>
+                </div>
+                <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
+                    <template v-if="groupTreeData&&groupTreeData.length">
+                        @* :indent="20" *@
+                        @* <el-tree ref="groupElTree" :data="groupTreeData" :props="groupTreeDefaultProps"
+                        default-expand-all node-key="id" :expand-on-click-node="false"
+                        :filter-node-method="filterGroupTreeNode" class="group-tree">
+                        <span slot-scope="{ node, data }" class="df-wn flex-ac flex-js customGroupTreeNode"
+                        @@click="handleGroupTreeNodeClick(node,data,'group')">
+                        <i v-if="data.state" class="el-icon-success"></i>
+                        <span class="groupTreeNodeText text-ellipsis" :title="node.label">{{ node.label
+                        }}</span>
+                        </span>
+                        </el-tree> *@
+                        <div class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarGroupIndex === ''}"
+                            @@click="handleGroupViewAll">
+                            全部组
+                        </div>
+                        <div v-for="(item,index) in groupList" :key="index" class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarGroupIndex === index}" :title="item.name"
+                            @@click="handleGroupView('group',item,index)">
+                            {{ item.name }}
+                        </div>
+                    </template>
+                </el-scrollbar>
+            </div>
+            @* 主体内容 *@
+            <div class="main-container group-container">
+                @* 组全部 *@
+                <template v-if="groupShowType === '1'">
+                    <el-table :data="groupList" :height="`calc(100vh - 255px)`" style="width: 100%;">
+                        <el-table-column prop="name" label="组名称" min-width="170" show-overflow-tooltip>
+                            <template slot-scope="{ row }">
+                                <i class="el-icon-success"></i>
+                                <span>{{ row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="numberTasks" label="任务数" width="100">
+                        </el-table-column>
+                        <el-table-column prop="lastRunningTime" label="最近运行时间" min-width="150">
+                        </el-table-column>
+                        <el-table-column prop="groupLeader" label="群主" min-width="100" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column prop="dockingPerson" label="对接人" min-width="100" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column fixed="right" label="操作" width="220">
+                            <template slot-scope="{ row,$index }">
+                                <el-button type="primary" size="small"
+                                    @@click="handleElVisibleOpenBtn('groupStart',row)">启动</el-button>
+                                <el-button type="primary" size="small"
+                                    @@click="handleEditDrawerOpenBtn('group',row)">编辑</el-button>
+                                <el-button type="primary" size="small"
+                                    @@click="handleGroupView('groupTable',row,$index)">详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                @* 组详情 *@
+                <template v-else-if="groupShowType === '2'">
+                    <div class="df-wn flex-ac flex-js groupInfoRow">
+                        <div class="groupInfoRow-name text-ellipsis" :title="groupDetails.name">{{ groupDetails.name }}
+                        </div>
+                        <div class="df-wn groupInfoRow-info">
+                            <div>任务数: {{ groupDetails.numberTasks }}</div>
+                            <div>群主: {{ groupDetails.groupLeader }}</div>
+                            <div>对接人: {{ groupDetails.dockingPerson }}</div>
+                        </div>
+                        <div class="df-wn  groupInfoRow-operation">
+                            <el-button type="primary" size="small"
+                                @@click="handleElVisibleOpenBtn('groupStart',groupDetails)">启动</el-button>
+                            <el-button type="primary" size="small"
+                                @@click="handleEditDrawerOpenBtn('group',groupDetails)">编辑</el-button>
+                        </div>
+                    </div>
+                    <el-table :data="groupDetails.children" :height="`calc(100vh - 300px)`" style="width: 100%;">
+                        <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
+                            <template slot-scope="{ row }">
+                                <i class="el-icon-success"></i>
+                                <span>{{ row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="startTime" label="开始时间" min-width="100" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column prop="duration" label="持续时长" width="100">
+                        </el-table-column>
+                        <el-table-column prop="modelName" label="模型名称" min-width="100" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column prop="description" label="任务描述" min-width="130" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column fixed="right" label="操作" width="73">
+                            <template slot-scope="{ row }">
+                                <el-button type="text" size="small"
+                                    @@click="handleGroupView('groupTask', row)">详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                @* 任务详情 *@
+                <template v-else-if="groupShowType === '3'">
+                    <div class="df-wn flex-ac flex-jsb task-header">
+                        <div class="df-wn flex-ac backgroupbox" @@click="returnGroup('groupTask')">
+                            <i class="icon el-icon-back"></i>
+                            <span class="text">返回</span>
+                        </div>
+                        <div class="task-header1 text-ellipsis" :title="groupDetails.name">
+                            {{ groupDetails.name }}
+                        </div>
+                        <div class="df-wn flex-ac task-header2">
+                            <div class="taskheader2-item" style="flex-shrink: 0;">{{ agentStateText[groupDetails.state]
+                                }}</div>
+                            <div class="taskheader2-item" style="flex-shrink: 0;">{{ groupDetails.modelName }}</div>
+                            <div class="taskheader2-item text-ellipsis" :title="groupDetails.description">{{
+                                groupDetails.description }}</div>
+                        </div>
+                        <div class="df-wn flex-ac task-header3">
+                            <div class="taskheader3-item">开始时间：{{ groupDetails.startTime }}</div>
+                            <div class="taskheader3-item">持续时长：{{ groupDetails.duration }}</div>
+                        </div>
+                    </div>
+                    <div class="df-wn task-main">
+                        <div class="taskmain-record">
+                            <el-scrollbar class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
+                                <div class="df-wn flex-dc taskrecord-listWrap">
+                                    <div v-for="ritem in groupDetails.recordList" :key="ritem.id"
+                                        class="taskrecord-listWrap-item">
+                                        <div class="taskrecord-listWrap-item-head">
+                                            <span class="df-wn flex-ac flex-jc avatarBox">
+                                                <img :src="ritem.avatar" alt="">
+                                            </span>
+                                            <span class="name">{{ ritem.sender }}</span>
+                                            <span class="time">{{ ritem.sendTime }}</span>
+                                        </div>
+                                        <div class="taskrecord-listWrap-item-content">
+                                            {{ ritem.sendContent }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-scrollbar>
+                        </div>
+                        <div class="taskmain-members">
+                            <div class="taskmain-members-title">
+                                机器人·3
+                            </div>
+                            <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
+                                <div class="df-wn flex-dc taskmain-members-listWrap">
+                                    <div v-for="mitem in groupDetails.memberList" :key="mitem.id"
+                                        class="taskmain-members-listWrap-item">
+                                        <div class="df-wn flex-ac flex-jc avatarBox">
+                                            <img :src="mitem.avatar" alt="">
+                                        </div>
+                                        <span class="name text-ellipsis">{{ mitem.name }}</span>
+                                    </div>
+                                </div>
+                            </el-scrollbar>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </el-tab-pane>
+    <el-tab-pane label="任务" name="third">
+        <div class="tabPane-container">
+            @* 侧边 *@
+            <div class="sidebar-container">
+                <div class="sidebar-head-container">
+                    <div class="df-wn flex-ac flex-jsb sidebar-title-row">
+                        <div class="sidebar-titleRow-title text-ellipsis">任务列表</div>
+                    </div>
+                    <div class="df-wn flex-ac flex-jsb sidebar-search-row">
+                        <el-input v-model="taskQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                            class="sidebar-searchRow-input" @@change="handleFilterChange($event,'task')"></el-input>
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="taskFCPVisible">
+                            <div class="popover-filterCriteria">
+                                <div class="sortRow" @@click="handleFilterCriteria('task','timeSort')">
+                                    <span class="sortRowText">按时间排序</span>
+                                    <div class="sortRowIconBox">
+                                        <i class="el-icon-caret-top sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':taskQueryList.timeSort}"></i>
+                                        <i class="el-icon-caret-bottom sortRowIconTriangle"
+                                            :class="{'sortRowIconActive':!taskQueryList.timeSort}"></i>
+                                    </div>
+                                </div>
+                                <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
+                                    <span class="sortRowText">选择状态</span>
+                                </div>
+                                <div v-for="(fitem,findex) in taskFilterCriteria" :key="findex" class="sortRow"
+                                    @@click="handleFilterCriteria('task',fitem.value)">
+                                    <span class="sortRowText">{{ fitem.label }}</span>
+                                    <i v-if="fitem.checked" class="el-icon-check sortRowIcon"></i>
+                                </div>
+                            </div>
+                            <i slot="reference" class="el-icon-more sidebar-searchRow-icon"></i>
+                            @* <img slot="reference" src="~/image/AgentsManager/icon-setEllipsis.png" alt=""
+                            class="sidebar-searchRow-icon"> *@
+                        </el-popover>
+                    </div>
+                </div>
+                <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
+                    <template v-if="taskList&&taskList.length">
+                        <div v-for="(item,index) in taskList" :key="index" class="sidebar-agentitem text-ellipsis"
+                            :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
+                            @@click="handleTaskView('task',item,index)">
+                            {{ item.name }}
+                        </div>
+                    </template>
+                </el-scrollbar>
+            </div>
+            @* 主体内容 *@
+            <div class="main-container agent-container">
+                <template v-if="taskDetails">
+                    <div class="df-wn flex-ac flex-jsb task-header">
+                        <div class="task-header1 text-ellipsis" :title="taskDetails.name">
+                            {{ taskDetails.name }}
+                        </div>
+                        <div class="df-wn flex-ac task-header2">
+                            <div class="taskheader2-item" style="flex-shrink: 0;">{{ agentStateText[taskDetails.state]
+                                }}</div>
+                            <div class="taskheader2-item" style="flex-shrink: 0;">{{ taskDetails.modelName }}</div>
+                            <div class="taskheader2-item text-ellipsis" :title="taskDetails.description">{{
+                                taskDetails.description }}</div>
+                        </div>
+                        <div class="df-wn flex-ac task-header3">
+                            <div class="taskheader3-item">开始时间：{{ taskDetails.startTime }}</div>
+                            <div class="taskheader3-item">持续时长：{{ taskDetails.duration }}</div>
+                        </div>
+                    </div>
+                    <div class="df-wn task-main">
+                        <div class="taskmain-record">
+                            <el-scrollbar class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
+                                <div class="df-wn flex-dc taskrecord-listWrap">
+                                    <div v-for="ritem in taskDetails.recordList" :key="ritem.id"
+                                        class="taskrecord-listWrap-item">
+                                        <div class="taskrecord-listWrap-item-head">
+                                            <span class="df-wn flex-ac flex-jc avatarBox">
+                                                <img :src="ritem.avatar" alt="">
+                                            </span>
+                                            <span class="name">{{ ritem.sender }}</span>
+                                            <span class="time">{{ ritem.sendTime }}</span>
+                                        </div>
+                                        <div class="taskrecord-listWrap-item-content">
+                                            {{ ritem.sendContent }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-scrollbar>
+                        </div>
+                        <div class="taskmain-members">
+                            <div class="taskmain-members-title">
+                                机器人·3
+                            </div>
+                            <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
+                                <div class="df-wn flex-dc taskmain-members-listWrap">
+                                    <div v-for="mitem in taskDetails.memberList" :key="mitem.id"
+                                        class="taskmain-members-listWrap-item">
+                                        <div class="df-wn flex-ac flex-jc avatarBox">
+                                            <img :src="mitem.avatar" alt="">
+                                        </div>
+                                        <span class="name text-ellipsis">{{ mitem.name }}</span>
+                                    </div>
+                                </div>
+                            </el-scrollbar>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </el-tab-pane>
+</el-tabs>
 
-        <!-- 此处也可以加 SideMenu -->
-        @*<el-aside width="200px">
-            <el-menu background-color="#304156" default-active="1"
-                        text-color="#bfcbd9" active-text-color="#409eff">
-                @(await Html.PartialAsync("_SideMenu"))
-            </el-menu>
-        </el-aside>*@
-        <el-main>
-            <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
-            <h4>@Model.XncfRegister.Description</h4>
-            <br />
-            <i>当前模块为自动生成模块</i>
-        </el-main>
-    </el-container>
-</div>
+@* 抽屉 新增|编辑 智能体 *@
+<el-drawer :visible.sync="visible.agent" direction="rtl" :with-header="false" :wrapper-closable="false"
+    :close-on-press-escape="false" size="540px">
+    <div class="drawerRtl">
+        @* 内容中的头（包括标题和关闭图标） *@
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title">{{ agentForm.id ? '编辑智能体' : '新增智能体' }}</div>
+            <div class="drawerRtl__header__close" @@click="handleElVisibleClose('agent')">&times;</div>
+        </div>
+        @* 内容中的主体内容 *@
+        <div class="drawerRtl__body">
+            <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
+                label-width="130px" class="drawerForm-container">
+                <el-form-item label="智能体名称" prop="name">
+                    <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="SystemMessage" required>
+                    <el-radio-group v-model="agentForm.systemMessageType">
+                        <el-radio label="1" border>自选</el-radio>
+                        <el-radio label="2" border>手动</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+                    @* @change="handleChange($event,'')" *@
+                    <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" placeholder="请选择" />
+                </el-form-item>
+                <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+                    <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="是否启用" prop="enable">
+                    <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
+                </el-form-item>
+                <el-form-item label="说明" prop="description">
+                    <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="外接平台" prop="hookRobotType">
+                    <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
+                        <el-option label="None" value="@HookRobotType.None"></el-option>
+                        <el-option label="WeChatMp" value="@HookRobotType.WeChatMp"></el-option>
+                        <el-option label="WeChatWorkRobot" value="@HookRobotType.WeChatWorkRobot"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="外接平台参数" prop="hookRobotParameter">
+                    <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="Agent 头像" prop="avatar">
+                    <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
+                        <div v-for="(aitem,aindex) in agentAvatarList" :key="aindex"
+                            class="df-wn flex-ac flex-jc agentAvatarBoxItem"
+                            :class="{'agentAvatarBoxItem-active':aitem === agentForm.avatar}"
+                            @@click="handleFormValidateField('agentELForm','agentForm','avatar',aitem)">
+                            <img :src="aitem" alt="">
+                        </div>
+                    </div>
+                </el-form-item>
+            </el-form>
+        </div>
+        @* 内容中固定的footer *@
+        <div class="drawerRtl__footer text-right">
+            <el-button :size="elSize" @@click="handleElVisibleClose('agent')">取消</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('agent')">确认</el-button>
+        </div>
+    </div>
+</el-drawer>
+@* 抽屉 新增|编辑 组 *@
+<el-drawer :visible.sync="visible.group" direction="rtl" :with-header="false" :wrapper-closable="false"
+    :close-on-press-escape="false" size="960px">
+    <div class="drawerRtl">
+        @* 内容中的头（包括标题和关闭图标） *@
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑组' : '新增组' }} </div>
+            <div class="drawerRtl__header__close" @@click="handleElVisibleClose('group')">&times;</div>
+        </div>
+        @* 内容中的主体内容 *@
+        <div class="drawerRtl__body">
+            <el-form ref="groupELForm" :model="groupForm" :rules="groupFormRules" :size="elSize" label-position="left"
+                label-width="130px" class="drawerForm-container">
+                <el-form-item label="组名称" prop="name">
+                    <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="组成员" prop="members">
+                    <div class="groupFMB">
+                        <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
+                            <div class="df-wn flex-ac" style="gap: 10px;">
+                                <el-input v-model="groupAgentQueryList.filter" size="small"
+                                    placeholder="请填写"></el-input>
+                                <el-button size="small" icon="el-icon-search"
+                                    @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
+                            </div>
+                            <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('agentDialog')">
+                                新增智能体
+                            </div>
+                        </div>
+                        <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
+                            <span class="groupFMB_ma_label">已选择:</span>
+                            <div class="groupFMB_ma_list">
+                                <div class="df flex-ac flex-js" style="gap:10px">
+                                    <div v-for="(item,index) in groupForm.members" :key="item.id"
+                                        class="df-wn flex-ac groupFMB_ma_list_item">
+                                        <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
+                                        <i class="el-icon-close cursorPointer"
+                                            @@click="groupMembersCancel(item,index)"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <el-table ref="groupAgentTable" :data="groupAgentList" max-height="447"
+                            style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
+                            @@selection-change="handleSelectionChange">
+                            <el-table-column type="selection" width="30"></el-table-column>
+                            <el-table-column prop="name" label="智能体名称" width="130"
+                                show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="score" label="评分" width="100">
+                            </el-table-column>
+                            <el-table-column prop="description" label="描述" min-width="100">
+                            </el-table-column>
+                            <el-table-column fixed="right" label="操作" width="100">
+                                <template slot-scope="{ row }">
+                                    <el-button type="primary" size="small"
+                                        @@click="handleEditDrawerOpenBtn('agentDialog',row)">编辑</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination small layout="prev, pager, next" :total="groupAgentTotal"
+                            @@current-change="getAgentListData($event,'groupAgent')"
+                            @@prev-click="getAgentListData($event,'groupAgent')"
+                            @@next-click="getAgentListData($event,'groupAgent')">
+                        </el-pagination>
+                    </div>
+                </el-form-item>
+                <el-form-item label="群主" prop="adminAgentTemplateId">
+                    @* @change="handleChange($event,'')" *@
+                    <load-more-select v-model="groupForm.adminAgentTemplateId" service-type='agent' placeholder="请选择" />
+                </el-form-item>
+                <el-form-item label="对接人" prop="enterAgentTemplateId">
+                    @* @change="handleChange($event,'')" *@
+                    <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' placeholder="请选择" />
+                </el-form-item>
+                <el-form-item label="说明">
+                    <el-input type="textarea" v-model="groupForm.description" :rows="4" placeholder="请填写"></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+        @* 内容中固定的footer *@
+        <div class="drawerRtl__footer text-right">
+            <el-button :size="elSize" @@click="handleElVisibleClose('group')">取消</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('group')">确认</el-button>
+        </div>
+    </div>
+</el-drawer>
+@* 抽屉 启动 组 *@
+<el-drawer :visible.sync="visible.groupStart" direction="rtl" :with-header="false" :wrapper-closable="false"
+    :close-on-press-escape="false" size="960px">
+    <div class="drawerRtl">
+        @* 内容中的头（包括标题和关闭图标） *@
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title">启动群组</div>
+            <div class="drawerRtl__header__close" @@click="handleElVisibleClose('groupStart')">&times;</div>
+        </div>
+        @* 内容中的主体内容 *@
+        <div class="drawerRtl__body">
+            <el-form ref="groupStartELForm" :model="groupStartForm" :rules="groupStartFormRules" :size="elSize"
+                label-position="left" label-width="130px" class="drawerForm-container">
+                <el-form-item label="选择群组" prop="groupName">
+                    <el-input v-model="groupStartForm.groupName" disabled placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="任务标题" prop="name">
+                    <el-input v-model="groupStartForm.name" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="选择模型" prop="aiModelId">
+                    @* @change="handleChange($event,'')" *@
+                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" placeholder="请选择" />
+                </el-form-item>
+                <el-form-item label="个性化智能体" prop="personality">
+                    <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
+                </el-form-item>
+                <el-form-item label="我能帮你做什么" prop="command">
+                    <el-input type="textarea" v-model="groupStartForm.command" :rows="8" placeholder="请填写"></el-input>
+                </el-form-item>
+                @* <el-form-item label="说明" prop="description">
+                <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
+                placeholder="请填写"></el-input>
+                </el-form-item> *@
+            </el-form>
+        </div>
+        @* 内容中固定的footer *@
+        <div class="drawerRtl__footer text-right">
+            <el-button :size="elSize" @@click="handleElVisibleClose('groupStart')">取消</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('groupStart')">确认</el-button>
+        </div>
+    </div>
+</el-drawer>
+@* Dialog 智能体 新增 *@
+<el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.agentDialog" :show-close="false"
+    :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
+        label-width="130px" class="drawerForm-container">
+        <el-form-item label="智能体名称" prop="name">
+            <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+        </el-form-item>
+        <el-form-item label="SystemMessage" required>
+            <el-radio-group v-model="agentForm.systemMessageType">
+                <el-radio label="1" border>自选</el-radio>
+                <el-radio label="2" border>手动</el-radio>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+            <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" placeholder="请选择" />
+        </el-form-item>
+        <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+            <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用" prop="enable">
+            <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
+        </el-form-item>
+        <el-form-item label="说明" prop="description">
+            <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
+        </el-form-item>
+        <el-form-item label="外接平台" prop="hookRobotType">
+            <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
+                <el-option label="None" value="@HookRobotType.None"></el-option>
+                <el-option label="WeChatMp" value="@HookRobotType.WeChatMp"></el-option>
+                <el-option label="WeChatWorkRobot" value="@HookRobotType.WeChatWorkRobot"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="外接平台参数" prop="hookRobotParameter">
+            <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
+        </el-form-item>
+        <el-form-item label="Agent 头像" prop="avatar">
+            <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
+                <div v-for="(aitem,aindex) in agentAvatarList" :key="aindex"
+                    class="df-wn flex-ac flex-jc agentAvatarBoxItem"
+                    :class="{'agentAvatarBoxItem-active':aitem === agentForm.avatar}"
+                    @@click="handleFormValidateField('agentELForm','agentForm','avatar',aitem)">
+                    <img :src="aitem" alt="">
+                </div>
+            </div>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @@click="handleElVisibleClose('agentDialog')">取 消</el-button>
+        <el-button type="primary" @@click="handleElVisibleSubmit('agentDialog')">确 定</el-button>
+    </div>
+</el-dialog>
 
-
-@section scripts{
-    <script>
-        new Vue({
-            el: "#app"
-        });
-    </script>
+@section scripts {
+    <script src="~/js/AgentsManager/lib/axios.min.js"></script>
+    <script src="~/js/AgentsManager/axios.js"></script>
+    <script src="~/js/AgentsManager/index.js"></script>
 }

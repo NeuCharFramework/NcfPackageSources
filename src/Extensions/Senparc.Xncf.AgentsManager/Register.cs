@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
@@ -12,6 +15,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager
@@ -25,7 +29,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.2.10";//必须填写版本号
+        public override string Version => "0.2.14";//必须填写版本号
 
         public override string MenuName => "Agents 管理模块";
 
@@ -90,8 +94,20 @@ namespace Senparc.Xncf.AgentsManager
 
             return base.AddXncfModule(services, configuration, env);
         }
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
+        }
     }
 }
+
+
+
+
 
 
 

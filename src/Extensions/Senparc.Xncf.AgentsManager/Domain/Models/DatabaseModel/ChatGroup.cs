@@ -73,6 +73,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         public ChatGroup(ChatGroupDto chatGroupDto)
         {
+            Update(chatGroupDto);
+        }
+
+        public void Update(ChatGroupDto chatGroupDto)
+        {
             Name = chatGroupDto.Name;
             Enable = chatGroupDto.Enable;
             State = chatGroupDto.State;

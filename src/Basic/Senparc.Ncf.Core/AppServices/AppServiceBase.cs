@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 
 namespace Senparc.Ncf.Core.AppServices
@@ -20,6 +19,21 @@ namespace Senparc.Ncf.Core.AppServices
         {
             this.ServiceProvider = serviceProvider;
             CancellationToken = new CancellationToken();
+        }
+
+        public T GetService<T>()
+        {
+            return ServiceProvider.GetService<T>();
+        }
+
+        public T GetRequiredService<T>()
+        {
+            return ServiceProvider.GetRequiredService<T>();
+        }
+
+        public T GetRequiredKeyedService<T>(object? serviceKey)
+        {
+            return ServiceProvider.GetRequiredKeyedService<T>(serviceKey);
         }
     }
 }

@@ -52,6 +52,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// </summary>
         public string Description { get; private set; }
 
+        public string Avastar { get; set; }
+
 
         //[InverseProperty(nameof(ChatGroupMember.AgentTemplate))]
         public ICollection<ChatGroupMember> ChatGroupMembers { get; private set; }

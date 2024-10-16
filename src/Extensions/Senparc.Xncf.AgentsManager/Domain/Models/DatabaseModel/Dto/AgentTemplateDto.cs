@@ -1,5 +1,7 @@
+using Microsoft.Identity.Client;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +10,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     /// <summary>
     /// Agent模板信息
     /// </summary>
-    public class AgentTemplateDto : DtoBase
+    public class AgentTemplateDto : DtoBase<int>
     {
         /// <summary>
         /// 名称
@@ -16,7 +18,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string Name { get; private set; }
 
         /// <summary>
-        /// 系统消息
+        /// 系统消息（PromptCode）
         /// </summary>
         public string SystemMessage { get; private set; }
 
@@ -33,7 +35,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// <summary>
         /// PromptRange 的代号
         /// </summary>
-        public string PromptCode { get;private set; }
+        public string PromptCode { get; private set; }
 
         /// <summary>
         /// 第三方机器人平台类型
@@ -45,7 +47,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// </summary>
         public string HookRobotParameter { get; set; }
 
-        private AgentTemplateDto() { }
+        public AgentTemplateDto() { }
 
         public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null)
         {
@@ -57,5 +59,17 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
         }
+    }
+
+    public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto { 
+    
+    }
+
+    public class AgentTemplateStatusDto
+    {
+        public AgentTemplateDto AgentTemplateDto { get; set; }
+
+        public PromptItemDto PromptItemDto { get; set; }
+        public PromptRangeDto PromptRangeDto { get; set; }
     }
 }

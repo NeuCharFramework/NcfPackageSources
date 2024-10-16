@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -62,6 +64,22 @@ public class PromptRangeAppService : AppServiceBase
             async (response, logger) =>
                 await _promptRangeService.GetListAsync()
         );
+    }
+
+
+    /// <summary>
+    /// 获取 PromptRange 的树状结构
+    /// </summary>
+    /// <returns></returns>
+    [ApiBind]
+    public async Task<AppResponseBase<PromptItemTreeList>> GetPromptRangeTree()
+    {
+        return await this.GetResponseAsync<PromptItemTreeList>(async (response, logger) =>
+        {
+            var promptItemService = base.GetService<PromptItemService>();
+            var items = await promptItemService.GetPromptRangeTreeList(true, true);
+            return items;
+        });
     }
 
     /// <summary>

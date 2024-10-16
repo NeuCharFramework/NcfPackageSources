@@ -1,13 +1,17 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Repository;
 
 namespace Senparc.Ncf.Service
 {
     public interface IServiceDataBase
     {
+        IServiceProvider ServiceProvider { get; set; }
         IDataBase BaseData { get; set; }
         void CloseConnection();
+
+        T GetService<T>();
     }
 
 
@@ -33,6 +37,7 @@ namespace Senparc.Ncf.Service
         #endregion
 
 
+        public IServiceProvider ServiceProvider { get; set; }
         public IDataBase BaseData { get; set; }
 
         public ServiceDataBase(IDataBase baseData)
@@ -44,5 +49,16 @@ namespace Senparc.Ncf.Service
         {
             BaseData.CloseConnection();
         }
+
+        public T GetService<T>()
+        {
+            return ServiceProvider.GetService<T>();
+        }
+
+        public T GetRequiredService<T>()
+        {
+            return ServiceProvider.GetRequiredService<T>();
+        }
+
     }
 }

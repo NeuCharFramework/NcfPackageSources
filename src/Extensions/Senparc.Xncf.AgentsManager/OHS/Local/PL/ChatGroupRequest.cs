@@ -108,4 +108,37 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             await base.LoadData(serviceProvider);
         }
     }
+
+    public class ChatGroup_RunGroupRequest 
+    {
+        /// <summary>
+        /// 任务名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// ChatGroup ID
+        /// </summary>
+        public int ChatGroupId { get; set; }
+
+        /// <summary>
+        /// 如果是 0 ，则使用系统默认配置
+        /// </summary>
+        public int AiModelId { get; set; }
+
+        /// <summary>
+        /// 发起对话的要求
+        /// </summary>
+        public string PromptCommand { get; set; }
+
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// 使用个性化智能体
+        /// </summary>
+        public bool Personality { get; set; }
+    }
 }
