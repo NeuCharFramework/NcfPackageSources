@@ -82,3 +82,4 @@ SenparcConfig.Development.config
 /src/TestResults
 Thumbs.db
 /src/ApiDocXML/Senparc.Xncf.AgentsManager.XML
+/src/Extensions/Senparc.Xncf.AgentsManager/ncf_obj/Debug/net8.0
