@@ -5,6 +5,8 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -90,6 +92,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 获取 PromptRange 的树状结构
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<PromptItemTreeList>> GetPromptRangeTree()
+        {
+            return await this.GetResponseAsync<PromptItemTreeList>(async (response, logger) =>
+           {
+               var items = await _promptItemService.GetPromptRangeTreeList(true, true);
+               return items;
+           });
+        }
+
+        /// <summary>
         /// 创建或更新 AgentTemplate
         /// </summary>
         /// <returns></returns>
@@ -118,7 +134,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var dto = this._agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
                 var result = new AgentTemplate_GetItemResponse()
                 {
-                    AgentTemplate = dto
+                    AgentTemplate = dto,
                 };
 
                 return result;
@@ -150,6 +166,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
                 promptItemDto.PromptRange = promptRangeDto;
 
+                var aiModelService = base.GetService<AIModelService>();
+                var aiModel = await aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+                var aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
 
                 var result = new AgentTemplate_GetItemStatusResponse()
                 {
@@ -157,7 +176,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     {
                         AgentTemplateDto = agentTemplateDto,
                         PromptItemDto = promptItemDto,
-                        PromptRangeDto = promptRangeDto
+                        PromptRangeDto = promptRangeDto,
+                        AIModelDto = aiModelDto
                     }
                 };
 

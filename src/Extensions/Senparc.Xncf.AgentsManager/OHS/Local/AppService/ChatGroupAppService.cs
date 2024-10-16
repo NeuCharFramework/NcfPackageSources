@@ -228,7 +228,23 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// 创建或设置 ChatGroup
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<ChatGroup_GetItemResponse>> GetChatGroupItem(int id)
+        {
+            return await this.GetResponseAsync<ChatGroup_GetItemResponse>(async (response, logger) =>
+            {
+                var item = await this._chatGroupService.GetObjectAsync(z=>z.Id == id);
 
+                return new ChatGroup_GetItemResponse()
+                {
+                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item)
+                };
+            });
+        }
 
         /// <summary>
         /// 运行智能体
