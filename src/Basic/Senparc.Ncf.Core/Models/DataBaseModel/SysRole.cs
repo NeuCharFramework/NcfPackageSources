@@ -45,19 +45,19 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// </summary>
         public bool Enabled { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(150)]
         public new string Id { get; set; }
 
         /// <summary>
         /// 角色名称
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string RoleName { get; set; }
 
         /// <summary>
         /// 角色代码
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(150)]
         public string RoleCode { get; set; }
     }
 }

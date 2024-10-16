@@ -15,12 +15,12 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(50)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("AddTime")
@@ -44,11 +44,11 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RoleName")
-                        .HasMaxLength(50)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TenantId")
@@ -86,11 +86,11 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RoleId")
-                        .HasMaxLength(50)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TenantId")
@@ -124,7 +124,7 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PermissionId")
-                        .HasMaxLength(50)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
@@ -132,15 +132,15 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ResourceCode")
-                        .HasMaxLength(20)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RoleId")
-                        .HasMaxLength(50)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TenantId")

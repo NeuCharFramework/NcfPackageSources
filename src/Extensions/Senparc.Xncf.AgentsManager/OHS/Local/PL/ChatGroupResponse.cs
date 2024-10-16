@@ -13,6 +13,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         public PagedList<ChatGroupDto> ChatGroupDtoList { get; set; }
     }
 
+    public class ChatGroup_GetItemResponse
+    {
+        public ChatGroupDto ChatGroupDto { get; set; }
+    }
+
+
     public class ChatGroup_SetGroupChatResponse
     {
         public string Logs { get; set; }

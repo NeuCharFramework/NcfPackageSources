@@ -17,7 +17,7 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -25,8 +25,8 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("timestamp without time zone");
@@ -49,12 +49,12 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
                         .HasColumnType("character varying(300)");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("RoleName")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -93,12 +93,12 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
                         .HasColumnType("character varying(300)");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
@@ -133,24 +133,24 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.PostgreSQL
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PermissionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
                     b.Property<string>("ResourceCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
