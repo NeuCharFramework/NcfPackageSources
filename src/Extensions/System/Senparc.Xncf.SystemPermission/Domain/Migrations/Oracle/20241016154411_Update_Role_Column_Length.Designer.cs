@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.SystemPermission.Models;
@@ -11,9 +12,11 @@ using Senparc.Xncf.SystemPermission.Models;
 namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
 {
     [DbContext(typeof(SystemPermissionSenparcEntities_Oracle))]
-    partial class SystemPermissionSenparcEntities_OracleModelSnapshot : ModelSnapshot
+    [Migration("20241016154411_Update_Role_Column_Length")]
+    partial class Update_Role_Column_Length
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

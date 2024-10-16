@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             ResourceCode = sysMenuDto.ResourceCode ?? string.Empty;
         }
 
-        [MaxLength(50)]
+        [MaxLength(150)]
         public new string Id { get; set; }
 
         [MaxLength(150)]
@@ -46,16 +46,16 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 父菜单
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string ParentId { get; set; }
 
-        [MaxLength(350)]
+        [MaxLength(500)]
         public string Url { get; set; }
 
         /// <summary>
         /// 图标
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string Icon { get; set; }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 操作资源
         /// </summary>
-        [MaxLength(30)]
+        [MaxLength(150)]
         public string ResourceCode { get; set; }
 
         public void Update(SysMenuDto sysMenuDto)

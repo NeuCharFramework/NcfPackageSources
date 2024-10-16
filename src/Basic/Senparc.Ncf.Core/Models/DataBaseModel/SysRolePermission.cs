@@ -35,19 +35,19 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 角色代码
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(150)]
         public string RoleCode { get; set; }
 
         /// <summary>
         /// 资源（按钮）代码
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(150)]
         public string ResourceCode { get; set; }
 
         /// <summary>
         /// 角色Id
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string RoleId { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 权限Id(菜单或者是按钮)
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string PermissionId { get; set; }
     }
 }

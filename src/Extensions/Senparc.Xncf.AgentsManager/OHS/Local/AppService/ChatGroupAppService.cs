@@ -239,6 +239,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 var item = await this._chatGroupService.GetObjectAsync(z=>z.Id == id);
 
+                var agentTemplateService = base.GetRequiredService<AgentsTemplateService>();
+
                 return new ChatGroup_GetItemResponse()
                 {
                      ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item)
