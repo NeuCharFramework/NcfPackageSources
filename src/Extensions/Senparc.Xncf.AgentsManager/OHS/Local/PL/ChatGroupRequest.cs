@@ -108,4 +108,23 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             await base.LoadData(serviceProvider);
         }
     }
+
+    public class ChatGroup_RunGroupRequest 
+    {
+        public string Name { get; set; }
+
+        public int ChatGroupId { get; set; }
+
+        /// <summary>
+        /// 如果是 0 ，则使用系统默认配置
+        /// </summary>
+        public int AiModelId { get; set; }
+
+        public string Command { get; set; }
+
+        /// <summary>
+        /// 使用个性化智能体
+        /// </summary>
+        public bool Personality { get; set; }
+    }
 }

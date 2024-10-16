@@ -1,4 +1,6 @@
-﻿using Senparc.Ncf.Core.AppServices;
+﻿using Senparc.CO2NET;
+using Senparc.CO2NET.WebApi;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Services;
@@ -142,9 +144,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
-
-
-        public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(ChatGroupDto chatGroupDto, List<int> memberIds)
+        /// <summary>
+        /// 创建或设置 ChatGroup
+        /// </summary>
+        /// <param name="chatGroupDto">ChatGroup 信息></param>
+        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(ChatGroupDto chatGroupDto, List<int> memberAgentTemplateIds)
         {
             return await this.GetResponseAsync<ChatGroup_SetGroupChatResponse>(async (response, logger) =>
             {
@@ -156,9 +163,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //TODO:封装到 Service 中
                 ChatGroup chatGroup = null;
                 chatGroupDto.State = ChatGroupState.Unstart;
-                
+
                 var isNew = false;
-                if (chatGroupDto.Id ==0)
+                if (chatGroupDto.Id == 0)
                 {
                     //新建
                     chatGroup = new ChatGroup(chatGroupDto);
@@ -179,12 +186,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //添加成员
                 var memberList = new List<ChatGroupMember>();
                 //合并“对接人”为成员
-                if (!memberIds.Contains(chatGroupDto.EnterAgentTemplateId))
+                if (!memberAgentTemplateIds.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
-                    memberIds.Add(chatGroupDto.EnterAgentTemplateId);
+                    memberAgentTemplateIds.Add(chatGroupDto.EnterAgentTemplateId);
                 }
 
-                foreach (var agentId in memberIds)
+                foreach (var agentId in memberAgentTemplateIds)
                 {
                     var chatGroupMemberDto = new ChatGroupMemberDto(null, chatGroup.Id, agentId);
                     var member = new ChatGroupMember(chatGroupMemberDto);
@@ -200,6 +207,44 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     Logs = logger.ToString(),
                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(chatGroup)
                 };
+            });
+        }
+
+        /// <summary>
+        /// 运行智能体
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> RunGroup(ChatGroup_RunGroupRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                var aiModelId = request.AiModelId;
+                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
+                if (aiModelId == 0)
+                {
+                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+                    if (aiModel == null)
+                    {
+                        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
+                    }
+
+                    var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+
+                    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
+                }
+
+                List<Task> tasks = new List<Task>();
+
+                //TODO: 使用线程进行维护
+                var task = _chatGroupService.RunGroup(logger, request.ChatGroupId, request.Command, aiSetting, request.Personality);
+                tasks.Add(task);
+
+                Task.WaitAll(tasks.ToArray());
+
+                return logger.ToString();
+
             });
         }
     }
