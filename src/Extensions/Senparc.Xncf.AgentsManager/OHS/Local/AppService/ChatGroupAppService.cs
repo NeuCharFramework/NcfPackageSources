@@ -211,19 +211,17 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///// 创建或设置 ChatGroup
-        ///// </summary>
-        ///// <param name="chatGroupDto">ChatGroup 信息></param>
-        ///// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
-        ///// <returns></returns>
-        //[ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        //public async Task<AppResponseBase<List<ChatGroupDto>> GetChatGroupList(int pageIndex,int pageSize)
-        //{
-        //    return await this.GetResponseAsync<ChatGroup_SetGroupChatResponse>(async (response, logger) =>
-        //    {
-                
-        //    });
-        //}
+        /// 创建或设置 ChatGroup
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<ChatGroup_GetListResponse> GetChatGroupList(int pageIndex, int pageSize)
+        {
+            return await this.GetResponseAsync<ChatGroup_GetListResponse>(async (response, logger) =>
+            {
+                var list = await this._chatGroupService.GetObjectListAsync(pageIndex, pageSize,z=>true, z=>z.Id, Ncf.Core.Enums.OrderingType.Descending);
+            });
+        }
 
 
 
