@@ -18,7 +18,9 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <DocumentationFile>../../../../NCF/src/back-end/Senparc.Web/App_Data/ApiDocXml/Senparc.Xncf.AgentsManager.XML</DocumentationFile>
-    <PackageReleaseNotes>
+	  <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\ncf_obj\</BaseIntermediateOutputPath>
+	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	  <PackageReleaseNotes>
 			v0.1.0 创世
             [2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
 			[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
@@ -68,6 +70,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
     <EmbeddedResource Include="wwwroot\**\*" />
+    <Compile Remove="obj\**" />
+    <Content Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <ItemGroup>

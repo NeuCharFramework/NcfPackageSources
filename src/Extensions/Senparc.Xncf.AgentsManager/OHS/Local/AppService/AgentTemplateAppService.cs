@@ -90,20 +90,6 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 PromptRange 的树状结构
-        /// </summary>
-        /// <returns></returns>
-        [ApiBind]
-        public async Task<AppResponseBase<PromptItemTreeList>> GetPromptRangeTree()
-        {
-            return await this.GetResponseAsync<PromptItemTreeList>(async (response, logger) =>
-           {
-               var items = await _promptItemService.GetPromptRangeTreeList(true, true);
-               return items;
-           });
-        }
-
-        /// <summary>
         /// 创建或更新 AgentTemplate
         /// </summary>
         /// <returns></returns>
