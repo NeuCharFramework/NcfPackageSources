@@ -231,7 +231,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 //更新状态
                 await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Chatting, chatTask);
 
-                await _cache.Set("")
+                //运行中进行缓存
+                var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
+                await _cache.SetAsync(runningKey, chatTaskDto);
 
                 logger.Append($"开始运行 {chatGroup.Name}");
 
@@ -386,6 +388,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     logger.Append("已完成运行：" + chatGroup.Name);
 
                     await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Finished, chatTask);
+                    //完成后移除缓存
+                    await _cache.RemoveFromCacheAsync(runningKey);
 
                     SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
 

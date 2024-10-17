@@ -13,7 +13,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
         }
 
-        public 
+        /// <summary>
+        /// 获取缓存中记录正在运行的 ChatTask 的 Key
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <returns></returns>
+        public string GetChatTaskRunCacheKey(int taskId)
+        {
+            return $"ChatTask-Running:{taskId}";
+        }
 
         public async Task<ChatTask> CreateTask(ChatTaskDto chatTaskDto)
         {
