@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
@@ -240,10 +241,18 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var item = await this._chatGroupService.GetObjectAsync(z=>z.Id == id);
 
                 var agentTemplateService = base.GetRequiredService<AgentsTemplateService>();
+                
+                var chartGroupMemeberService = base.GetRequiredService<ChatGroupMemberService>();
+
+                var members = await chartGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == id,z=>z.Id, Ncf.Core.Enums.OrderingType.Descending, new[] { nameof(ChatGroupMember.AgentTemplate)});
+                
+                
+                var agents = members.Select(z => agentTemplateService.Mapping<AgentTemplateDto>(z.AgentTemplate)).ToList();
 
                 return new ChatGroup_GetItemResponse()
                 {
-                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item)
+                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item),
+                     AgentTemplateDtoList= agents
                 };
             });
         }

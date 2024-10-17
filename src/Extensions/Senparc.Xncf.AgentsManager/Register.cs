@@ -96,6 +96,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
+            services.AddScoped<ChatGroupMemberService>();
 
             return base.AddXncfModule(services, configuration, env);
         }
