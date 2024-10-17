@@ -71,6 +71,7 @@
                             {{ item.name }}
                         </div>
                     </template>
+                    <div v-else class="df-wn flex-ac flex-jc emptyData" style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
             @* 主体内容 *@
@@ -79,17 +80,18 @@
                 @* 智能体列表 *@
                 <template v-if="scrollbarAgentIndex === ''">
                     <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
-                        <div class="agent-listWrap">
+                        <div v-if="agentList&&agentList.length" class="agent-listWrap">
                             <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
                                 @* <div class="agentCard-statebox" :class="[agentStateColor[aitem.state]]">{{
                                 agentStateText[aitem.state] }}
                                 </div> *@
-                                <div class="agentCard-statebox">
-                                    {{ aitem.enable ? '启用' : '未启用' }}
+                                <div class="agentCard-statebox" :class="[aitem.enable ? 'standColor' : 'stopColor']">
+                                    {{ aitem.enable ? '待命' : '停用' }}
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                        <img :src="aitem.avatar" alt="" class="upperHalfbox_avatar">
+                                        <img :src="aitem.avatar || '/images/AgentsManager/avatar/avatar1.png'" alt=""
+                                            class="upperHalfbox_avatar">
                                     </div>
                                     <div class="upperHalfbox_describe">
                                         <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
@@ -111,14 +113,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div v-else class="df-wn flex-ac flex-jc emptyData" style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                     </el-scrollbar>
                 </template>
                 @* 智能体详情 *@
-                <template v-else>
-                    <div v-if="agentDetails" class="df-wn flex-ac flex-js agentDetails-head">
+                <template v-else-if="agentDetails">
+                    <div class="df-wn flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-dc flex-ac agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                <img :src="agentDetails.avatar" alt="">
+                                <img :src="agentDetails.avatar || '/images/AgentsManager/avatar/avatar1.png'" alt="">
                             </div>
                             <div class="name text-ellipsis">
                                 {{ agentDetails.name }}
@@ -172,7 +175,7 @@
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">状态:</span>
                                 <span class="value">{{
-                                    agentDetails.agentTemplateDto ? agentDetails.agentTemplateDto.enable ? '启用' : '未启用'
+                                    agentDetails.agentTemplateDto ? agentDetails.agentTemplateDto.enable ? '待命' : '停用'
                                     : ''
                                     }}</span>
                                 @* <span class="value">{{ agentStateText[agentDetails.state] }}</span> *@
@@ -219,6 +222,7 @@
                                                     {{ item.name }}
                                                 </div>
                                             </template>
+                                            <div v-else class="df-wn flex-ac flex-jc emptyData" style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                                         </el-scrollbar>
                                     </div>
                                 </el-tab-pane>
@@ -239,6 +243,7 @@
                                                     {{ item.name }}
                                                 </div>
                                             </template>
+                                            <div v-else class="df-wn flex-ac flex-jc emptyData" style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                                         </el-scrollbar>
                                     </div>
                                 </el-tab-pane>
@@ -287,8 +292,10 @@
                                         </div>
                                         <div class="df-wn groupInfoRow-info">
                                             <div>任务数: {{ agentDetailsGroupDetails.numberTasks }}</div>
-                                            <div>群主: {{ agentDetailsGroupDetails.groupLeader }}</div>
-                                            <div>对接人: {{ agentDetailsGroupDetails.dockingPerson }}</div>
+                                            <div>群主: {{ agentDetailsGroupDetails.adminAgentTemplate ?
+                                                agentDetailsGroupDetails.adminAgentTemplate.name : '' }}</div>
+                                            <div>对接人: {{ agentDetailsGroupDetails.enterAgentTemplate ?
+                                                agentDetailsGroupDetails.enterAgentTemplate.name : '' }}</div>
                                         </div>
                                         <div class="df-wn  groupInfoRow-operation">
                                             <el-button type="primary" size="small"
@@ -460,6 +467,7 @@
                         </div>
                     </div>
                 </template>
+                <div v-else class="df-wn flex-ac flex-jc emptyData" style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
             </div>
         </div>
     </el-tab-pane>
@@ -568,8 +576,10 @@
                         </div>
                         <div class="df-wn groupInfoRow-info">
                             <div>任务数: {{ groupDetails.numberTasks }}</div>
-                            <div>群主: {{ groupDetails.groupLeader }}</div>
-                            <div>对接人: {{ groupDetails.dockingPerson }}</div>
+                            <div>群主: {{ groupDetails.adminAgentTemplate ? groupDetails.adminAgentTemplate.name : '' }}
+                            </div>
+                            <div>对接人: {{ groupDetails.enterAgentTemplate ? groupDetails.enterAgentTemplate.name : '' }}
+                            </div>
                         </div>
                         <div class="df-wn  groupInfoRow-operation">
                             <el-button type="primary" size="small"
@@ -797,7 +807,8 @@
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" placeholder="请选择" />
+                    <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage"
+                        placeholder="请选择" />
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
                     <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
