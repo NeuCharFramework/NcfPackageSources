@@ -423,7 +423,10 @@ var app = new Vue({
                             }]
                             this.agentDetailsGroupList = groupData
                             // 获取详情
-                            this.getGroupDetailData(listType, groupData[this.agentDetailsGroupIndex].id)
+                            if(groupData.length>0){
+                                this.getGroupDetailData(listType, groupData[this.agentDetailsGroupIndex].id)
+                            }
+                            
                         }
                     } else {
                         app.$message({
@@ -693,8 +696,35 @@ var app = new Vue({
             await serviceAM.post(serviceURL, serviceForm)
                 .then(res => {
                     if (res.data.success) {
-                        // 关闭弹框
-                        this.visible[btnType] = false
+
+                        let refName = '', formName = ''
+                        // 智能体
+                        if (btnType === 'agent' || btnType === 'groupAgent') {
+                            refName = 'agentELForm'
+                            formName = 'agentForm'
+                        }
+                        // 组
+                        if (btnType === 'group') {
+                            refName = 'groupELForm'
+                            formName = 'groupForm'
+                            // 重置 组获取智能体query
+                            this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+                        }
+                        // 组 启动
+                        if (btnType === 'groupStart') {
+                            refName = 'groupStartELForm'
+                            formName = 'groupStartForm'
+                        }
+                        if (formName) {
+                            this.$set(this, `${formName}`, this.$options.data()[formName])
+                            // Object.assign(this[formName],this.$options.data()[formName] )
+                        }
+                        if (refName) {
+                            this.$refs[refName].resetFields();
+                        }
+                        this.$nextTick(() => {
+                            this.visible[btnType] = false
+                        })
                         // 重新获取数据
                         if (['group', 'groupStart'].includes(btnType)) {
                             if (this.tabsActiveName === 'first') {
@@ -760,6 +790,8 @@ var app = new Vue({
         },
         // 编辑 Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
         handleEditDrawerOpenBtn(btnType, item) {
+            console.log('handleEditDrawerOpenBtn',btnType, item);
+            
             let formName = ''
             // 智能体
             if (btnType === 'agent' || btnType === 'groupAgent') {
@@ -778,7 +810,14 @@ var app = new Vue({
             if (formName) {
                 if (btnType === 'agent' && item.agentTemplateDto) {
                     Object.assign(this[formName], deepClone(item.agentTemplateDto))
-                } else {
+                } else if (btnType === 'group'){
+                    // item.agentTemplateDtoList
+                    // chatGroupMembers
+                    Object.assign(this[formName], {
+                        ...deepClone(item),
+                        members:item.agentTemplateDtoList || item.chatGroupMembers || []
+                    })
+                }else {
                     Object.assign(this[formName], deepClone(item))
                 }
                 // 回显 表单值
@@ -1236,13 +1275,13 @@ var app = new Vue({
         getTaskSenderName(taskType, formId) {
             // 智能体 组 任务
             if (taskType === 'agentGroupTask') {
-                const chatGroupMembers = this.agentDetailsGroupDetails?.chatGroupMembers ?? []
+                const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
                 const fintItem = chatGroupMembers.find(item => item.id === formId)
                 return fintItem ?? {}
             }
             // 组 任务
             if (taskType === 'groupTask') {
-                const chatGroupMembers = this.groupDetails?.chatGroupMembers ?? []
+                const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
                 const fintItem = chatGroupMembers.find(item => item.id === formId)
                 return fintItem ?? {}
             }
