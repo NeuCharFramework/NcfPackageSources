@@ -10,7 +10,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
     public class AgentTemplate_GetListResponse
     {
-        public PagedList<AgentTemplateDto> List { get; set; }
+        public PagedList<AgentTemplateSimpleStatusDto> List { get; set; }
     }
 
     public class AgentTemplate_GetItemResponse

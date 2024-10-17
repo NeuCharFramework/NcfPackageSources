@@ -82,7 +82,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 var list = await this._agentsTemplateService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
-                var listDto = new PagedList<AgentTemplateDto>(list.Select(z => _agentsTemplateService.Mapping<AgentTemplateDto>(z)).ToList(), list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
+                var listDto = new PagedList<AgentTemplateSimpleStatusDto>(list
+                    .Select(z => 
+                    _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList(), 
+                        list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
 
                 var result = new AgentTemplate_GetListResponse()
                 {

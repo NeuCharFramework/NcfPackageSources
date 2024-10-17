@@ -62,8 +62,14 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         }
     }
 
-    public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto { 
-    
+    public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto {
+
+    }
+
+    public class AgentTemplateSimpleStatusDto : AgentTemplateDto
+    {
+        public int ChattingCount { get; set; }
+        public float Score { get; set; }
     }
 
     public class AgentTemplateStatusDto
