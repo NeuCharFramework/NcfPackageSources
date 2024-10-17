@@ -1,4 +1,1045 @@
+var app = new Vue({
+    el: "#app",
+    data() {
+        return {
+            devHost: 'http://pr-felixj.frp.senparc.com',
+            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
+            tabsActiveName: 'first', // first(智能体) second(组) third(任务)
+            // 显隐 visible
+            visible: {
+                agent: false, // 智能体 新增|编辑
+                groupAgent: false, // 智能体 新增dialog
+                group: false, // 组 新增|编辑
+                groupStart: false, // 组 启动 
+            },
+            // 智能体 通用
+            agentStateText: {
+                1: '待命',
+                2: '进行中',
+                3: '停用',
+            },
+            agentStateColor: {
+                1: 'standColor',
+                2: 'proceColor',
+                3: 'stopColor',
+            },
+            agentAvatarList: [
+                '/images/AgentsManager/avatar/avatar1.png',
+                '/images/AgentsManager/avatar/avatar2.png',
+                '/images/AgentsManager/avatar/avatar3.png',
+                '/images/AgentsManager/avatar/avatar4.png',
+                '/images/AgentsManager/avatar/avatar5.png',
+            ],
+            // 智能体
+            agentQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            agentFCPVisible: false, // 筛选条件 popover 显隐
+            agentFilterCriteria: [
+                {
+                    label: '全部',
+                    value: 'all',
+                    checked: true
+                },
+                {
+                    label: '进行中',
+                    value: 'proce',
+                    checked: false
+                },
+                {
+                    label: '停用',
+                    value: 'stop',
+                    checked: false
+                },
+                {
+                    label: '待命',
+                    value: 'stand',
+                    checked: false
+                }
+            ],
+            agentList: [],
+            scrollbarAgentIndex: '', // 侧边智能体index 默认全部
+            agentDetails: '', // 智能体详情数据 查看
+            // 智能体详情 tabs
+            agentDetailsTabsActiveName: 'first', // first(组) second(任务)
+            // 智能体详情 组
+            agentDetailsGroupQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            agentDetailsGroupTreeData: [],
+            agentDetailsGroupList: [],
+            agentDetailsGroupShowType: '1', // 1:组列表 2:组详情 3:任务详情
+            agentDetailsGroupIndex: 0, // 侧边组index 默认全部
+            agentDetailsGroupDetails: '',
+            agentDetailsGroupTaskQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                chatGroupId: null,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            agentDetailsGroupTaskList: [], // 组 任务列表
+            // 智能体详情 任务
+            agentDetailsTaskQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                chatGroupId: null,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            agentDetailsTaskIndex: 0, // 侧边任务index 默认全部
+            agentDetailsTaskList: [],
+            agentDetailsTaskDetails: '',
+            // 组
+            groupQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            groupFCPVisible: false, // 筛选条件 popover 显隐
+            groupFilterCriteria: [
+                {
+                    label: '全部',
+                    value: 'all',
+                    checked: true
+                },
+                {
+                    label: '进行中',
+                    value: 'proce',
+                    checked: false
+                },
+                {
+                    label: '停用',
+                    value: 'stop',
+                    checked: false
+                },
+                {
+                    label: '待命',
+                    value: 'stand',
+                    checked: false
+                }
+            ],
+            groupTreeDefaultProps: {
+                children: 'children',
+                label: 'name'
+            },
+            groupTreeData: [],
+            groupList: [],
+            groupShowType: '1', // 1:组列表 2:组详情 3:任务详情
+            scrollbarGroupIndex: '', // 侧边任务index 默认全部
+            groupDetails: '',
+            groupTaskQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                chatGroupId: null,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            groupTaskList: [],
+            // 组 新增|编辑 智能体
+            groupAgentQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            groupAgentList: [], // 组新增时的智能体列表
+            groupAgentTotal: 0,
+
+            // 任务 task
+            taskQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                chatGroupId: null,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
+            taskFilterCriteria: [
+                {
+                    label: '全部',
+                    value: 'all',
+                    checked: true
+                },
+                {
+                    label: '进行中',
+                    value: 'proce',
+                    checked: false
+                },
+                {
+                    label: '停用',
+                    value: 'stop',
+                    checked: false
+                },
+                {
+                    label: '待命',
+                    value: 'stand',
+                    checked: false
+                }
+            ],
+            scrollbarTaskIndex: 0, // 侧边任务index 默认全部
+            taskList: [],
+            taskDetails: '', // 任务详情数据 查看
+
+            // 智能体 新增|编辑
+            agentForm: {
+                id: 0, // 0 是新增 
+                name: '', // 名称
+                systemMessageType: '1',
+                systemMessage: '', // 
+                enable: true, // 是否启用
+                description: '', // 说明
+                hookRobotType: '', // 外接平台
+                hookRobotParameter: '', // 外接参数
+                avatar: '' // 头像
+            },
+            agentFormRules: {
+                name: [
+                    { required: true, message: '请填写', trigger: 'blur' },
+                ],
+                systemMessage: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ],
+                // description: [
+                //     { required: true, message: '请填写', trigger: 'blur' },
+                // ],
+                // hookRobotType: [
+                //     { required: true, message: '请选择', trigger: 'change' },
+                // ],
+                // hookRobotParameter: [
+                //     { required: true, message: '请填写', trigger: 'blur' },
+                // ],
+                avatar: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ]
+            },
+            // 组 新增|编辑
+            groupForm: {
+                name: '', // 名称
+                members: [], // 成员列表
+                description: '', // 说明
+                adminAgentTemplateId: '', // 群主即agent
+                enterAgentTemplateId: '' // 对接人即agent
+            },
+            groupFormRules: {
+                name: [
+                    { required: true, message: '请填写', trigger: 'blur' },
+                ],
+                members: [
+                    { required: true, message: '请填写', trigger: 'change' },
+                ],
+                adminAgentTemplateId: [
+                    { required: true, message: '请填写', trigger: 'change' },
+                ],
+                enterAgentTemplateId: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ],
+                // description: [
+                //     { required: true, message: '请填写', trigger: 'blur' },
+                // ],
+            },
+            // 组 启动
+            groupStartForm: {
+                groupName: '', // 组名称
+                chatGroupId: '', // 组id
+                name: '', // 标题
+                aiModelId: '', // 模型 id
+                command: '', // 任务描述
+                personality: true, // 是否采用个性化
+                description: ''
+            },
+            groupStartFormRules: {
+                chatGroupId: [
+                    { required: true, message: '请填写', trigger: 'blur' },
+                ],
+                name: [
+                    { required: true, message: '请填写', trigger: 'blur' },
+                ],
+                aiModelId: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ],
+                command: [
+                    { required: true, message: '请填写', trigger: 'blur' },
+                ],
+            }
+        };
+    },
+    computed: {
+    },
+    watch: {},
+    created() { },
+    mounted() {
+        if (this.tabsActiveName === 'first') {
+            this.getAgentListData('agent')
+        }
+        if (this.tabsActiveName === 'second') {
+            this.getGroupListData('group')
+        }
+        if (this.tabsActiveName === 'third') {
+            this.gettaskListData('task')
+        }
+    },
+    beforeDestroy() { },
+    methods: {
+        // 获取 智能体 数据
+        async getAgentListData(listType, page = 0) {
+            const queryList = {}
+            if (listType === 'agent') {
+                this.agentQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.agentQueryList)
+            }
+            if (listType === 'groupAgent') {
+                this.groupAgentQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.groupAgentQueryList)
+            }
+            // 接口对接
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getQueryObjectStr(queryList)}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const agentData = data?.data?.list ?? []
+                        if (listType === 'agent') {
+                            this.agentList = agentData
+                        }
+                        if (listType === 'groupAgent') {
+                            this.groupAgentList = agentData
+                            // this.groupAgentTotal = agentData.length
+                            // const filterList = this.groupAgentList.filter(i => {
+                            //     if (this.groupForm.members) {
+                            //         return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
+                            //     }
+                            //     return false
+                            // })
+                            // this.toggleSelection(filterList)
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 智能体详情 
+        async getAgentDetailData(id) {
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        this.agentDetails = data?.data?.agentTemplateStatus ?? ''
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 组 数据
+        async getGroupListData(listType, id, page = 0) {
+            const queryList = {}
+            if (listType === 'group') {
+                this.groupQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.groupQueryList)
+            }
+            if (listType === 'agentGroup') {
+                this.agentDetailsGroupQueryList.pageIndex = page ?? 1
+                this.agentDetailsTaskQueryList.chatAgentId = id
+                Object.assign(queryList, this.agentDetailsGroupQueryList)
+            }
+            // 接口对接
+            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getQueryObjectStr(queryList)}`, queryList)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const groupData = data?.data?.chatGroupDtoList ?? []
+                        if (listType === 'group') {
+                            this.groupTreeData = [{
+                                id: '0',
+                                name: '全部组',
+                                children: groupData
+                            }]
+                            this.groupList = groupData
+                        }
+                        if (listType === 'agentGroup') {
+                            this.agentDetailsGroupTreeData = [{
+                                id: '0',
+                                name: '全部组',
+                                children: groupData
+                            }]
+                            this.agentDetailsGroupList = groupData
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 组详情 
+        async getGroupDetailData(detailType, id) {
+            return await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const groupDetail = data?.data?.chatGroupDto ?? ''
+                        if (['agentGroup', 'agentGroupTable'].includes(detailType)) {
+                            this.agentDetailsGroupDetails = groupDetail
+                            // 获取任务列表
+                            this.gettaskListData('agentGroupTask')
+                        }
+                        if (['group', 'groupTable'].includes(detailType)) {
+                            this.groupDetails = groupDetail
+                            // 获取任务列表
+                            this.gettaskListData('groupTask')
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 任务 数据
+        async gettaskListData(listType, id, page = 0) {
+            const queryList = {}
+            // 任务
+            if (listType === 'task') {
+                this.taskQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.taskQueryList)
+            }
+            // 智能体 任务
+            if (listType === 'agentTask') {
+                this.agentDetailsTaskQueryList.pageIndex = page ?? 1
+                this.agentDetailsTaskQueryList.chatAgentId = id
+                Object.assign(queryList, this.agentDetailsTaskQueryList)
+            }
+            // 智能体 组 任务
+            if (listType === 'agentGroupTask') {
+                this.agentDetailsGroupTaskQueryList.pageIndex = page ?? 1
+                this.agentDetailsGroupTaskQueryList.chatGroupId = id
+                Object.assign(queryList, this.agentDetailsGroupTaskQueryList)
+            }
+            // 组 任务
+            if (listType === 'groupTask') {
+                this.groupTaskQueryList.pageIndex = page ?? 1
+                this.groupTaskQueryList.chatGroupId = id
+                Object.assign(queryList, this.groupTaskQueryList)
+            }
+            //  接口对接
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getQueryObjectStr(queryList)}`, queryList)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const taskData = data?.data?.chatTaskList ?? []
+                        // 任务
+                        if (listType === 'task') {
+                            this.taskList = taskData
+                            this.taskDetails = taskData.length ? taskData[0] : ''
+                        }
+                        // 智能体 任务
+                        if (listType === 'agentTask') {
+                            this.agentDetailsTaskList = taskData
+                            this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
+                        }
+                        // 智能体 组 任务
+                        if (listType === 'agentGroupTask') {
+                            this.agentDetailsGroupTaskList = taskData
+                        }
+                        // 组 任务
+                        if (listType === 'groupTask') {
+                            this.groupTaskList = taskData
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 任务详情 
+        async getTaskDetailData(detailType, id) {
+            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const taskDetail = data?.data?.chatTaskDto ?? ''
+                        // 智能体 组 任务
+                        if (detailType === 'agentGroupTask') {
+                            this.agentDetailsGroupDetails = taskDetail
+                        }
+                        // 智能体 任务
+                        if (detailType === 'agentTask') {
+                            this.agentDetailsTaskDetails = taskDetail
+                        }
+                        // 组 任务
+                        if (detailType === 'groupTask') {
+                            this.groupDetails = taskDetail
+                        }
+                        // 任务
+                        if (detailType === 'task') {
+                            this.taskDetails = taskDetail
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 保存 submitForm 数据
+        async saveSubmitFormData(btnType, serviceForm = {}) {
+            let serviceURL = ''
+            // agent 新增|编辑
+            if (btnType === 'agent' || btnType === 'groupAgent') {
+                serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem`
+            }
+            // 组 新增|编辑
+            if (btnType === 'group') {
+                serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup`
+                if (serviceForm.members) {
+                    const membersIds = serviceForm.members.map(item => item.id)
+                    serviceForm.memberAgentTemplateIds = membersIds
+                    serviceURL += `?${getQueryObjectStr({ memberAgentTemplateIds: membersIds })}`
+                }
+            }
+            // 组启动（运行任务）
+            if (btnType === 'groupStart') {
+                serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
+            }
+
+            if (!serviceURL) return
+            await serviceAM.post(serviceURL, serviceForm)
+                .then(res => {
+                    if (res.data.success) {
+                        // 关闭弹框
+                        this.visible[btnType] = false
+                        // 重新获取数据
+                        if (['group', 'groupStart'].includes(btnType)) {
+                            this.getGroupListData(btnType)
+                        } else if (['agent', 'groupAgent'].includes(btnType)) {
+                            this.getAgentListData(btnType)
+                        }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 切换 tabs 页面
+        handleTabsClick(tab, event) {
+            if (this.tabsActiveName === 'first') {
+                this.getAgentListData('agent')
+            }
+            if (this.tabsActiveName === 'second') {
+                this.getGroupListData('group')
+            }
+            if (this.tabsActiveName === 'third') {
+                this.gettaskListData('task')
+            }
+        },
+        // 切换 智能体详情 tabs 页面
+        handleAgentDetailsTabsClick(tab, event) {
+            if (this.agentDetailsTabsActiveName === 'first') {
+                this.getGroupListData('agentGroup')
+            }
+            if (this.agentDetailsTabsActiveName === 'second') {
+                this.gettaskListData('agentTask')
+            }
+        },
+        // 编辑 Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
+        handleEditDrawerOpenBtn(btnType, item) {
+            let formName = ''
+            // 智能体
+            if (btnType === 'agent' || btnType === 'groupAgent') {
+                formName = 'agentForm'
+            }
+            // 组
+            if (btnType === 'group') {
+                formName = 'groupForm'
+                // 加载  智能体数据
+                this.getAgentListData('groupAgent')
+            }
+            // 组 启动
+            if (btnType === 'groupStart') {
+                formName = 'groupStartForm'
+            }
+            if (formName) {
+                // 回显 表单值
+                this.$set(this, `${formName}`, deepClone(item))
+                // 打开 抽屉
+                this.handleElVisibleOpenBtn(btnType)
+            }
+        },
+        // Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
+        handleElVisibleOpenBtn(btnType, formData) {
+            // console.log('通用新增按钮:', btnType);
+            // 组 启动
+            if (btnType === 'groupStart') {
+                this.groupStartForm.groupName = formData?.name ?? ''
+                this.groupStartForm.chatGroupId = formData?.id ?? ''
+            }
+            if (btnType === 'group') {
+                this.getAgentListData('groupAgent')
+            }
+            this.visible[btnType] = true
+        },
+        // Dailog|抽屉 关闭 按钮 agent groupAgent group groupStart
+        handleElVisibleClose(btnType) {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    let refName = '', formName = ''
+                    // 智能体
+                    if (btnType === 'agent' || btnType === 'groupAgent') {
+                        refName = 'agentELForm'
+                        formName = 'agentForm'
+                    }
+                    // 组
+                    if (btnType === 'group') {
+                        refName = 'groupELForm'
+                        formName = 'groupForm'
+                        // 重置 组获取智能体query
+                        this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+                    }
+                    // 组 启动
+                    if (btnType === 'groupStart') {
+                        refName = 'groupStartELForm'
+                        formName = 'groupStartForm'
+                    }
+                    if (formName) {
+                        this.$set(this, `${formName}`, this.$options.data()[formName])
+                        // Object.assign(this[formName],this.$options.data()[formName] )
+                    }
+                    if (refName) {
+                        this.$refs[refName].resetFields();
+                    }
+                    this.$nextTick(() => {
+                        this.visible[btnType] = false
+                    })
+                })
+                .catch(_ => { });
+        },
+        // Dailog|抽屉 提交 按钮 agent groupAgent group groupStart
+        handleElVisibleSubmit(btnType) {
+            let refName = '', formName = ''
+            // 智能体 
+            if (['agent', 'groupAgent'].includes(btnType)) {
+                refName = 'agentELForm'
+                formName = 'agentForm'
+            }
+            // 组
+            if (btnType === 'group') {
+                refName = 'groupELForm'
+                formName = 'groupForm'
+            }
+            // 组 启动
+            if (btnType === 'groupStart') {
+                refName = 'groupStartELForm'
+                formName = 'groupStartForm'
+            }
+            if (!refName) return
+            this.$refs[refName].validate((valid) => {
+                if (valid) {
+                    const submitForm = this[formName] ?? {}
+                    this.saveSubmitFormData(btnType, submitForm)
+                    // this.visible[btnType] = false
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        // 表单 单条校验
+        handleFormValidateField(refFormEL, formName, propName, item) {
+            // this[formName][propName] = item
+            this.$set(this[formName], `${propName}`, item)
+            this.$refs[refFormEL]?.validateField('avatar', () => { })
+        },
+        // 筛选输入变化
+        handleFilterChange(value, filterType) {
+            console.log('handleFilterChange', filterType, value)
+            if (filterType === 'agent') {
+                this.agentQueryList.filter = value
+                this.getAgentListData('agent', 1)
+            }
+            if (filterType === 'agentGroup') {
+                this.agentDetailsGroupQueryList.filter = value
+                this.getGroupListData('agentGroup', 1)
+            }
+            if (filterType === 'agentTask') {
+                this.agentDetailsTaskQueryList.filter = value
+                this.gettaskListData('agentTask', 1)
+            }
+            if (filterType === 'group') {
+                this.groupQueryList.filter = value
+                this.getGroupListData('group', 1)
+            }
+            if (filterType === 'groupAgent') {
+                this.groupAgentQueryList.filter = value
+                this.getAgentListData('groupAgent', 1)
+            }
+            if (filterType === 'task') {
+                this.taskQueryList.filter = value
+                this.gettaskListData('task', 1)
+            }
+        },
+        // 筛选条件事件 agent  group task
+        handleFilterCriteria(filterType, fieldType) {
+            // 智能体
+            if (filterType === 'agent') {
+                if (fieldType === 'timeSort') {
+                    this.agentQueryList.timeSort = !this.agentQueryList.timeSort
+                } else {
+                    this.agentFilterCriteria.forEach(item => {
+                        if (item.value === fieldType) {
+                            item.checked = true
+                        } else {
+                            item.checked = false
+                        }
+                        if (fieldType === 'all') {
+                            this.agentQueryList[item.value] = true
+                        } else {
+                            this.agentQueryList[item.value] = item.checked
+                        }
+                    })
+                }
+                // this.agentFCPVisible = !this.agentFCPVisible
+                // to do 调用接口
+            }
+            // 组
+            if (filterType === 'group') {
+                if (fieldType === 'timeSort') {
+                    this.groupQueryList.timeSort = !this.groupQueryList.timeSort
+                } else {
+                    this.groupFilterCriteria.forEach(item => {
+                        if (item.value === fieldType) {
+                            item.checked = true
+                        } else {
+                            item.checked = false
+                        }
+                        if (fieldType === 'all') {
+                            this.groupQueryList[item.value] = true
+                        } else {
+                            this.groupQueryList[item.value] = item.checked
+                        }
+                    })
+                }
+                // this.groupFCPVisible = !this.groupFCPVisible
+                // to do 调用接口
+            }
+            // 任务
+            if (filterType === 'task') {
+                if (fieldType === 'timeSort') {
+                    this.taskQueryList.timeSort = !this.taskQueryList.timeSort
+                } else {
+                    this.taskFilterCriteria.forEach(item => {
+                        if (item.value === fieldType) {
+                            item.checked = true
+                        } else {
+                            item.checked = false
+                        }
+                        if (fieldType === 'all') {
+                            this.taskQueryList[item.value] = true
+                        } else {
+                            this.taskQueryList[item.value] = item.checked
+                        }
+                    })
+                }
+                // this.taskFCPVisible = !this.taskFCPVisible
+                // to do 调用接口
+            }
+        },
+        // 查看全部智能体 列表 
+        handleAgentViewAll() {
+            this.scrollbarAgentIndex = '' // 清空索引
+            this.agentDetails = '' // 清空详情数据
+        },
+        // 查看 智能体
+        handleAgentView(item, index) {
+            this.scrollbarAgentIndex = index ?? ''
+            // 获取智能体 详情
+            this.getAgentDetailData(item.id)
+            // 重置 数据
+            this.resetAgentDetailsQuery()
+            // 重置 组获取智能体query
+            if (this.agentDetailsTabsActiveName === 'first') {
+
+                this.getGroupListData(1, 'agentGroup', item.id)
+            }
+            if (this.agentDetailsTabsActiveName === 'second') {
+
+                this.gettaskListData(1, 'agentTask', item.id)
+            }
+        },
+        // 重置 智能体详情下的组和任务数据
+        resetAgentDetailsQuery() {
+            this.agentDetailsTabsActiveName = 'first'
+            this.agentDetailsGroupTreeData = []
+            this.agentDetailsGroupList = []
+            this.agentDetailsGroupShowType = '2'
+            this.agentDetailsGroupIndex = 0
+            this.agentDetailsGroupDetails = ''
+            this.agentDetailsTaskIndex = 0
+            this.agentDetailsTaskList = []
+            this.agentDetailsTaskDetails = ''
+            this.$set(this, 'agentDetailsGroupQueryList', this.$options.data().agentDetailsGroupQueryList)
+            this.$set(this, 'agentDetailsTaskQueryList', this.$options.data().agentDetailsTaskQueryList)
+        },
+        // 智能体 状态 切换
+        setAgentState(stateType, item) {
+            if (!stateType || !item) return
+            let messageText = ''
+            if (stateType === 'stop') {
+                messageText = `<div>是否确认将${item.name}智能体停用？</div><div>此智能体将不会参与后续新任务</div>`
+            }
+            if (stateType === 'delete') {
+                messageText = `<div>是否确认从${item.name}组退出？</div><div>移除出后将无法看到之前参与的任务记录</div>`
+            }
+            this.$confirm(messageText, '操作确认', {
+                dangerouslyUseHTMLString: true, // message当作HTML片段处理
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                // type: 'warning'
+            }).then(() => {
+                // to do 调用接口
+                this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
+        // 侧边 组tree 组件 节点 筛选
+        filterGroupTreeNode(value, data) {
+            if (!value) return true;
+            return data.name.indexOf(value) !== -1;
+        },
+        // 侧边 组tree 组件 节点 点击
+        handleGroupTreeNodeClick(node, data, clickType) {
+            // console.log('handleGroupTreeNodeClick', node, data)
+            if (clickType === 'agentGroup') {
+                this.agentDetailsGroupShowType = node.level.toString()
+                if (this.agentDetailsGroupShowType === '1') {
+                    this.agentDetailsGroupDetails = '' // 清空组详情
+                }
+                if (this.agentDetailsGroupShowType === '2') {
+                    this.agentDetailsGroupDetails = deepClone(data)
+                }
+                if (this.agentDetailsGroupShowType === '3') {
+                    this.agentDetailsGroupDetails = deepClone(data)
+                }
+            }
+            if (clickType === 'group') {
+                this.groupShowType = node.level.toString()
+                if (this.groupShowType === '1') {
+                    this.groupDetails = '' // 清空组详情
+                }
+                if (this.groupShowType === '2') {
+                    this.groupDetails = deepClone(data)
+                }
+                if (this.groupShowType === '3') {
+                    this.groupDetails = deepClone(data)
+                }
+            }
+        },
+        // 组 查看详情
+        handleGroupDetail(row, clickType) {
+            // console.log('handleGroupDetail', row)
+            if (clickType === 'agentGroup') {
+                this.agentDetailsGroupShowType = '2'
+                this.agentDetailsGroupDetails = deepClone(row)
+            }
+            if (clickType === 'group') {
+                this.groupShowType = '2'
+                this.groupDetails = deepClone(row)
+            }
+        },
+        // 组 查看全部 列表 
+        handleGroupViewAll() {
+            this.groupShowType = '1'
+            this.scrollbarGroupIndex = '' // 清空索引
+            this.groupDetails = '' // 清空详情数据
+        },
+        // 组 查看列表 详情 
+        handleGroupView(clickType, item, index = 0) {
+            if (clickType === 'agentGroup' || clickType === 'agentGroupTable') {
+                this.agentDetailsGroupShowType = '2'
+                if (clickType === 'agentGroupTable') {
+                    const { pageIndex, pageSize } = this.agentDetailsGroupQueryList
+                    this.agentDetailsGroupIndex = pageIndex > 1 ? pageIndex * pageSize + index : index
+                } else {
+                    this.agentDetailsGroupIndex = index ?? 0
+                }
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
+            }
+            if (clickType === 'agentGroupTask') {
+                this.agentDetailsGroupShowType = '3'
+                // deepClone(item)
+                this.getTaskDetailData(clickType, item.id)
+            }
+            if (clickType === 'group' || clickType === 'groupTable') {
+                this.groupShowType = '2'
+                if (clickType === 'groupTable') {
+                    const { pageIndex, pageSize } = this.groupQueryList
+                    this.scrollbarGroupIndex = pageIndex > 1 ? pageIndex * pageSize + index : index
+                } else {
+                    this.scrollbarGroupIndex = index ?? 0
+                }
+                this.scrollbarGroupIndex = index ?? ''
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
+            }
+            if (clickType === 'groupTask') {
+                this.groupShowType = '3'
+                // deepClone(item)
+                this.getTaskDetailData(clickType, item.id)
+            }
+        },
+        // 返回组详情页面
+        returnGroup(clickType) {
+            if (clickType === 'agentGroupTask') {
+                this.agentDetailsGroupShowType = '2'
+                const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
+                // this.agentDetailsGroupIndex = index ?? 0
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
+
+            }
+            if (clickType === 'groupTask') {
+                this.groupShowType = '2'
+                const item = this.groupList[this.scrollbarGroupIndex]
+                // this.scrollbarGroupIndex = index ?? ''
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
+            }
+        },
+        // 查看 任务详情
+        handleTaskView(clickType, item, index = 0) {
+            if (clickType === 'agentTask') {
+                this.agentDetailsTaskIndex = index ?? ''
+                this.getTaskDetailData(item.id, clickType)
+            }
+            if (clickType === 'task') {
+                this.scrollbarTaskIndex = index ?? ''
+                this.getTaskDetailData(item.id, clickType)
+            }
+        },
+        // 组 新增|编辑 智能体table 切换table 选中
+        toggleSelection(rows) {
+            if (rows) {
+                rows.forEach(row => {
+                    this.$refs?.groupAgentTable?.toggleRowSelection(row);
+                });
+            } else {
+                this.$refs?.groupAgentTable?.clearSelection();
+            }
+        },
+        // 组 新增|编辑 智能体table 选中变化
+        handleSelectionChange(val) {
+            // console.log('handleSelectionChange',val);
+            // this.groupAgentList val
+            // const members = deepClone(this.groupForm.members)
+            if (val && val.length) {
+                this.groupAgentList.forEach(i => {
+                    const vFindIndex = val.findIndex(item => item.id === i.id)
+                    if (vFindIndex === -1) {
+                        const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
+                        if (findIndex !== -1) {
+                            this.groupForm.members.splice(findIndex, 1);
+                        }
+                    } else {
+                        const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
+                        if (findIndex === -1) {
+                            this.groupForm.members.push(i)
+                        }
+                    }
+                })
+            } else {
+                this.groupAgentList.forEach(i => {
+                    const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
+                    if (findIndex !== -1) {
+                        this.groupForm.members.splice(findIndex, 1);
+                    }
+                })
+            }
+        },
+        // 组 新增|编辑 智能体 成员取消选中
+        groupMembersCancel(item, index) {
+            const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
+            if (findIndex !== -1) {
+                this.toggleSelection([this.groupAgentList[findIndex]])
+            }
+            this.groupForm.members.splice(index, 1);
+        },
+        // 跳转 PromptRange
+        jumpPromptRange(urlType) {
+            let url = ''
+            if (urlType === 'promptRange') {
+                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+            }
+            if (urlType === 'model') {
+                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
+            }
+            if (urlType === 'modelParameter') {
+                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+            }
+            if (!url) return
+            simulationAELOperation(url)
+        },
+    }
+});
+
 /**
+ * 节流 防抖
  * @param {Function} func
  * @param {number} wait
  * @param {boolean} immediate
@@ -39,9 +1080,7 @@ function debounce(func, wait, immediate) {
 }
 
 /**
-* This is just a simple version of deep copy
-* Has a lot of edge cases bug
-* If you want to use a perfect deep copy, use lodash's _.cloneDeep
+* 克隆
 * @param {Object} source
 * @returns {Object}
 */
@@ -78,7 +1117,7 @@ function isObjEmpty(obj) {
 }
 
 /**
- *Created by PanJiaChen on 16/11/29.
+ * 打开 window窗口
  * @param {Sting} url
  * @param {Sting} title
  * @param {Number} w
@@ -103,6 +1142,7 @@ function openWindow(url, title, w, h) {
 }
 
 /**
+ * 模拟 a 标签
  * @param {string} url // 原地址
  */
 function simulationAELOperation(url = '', name = '') {
@@ -116,6 +1156,10 @@ function simulationAELOperation(url = '', name = '') {
     link.remove()
 }
 
+/**
+ * 处理接口 query 参数 转换为 string
+ * @param {Object} queryObj // 原地址
+ */
 function getQueryObjectStr(queryObj) {
     if (!queryObj) return ''
     // 将对象转换为 URL 参数字符串
@@ -135,19 +1179,28 @@ function getQueryObjectStr(queryObj) {
             }
         })
         .map(
-            ([key, value]) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            ([key, value]) => {
+                if (Array.isArray(value)) {
+                    let str = ""
+                    for (let index in value) {
+                        str += `${index > 0 ? '&' : ''}${encodeURIComponent(key)}=${encodeURIComponent(value[index])}`
+                    }
+                    return str
+                }
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            }
         )
         .join('&')
 }
-function FuncMockJson() {
+
+/**
+ * 加载载 模拟json 数据
+ */
+function funcMockJson() {
     return fetch("/json/AgentsManager/data.json")
         .then((res) => {
             return res.json();
         })
-    // .then((data) => {
-    //     // console.log('Func', data)
-    // });
 }
 
 // 注册一个全局自定义指令 v-el-select-loadmore
@@ -170,7 +1223,8 @@ Vue.directive('el-select-loadmore', {
         })
     }
 })
-// 
+
+// load-more-select 组件
 Vue.component('load-more-select', {
     template: `<el-select ref="elSelectLoadMore" v-model="selectVal" v-el-select-loadmore="interestsLoadmore" :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" clearable style="width:100%" @focus="remoteMethod('',true)" @change="handleChange" @visible-change="reverseArrow">
     <el-option v-for="(item,index) in interestsOptions" :key="index" :label="item.key" :value="item.value"></el-option></el-select>`,
@@ -332,7 +1386,7 @@ Vue.component('load-more-select', {
                         }
                     })
             } else if (this.serviceType === 'model') {
-                serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {}).then(res => {
+                serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', this.listQuery).then(res => {
                     // console.log('this.serviceType === model', res);
                     const data = res?.data ?? {}
                     if (data.success) {
@@ -362,7 +1416,7 @@ Vue.component('load-more-select', {
             } else if (this.serviceType === 'systemMessage') {
                 // /api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetPromptRangeTree
                 // /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetPromptRangeTree
-                serviceAM.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetPromptRangeTree', {}).then(res => {
+                serviceAM.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetPromptRangeTree', this.listQuery).then(res => {
                     // console.log('this.serviceType === systemMessage', res);
                     const data = res?.data ?? {}
                     if (data.success) {
@@ -393,1044 +1447,3 @@ Vue.component('load-more-select', {
         }
     },
 })
-
-var app = new Vue({
-    el: "#app",
-    data() {
-        return {
-            devHost: 'http://pr-felixj.frp.senparc.com',
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-            tabsActiveName: 'first', // first(智能体) second(组) third(任务)
-            // 显隐 visible
-            visible: {
-                agent: false, // 智能体 新增|编辑
-                agentDialog: false, // 智能体 新增dialog
-                group: false, // 组 新增|编辑
-                groupStart: false, // 组 启动 
-            },
-            // 智能体 通用
-            agentStateText: {
-                1: '待命',
-                2: '进行中',
-                3: '停用',
-            },
-            agentStateColor: {
-                1: 'standColor',
-                2: 'proceColor',
-                3: 'stopColor',
-            },
-            agentAvatarList: [
-                '/images/AgentsManager/avatar/avatar1.png',
-                '/images/AgentsManager/avatar/avatar2.png',
-                '/images/AgentsManager/avatar/avatar3.png',
-                '/images/AgentsManager/avatar/avatar4.png',
-                '/images/AgentsManager/avatar/avatar5.png',
-            ],
-            // 智能体
-            agentQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
-            },
-            agentFCPVisible: false, // 筛选条件 popover 显隐
-            agentFilterCriteria: [
-                {
-                    label: '全部',
-                    value: 'all',
-                    checked: true
-                },
-                {
-                    label: '进行中',
-                    value: 'proce',
-                    checked: false
-                },
-                {
-                    label: '停用',
-                    value: 'stop',
-                    checked: false
-                },
-                {
-                    label: '待命',
-                    value: 'stand',
-                    checked: false
-                }
-            ],
-            agentList: [],
-            scrollbarAgentIndex: '', // 侧边智能体index 默认全部
-            agentDetails: '', // 智能体详情数据 查看
-            // 智能体详情
-            agentDetailsTabsActiveName: 'first', // first(组) second(任务)
-            // 智能体详情 组
-            agentDetailsGroupQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
-            },
-            agentDetailsGroupTreeData: [],
-            agentDetailsGroupList: [],
-            agentDetailsGroupShowType: '1', // 1:组列表 2:组详情 3:任务详情
-            agentDetailsGroupIndex: 0, // 侧边组index 默认全部
-            agentDetailsGroupDetails: '',
-            // 智能体详情 任务
-            agentDetailsTaskQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
-            },
-            agentDetailsTaskIndex: 0, // 侧边任务index 默认全部
-            agentDetailsTaskList: [],
-            agentDetailsTaskDetails: '',
-            // 组
-            groupQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
-            },
-            groupFCPVisible: false, // 筛选条件 popover 显隐
-            groupFilterCriteria: [
-                {
-                    label: '全部',
-                    value: 'all',
-                    checked: true
-                },
-                {
-                    label: '进行中',
-                    value: 'proce',
-                    checked: false
-                },
-                {
-                    label: '停用',
-                    value: 'stop',
-                    checked: false
-                },
-                {
-                    label: '待命',
-                    value: 'stand',
-                    checked: false
-                }
-            ],
-            groupTreeDefaultProps: {
-                children: 'children',
-                label: 'name'
-            },
-            groupTreeData: [],
-            groupList: [],
-            groupShowType: '1', // 1:组列表 2:组详情 3:任务详情
-            scrollbarGroupIndex: '', // 侧边任务index 默认全部
-            groupDetails: '',
-            // 组 新增|编辑 智能体
-            groupAgentQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
-            },
-            groupAgentList: [], // 组新增时的智能体列表
-            groupAgentTotal: 0,
-
-            // 任务 task
-            taskQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
-            },
-            taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
-            taskFilterCriteria: [
-                {
-                    label: '全部',
-                    value: 'all',
-                    checked: true
-                },
-                {
-                    label: '进行中',
-                    value: 'proce',
-                    checked: false
-                },
-                {
-                    label: '停用',
-                    value: 'stop',
-                    checked: false
-                },
-                {
-                    label: '待命',
-                    value: 'stand',
-                    checked: false
-                }
-            ],
-            scrollbarTaskIndex: 0, // 侧边任务index 默认全部
-            taskList: [],
-            taskDetails: '', // 任务详情数据 查看
-            // 智能体 新增|编辑
-            agentForm: {
-                name: '',
-                systemMessageType: '1',
-                systemMessage: '',
-                enable: true,
-                description: '',
-                hookRobotType: '',
-                hookRobotParameter: '',
-                avatar: ''
-            },
-            agentFormRules: {
-                name: [
-                    { required: true, message: '请填写', trigger: 'blur' },
-                ],
-                systemMessage: [
-                    { required: true, message: '请选择', trigger: 'change' },
-                ],
-                // description: [
-                //     { required: true, message: '请填写', trigger: 'blur' },
-                // ],
-                // hookRobotType: [
-                //     { required: true, message: '请选择', trigger: 'change' },
-                // ],
-                // hookRobotParameter: [
-                //     { required: true, message: '请填写', trigger: 'blur' },
-                // ],
-                avatar: [
-                    { required: true, message: '请选择', trigger: 'change' },
-                ]
-            },
-            // 组 新增|编辑
-            groupForm: {
-                name: '',
-                members: [],
-                description: '',
-                adminAgentTemplateId: '', // 群主
-                enterAgentTemplateId: '' // 对接人
-            },
-            groupFormRules: {
-                name: [
-                    { required: true, message: '请填写', trigger: 'blur' },
-                ],
-                members: [
-                    { required: true, message: '请填写', trigger: 'change' },
-                ],
-                adminAgentTemplateId: [
-                    { required: true, message: '请填写', trigger: 'change' },
-                ],
-                enterAgentTemplateId: [
-                    { required: true, message: '请选择', trigger: 'change' },
-                ],
-                // description: [
-                //     { required: true, message: '请填写', trigger: 'blur' },
-                // ],
-            },
-            // 组 启动
-            groupStartForm: {
-                groupName: '',
-                chatGroupId: '',
-                name: '',
-                aiModelId: '',
-                command: '',
-                personality: true,
-                description: ''
-            },
-            groupStartFormRules: {
-                chatGroupId: [
-                    { required: true, message: '请填写', trigger: 'blur' },
-                ],
-                name: [
-                    { required: true, message: '请填写', trigger: 'blur' },
-                ],
-                aiModelId: [
-                    { required: true, message: '请选择', trigger: 'change' },
-                ],
-                command: [
-                    { required: true, message: '请填写', trigger: 'blur' },
-                ],
-            }
-        };
-    },
-    computed: {
-    },
-    watch: {},
-    created() { },
-    mounted() {
-        if (this.tabsActiveName === 'first') {
-            this.getAgentListData(1, 'agent')
-        }
-        if (this.tabsActiveName === 'second') {
-            this.getGroupListData(1, 'group')
-        }
-        if (this.tabsActiveName === 'third') {
-            this.gettaskListData(1, 'task')
-        }
-    },
-    beforeDestroy() { },
-    methods: {
-        // 跳转 prompt
-        jumpPromptRange(urlType) {
-            let url = ''
-            if (urlType === 'promptRange') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
-            }
-            if (urlType === 'model') {
-                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
-            }
-            if (urlType === 'modelParameter') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
-            }
-            if (!url) return
-            simulationAELOperation(url)
-        },
-        // 切换 智能体详情 tabs 页面
-        handleAgentDetailsTabsClick(tab, event) {
-            if (this.agentDetailsTabsActiveName === 'first') {
-                this.getGroupListData(1, 'agentGroup')
-            }
-            if (this.agentDetailsTabsActiveName === 'second') {
-                this.gettaskListData(1, 'agentTask')
-            }
-        },
-        // 切换 tabs 页面
-        handleTabsClick(tab, event) {
-            if (this.tabsActiveName === 'first') {
-                this.getAgentListData(1, 'agent')
-            }
-            if (this.tabsActiveName === 'second') {
-                this.getGroupListData(1, 'group')
-            }
-            if (this.tabsActiveName === 'third') {
-                this.gettaskListData(1, 'task')
-            }
-        },
-        // 编辑 Dailog|抽屉 打开 按钮 agent agentDialog group groupStart
-        handleEditDrawerOpenBtn(btnType, item) {
-            let formName = ''
-            // 智能体
-            if (btnType === 'agent' || btnType === 'agentDialog') {
-                formName = 'agentForm'
-            }
-            // 组
-            if (btnType === 'group') {
-                formName = 'groupForm'
-                this.getAgentListData(1, 'groupAgent')
-            }
-            // 组 启动
-            if (btnType === 'groupStart') {
-                formName = 'groupStartForm'
-            }
-            if (formName) {
-                // 回显 表单值
-                this.$set(this, `${formName}`, deepClone(item))
-                // 打开 抽屉
-                this.handleElVisibleOpenBtn(btnType)
-            }
-        },
-        // Dailog|抽屉 打开 按钮 agent agentDialog group groupStart
-        handleElVisibleOpenBtn(btnType, formData) {
-            // console.log('通用新增按钮:', btnType);
-            // 组 启动
-            if (btnType === 'groupStart') {
-                this.groupStartForm.groupName = formData?.name ?? ''
-                this.groupStartForm.chatGroupId = formData?.id ?? ''
-            }
-            if (btnType === 'group') {
-                this.getAgentListData(1, 'groupAgent')
-            }
-            this.visible[btnType] = true
-        },
-        // Dailog|抽屉 关闭 按钮 agent agentDialog group groupStart
-        handleElVisibleClose(btnType) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    let refName = '', formName = ''
-                    // 智能体
-                    if (btnType === 'agent' || btnType === 'agentDialog') {
-                        refName = 'agentELForm'
-                        formName = 'agentForm'
-                    }
-                    // 组
-                    if (btnType === 'group') {
-                        refName = 'groupELForm'
-                        formName = 'groupForm'
-                        // 重置 组获取智能体query
-                        this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
-                    }
-                    // 组 启动
-                    if (btnType === 'groupStart') {
-                        refName = 'groupStartELForm'
-                        formName = 'groupStartForm'
-                    }
-                    if (formName) {
-                        this.$set(this, `${formName}`, this.$options.data()[formName])
-                        // Object.assign(this[formName],this.$options.data()[formName] )
-                    }
-                    if (refName) {
-                        this.$refs[refName].resetFields();
-                    }
-                    this.$nextTick(() => {
-                        this.visible[btnType] = false
-                    })
-                })
-                .catch(_ => { });
-        },
-        // Dailog|抽屉 提交 按钮 agent agentDialog group groupStart
-        handleElVisibleSubmit(btnType) {
-            let refName = '', formName = ''
-            if (btnType === 'agent' || btnType === 'agentDialog') {
-                refName = 'agentELForm'
-                formName = 'agentForm'
-            }
-            // 组
-            if (btnType === 'group') {
-                refName = 'groupELForm'
-                formName = 'groupForm'
-            }
-            // 组 启动
-            if (btnType === 'groupStart') {
-                refName = 'groupStartELForm'
-                formName = 'groupStartForm'
-            }
-            if (!refName) return
-            this.$refs[refName].validate((valid) => {
-                if (valid) {
-                    const submitForm = this[formName] ?? {}
-                    this.saveSubmitFormData(btnType, submitForm)
-                    // this.visible[btnType] = false
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-        },
-        // 表单 单条校验
-        handleFormValidateField(refFormEL, formName, propName, item) {
-            // this[formName][propName] = item
-            this.$set(this[formName], `${propName}`, item)
-            this.$refs[refFormEL]?.validateField('avatar', () => { })
-        },
-        // 筛选输入变化
-        handleFilterChange(value, filterType) {
-            console.log('handleFilterChange', filterType, value)
-            if (filterType === 'agent') {
-                this.agentQueryList.filter = value
-                this.getAgentListData(1, 'agent')
-            }
-            if (filterType === 'agentGroup') {
-                this.agentDetailsGroupQueryList.filter = value
-                this.getGroupListData(1, 'agentGroup')
-            }
-            if (filterType === 'agentTask') {
-                this.agentDetailsTaskQueryList.filter = value
-                this.gettaskListData(1, 'agentTask')
-            }
-            if (filterType === 'group') {
-                this.groupQueryList.filter = value
-                this.getGroupListData(1, 'group')
-            }
-            if (filterType === 'groupAgent') {
-                this.groupAgentQueryList.filter = value
-                this.getAgentListData(1, 'groupAgent')
-            }
-            if (filterType === 'task') {
-                this.taskQueryList.filter = value
-                this.gettaskListData(1, 'task')
-            }
-        },
-        // 筛选条件事件 agent  group task
-        handleFilterCriteria(filterType, fieldType) {
-            // 智能体
-            if (filterType === 'agent') {
-                if (fieldType === 'timeSort') {
-                    this.agentQueryList.timeSort = !this.agentQueryList.timeSort
-                } else {
-                    this.agentFilterCriteria.forEach(item => {
-                        if (item.value === fieldType) {
-                            item.checked = true
-                        } else {
-                            item.checked = false
-                        }
-                        if (fieldType === 'all') {
-                            this.agentQueryList[item.value] = true
-                        } else {
-                            this.agentQueryList[item.value] = item.checked
-                        }
-                    })
-                }
-                // this.agentFCPVisible = !this.agentFCPVisible
-                // to do 调用接口
-            }
-            // 组
-            if (filterType === 'group') {
-                if (fieldType === 'timeSort') {
-                    this.groupQueryList.timeSort = !this.groupQueryList.timeSort
-                } else {
-                    this.groupFilterCriteria.forEach(item => {
-                        if (item.value === fieldType) {
-                            item.checked = true
-                        } else {
-                            item.checked = false
-                        }
-                        if (fieldType === 'all') {
-                            this.groupQueryList[item.value] = true
-                        } else {
-                            this.groupQueryList[item.value] = item.checked
-                        }
-                    })
-                }
-                // this.groupFCPVisible = !this.groupFCPVisible
-                // to do 调用接口
-            }
-            // 任务
-            if (filterType === 'task') {
-                if (fieldType === 'timeSort') {
-                    this.taskQueryList.timeSort = !this.taskQueryList.timeSort
-                } else {
-                    this.taskFilterCriteria.forEach(item => {
-                        if (item.value === fieldType) {
-                            item.checked = true
-                        } else {
-                            item.checked = false
-                        }
-                        if (fieldType === 'all') {
-                            this.taskQueryList[item.value] = true
-                        } else {
-                            this.taskQueryList[item.value] = item.checked
-                        }
-                    })
-                }
-                // this.taskFCPVisible = !this.taskFCPVisible
-                // to do 调用接口
-            }
-        },
-        // 查看全部智能体 列表 
-        handleAgentViewAll() {
-            this.scrollbarAgentIndex = '' // 清空索引
-            this.agentDetails = '' // 清空详情数据
-        },
-        // 查看 智能体
-        handleAgentView(item, index) {
-            this.scrollbarAgentIndex = index ?? ''
-            // 获取智能体 详情
-            this.getAgentDetailData(item.id)
-            // 重置 数据
-            this.resetAgentDetailsQuery()
-            // 重置 组获取智能体query
-            if (this.agentDetailsTabsActiveName === 'first') {
-
-                this.getGroupListData(1, 'agentGroup',item.id)
-            }
-            if (this.agentDetailsTabsActiveName === 'second') {
-
-                this.gettaskListData(1, 'agentTask',item.id)
-            }
-        },
-        // 重置 智能体详情下的组和任务数据
-        resetAgentDetailsQuery() {
-            this.agentDetailsTabsActiveName = 'first'
-            this.agentDetailsGroupTreeData = []
-            this.agentDetailsGroupList = []
-            this.agentDetailsGroupShowType = '2'
-            this.agentDetailsGroupIndex = 0
-            this.agentDetailsGroupDetails = ''
-            this.agentDetailsTaskIndex = 0
-            this.agentDetailsTaskList = []
-            this.agentDetailsTaskDetails = ''
-            this.$set(this, 'agentDetailsGroupQueryList', this.$options.data().agentDetailsGroupQueryList)
-            this.$set(this, 'agentDetailsTaskQueryList', this.$options.data().agentDetailsTaskQueryList)
-        },
-        // 智能体 状态 切换
-        setAgentState(stateType, item) {
-            if (!stateType || !item) return
-            let messageText = ''
-            if (stateType === 'stop') {
-                messageText = `<div>是否确认将${item.name}智能体停用？</div><div>此智能体将不会参与后续新任务</div>`
-            }
-            if (stateType === 'delete') {
-                messageText = `<div>是否确认从${item.name}组退出？</div><div>移除出后将无法看到之前参与的任务记录</div>`
-            }
-            this.$confirm(messageText, '操作确认', {
-                dangerouslyUseHTMLString: true, // message当作HTML片段处理
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                // type: 'warning'
-            }).then(() => {
-                // to do 调用接口
-                this.$message({
-                    type: 'success',
-                    message: '操作成功!'
-                });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消操作'
-                });
-            });
-        },
-        // 侧边 组tree 组件 节点 筛选
-        filterGroupTreeNode(value, data) {
-            if (!value) return true;
-            return data.name.indexOf(value) !== -1;
-        },
-        // 侧边 组tree 组件 节点 点击
-        handleGroupTreeNodeClick(node, data, clickType) {
-            // console.log('handleGroupTreeNodeClick', node, data)
-            if (clickType === 'agentGroup') {
-                this.agentDetailsGroupShowType = node.level.toString()
-                if (this.agentDetailsGroupShowType === '1') {
-                    this.agentDetailsGroupDetails = '' // 清空组详情
-                }
-                if (this.agentDetailsGroupShowType === '2') {
-                    this.agentDetailsGroupDetails = deepClone(data)
-                }
-                if (this.agentDetailsGroupShowType === '3') {
-                    this.agentDetailsGroupDetails = deepClone(data)
-                }
-            }
-            if (clickType === 'group') {
-                this.groupShowType = node.level.toString()
-                if (this.groupShowType === '1') {
-                    this.groupDetails = '' // 清空组详情
-                }
-                if (this.groupShowType === '2') {
-                    this.groupDetails = deepClone(data)
-                }
-                if (this.groupShowType === '3') {
-                    this.groupDetails = deepClone(data)
-                }
-            }
-        },
-        // 组 查看详情
-        handleGroupDetail(row, clickType) {
-            // console.log('handleGroupDetail', row)
-            if (clickType === 'agentGroup') {
-                this.agentDetailsGroupShowType = '2'
-                this.agentDetailsGroupDetails = deepClone(row)
-            }
-            if (clickType === 'group') {
-                this.groupShowType = '2'
-                this.groupDetails = deepClone(row)
-            }
-        },
-        // 组 查看全部 列表 
-        handleGroupViewAll() {
-            this.groupShowType = '1'
-            this.scrollbarGroupIndex = '' // 清空索引
-            this.groupDetails = '' // 清空详情数据
-        },
-        // 组 查看列表 详情 
-        handleGroupView(clickType, item, index = 0) {
-            // console.log('handleGroupView', clickType, item, index);
-            if (clickType === 'agentGroup' || clickType === 'agentGroupTable') {
-                this.agentDetailsGroupShowType = '2'
-                if (clickType === 'agentGroupTable') {
-                    const { pageIndex, pageSize } = this.agentDetailsGroupQueryList
-                    this.agentDetailsGroupIndex = pageIndex > 1 ? pageIndex * pageSize + index : index
-                } else {
-                    this.agentDetailsGroupIndex = index ?? 0
-                }
-                // deepClone(item)
-                this.getGroupDetailData(item.id,clickType)
-            }
-            if (clickType === 'agentGroupTask') {
-                this.agentDetailsGroupShowType = '3'
-                // deepClone(item)
-                this.getGroupDetailData(item.id,clickType)
-            }
-            if (clickType === 'group' || clickType === 'groupTable') {
-                this.groupShowType = '2'
-                if (clickType === 'groupTable') {
-                    const { pageIndex, pageSize } = this.groupQueryList
-                    this.scrollbarGroupIndex = pageIndex > 1 ? pageIndex * pageSize + index : index
-                } else {
-                    this.scrollbarGroupIndex = index ?? 0
-                }
-                this.scrollbarGroupIndex = index ?? ''
-                // deepClone(item)
-                this.getGroupDetailData(item.id,clickType)
-            }
-            if (clickType === 'groupTask') {
-                this.groupShowType = '3'
-                // deepClone(item)
-                this.getGroupDetailData(item.id,clickType)
-            }
-        },
-        // 返回组详情页面
-        returnGroup(clickType) {
-            if (clickType === 'agentGroupTask') {
-                this.agentDetailsGroupShowType = '2'
-                const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
-                // this.agentDetailsGroupIndex = index ?? 0
-                // deepClone(item)
-                this.getGroupDetailData(item.id,clickType)
-
-            }
-            if (clickType === 'groupTask') {
-                this.groupShowType = '2'
-                const item = this.groupList[this.scrollbarGroupIndex]
-                // this.scrollbarGroupIndex = index ?? ''
-                // deepClone(item)
-                this.getGroupDetailData(item.id,clickType)
-            }
-        },
-        // 查看 任务详情
-        handleTaskView(clickType, item, index = 0) {
-            if (clickType === 'agentTask') {
-                this.agentDetailsTaskIndex = index ?? ''
-                this.getTaskDetailData(item.id,clickType)
-            }
-            if (clickType === 'task') {
-                this.scrollbarTaskIndex = index ?? ''
-                this.getTaskDetailData(item.id,clickType)
-            }
-        },
-        // 组 新增|编辑 智能体table 切换table 选中
-        toggleSelection(rows) {
-            if (rows) {
-                rows.forEach(row => {
-                    this.$refs?.groupAgentTable?.toggleRowSelection(row);
-                });
-            } else {
-                this.$refs?.groupAgentTable?.clearSelection();
-            }
-        },
-        // 组 新增|编辑 智能体table 选中变化
-        handleSelectionChange(val) {
-            // console.log('handleSelectionChange',val);
-            // this.groupAgentList val
-            // const members = deepClone(this.groupForm.members)
-            if (val && val.length) {
-                this.groupAgentList.forEach(i => {
-                    const vFindIndex = val.findIndex(item => item.id === i.id)
-                    if (vFindIndex === -1) {
-                        const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
-                        if (findIndex !== -1) {
-                            this.groupForm.members.splice(findIndex, 1);
-                        }
-                    } else {
-                        const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
-                        if (findIndex === -1) {
-                            this.groupForm.members.push(i)
-                        }
-                    }
-                })
-            } else {
-                this.groupAgentList.forEach(i => {
-                    const findIndex = this.groupForm.members.findIndex(item => item.id === i.id)
-                    if (findIndex !== -1) {
-                        this.groupForm.members.splice(findIndex, 1);
-                    }
-                })
-            }
-        },
-        // 组 新增|编辑 智能体 成员取消选中
-        groupMembersCancel(item, index) {
-            const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
-            if (findIndex !== -1) {
-                this.toggleSelection([this.groupAgentList[findIndex]])
-            }
-            this.groupForm.members.splice(index, 1);
-        },
-        // 获取 智能体 数据
-        async getAgentListData(pageIndex, queryType) {
-            // console.log('getAgentListData',pageIndex,queryType);
-            const queryList = {}
-            if (queryType === 'agent') {
-                this.agentQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.agentQueryList)
-            }
-            if (queryType === 'groupAgent') {
-                this.groupAgentQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.groupAgentQueryList)
-            }
-            // 模拟数据
-            // console.log('FuncMockJson()',);
-            // FuncMockJson().then((data) => {
-            //     // console.log('Func', data)
-            //     const { agents = [] } = data
-            //     if (queryType === 'agent') {
-            //         this.agentList = agents
-            //     }
-            //     if (queryType === 'groupAgent') {
-            //         this.groupAgentList = agents
-            //         this.groupAgentTotal = agents.length
-            //         const filterList = this.groupAgentList.filter(i => {
-            //             if (this.groupForm.members) {
-            //                 return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
-            //             }
-            //             return false
-            //         })
-            //         this.toggleSelection(filterList)
-            //     }
-            // })
-
-            // 接口对接
-            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getQueryObjectStr(queryList)}`)
-                .then(res => {
-                    console.log('res', res);
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        const agentData = data?.data?.list ?? []
-                        if (queryType === 'agent') {
-                            this.agentList = agentData
-                        }
-                        if (queryType === 'groupAgent') {
-                            this.groupAgentList = agentData
-                            this.groupAgentTotal = agentData.length
-                            // const filterList = this.groupAgentList.filter(i => {
-                            //     if (this.groupForm.members) {
-                            //         return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
-                            //     }
-                            //     return false
-                            // })
-                            // this.toggleSelection(filterList)
-                        }
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 智能体详情 
-        async getAgentDetailData(id) {
-            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${id}`)
-                .then(res => {
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        this.agentDetails = data?.data?.agentTemplateStatus ?? ''
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 组 数据
-        async getGroupListData(pageIndex, queryType,id) {
-            // console.log('getGroupListData',pageIndex,queryType);
-            const queryList = {}
-            if (queryType === 'group') {
-                this.groupQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.groupQueryList)
-            }
-            if (queryType === 'agentGroup') {
-                this.agentDetailsTaskQueryList.chatAgentId = id
-                this.agentDetailsGroupQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.agentDetailsGroupQueryList)
-            }
-            // 模拟数据
-            // FuncMockJson().then((data) => {
-            //     // console.log('Func', data)
-            //     const { group, task = [] } = data
-            //     const _groupList = group.map(item => {
-            //         return {
-            //             ...item,
-            //             children: task
-            //         }
-            //     })
-            //     if (queryType === 'group') {
-            //         this.groupTreeData = [{
-            //             id: '0',
-            //             name: '全部组',
-            //             children: _groupList
-            //         }]
-            //         this.groupList = _groupList
-            //     }
-            //     if (queryType === 'agentGroup') {
-            //         this.agentDetailsGroupTreeData = [{
-            //             id: '0',
-            //             name: '全部组',
-            //             children: _groupList
-            //         }]
-            //         this.agentDetailsGroupList = _groupList
-            //         const groupIndex = this.agentDetailsGroupIndex ?? 0
-            //         this.handleGroupView(queryType, _groupList[groupIndex], groupIndex)
-            //     }
-            // })
-            // to do 接口对接
-            return await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getQueryObjectStr(queryList)}`, queryList)
-                .then(res => {
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        const groupData = data?.data?.chatGroupDtoList ?? []
-                        if (queryType === 'group') {
-                            this.groupTreeData = [{
-                                id: '0',
-                                name: '全部组',
-                                children: groupData
-                            }]
-                            this.groupList = groupData
-                        }
-                        if (queryType === 'agentGroup') {
-                            this.agentDetailsGroupTreeData = [{
-                                id: '0',
-                                name: '全部组',
-                                children: groupData
-                            }]
-                            this.agentDetailsGroupList = groupData
-                        }
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 组详情 
-        async getGroupDetailData(id,clickType) {
-            return await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
-                .then(res => {
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        if (['agentGroup','agentGroupTable','agentGroupTask'].includes(clickType)) {
-                            this.agentDetailsGroupDetails = data?.data?.chatGroupDto ?? ''
-                        }
-                        if (['group','groupTable','groupTask'].includes(clickType)) {
-                            this.groupDetails = data?.data?.chatGroupDto ?? ''
-                        }
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 任务 数据
-        async gettaskListData(pageIndex, queryType,id) {
-            const queryList = {}
-            if (queryType === 'task') {
-                this.taskQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.taskQueryList)
-            }
-            if (queryType === 'agentTask') {
-                this.agentDetailsTaskQueryList.chatGroupId = id
-                this.agentDetailsTaskQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.agentDetailsTaskQueryList)
-            }
-            // 模拟数据
-            // console.log('FuncMockJson()',);
-            // FuncMockJson().then((data) => {
-            //     // console.log('Func', data)
-            //     const { task = [] } = data
-            //     if (queryType === 'task') {
-            //         this.taskList = task
-            //         const taskIndex = this.scrollbarTaskIndex ?? 0
-            //         this.handleTaskView(queryType, task[taskIndex], taskIndex)
-            //         // this.taskDetails = task.length ? task[0] : ''
-            //     }
-            //     if (queryType === 'agentTask') {
-            //         this.agentDetailsTaskList = task
-            //         const taskIndex = this.agentDetailsTaskIndex ?? 0
-            //         this.handleTaskView(queryType, task[taskIndex], taskIndex)
-            //         // this.agentDetailsTaskDetails = task.length ? task[0] : ''
-            //     }
-            // })
-            // to do 接口对接
-            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getQueryObjectStr(queryList)}`, queryList)
-                .then(res => {
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        const taskData = data?.data?.chatTaskList ?? []
-                        if (queryType === 'task') {
-                            this.taskList = taskData
-                            this.taskDetails = taskData.length ? taskData[0] : ''
-                        }
-                        if (queryType === 'agentTask') {
-                            this.agentDetailsTaskList = taskData
-                            this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
-                        }
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 任务详情 
-        async getTaskDetailData(id,clickType) {
-            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
-                .then(res => {
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        if (clickType === 'agentTask') {
-                            this.agentDetailsTaskDetails = data?.data?.chatTaskDto ?? ''
-                        }
-                        if (clickType === 'task') {
-                            this.taskDetails = data?.data?.chatTaskDto ?? ''
-                        }
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 保存 submitForm 数据
-        async saveSubmitFormData(btnType, serviceForm = {}) {
-            let serviceURL = ''
-            if (btnType === 'agent' || btnType === 'agentDialog') {
-                serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem`
-            }
-            if (btnType === 'group') {
-                serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup?`
-                if (serviceForm.members) {
-                    const membersIds = serviceForm.members.map(item => item.id)
-                    serviceURL += getQueryObjectStr({ memberAgentTemplateIds: membersIds })
-                }
-            }
-            if (btnType === 'groupStart') {
-                serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
-            }
-            if (!serviceURL) return
-            return await serviceAM.post(serviceURL, serviceForm)
-                .then(res => {
-                    if (res.data.success) {
-                        this.visible[btnType] = false
-                        if (btnType === 'agent') {
-                            this.getAgentListData(1, 'agent')
-                        }
-                        if (btnType === 'agentDialog') {
-                            this.getAgentListData(1, 'groupAgent')
-                        }
-                        if (btnType === 'group' || btnType === 'groupStart') {
-                            this.getGroupListData(1, 'group')
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-    }
-});

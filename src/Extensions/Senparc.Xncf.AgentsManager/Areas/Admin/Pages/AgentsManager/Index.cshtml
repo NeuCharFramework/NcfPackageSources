@@ -821,9 +821,9 @@
                 </el-form-item>
                 <el-form-item label="外接平台" prop="hookRobotType">
                     <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
-                        <el-option label="None" value="@HookRobotType.None"></el-option>
-                        <el-option label="WeChatMp" value="@HookRobotType.WeChatMp"></el-option>
-                        <el-option label="WeChatWorkRobot" value="@HookRobotType.WeChatWorkRobot"></el-option>
+                        <el-option label="None" :value="0"></el-option>
+                        <el-option label="WeChatMp" :value="1"></el-option>
+                        <el-option label="WeChatWorkRobot" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="外接平台参数" prop="hookRobotParameter">
@@ -873,7 +873,7 @@
                                 <el-button size="small" icon="el-icon-search"
                                     @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
                             </div>
-                            <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('agentDialog')">
+                            <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('groupAgent')">
                                 新增智能体
                             </div>
                         </div>
@@ -903,7 +903,7 @@
                             <el-table-column fixed="right" label="操作" width="100">
                                 <template slot-scope="{ row }">
                                     <el-button type="primary" size="small"
-                                        @@click="handleEditDrawerOpenBtn('agentDialog',row)">编辑</el-button>
+                                        @@click="handleEditDrawerOpenBtn('groupAgent',row)">编辑</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -977,7 +977,7 @@
     </div>
 </el-drawer>
 @* Dialog 智能体 新增 *@
-<el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.agentDialog" :show-close="false"
+<el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.groupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
         label-width="130px" class="drawerForm-container">
@@ -1004,9 +1004,9 @@
         </el-form-item>
         <el-form-item label="外接平台" prop="hookRobotType">
             <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
-                <el-option label="None" value="@HookRobotType.None"></el-option>
-                <el-option label="WeChatMp" value="@HookRobotType.WeChatMp"></el-option>
-                <el-option label="WeChatWorkRobot" value="@HookRobotType.WeChatWorkRobot"></el-option>
+                <el-option label="None" :value="0"></el-option>
+                <el-option label="WeChatMp" :value="1"></el-option>
+                <el-option label="WeChatWorkRobot" :value="2"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="外接平台参数" prop="hookRobotParameter">
@@ -1024,8 +1024,8 @@
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @@click="handleElVisibleClose('agentDialog')">取 消</el-button>
-        <el-button type="primary" @@click="handleElVisibleSubmit('agentDialog')">确 定</el-button>
+        <el-button @@click="handleElVisibleClose('groupAgent')">取 消</el-button>
+        <el-button type="primary" @@click="handleElVisibleSubmit('groupAgent')">确 定</el-button>
     </div>
 </el-dialog>
 
