@@ -83,4 +83,14 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             HookPlatformParameter = chatTask.HookPlatformParameter;
         }
     }
+
+    /// <summary>
+    /// 用于缓存的当前运行任务信息
+    /// </summary>
+    public class RunningChatTaskDto
+    {
+        public ChatTaskDto ChatTaskDto { get; set; }
+        public bool Cancel { get; set; }
+        public int MessageCount { get; set; }
+    }
 }
