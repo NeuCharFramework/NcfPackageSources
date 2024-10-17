@@ -121,10 +121,10 @@
                     <div class="df-wn flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-dc flex-ac agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                <img :src="agentDetails.avatar || '/images/AgentsManager/avatar/avatar1.png'" alt="">
+                                <img :src="agentDetails.agentTemplateDto.avatar || '/images/AgentsManager/avatar/avatar1.png'" alt="">
                             </div>
                             <div class="name text-ellipsis">
-                                {{ agentDetails.name }}
+                                {{ agentDetails.agentTemplateDto.name }}
                             </div>
                             <i class="el-icon-edit editIcon"
                                 @@click="handleEditDrawerOpenBtn('agent',agentDetails)"></i>

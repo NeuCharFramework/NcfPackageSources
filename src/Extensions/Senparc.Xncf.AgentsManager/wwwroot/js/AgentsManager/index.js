@@ -540,7 +540,7 @@ var app = new Vue({
                         if (detailType === 'agentTask') {
                             this.agentDetailsTaskDetails = taskDetail
                             this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
-                            this.getTaskMemberListData(detailType, taskDetail.id)
+                            this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
                         }
                         // 组 任务
                         if (detailType === 'groupTask') {
@@ -551,7 +551,7 @@ var app = new Vue({
                         if (detailType === 'task') {
                             this.taskDetails = taskDetail
                             this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
-                            this.getTaskMemberListData(detailType, taskDetail.id)
+                            this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
                         }
                     } else {
                         app.$message({
@@ -1232,24 +1232,6 @@ var app = new Vue({
             if (!url) return
             simulationAELOperation(url)
         },
-        // 任务 滚动 向下
-        taskScrollbarDown() {
-            if (this.$refs.taskHistoryScrollbar) {
-                this.$refs.taskHistoryScrollbar.handleScroll = () => {
-                    const wrap = this.$refs.taskHistoryScrollbar.wrap;
-                    this.$refs.taskHistoryScrollbar.moveY = (wrap.scrollTop * 100) / wrap.clientHeight;
-                    this.$refs.taskHistoryScrollbar.moveX = (wrap.scrollLeft * 100) / wrap.clientWidth;
-                    let poor = wrap.scrollHeight - wrap.clientHeight;
-                    if (
-                        poor == parseInt(wrap.scrollTop) ||
-                        poor == Math.ceil(wrap.scrollTop) ||
-                        poor == Math.floor(wrap.scrollTop)
-                    ) {
-                        console.log("已经触底了");
-                    }
-                };
-            }
-        },
         // 获取发送人名称
         getTaskSenderName(taskType, formId) {
             // 智能体 组 任务
@@ -1278,6 +1260,24 @@ var app = new Vue({
             }
 
             return {}
+        },
+        // 任务 滚动 向下
+        taskScrollbarDown() {
+            if (this.$refs.taskHistoryScrollbar) {
+                this.$refs.taskHistoryScrollbar.handleScroll = () => {
+                    const wrap = this.$refs.taskHistoryScrollbar.wrap;
+                    this.$refs.taskHistoryScrollbar.moveY = (wrap.scrollTop * 100) / wrap.clientHeight;
+                    this.$refs.taskHistoryScrollbar.moveX = (wrap.scrollLeft * 100) / wrap.clientWidth;
+                    let poor = wrap.scrollHeight - wrap.clientHeight;
+                    if (
+                        poor == parseInt(wrap.scrollTop) ||
+                        poor == Math.ceil(wrap.scrollTop) ||
+                        poor == Math.floor(wrap.scrollTop)
+                    ) {
+                        console.log("已经触底了");
+                    }
+                };
+            }
         }
     }
 });
