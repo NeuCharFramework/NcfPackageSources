@@ -636,6 +636,49 @@ var app = new Vue({
                     }
                 })
         },
+        // 获取 任务 成员列表
+        async getTaskMemberListData(memberType, chatGroupld) {
+            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const groupDetail = data?.data?.chatGroupDto ?? ''
+                        // 任务
+                        if (memberType === 'task') {
+                            if (nextHistoryld) {
+                                this.taskHistoryList = this.taskHistoryList.concat(taskData)
+                            } else {
+                                this.taskHistoryList = taskData
+                            }
+
+                        }
+                        // 智能体 任务
+                        if (memberType === 'agentTask') {
+                            if (nextHistoryld) {
+                                this.agentDetailsTaskHistoryList = this.agentDetailsTaskHistoryList.concat(taskData)
+                            } else {
+                                this.agentDetailsTaskHistoryList = taskData
+                            }
+                        }
+                        // if (['agentGroup', 'agentGroupTable'].includes(detailType)) {
+                        //     this.agentDetailsGroupDetails = groupDetail
+                        //     // 获取任务列表
+                        //     this.gettaskListData('agentGroupTask')
+                        // }
+                        // if (['group', 'groupTable'].includes(detailType)) {
+                        //     this.groupDetails = groupDetail
+                        //     // 获取任务列表
+                        //     this.gettaskListData('groupTask')
+                        // }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
         // 保存 submitForm 数据
         async saveSubmitFormData(btnType, serviceForm = {}) {
             let serviceURL = ''
