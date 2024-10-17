@@ -363,7 +363,7 @@
                                     </div>
                                     <div class="df-wn task-main">
                                         <div class="taskmain-record">
-                                            <el-scrollbar class="sidebar-taskrecord-container"
+                                            <el-scrollbar ref="agentDetailsGroupTaskHistoryScrollbar" class="sidebar-taskrecord-container"
                                                 wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskrecord-listWrap">
                                                     <div v-for="ritem in agentDetailsGroupTaskHistoryList"
@@ -389,7 +389,7 @@
                                             <el-scrollbar class="sidebar-taskmembers-container"
                                                 wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                                    <div v-for="mitem in agentDetailsGroupDetails.memberList"
+                                                    <div v-for="mitem in agentDetailsGroupDetails.chatGroupMembers"
                                                         :key="mitem.id" class="taskmain-members-listWrap-item">
                                                         <div class="df-wn flex-ac flex-jc avatarBox">
                                                             <img :src="mitem.avatar" alt="">
@@ -426,7 +426,7 @@
                                 </div>
                                 <div class="df-wn task-main">
                                     <div class="taskmain-record">
-                                        <el-scrollbar class="sidebar-taskrecord-container"
+                                        <el-scrollbar ref="agentDetailsTaskHistoryScrollbar" class="sidebar-taskrecord-container"
                                             wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskrecord-listWrap">
                                                 <div v-for="ritem in agentDetailsTaskHistoryList" :key="ritem.id"
@@ -452,7 +452,7 @@
                                         <el-scrollbar class="sidebar-taskmembers-container"
                                             wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskmain-members-listWrap">
-                                                <div v-for="mitem in agentDetailsTaskDetails.memberList" :key="mitem.id"
+                                                <div v-for="mitem in agentDetailsTaskMemberList" :key="mitem.id"
                                                     class="taskmain-members-listWrap-item">
                                                     <div class="df-wn flex-ac flex-jc avatarBox">
                                                         <img :src="mitem.avatar" alt="">
@@ -635,7 +635,7 @@
                     </div>
                     <div class="df-wn task-main">
                         <div class="taskmain-record">
-                            <el-scrollbar class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
+                            <el-scrollbar ref="groupTaskHistoryScrollbar" class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
                                     <div v-for="ritem in groupTaskHistoryList" :key="ritem.id"
                                         class="taskrecord-listWrap-item">
@@ -659,7 +659,7 @@
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                    <div v-for="mitem in groupDetails.memberList" :key="mitem.id"
+                                    <div v-for="mitem in groupDetails.chatGroupMembers" :key="mitem.id"
                                         class="taskmain-members-listWrap-item">
                                         <div class="df-wn flex-ac flex-jc avatarBox">
                                             <img :src="mitem.avatar" alt="">
@@ -742,7 +742,7 @@
                     </div>
                     <div class="df-wn task-main">
                         <div class="taskmain-record">
-                            <el-scrollbar class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
+                            <el-scrollbar ref="taskHistoryScrollbar" class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
                                     <div v-for="ritem in taskHistoryList" :key="ritem.id"
                                         class="taskrecord-listWrap-item">
@@ -766,7 +766,7 @@
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                    <div v-for="mitem in taskDetails.memberList" :key="mitem.id"
+                                    <div v-for="mitem in taskMemberList" :key="mitem.id"
                                         class="taskmain-members-listWrap-item">
                                         <div class="df-wn flex-ac flex-jc avatarBox">
                                             <img :src="mitem.avatar" alt="">
