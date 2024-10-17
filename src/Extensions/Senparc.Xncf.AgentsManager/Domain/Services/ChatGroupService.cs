@@ -8,6 +8,7 @@ using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
+using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -31,8 +32,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class ChatGroupService : ServiceBase<ChatGroup>
     {
-        public ChatGroupService(IRepositoryBase<ChatGroup> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+
+        //临时使用本机线程
+
+        public static List<Task> TaskList = new List<Task>();
+        private readonly IBaseObjectCacheStrategy _cache;
+
+
+        public ChatGroupService(IRepositoryBase<ChatGroup> repo, IServiceProvider serviceProvider,IBaseObjectCacheStrategy cache) : base(repo, serviceProvider)
         {
+            this._cache = cache;
         }
 
         /// <summary>
@@ -185,10 +194,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
         }
 
-        //临时使用本机线程
-
-        public static List<Task> TaskList = new List<Task>();
-
         /// <summary>
         /// 在独立进程中运行 ChatGroup
         /// </summary>
@@ -223,8 +228,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     DateTime.Now, DateTime.Now, null);
                 var chatTask = await chatTaskService.CreateTask(chatTaskDto);
                 chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
-
+                //更新状态
                 await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Chatting, chatTask);
+
+                await _cache.Set("")
 
                 logger.Append($"开始运行 {chatGroup.Name}");
 

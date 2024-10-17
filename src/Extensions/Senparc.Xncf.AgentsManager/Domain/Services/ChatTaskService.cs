@@ -13,6 +13,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
         }
 
+        public 
+
         public async Task<ChatTask> CreateTask(ChatTaskDto chatTaskDto)
         {
             var chatTask = new ChatTask(chatTaskDto);
