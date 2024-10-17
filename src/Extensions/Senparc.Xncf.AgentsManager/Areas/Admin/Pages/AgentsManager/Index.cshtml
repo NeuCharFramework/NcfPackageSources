@@ -285,13 +285,13 @@
                                 </template>
                                 @* 组详情 *@
                                 <template v-else-if="agentDetailsGroupShowType === '2'">
-                                    <div class="df-wn flex-ac flex-js groupInfoRow">
+                                    <div v-if="agentDetailsGroupDetails" class="df-wn flex-ac flex-js groupInfoRow">
                                         <div class="groupInfoRow-name text-ellipsis"
-                                            :title="agentDetailsGroupDetails.name">{{
-                                            agentDetailsGroupDetails.name }}
+                                            :title="agentDetailsGroupDetails.chatGroupDto.name">{{
+                                            agentDetailsGroupDetails.chatGroupDto.name }}
                                         </div>
                                         <div class="df-wn groupInfoRow-info">
-                                            <div>任务数: {{ agentDetailsGroupDetails.numberTasks }}</div>
+                                            <div>任务数: {{ agentDetailsGroupDetails.chatGroupDto.numberTasks }}</div>
                                             <div>群主: {{ agentDetailsGroupDetails.adminAgentTemplate ?
                                                 agentDetailsGroupDetails.adminAgentTemplate.name : '' }}</div>
                                             <div>对接人: {{ agentDetailsGroupDetails.enterAgentTemplate ?
@@ -567,11 +567,11 @@
                 </template>
                 @* 组详情 *@
                 <template v-else-if="groupShowType === '2'">
-                    <div class="df-wn flex-ac flex-js groupInfoRow">
-                        <div class="groupInfoRow-name text-ellipsis" :title="groupDetails.name">{{ groupDetails.name }}
+                    <div v-if="groupDetails" class="df-wn flex-ac flex-js groupInfoRow">
+                        <div class="groupInfoRow-name text-ellipsis" :title="groupDetails.chatGroupDto.name">{{ groupDetails.chatGroupDto.name }}
                         </div>
                         <div class="df-wn groupInfoRow-info">
-                            <div>任务数: {{ groupDetails.numberTasks }}</div>
+                            <div>任务数: {{ groupDetails.chatGroupDto.numberTasks }}</div>
                             <div>群主: {{ groupDetails.adminAgentTemplate ? groupDetails.adminAgentTemplate.name : '' }}
                             </div>
                             <div>对接人: {{ groupDetails.enterAgentTemplate ? groupDetails.enterAgentTemplate.name : '' }}

@@ -443,7 +443,7 @@ var app = new Vue({
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
-                        const groupDetail = data?.data?.chatGroupDto ?? ''
+                        const groupDetail = data?.data ?? ''
                         if (['agentGroup', 'agentGroupTable'].includes(detailType)) {
                             this.agentDetailsGroupDetails = groupDetail
                             // 获取任务列表
@@ -819,10 +819,15 @@ var app = new Vue({
                 } else if (btnType === 'group') {
                     // item.agentTemplateDtoList
                     // chatGroupMembers
-                    Object.assign(this[formName], {
-                        ...deepClone(item),
-                        members: item.agentTemplateDtoList || item.chatGroupMembers || []
-                    })
+                    if (item.chatGroupDto) {
+                        Object.assign(this[formName], {
+                            ...deepClone(item.chatGroupDto),
+                            members: item.agentTemplateDtoList || item.chatGroupMembers || []
+                        })
+                    } else {
+                        Object.assign(this[formName], deepClone(item))
+                    }
+
                 } else {
                     Object.assign(this[formName], deepClone(item))
                 }
