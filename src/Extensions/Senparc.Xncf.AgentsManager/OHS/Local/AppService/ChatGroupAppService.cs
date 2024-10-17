@@ -3,6 +3,8 @@ using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.Utility;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -216,11 +218,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<ChatGroup_GetListResponse>> GetChatGroupList(int pageIndex, int pageSize)
+        public async Task<AppResponseBase<ChatGroup_GetListResponse>> GetChatGroupList(int agentTemplateId, int pageIndex, int pageSize)
         {
             return await this.GetResponseAsync<ChatGroup_GetListResponse>(async (response, logger) =>
             {
-                var list = await this._chatGroupService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+                var chatGroupIdList = new List<int>();
+
+                if (agentTemplateId > 0)
+                {
+                    var agentTemplateService = base.GetRequiredService<AgentTemplateAppService>();
+                    var memberService = base.GetRequiredService<ChatGroupMemberService>();
+                    var chatGroupList = await memberService.GetFullListAsync(z => z.AgentTemplateId == agentTemplateId);
+                    chatGroupIdList = chatGroupList.Select(z => z.ChatGroupId).ToList();
+                }
+
+                var seh = new SenparcExpressionHelper<ChatTask>();
+                seh.ValueCompare
+                    .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.Id));
+                var where = seh.BuildWhereExpression();
+
+                var list = await this._chatGroupService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 return new ChatGroup_GetListResponse()
                 {

@@ -7,6 +7,8 @@ using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
@@ -20,15 +22,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int pageIndex, int pageSize)
+        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize)
         {
             return await this.GetResponseAsync<ChatTask_GetListResponse>(async (response, logger) =>
                   {
+                      var chatGroupIdList = new List<int>();
+                      if (agentTemplateId > 0)
+                      {
+                          var agentTemplateService = base.GetRequiredService<AgentTemplateAppService>();
+                          var memberService = base.GetRequiredService<ChatGroupMemberService>();
+                          var chatGroupList = await memberService.GetFullListAsync(z => z.AgentTemplateId == agentTemplateId);
+                           chatGroupIdList = chatGroupList.Select(z => z.ChatGroupId).ToList();
+
+                          //chatTaskIdList = this._chatTaskService.GetFullList(z=> chatGroupIdList.Contains(z.ChatGroupId)).Select
+                      }
+
                       var seh = new SenparcExpressionHelper<ChatTask>();
                       seh.ValueCompare
-                          .AndAlso(chatGroupId > 0, z => z.Id == chatGroupId);
+                          .AndAlso(chatGroupId > 0, z => z.Id == chatGroupId)
+                          .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
                       var where = seh.BuildWhereExpression();
-
 
                       var list = await this._chatTaskService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
