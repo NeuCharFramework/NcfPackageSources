@@ -275,6 +275,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 foreach (var groupMember in groupMemebers)
                 {
                     var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);
+                    if (!agentTemplate.Enable)
+                    {
+                        logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
+                        //不启用的智能体不参与对话
+                        continue;
+                    }
+                    
                     var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
                     agentsTemplates.Add(agentTemplateDto);
 
