@@ -86,6 +86,7 @@ namespace Senparc.Xncf.AgentsManager
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<AgentTemplate, AgentTemplateDto>().ReverseMap();
+                profile.CreateMap<AgentTemplate, AgentTemplateSimpleStatusDto>().ReverseMap();
                 profile.CreateMap<ChatGroup, ChatGroupDto>().ReverseMap();
                 profile.CreateMap<ChatGroupMember, ChatGroupMemberDto>().ReverseMap();
                 profile.CreateMap<ChatGroupHistory, ChatGroupHistoryDto>().ReverseMap();
