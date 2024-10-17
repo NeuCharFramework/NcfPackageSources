@@ -534,23 +534,23 @@ var app = new Vue({
                         // 智能体 组 任务
                         if (detailType === 'agentGroupTask') {
                             this.agentDetailsGroupDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
                         }
                         // 智能体 任务
                         if (detailType === 'agentTask') {
                             this.agentDetailsTaskDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
                             this.getTaskMemberListData(detailType, taskDetail.id)
                         }
                         // 组 任务
                         if (detailType === 'groupTask') {
                             this.groupDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
                         }
                         // 任务
                         if (detailType === 'task') {
                             this.taskDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
                             this.getTaskMemberListData(detailType, taskDetail.id)
                         }
                     } else {
@@ -710,12 +710,12 @@ var app = new Vue({
                 })
         },
         // 轮询获取 task 历史对话记录
-        pollGetTaskHistoryData(listType, fun,id) {
+        pollGetTaskHistoryData(listType, fun, id) {
             if (!listType || !fun) return
             const interval = () => {
                 this.historyTimer[listType] = setTimeout(() => {
                     // 执行代码块
-                    fun(listType,id)
+                    fun(listType, id)
                     interval()
                 }, 1000)
                 //     this.historyTimer = setTimeout(() => {
@@ -1243,6 +1243,35 @@ var app = new Vue({
                 };
             }
         },
+        // 获取发送人名称
+        getTaskSenderName(taskType, formId) {
+            // 智能体 组 任务
+            if (taskType === 'agentGroupTask') {
+                const chatGroupMembers = this.agentDetailsGroupDetails?.chatGroupMembers ?? []
+                const fintItem = chatGroupMembers.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+            // 组 任务
+            if (taskType === 'groupTask') {
+                const chatGroupMembers = this.groupDetails?.chatGroupMembers ?? []
+                const fintItem = chatGroupMembers.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+            // 智能体 任务
+            if (taskType === 'agentTask') {
+
+                const fintItem = this.agentDetailsTaskMemberList.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+
+            // 任务
+            if (taskType === 'task') {
+                const fintItem = this.taskMemberList.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+
+            return {}
+        }
     }
 });
 

@@ -370,9 +370,9 @@
                                                         :key="ritem.id" class="taskrecord-listWrap-item">
                                                         <div class="taskrecord-listWrap-item-head">
                                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                                <img :src="ritem.avatar" alt="">
+                                                                <img :src="getTaskSenderName('agentGroupTask',ritem.fromAgentTemplateId).avatar" alt="">
                                                             </span>
-                                                            <span class="name">{{ ritem.fromAgentTemplateId }}</span>
+                                                            <span class="name">{{ getTaskSenderName('agentGroupTask',ritem.fromAgentTemplateId).name }}</span>
                                                             <span class="time">{{ ritem.addTime }}</span>
                                                         </div>
                                                         <div class="taskrecord-listWrap-item-content">
@@ -433,9 +433,9 @@
                                                     class="taskrecord-listWrap-item">
                                                     <div class="taskrecord-listWrap-item-head">
                                                         <span class="df-wn flex-ac flex-jc avatarBox">
-                                                            <img :src="ritem.avatar" alt="">
+                                                            <img :src="getTaskSenderName('agentTask',ritem.fromAgentTemplateId).avatar" alt="">
                                                         </span>
-                                                        <span class="name">{{ ritem.fromAgentTemplateId }}</span>
+                                                        <span class="name">{{ getTaskSenderName('agentTask',ritem.fromAgentTemplateId).name }}</span>
                                                         <span class="time">{{ ritem.addTime }}</span>
                                                     </div>
                                                     <div class="taskrecord-listWrap-item-content">
@@ -641,9 +641,9 @@
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="ritem.avatar" alt="">
+                                                <img :src="getTaskSenderName('groupTask',ritem.fromAgentTemplateId).avatar" alt="">
                                             </span>
-                                            <span class="name">{{ ritem.fromAgentTemplateId }}</span>
+                                            <span class="name">{{ getTaskSenderName('groupTask',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime }}</span>
                                         </div>
                                         <div class="taskrecord-listWrap-item-content">
@@ -748,9 +748,9 @@
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="ritem.avatar" alt="">
+                                                <img :src="getTaskSenderName('task',ritem.fromAgentTemplateId).avatar" alt="">
                                             </span>
-                                            <span class="name">{{ ritem.fromAgentTemplateId }}</span>
+                                            <span class="name">{{ getTaskSenderName('task',ritem.fromAgentTemplateId).name  }}</span>
                                             <span class="time">{{ ritem.addTime }}</span>
                                         </div>
                                         <div class="taskrecord-listWrap-item-content">
