@@ -31,7 +31,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             AgentTemplate agentTemplate = null;
 
-            agentTemplateDto.PromptCode = agentTemplate.SystemMessage;
+            agentTemplateDto.PromptCode = agentTemplateDto.SystemMessage;
             if (id > 0)
             {
                 agentTemplate = await GetAgentTemplateAsync(id);

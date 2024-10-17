@@ -37,7 +37,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public Status Status { get; set; }
 
-        private ChatGroupHistoryDto() { }
+        public ChatGroupHistoryDto() { }
 
         public ChatGroupHistoryDto(int chatGroupId,int chatTaskId, ChatGroup chatGroup, int fromAgentTemplateId, AgentTemplate fromAgentTemplate, int toAgentTemplateId, AgentTemplate toAgentTemplate, /*int fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {

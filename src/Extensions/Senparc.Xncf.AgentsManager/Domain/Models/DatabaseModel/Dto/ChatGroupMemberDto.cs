@@ -35,7 +35,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         ///// </summary>
         //public ChatGroup ChatGroup { get;  set; }
 
-        private ChatGroupMemberDto() { }
+        public ChatGroupMemberDto() { }
 
         public ChatGroupMemberDto(string uID, int chatGroupId, int agentTemplateId /*,AgentTemplate agentTemplate  ChatGroup chatGroup*/)
         {
