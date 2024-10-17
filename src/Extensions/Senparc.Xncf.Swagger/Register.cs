@@ -66,7 +66,7 @@ namespace Senparc.Xncf.Swagger
                 )
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 })
                 .AddApiExplorer();
 
