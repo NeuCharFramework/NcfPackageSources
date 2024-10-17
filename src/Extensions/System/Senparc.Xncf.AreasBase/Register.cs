@@ -68,8 +68,7 @@ namespace Senparc.Xncf.AreasBase
               .AddJsonOptions(options =>
               {
                   //忽略循环引用
-                  options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-
+                  options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                   //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                   //不使用驼峰样式的key
                   //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
