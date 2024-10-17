@@ -291,11 +291,9 @@
                                             agentDetailsGroupDetails.chatGroupDto.name }}
                                         </div>
                                         <div class="df-wn groupInfoRow-info">
-                                            <div>任务数: {{ agentDetailsGroupDetails.chatGroupDto.chatGroupDto.numberTasks }}</div>
-                                            <div>群主: {{ agentDetailsGroupDetails.chatGroupDto.adminAgentTemplate ?
-                                                agentDetailsGroupDetails.chatGroupDto.adminAgentTemplate.name : '' }}</div>
-                                            <div>对接人: {{ agentDetailsGroupDetails.chatGroupDto.enterAgentTemplate ?
-                                                agentDetailsGroupDetails.chatGroupDto.enterAgentTemplate.name : '' }}</div>
+                                            <div>任务数: {{ agentDetailsGroupDetails.chatGroupDto.numberTasks || '' }}</div>
+                                            <div>群主: {{ agentDetailsGroupDetails.chatGroupDto.adminAgentTemplateName || '' }}</div>
+                                            <div>对接人: {{ agentDetailsGroupDetails.chatGroupDto.enterAgentTemplateName || '' }}</div>
                                         </div>
                                         <div class="df-wn  groupInfoRow-operation">
                                             <el-button type="primary" size="small"
@@ -571,10 +569,10 @@
                         <div class="groupInfoRow-name text-ellipsis" :title="groupDetails.chatGroupDto.name">{{ groupDetails.chatGroupDto.name }}
                         </div>
                         <div class="df-wn groupInfoRow-info">
-                            <div>任务数: {{ groupDetails.chatGroupDto.numberTasks }}</div>
-                            <div>群主: {{ groupDetails.chatGroupDto.adminAgentTemplate ? groupDetails.chatGroupDto.adminAgentTemplate.name : '' }}
+                            <div>任务数: {{ groupDetails.chatGroupDto.numberTasks || '' }}</div>
+                            <div>群主: {{ groupDetails.chatGroupDto.adminAgentTemplateName || '' }}
                             </div>
-                            <div>对接人: {{ groupDetails.chatGroupDto.enterAgentTemplate ? groupDetails.chatGroupDto.enterAgentTemplate.name : '' }}
+                            <div>对接人: {{ groupDetails.chatGroupDto.enterAgentTemplateName || '' }}
                             </div>
                         </div>
                         <div class="df-wn  groupInfoRow-operation">

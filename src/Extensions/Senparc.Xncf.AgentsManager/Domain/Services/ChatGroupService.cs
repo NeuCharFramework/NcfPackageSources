@@ -39,7 +39,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly IBaseObjectCacheStrategy _cache;
 
 
-        public ChatGroupService(IRepositoryBase<ChatGroup> repo, IServiceProvider serviceProvider,IBaseObjectCacheStrategy cache) : base(repo, serviceProvider)
+        public ChatGroupService(IRepositoryBase<ChatGroup> repo, IServiceProvider serviceProvider, IBaseObjectCacheStrategy cache) : base(repo, serviceProvider)
         {
             this._cache = cache;
         }
@@ -233,7 +233,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 //运行中进行缓存
                 var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
-                await _cache.SetAsync(runningKey, chatTaskDto);
+                var cacheTask = new RunningChatTaskDto()
+                {
+                    ChatTaskDto = chatTaskDto
+                };
+                await _cache.SetAsync(runningKey, cacheTask);
 
                 logger.Append($"开始运行 {chatGroup.Name}");
 
@@ -290,7 +294,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                         //不启用的智能体不参与对话
                         continue;
                     }
-                    
+
                     var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
                     agentsTemplates.Add(agentTemplateDto);
 
@@ -402,7 +406,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     SenparcTrace.BaseExceptionLog(ex);
                     throw;
                 }
-                finally {
+                finally
+                {
                     scope.Dispose();
                 }
             });
