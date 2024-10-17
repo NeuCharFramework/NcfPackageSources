@@ -563,10 +563,10 @@ var app = new Vue({
                 })
         },
         // 获取 任务历史记录
-        async getTaskRecordListData(recordType, chatTaskld, nextHistoryld) {
+        async getTaskRecordListData(recordType, chatTaskId, nextHistoryId) {
             const queryList = {
-                chatTaskld,
-                nextHistoryld
+                chatTaskId,
+                nextHistoryId
             }
             //  接口对接
             await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
@@ -576,7 +576,7 @@ var app = new Vue({
                         const taskData = data?.data?.chatTaskList ?? []
                         // 任务
                         if (recordType === 'task') {
-                            if (nextHistoryld) {
+                            if (nextHistoryId) {
                                 for (let index = 0; index < taskData.length; index++) {
                                     const element = taskData[index];
                                     setTimeout(() => {
@@ -590,7 +590,7 @@ var app = new Vue({
                         }
                         // 智能体 任务
                         if (recordType === 'agentTask') {
-                            if (nextHistoryld) {
+                            if (nextHistoryId) {
                                 for (let index = 0; index < taskData.length; index++) {
                                     const element = taskData[index];
                                     setTimeout(() => {
@@ -604,7 +604,7 @@ var app = new Vue({
                         }
                         // 智能体 组 任务
                         if (recordType === 'agentGroupTask') {
-                            if (nextHistoryld) {
+                            if (nextHistoryId) {
                                 for (let index = 0; index < taskData.length; index++) {
                                     const element = taskData[index];
                                     setTimeout(() => {
@@ -618,7 +618,7 @@ var app = new Vue({
                         }
                         // 组 任务
                         if (recordType === 'groupTask') {
-                            if (nextHistoryld) {
+                            if (nextHistoryId) {
                                 for (let index = 0; index < taskData.length; index++) {
                                     const element = taskData[index];
                                     setTimeout(() => {
