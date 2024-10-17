@@ -72,7 +72,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -81,6 +81,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             PromptCode = promptCode;
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
+            Avastar = avastar;
         }
 
         public bool EnableAgent()

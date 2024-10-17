@@ -48,9 +48,12 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// </summary>
         public string HookRobotParameter { get; set; }
 
+        public string Avastar { get; set; }
+
+
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -59,6 +62,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             PromptCode = promptCode;
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
+            Avastar = avastar;
         }
     }
 
