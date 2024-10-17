@@ -794,7 +794,7 @@
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
-            <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
+            <el-form v-if="visible.agent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
                 label-width="130px" class="drawerForm-container">
                 <el-form-item label="智能体名称" prop="name">
                     <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
@@ -859,7 +859,7 @@
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
-            <el-form ref="groupELForm" :model="groupForm" :rules="groupFormRules" :size="elSize" label-position="left"
+            <el-form v-if="visible.group" ref="groupELForm" :model="groupForm" :rules="groupFormRules" :size="elSize" label-position="left"
                 label-width="130px" class="drawerForm-container">
                 <el-form-item label="组名称" prop="name">
                     <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
@@ -945,7 +945,7 @@
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
-            <el-form ref="groupStartELForm" :model="groupStartForm" :rules="groupStartFormRules" :size="elSize"
+            <el-form v-if="visible.groupStart" ref="groupStartELForm" :model="groupStartForm" :rules="groupStartFormRules" :size="elSize"
                 label-position="left" label-width="130px" class="drawerForm-container">
                 <el-form-item label="选择群组" prop="groupName">
                     <el-input v-model="groupStartForm.groupName" disabled placeholder="请填写"></el-input>
@@ -979,7 +979,7 @@
 @* Dialog 智能体 新增 *@
 <el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.groupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
-    <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
+    <el-form v-if="visible.groupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
         label-width="130px" class="drawerForm-container">
         <el-form-item label="智能体名称" prop="name">
             <el-input v-model="agentForm.name" placeholder="请填写"></el-input>

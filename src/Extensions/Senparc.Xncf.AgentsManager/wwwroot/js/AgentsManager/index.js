@@ -520,7 +520,7 @@ var app = new Vue({
         },
         // 获取 任务详情 
         async getTaskDetailData(detailType, id) {
-            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${id}`)
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
