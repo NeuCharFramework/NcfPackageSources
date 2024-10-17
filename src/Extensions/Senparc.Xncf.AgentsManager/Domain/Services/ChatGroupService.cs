@@ -197,6 +197,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             var task = Task.Factory.StartNew(async () =>
             {
+                base.ServiceProvider = base._serviceProvider;
                 var scope = base.ServiceProvider.CreateScope();
                 var services = scope.ServiceProvider;
 
@@ -207,7 +208,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 var logger = new StringBuilder();
 
-                base.ServiceProvider = base._serviceProvider;
 
                 var chatGroupMemberService = services.GetService<ChatGroupMemberService>();
                 var agentTemplateService = services.GetService<AgentsTemplateService>();
@@ -235,7 +235,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 #region 确定 AiSetting
 
                 var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var aiModelService = base.GetRequiredService<AIModelService>();
+                var aiModelService = services.GetRequiredService<AIModelService>();
                 if (aiModelId == 0)
                 {
                     var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
