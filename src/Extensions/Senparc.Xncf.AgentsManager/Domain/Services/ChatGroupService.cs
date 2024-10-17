@@ -300,7 +300,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                                 .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
                                 {
                                     AgentTemplatePrintMessageMiddleware.SendWechatMessage
-                                    .Invoke(base.ServiceProvider, a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
+                                    .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
                                     //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
                                     logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
                                 }));
@@ -382,6 +382,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 {
                     SenparcTrace.BaseExceptionLog(ex);
                     throw;
+                }
+                finally {
+                    scope.Dispose();
                 }
             });
 
