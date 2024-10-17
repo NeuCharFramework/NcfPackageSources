@@ -236,7 +236,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
                 var aiModelService = services.GetRequiredService<AIModelService>();
-                if (aiModelId == 0)
+                if (aiModelId != 0)
                 {
                     var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
                     if (aiModel == null)
