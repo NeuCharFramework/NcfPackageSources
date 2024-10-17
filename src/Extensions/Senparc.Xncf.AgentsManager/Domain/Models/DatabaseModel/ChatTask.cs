@@ -17,7 +17,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         [Required]
         public int AiModelId { get; private set; }
 
-        public Status Status { get; private set; }
+        public ChatTask_Status Status { get; private set; }
         [Required]
         public string PromptCommand { get; private set; }
 
@@ -52,7 +52,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 
         private ChatTask() { }
 
-        public ChatTask(string name, int chatGroupId, int aiModelId, Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter)
+        public ChatTask(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
         {
             Name = name;
             ChatGroupId = chatGroupId;
@@ -61,9 +61,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             PromptCommand = promptCommand;
             Description = description;
             IsPersonality = isPersonality;
+            Score = score;
+            StartTime = startTime;
+            EndTime = endTime;
+            ResultComment = resultComment;
             HookPlatform = hookPlatform;
             HookPlatformParameter = hookPlatformParameter;
-        }
+                  }
 
         public ChatTask(ChatTaskDto chatTaskDto)
         {
@@ -74,12 +78,25 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             PromptCommand = chatTaskDto.PromptCommand;
             Description = chatTaskDto.Description;
             IsPersonality = chatTaskDto.IsPersonality;
+            Score = chatTaskDto.Score;
+            StartTime = chatTaskDto.StartTime;
+            EndTime = chatTaskDto.EndTime;
+            ResultComment = chatTaskDto.ResultComment;
             HookPlatform = chatTaskDto.HookPlatform;
             HookPlatformParameter = chatTaskDto.HookPlatformParameter;
         }
+
+        public void ChangeStatus(ChatTask_Status status)
+        {
+            Status = status;
+            if (status == ChatTask_Status.Cancelled || status == ChatTask_Status.Finished)
+            {
+                EndTime = DateTime.Now;
+            }
+        }
     }
 
-    public enum Status
+    public enum ChatTask_Status
     {
         Waiting = 0,
         Chatting = 1,

@@ -258,25 +258,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var aiModelId = request.AiModelId;
-                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                if (aiModelId == 0)
-                {
-                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
-                    if (aiModel == null)
-                    {
-                        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
-                    }
-
-                    var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
-
-                    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
-                }
-
                 List<Task> tasks = new List<Task>();
 
                 //TODO: 使用线程进行维护
-                var task = _chatGroupService.RunChatGroup(logger, request.ChatGroupId, request.PromptCommand, aiSetting, request.Personality);
+                var task = _chatGroupService.RunChatGroupInThread(request);
                 tasks.Add(task);
 
                 Task.WaitAll(tasks.ToArray());

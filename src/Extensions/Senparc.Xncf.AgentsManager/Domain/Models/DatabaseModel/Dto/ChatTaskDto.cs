@@ -1,10 +1,6 @@
 ﻿using Senparc.Ncf.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 {
@@ -17,7 +13,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
         [Required]
         public int AiModelId { get; set; }
 
-        public Status Status { get; set; }
+        public ChatTask_Status Status { get; set; }
         [Required]
         public string PromptCommand { get; set; }
 
@@ -25,6 +21,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         [Required]
         public bool IsPersonality { get; set; }
+
+
+        public bool Score { get; set; }
+
+        [Required]
+        public DateTime StartTime { get; set; }
+        [Required]
+        public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// 对于对话结果的评价
+        /// </summary>
+        public string ResultComment { get; set; }
+
 
         /// <summary>
         /// 进行 WebHook 的平台
@@ -39,7 +49,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         public ChatTaskDto() { }
 
-        public ChatTaskDto(string name, int chatGroupId, int aiModelId, Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter)
+        public ChatTaskDto(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
         {
             Name = name;
             ChatGroupId = chatGroupId;
@@ -48,6 +58,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             PromptCommand = promptCommand;
             Description = description;
             IsPersonality = isPersonality;
+            Score = score;
+            StartTime = startTime;
+            EndTime = endTime;
+            ResultComment = resultComment;
             HookPlatform = hookPlatform;
             HookPlatformParameter = hookPlatformParameter;
         }
@@ -61,6 +75,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             PromptCommand = chatTask.PromptCommand;
             Description = chatTask.Description;
             IsPersonality = chatTask.IsPersonality;
+            Score = chatTask.Score;
+            StartTime = chatTask.StartTime;
+            EndTime = chatTask.EndTime;
+            ResultComment = chatTask.ResultComment;
             HookPlatform = chatTask.HookPlatform;
             HookPlatformParameter = chatTask.HookPlatformParameter;
         }
