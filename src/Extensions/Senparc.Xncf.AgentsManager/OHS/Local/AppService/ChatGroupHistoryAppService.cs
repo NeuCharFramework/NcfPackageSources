@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET;
+﻿using AutoGen.Core;
+using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -26,13 +27,23 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return await this.GetResponseAsync< ChatGroupHistory_GetListResponse>(async (response, logger) =>
             {
                 var list = await this._chatGroupHistoryService.
-                        GetObjectListAsync(pageIndex, pageSize, z => z.Id>nextHistoryId && z.ChatTaskId == chatTaskId,
-                    z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+                        GetObjectListAsync(pageIndex, pageSize,
+                        z => z.Id>nextHistoryId && z.ChatTaskId == chatTaskId,
+                        z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
 
                 var result = new ChatGroupHistory_GetListResponse()
                 {
                     ChatGroupHistories = this._chatGroupHistoryService.Mapping<ChatGroupHistoryDto>(list)
                 };
+
+                foreach (var historyDto in result.ChatGroupHistories)
+                {
+                    var arr = historyDto.Message.Split(new[] { "\r\n--------------------\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    if (arr.Length>=2)
+                    {
+                        historyDto.Message = arr[1];
+                    }
+                }
 
                 return result;
             });
