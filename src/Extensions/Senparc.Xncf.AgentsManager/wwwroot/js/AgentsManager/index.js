@@ -227,7 +227,7 @@ var app = new Vue({
                 description: '', // 说明
                 hookRobotType: 0, // 外接平台
                 hookRobotParameter: '', // 外接参数
-                avatar: '/images/AgentsManager/avatar/avatar1.png' // 头像
+                avastar: '/images/AgentsManager/avatar/avatar1.png' // 头像
             },
             agentFormRules: {
                 name: [
@@ -245,7 +245,7 @@ var app = new Vue({
                 // hookRobotParameter: [
                 //     { required: true, message: '请填写', trigger: 'blur' },
                 // ],
-                avatar: [
+                avastar: [
                     { required: true, message: '请选择', trigger: 'change' },
                 ]
             },
@@ -915,7 +915,7 @@ var app = new Vue({
         handleFormValidateField(refFormEL, formName, propName, item) {
             // this[formName][propName] = item
             this.$set(this[formName], `${propName}`, item)
-            this.$refs[refFormEL]?.validateField('avatar', () => { })
+            this.$refs[refFormEL]?.validateField('avastar', () => { })
         },
         // 筛选输入变化
         handleFilterChange(value, filterType) {
