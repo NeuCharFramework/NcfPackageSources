@@ -423,10 +423,10 @@ var app = new Vue({
                             }]
                             this.agentDetailsGroupList = groupData
                             // 获取详情
-                            if(groupData.length>0){
+                            if (groupData.length > 0) {
                                 this.getGroupDetailData(listType, groupData[this.agentDetailsGroupIndex].id)
                             }
-                            
+
                         }
                     } else {
                         app.$message({
@@ -536,7 +536,10 @@ var app = new Vue({
                         const taskDetail = data?.data?.chatTaskDto ?? ''
                         // 智能体 组 任务
                         if (detailType === 'agentGroupTask') {
-                            this.agentDetailsGroupDetails = taskDetail
+                            this.agentDetailsGroupDetails = {
+                                ...taskDetail,
+                                agentTemplateDtoList: this.agentDetailsGroupDetails.agentTemplateDtoList || []
+                            }
                             this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
                         }
                         // 智能体 任务
@@ -547,7 +550,10 @@ var app = new Vue({
                         }
                         // 组 任务
                         if (detailType === 'groupTask') {
-                            this.groupDetails = taskDetail
+                            this.groupDetails = {
+                                ...taskDetail,
+                                agentTemplateDtoList: this.groupDetails.agentTemplateDtoList || []
+                            }
                             this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
                         }
                         // 任务
@@ -790,8 +796,8 @@ var app = new Vue({
         },
         // 编辑 Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
         handleEditDrawerOpenBtn(btnType, item) {
-            console.log('handleEditDrawerOpenBtn',btnType, item);
-            
+            console.log('handleEditDrawerOpenBtn', btnType, item);
+
             let formName = ''
             // 智能体
             if (btnType === 'agent' || btnType === 'groupAgent') {
@@ -810,14 +816,14 @@ var app = new Vue({
             if (formName) {
                 if (btnType === 'agent' && item.agentTemplateDto) {
                     Object.assign(this[formName], deepClone(item.agentTemplateDto))
-                } else if (btnType === 'group'){
+                } else if (btnType === 'group') {
                     // item.agentTemplateDtoList
                     // chatGroupMembers
                     Object.assign(this[formName], {
                         ...deepClone(item),
-                        members:item.agentTemplateDtoList || item.chatGroupMembers || []
+                        members: item.agentTemplateDtoList || item.chatGroupMembers || []
                     })
-                }else {
+                } else {
                     Object.assign(this[formName], deepClone(item))
                 }
                 // 回显 表单值
