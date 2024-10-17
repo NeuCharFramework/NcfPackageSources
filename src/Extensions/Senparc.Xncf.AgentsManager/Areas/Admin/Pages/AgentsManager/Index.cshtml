@@ -384,12 +384,12 @@
                                         </div>
                                         <div class="taskmain-members">
                                             <div class="taskmain-members-title">
-                                                机器人·{{ agentDetailsGroupDetails.chatGroupMembers ? agentDetailsGroupDetails.chatGroupMembers.length : 0 }}
+                                                机器人·{{ agentDetailsGroupDetails.agentTemplateDtoList ? agentDetailsGroupDetails.agentTemplateDtoList.length : 0 }}
                                             </div>
                                             <el-scrollbar class="sidebar-taskmembers-container"
                                                 wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                                    <div v-for="mitem in agentDetailsGroupDetails.chatGroupMembers"
+                                                    <div v-for="mitem in agentDetailsGroupDetails.agentTemplateDtoList"
                                                         :key="mitem.id" class="taskmain-members-listWrap-item">
                                                         <div class="df-wn flex-ac flex-jc avatarBox">
                                                             <img :src="mitem.avatar" alt="">
@@ -655,11 +655,11 @@
                         </div>
                         <div class="taskmain-members">
                             <div class="taskmain-members-title">
-                                机器人·{{ groupDetails.chatGroupMembers ? groupDetails.chatGroupMembers.length : 0 }}
+                                机器人·{{ groupDetails.agentTemplateDtoList ? groupDetails.agentTemplateDtoList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                    <div v-for="mitem in groupDetails.chatGroupMembers" :key="mitem.id"
+                                    <div v-for="mitem in groupDetails.agentTemplateDtoList" :key="mitem.id"
                                         class="taskmain-members-listWrap-item">
                                         <div class="df-wn flex-ac flex-jc avatarBox">
                                             <img :src="mitem.avatar" alt="">
