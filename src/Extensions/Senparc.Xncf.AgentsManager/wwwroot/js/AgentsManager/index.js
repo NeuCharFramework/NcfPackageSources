@@ -573,7 +573,7 @@ var app = new Vue({
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
-                        const taskData = data?.data?.chatTaskList ?? []
+                        const taskData = data?.data?.chatGroupHistories ?? []
                         // 任务
                         if (recordType === 'task') {
                             if (nextHistoryId) {
@@ -713,11 +713,12 @@ var app = new Vue({
         pollGetTaskHistoryData(listType, fun, id) {
             if (!listType || !fun) return
             const interval = () => {
+                fun(listType, id)
                 this.historyTimer[listType] = setTimeout(() => {
                     // 执行代码块
                     fun(listType, id)
                     interval()
-                }, 1000)
+                }, 1000 * 5)
                 //     this.historyTimer = setTimeout(() => {
                 //         // 执行代码块
                 //         fun()
