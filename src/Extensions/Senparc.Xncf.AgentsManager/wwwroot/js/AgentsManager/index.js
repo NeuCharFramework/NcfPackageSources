@@ -1,371 +1,3 @@
-/**
- * @param {Function} func
- * @param {number} wait
- * @param {boolean} immediate
- * @return {*}
- */
-function debounce(func, wait, immediate) {
-    let timeout, args, context, timestamp, result
-    const later = function () {
-        // 据上一次触发时间间隔
-        const last = +new Date() - timestamp
-
-        // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
-        if (last < wait && last > 0) {
-            timeout = setTimeout(later, wait - last)
-        } else {
-            timeout = null
-            // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
-            if (!immediate) {
-                result = func.apply(context, args)
-                if (!timeout) context = args = null
-            }
-        }
-    }
-
-    return function (...args) {
-        context = this
-        timestamp = +new Date()
-        const callNow = immediate && !timeout
-        // 如果延时不存在，重新设定延时
-        if (!timeout) timeout = setTimeout(later, wait)
-        if (callNow) {
-            result = func.apply(context, args)
-            context = args = null
-        }
-
-        return result
-    }
-}
-
-/**
-* This is just a simple version of deep copy
-* Has a lot of edge cases bug
-* If you want to use a perfect deep copy, use lodash's _.cloneDeep
-* @param {Object} source
-* @returns {Object}
-*/
-function deepClone(source) {
-    if (!source && typeof source !== 'object') {
-        throw new Error('error arguments', 'deepClone')
-    }
-    const targetObj = source.constructor === Array ? [] : {}
-    Object.keys(source).forEach(keys => {
-        if (source[keys] && typeof source[keys] === 'object') {
-            targetObj[keys] = deepClone(source[keys])
-        } else {
-            targetObj[keys] = source[keys]
-        }
-    })
-    return targetObj
-}
-
-/**
-* 判断值是否 数字
-* @param {*} val 需要判断的变量
-*/
-function isNumber(val) {
-    // return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
-    return !isNaN(val) && val !== '' && (typeof val === 'number' || !isNaN(Number()))
-}
-
-/**
-* 判断值是否是 空对象
-* @param {*} val 需要判断的变量
-*/
-function isObjEmpty(obj) {
-    return Object.keys(obj).length === 0;
-}
-
-/**
- *Created by PanJiaChen on 16/11/29.
- * @param {Sting} url
- * @param {Sting} title
- * @param {Number} w
- * @param {Number} h
- */
-function openWindow(url, title, w, h) {
-    // Fixes dual-screen position                            Most browsers       Firefox
-    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left
-    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top
-
-    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width
-    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height
-
-    const left = ((width / 2) - (w / 2)) + dualScreenLeft
-    const top = ((height / 2) - (h / 2)) + dualScreenTop
-    const newWindow = window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
-
-    // Puts focus on the newWindow
-    if (window.focus) {
-        newWindow.focus()
-    }
-}
-
-/**
- * @param {string} url // 原地址
- */
-function simulationAELOperation(url = '', name = '') {
-    if (!url) return
-    const link = document.createElement('a')
-    link.style.display = 'none'
-    link.href = url
-    if (name) link.download = name
-    link.target = '_blank'
-    link.click()
-    link.remove()
-}
-
-function getQueryObjectStr(queryObj) {
-    if (!queryObj) return ''
-    // 将对象转换为 URL 参数字符串
-    return Object.entries(queryObj)
-        .filter(([key, value]) => {
-            // 过滤掉空值
-            // console.log('value', typeof value)
-            if (typeof value === 'string') {
-                return value !== ''
-            } else if (typeof value === 'object') {
-                return value.length > 0
-            } else if (typeof value === 'number') {
-                return true
-            } else {
-                // if(typeof value === 'undefined')
-                return false
-            }
-        })
-        .map(
-            ([key, value]) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-        )
-        .join('&')
-}
-function FuncMockJson() {
-    return fetch("/json/AgentsManager/data.json")
-        .then((res) => {
-            return res.json();
-        })
-    // .then((data) => {
-    //     // console.log('Func', data)
-    // });
-}
-
-// 注册一个全局自定义指令 v-el-select-loadmore
-Vue.directive('el-select-loadmore', {
-    bind(el, binding, vnode) {
-        // 获取element-ui定义好的scroll盒子
-        const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-        SELECTWRAP_DOM.addEventListener('scroll', function () {
-            /**
-            * scrollHeight 获取元素内容高度(只读)
-            * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
-            * clientHeight 读取元素的可见高度(只读)
-            * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
-            * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
-            */
-            const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
-            if (condition) {
-                binding.value()
-            }
-        })
-    }
-})
-// 
-Vue.component('load-more-select', {
-    template: `<el-select ref="elSelectLoadMore" v-model="selectVal" v-el-select-loadmore="interestsLoadmore" :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" clearable style="width:100%" @focus="remoteMethod('',true)" @change="handleChange" @visible-change="reverseArrow">
-    <el-option v-for="(item,index) in interestsOptions" :key="index" :label="item.key" :value="item.value"></el-option></el-select>`,
-    props: {
-        // eslint-disable-next-line vue/require-prop-types
-        value: {
-            // type: [Array, String, Number],
-            required: true
-        },
-        selectKey: {
-            type: String,
-            // required: true,
-            default: ''
-        },
-        placeholder: {
-            type: String,
-            default: ''
-        },
-        multipleChoice: {
-            type: Boolean,
-            default: false
-        },
-        serviceType: {
-            type: String,
-            default: '' // 默认使用公共 
-        },
-        misiptvId: {
-            type: [String, Number],
-            default: ''
-        },
-        disabled: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data: function () {
-        return {
-            optionVisible: false,
-            interestsOptions: [], //  接口返回数据
-            interesLoading: false,
-            currentPageSize: 0,
-            listQuery: {
-                pageIndex: 1,
-                pageSize: 100,
-                // key: '',
-                filter: ''
-            }
-        }
-    },
-    computed: {
-        selectVal: {
-            get() {
-                if (this.multipleChoice) {
-                    return [...this.value]
-                } else {
-                    return this.value ?? ''
-                }
-            },
-            set(val) {
-                if (this.multipleChoice) {
-                    this.$emit('input', [...val])
-                } else {
-                    this.$emit('input', val)
-                }
-            }
-        }
-    },
-    watch: {
-        // selectKey: {
-        //     handler(val = '') {
-        //         this.listQuery.key = val
-        //     },
-        //     immediate: true
-        // }
-    },
-    mounted() {
-        // console.log('elSelectLoadMore',this.$refs['elSelectLoadMore']);
-        
-        // 找到dom
-        const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
-            '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
-        )
-        // 对dom新增class
-        rulesDom?.classList.add('el-icon-arrow-up')
-    },
-    methods: {
-        reverseArrow(flag) {
-            this.optionVisible = flag
-            // 找到dom
-            const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
-                '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
-            )
-            if (flag) {
-                rulesDom.classList.add('is-reverse') // 对dom新增class
-            } else {
-                rulesDom.classList.remove('is-reverse') // 对dom新增class
-            }
-        },
-        handleChange(e) {
-            if (this.multipleChoice) {
-                const filterItem = this.interestsOptions.filter((item) => {
-                    return e.includes(item.value)
-                })
-                this.$emit('change', filterItem)
-            } else {
-                const fintItem = this.interestsOptions.find((item) => item.value === e)
-                this.$emit('change', fintItem)
-            }
-        },
-        // 远程搜索
-        remoteMethod(query, isfocus) {
-            // console.log(query, 8888, this.optionVisible,isfocus)
-            if (this.optionVisible && isfocus) return
-            this.listQuery.filter = query ?? ''
-            this.listQuery.pageIndex = 1
-            this.interestsOptions = []
-            this.interesLoading = true
-            this.managementListOption() // 请求接口
-        },
-        interestsLoadmore() {
-            setTimeout(() => {
-                this.listQuery.pageIndex = this.listQuery.pageIndex + 1
-                if (this.listQuery.pageSize > this.currentPageSize) {
-                    this.listQuery.pageIndex = this.listQuery.pageIndex - 1
-                    return
-                }
-                this.managementListOption()
-            }, 1000)
-        },
-        // 调用接口
-        managementListOption() {
-            // console.log('managementListOption',this.serviceType);
-            if (this.serviceType === 'agent') {
-                serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getQueryObjectStr(this.listQuery)}`)
-                    .then(res => {
-                        console.log('this.serviceType === agent', res);
-                        const data = res?.data ?? {}
-                        if (data.success) {
-                            const agentData = data?.data?.list ?? []
-                            const listData = agentData.map(item => {
-                                return {
-                                    ...item,
-                                    key: item.name,
-                                    value: item.id,
-                                    disabled: false
-                                }
-                            })
-                            this.interesLoading = false
-                            this.currentPageSize = listData?.length ?? 0
-                            this.interestsOptions = this.interestsOptions.concat(listData)
-                            // [...this.interestsOptions, ...listData]
-                            // console.log(this.interestsOptions, 888)
-                        } else {
-                            app.$message({
-                                message: data.errorMessage || data.data || 'Error',
-                                type: 'error',
-                                duration: 5 * 1000
-                            })
-                        }
-                    })
-            } else if (this.serviceType === 'model') {
-                serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {}).then(res => {
-                    console.log('this.serviceType === model', res);
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        //console.log('getModelOptData:', res.data)
-                        const modelData = data?.data ?? []
-                        const listData = modelData.map(item => {
-                            return {
-                                ...item,
-                                label: item.alias,
-                                value: item.id,
-                                disabled: false
-                            }
-                        })
-                        this.interesLoading = false
-                        this.currentPageSize = listData?.length ?? 0
-                        this.interestsOptions = this.interestsOptions.concat(listData)
-                        // [...this.interestsOptions, ...listData]
-                        // console.log(this.interestsOptions, 888)
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-            } else if (this.serviceType === 'systemMessage') {
-            }
-
-        }
-    },
-})
-
 var app = new Vue({
     el: "#app",
     data() {
@@ -376,7 +8,7 @@ var app = new Vue({
             // 显隐 visible
             visible: {
                 agent: false, // 智能体 新增|编辑
-                agentDialog: false, // 智能体 新增dialog
+                groupAgent: false, // 智能体 新增dialog
                 group: false, // 组 新增|编辑
                 groupStart: false, // 组 启动 
             },
@@ -401,7 +33,7 @@ var app = new Vue({
             // 智能体
             agentQueryList: {
                 pageIndex: 0,
-                pageSize: 0,
+                pageSize: 20,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -434,12 +66,12 @@ var app = new Vue({
             agentList: [],
             scrollbarAgentIndex: '', // 侧边智能体index 默认全部
             agentDetails: '', // 智能体详情数据 查看
-            // 智能体详情
+            // 智能体详情 tabs
             agentDetailsTabsActiveName: 'first', // first(组) second(任务)
             // 智能体详情 组
             agentDetailsGroupQueryList: {
                 pageIndex: 0,
-                pageSize: 0,
+                pageSize: 20,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -451,10 +83,22 @@ var app = new Vue({
             agentDetailsGroupShowType: '1', // 1:组列表 2:组详情 3:任务详情
             agentDetailsGroupIndex: 0, // 侧边组index 默认全部
             agentDetailsGroupDetails: '',
+            agentDetailsGroupTaskQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                chatGroupId: null,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            agentDetailsGroupTaskList: [], // 组 任务列表
             // 智能体详情 任务
             agentDetailsTaskQueryList: {
                 pageIndex: 0,
-                pageSize: 0,
+                pageSize: 20,
+                chatGroupId: null,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -467,7 +111,7 @@ var app = new Vue({
             // 组
             groupQueryList: {
                 pageIndex: 0,
-                pageSize: 0,
+                pageSize: 20,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -506,10 +150,21 @@ var app = new Vue({
             groupShowType: '1', // 1:组列表 2:组详情 3:任务详情
             scrollbarGroupIndex: '', // 侧边任务index 默认全部
             groupDetails: '',
+            groupTaskQueryList: {
+                pageIndex: 0,
+                pageSize: 20,
+                chatGroupId: null,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            groupTaskList: [],
             // 组 新增|编辑 智能体
             groupAgentQueryList: {
                 pageIndex: 0,
-                pageSize: 0,
+                pageSize: 20,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -522,7 +177,8 @@ var app = new Vue({
             // 任务 task
             taskQueryList: {
                 pageIndex: 0,
-                pageSize: 0,
+                pageSize: 20,
+                chatGroupId: null,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -555,16 +211,18 @@ var app = new Vue({
             scrollbarTaskIndex: 0, // 侧边任务index 默认全部
             taskList: [],
             taskDetails: '', // 任务详情数据 查看
+
             // 智能体 新增|编辑
             agentForm: {
-                name: '',
+                id: 0, // 0 是新增 
+                name: '', // 名称
                 systemMessageType: '1',
-                systemMessage: '',
-                enable: false,
-                description: '',
-                hookRobotType: '',
-                hookRobotParameter: '',
-                avatar: ''
+                systemMessage: '', // 
+                enable: true, // 是否启用
+                description: '', // 说明
+                hookRobotType: '', // 外接平台
+                hookRobotParameter: '', // 外接参数
+                avatar: '' // 头像
             },
             agentFormRules: {
                 name: [
@@ -576,9 +234,9 @@ var app = new Vue({
                 // description: [
                 //     { required: true, message: '请填写', trigger: 'blur' },
                 // ],
-                // hookRobotType: [
-                //     { required: true, message: '请选择', trigger: 'change' },
-                // ],
+                hookRobotType: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ],
                 // hookRobotParameter: [
                 //     { required: true, message: '请填写', trigger: 'blur' },
                 // ],
@@ -588,11 +246,11 @@ var app = new Vue({
             },
             // 组 新增|编辑
             groupForm: {
-                name: '',
-                members: [],
-                description: '',
-                adminAgentTemplateId: '', // 群主
-                enterAgentTemplateId: '' // 对接人
+                name: '', // 名称
+                members: [], // 成员列表
+                description: '', // 说明
+                adminAgentTemplateId: '', // 群主即agent
+                enterAgentTemplateId: '' // 对接人即agent
             },
             groupFormRules: {
                 name: [
@@ -613,12 +271,12 @@ var app = new Vue({
             },
             // 组 启动
             groupStartForm: {
-                groupName: '',
-                chatGroupId:'',
-                name: '',
-                aiModelId: '',
-                command:'',
-                personality: true,
+                groupName: '', // 组名称
+                chatGroupId: '', // 组id
+                name: '', // 标题
+                aiModelId: '', // 模型 id
+                command: '', // 任务描述
+                personality: true, // 是否采用个性化
                 description: ''
             },
             groupStartFormRules: {
@@ -643,64 +301,308 @@ var app = new Vue({
     created() { },
     mounted() {
         if (this.tabsActiveName === 'first') {
-            this.getAgentListData(1, 'agent')
+            this.getAgentListData('agent')
         }
         if (this.tabsActiveName === 'second') {
-            this.getGroupListData(1, 'group')
+            this.getGroupListData('group')
         }
         if (this.tabsActiveName === 'third') {
-            this.gettaskListData(1, 'task')
+            this.gettaskListData('task')
         }
     },
     beforeDestroy() { },
     methods: {
-        // 跳转 prompt
-        jumpPromptRange(urlType) {
-            let url = ''
-            if (urlType === 'promptRange') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
+        // 获取 智能体 数据
+        async getAgentListData(listType, page = 0) {
+            const queryList = {}
+            if (listType === 'agent') {
+                this.agentQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.agentQueryList)
             }
-            if (urlType === 'model') {
-                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
+            if (listType === 'groupAgent') {
+                this.groupAgentQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.groupAgentQueryList)
             }
-            if (urlType === 'modelParameter') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
-            }
-            if (!url) return
-            simulationAELOperation(url)
+            // 接口对接
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getQueryObjectStr(queryList)}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const agentData = data?.data?.list ?? []
+                        if (listType === 'agent') {
+                            this.agentList = agentData
+                        }
+                        if (listType === 'groupAgent') {
+                            this.groupAgentList = agentData
+                            // this.groupAgentTotal = agentData.length
+                            // const filterList = this.groupAgentList.filter(i => {
+                            //     if (this.groupForm.members) {
+                            //         return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
+                            //     }
+                            //     return false
+                            // })
+                            // this.toggleSelection(filterList)
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
         },
-        // 切换 智能体详情 tabs 页面
-        handleAgentDetailsTabsClick(tab, event) {
-            if (this.agentDetailsTabsActiveName === 'first') {
-                this.getGroupListData(1, 'agentGroup')
+        // 获取 智能体详情 
+        async getAgentDetailData(id) {
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        this.agentDetails = data?.data?.agentTemplateStatus ?? ''
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 组 数据
+        async getGroupListData(listType, id, page = 0) {
+            const queryList = {}
+            if (listType === 'group') {
+                this.groupQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.groupQueryList)
             }
-            if (this.agentDetailsTabsActiveName === 'second') {
-                this.gettaskListData(1, 'agentTask')
+            if (listType === 'agentGroup') {
+                this.agentDetailsGroupQueryList.pageIndex = page ?? 1
+                this.agentDetailsTaskQueryList.chatAgentId = id
+                Object.assign(queryList, this.agentDetailsGroupQueryList)
             }
+            // 接口对接
+            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getQueryObjectStr(queryList)}`, queryList)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const groupData = data?.data?.chatGroupDtoList ?? []
+                        if (listType === 'group') {
+                            this.groupTreeData = [{
+                                id: '0',
+                                name: '全部组',
+                                children: groupData
+                            }]
+                            this.groupList = groupData
+                        }
+                        if (listType === 'agentGroup') {
+                            this.agentDetailsGroupTreeData = [{
+                                id: '0',
+                                name: '全部组',
+                                children: groupData
+                            }]
+                            this.agentDetailsGroupList = groupData
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 组详情 
+        async getGroupDetailData(detailType, id) {
+            return await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const groupDetail = data?.data?.chatGroupDto ?? ''
+                        if (['agentGroup', 'agentGroupTable'].includes(detailType)) {
+                            this.agentDetailsGroupDetails = groupDetail
+                            // 获取任务列表
+                            this.gettaskListData('agentGroupTask')
+                        }
+                        if (['group', 'groupTable'].includes(detailType)) {
+                            this.groupDetails = groupDetail
+                            // 获取任务列表
+                            this.gettaskListData('groupTask')
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 任务 数据
+        async gettaskListData(listType, id, page = 0) {
+            const queryList = {}
+            // 任务
+            if (listType === 'task') {
+                this.taskQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.taskQueryList)
+            }
+            // 智能体 任务
+            if (listType === 'agentTask') {
+                this.agentDetailsTaskQueryList.pageIndex = page ?? 1
+                this.agentDetailsTaskQueryList.chatAgentId = id
+                Object.assign(queryList, this.agentDetailsTaskQueryList)
+            }
+            // 智能体 组 任务
+            if (listType === 'agentGroupTask') {
+                this.agentDetailsGroupTaskQueryList.pageIndex = page ?? 1
+                this.agentDetailsGroupTaskQueryList.chatGroupId = id
+                Object.assign(queryList, this.agentDetailsGroupTaskQueryList)
+            }
+            // 组 任务
+            if (listType === 'groupTask') {
+                this.groupTaskQueryList.pageIndex = page ?? 1
+                this.groupTaskQueryList.chatGroupId = id
+                Object.assign(queryList, this.groupTaskQueryList)
+            }
+            //  接口对接
+            await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getQueryObjectStr(queryList)}`, queryList)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const taskData = data?.data?.chatTaskList ?? []
+                        // 任务
+                        if (listType === 'task') {
+                            this.taskList = taskData
+                            this.taskDetails = taskData.length ? taskData[0] : ''
+                        }
+                        // 智能体 任务
+                        if (listType === 'agentTask') {
+                            this.agentDetailsTaskList = taskData
+                            this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
+                        }
+                        // 智能体 组 任务
+                        if (listType === 'agentGroupTask') {
+                            this.agentDetailsGroupTaskList = taskData
+                        }
+                        // 组 任务
+                        if (listType === 'groupTask') {
+                            this.groupTaskList = taskData
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 任务详情 
+        async getTaskDetailData(detailType, id) {
+            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const taskDetail = data?.data?.chatTaskDto ?? ''
+                        // 智能体 组 任务
+                        if (detailType === 'agentGroupTask') {
+                            this.agentDetailsGroupDetails = taskDetail
+                        }
+                        // 智能体 任务
+                        if (detailType === 'agentTask') {
+                            this.agentDetailsTaskDetails = taskDetail
+                        }
+                        // 组 任务
+                        if (detailType === 'groupTask') {
+                            this.groupDetails = taskDetail
+                        }
+                        // 任务
+                        if (detailType === 'task') {
+                            this.taskDetails = taskDetail
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 保存 submitForm 数据
+        async saveSubmitFormData(btnType, serviceForm = {}) {
+            let serviceURL = ''
+            // agent 新增|编辑
+            if (btnType === 'agent' || btnType === 'groupAgent') {
+                serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem`
+            }
+            // 组 新增|编辑
+            if (btnType === 'group') {
+                serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup`
+                if (serviceForm.members) {
+                    const membersIds = serviceForm.members.map(item => item.id)
+                    serviceForm.memberAgentTemplateIds = membersIds
+                    serviceURL += `?${getQueryObjectStr({ memberAgentTemplateIds: membersIds })}`
+                }
+            }
+            // 组启动（运行任务）
+            if (btnType === 'groupStart') {
+                serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
+            }
+
+            if (!serviceURL) return
+            await serviceAM.post(serviceURL, serviceForm)
+                .then(res => {
+                    if (res.data.success) {
+                        // 关闭弹框
+                        this.visible[btnType] = false
+                        // 重新获取数据
+                        if (['group', 'groupStart'].includes(btnType)) {
+                            this.getGroupListData(btnType)
+                        } else if (['agent', 'groupAgent'].includes(btnType)) {
+                            this.getAgentListData(btnType)
+                        }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
         },
         // 切换 tabs 页面
         handleTabsClick(tab, event) {
             if (this.tabsActiveName === 'first') {
-                this.getAgentListData(1, 'agent')
+                this.getAgentListData('agent')
             }
             if (this.tabsActiveName === 'second') {
-                this.getGroupListData(1, 'group')
+                this.getGroupListData('group')
             }
             if (this.tabsActiveName === 'third') {
-                this.gettaskListData(1, 'task')
+                this.gettaskListData('task')
             }
         },
-        // 编辑 Dailog|抽屉 打开 按钮 agent agentDialog group groupStart
+        // 切换 智能体详情 tabs 页面
+        handleAgentDetailsTabsClick(tab, event) {
+            if (this.agentDetailsTabsActiveName === 'first') {
+                this.getGroupListData('agentGroup')
+            }
+            if (this.agentDetailsTabsActiveName === 'second') {
+                this.gettaskListData('agentTask')
+            }
+        },
+        // 编辑 Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
         handleEditDrawerOpenBtn(btnType, item) {
             let formName = ''
             // 智能体
-            if (btnType === 'agent' || btnType === 'agentDialog') {
+            if (btnType === 'agent' || btnType === 'groupAgent') {
                 formName = 'agentForm'
             }
             // 组
             if (btnType === 'group') {
                 formName = 'groupForm'
-                this.getAgentListData(1, 'groupAgent')
+                // 加载  智能体数据
+                this.getAgentListData('groupAgent')
             }
             // 组 启动
             if (btnType === 'groupStart') {
@@ -713,26 +615,26 @@ var app = new Vue({
                 this.handleElVisibleOpenBtn(btnType)
             }
         },
-        // Dailog|抽屉 打开 按钮 agent agentDialog group groupStart
+        // Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
         handleElVisibleOpenBtn(btnType, formData) {
             // console.log('通用新增按钮:', btnType);
             // 组 启动
             if (btnType === 'groupStart') {
                 this.groupStartForm.groupName = formData?.name ?? ''
-                this.groupStartForm.chatGroupId =  formData?.id ?? ''
+                this.groupStartForm.chatGroupId = formData?.id ?? ''
             }
             if (btnType === 'group') {
-                this.getAgentListData(1, 'groupAgent')
+                this.getAgentListData('groupAgent')
             }
             this.visible[btnType] = true
         },
-        // Dailog|抽屉 关闭 按钮 agent agentDialog group groupStart
+        // Dailog|抽屉 关闭 按钮 agent groupAgent group groupStart
         handleElVisibleClose(btnType) {
             this.$confirm('确认关闭？')
                 .then(_ => {
                     let refName = '', formName = ''
                     // 智能体
-                    if (btnType === 'agent' || btnType === 'agentDialog') {
+                    if (btnType === 'agent' || btnType === 'groupAgent') {
                         refName = 'agentELForm'
                         formName = 'agentForm'
                     }
@@ -761,10 +663,11 @@ var app = new Vue({
                 })
                 .catch(_ => { });
         },
-        // Dailog|抽屉 提交 按钮 agent agentDialog group groupStart
+        // Dailog|抽屉 提交 按钮 agent groupAgent group groupStart
         handleElVisibleSubmit(btnType) {
             let refName = '', formName = ''
-            if (btnType === 'agent' || btnType === 'agentDialog') {
+            // 智能体 
+            if (['agent', 'groupAgent'].includes(btnType)) {
                 refName = 'agentELForm'
                 formName = 'agentForm'
             }
@@ -801,27 +704,27 @@ var app = new Vue({
             console.log('handleFilterChange', filterType, value)
             if (filterType === 'agent') {
                 this.agentQueryList.filter = value
-                this.getAgentListData(1, 'agent')
+                this.getAgentListData('agent', 1)
             }
             if (filterType === 'agentGroup') {
                 this.agentDetailsGroupQueryList.filter = value
-                this.getGroupListData(1, 'agentGroup')
+                this.getGroupListData('agentGroup', 1)
             }
             if (filterType === 'agentTask') {
                 this.agentDetailsTaskQueryList.filter = value
-                this.gettaskListData(1, 'agentTask')
+                this.gettaskListData('agentTask', 1)
             }
             if (filterType === 'group') {
                 this.groupQueryList.filter = value
-                this.getGroupListData(1, 'group')
+                this.getGroupListData('group', 1)
             }
             if (filterType === 'groupAgent') {
                 this.groupAgentQueryList.filter = value
-                this.getAgentListData(1, 'groupAgent')
+                this.getAgentListData('groupAgent', 1)
             }
             if (filterType === 'task') {
                 this.taskQueryList.filter = value
-                this.gettaskListData(1, 'task')
+                this.gettaskListData('task', 1)
             }
         },
         // 筛选条件事件 agent  group task
@@ -904,12 +807,10 @@ var app = new Vue({
             this.resetAgentDetailsQuery()
             // 重置 组获取智能体query
             if (this.agentDetailsTabsActiveName === 'first') {
-
-                this.getGroupListData(1, 'agentGroup')
+                this.getGroupListData('agentGroup', item.id)
             }
             if (this.agentDetailsTabsActiveName === 'second') {
-
-                this.gettaskListData(1, 'agentTask')
+                this.gettaskListData('agentTask', item.id)
             }
         },
         // 重置 智能体详情下的组和任务数据
@@ -917,12 +818,14 @@ var app = new Vue({
             this.agentDetailsTabsActiveName = 'first'
             this.agentDetailsGroupTreeData = []
             this.agentDetailsGroupList = []
+            this.agentDetailsGroupTaskList = []
             this.agentDetailsGroupShowType = '2'
             this.agentDetailsGroupIndex = 0
             this.agentDetailsGroupDetails = ''
             this.agentDetailsTaskIndex = 0
             this.agentDetailsTaskList = []
             this.agentDetailsTaskDetails = ''
+            this.$set(this, 'agentDetailsGroupTaskQueryList', this.$options.data().agentDetailsGroupTaskQueryList)
             this.$set(this, 'agentDetailsGroupQueryList', this.$options.data().agentDetailsGroupQueryList)
             this.$set(this, 'agentDetailsTaskQueryList', this.$options.data().agentDetailsTaskQueryList)
         },
@@ -1007,8 +910,6 @@ var app = new Vue({
         },
         // 组 查看列表 详情 
         handleGroupView(clickType, item, index = 0) {
-            console.log('handleGroupView', clickType, item, index);
-
             if (clickType === 'agentGroup' || clickType === 'agentGroupTable') {
                 this.agentDetailsGroupShowType = '2'
                 if (clickType === 'agentGroupTable') {
@@ -1017,11 +918,13 @@ var app = new Vue({
                 } else {
                     this.agentDetailsGroupIndex = index ?? 0
                 }
-                this.agentDetailsGroupDetails = deepClone(item)
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
             }
             if (clickType === 'agentGroupTask') {
                 this.agentDetailsGroupShowType = '3'
-                this.agentDetailsGroupDetails = deepClone(item)
+                // deepClone(item)
+                this.getTaskDetailData(clickType, item.id)
             }
             if (clickType === 'group' || clickType === 'groupTable') {
                 this.groupShowType = '2'
@@ -1032,25 +935,43 @@ var app = new Vue({
                     this.scrollbarGroupIndex = index ?? 0
                 }
                 this.scrollbarGroupIndex = index ?? ''
-                this.groupDetails = deepClone(item)
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
             }
             if (clickType === 'groupTask') {
                 this.groupShowType = '3'
-                this.groupDetails = deepClone(item)
+                // deepClone(item)
+                this.getTaskDetailData(clickType, item.id)
             }
         },
+        // 返回组详情页面
+        returnGroup(clickType) {
+            if (clickType === 'agentGroupTask') {
+                this.agentDetailsGroupShowType = '2'
+                const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
+                // this.agentDetailsGroupIndex = index ?? 0
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
 
+            }
+            if (clickType === 'groupTask') {
+                this.groupShowType = '2'
+                const item = this.groupList[this.scrollbarGroupIndex]
+                // this.scrollbarGroupIndex = index ?? ''
+                // deepClone(item)
+                this.getGroupDetailData(item.id, clickType)
+            }
+        },
         // 查看 任务详情
         handleTaskView(clickType, item, index = 0) {
             if (clickType === 'agentTask') {
                 this.agentDetailsTaskIndex = index ?? ''
-                this.agentDetailsTaskDetails = item
+                this.getTaskDetailData(item.id, clickType)
             }
             if (clickType === 'task') {
                 this.scrollbarTaskIndex = index ?? ''
-                this.taskDetails = item
+                this.getTaskDetailData(item.id, clickType)
             }
-            // to do 获取详情 
         },
         // 组 新增|编辑 智能体table 切换table 选中
         toggleSelection(rows) {
@@ -1099,262 +1020,430 @@ var app = new Vue({
             }
             this.groupForm.members.splice(index, 1);
         },
-        // 返回组详情页面
-        returnGroup(clickType) {
-            if (clickType === 'agentGroupTask') {
-                this.agentDetailsGroupShowType = '2'
-                const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
-                // this.agentDetailsGroupIndex = index ?? 0
-                this.agentDetailsGroupDetails = deepClone(item)
+        // 跳转 PromptRange
+        jumpPromptRange(urlType) {
+            let url = ''
+            if (urlType === 'promptRange') {
+                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
             }
-            if (clickType === 'groupTask') {
-                this.groupShowType = '2'
-                const item = this.groupList[this.scrollbarGroupIndex]
-                // this.scrollbarGroupIndex = index ?? ''
-                this.groupDetails = deepClone(item)
+            if (urlType === 'model') {
+                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
             }
-        },
-        // 获取 智能体 数据
-        async getAgentListData(pageIndex, queryType) {
-            // console.log('getAgentListData',pageIndex,queryType);
-            const queryList = {}
-            if (queryType === 'agent') {
-                this.agentQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.agentQueryList)
+            if (urlType === 'modelParameter') {
+                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
             }
-            if (queryType === 'groupAgent') {
-                this.groupAgentQueryList.pageIndex = 0 // pageIndex ?? 1
-                Object.assign(queryList, this.groupAgentQueryList)
-            }
-            // 模拟数据
-            // console.log('FuncMockJson()',);
-            // FuncMockJson().then((data) => {
-            //     // console.log('Func', data)
-            //     const { agents = [] } = data
-            //     if (queryType === 'agent') {
-            //         this.agentList = agents
-            //     }
-            //     if (queryType === 'groupAgent') {
-            //         this.groupAgentList = agents
-            //         this.groupAgentTotal = agents.length
-            //         const filterList = this.groupAgentList.filter(i => {
-            //             if (this.groupForm.members) {
-            //                 return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
-            //             }
-            //             return false
-            //         })
-            //         this.toggleSelection(filterList)
-            //     }
-            // })
-
-            // to do 接口对接
-            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getQueryObjectStr(queryList)}`)
-                .then(res => {
-                    console.log('res', res);
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        const agentData = data?.data?.list ?? []
-                        if (queryType === 'agent') {
-                            this.agentList = agentData
-                        }
-                        if (queryType === 'groupAgent') {
-                            this.groupAgentList = agentData
-                            this.groupAgentTotal = agentData.length
-                            // const filterList = this.groupAgentList.filter(i => {
-                            //     if (this.groupForm.members) {
-                            //         return this.groupForm.members.findIndex(item => item.id === i.id) !== -1
-                            //     }
-                            //     return false
-                            // })
-                            // this.toggleSelection(filterList)
-                        }
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 智能体详情 
-        async getAgentDetailData(id) {
-            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${id}`)
-                .then(res => {
-                    const data = res?.data ?? {}
-                    if (data.success) {
-                        this.agentDetails = data?.data?.agentTemplateStatus ?? ''
-                    } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-        },
-        // 获取 组 数据
-        async getGroupListData(pageIndex, queryType) {
-            // console.log('getGroupListData',pageIndex,queryType);
-            const queryList = {}
-            if (queryType === 'group') {
-                this.groupQueryList.pageIndex = pageIndex ?? 1
-                Object.assign(queryList, this.groupQueryList)
-            }
-            if (queryType === 'agentGroup') {
-                this.agentDetailsGroupQueryList.pageIndex = pageIndex ?? 1
-                Object.assign(queryList, this.agentDetailsGroupQueryList)
-            }
-            // 模拟数据
-            FuncMockJson().then((data) => {
-                // console.log('Func', data)
-                const { group, task = [] } = data
-                const _groupList = group.map(item => {
-                    return {
-                        ...item,
-                        children: task
-                    }
-                })
-                if (queryType === 'group') {
-                    this.groupTreeData = [{
-                        id: '0',
-                        name: '全部组',
-                        children: _groupList
-                    }]
-                    this.groupList = _groupList
-                }
-                if (queryType === 'agentGroup') {
-                    this.agentDetailsGroupTreeData = [{
-                        id: '0',
-                        name: '全部组',
-                        children: _groupList
-                    }]
-                    this.agentDetailsGroupList = _groupList
-                    const groupIndex = this.agentDetailsGroupIndex ?? 0
-                    this.handleGroupView(queryType, _groupList[groupIndex], groupIndex)
-                }
-            })
-            // to do 接口对接
-            // return await serviceAM.post('', queryList)
-            // .then(res => {
-            //     if (res.data.success) {
-            //         const groupData = res?.data?.data ?? []
-            //         if (queryType === 'group') {
-            //             this.groupTreeData = [{
-            //                 id: '0',
-            //                 name: '全部组',
-            //                 children: groupData
-            //             }]
-            //             this.groupList = groupData
-            //         }
-            //         if (queryType === 'agentGroup') {
-            //             this.agentDetailsGroupTreeData = [{
-            //                 id: '0',
-            //                 name: '全部组',
-            //                 children: groupData
-            //             }]
-            //             this.agentDetailsGroupList = groupData
-            //         }
-            //     } else {
-            //         app.$message({
-            //             message: res.data.errorMessage || res.data.data || 'Error',
-            //             type: 'error',
-            //             duration: 5 * 1000
-            //         })
-            //     }
-            // })
-        },
-        // 获取 任务 数据
-        async gettaskListData(pageIndex, queryType) {
-            const queryList = {}
-            if (queryType === 'task') {
-                this.taskQueryList.pageIndex = pageIndex ?? 1
-                Object.assign(queryList, this.taskQueryList)
-            }
-            if (queryType === 'agentTask') {
-                this.agentDetailsTaskQueryList.pageIndex = pageIndex ?? 1
-                Object.assign(queryList, this.agentDetailsTaskQueryList)
-            }
-            // 模拟数据
-            // console.log('FuncMockJson()',);
-            FuncMockJson().then((data) => {
-                // console.log('Func', data)
-                const { task = [] } = data
-                if (queryType === 'task') {
-                    this.taskList = task
-                    const taskIndex = this.scrollbarTaskIndex ?? 0
-                    this.handleTaskView(queryType, task[taskIndex], taskIndex)
-                    // this.taskDetails = task.length ? task[0] : ''
-                }
-                if (queryType === 'agentTask') {
-                    this.agentDetailsTaskList = task
-                    const taskIndex = this.agentDetailsTaskIndex ?? 0
-                    this.handleTaskView(queryType, task[taskIndex], taskIndex)
-                    // this.agentDetailsTaskDetails = task.length ? task[0] : ''
-                }
-            })
-
-
-            // to do 接口对接
-            // return await serviceAM.post('', queryList)
-            // .then(res => {
-            //     if (res.data.success) {
-            //         const taskData = res?.data?.data ?? []
-            //         if (queryType === 'task') {
-            //             this.taskList = taskData
-            //             this.taskDetails = taskData.length ? taskData[0] : ''
-            //         }
-            //         if (queryType === 'agentTask') {
-            //             this.agentDetailsTaskList = taskData
-            //             this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
-            //         }
-            //     } else {
-            //         app.$message({
-            //             message: res.data.errorMessage || res.data.data || 'Error',
-            //             type: 'error',
-            //             duration: 5 * 1000
-            //         })
-            //     }
-            // })
-        },
-        // 保存 submitForm 数据
-        async saveSubmitFormData(btnType, serviceForm = {}) {
-            let serviceURL = ''
-            if (btnType === 'agent' || btnType === 'agentDialog') {
-                serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem`
-            }
-            if (btnType === 'group') {
-                serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup?`
-                if (serviceForm.members) {
-                    const membersIds = serviceForm.members.map(item => item.id)
-                    serviceURL += getQueryObjectStr({ memberAgentTemplateIds: membersIds })
-                }
-            }
-            if (btnType === 'groupStart') {
-                serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
-            }
-            if (!serviceURL) return
-            return await serviceAM.post(serviceURL, serviceForm)
-                .then(res => {
-                    if (res.data.success) {
-                        this.visible[btnType] = false
-                        if (btnType === 'agent') {
-                            this.getAgentListData(1, 'agent')
-                        }
-                        if (btnType === 'agentDialog') {
-                            this.getAgentListData(1, 'groupAgent')
-                        }
-                        if (btnType === 'group' || btnType === 'groupStart') {
-                            this.getGroupListData(1, 'group')
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
+            if (!url) return
+            simulationAELOperation(url)
         },
     }
 });
+
+/**
+ * 节流 防抖
+ * @param {Function} func
+ * @param {number} wait
+ * @param {boolean} immediate
+ * @return {*}
+ */
+function debounce(func, wait, immediate) {
+    let timeout, args, context, timestamp, result
+    const later = function () {
+        // 据上一次触发时间间隔
+        const last = +new Date() - timestamp
+
+        // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
+        if (last < wait && last > 0) {
+            timeout = setTimeout(later, wait - last)
+        } else {
+            timeout = null
+            // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
+            if (!immediate) {
+                result = func.apply(context, args)
+                if (!timeout) context = args = null
+            }
+        }
+    }
+
+    return function (...args) {
+        context = this
+        timestamp = +new Date()
+        const callNow = immediate && !timeout
+        // 如果延时不存在，重新设定延时
+        if (!timeout) timeout = setTimeout(later, wait)
+        if (callNow) {
+            result = func.apply(context, args)
+            context = args = null
+        }
+
+        return result
+    }
+}
+
+/**
+* 克隆
+* @param {Object} source
+* @returns {Object}
+*/
+function deepClone(source) {
+    if (!source && typeof source !== 'object') {
+        throw new Error('error arguments', 'deepClone')
+    }
+    const targetObj = source.constructor === Array ? [] : {}
+    Object.keys(source).forEach(keys => {
+        if (source[keys] && typeof source[keys] === 'object') {
+            targetObj[keys] = deepClone(source[keys])
+        } else {
+            targetObj[keys] = source[keys]
+        }
+    })
+    return targetObj
+}
+
+/**
+* 判断值是否 数字
+* @param {*} val 需要判断的变量
+*/
+function isNumber(val) {
+    // return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
+    return !isNaN(val) && val !== '' && (typeof val === 'number' || !isNaN(Number()))
+}
+
+/**
+* 判断值是否是 空对象
+* @param {*} val 需要判断的变量
+*/
+function isObjEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
+
+/**
+ * 打开 window窗口
+ * @param {Sting} url
+ * @param {Sting} title
+ * @param {Number} w
+ * @param {Number} h
+ */
+function openWindow(url, title, w, h) {
+    // Fixes dual-screen position                            Most browsers       Firefox
+    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left
+    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top
+
+    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width
+    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height
+
+    const left = ((width / 2) - (w / 2)) + dualScreenLeft
+    const top = ((height / 2) - (h / 2)) + dualScreenTop
+    const newWindow = window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
+
+    // Puts focus on the newWindow
+    if (window.focus) {
+        newWindow.focus()
+    }
+}
+
+/**
+ * 模拟 a 标签
+ * @param {string} url // 原地址
+ */
+function simulationAELOperation(url = '', name = '') {
+    if (!url) return
+    const link = document.createElement('a')
+    link.style.display = 'none'
+    link.href = url
+    if (name) link.download = name
+    link.target = '_blank'
+    link.click()
+    link.remove()
+}
+
+/**
+ * 处理接口 query 参数 转换为 string
+ * @param {Object} queryObj // 原地址
+ */
+function getQueryObjectStr(queryObj) {
+    if (!queryObj) return ''
+    // 将对象转换为 URL 参数字符串
+    return Object.entries(queryObj)
+        .filter(([key, value]) => {
+            // 过滤掉空值
+            // console.log('value', typeof value)
+            if (typeof value === 'string') {
+                return value !== ''
+            } else if (typeof value === 'object') {
+                return value.length > 0
+            } else if (typeof value === 'number') {
+                return true
+            } else {
+                // if(typeof value === 'undefined')
+                return false
+            }
+        })
+        .map(
+            ([key, value]) => {
+                if (Array.isArray(value)) {
+                    let str = ""
+                    for (let index in value) {
+                        str += `${index > 0 ? '&' : ''}${encodeURIComponent(key)}=${encodeURIComponent(value[index])}`
+                    }
+                    return str
+                }
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            }
+        )
+        .join('&')
+}
+
+/**
+ * 加载载 模拟json 数据
+ */
+function funcMockJson() {
+    return fetch("/json/AgentsManager/data.json")
+        .then((res) => {
+            return res.json();
+        })
+}
+
+// 注册一个全局自定义指令 v-el-select-loadmore
+Vue.directive('el-select-loadmore', {
+    bind(el, binding, vnode) {
+        // 获取element-ui定义好的scroll盒子
+        const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+        SELECTWRAP_DOM.addEventListener('scroll', function () {
+            /**
+            * scrollHeight 获取元素内容高度(只读)
+            * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
+            * clientHeight 读取元素的可见高度(只读)
+            * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+            * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+            */
+            const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
+            if (condition) {
+                binding.value()
+            }
+        })
+    }
+})
+
+// load-more-select 组件
+Vue.component('load-more-select', {
+    template: `<el-select ref="elSelectLoadMore" v-model="selectVal" v-el-select-loadmore="interestsLoadmore" :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" clearable style="width:100%" @focus="remoteMethod('',true)" @change="handleChange" @visible-change="reverseArrow">
+    <el-option v-for="(item,index) in interestsOptions" :key="index" :label="item.key" :value="item.value"></el-option></el-select>`,
+    props: {
+        // eslint-disable-next-line vue/require-prop-types
+        value: {
+            // type: [Array, String, Number],
+            required: true
+        },
+        selectKey: {
+            type: String,
+            // required: true,
+            default: ''
+        },
+        placeholder: {
+            type: String,
+            default: ''
+        },
+        multipleChoice: {
+            type: Boolean,
+            default: false
+        },
+        serviceType: {
+            type: String,
+            default: '' // 默认使用公共 
+        },
+        misiptvId: {
+            type: [String, Number],
+            default: ''
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data: function () {
+        return {
+            optionVisible: false,
+            interestsOptions: [], //  接口返回数据
+            interesLoading: false,
+            currentPageSize: 0,
+            listQuery: {
+                pageIndex: 1,
+                pageSize: 100,
+                // key: '',
+                filter: ''
+            }
+        }
+    },
+    computed: {
+        selectVal: {
+            get() {
+                if (this.multipleChoice) {
+                    return [...this.value]
+                } else {
+                    return this.value ?? ''
+                }
+            },
+            set(val) {
+                if (this.multipleChoice) {
+                    this.$emit('input', [...val])
+                } else {
+                    this.$emit('input', val)
+                }
+            }
+        }
+    },
+    watch: {
+        // selectKey: {
+        //     handler(val = '') {
+        //         this.listQuery.key = val
+        //     },
+        //     immediate: true
+        // }
+    },
+    mounted() {
+        // console.log('elSelectLoadMore',this.$refs['elSelectLoadMore']);
+
+        // 找到dom
+        const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
+            '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
+        )
+        // 对dom新增class
+        rulesDom?.classList.add('el-icon-arrow-up')
+    },
+    methods: {
+        reverseArrow(flag) {
+            this.optionVisible = flag
+            // 找到dom
+            const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
+                '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
+            )
+            if (flag) {
+                rulesDom.classList.add('is-reverse') // 对dom新增class
+            } else {
+                rulesDom.classList.remove('is-reverse') // 对dom新增class
+            }
+        },
+        handleChange(e) {
+            if (this.multipleChoice) {
+                const filterItem = this.interestsOptions.filter((item) => {
+                    return e.includes(item.value)
+                })
+                this.$emit('change', filterItem)
+            } else {
+                const fintItem = this.interestsOptions.find((item) => item.value === e)
+                this.$emit('change', fintItem)
+            }
+        },
+        // 远程搜索
+        remoteMethod(query, isfocus) {
+            // console.log(query, 8888, this.optionVisible,isfocus)
+            if (this.optionVisible && isfocus) return
+            this.listQuery.filter = query ?? ''
+            this.listQuery.pageIndex = 1
+            this.interestsOptions = []
+            this.interesLoading = true
+            this.managementListOption() // 请求接口
+        },
+        interestsLoadmore() {
+            setTimeout(() => {
+                this.listQuery.pageIndex = this.listQuery.pageIndex + 1
+                if (this.listQuery.pageSize > this.currentPageSize) {
+                    this.listQuery.pageIndex = this.listQuery.pageIndex - 1
+                    return
+                }
+                this.managementListOption()
+            }, 1000)
+        },
+        // 调用接口
+        managementListOption() {
+            // console.log('managementListOption',this.serviceType);
+            if (this.serviceType === 'agent') {
+                serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getQueryObjectStr(this.listQuery)}`)
+                    .then(res => {
+                        // console.log('this.serviceType === agent', res);
+                        const data = res?.data ?? {}
+                        if (data.success) {
+                            const agentData = data?.data?.list ?? []
+                            const listData = agentData.map(item => {
+                                return {
+                                    ...item,
+                                    key: item.name,
+                                    value: item.id,
+                                    disabled: false
+                                }
+                            })
+                            this.interesLoading = false
+                            this.currentPageSize = listData?.length ?? 0
+                            this.interestsOptions = this.interestsOptions.concat(listData)
+                            // [...this.interestsOptions, ...listData]
+                            // console.log(this.interestsOptions, 888)
+                        } else {
+                            app.$message({
+                                message: data.errorMessage || data.data || 'Error',
+                                type: 'error',
+                                duration: 5 * 1000
+                            })
+                        }
+                    })
+            } else if (this.serviceType === 'model') {
+                serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', this.listQuery).then(res => {
+                    // console.log('this.serviceType === model', res);
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        //console.log('getModelOptData:', res.data)
+                        const modelData = data?.data ?? []
+                        const listData = modelData.map(item => {
+                            return {
+                                ...item,
+                                label: item.alias,
+                                value: item.id,
+                                disabled: false
+                            }
+                        })
+                        this.interesLoading = false
+                        this.currentPageSize = listData?.length ?? 0
+                        this.interestsOptions = this.interestsOptions.concat(listData)
+                        // [...this.interestsOptions, ...listData]
+                        // console.log(this.interestsOptions, 888)
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+            } else if (this.serviceType === 'systemMessage') {
+                // /api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetPromptRangeTree
+                // /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetPromptRangeTree
+                serviceAM.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetPromptRangeTree', this.listQuery).then(res => {
+                    // console.log('this.serviceType === systemMessage', res);
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        //console.log('getModelOptData:', res.data)
+                        const promptRangeData = data?.data ?? []
+                        const listData = promptRangeData.map(item => {
+                            return {
+                                ...item,
+                                label: item.text,
+                                disabled: false
+                            }
+                        })
+                        this.interesLoading = false
+                        this.currentPageSize = listData?.length ?? 0
+                        this.interestsOptions = this.interestsOptions.concat(listData)
+                        // [...this.interestsOptions, ...listData]
+                        // console.log(this.interestsOptions, 888)
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+            }
+
+        }
+    },
+})

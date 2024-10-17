@@ -8,6 +8,8 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -87,10 +89,14 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<ChatGroup, ChatGroupDto>().ReverseMap();
                 profile.CreateMap<ChatGroupMember, ChatGroupMemberDto>().ReverseMap();
                 profile.CreateMap<ChatGroupHistory, ChatGroupHistoryDto>().ReverseMap();
+                profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
             });
 
             services.AddScoped<AgentsTemplateService>();
             services.AddScoped<ChatGroupService>();
+            services.AddScoped<ChatGroupHistoryService>();
+            services.AddScoped<ChatTaskService>();
+            services.AddScoped<ChatGroupMemberService>();
 
             return base.AddXncfModule(services, configuration, env);
         }
