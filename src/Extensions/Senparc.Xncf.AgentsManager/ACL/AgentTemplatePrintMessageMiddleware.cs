@@ -17,8 +17,8 @@ namespace Senparc.Xncf.AgentsManager.ACL
 {
     public static class AgentTemplatePrintMessageMiddleware
     {
-        public static Action<IServiceProvider, IAgent, IMessage, string, AgentTemplateDto,ChatGroupDto,ChatTaskDto> SendWechatMessage => 
-            async (serviceProvider, agent, replyObject, message, agentTemplateDto, chatGroupDto, chatTaskDto) =>
+        public static Action</*IServiceProvider,*/ IAgent, IMessage, string, AgentTemplateDto,ChatGroupDto,ChatTaskDto> SendWechatMessage => 
+            async (/*serviceProvider,*/ agent, replyObject, message, agentTemplateDto, chatGroupDto, chatTaskDto) =>
         {
             string key = null;
             switch (agentTemplateDto.HookRobotType)
@@ -46,9 +46,15 @@ namespace Senparc.Xncf.AgentsManager.ACL
             }
 
             //记录到聊天记录
-            var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
-            var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id,null, agentTemplateDto.Id,null, agentTemplateDto.Id,null, message, Models.DatabaseModel.Models.MessageType.Text, Models.DatabaseModel.Models.Status.Finished);
-            await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
+            //TODO: serviceProvider 是 null
+            using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
+            {
+                var chatGroupHistoryService = scope.ServiceProvider.GetService<ChatGroupHistoryService>();
+                var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, message, Models.DatabaseModel.Models.MessageType.Text, Models.DatabaseModel.Models.Status.Finished);
+                await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
+            }
+
+           
         };
     }
 }

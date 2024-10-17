@@ -1,5 +1,6 @@
 ﻿using AutoGen.Core;
 using AutoGen.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 using Senaprc.AI.Agents.AgentExtensions;
 using Senaprc.AI.Agents.AgentUtility;
 using Senparc.AI;
@@ -7,6 +8,7 @@ using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
+using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -30,8 +32,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class ChatGroupService : ServiceBase<ChatGroup>
     {
-        public ChatGroupService(IRepositoryBase<ChatGroup> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+
+        //临时使用本机线程
+
+        public static List<Task> TaskList = new List<Task>();
+        private readonly IBaseObjectCacheStrategy _cache;
+
+
+        public ChatGroupService(IRepositoryBase<ChatGroup> repo, IServiceProvider serviceProvider,IBaseObjectCacheStrategy cache) : base(repo, serviceProvider)
         {
+            this._cache = cache;
         }
 
         /// <summary>
@@ -184,10 +194,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
         }
 
-        //临时使用本机线程
-
-        public static List<Task> TaskList = new List<Task>();
-
         /// <summary>
         /// 在独立进程中运行 ChatGroup
         /// </summary>
@@ -196,6 +202,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             var task = Task.Factory.StartNew(async () =>
             {
+                //base.ServiceProvider = base._serviceProvider;
+                var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope(); //base.ServiceProvider.CreateScope();
+                var services = scope.ServiceProvider;
+
                 var groupId = request.ChatGroupId;
                 var aiModelId = request.AiModelId;
                 var personality = request.Personality;
@@ -203,19 +213,27 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 var logger = new StringBuilder();
 
-                var chatGroupMemberService = base.GetService<ServiceBase<ChatGroupMember>>();
-                var agentTemplateService = base.GetService<AgentsTemplateService>();
-                var promptItemService = base.GetService<PromptItemService>();
-                var chatTaskService = base.GetService<ChatTaskService>();
 
-                var chatGroup = await base.GetObjectAsync(x => x.Id == groupId);
-                var chatGroupDto = base.Mapping<ChatGroupDto>(chatGroup);
+                var chatGroupMemberService = services.GetService<ChatGroupMemberService>();
+                var agentTemplateService = services.GetService<AgentsTemplateService>();
+                var promptItemService = services.GetService<PromptItemService>();
+                var chatTaskService = services.GetService<ChatTaskService>();
+
+                var chatGroupService = services.GetService<ChatGroupService>();
+
+                var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
+                var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
                 var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, Models.DatabaseModel.ChatTask_Status.Waiting,
                     userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
                     DateTime.Now, DateTime.Now, null);
                 var chatTask = await chatTaskService.CreateTask(chatTaskDto);
-
+                chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
+                //更新状态
                 await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Chatting, chatTask);
+
+                //运行中进行缓存
+                var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
+                await _cache.SetAsync(runningKey, chatTaskDto);
 
                 logger.Append($"开始运行 {chatGroup.Name}");
 
@@ -227,8 +245,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 #region 确定 AiSetting
 
                 var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var aiModelService = base.GetRequiredService<AIModelService>();
-                if (aiModelId == 0)
+                var aiModelService = services.GetRequiredService<AIModelService>();
+                if (aiModelId != 0)
                 {
                     var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
                     if (aiModel == null)
@@ -266,6 +284,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 foreach (var groupMember in groupMemebers)
                 {
                     var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);
+                    if (!agentTemplate.Enable)
+                    {
+                        logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
+                        //不启用的智能体不参与对话
+                        continue;
+                    }
+                    
                     var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
                     agentsTemplates.Add(agentTemplateDto);
 
@@ -292,7 +317,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                                 .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
                                 {
                                     AgentTemplatePrintMessageMiddleware.SendWechatMessage
-                                    .Invoke(base.ServiceProvider, a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
+                                    .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
                                     //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
                                     logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
                                 }));
@@ -363,6 +388,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     logger.Append("已完成运行：" + chatGroup.Name);
 
                     await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Finished, chatTask);
+                    //完成后移除缓存
+                    await _cache.RemoveFromCacheAsync(runningKey);
 
                     SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
 
@@ -374,6 +401,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 {
                     SenparcTrace.BaseExceptionLog(ex);
                     throw;
+                }
+                finally {
+                    scope.Dispose();
                 }
             });
 

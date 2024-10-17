@@ -59,9 +59,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         private ChatGroupHistory() { }
 
-        public ChatGroupHistory(int chatGroupId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
+        public ChatGroupHistory(int chatGroupId,int chatTaskId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {
             ChatGroupId = chatGroupId;
+            ChatTaskId = chatTaskId;
             ChatGroup = chatGroup;
             FromAgentTemplateId = fromAgentTemplateId;
             FromAgentTemplate = fromAgentTemplate;
@@ -79,6 +80,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public ChatGroupHistory(ChatGroupHistoryDto chatGroupHistoryDto)
         {
             ChatGroupId = chatGroupHistoryDto.ChatGroupId;
+            ChatTaskId = chatGroupHistoryDto.ChatTaskId;
             ChatGroup = chatGroupHistoryDto.ChatGroup;
             FromAgentTemplateId = chatGroupHistoryDto.FromAgentTemplateId;
             FromAgentTemplate = chatGroupHistoryDto.FromAgentTemplate;
