@@ -1035,8 +1035,7 @@ var app = new Vue({
         },
         // 组 查看列表 详情 
         handleGroupView(clickType, item, index = 0) {
-            console.log('handleGroupView', clickType, item, index);
-
+            // console.log('handleGroupView', clickType, item, index);
             if (clickType === 'agentGroup' || clickType === 'agentGroupTable') {
                 this.agentDetailsGroupShowType = '2'
                 if (clickType === 'agentGroupTable') {
@@ -1046,12 +1045,12 @@ var app = new Vue({
                     this.agentDetailsGroupIndex = index ?? 0
                 }
                 // deepClone(item)
-                this.agentDetailsGroupDetails = this.getGroupDetailData(item.id)
+                this.getGroupDetailData(item.id,clickType)
             }
             if (clickType === 'agentGroupTask') {
                 this.agentDetailsGroupShowType = '3'
                 // deepClone(item)
-                this.agentDetailsGroupDetails = this.getGroupDetailData(item.id)
+                this.getGroupDetailData(item.id,clickType)
             }
             if (clickType === 'group' || clickType === 'groupTable') {
                 this.groupShowType = '2'
@@ -1063,12 +1062,12 @@ var app = new Vue({
                 }
                 this.scrollbarGroupIndex = index ?? ''
                 // deepClone(item)
-                this.groupDetails = this.getGroupDetailData(item.id)
+                this.getGroupDetailData(item.id,clickType)
             }
             if (clickType === 'groupTask') {
                 this.groupShowType = '3'
                 // deepClone(item)
-                this.groupDetails = this.getGroupDetailData(item.id)
+                this.getGroupDetailData(item.id,clickType)
             }
         },
         // 返回组详情页面
@@ -1078,28 +1077,27 @@ var app = new Vue({
                 const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
                 // this.agentDetailsGroupIndex = index ?? 0
                 // deepClone(item)
-                this.agentDetailsGroupDetails = this.getGroupDetailData(item.id)
-                
+                this.getGroupDetailData(item.id,clickType)
+
             }
             if (clickType === 'groupTask') {
                 this.groupShowType = '2'
                 const item = this.groupList[this.scrollbarGroupIndex]
                 // this.scrollbarGroupIndex = index ?? ''
                 // deepClone(item)
-                this.groupDetails = this.getGroupDetailData(item.id)
+                this.getGroupDetailData(item.id,clickType)
             }
         },
         // 查看 任务详情
         handleTaskView(clickType, item, index = 0) {
             if (clickType === 'agentTask') {
                 this.agentDetailsTaskIndex = index ?? ''
-                this.agentDetailsTaskDetails = item
+                this.getTaskDetailData(item.id,clickType)
             }
             if (clickType === 'task') {
                 this.scrollbarTaskIndex = index ?? ''
-                this.taskDetails = item
+                this.getTaskDetailData(item.id,clickType)
             }
-            // to do 获取详情 
         },
         // 组 新增|编辑 智能体table 切换table 选中
         toggleSelection(rows) {
@@ -1232,11 +1230,11 @@ var app = new Vue({
             // console.log('getGroupListData',pageIndex,queryType);
             const queryList = {}
             if (queryType === 'group') {
-                this.groupQueryList.pageIndex = pageIndex ?? 1
+                this.groupQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.groupQueryList)
             }
             if (queryType === 'agentGroup') {
-                this.agentDetailsGroupQueryList.pageIndex = pageIndex ?? 1
+                this.agentDetailsGroupQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.agentDetailsGroupQueryList)
             }
             // 模拟数据
@@ -1300,12 +1298,17 @@ var app = new Vue({
                 })
         },
         // 获取 组详情 
-        async  getGroupDetailData(id) {
+        async getGroupDetailData(id,clickType) {
             return await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
-                        this.agentDetails = data?.data?.chatGroupDto ?? ''
+                        if (['agentGroup','agentGroupTable','agentGroupTask'].includes(clickType)) {
+                            this.agentDetailsGroupDetails = data?.data?.chatGroupDto ?? ''
+                        }
+                        if (['group','groupTable','groupTask'].includes(clickType)) {
+                            this.groupDetails = data?.data?.chatGroupDto ?? ''
+                        }
                     } else {
                         app.$message({
                             message: data.errorMessage || data.data || 'Error',
@@ -1319,54 +1322,74 @@ var app = new Vue({
         async gettaskListData(pageIndex, queryType) {
             const queryList = {}
             if (queryType === 'task') {
-                this.taskQueryList.pageIndex = pageIndex ?? 1
+                this.taskQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.taskQueryList)
             }
             if (queryType === 'agentTask') {
-                this.agentDetailsTaskQueryList.pageIndex = pageIndex ?? 1
+                this.agentDetailsTaskQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.agentDetailsTaskQueryList)
             }
             // 模拟数据
             // console.log('FuncMockJson()',);
-            FuncMockJson().then((data) => {
-                // console.log('Func', data)
-                const { task = [] } = data
-                if (queryType === 'task') {
-                    this.taskList = task
-                    const taskIndex = this.scrollbarTaskIndex ?? 0
-                    this.handleTaskView(queryType, task[taskIndex], taskIndex)
-                    // this.taskDetails = task.length ? task[0] : ''
-                }
-                if (queryType === 'agentTask') {
-                    this.agentDetailsTaskList = task
-                    const taskIndex = this.agentDetailsTaskIndex ?? 0
-                    this.handleTaskView(queryType, task[taskIndex], taskIndex)
-                    // this.agentDetailsTaskDetails = task.length ? task[0] : ''
-                }
-            })
-
-
-            // to do 接口对接
-            // return await serviceAM.post('', queryList)
-            // .then(res => {
-            //     if (res.data.success) {
-            //         const taskData = res?.data?.data ?? []
-            //         if (queryType === 'task') {
-            //             this.taskList = taskData
-            //             this.taskDetails = taskData.length ? taskData[0] : ''
-            //         }
-            //         if (queryType === 'agentTask') {
-            //             this.agentDetailsTaskList = taskData
-            //             this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
-            //         }
-            //     } else {
-            //         app.$message({
-            //             message: res.data.errorMessage || res.data.data || 'Error',
-            //             type: 'error',
-            //             duration: 5 * 1000
-            //         })
+            // FuncMockJson().then((data) => {
+            //     // console.log('Func', data)
+            //     const { task = [] } = data
+            //     if (queryType === 'task') {
+            //         this.taskList = task
+            //         const taskIndex = this.scrollbarTaskIndex ?? 0
+            //         this.handleTaskView(queryType, task[taskIndex], taskIndex)
+            //         // this.taskDetails = task.length ? task[0] : ''
+            //     }
+            //     if (queryType === 'agentTask') {
+            //         this.agentDetailsTaskList = task
+            //         const taskIndex = this.agentDetailsTaskIndex ?? 0
+            //         this.handleTaskView(queryType, task[taskIndex], taskIndex)
+            //         // this.agentDetailsTaskDetails = task.length ? task[0] : ''
             //     }
             // })
+            // to do 接口对接
+            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getQueryObjectStr(queryList)}`, queryList)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const taskData = data?.data?.chatTaskList ?? []
+                        if (queryType === 'task') {
+                            this.taskList = taskData
+                            this.taskDetails = taskData.length ? taskData[0] : ''
+                        }
+                        if (queryType === 'agentTask') {
+                            this.agentDetailsTaskList = taskData
+                            this.agentDetailsTaskDetails = taskData.length ? taskData[0] : ''
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+        },
+        // 获取 任务详情 
+        async getTaskDetailData(id,clickType) {
+            return await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
+                .then(res => {
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        if (clickType === 'agentTask') {
+                            this.agentDetailsTaskDetails = data?.data?.chatTaskDto ?? ''
+                        }
+                        if (clickType === 'task') {
+                            this.taskDetails = data?.data?.chatTaskDto ?? ''
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
         },
         // 保存 submitForm 数据
         async saveSubmitFormData(btnType, serviceForm = {}) {
