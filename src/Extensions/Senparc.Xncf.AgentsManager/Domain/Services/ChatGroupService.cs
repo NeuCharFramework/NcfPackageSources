@@ -222,6 +222,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
                     DateTime.Now, DateTime.Now, null);
                 var chatTask = await chatTaskService.CreateTask(chatTaskDto);
+                chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
 
                 await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Chatting, chatTask);
 
