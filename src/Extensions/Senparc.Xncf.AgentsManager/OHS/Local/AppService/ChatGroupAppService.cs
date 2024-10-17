@@ -214,6 +214,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 for (var i = 0; i < tobeRemove.Length; i++) {
                     var member = tobeRemove[i];
                     memberList.Remove(member);
+                    await _chatGroupMemeberService.DeleteObjectAsync(member);
                 }
 
                 await _chatGroupMemeberService.SaveObjectListAsync(memberList);
