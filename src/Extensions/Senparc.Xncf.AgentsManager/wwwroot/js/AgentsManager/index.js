@@ -33,7 +33,7 @@ var app = new Vue({
             // 智能体
             agentQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -71,7 +71,7 @@ var app = new Vue({
             // 智能体详情 组
             agentDetailsGroupQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -85,7 +85,7 @@ var app = new Vue({
             agentDetailsGroupDetails: '',
             agentDetailsGroupTaskQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 chatGroupId: null,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
@@ -98,7 +98,7 @@ var app = new Vue({
             // 智能体详情 任务
             agentDetailsTaskQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 chatGroupId: null,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
@@ -114,7 +114,7 @@ var app = new Vue({
             // 组
             groupQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -155,7 +155,7 @@ var app = new Vue({
             groupDetails: '',
             groupTaskQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 chatGroupId: null,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
@@ -168,7 +168,7 @@ var app = new Vue({
             // 组 新增|编辑 智能体
             groupAgentQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
                 proce: false, // 进行中
@@ -181,7 +181,7 @@ var app = new Vue({
             // 任务 task
             taskQueryList: {
                 pageIndex: 0,
-                pageSize: 20,
+                pageSize: 0,
                 chatGroupId: null,
                 filter: '', // 筛选文本
                 timeSort: false, // 默认降序
@@ -225,9 +225,9 @@ var app = new Vue({
                 systemMessage: '', // 
                 enable: true, // 是否启用
                 description: '', // 说明
-                hookRobotType: '', // 外接平台
+                hookRobotType: 0, // 外接平台
                 hookRobotParameter: '', // 外接参数
-                avatar: '' // 头像
+                avatar: '/images/AgentsManager/avatar/avatar1.png' // 头像
             },
             agentFormRules: {
                 name: [
@@ -280,7 +280,7 @@ var app = new Vue({
                 chatGroupId: '', // 组id
                 name: '', // 标题
                 aiModelId: '', // 模型 id
-                command: '', // 任务描述
+                promptCommand: '', // 任务描述
                 personality: true, // 是否采用个性化
                 description: ''
             },
@@ -294,7 +294,7 @@ var app = new Vue({
                 aiModelId: [
                     { required: true, message: '请选择', trigger: 'change' },
                 ],
-                command: [
+                promptCommand: [
                     { required: true, message: '请填写', trigger: 'blur' },
                 ],
             },
@@ -438,12 +438,12 @@ var app = new Vue({
                         if (['agentGroup', 'agentGroupTable'].includes(detailType)) {
                             this.agentDetailsGroupDetails = groupDetail
                             // 获取任务列表
-                            this.gettaskListData('agentGroupTask')
+                            this.gettaskListData('agentGroupTask',id)
                         }
                         if (['group', 'groupTable'].includes(detailType)) {
                             this.groupDetails = groupDetail
                             // 获取任务列表
-                            this.gettaskListData('groupTask')
+                            this.gettaskListData('groupTask',id)
                         }
                     } else {
                         app.$message({
@@ -738,6 +738,7 @@ var app = new Vue({
         },
         // 编辑 Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
         handleEditDrawerOpenBtn(btnType, item) {
+            console.log('handleEditDrawerOpenBtn',item);
             let formName = ''
             // 智能体
             if (btnType === 'agent' || btnType === 'groupAgent') {
@@ -754,8 +755,14 @@ var app = new Vue({
                 formName = 'groupStartForm'
             }
             if (formName) {
+                if(btnType === 'agent'&& item.agentTemplateDto){
+                    Object.assign(this[formName],deepClone(item.agentTemplateDto))
+                }else{
+                    Object.assign(this[formName],deepClone(item))
+                }
                 // 回显 表单值
-                this.$set(this, `${formName}`, deepClone(item))
+                
+                // this.$set(this, `${formName}`, deepClone(item))
                 // 打开 抽屉
                 this.handleElVisibleOpenBtn(btnType)
             }
@@ -947,10 +954,10 @@ var app = new Vue({
         handleAgentView(item, index) {
             this.scrollbarAgentIndex = index ?? ''
             // 清空 定时器 agentGroupTask agentTask
-            const timerList = ['agentGroupTask','agentTask']
+            const timerList = ['agentGroupTask', 'agentTask']
             for (let index = 0; index < timerList.length; index++) {
                 const element = timerList[index];
-                if(this.historyTimer[element]){
+                if (this.historyTimer[element]) {
                     clearTimeout(this.historyTimer[element])
                 }
             }
@@ -1067,10 +1074,10 @@ var app = new Vue({
         // 组 查看列表 详情 
         handleGroupView(clickType, item, index = 0) {
             // 清空 定时器 agentGroupTask groupTask
-            const timerList = ['agentGroupTask','groupTask']
+            const timerList = ['agentGroupTask', 'groupTask']
             for (let index = 0; index < timerList.length; index++) {
                 const element = timerList[index];
-                if(this.historyTimer[element]){
+                if (this.historyTimer[element]) {
                     clearTimeout(this.historyTimer[element])
                 }
             }
@@ -1107,10 +1114,10 @@ var app = new Vue({
         // 返回组详情页面
         returnGroup(clickType) {
             // 清空 定时器 agentGroupTask agentTask
-            const timerList = ['agentGroupTask','groupTask']
+            const timerList = ['agentGroupTask', 'groupTask']
             for (let index = 0; index < timerList.length; index++) {
                 const element = timerList[index];
-                if(this.historyTimer[element]){
+                if (this.historyTimer[element]) {
                     clearTimeout(this.historyTimer[element])
                 }
             }
@@ -1129,10 +1136,10 @@ var app = new Vue({
         // 查看 任务详情
         handleTaskView(clickType, item, index = 0) {
             // 清空 定时器 agentGroupTask groupTask
-            const timerList = ['agentTask','task']
+            const timerList = ['agentTask', 'task']
             for (let index = 0; index < timerList.length; index++) {
                 const element = timerList[index];
-                if(this.historyTimer[element]){
+                if (this.historyTimer[element]) {
                     clearTimeout(this.historyTimer[element])
                 }
             }
@@ -1203,6 +1210,24 @@ var app = new Vue({
             }
             if (!url) return
             simulationAELOperation(url)
+        },
+        // 任务 滚动 向下
+        taskScrollbarDown() {
+            if(this.$refs.taskHistoryScrollbar){
+                this.$refs.taskHistoryScrollbar.handleScroll = () => {
+                    const wrap = this.$refs.taskHistoryScrollbar.wrap;
+                    this.$refs.taskHistoryScrollbar.moveY = (wrap.scrollTop * 100) / wrap.clientHeight;
+                    this.$refs.taskHistoryScrollbar.moveX = (wrap.scrollLeft * 100) / wrap.clientWidth;
+                    let poor = wrap.scrollHeight - wrap.clientHeight;
+                    if (
+                        poor == parseInt(wrap.scrollTop) ||
+                        poor == Math.ceil(wrap.scrollTop) ||
+                        poor == Math.floor(wrap.scrollTop)
+                    ) {
+                        console.log("已经触底了");
+                    }
+                };
+            }
         },
     }
 });
@@ -1396,8 +1421,9 @@ Vue.directive('el-select-loadmore', {
 
 // load-more-select 组件
 Vue.component('load-more-select', {
-    template: `<el-select ref="elSelectLoadMore" v-model="selectVal" v-el-select-loadmore="interestsLoadmore" :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" clearable style="width:100%" @focus="remoteMethod('',true)" @change="handleChange" @visible-change="reverseArrow">
-    <el-option v-for="(item,index) in interestsOptions" :key="index" :label="item.key" :value="item.value"></el-option></el-select>`,
+    // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
+    template: `<el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
+    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>`,
     props: {
         // eslint-disable-next-line vue/require-prop-types
         value: {
@@ -1471,14 +1497,15 @@ Vue.component('load-more-select', {
         // }
     },
     mounted() {
-        // console.log('elSelectLoadMore',this.$refs['elSelectLoadMore']);
-
         // 找到dom
-        const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
-            '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
-        )
-        // 对dom新增class
-        rulesDom?.classList.add('el-icon-arrow-up')
+        // const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
+        //     '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
+        // )
+        // // 对dom新增class
+        // rulesDom?.classList.add('el-icon-arrow-up')
+        console.log('s*******');
+        
+        this.managementListOption()
     },
     methods: {
         reverseArrow(flag) {
@@ -1537,14 +1564,14 @@ Vue.component('load-more-select', {
                             const listData = agentData.map(item => {
                                 return {
                                     ...item,
-                                    key: item.name,
+                                    label: item.name,
                                     value: item.id,
                                     disabled: false
                                 }
                             })
                             this.interesLoading = false
                             this.currentPageSize = listData?.length ?? 0
-                            this.interestsOptions = this.interestsOptions.concat(listData)
+                            this.interestsOptions = this.interestsOptions.concat(deepClone(listData))
                             // [...this.interestsOptions, ...listData]
                             // console.log(this.interestsOptions, 888)
                         } else {
@@ -1572,7 +1599,7 @@ Vue.component('load-more-select', {
                         })
                         this.interesLoading = false
                         this.currentPageSize = listData?.length ?? 0
-                        this.interestsOptions = this.interestsOptions.concat(listData)
+                        this.interestsOptions = this.interestsOptions.concat(deepClone(listData))
                         // [...this.interestsOptions, ...listData]
                         // console.log(this.interestsOptions, 888)
                     } else {
@@ -1601,7 +1628,7 @@ Vue.component('load-more-select', {
                         })
                         this.interesLoading = false
                         this.currentPageSize = listData?.length ?? 0
-                        this.interestsOptions = this.interestsOptions.concat(listData)
+                        this.interestsOptions = this.interestsOptions.concat(deepClone(listData))
                         // [...this.interestsOptions, ...listData]
                         // console.log(this.interestsOptions, 888)
                     } else {
