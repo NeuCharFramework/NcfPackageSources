@@ -21,12 +21,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind]
-        public async Task<AppResponseBase<ChatGroupHistory_GetListResponse>> GetList(int chatTaskId, int pageIndex, int pageSize)
+        public async Task<AppResponseBase<ChatGroupHistory_GetListResponse>> GetList(int chatTaskId, int nextHistoryId, int pageIndex, int pageSize)
         {
             return await this.GetResponseAsync< ChatGroupHistory_GetListResponse>(async (response, logger) =>
             {
                 var list = await this._chatGroupHistoryService.
-                        GetObjectListAsync(pageIndex, pageSize, z => z.ChatTaskId == chatTaskId,
+                        GetObjectListAsync(pageIndex, pageSize, z => z.Id>nextHistoryId && z.ChatTaskId == chatTaskId,
                     z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
 
                 var result = new ChatGroupHistory_GetListResponse()
