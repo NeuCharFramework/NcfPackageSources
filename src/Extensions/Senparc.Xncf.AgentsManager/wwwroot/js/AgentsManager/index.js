@@ -933,11 +933,11 @@ var app = new Vue({
             // 重置 组获取智能体query
             if (this.agentDetailsTabsActiveName === 'first') {
 
-                this.getGroupListData(1, 'agentGroup')
+                this.getGroupListData(1, 'agentGroup',item.id)
             }
             if (this.agentDetailsTabsActiveName === 'second') {
 
-                this.gettaskListData(1, 'agentTask')
+                this.gettaskListData(1, 'agentTask',item.id)
             }
         },
         // 重置 智能体详情下的组和任务数据
@@ -1226,7 +1226,7 @@ var app = new Vue({
                 })
         },
         // 获取 组 数据
-        async getGroupListData(pageIndex, queryType) {
+        async getGroupListData(pageIndex, queryType,id) {
             // console.log('getGroupListData',pageIndex,queryType);
             const queryList = {}
             if (queryType === 'group') {
@@ -1234,6 +1234,7 @@ var app = new Vue({
                 Object.assign(queryList, this.groupQueryList)
             }
             if (queryType === 'agentGroup') {
+                this.agentDetailsTaskQueryList.chatAgentId = id
                 this.agentDetailsGroupQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.agentDetailsGroupQueryList)
             }
@@ -1319,13 +1320,14 @@ var app = new Vue({
                 })
         },
         // 获取 任务 数据
-        async gettaskListData(pageIndex, queryType) {
+        async gettaskListData(pageIndex, queryType,id) {
             const queryList = {}
             if (queryType === 'task') {
                 this.taskQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.taskQueryList)
             }
             if (queryType === 'agentTask') {
+                this.agentDetailsTaskQueryList.chatGroupId = id
                 this.agentDetailsTaskQueryList.pageIndex = 0 // pageIndex ?? 1
                 Object.assign(queryList, this.agentDetailsTaskQueryList)
             }
