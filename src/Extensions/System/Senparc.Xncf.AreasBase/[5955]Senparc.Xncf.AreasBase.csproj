@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.9.7-preview1</Version>
+		<Version>0.9.8-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AreasBase</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AreasBase</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -21,7 +21,8 @@
 			[2024-09-10] v0.9.4-preview1 升级缓存基础库
 			[2024-10-09] v0.9.6-preview1 升级基础库
 			[2024-10-16] v0.9.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-</PackageReleaseNotes>
+			[2024-10-17] v0.9.8-preview1 为 JSON 设置忽略循环引用
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
