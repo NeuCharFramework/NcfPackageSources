@@ -843,8 +843,9 @@ var app = new Vue({
             // console.log('通用新增按钮:', btnType);
             // 组 启动
             if (btnType === 'groupStart') {
-                this.groupStartForm.groupName = formData?.name ?? ''
-                this.groupStartForm.chatGroupId = formData?.id ?? ''
+                
+                this.groupStartForm.groupName = formData.chatGroupDto ? formData.chatGroupDto.name : formData.name
+                this.groupStartForm.chatGroupId = formData.chatGroupDto ? formData.chatGroupDto.id : formData.id
             }
             if (btnType === 'group') {
                 this.getAgentListData('groupAgent')
