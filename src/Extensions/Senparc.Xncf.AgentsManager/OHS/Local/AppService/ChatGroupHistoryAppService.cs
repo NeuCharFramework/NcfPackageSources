@@ -38,11 +38,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 foreach (var historyDto in result.ChatGroupHistories)
                 {
-                    var arr = historyDto.Message.Split(new[] { "\r\n--------------------\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (arr.Length>=2)
-                    {
-                        historyDto.Message = arr[1];
-                    }
+                
+                        historyDto.Message = _chatGroupHistoryService.GetRawMessage(historyDto.Message);
+
                 }
 
                 return result;

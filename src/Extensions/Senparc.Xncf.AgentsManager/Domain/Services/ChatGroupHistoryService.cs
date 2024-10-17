@@ -24,5 +24,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             await base.SaveObjectAsync(chatGroupHistory);
         }
 
+        /// <summary>
+        /// 获取干净的消息信息
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public string GetRawMessage(string message)
+        {
+            var arr = message.Split(new[] { "\r\n--------------------\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            if (arr.Length >= 2)
+            {
+                return arr[1].Trim();
+            }
+
+            return message;
+        }
+
     }
 }
