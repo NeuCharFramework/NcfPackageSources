@@ -2,9 +2,7 @@
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
-using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
-using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -16,20 +14,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
     public class ChatGroupAppService : AppServiceBase
     {
         private readonly ChatGroupService _chatGroupService;
-        private readonly ServiceBase<ChatGroupMember> _chatGroupMemeberService;
+        private readonly ChatGroupMemberService _chatGroupMemeberService;
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly AIModelService _aIModelService;
 
         public ChatGroupAppService(IServiceProvider serviceProvider,
             ChatGroupService chatGroupService,
-            ServiceBase<ChatGroupMember> chatGroupMemeberService,
+            ChatGroupMemberService chatGroupMemeberService,
             AgentsTemplateService agentsTemplateService,
             AIModelService aIModelService) : base(serviceProvider)
         {
@@ -168,6 +165,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 chatGroupDto.State = ChatGroupState.Unstart;
 
                 var isNew = false;
+                var memberList = new List<ChatGroupMember>();
                 if (chatGroupDto.Id == 0)
                 {
                     //新建
@@ -179,6 +177,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupDto.Id);
                     chatGroup.Update(chatGroupDto);
 
+                    memberList = await _chatGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == chatGroupDto.Id);
+
+
                     //chatGroup = _chatGroupService.Mapper.Map<ChatGroup>(chatGroupDto);
                 }
 
@@ -187,7 +188,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 logger.Append($"ChatGroup {(isNew ? "新增" : "编辑")} 成功！");
 
                 //添加成员
-                var memberList = new List<ChatGroupMember>();
+
                 //合并“对接人”为成员
                 if (!memberAgentTemplateIds.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
@@ -196,11 +197,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 foreach (var agentId in memberAgentTemplateIds)
                 {
+                    if (memberList.Exists(z => z.AgentTemplateId == agentId))
+                    {
+                        continue;//已存在的不添加
+                    }
+
                     var chatGroupMemberDto = new ChatGroupMemberDto(null, chatGroup.Id, agentId);
                     var member = new ChatGroupMember(chatGroupMemberDto);
                     member.ResetUID();
                     memberList.Add(member);
                 }
+
+                //删除不在范围内的成员
+                var tobeRemove = memberList.Where(z => !memberAgentTemplateIds.Contains(z.AgentTemplateId)).ToArray();
+
+                for (var i = 0; i < tobeRemove.Length; i++) {
+                    var member = tobeRemove[i];
+                    memberList.Remove(member);
+                    await _chatGroupMemeberService.DeleteObjectAsync(member);
+                }
+
                 await _chatGroupMemeberService.SaveObjectListAsync(memberList);
 
                 logger.Append($"ChatGroup 成员添加成功！");
@@ -255,21 +271,21 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetResponseAsync<ChatGroup_GetItemResponse>(async (response, logger) =>
             {
-                var item = await this._chatGroupService.GetObjectAsync(z=>z.Id == id);
+                var item = await this._chatGroupService.GetObjectAsync(z => z.Id == id);
 
                 var agentTemplateService = base.GetRequiredService<AgentsTemplateService>();
-                
+
                 var chartGroupMemeberService = base.GetRequiredService<ChatGroupMemberService>();
 
-                var members = await chartGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == id,z=>z.Id, Ncf.Core.Enums.OrderingType.Descending, new[] { nameof(ChatGroupMember.AgentTemplate)});
-                
-                
+                var members = await chartGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == id, z => z.Id, Ncf.Core.Enums.OrderingType.Descending, new[] { nameof(ChatGroupMember.AgentTemplate) });
+
+
                 var agents = members.Select(z => agentTemplateService.Mapping<AgentTemplateDto>(z.AgentTemplate)).ToList();
 
                 return new ChatGroup_GetItemResponse()
                 {
-                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item),
-                     AgentTemplateDtoList= agents
+                    ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item),
+                    AgentTemplateDtoList = agents
                 };
             });
         }
