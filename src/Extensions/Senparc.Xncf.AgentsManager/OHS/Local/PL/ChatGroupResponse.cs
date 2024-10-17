@@ -16,6 +16,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class ChatGroup_GetItemResponse
     {
         public ChatGroupDto ChatGroupDto { get; set; }
+        public List<AgentTemplateDto> AgentTemplateDtoList { get; set; }
     }
 
 

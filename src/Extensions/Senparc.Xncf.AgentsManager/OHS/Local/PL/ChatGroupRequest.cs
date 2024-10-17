@@ -13,6 +13,7 @@ using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System.Web.Mvc;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
@@ -140,5 +141,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// 使用个性化智能体
         /// </summary>
         public bool Personality { get; set; }
+
+        /// <summary>
+        /// 消息平台
+        /// </summary>
+        public HookPlatform HookPlatform { get; set; }
+        /// <summary>
+        /// 消息平台参数
+        /// </summary>
+        public string HookParameter { get; set; }
     }
 }
