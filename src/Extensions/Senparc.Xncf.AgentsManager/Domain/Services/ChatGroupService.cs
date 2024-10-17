@@ -197,8 +197,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             var task = Task.Factory.StartNew(async () =>
             {
-                base.ServiceProvider = base._serviceProvider;
-                var scope = base.ServiceProvider.CreateScope();
+                //base.ServiceProvider = base._serviceProvider;
+                var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope(); //base.ServiceProvider.CreateScope();
                 var services = scope.ServiceProvider;
 
                 var groupId = request.ChatGroupId;
