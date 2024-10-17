@@ -16,41 +16,44 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get;  set; }
 
         /// <summary>
         /// 系统消息（PromptCode）
         /// </summary>
-        public string SystemMessage { get; private set; }
+        public string SystemMessage { get;  set; }
 
         /// <summary>
         /// 是否启用
         /// </summary>
-        public bool Enable { get; private set; }
+        public bool Enable { get;  set; }
 
         /// <summary>
         /// 描述
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get;  set; }
 
         /// <summary>
         /// PromptRange 的代号
         /// </summary>
-        public string PromptCode { get; private set; }
+        public string PromptCode { get;  set; }
 
         /// <summary>
         /// 第三方机器人平台类型
         /// </summary>
-        public HookRobotType HookRobotType { get; private set; }
+        public HookRobotType HookRobotType { get;  set; }
 
         /// <summary>
         /// 第三方机器人平台参数
         /// </summary>
         public string HookRobotParameter { get; set; }
 
+        public string Avastar { get; set; }
+
+
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -59,11 +62,18 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             PromptCode = promptCode;
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
+            Avastar = avastar;
         }
     }
 
-    public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto { 
-    
+    public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto {
+
+    }
+
+    public class AgentTemplateSimpleStatusDto : AgentTemplateDto
+    {
+        public int ChattingCount { get; set; }
+        public float Score { get; set; }
     }
 
     public class AgentTemplateStatusDto

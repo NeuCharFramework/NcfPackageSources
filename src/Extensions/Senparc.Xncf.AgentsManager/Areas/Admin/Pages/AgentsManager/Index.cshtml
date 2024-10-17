@@ -90,7 +90,7 @@
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                        <img :src="aitem.avatar || '/images/AgentsManager/avatar/avatar1.png'" alt=""
+                                        <img :src="aitem.avastar || '/images/AgentsManager/avatar/avatar1.png'" alt=""
                                             class="upperHalfbox_avatar">
                                     </div>
                                     <div class="upperHalfbox_describe">
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="agentCard-lowerHalfbox">
                                     <div class="lowerHalfbox_label">参加中</div>
-                                    <div class="lowerHalfbox_quantity">{{ aitem.numberParticipants }}</div>
+                                    <div class="lowerHalfbox_quantity">{{ aitem.chattingCount }}</div>
                                     <div class="lowerHalfbox_label">评分</div>
                                     <div class="lowerHalfbox_score">{{ aitem.score }}</div>
                                     <div class="lowerHalfbox_operation"
@@ -121,10 +121,10 @@
                     <div class="df-wn flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-dc flex-ac agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                <img :src="agentDetails.avatar || '/images/AgentsManager/avatar/avatar1.png'" alt="">
+                                <img :src="agentDetails.agentTemplateDto.avastar || '/images/AgentsManager/avatar/avatar1.png'" alt="">
                             </div>
                             <div class="name text-ellipsis">
-                                {{ agentDetails.name }}
+                                {{ agentDetails.agentTemplateDto.name }}
                             </div>
                             <i class="el-icon-edit editIcon"
                                 @@click="handleEditDrawerOpenBtn('agent',agentDetails)"></i>
@@ -285,17 +285,15 @@
                                 </template>
                                 @* 组详情 *@
                                 <template v-else-if="agentDetailsGroupShowType === '2'">
-                                    <div class="df-wn flex-ac flex-js groupInfoRow">
+                                    <div v-if="agentDetailsGroupDetails&&agentDetailsGroupDetails.chatGroupDto" class="df-wn flex-ac flex-js groupInfoRow">
                                         <div class="groupInfoRow-name text-ellipsis"
-                                            :title="agentDetailsGroupDetails.name">{{
-                                            agentDetailsGroupDetails.name }}
+                                            :title="agentDetailsGroupDetails.chatGroupDto.name">{{
+                                            agentDetailsGroupDetails.chatGroupDto.name }}
                                         </div>
                                         <div class="df-wn groupInfoRow-info">
-                                            <div>任务数: {{ agentDetailsGroupDetails.numberTasks }}</div>
-                                            <div>群主: {{ agentDetailsGroupDetails.adminAgentTemplate ?
-                                                agentDetailsGroupDetails.adminAgentTemplate.name : '' }}</div>
-                                            <div>对接人: {{ agentDetailsGroupDetails.enterAgentTemplate ?
-                                                agentDetailsGroupDetails.enterAgentTemplate.name : '' }}</div>
+                                            <div>任务数: {{ agentDetailsGroupDetails.chatGroupDto.numberTasks || '' }}</div>
+                                            <div>群主: {{ agentDetailsGroupDetails.chatGroupDto.adminAgentTemplateName || '' }}</div>
+                                            <div>对接人: {{ agentDetailsGroupDetails.chatGroupDto.enterAgentTemplateName || '' }}</div>
                                         </div>
                                         <div class="df-wn  groupInfoRow-operation">
                                             <el-button type="primary" size="small"
@@ -370,29 +368,27 @@
                                                         :key="ritem.id" class="taskrecord-listWrap-item">
                                                         <div class="taskrecord-listWrap-item-head">
                                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                                <img :src="ritem.avatar" alt="">
+                                                                <img :src="getTaskSenderName('agentGroupTask',ritem.fromAgentTemplateId).avastar" alt="">
                                                             </span>
-                                                            <span class="name">{{ ritem.sender }}</span>
-                                                            <span class="time">{{ ritem.sendTime }}</span>
+                                                            <span class="name">{{ getTaskSenderName('agentGroupTask',ritem.fromAgentTemplateId).name }}</span>
+                                                            <span class="time">{{ ritem.addTime }}</span>
                                                         </div>
-                                                        <div class="taskrecord-listWrap-item-content">
-                                                            {{ ritem.sendContent }}
-                                                        </div>
+                                                        <div class="taskrecord-listWrap-item-content">{{ ritem.message }}</div>
                                                     </div>
                                                 </div>
                                             </el-scrollbar>
                                         </div>
                                         <div class="taskmain-members">
                                             <div class="taskmain-members-title">
-                                                机器人·3
+                                                机器人·{{ agentDetailsGroupDetails.agentTemplateDtoList ? agentDetailsGroupDetails.agentTemplateDtoList.length : 0 }}
                                             </div>
                                             <el-scrollbar class="sidebar-taskmembers-container"
                                                 wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                                    <div v-for="mitem in agentDetailsGroupDetails.chatGroupMembers"
+                                                    <div v-for="mitem in agentDetailsGroupDetails.agentTemplateDtoList"
                                                         :key="mitem.id" class="taskmain-members-listWrap-item">
                                                         <div class="df-wn flex-ac flex-jc avatarBox">
-                                                            <img :src="mitem.avatar" alt="">
+                                                            <img :src="mitem.avastar" alt="">
                                                         </div>
                                                         <span class="name text-ellipsis">{{ mitem.name }}</span>
                                                     </div>
@@ -433,21 +429,19 @@
                                                     class="taskrecord-listWrap-item">
                                                     <div class="taskrecord-listWrap-item-head">
                                                         <span class="df-wn flex-ac flex-jc avatarBox">
-                                                            <img :src="ritem.avatar" alt="">
+                                                            <img :src="getTaskSenderName('agentTask',ritem.fromAgentTemplateId).avastar" alt="">
                                                         </span>
-                                                        <span class="name">{{ ritem.sender }}</span>
-                                                        <span class="time">{{ ritem.sendTime }}</span>
+                                                        <span class="name">{{ getTaskSenderName('agentTask',ritem.fromAgentTemplateId).name }}</span>
+                                                        <span class="time">{{ ritem.addTime }}</span>
                                                     </div>
-                                                    <div class="taskrecord-listWrap-item-content">
-                                                        {{ ritem.sendContent }}
-                                                    </div>
+                                                    <div class="taskrecord-listWrap-item-content">{{ ritem.message }}</div>
                                                 </div>
                                             </div>
                                         </el-scrollbar>
                                     </div>
                                     <div class="taskmain-members">
                                         <div class="taskmain-members-title">
-                                            机器人·3
+                                            机器人·{{ agentDetailsTaskMemberList ? agentDetailsTaskMemberList.length : 0 }}
                                         </div>
                                         <el-scrollbar class="sidebar-taskmembers-container"
                                             wrap-class="scrollbar-wrapper">
@@ -455,7 +449,7 @@
                                                 <div v-for="mitem in agentDetailsTaskMemberList" :key="mitem.id"
                                                     class="taskmain-members-listWrap-item">
                                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                                        <img :src="mitem.avatar" alt="">
+                                                        <img :src="mitem.avastar" alt="">
                                                     </div>
                                                     <span class="name text-ellipsis">{{ mitem.name }}</span>
                                                 </div>
@@ -571,14 +565,14 @@
                 </template>
                 @* 组详情 *@
                 <template v-else-if="groupShowType === '2'">
-                    <div class="df-wn flex-ac flex-js groupInfoRow">
-                        <div class="groupInfoRow-name text-ellipsis" :title="groupDetails.name">{{ groupDetails.name }}
+                    <div v-if="groupDetails&&groupDetails.chatGroupDto" class="df-wn flex-ac flex-js groupInfoRow">
+                        <div class="groupInfoRow-name text-ellipsis" :title="groupDetails.chatGroupDto.name">{{ groupDetails.chatGroupDto.name }}
                         </div>
                         <div class="df-wn groupInfoRow-info">
-                            <div>任务数: {{ groupDetails.numberTasks }}</div>
-                            <div>群主: {{ groupDetails.adminAgentTemplate ? groupDetails.adminAgentTemplate.name : '' }}
+                            <div>任务数: {{ groupDetails.chatGroupDto.numberTasks || '' }}</div>
+                            <div>群主: {{ groupDetails.chatGroupDto.adminAgentTemplateName || '' }}
                             </div>
-                            <div>对接人: {{ groupDetails.enterAgentTemplate ? groupDetails.enterAgentTemplate.name : '' }}
+                            <div>对接人: {{ groupDetails.chatGroupDto.enterAgentTemplateName || '' }}
                             </div>
                         </div>
                         <div class="df-wn  groupInfoRow-operation">
@@ -641,28 +635,26 @@
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="ritem.avatar" alt="">
+                                                <img :src="getTaskSenderName('groupTask',ritem.fromAgentTemplateId).avastar" alt="">
                                             </span>
-                                            <span class="name">{{ ritem.sender }}</span>
-                                            <span class="time">{{ ritem.sendTime }}</span>
+                                            <span class="name">{{ getTaskSenderName('groupTask',ritem.fromAgentTemplateId).name }}</span>
+                                            <span class="time">{{ ritem.addTime }}</span>
                                         </div>
-                                        <div class="taskrecord-listWrap-item-content">
-                                            {{ ritem.sendContent }}
-                                        </div>
+                                        <div class="taskrecord-listWrap-item-content">{{ ritem.message }}</div>
                                     </div>
                                 </div>
                             </el-scrollbar>
                         </div>
                         <div class="taskmain-members">
                             <div class="taskmain-members-title">
-                                机器人·3
+                                机器人·{{ groupDetails.agentTemplateDtoList ? groupDetails.agentTemplateDtoList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                    <div v-for="mitem in groupDetails.chatGroupMembers" :key="mitem.id"
+                                    <div v-for="mitem in groupDetails.agentTemplateDtoList" :key="mitem.id"
                                         class="taskmain-members-listWrap-item">
                                         <div class="df-wn flex-ac flex-jc avatarBox">
-                                            <img :src="mitem.avatar" alt="">
+                                            <img :src="mitem.avastar" alt="">
                                         </div>
                                         <span class="name text-ellipsis">{{ mitem.name }}</span>
                                     </div>
@@ -748,28 +740,26 @@
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="ritem.avatar" alt="">
+                                                <img :src="getTaskSenderName('task',ritem.fromAgentTemplateId).avastar" alt="">
                                             </span>
-                                            <span class="name">{{ ritem.sender }}</span>
-                                            <span class="time">{{ ritem.sendTime }}</span>
+                                            <span class="name">{{ getTaskSenderName('task',ritem.fromAgentTemplateId).name  }}</span>
+                                            <span class="time">{{ ritem.addTime }}</span>
                                         </div>
-                                        <div class="taskrecord-listWrap-item-content">
-                                            {{ ritem.sendContent }}
-                                        </div>
+                                        <div class="taskrecord-listWrap-item-content">{{ ritem.message }}</div>
                                     </div>
                                 </div>
                             </el-scrollbar>
                         </div>
                         <div class="taskmain-members">
                             <div class="taskmain-members-title">
-                                机器人·3
+                                机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
                                     <div v-for="mitem in taskMemberList" :key="mitem.id"
                                         class="taskmain-members-listWrap-item">
                                         <div class="df-wn flex-ac flex-jc avatarBox">
-                                            <img :src="mitem.avatar" alt="">
+                                            <img :src="mitem.avastar" alt="">
                                         </div>
                                         <span class="name text-ellipsis">{{ mitem.name }}</span>
                                     </div>
@@ -794,7 +784,7 @@
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
-            <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
+            <el-form v-if="visible.agent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
                 label-width="130px" class="drawerForm-container">
                 <el-form-item label="智能体名称" prop="name">
                     <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
@@ -829,12 +819,12 @@
                 <el-form-item label="外接平台参数" prop="hookRobotParameter">
                     <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="Agent 头像" prop="avatar">
+                <el-form-item label="Agent 头像" prop="avastar">
                     <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
                         <div v-for="(aitem,aindex) in agentAvatarList" :key="aindex"
                             class="df-wn flex-ac flex-jc agentAvatarBoxItem"
-                            :class="{'agentAvatarBoxItem-active':aitem === agentForm.avatar}"
-                            @@click="handleFormValidateField('agentELForm','agentForm','avatar',aitem)">
+                            :class="{'agentAvatarBoxItem-active':aitem === agentForm.avastar}"
+                            @@click="handleFormValidateField('agentELForm','agentForm','avastar',aitem)">
                             <img :src="aitem" alt="">
                         </div>
                     </div>
@@ -859,7 +849,7 @@
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
-            <el-form ref="groupELForm" :model="groupForm" :rules="groupFormRules" :size="elSize" label-position="left"
+            <el-form v-if="visible.group" ref="groupELForm" :model="groupForm" :rules="groupFormRules" :size="elSize" label-position="left"
                 label-width="130px" class="drawerForm-container">
                 <el-form-item label="组名称" prop="name">
                     <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
@@ -945,7 +935,7 @@
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
-            <el-form ref="groupStartELForm" :model="groupStartForm" :rules="groupStartFormRules" :size="elSize"
+            <el-form v-if="visible.groupStart" ref="groupStartELForm" :model="groupStartForm" :rules="groupStartFormRules" :size="elSize"
                 label-position="left" label-width="130px" class="drawerForm-container">
                 <el-form-item label="选择群组" prop="groupName">
                     <el-input v-model="groupStartForm.groupName" disabled placeholder="请填写"></el-input>
@@ -960,8 +950,8 @@
                 <el-form-item label="个性化智能体" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
                 </el-form-item>
-                <el-form-item label="我能帮你做什么" prop="command">
-                    <el-input type="textarea" v-model="groupStartForm.command" :rows="8" placeholder="请填写"></el-input>
+                <el-form-item label="我能帮你做什么" prop="promptCommand">
+                    <el-input type="textarea" v-model="groupStartForm.promptCommand" :rows="8" placeholder="请填写"></el-input>
                 </el-form-item>
                 @* <el-form-item label="说明" prop="description">
                 <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
@@ -979,7 +969,7 @@
 @* Dialog 智能体 新增 *@
 <el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.groupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
-    <el-form ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
+    <el-form v-if="visible.groupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize" label-position="left"
         label-width="130px" class="drawerForm-container">
         <el-form-item label="智能体名称" prop="name">
             <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
@@ -1012,12 +1002,12 @@
         <el-form-item label="外接平台参数" prop="hookRobotParameter">
             <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
         </el-form-item>
-        <el-form-item label="Agent 头像" prop="avatar">
+        <el-form-item label="Agent 头像" prop="avastar">
             <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
                 <div v-for="(aitem,aindex) in agentAvatarList" :key="aindex"
                     class="df-wn flex-ac flex-jc agentAvatarBoxItem"
-                    :class="{'agentAvatarBoxItem-active':aitem === agentForm.avatar}"
-                    @@click="handleFormValidateField('agentELForm','agentForm','avatar',aitem)">
+                    :class="{'agentAvatarBoxItem-active':aitem === agentForm.avastar}"
+                    @@click="handleFormValidateField('agentELForm','agentForm','avastar',aitem)">
                     <img :src="aitem" alt="">
                 </div>
             </div>

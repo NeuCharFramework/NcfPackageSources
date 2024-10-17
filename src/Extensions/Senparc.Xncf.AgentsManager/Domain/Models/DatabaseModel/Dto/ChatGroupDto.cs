@@ -34,7 +34,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// </summary>
         public int AdminAgentTemplateId { get; set; }
 
-        public AgentTemplate AdminAgentTemplate { get; set; }
+        //public AgentTemplate AdminAgentTemplate { get; set; }
 
         /// <summary>
         /// 对接人代理模板Id
@@ -42,9 +42,9 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public int EnterAgentTemplateId { get; set; }
 
-        public AgentTemplate EnterAgentTemplate { get; set; }
+        //public AgentTemplate EnterAgentTemplate { get; set; }
 
-        private ChatGroupDto() { }
+        public ChatGroupDto() { }
 
         public ChatGroupDto(string name, bool enable, ChatGroupState state, string description, int adminAgentTemplateId, int enterAgentTemplateId)
         {
