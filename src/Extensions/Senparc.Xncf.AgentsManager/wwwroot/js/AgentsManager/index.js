@@ -808,11 +808,11 @@ var app = new Vue({
             // 重置 组获取智能体query
             if (this.agentDetailsTabsActiveName === 'first') {
 
-                this.getGroupListData(1, 'agentGroup', item.id)
+                this.getGroupListData('agentGroup', item.id)
             }
             if (this.agentDetailsTabsActiveName === 'second') {
 
-                this.gettaskListData(1, 'agentTask', item.id)
+                this.gettaskListData('agentTask', item.id)
             }
         },
         // 重置 智能体详情下的组和任务数据
