@@ -534,23 +534,23 @@ var app = new Vue({
                         // 智能体 组 任务
                         if (detailType === 'agentGroupTask') {
                             this.agentDetailsGroupDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData(detailType, taskDetail.id))
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
                         }
                         // 智能体 任务
                         if (detailType === 'agentTask') {
                             this.agentDetailsTaskDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData(detailType, taskDetail.id))
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
                             this.getTaskMemberListData(detailType, taskDetail.id)
                         }
                         // 组 任务
                         if (detailType === 'groupTask') {
                             this.groupDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData(detailType, taskDetail.id))
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
                         }
                         // 任务
                         if (detailType === 'task') {
                             this.taskDetails = taskDetail
-                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData(detailType, taskDetail.id))
+                            this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData,taskDetail.id)
                             this.getTaskMemberListData(detailType, taskDetail.id)
                         }
                     } else {
@@ -710,12 +710,12 @@ var app = new Vue({
                 })
         },
         // 轮询获取 task 历史对话记录
-        pollGetTaskHistoryData(listType, fun) {
-            if (!listType) return
+        pollGetTaskHistoryData(listType, fun,id) {
+            if (!listType || !fun) return
             const interval = () => {
                 this.historyTimer[listType] = setTimeout(() => {
                     // 执行代码块
-                    fun && fun()
+                    fun(listType,id)
                     interval()
                 }, 1000)
                 //     this.historyTimer = setTimeout(() => {
