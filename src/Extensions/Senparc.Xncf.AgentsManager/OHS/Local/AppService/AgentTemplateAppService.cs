@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET;
+﻿using Microsoft.AspNetCore.Mvc;
+using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Domain.Services;
@@ -110,8 +111,19 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<AgentTemplateDto>> SetItem(AgentTemplateDto_UpdateOrCreate agentTemplateDto)
+        public async Task<AppResponseBase<AgentTemplateDto>> SetItem([FromBody] AgentTemplateDto_UpdateOrCreate agentTemplateDto)
         {
+            //if (!ModelState.IsValid)
+            //{
+            //    // Log the model state errors  
+            //    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            //    {
+            //        Console.WriteLine(error.ErrorMessage);
+            //    }
+
+            //    return BadRequest(ModelState);
+            //}
+
             return await this.GetResponseAsync<AgentTemplateDto>(async (response, logger) =>
             {
                 var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
