@@ -306,7 +306,7 @@
                                                 @@click="handleEditDrawerOpenBtn('group',agentDetailsGroupDetails)">编辑</el-button>
                                         </div>
                                     </div>
-                                    <el-table :data="agentDetailsGroupDetails.children" :height="`calc(100vh - 485px)`"
+                                    <el-table :data="agentDetailsGroupTaskList" :height="`calc(100vh - 485px)`"
                                         style="width: 100%;">
                                         <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
                                             <template slot-scope="{ row }">
@@ -588,7 +588,7 @@
                                 @@click="handleEditDrawerOpenBtn('group',groupDetails)">编辑</el-button>
                         </div>
                     </div>
-                    <el-table :data="groupDetails.children" :height="`calc(100vh - 300px)`" style="width: 100%;">
+                    <el-table :data="groupTaskList" :height="`calc(100vh - 300px)`" style="width: 100%;">
                         <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 <i class="el-icon-success"></i>

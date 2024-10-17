@@ -234,9 +234,9 @@ var app = new Vue({
                 // description: [
                 //     { required: true, message: '请填写', trigger: 'blur' },
                 // ],
-                // hookRobotType: [
-                //     { required: true, message: '请选择', trigger: 'change' },
-                // ],
+                hookRobotType: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ],
                 // hookRobotParameter: [
                 //     { required: true, message: '请填写', trigger: 'blur' },
                 // ],
@@ -807,11 +807,9 @@ var app = new Vue({
             this.resetAgentDetailsQuery()
             // 重置 组获取智能体query
             if (this.agentDetailsTabsActiveName === 'first') {
-
                 this.getGroupListData('agentGroup', item.id)
             }
             if (this.agentDetailsTabsActiveName === 'second') {
-
                 this.gettaskListData('agentTask', item.id)
             }
         },
@@ -820,12 +818,14 @@ var app = new Vue({
             this.agentDetailsTabsActiveName = 'first'
             this.agentDetailsGroupTreeData = []
             this.agentDetailsGroupList = []
+            this.agentDetailsGroupTaskList = []
             this.agentDetailsGroupShowType = '2'
             this.agentDetailsGroupIndex = 0
             this.agentDetailsGroupDetails = ''
             this.agentDetailsTaskIndex = 0
             this.agentDetailsTaskList = []
             this.agentDetailsTaskDetails = ''
+            this.$set(this, 'agentDetailsGroupTaskQueryList', this.$options.data().agentDetailsGroupTaskQueryList)
             this.$set(this, 'agentDetailsGroupQueryList', this.$options.data().agentDetailsGroupQueryList)
             this.$set(this, 'agentDetailsTaskQueryList', this.$options.data().agentDetailsTaskQueryList)
         },
