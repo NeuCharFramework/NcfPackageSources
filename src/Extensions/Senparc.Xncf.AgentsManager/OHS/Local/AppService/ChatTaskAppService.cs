@@ -39,7 +39,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                       var seh = new SenparcExpressionHelper<ChatTask>();
                       seh.ValueCompare
-                          .AndAlso(chatGroupId > 0, z => z.Id == chatGroupId)
+                          .AndAlso(chatGroupId > 0, z => z.ChatGroupId == chatGroupId)
                           .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
                       var where = seh.BuildWhereExpression();
 
