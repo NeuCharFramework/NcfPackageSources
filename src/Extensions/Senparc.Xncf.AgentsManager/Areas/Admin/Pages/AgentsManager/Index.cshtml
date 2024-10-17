@@ -384,7 +384,7 @@
                                         </div>
                                         <div class="taskmain-members">
                                             <div class="taskmain-members-title">
-                                                机器人·3
+                                                机器人·{{ agentDetailsGroupDetails.chatGroupMembers ? agentDetailsGroupDetails.chatGroupMembers.length : 0 }}
                                             </div>
                                             <el-scrollbar class="sidebar-taskmembers-container"
                                                 wrap-class="scrollbar-wrapper">
@@ -447,7 +447,7 @@
                                     </div>
                                     <div class="taskmain-members">
                                         <div class="taskmain-members-title">
-                                            机器人·3
+                                            机器人·{{ agentDetailsTaskMemberList ? agentDetailsTaskMemberList.length : 0 }}
                                         </div>
                                         <el-scrollbar class="sidebar-taskmembers-container"
                                             wrap-class="scrollbar-wrapper">
@@ -655,7 +655,7 @@
                         </div>
                         <div class="taskmain-members">
                             <div class="taskmain-members-title">
-                                机器人·3
+                                机器人·{{ groupDetails.chatGroupMembers ? groupDetails.chatGroupMembers.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -762,7 +762,7 @@
                         </div>
                         <div class="taskmain-members">
                             <div class="taskmain-members-title">
-                                机器人·3
+                                机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
