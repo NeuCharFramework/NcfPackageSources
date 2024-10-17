@@ -1,5 +1,6 @@
 ﻿using AutoGen.Core;
 using AutoGen.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 using Senaprc.AI.Agents.AgentExtensions;
 using Senaprc.AI.Agents.AgentUtility;
 using Senparc.AI;
@@ -196,6 +197,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             var task = Task.Factory.StartNew(async () =>
             {
+                base.ServiceProvider = base._serviceProvider;
+                var scope = base.ServiceProvider.CreateScope();
+                var services = scope.ServiceProvider;
+
                 var groupId = request.ChatGroupId;
                 var aiModelId = request.AiModelId;
                 var personality = request.Personality;
@@ -203,13 +208,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 var logger = new StringBuilder();
 
-                var chatGroupMemberService = base.GetService<ServiceBase<ChatGroupMember>>();
-                var agentTemplateService = base.GetService<AgentsTemplateService>();
-                var promptItemService = base.GetService<PromptItemService>();
-                var chatTaskService = base.GetService<ChatTaskService>();
 
-                var chatGroup = await base.GetObjectAsync(x => x.Id == groupId);
-                var chatGroupDto = base.Mapping<ChatGroupDto>(chatGroup);
+                var chatGroupMemberService = services.GetService<ChatGroupMemberService>();
+                var agentTemplateService = services.GetService<AgentsTemplateService>();
+                var promptItemService = services.GetService<PromptItemService>();
+                var chatTaskService = services.GetService<ChatTaskService>();
+
+                var chatGroupService = services.GetService<ChatGroupService>();
+
+                var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
+                var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
                 var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, Models.DatabaseModel.ChatTask_Status.Waiting,
                     userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
                     DateTime.Now, DateTime.Now, null);
@@ -227,7 +235,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 #region 确定 AiSetting
 
                 var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var aiModelService = base.GetRequiredService<AIModelService>();
+                var aiModelService = services.GetRequiredService<AIModelService>();
                 if (aiModelId == 0)
                 {
                     var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
