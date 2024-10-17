@@ -394,7 +394,7 @@ var app = new Vue({
             }
             if (listType === 'agentGroup') {
                 this.agentDetailsGroupQueryList.pageIndex = page ?? 1
-                this.agentDetailsTaskQueryList.chatAgentId = id
+                this.agentDetailsTaskQueryList.agentTemplateId = id
                 Object.assign(queryList, this.agentDetailsGroupQueryList)
             }
             // 接口对接
@@ -410,6 +410,10 @@ var app = new Vue({
                                 children: groupData
                             }]
                             this.groupList = groupData
+                            if (this.groupShowType === '2') {
+                                // 获取详情
+                                this.getGroupDetailData(listType, this.groupDetails.id)
+                            }
                         }
                         if (listType === 'agentGroup') {
                             this.agentDetailsGroupTreeData = [{
@@ -418,6 +422,8 @@ var app = new Vue({
                                 children: groupData
                             }]
                             this.agentDetailsGroupList = groupData
+                            // 获取详情
+                            this.getGroupDetailData(listType, groupData[this.agentDetailsGroupIndex].id)
                         }
                     } else {
                         app.$message({
@@ -438,12 +444,12 @@ var app = new Vue({
                         if (['agentGroup', 'agentGroupTable'].includes(detailType)) {
                             this.agentDetailsGroupDetails = groupDetail
                             // 获取任务列表
-                            this.gettaskListData('agentGroupTask',id)
+                            this.gettaskListData('agentGroupTask', id)
                         }
                         if (['group', 'groupTable'].includes(detailType)) {
                             this.groupDetails = groupDetail
                             // 获取任务列表
-                            this.gettaskListData('groupTask',id)
+                            this.gettaskListData('groupTask', id)
                         }
                     } else {
                         app.$message({
@@ -465,7 +471,7 @@ var app = new Vue({
             // 智能体 任务
             if (listType === 'agentTask') {
                 this.agentDetailsTaskQueryList.pageIndex = page ?? 1
-                this.agentDetailsTaskQueryList.chatAgentId = id
+                this.agentDetailsTaskQueryList.agentTemplateId = id
                 Object.assign(queryList, this.agentDetailsTaskQueryList)
             }
             // 智能体 组 任务
@@ -685,7 +691,12 @@ var app = new Vue({
                         this.visible[btnType] = false
                         // 重新获取数据
                         if (['group', 'groupStart'].includes(btnType)) {
-                            this.getGroupListData(btnType)
+                            if (this.tabsActiveName === 'first') {
+                                this.getGroupListData('agentGroup')
+                            } else if (this.tabsActiveName === 'second') {
+                                this.getGroupListData('group')
+                            }
+
                         } else if (['agent', 'groupAgent'].includes(btnType)) {
                             this.getAgentListData(btnType)
                         }
@@ -729,16 +740,19 @@ var app = new Vue({
         },
         // 切换 智能体详情 tabs 页面
         handleAgentDetailsTabsClick(tab, event) {
+            let id = ''
+            if (this.agentDetails) {
+                id = this.agentDetails.agentTemplateDto ? this.agentDetails.agentTemplateDto.id : this.agentDetails.id
+            }
             if (this.agentDetailsTabsActiveName === 'first') {
-                this.getGroupListData('agentGroup')
+                this.getGroupListData('agentGroup', id)
             }
             if (this.agentDetailsTabsActiveName === 'second') {
-                this.gettaskListData('agentTask')
+                this.gettaskListData('agentTask', id)
             }
         },
         // 编辑 Dailog|抽屉 打开 按钮 agent groupAgent group groupStart
         handleEditDrawerOpenBtn(btnType, item) {
-            console.log('handleEditDrawerOpenBtn',item);
             let formName = ''
             // 智能体
             if (btnType === 'agent' || btnType === 'groupAgent') {
@@ -755,13 +769,13 @@ var app = new Vue({
                 formName = 'groupStartForm'
             }
             if (formName) {
-                if(btnType === 'agent'&& item.agentTemplateDto){
-                    Object.assign(this[formName],deepClone(item.agentTemplateDto))
-                }else{
-                    Object.assign(this[formName],deepClone(item))
+                if (btnType === 'agent' && item.agentTemplateDto) {
+                    Object.assign(this[formName], deepClone(item.agentTemplateDto))
+                } else {
+                    Object.assign(this[formName], deepClone(item))
                 }
                 // 回显 表单值
-                
+
                 // this.$set(this, `${formName}`, deepClone(item))
                 // 打开 抽屉
                 this.handleElVisibleOpenBtn(btnType)
@@ -853,7 +867,7 @@ var app = new Vue({
         },
         // 筛选输入变化
         handleFilterChange(value, filterType) {
-            console.log('handleFilterChange', filterType, value)
+            // console.log('handleFilterChange', filterType, value)
             if (filterType === 'agent') {
                 this.agentQueryList.filter = value
                 this.getAgentListData('agent', 1)
@@ -1213,7 +1227,7 @@ var app = new Vue({
         },
         // 任务 滚动 向下
         taskScrollbarDown() {
-            if(this.$refs.taskHistoryScrollbar){
+            if (this.$refs.taskHistoryScrollbar) {
                 this.$refs.taskHistoryScrollbar.handleScroll = () => {
                     const wrap = this.$refs.taskHistoryScrollbar.wrap;
                     this.$refs.taskHistoryScrollbar.moveY = (wrap.scrollTop * 100) / wrap.clientHeight;
@@ -1504,7 +1518,7 @@ Vue.component('load-more-select', {
         // // 对dom新增class
         // rulesDom?.classList.add('el-icon-arrow-up')
         console.log('s*******');
-        
+
         this.managementListOption()
     },
     methods: {
