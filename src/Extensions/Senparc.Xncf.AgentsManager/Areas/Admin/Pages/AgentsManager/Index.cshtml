@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="agentCard-lowerHalfbox">
                                     <div class="lowerHalfbox_label">参加中</div>
-                                    <div class="lowerHalfbox_quantity">{{ aitem.numberParticipants }}</div>
+                                    <div class="lowerHalfbox_quantity">{{ aitem.chattingCount }}</div>
                                     <div class="lowerHalfbox_label">评分</div>
                                     <div class="lowerHalfbox_score">{{ aitem.score }}</div>
                                     <div class="lowerHalfbox_operation"
@@ -960,8 +960,8 @@
                 <el-form-item label="个性化智能体" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
                 </el-form-item>
-                <el-form-item label="我能帮你做什么" prop="command">
-                    <el-input type="textarea" v-model="groupStartForm.command" :rows="8" placeholder="请填写"></el-input>
+                <el-form-item label="我能帮你做什么" prop="promptCommand">
+                    <el-input type="textarea" v-model="groupStartForm.promptCommand" :rows="8" placeholder="请填写"></el-input>
                 </el-form-item>
                 @* <el-form-item label="说明" prop="description">
                 <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
