@@ -83,8 +83,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var list = await this._agentsTemplateService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 var listDto = new PagedList<AgentTemplateSimpleStatusDto>(list
-                    .Select(z => 
-                    _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList(), 
+                    .Select(z =>
+                    _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList(),
                         list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
 
                 var result = new AgentTemplate_GetListResponse()
@@ -197,6 +197,32 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 };
 
                 return result;
+            });
+        }
+
+        /// <summary>
+        /// 启用或者停用 AgentTemplate
+        /// </summary>
+        /// <param name="id">AgentTemplate ID</param>
+        /// <param name="enable">是否启用</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> Enable(int id, bool enable)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var agent = await this._agentsTemplateService.GetAgentTemplateAsync(id);
+                if (enable)
+                {
+                    agent.EnableAgent();
+                }
+                else
+                {
+                    agent.DisableAgent();
+                }
+                await this._agentsTemplateService.SaveObjectAsync(agent);
+
+                return $"已完成{(enable ? "启用" : "停用")}";
             });
         }
     }
