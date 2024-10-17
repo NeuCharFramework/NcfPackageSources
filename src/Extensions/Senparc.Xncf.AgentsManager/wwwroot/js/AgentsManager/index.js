@@ -1201,13 +1201,13 @@ var app = new Vue({
             if (clickType === 'agentGroupTask') {
                 this.agentDetailsGroupShowType = '2'
                 const item = this.agentDetailsGroupList[this.agentDetailsGroupIndex]
-                this.getGroupDetailData(clickType, item.id)
+                this.getGroupDetailData('agentGroupTable', item.id)
 
             }
             if (clickType === 'groupTask') {
                 this.groupShowType = '2'
                 const item = this.groupList[this.scrollbarGroupIndex]
-                this.getGroupDetailData(clickType, item.id)
+                this.getGroupDetailData('groupTable', item.id)
             }
         },
         // 查看 任务详情
