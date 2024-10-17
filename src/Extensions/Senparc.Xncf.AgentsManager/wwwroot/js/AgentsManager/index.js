@@ -410,9 +410,13 @@ var app = new Vue({
                                 children: groupData
                             }]
                             this.groupList = groupData
+                            // 获取详情 
                             if (this.groupShowType === '2') {
-                                // 获取详情
-                                this.getGroupDetailData(listType, this.groupDetails.id)
+                                if (this.groupDetails) {
+                                    const detailId = this.groupDetails?.chatGroupDto?.id || this.groupDetails.id
+                                    this.getGroupDetailData(listType, detailId)
+                                }
+
                             }
                         }
                         if (listType === 'agentGroup') {
@@ -424,7 +428,8 @@ var app = new Vue({
                             this.agentDetailsGroupList = groupData
                             // 获取详情
                             if (groupData.length > 0) {
-                                this.getGroupDetailData(listType, groupData[this.agentDetailsGroupIndex].id)
+                                const detailId = groupData[this.agentDetailsGroupIndex]?.chatGroupDto?.id || groupData[this.agentDetailsGroupIndex].id
+                                this.getGroupDetailData(listType,detailId)
                             }
 
                         }
@@ -843,7 +848,7 @@ var app = new Vue({
             // console.log('通用新增按钮:', btnType);
             // 组 启动
             if (btnType === 'groupStart') {
-                
+
                 this.groupStartForm.groupName = formData.chatGroupDto ? formData.chatGroupDto.name : formData.name
                 this.groupStartForm.chatGroupId = formData.chatGroupDto ? formData.chatGroupDto.id : formData.id
             }
