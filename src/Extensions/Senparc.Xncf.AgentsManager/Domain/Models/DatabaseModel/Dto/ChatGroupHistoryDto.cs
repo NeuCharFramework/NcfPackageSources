@@ -10,32 +10,32 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     /// </summary>
     public class ChatGroupHistoryDto : DtoBase
     {
-        public int ChatGroupId { get; private set; }
-        public int ChatTaskId { get; private set; }
+        public int ChatGroupId { get; set; }
+        public int ChatTaskId { get; set; }
 
-        public ChatGroup ChatGroup { get; private set; }
+        public ChatGroup ChatGroup { get; set; }
 
-        public int? FromAgentTemplateId { get; private set; }
+        public int? FromAgentTemplateId { get; set; }
 
-        public AgentTemplate FromAgentTemplate { get; private set; }
+        public AgentTemplate FromAgentTemplate { get; set; }
 
-        public int? ToAgentTemplateId { get; private set; }
+        public int? ToAgentTemplateId { get; set; }
 
-        public AgentTemplate ToAgentTemplate { get; private set; }
+        public AgentTemplate ToAgentTemplate { get; set; }
 
-        //public int? FromChatGroupMemberId { get; private set; }
+        //public int? FromChatGroupMemberId { get; set; }
 
-        //public ChatGroupMember FromChatGroupMember { get; private set; }
+        //public ChatGroupMember FromChatGroupMember { get; set; }
 
-        //public int? ToChatGroupMemberId { get; private set; }
+        //public int? ToChatGroupMemberId { get; set; }
 
-        //public ChatGroupMember ToChatGroupMember { get; private set; }
+        //public ChatGroupMember ToChatGroupMember { get; set; }
 
-        public string Message { get; private set; }
+        public string Message { get; set; }
 
-        public MessageType MessageType { get; private set; }
+        public MessageType MessageType { get; set; }
 
-        public Status Status { get; private set; }
+        public Status Status { get; set; }
 
         private ChatGroupHistoryDto() { }
 
