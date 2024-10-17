@@ -366,7 +366,7 @@
                                             <el-scrollbar class="sidebar-taskrecord-container"
                                                 wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskrecord-listWrap">
-                                                    <div v-for="ritem in agentDetailsGroupDetails.recordList"
+                                                    <div v-for="ritem in agentDetailsGroupTaskListoryList"
                                                         :key="ritem.id" class="taskrecord-listWrap-item">
                                                         <div class="taskrecord-listWrap-item-head">
                                                             <span class="df-wn flex-ac flex-jc avatarBox">
@@ -429,7 +429,7 @@
                                         <el-scrollbar class="sidebar-taskrecord-container"
                                             wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskrecord-listWrap">
-                                                <div v-for="ritem in agentDetailsTaskDetails.recordList" :key="ritem.id"
+                                                <div v-for="ritem in agentDetailsTaskListoryList" :key="ritem.id"
                                                     class="taskrecord-listWrap-item">
                                                     <div class="taskrecord-listWrap-item-head">
                                                         <span class="df-wn flex-ac flex-jc avatarBox">
@@ -637,7 +637,7 @@
                         <div class="taskmain-record">
                             <el-scrollbar class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
-                                    <div v-for="ritem in groupDetails.recordList" :key="ritem.id"
+                                    <div v-for="ritem in groupTaskListoryList" :key="ritem.id"
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
@@ -744,7 +744,7 @@
                         <div class="taskmain-record">
                             <el-scrollbar class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
-                                    <div v-for="ritem in taskDetails.recordList" :key="ritem.id"
+                                    <div v-for="ritem in taskListoryList" :key="ritem.id"
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
