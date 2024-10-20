@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="7.0.100" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="8.0.403" />
   </ItemGroup>
 </Project>

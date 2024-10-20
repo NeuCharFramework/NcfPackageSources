@@ -1,23 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.5.13-preview1</Version>
-		<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
-		<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
-		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<Description>Agents 管理模块</Description>
-		<Copyright>Senparc</Copyright>
-		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.AgentsManager</PackageTags>
-		<Authors>Senparc</Authors>
-		<Owners>Senparc</Owners>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<Title>Agents 管理模块</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.5.14-preview1</Version>
+    <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
+    <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>Agents 管理模块</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.AgentsManager</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>Agents 管理模块</Title>
+    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
-		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世
 			[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
 			[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
@@ -39,19 +39,19 @@
 			[2024-10-17] v0.5.11-preview1 完成能够全流程运行的基础版本
 			[2024-10-18] v0.5.12-preview1 优化功能
 			[2024-10-20] 0.5.13-preview1 升级 Senparc.Weixin.Work SDK
-		</PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Senparc.AI.Agents" Version="0.2.0" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
-		<PackageReference Include="Senparc.Weixin.Work" Version="3.23.3" />
-	</ItemGroup>
-	<!--<ItemGroup>
+</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Senparc.AI.Agents" Version="0.2.0" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.23.3" />
+  </ItemGroup>
+  <!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.17.3.1-preview1" />
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.15.2-preview1+37312e28c788cba6605dfcc00947f80a36023b86" />
@@ -73,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
-
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="ncf_obj\**" />
