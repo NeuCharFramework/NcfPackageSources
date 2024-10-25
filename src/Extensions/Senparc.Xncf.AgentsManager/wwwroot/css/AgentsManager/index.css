@@ -223,8 +223,10 @@
 
 .agent-cardBox {
     flex-grow: 1;
-    flex-basis: 390px;
-    min-width: 390px;
+    /* flex-basis: 390px; */
+    /* min-width: 390px; */
+    flex-basis: 315px;
+    /* min-width: 315px; */
     height: 167px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 1);
@@ -248,9 +250,11 @@
 }
 
 .agentCard-upperHalfbox {
-    padding: 20px;
+    /* padding: 20px 20px 13px; */
+    padding: 20px 55px 13px 20px;
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
     gap: 20px;
 }
 
@@ -265,8 +269,10 @@
 } */
 .agentCard-upperHalfbox>.avatarBox {
     flex-shrink: 0;
-    width: 84px;
-    height: 84px;
+    /* width: 84px;
+    height: 84px; */
+    width: 38px;
+    height: 38px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(229, 229, 229, 1);
@@ -277,11 +283,11 @@
 
 .agentCard-upperHalfbox>.avatarBox>img {
     flex-shrink: 0;
-    width: 60px;
+    width: 25px;
     height: auto;
-    transform: translateY(-100px);
+    transform: translateY(-38px);
     /* //颜色、x轴偏移量、y轴偏移量, */
-    filter: drop-shadow(#409eff 0 100px);
+    filter: drop-shadow(#409eff 0 38px);
     /* background-image: url(''), linear-gradient(#409eff, #409eff);
     background-blend-mode: lighten;
     background-size: cover; */
@@ -296,7 +302,8 @@
     justify-content: space-between;
 }
 
-.agentCard-upperHalfbox .upperHalfbox_describe .upperHalfbox_describe_title {
+.agentCard-upperHalfbox .upperHalfbox_describe_title {
+    flex-grow: 1;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0px;
@@ -305,13 +312,24 @@
     /* vertical-align: top; */
 }
 
-.agentCard-upperHalfbox .upperHalfbox_describe .upperHalfbox_describe_introduce {
+.agentCard-upperHalfbox .upperHalfbox_describe_introduce {
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0px;
     color: rgba(128, 128, 128, 1);
     text-align: left;
     /* vertical-align: top; */
+}
+
+.agentCard-middleHalfbox {
+    height: 40px;
+    margin-bottom: 10px;
+    padding: 0px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(128, 128, 128, 1);
+    text-align: left;
 }
 
 .agentCard-lowerHalfbox {
@@ -368,23 +386,28 @@
 /* 智能体详情 */
 .agentDetails-head {
     flex-shrink: 0;
-    padding: 0px 60px;
-    gap: 100px;
-    height: 177px;
+    padding: 15px;
+    gap: 40px;
+    height: 105px;
+    /* height: 177px; */
     background-color: rgba(255, 255, 255, 1);
     border-radius: 6px;
 }
 
 .agentDetails-head-item1 {
     flex-shrink: 0;
-    text-align: center;
+    /* text-align: center; */
     gap: 10px;
     position: relative;
+    gap: 10px;
 }
 
 .agentDetails-head-item1>.avatarBox {
-    width: 84px;
-    height: 84px;
+    /* width: 84px;
+    height: 84px; */
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(229, 229, 229, 1);
@@ -395,19 +418,19 @@
 
 .agentDetails-head-item1>.avatarBox>img {
     flex-shrink: 0;
-    width: 60px;
+    width: 50px;
     height: auto;
-    transform: translateY(-100px);
+    transform: translateY(-70px);
     /* //颜色、x轴偏移量、y轴偏移量, */
-    filter: drop-shadow(#409eff 0 100px);
+    filter: drop-shadow(#409eff 0 70px);
     /* background-image: url(''), linear-gradient(#409eff, #409eff);
     background-blend-mode: lighten;
     background-size: cover; */
     /* height: 30px; */
 }
 
-.agentDetails-head-item1>.name {
-    width: 100px;
+.agentDetails-head-item1 .name {
+    max-width: 110px;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0px;
@@ -425,20 +448,28 @@
     cursor: pointer;
 }
 
+.agentDetails-head-item1>.namebox {
+    flex-shrink: 0;
+    gap: 10px;
+}
+
 .agentDetails-head-item2 {
     flex-shrink: 0;
-    height: 112px;
+    /* height: 112px; */
+    height: 70px;
 }
 
 .agentDetails-head-item3 {
-    flex-grow: 1;
-    height: 112px;
+    /* flex-grow: 1; */
+    /* height: 112px; */
+    height: 70px;
 }
 
 .agentDetails-head-item4 {
+    margin-left: 30px;
     flex-shrink: 0;
-    /* width: 120px; */
-    height: 112px;
+    /* height: 112px; */
+    height: 70px;
 }
 
 .agentDetails-head-item2>.itemBox {
@@ -458,7 +489,7 @@
 
 .agentDetails-head-item2>.itemBox>.numerical {
     flex-grow: 1;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 400;
     letter-spacing: 0px;
     color: rgba(64, 158, 255, 1);
@@ -498,18 +529,17 @@
 
 .agentDetails-head .itemBox>.btn {
     flex-shrink: 0;
-    width: 59px;
-    height: 32px;
-    border-radius: 6px;
+    width: 55px;
+    height: 27px;
+    border-radius: 4px;
     background: rgba(42, 130, 228, 1);
-    line-height: 32px;
+    line-height: 27px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     letter-spacing: 0px;
     color: rgba(255, 255, 255, 1);
     cursor: pointer;
-
 }
 
 .agentDetails-main {
@@ -553,7 +583,7 @@
 }
 
 .agentDetails-main-right .task-main {
-    height: calc(100vh - 480px);
+    height: calc(100vh - 482px);
 }
 
 .agentDetails-main-right .sidebar-taskrecord-container {
@@ -565,7 +595,7 @@
 }
 
 .agentDetails-main-right .sidebar-taskmembers-container {
-    height: calc(100vh - 550px);
+    height: calc(100vh - 552px);
 }
 
 /* 组侧边 tree node */
@@ -597,12 +627,13 @@
 .groupInfoRow {
     margin-bottom: 10px;
     height: 35px;
+    gap: 20px;
 }
 
 .groupInfoRow .groupInfoRow-name {
     /* min-width: 150px; */
     /* flex-basis: 160px; */
-    margin-right: 60px;
+    flex-grow: 1;
     font-size: 20px;
     font-weight: 500;
     letter-spacing: 0px;
@@ -611,10 +642,17 @@
     /* vertical-align: top; */
 }
 
-.groupInfoRow .groupInfoRow-info {
-    margin-right: 20px;
+.groupInfoRow-info {
+    margin-bottom: 10px;
+    height: 35px;
+    background-color: #f4f8fb;
+    border-radius: 6px;
+    padding: 0px 10px;
+    /* gap: 60px; */
+}
+
+.groupInfoRow-info .itembox {
     flex-grow: 1;
-    gap: 60px;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0px;
@@ -901,10 +939,11 @@
 }
 
 .backgroupbox {
-    position: absolute;
+    /* position: absolute;
     left: -15px;
     top: -15px;
-    gap: 5px;
+    gap: 5px; */
+    flex-shrink: 0;
     color: #2a82e4;
     cursor: pointer;
 }
@@ -929,8 +968,6 @@
 }
 
 .task-header2 {
-    /* flex: 1; */
-    gap: 20px;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0px;
@@ -959,10 +996,43 @@
 .taskheader3-item {
     flex: 1;
 }
-
+.task-info{
+    margin-top: 15px;
+    height: 55px;
+    background-color: #f4f8fb;
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+.task-info>.itembox{
+    width: 33%;
+    /* flex-grow: 1; */
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    white-space: nowrap;
+}
+.task-info>.itembox>.lable{
+    flex-shrink: 0;
+    gap: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: rgba(166, 166, 166, 1);
+    text-align: left;
+}
+.task-info>.itembox>.value{
+    gap: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: #333;
+    text-align: left;
+}
 .task-main {
     margin-top: 15px;
-    height: calc(100vh - 315px);
+    height: calc(100vh - 370px);
     border: 1px solid rgba(229, 229, 229, 1);
 }
 
@@ -971,7 +1041,7 @@
 }
 
 .sidebar-taskrecord-container {
-    height: calc(100vh - 317px);
+    height: calc(100vh - 372px);
 }
 
 .taskrecord-listWrap {
@@ -1054,7 +1124,7 @@
 }
 
 .sidebar-taskmembers-container {
-    height: calc(100vh - 387px);
+    height: calc(100vh - 442px);
 }
 
 .taskmain-members-listWrap {
