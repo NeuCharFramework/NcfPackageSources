@@ -26,7 +26,7 @@ namespace Senparc.Ncf.Utility.Helpers
         /// <summary>
         /// 当前系统使用的语言
         /// </summary>
-        public static SystemLanguage Language
+        public static SystemLanguage CurrentLanguage
         {
             get
             {
@@ -62,7 +62,7 @@ namespace Senparc.Ncf.Utility.Helpers
                 return;
             }
 
-            if (language == Language)
+            if (language == CurrentLanguage)
             {
                 action.Invoke();
                 _invoked = true;
@@ -98,6 +98,11 @@ namespace Senparc.Ncf.Utility.Helpers
         /// <exception cref="Exception"></exception>
         public void InvokeDefault(bool throwIfNothingIsSet = false, bool throwIfNotAllIsSet = false)
         {
+            if (_invoked)
+            {
+                return;
+            }
+
             if (_languageActionCollection.Count == 0)
             {
                 if (throwIfNothingIsSet)

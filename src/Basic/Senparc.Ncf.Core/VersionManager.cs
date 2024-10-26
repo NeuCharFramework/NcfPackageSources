@@ -33,17 +33,19 @@ namespace Senparc.Ncf.Core
                 .SetEnglish(() =>
                 {
                     sb.AppendLine("    AI Native / Build-in AI / Domain-Driven Design System");
+                    sb.AppendLine("");
                     sb.AppendLine("    OpenSource Template：https://github.com/NeuCharFramework/NCF");
                     //sb.AppendLine("    OpenSource Template：https://gitee.com/NeuCharFramework/NCF");
-                    sb.AppendLine("    Base Module Source Code：https://github.com/NeuCharFramework/NcfPackageSources");
+                    //sb.AppendLine("    Base Module Source Code：https://github.com/NeuCharFramework/NcfPackageSources");
                     sb.AppendLine("    Document：https://doc.ncf.pub/");
                 })
                 .SetChinese(() =>
                 {
                     sb.AppendLine("    AI 原生 / 内置 AI / DDD（Domain-Driven Design） 系统");
+                    sb.AppendLine("");
                     sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
                     sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
-                    sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
+                    //sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
                     sb.AppendLine("    文档：https://doc.ncf.pub/");
                 })
                 .InvokeDefault();

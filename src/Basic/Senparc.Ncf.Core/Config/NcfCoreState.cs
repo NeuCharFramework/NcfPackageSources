@@ -75,6 +75,6 @@ namespace Senparc.Ncf.Core.Config
         /// </summary>
         public List<string> DllFilePatterns { get; set; }
 
-        public SystemLanguage SystemLanguage => GlobalCulture.Language;
+        public SystemLanguage SystemLanguage => GlobalCulture.CurrentLanguage;
     }
 }
