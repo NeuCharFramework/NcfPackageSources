@@ -446,17 +446,6 @@ var app = new Vue({
                 return statusColor
             }
         },
-        // 清除 获取历史对话记录 的轮询
-        clearHistoryTimer() {
-            for (const key in this.historyTimer) {
-                if (Object.prototype.hasOwnProperty.call(this.historyTimer, key)) {
-                    const element = this.historyTimer[key];
-                    if (element) {
-                        clearTimeout(element)
-                    }
-                }
-            }
-        },
         // 获取 智能体 数据
         async getAgentListData(listType, page = 0) {
             const queryList = {}
@@ -518,15 +507,52 @@ var app = new Vue({
         },
         // 获取 智能体详情 
         async getAgentDetailData(id, detail = {}) {
+            let taskList = []
+            let groupList = []
+            if (this.tabsActiveName === 'first') {
+                const groupQuery = {
+                    pageIndex: 0,
+                    pageSize: 0,
+                    agentTemplateId: id
+                }
+                // 获取组列表
+                await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(groupQuery)}`, groupQuery)
+                    .then(res => {
+                        const data = res?.data ?? {}
+                        if (data.success) {
+                            groupList = data?.data?.chatGroupDtoList ?? []
+                        }
+                    })
+                const taskQuery = {
+                    pageIndex: 0,
+                    pageSize: 0,
+                    agentTemplateId: id
+                }
+                //  获取任务列表
+                await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getInterfaceQueryStr(taskQuery)}`, taskQuery)
+                    .then(res => {
+                        const data = res?.data ?? {}
+                        if (data.success) {
+                            taskList = data?.data?.chatTaskList ?? []
+                        }
+                    })
+            }
             await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${id}`)
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
                         const agentDetail = data?.data?.agentTemplateStatus ?? ''
-                        if (agentDetail && agentDetail.agentTemplateDto) {
-                            const agentTemplateDto = Object.assign({}, detail, agentDetail.agentTemplateDto)
-                            agentDetail.agentTemplateDto = agentTemplateDto
+                        if (agentDetail) {
+                            if (agentDetail.agentTemplateDto) {
+                                const agentTemplateDto = Object.assign({}, detail, agentDetail.agentTemplateDto)
+                                agentDetail.agentTemplateDto = agentTemplateDto
+                            }
+                            if (this.tabsActiveName === 'first') {
+                                agentDetail.participationGroup = groupList.length
+                                agentDetail.participationInTasks = taskList.length
+                            }
                         }
+
                         this.$set(this, 'agentDetails', agentDetail)
                         // this.agentDetails = agentDetail
                     } else {
@@ -601,9 +627,6 @@ var app = new Vue({
                         if (listType === 'agentGroup') {
                             this.agentDetailsGroupList = handleGroupData
                             const groupDetail = handleGroupData[this.agentDetailsGroupIndex]
-                            if (this.agentDetails) {
-                                this.agentDetails.participationGroup = handleGroupData.length
-                            }
                             // 获取详情
                             if (groupDetail && groupDetail.id) {
                                 this.getGroupDetailData(listType, groupDetail.id, groupDetail)
@@ -718,9 +741,6 @@ var app = new Vue({
                         // 智能体 任务
                         if (listType === 'agentTask') {
                             this.agentDetailsTaskList = handleTaskData
-                            if (this.agentDetails) {
-                                this.agentDetails.participationInTasks = handleTaskData.length
-                            }
                             // 默认展示第一个任务详情
                             if (handleTaskData && handleTaskData.length) {
                                 const taskDetail = this.agentDetailsTaskDetails ? this.agentDetailsTaskDetails : handleTaskData[0]
@@ -1052,10 +1072,22 @@ var app = new Vue({
                     fun(listType, id, nextHistoryId)
                     interval()
                 }, 1000 * 5)
+                // console.log('pollGetTaskHistoryData', this.historyTimer[listType]);
             }
             interval()
         },
-
+        // 清除 获取历史对话记录 的轮询
+        clearHistoryTimer() {
+            for (const key in this.historyTimer) {
+                if (Object.prototype.hasOwnProperty.call(this.historyTimer, key)) {
+                    const element = this.historyTimer[key];
+                    // console.log('clearHistoryTimer', element);
+                    if (element) {
+                        clearTimeout(element)
+                    }
+                }
+            }
+        },
 
         // 编辑 Dailog|抽屉 按钮 
         async handleEditDrawerOpenBtn(btnType, item) {
@@ -1332,12 +1364,12 @@ var app = new Vue({
             // 获取智能体 详情
             this.getAgentDetailData(item.id, item)
             // 重置 组获取智能体query
-            // if (this.agentDetailsTabsActiveName === 'first') {
-            this.getGroupListData('agentGroup', item.id)
-            // }
-            // if (this.agentDetailsTabsActiveName === 'second') {
-            this.gettaskListData('agentTask', item.id)
-            // }
+            if (this.agentDetailsTabsActiveName === 'first') {
+                this.getGroupListData('agentGroup', item.id)
+            }
+            if (this.agentDetailsTabsActiveName === 'second') {
+                this.gettaskListData('agentTask', item.id)
+            }
         },
         // 重置 智能体详情下的组和任务数据
         resetAgentDetailsQuery() {
