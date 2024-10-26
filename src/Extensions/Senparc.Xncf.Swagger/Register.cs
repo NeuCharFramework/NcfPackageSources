@@ -16,8 +16,8 @@ using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.Swagger
 {
@@ -63,7 +63,13 @@ namespace Senparc.Xncf.Swagger
                 var builder = services
                     .AddMvcCore(options =>
                     options.OutputFormatters.RemoveType<XmlSerializerOutputFormatter>()
-                ).AddApiExplorer();
+                )
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                })
+                .AddApiExplorer();
+
                 services.AddAndInitDynamicApi(builder, options =>
                 {
                     options.DocXmlPath = docXmlPath;

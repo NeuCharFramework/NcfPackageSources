@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.18.4-preview1</Version>
+    <Version>0.18.5-preview1</Version>
     <AssemblyName>Senparc.Ncf.Log</AssemblyName>
     <RootNamespace>Senparc.Ncf.Log</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -48,6 +48,6 @@
     <Compile Remove="NLogExtension.Core.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="log4net" Version="3.0.1" />
   </ItemGroup>
 </Project>

@@ -17,16 +17,16 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.DataBaseModel.SysRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
@@ -49,12 +49,12 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("RoleName")
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
@@ -70,7 +70,7 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("NUMBER(10)");
@@ -93,12 +93,12 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
@@ -133,24 +133,24 @@ namespace Senparc.Xncf.SystemPermission.Domain.Migrations.Oracle
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("PermissionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ResourceCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("RoleCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("RoleId")
-                        .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");

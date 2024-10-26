@@ -12,6 +12,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AreasBase
@@ -67,6 +68,7 @@ namespace Senparc.Xncf.AreasBase
               .AddJsonOptions(options =>
               {
                   //忽略循环引用
+                  options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                   //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                   //不使用驼峰样式的key
                   //options.SerializerSettings.ContractResolver = new DefaultContractResolver();

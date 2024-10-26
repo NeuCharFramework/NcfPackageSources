@@ -22,6 +22,81 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("AiModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChatGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("HookPlatform")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HookPlatformParameter")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPersonality")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("PromptCommand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ResultComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Score")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AgentsManager_ChatTask");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", b =>
                 {
                     b.Property<int>("Id")
@@ -36,6 +111,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Avastar")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -152,6 +230,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.Property<int>("ChatGroupId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ChatTaskId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
@@ -168,9 +249,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.Property<int>("MessageType")
                         .HasColumnType("int");
 
+                    b.Property<int>("MyProperty")
+                        .HasColumnType("int");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
@@ -181,6 +268,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.HasIndex("ChatGroupId");
+
+                    b.HasIndex("ChatTaskId");
 
                     b.HasIndex("FromAgentTemplateId");
 
@@ -261,6 +350,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", "ChatTask")
+                        .WithMany()
+                        .HasForeignKey("ChatTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "FromAgentTemplate")
                         .WithMany("FromChatGroupHistories")
                         .HasForeignKey("FromAgentTemplateId");
@@ -270,6 +365,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                         .HasForeignKey("ToAgentTemplateId");
 
                     b.Navigation("ChatGroup");
+
+                    b.Navigation("ChatTask");
 
                     b.Navigation("FromAgentTemplate");
 

@@ -13,29 +13,29 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// <summary>
         /// UID
         /// </summary>
-        public string UID { get; private set; }
+        public string UID { get;  set; }
 
         /// <summary>
         /// AgentTemplateId
         /// </summary>
-        public int AgentTemplateId { get; private set; }
+        public int AgentTemplateId { get;  set; }
 
         /// <summary>
         /// AgentTemplate（类型同名）
         /// </summary>
-        public AgentTemplate AgentTemplate { get; private set; }
+        public AgentTemplate AgentTemplate { get;  set; }
 
         /// <summary>
         /// chatgroupid
         /// </summary>
-        public int ChatGroupId { get; private set; }
+        public int ChatGroupId { get;  set; }
 
         ///// <summary>
         ///// ChatGroup（类型同名）
         ///// </summary>
-        //public ChatGroup ChatGroup { get; private set; }
+        //public ChatGroup ChatGroup { get;  set; }
 
-        private ChatGroupMemberDto() { }
+        public ChatGroupMemberDto() { }
 
         public ChatGroupMemberDto(string uID, int chatGroupId, int agentTemplateId /*,AgentTemplate agentTemplate  ChatGroup chatGroup*/)
         {

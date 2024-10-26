@@ -26,7 +26,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             RoleCode = roleCode;
         }
 
-        [MaxLength(20)]
+        [MaxLength(150)]
         public string RoleCode { get; set; }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 角色Id
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string RoleId { get; set; }
     }
 }

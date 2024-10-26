@@ -1,4 +1,5 @@
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -16,8 +17,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [Required]
         public int ChatGroupId { get; private set; }
 
-        [Required]
         public ChatGroup ChatGroup { get; private set; }
+
+
+        [Required]
+        public int ChatTaskId { get; private set; }
+        public ChatTask ChatTask { get; private set; }
+
 
         [ForeignKey(nameof(FromAgentTemplate))]
         public int? FromAgentTemplateId { get; private set; }
@@ -46,11 +52,17 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         [Required]
         public MessageType MessageType { get; private set; }
 
+        [Required,DeniedValues(Status.Waiting)]
+        public Status Status { get;private set; }
+
+        public int MyProperty { get; set; }
+
         private ChatGroupHistory() { }
 
-        public ChatGroupHistory(int chatGroupId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType)
+        public ChatGroupHistory(int chatGroupId,int chatTaskId, ChatGroup chatGroup, int? fromAgentTemplateId, AgentTemplate fromAgentTemplate, int? toAgentTemplateId, AgentTemplate toAgentTemplate, /*int? fromChatGroupMemberId, ChatGroupMember fromChatGroupMember, int? toChatGroupMemberId, ChatGroupMember toChatGroupMember,*/ string message, MessageType messageType, Status status)
         {
             ChatGroupId = chatGroupId;
+            ChatTaskId = chatTaskId;
             ChatGroup = chatGroup;
             FromAgentTemplateId = fromAgentTemplateId;
             FromAgentTemplate = fromAgentTemplate;
@@ -62,11 +74,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             //ToChatGroupMember = toChatGroupMember;
             Message = message;
             MessageType = messageType;
+            Status = status;
         }
 
         public ChatGroupHistory(ChatGroupHistoryDto chatGroupHistoryDto)
         {
             ChatGroupId = chatGroupHistoryDto.ChatGroupId;
+            ChatTaskId = chatGroupHistoryDto.ChatTaskId;
             ChatGroup = chatGroupHistoryDto.ChatGroup;
             FromAgentTemplateId = chatGroupHistoryDto.FromAgentTemplateId;
             FromAgentTemplate = chatGroupHistoryDto.FromAgentTemplate;
@@ -78,6 +92,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             //ToChatGroupMember = chatGroupHistoryDto.ToChatGroupMember;
             Message = chatGroupHistoryDto.Message;
             MessageType = chatGroupHistoryDto.MessageType;
+            Status = chatGroupHistoryDto.Status;
         }
     }
 
@@ -87,5 +102,14 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         Image,
         Voice,
         Video
+    }
+
+    public enum Status
+    { 
+        Waiting=0,
+        Chatting=1,
+        Paused=2,
+        Finished=3,
+        Cancelled=4,
     }
 }

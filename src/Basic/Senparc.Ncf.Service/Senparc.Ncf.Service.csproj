@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.20.4-preview1</Version>
+    <Version>0.21.1-preview1</Version>
     <AssemblyName>Senparc.Ncf.Service</AssemblyName>
     <RootNamespace>Senparc.Ncf.Service</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -21,7 +21,8 @@
 			v0.11.7 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
 			v0.14.0 解决模块安装后直接授权菜单问题
             [2024-08-13] v0.20.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
-			[2024-09-10] v0.20.3-preview1 升级缓存基础库
+		    [2024-09-10] v0.20.3-preview1 升级缓存基础库
+		    [2024-10-16] v0.21.0-preview1 为 ServiceBase 提供依赖注入快捷方法
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

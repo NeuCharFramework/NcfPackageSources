@@ -7,15 +7,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.DynamicData\Senparc.Xncf.DynamicData.csproj" />
-	  <ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 	</ItemGroup>
 
 </Project>

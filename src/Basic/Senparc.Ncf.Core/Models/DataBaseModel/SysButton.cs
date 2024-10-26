@@ -31,20 +31,20 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 菜单id
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string MenuId { get; set; }
 
         /// <summary>
         /// 操作名称
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         [Required]
         public string ButtonName { get; set; }
 
         /// <summary>
         /// 操作标识
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string OpearMark { get; set; }
 
         public void Update(SysButtonDto item)
@@ -58,7 +58,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// <summary>
         /// 按钮对应的请求地址
         /// </summary>
-        [MaxLength(350)]
+        [MaxLength(500)]
         public string Url { get; set; }
     }
 }

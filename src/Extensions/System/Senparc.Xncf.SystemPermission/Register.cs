@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Senparc.Xncf.SystemPermission
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_PERMISSION_UID;// "00000000-0000-0000-0000-000000000003";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.2.0";//必须填写版本号
 
         public override string MenuName => "权限管理";
 
@@ -48,3 +48,4 @@ namespace Senparc.Xncf.SystemPermission
         }
     }
 }
+

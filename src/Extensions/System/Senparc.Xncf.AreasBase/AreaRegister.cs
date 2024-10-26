@@ -16,6 +16,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AreasBase
 {
@@ -117,8 +118,13 @@ namespace Senparc.Xncf.AreasBase
             Action<IAreaRegister> eachRegsiterAction = null)
         {
             var builder = services.AddRazorPages(addRazorPagesConfig)
-            //注册所有 Ncf 的 Area 模块（必须）
-            .AddNcfAreas(env, eachRegsiterAction);
+             //注册所有 Ncf 的 Area 模块（必须）
+             .AddNcfAreas(env, eachRegsiterAction)
+             //.AddJsonOptions(options =>
+             //{
+             //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+             //})
+             ;
             Console.WriteLine("临时：StartWebEngine");
             return services.StartNcfEngine(configuration, env, dllFilePatterns);
         }
