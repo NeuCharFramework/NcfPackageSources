@@ -41,7 +41,7 @@ namespace Senparc.Ncf.Core
                 })
                 .SetChinese(() =>
                 {
-                    sb.AppendLine("    AI 原生 / DDD（Domain-Driven Design） 系统");
+                    sb.AppendLine("    AI 原生 / DDD（Domain-Driven Design）系统");
                     sb.AppendLine("");
                     sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
                     sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
