@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                        <img :src="aitem.avastar" alt=""
+                                        <img :src="aitem.avastar | showAvatar" alt=""
                                             class="upperHalfbox_avatar">
                                     </div>
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
@@ -128,7 +128,7 @@
                     <div class="df-wn df flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-ac flex-js agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                <img :src="agentDetails.agentTemplateDto.avastar"
+                                <img :src="agentDetails.agentTemplateDto.avastar | showAvatar"
                                     alt="">
                             </div>
                             <div class="df-wn flex-dc namebox itemBox">
@@ -381,7 +381,7 @@
                                                         :key="ritem.id" class="taskrecord-listWrap-item">
                                                         <div class="taskrecord-listWrap-item-head">
                                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                                <img :src="getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).avastar"
+                                                                <img :src="getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                                     alt="">
                                                             </span>
                                                             <span class="name">{{
@@ -409,7 +409,7 @@
                                                         <div v-for="mitem in agentDetailsGroupDetails.agentTemplateDtoList"
                                                             :key="mitem.id" class="taskmain-members-listWrap-item">
                                                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                                                <img :src="mitem.avastar" alt="">
+                                                                <img :src="mitem.avastar | showAvatar" alt="">
                                                             </div>
                                                             <span class="name text-ellipsis">{{ mitem.name }}</span>
                                                         </div>
@@ -472,7 +472,7 @@
                                                     class="taskrecord-listWrap-item">
                                                     <div class="taskrecord-listWrap-item-head">
                                                         <span class="df-wn flex-ac flex-jc avatarBox">
-                                                            <img :src="getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).avastar"
+                                                            <img :src="getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                                 alt="">
                                                         </span>
                                                         <span class="name">{{
@@ -496,7 +496,7 @@
                                                 <div v-for="mitem in agentDetailsTaskMemberList" :key="mitem.id"
                                                     class="taskmain-members-listWrap-item">
                                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                                        <img :src="mitem.avastar" alt="">
+                                                        <img :src="mitem.avastar | showAvatar" alt="">
                                                     </div>
                                                     <span class="name text-ellipsis">{{ mitem.name }}</span>
                                                 </div>
@@ -735,7 +735,7 @@
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).avastar"
+                                                <img :src="getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                     alt="">
                                             </span>
                                             <span class="name">{{
@@ -757,7 +757,7 @@
                                         <div v-for="mitem in groupDetails.agentTemplateDtoList" :key="mitem.id"
                                             class="taskmain-members-listWrap-item">
                                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="mitem.avastar" alt="">
+                                                <img :src="mitem.avastar | showAvatar" alt="">
                                             </div>
                                             <span class="name text-ellipsis">{{ mitem.name }}</span>
                                         </div>
@@ -869,7 +869,7 @@
                                         class="taskrecord-listWrap-item">
                                         <div class="taskrecord-listWrap-item-head">
                                             <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="getTaskSenderInfo('task',ritem.fromAgentTemplateId).avastar"
+                                                <img :src="getTaskSenderInfo('task',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                     alt="">
                                             </span>
                                             <span class="name">{{
@@ -890,7 +890,7 @@
                                     <div v-for="mitem in taskMemberList" :key="mitem.id"
                                         class="taskmain-members-listWrap-item">
                                         <div class="df-wn flex-ac flex-jc avatarBox">
-                                            <img :src="mitem.avastar" alt="">
+                                            <img :src="mitem.avastar | showAvatar" alt="">
                                         </div>
                                         <span class="name text-ellipsis">{{ mitem.name }}</span>
                                     </div>

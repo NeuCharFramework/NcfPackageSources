@@ -1,9 +1,12 @@
 var app = new Vue({
     el: "#app",
     filters: {
-        showFormatDate: function (value) {
+        showFormatDate(value) {
             if (!value) return ''
             return formatDate(value)
+        },
+        showAvatar(val) {
+            return val || '/images/AgentsManager/avatar/avatar1.png'
         }
     },
     data() {
