@@ -81,3 +81,4 @@ SenparcConfig.Development.config
 .vs/
 /src/TestResults
 Thumbs.db
+ncf_obj/
