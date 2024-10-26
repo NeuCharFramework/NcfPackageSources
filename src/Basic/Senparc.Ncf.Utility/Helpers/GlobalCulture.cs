@@ -9,8 +9,8 @@ namespace Senparc.Ncf.Utility.Helpers
 {
     public enum SystemLanguage
     {
-        Chinese = 1,
-        English = 2,
+        Chinese = 0,
+        English = 1,
     }
 
     /// <summary>
