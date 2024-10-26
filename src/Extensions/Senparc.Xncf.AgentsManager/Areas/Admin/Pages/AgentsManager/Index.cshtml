@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                        <img :src="aitem.avastar || '/images/AgentsManager/avatar/avatar1.png'" alt=""
+                                        <img :src="aitem.avastar" alt=""
                                             class="upperHalfbox_avatar">
                                     </div>
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
@@ -128,7 +128,7 @@
                     <div class="df-wn df flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-ac flex-js agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                <img :src="agentDetails.agentTemplateDto.avastar || '/images/AgentsManager/avatar/avatar1.png'"
+                                <img :src="agentDetails.agentTemplateDto.avastar"
                                     alt="">
                             </div>
                             <div class="df-wn flex-dc namebox itemBox">
@@ -876,7 +876,7 @@
                                                 getTaskSenderInfo('task',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                         </div>
-                                        <div class="taskrecord-listWrap-item-content">{{ ritem.message }}</div>
+                                        <task-html-renderer :content="ritem.message" />
                                     </div>
                                 </div>
                             </el-scrollbar>
@@ -1156,6 +1156,7 @@
 
 @section scripts {
     <script src="~/js/AgentsManager/lib/axios.min.js"></script>
+    <script src="~/js/PromptRange/lib/marked.min.js"></script>
     <script src="~/js/AgentsManager/axios.js"></script>
     <script src="~/js/AgentsManager/index.js"></script>
 }

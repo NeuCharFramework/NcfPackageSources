@@ -672,8 +672,8 @@ var app = new Vue({
             let modelList = []
             // 获取模型列表
             await serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {
-                pageIndex: 1,
-                pageSize: 1000
+                pageIndex: 0,
+                pageSize: 0
             }).then(res => {
                 // console.log('this.serviceType === model', res);
                 const data = res?.data ?? {}
@@ -795,7 +795,12 @@ var app = new Vue({
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
-                        const historiesData = data?.data?.chatGroupHistories ?? []
+                        const chatGroupHistories = data?.data?.chatGroupHistories ?? []
+                        const historiesData = chatGroupHistories.map(item => {
+                            //使用 MarkDown 格式，对输出结果进行展示
+                            item.message = marked.parse(item.message);
+                            return item
+                        })
                         // 任务
                         if (recordType === 'task') {
                             if (nextHistoryId) {
@@ -1907,6 +1912,18 @@ function arraysEqual(arr1, arr2) {
 //         })
 // }
 
+// task-html-renderer 渲染任务对话记录的内容
+Vue.component('task-html-renderer', {
+    props: ['content'],
+    render(createElement) {
+        return createElement('div', {
+            class: 'taskrecord-listWrap-item-content', // 使用 CSS 类
+            domProps: {
+                innerHTML: this.content // 直接插入 HTML
+            }
+        });
+    }
+});
 
 // 注册一个全局自定义指令 v-el-select-loadmore
 Vue.directive('el-select-loadmore', {
@@ -1932,18 +1949,13 @@ Vue.directive('el-select-loadmore', {
 // load-more-select 组件
 Vue.component('load-more-select', {
     // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
-    template: `<el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
+    template: `<el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
     <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>`,
     props: {
         // eslint-disable-next-line vue/require-prop-types
         value: {
             // type: [Array, String, Number],
             required: true
-        },
-        selectKey: {
-            type: String,
-            // required: true,
-            default: ''
         },
         placeholder: {
             type: String,
@@ -1973,8 +1985,8 @@ Vue.component('load-more-select', {
             interesLoading: false,
             currentPageSize: 0,
             listQuery: {
-                pageIndex: 1,
-                pageSize: 1000,
+                pageIndex: 0,
+                pageSize: 0,
                 // key: '',
                 filter: ''
             }
@@ -1999,7 +2011,7 @@ Vue.component('load-more-select', {
         }
     },
     watch: {
-        // selectKey: {
+        // serviceType: {
         //     handler(val = '') {
         //         this.listQuery.key = val
         //     },
@@ -2079,7 +2091,7 @@ Vue.component('load-more-select', {
                             })
                             this.interesLoading = false
                             this.currentPageSize = listData?.length ?? 0
-                            this.interestsOptions = this.interestsOptions.concat(deepClone(listData))
+                            this.interestsOptions = this.interestsOptions.concat(listData)
                             // [...this.interestsOptions, ...listData]
                             // console.log(this.interestsOptions, 888)
                         } else {
@@ -2107,7 +2119,7 @@ Vue.component('load-more-select', {
                         })
                         this.interesLoading = false
                         this.currentPageSize = listData?.length ?? 0
-                        this.interestsOptions = this.interestsOptions.concat(deepClone(listData))
+                        this.interestsOptions = this.interestsOptions.concat(listData)
                         // [...this.interestsOptions, ...listData]
                         // console.log(this.interestsOptions, 888)
                     } else {
@@ -2136,7 +2148,7 @@ Vue.component('load-more-select', {
                         })
                         this.interesLoading = false
                         this.currentPageSize = listData?.length ?? 0
-                        this.interestsOptions = this.interestsOptions.concat(deepClone(listData))
+                        this.interestsOptions = this.interestsOptions.concat(listData)
                         // [...this.interestsOptions, ...listData]
                         // console.log(this.interestsOptions, 888)
                     } else {

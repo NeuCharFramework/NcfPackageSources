@@ -102,5 +102,8 @@
     <EmbeddedResource Update="wwwroot\js\AgentsManager\lib\axios.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Update="wwwroot\js\AgentsManager\lib\marked.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
