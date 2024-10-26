@@ -70,15 +70,19 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <Compile Remove="Domain\PromptPlugins\**" />
+    <Compile Remove="ncf_obj\**" />
     <Compile Remove="objForNcf\**" />
     <Compile Remove="obj\**" />
     <Content Remove="Domain\PromptPlugins\**" />
+    <Content Remove="ncf_obj\**" />
     <Content Remove="objForNcf\**" />
     <Content Remove="obj\**" />
     <EmbeddedResource Remove="Domain\PromptPlugins\**" />
+    <EmbeddedResource Remove="ncf_obj\**" />
     <EmbeddedResource Remove="objForNcf\**" />
     <EmbeddedResource Remove="obj\**" />
     <None Remove="Domain\PromptPlugins\**" />
+    <None Remove="ncf_obj\**" />
     <None Remove="objForNcf\**" />
     <None Remove="obj\**" />
     <Content Remove="wwwroot\css\Admin\PromptRange\index.css" />
