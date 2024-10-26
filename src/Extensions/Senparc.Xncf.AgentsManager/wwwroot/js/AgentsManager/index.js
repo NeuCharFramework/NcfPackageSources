@@ -352,7 +352,6 @@ var app = new Vue({
         this.clearHistoryTimer()
     },
     methods: {
-        // formatDate,
         calculateDuration,
         // 计算 agent列表 需要填充的元素数量
         calcAgentFillNum() {
@@ -1615,50 +1614,6 @@ var app = new Vue({
         },
 
 
-        // 跳转 PromptRange
-        jumpPromptRange(urlType) {
-            let url = ''
-            if (urlType === 'promptRange') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
-            }
-            if (urlType === 'model') {
-                url = '/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69'
-            }
-            if (urlType === 'modelParameter') {
-                url = '/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18'
-            }
-            if (!url) return
-            simulationAELOperation(url)
-        },
-        // 获取发送人名称
-        getTaskSenderInfo(taskType, formId) {
-            // 智能体 组 任务
-            if (taskType === 'agentGroupTask') {
-                const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
-                const fintItem = chatGroupMembers.find(item => item.id === formId)
-                return fintItem ?? {}
-            }
-            // 组 任务
-            if (taskType === 'groupTask') {
-                const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
-                const fintItem = chatGroupMembers.find(item => item.id === formId)
-                return fintItem ?? {}
-            }
-            // 智能体 任务
-            if (taskType === 'agentTask') {
-
-                const fintItem = this.agentDetailsTaskMemberList.find(item => item.id === formId)
-                return fintItem ?? {}
-            }
-
-            // 任务
-            if (taskType === 'task') {
-                const fintItem = this.taskMemberList.find(item => item.id === formId)
-                return fintItem ?? {}
-            }
-
-            return {}
-        },
         // el-scrollbar 触底滚动 到底部
         scrollbarDown(refName, istouchBottom = false, isFirst = false) {
             if (!refName) return
@@ -1676,6 +1631,104 @@ var app = new Vue({
                 // 滚动到底部
                 scrollbar.wrap.scrollTop = scrollbar.wrap.scrollHeight;
             }
+        },
+        // 获取发送人名称
+        getTaskSenderInfo(taskType, formId) {
+            // 智能体 组 任务
+            if (taskType === 'agentGroupTask') {
+                const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+                const fintItem = chatGroupMembers.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+            // 组 任务
+            if (taskType === 'groupTask') {
+                const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
+                const fintItem = chatGroupMembers.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+            // 智能体 任务
+            if (taskType === 'agentTask') {
+                const fintItem = this.agentDetailsTaskMemberList.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+
+            // 任务
+            if (taskType === 'task') {
+                const fintItem = this.taskMemberList.find(item => item.id === formId)
+                return fintItem ?? {}
+            }
+
+            return {}
+        },
+        jumpPromptRange(urlType, item) {
+            let url = ''
+            if (urlType === 'promptRange') {
+                url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+            }
+            if (urlType === 'model') {
+                url = `/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69`
+            }
+            if (urlType === 'modelParameter') {
+                // url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+                if (item) {
+                    // 展示详情数据
+                    this.$confirm(`<div class="df">
+                    <div class="df-wn flex-ac flex-js" style="width:50%">
+                        <span>Top_p:</span>
+                        <span>${item.topP}</span>
+                    </div>
+                    <div class="df-wn flex-ac flex-js" style="width:50%">
+                        <span>Temperature:</span>
+                        <span>${item.temperature}</span>
+                    </div>
+                    <div class="df-wn flex-ac flex-js" style="width:50%">
+                        <span>MaxToken:</span>
+                        <span>${item.maxToken}</span>
+                    </div>
+                    <div class="df-wn flex-ac flex-js" style="width:50%">
+                        <span>Frequeny_penalty:</span>
+                        <span>${item.frequencyPenalty}</span>
+                    </div>
+                    <div class="df-wn flex-ac flex-js" style="width:50%">
+                        <span>Presence_penalty:</span>
+                        <span>${item.presencePenalty}</span>
+                    </div>
+                    <div class="df-wn flex-ac flex-js" style="width:50%">
+                        <span>StopSequences:</span>
+                        <span>${item.stopSequences}</span>
+                    </div>
+    </div>`, '模型参数', {
+                        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        showCancelButton: false,
+                        // type: 'warning'
+                    }).then(() => { }).catch(() => { });
+                }
+            }
+            if (!url) return
+            simulationAELOperation(url)
+            // openWindow(url)
+        },
+        // 处理靶道 和 靶场展示名称
+        handlePromptShowName(showType, item) {
+            let resultText = ''
+            if (showType === '1') {
+                // 靶道
+                const itemData = item?.promptRangeDto ?? ''
+                if (itemData) {
+                    resultText = `${itemData.alias}(${itemData.rangeName})`
+                }
+            } else if (showType === '2') {
+                // 靶场
+                const itemData = item?.promptItemDto ?? ''
+                if (itemData) {
+                    const avg = scoreFormatter(itemData.evalAvgScore)
+                    const max = scoreFormatter(itemData.evalMaxScore)
+                    resultText = `${itemData.nickName || '未设置'} | ${itemData.fullVersion} | 平均分：${avg} | 最高分：${max} ${itemData.isDraft ? '(草稿)' : ''}`
+                }
+            }
+            return resultText ?? ''
         }
     }
 });
@@ -1901,8 +1954,14 @@ function calculateDuration(startTime, endTime) {
     return durationParts.join(' ');
 }
 
+// 简单对比 数组是否相等
 function arraysEqual(arr1, arr2) {
     return JSON.stringify(arr1) === JSON.stringify(arr2);
+}
+
+// prompt 分数处理
+function scoreFormatter(score) {
+    return score === -1 ? '--' : score.toFixed(1)
 }
 
 /**
@@ -1952,8 +2011,13 @@ Vue.directive('el-select-loadmore', {
 // load-more-select 组件
 Vue.component('load-more-select', {
     // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
-    template: `<el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
-    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>`,
+    template: `<div style="width:100%">
+        <el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
+    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+    <el-button size="mini" @click="managementListOption" :loading="interesLoading">刷新</el-button>
+    <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">管理PromptRange</el-button>
+    <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">管理模型</el-button>
+    </div>`,
     props: {
         // eslint-disable-next-line vue/require-prop-types
         value: {
@@ -2031,6 +2095,18 @@ Vue.component('load-more-select', {
         this.managementListOption()
     },
     methods: {
+        jumpPromptRange(urlType) {
+            let url = ''
+            if (urlType === 'promptRange') {
+                url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+            }
+            if (urlType === 'model') {
+                url = `/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69`
+            }
+            if (!url) return
+            simulationAELOperation(url)
+            // openWindow(url)
+        },
         reverseArrow(flag) {
             this.optionVisible = flag
             // 找到dom
@@ -2077,6 +2153,7 @@ Vue.component('load-more-select', {
         // 调用接口
         managementListOption() {
             // console.log('managementListOption',this.serviceType);
+            this.interesLoading = true // 本地搜索 调用
             if (this.serviceType === 'agent') {
                 serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getInterfaceQueryStr(this.listQuery)}`)
                     .then(res => {

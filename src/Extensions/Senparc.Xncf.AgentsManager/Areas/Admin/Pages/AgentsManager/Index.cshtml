@@ -88,8 +88,7 @@
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
-                                        <img :src="aitem.avastar | showAvatar" alt=""
-                                            class="upperHalfbox_avatar">
+                                        <img :src="aitem.avastar | showAvatar" alt="" class="upperHalfbox_avatar">
                                     </div>
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
                                         aitem.name }}</div>
@@ -128,8 +127,7 @@
                     <div class="df-wn df flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-ac flex-js agentDetails-head-item1">
                             <div class="df-wn flex-ac flex-jc avatarBox">
-                                <img :src="agentDetails.agentTemplateDto.avastar | showAvatar"
-                                    alt="">
+                                <img :src="agentDetails.agentTemplateDto.avastar | showAvatar" alt="">
                             </div>
                             <div class="df-wn flex-dc namebox itemBox">
                                 <div class="name text-ellipsis">
@@ -157,26 +155,31 @@
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item3">
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">靶场:</span>
-                                <span class="value">{{ agentDetails.promptRangeDto ?
-                                    agentDetails.promptRangeDto.rangeName : '' }}</span>
+                                <span class="value">
+                                    {{ handlePromptShowName('1',agentDetails) }}
+                                </span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">靶道:</span>
-                                <span class="value">{{ agentDetails.promptRangeDto ? agentDetails.promptRangeDto.alias :
-                                    '' }}</span>
-                                <span class="btnText" @@click="jumpPromptRange('promptRange')">打靶</span>
+                                <span class="value">
+                                    {{ handlePromptShowName('2',agentDetails) }}
+                                </span>
+                                <span class="btnText"
+                                    @@click="jumpPromptRange('promptRange',agentDetails.promptItemDto)">打靶</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">模型:</span>
                                 <span class="value">{{ agentDetails.aiModelDto ? agentDetails.aiModelDto.deploymentName
                                     : '' }}</span>
-                                <span class="btnText" @@click="jumpPromptRange('model')">管理AI模型</span>
+                                <span class="btnText"
+                                    @@click="jumpPromptRange('model',agentDetails.aiModelDto)">管理AI模型</span>
                             </div>
                         </div>
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item4">
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">模型参数</span>
-                                <span class="btnText" @@click="jumpPromptRange('modelParameter')">详情</span>
+                                <span class="btnText"
+                                    @@click="jumpPromptRange('modelParameter',agentDetails.promptItemDto)">详情</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">模型评分:</span>
