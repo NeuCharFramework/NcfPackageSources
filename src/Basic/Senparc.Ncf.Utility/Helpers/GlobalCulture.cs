@@ -59,11 +59,11 @@ namespace Senparc.Ncf.Utility.Helpers
             }
         }
 
-        internal GlobalCulture(SystemLanguage defaultLanguage = SystemLanguage.English)
+        private GlobalCulture(SystemLanguage defaultLanguage = SystemLanguage.English)
         {
             _defaultLanguage = defaultLanguage;
         }
-        
+
         private bool _invoked = false;
 
         private void CheckAndRun(SystemLanguage language, Action action)
@@ -84,6 +84,11 @@ namespace Senparc.Ncf.Utility.Helpers
             }
         }
 
+        public static GlobalCulture Create(SystemLanguage defaultLanguage = SystemLanguage.English)
+        {
+            return new GlobalCulture(defaultLanguage);
+        }
+
         public GlobalCulture SetChinese(Action action)
         {
             CheckAndRun(SystemLanguage.Chinese, action);
@@ -97,17 +102,17 @@ namespace Senparc.Ncf.Utility.Helpers
         }
 
         /// <summary>
-        /// 执行默认语言设置
+        /// 如果之前的语言都不匹配，则执行默认语言设置
         /// </summary>
         /// <param name="throwIfNothingIsSet">如果未设置任何语言，则抛出异常</param>
         /// <param name="throwIfNotAllIsSet">如何未设置全所有语言，则抛出异常</param>
         /// <exception cref="Exception"></exception>
         public void InvokeDefault(bool throwIfNothingIsSet = false, bool throwIfNotAllIsSet = false)
         {
-            if (_languageActionCollection.Count == 0 )
+            if (_languageActionCollection.Count == 0)
             {
                 if (throwIfNothingIsSet)
-                { 
+                {
                     throw new Exception("Please set at least one language!");
                 }
                 else

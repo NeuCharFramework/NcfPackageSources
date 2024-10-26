@@ -19,7 +19,7 @@
     <PackageReleaseNotes>
 		v0.1.0 创世
 		[2024-10-07] 删除 AESEncryptionUtility 类，统一使用 CO2NET 相关功能。
-		[2024-10-26] 0.18.6-preview1 新增 CultureHelper 类
+		[2024-10-26] 0.18.6-preview1 新增 GlobalCulture 类
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
