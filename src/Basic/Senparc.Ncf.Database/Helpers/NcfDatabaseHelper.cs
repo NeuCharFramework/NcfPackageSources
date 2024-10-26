@@ -20,7 +20,7 @@ namespace Senparc.Ncf.Database.Helpers
         /// <returns></returns>
         public static Dictionary<string, string> GetCurrentConnectionInfo()
         {
-            var connectionStr = SenparcDatabaseConnectionConfigs.ClientConnectionString;
+            var connectionStr = SenparcDatabaseConnectionConfigs.GetClientConnectionString();
             var list = connectionStr.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(z =>
             {
                 var item = z.Split('=');

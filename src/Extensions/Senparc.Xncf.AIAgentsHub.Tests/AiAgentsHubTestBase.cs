@@ -29,6 +29,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.SystemManager.Domain.Service;
 using Senparc.Ncf.UnitTestExtension;
+using Senparc.Ncf.Utility.Helpers;
 
 namespace Senparc.Xncf.AIAgentsHub.Tests
 {
@@ -217,7 +218,23 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
         public static void ShowSuccessTip(this WebApplication app)
         {
             //输出启动成功标志
-            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t启动工作准备就绪\r\n\t\t用时：{SystemTime.NowDiff(StartTime).TotalSeconds} s");
+            var ready = "";
+            var cost = "";
+
+            GlobalCulture.Create()
+               .SetEnglish(() =>
+               {
+                   ready = "The start-up is ready";
+                   cost = "Cost Time:";
+               })
+               .SetChinese(() =>
+               {
+                   ready = "启动工作准备就绪";
+                   cost = "用时：";
+               })
+               .InvokeDefault();
+
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t{ready}\r\n\t\t{cost}{SystemTime.NowDiff(StartTime).TotalSeconds} s");
         }
     }
 }

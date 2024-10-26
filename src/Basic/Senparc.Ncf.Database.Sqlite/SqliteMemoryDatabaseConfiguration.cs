@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +32,15 @@ namespace Senparc.Ncf.Database.Sqlite
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
                 //其他更多配置
+
+                // 检查并调整路径  
+                const string PREFIX = "Filename=";
+                if (connectionString.StartsWith($"{PREFIX}\\") || connectionString.StartsWith("{PREFIX}./") || connectionString.StartsWith("Filename=.\\"))
+                {
+                    string relativePath = connectionString.Substring(PREFIX.Length); // 去掉 "Filename=" 前缀  
+                    string dbPath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, relativePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
+                    connectionString = $"{PREFIX}{dbPath}";
+                }
 
                 //执行 UseSqlite（必须）
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
