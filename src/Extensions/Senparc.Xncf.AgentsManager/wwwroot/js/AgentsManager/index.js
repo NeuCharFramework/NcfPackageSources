@@ -35,7 +35,7 @@ var app = new Vue({
                 3: 'successColor',
                 4: 'errorColor',
             },
-            taskStateIcon:{
+            taskStateIcon: {
                 0: 'fas hourglass',
                 1: 'fas fa-sync fa-spin',
                 2: 'fas fa-sync fa-spin',
@@ -1053,6 +1053,7 @@ var app = new Vue({
             if (!listType || !fun) return
             fun(listType, id, '', true)
             const interval = () => {
+                if (this.historyTimer[listType]) clearTimeout(this.historyTimer[listType])
                 this.historyTimer[listType] = setTimeout(() => {
                     let nextHistoryId = ''
                     // 任务
