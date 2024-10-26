@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <Version>0.21.1-preview1</Version>
+    <Version>0.21.2-preview1</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -37,6 +37,7 @@
 			[2024-09-10] v0.20.4-preview1 升级缓存基础库
 			[2024-10-16] v0.20.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-10-16] v0.21.0 优化 AppServiceBase，提供依赖注入快捷方法
+			[2024-10-26] v0.21.2 更新启动标志信息
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

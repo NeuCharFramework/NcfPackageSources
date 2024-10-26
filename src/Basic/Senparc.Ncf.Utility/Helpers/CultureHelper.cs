@@ -9,7 +9,6 @@ namespace Senparc.Ncf.Utility.Helpers
 {
     public enum SystemLanguage
     {
-        None,
         Chinese = 1,
         English = 2,
     }
@@ -31,7 +30,7 @@ namespace Senparc.Ncf.Utility.Helpers
     /// </summary>
     public class CultureHelper
     {
-        private static SystemLanguage CurrentLanguage = SystemLanguage.None;
+        private static SystemLanguage? CurrentSystemLanguage = null;
 
         private SystemLanguage _defaultLanguage;
         private Dictionary<SystemLanguage, Action> _languageActionCollection = new Dictionary<SystemLanguage, Action>();
@@ -43,74 +42,73 @@ namespace Senparc.Ncf.Utility.Helpers
         {
             get
             {
-                if (CurrentLanguage == SystemLanguage.None)
+                if (CurrentSystemLanguage == null)
                 {
                     CultureInfo currentCulture = CultureInfo.CurrentCulture;
                     CultureInfo currentUICulture = CultureInfo.CurrentUICulture;
                     if (currentCulture.TwoLetterISOLanguageName.Equals("zh", StringComparison.OrdinalIgnoreCase))
                     {
-                        CurrentLanguage = SystemLanguage.Chinese;
+                        CurrentSystemLanguage = SystemLanguage.Chinese;
                     }
                     else //if (currentCulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase))
                     {
-                        CurrentLanguage = SystemLanguage.English;
+                        CurrentSystemLanguage = SystemLanguage.English;
                     }
                 }
-                return CurrentLanguage;
+                return CurrentSystemLanguage.Value;
             }
         }
 
-        public CultureHelper(SystemLanguage defaultLanguage, Dictionary<SystemLanguage, Action> languageActionCollection, bool throwIfNothingBeSet = true)
+        internal CultureHelper(SystemLanguage defaultLanguage = SystemLanguage.English)
         {
             _defaultLanguage = defaultLanguage;
-            _languageActionCollection = languageActionCollection;
-
-            Invoke(Language, throwIfNothingBeSet);
         }
+        
+        private bool _invoked = false;
 
-        /// <summary>
-        /// 启动全球化输出
-        /// </summary>
-        /// <param name="lauguageActions"></param>
-        /// <returns></returns>
-        public static CultureHelper Global(SystemLanguage defaultLanguage = SystemLanguage.English, bool throwIfNothingIsSet = true, params LauguageActionContainer[] lauguageActions)
+        private void CheckAndRun(SystemLanguage language, Action action)
         {
-            var collection = new Dictionary<SystemLanguage, Action>();
-            foreach (var item in lauguageActions)
+            if (_invoked)
             {
-                collection[item.Language] = item.Action;
+                return;
             }
-            return new CultureHelper(defaultLanguage, collection, throwIfNothingIsSet);
+
+            if (language == Language)
+            {
+                action.Invoke();
+                _invoked = true;
+            }
+            else
+            {
+                _languageActionCollection[language] = action;
+            }
+        }
+
+        public CultureHelper SetChinese(Action action)
+        {
+            CheckAndRun(SystemLanguage.Chinese, action);
+            return this;
+        }
+
+        public CultureHelper SetEnglish(Action action)
+        {
+            CheckAndRun(SystemLanguage.English, action);
+            return this;
         }
 
         /// <summary>
-        /// 启动全球化输出
+        /// 执行默认语言设置
         /// </summary>
-        /// <param name="lauguageActions"></param>
-        /// <returns></returns>
-        public static CultureHelper Global(params LauguageActionContainer[] lauguageActions)
+        /// <param name="throwIfNothingIsSet">如果未设置任何语言，则抛出异常</param>
+        /// <param name="throwIfNotAllIsSet">如何未设置全所有语言，则抛出异常</param>
+        /// <exception cref="Exception"></exception>
+        public void InvokeDefault(bool throwIfNothingIsSet = false, bool throwIfNotAllIsSet = false)
         {
-            return Global(SystemLanguage.English, true, lauguageActions);
-        }
-
-
-        public static LauguageActionContainer SetChinese(Action action)
-        {
-            return new LauguageActionContainer(SystemLanguage.Chinese, action);
-        }
-
-        public static LauguageActionContainer SetEnglish(Action action)
-        {
-            return new LauguageActionContainer(SystemLanguage.English, action);
-        }
-
-        private void Invoke(SystemLanguage language, bool throwIfNothingIsSet = false)
-        {
-            if (_languageActionCollection.Count == 0)
+            if (_languageActionCollection.Count == 0 )
             {
-                if (!throwIfNothingIsSet)
-                {
-                    throw new Exception($"Please set at least one language:{language}");
+                if (throwIfNothingIsSet)
+                { 
+                    throw new Exception("Please set at least one language!");
                 }
                 else
                 {
@@ -118,14 +116,15 @@ namespace Senparc.Ncf.Utility.Helpers
                 }
             }
 
-            if (_languageActionCollection.ContainsKey(language))
+            if (throwIfNotAllIsSet && _languageActionCollection.Count != Enum.GetNames<SystemLanguage>().Length)
             {
-                //当前语言已设置，可以使用
-                _languageActionCollection[language].Invoke();
+                throw new Exception("Please set all languages!");
             }
-            else if (_languageActionCollection.ContainsKey(_defaultLanguage))
+
+
+            if (_languageActionCollection.ContainsKey(_defaultLanguage))
             {
-                //当前语言未设置，使用默认语言
+                //使用默认语言
                 _languageActionCollection[_defaultLanguage].Invoke();
             }
             else
