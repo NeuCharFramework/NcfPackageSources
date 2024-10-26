@@ -14,10 +14,22 @@ namespace Senparc.Ncf.Utility.Helpers
         English = 2,
     }
 
+    public class LauguageActionContainer
+    {
+        public LauguageActionContainer(SystemLanguage language, Action action)
+        {
+            Language = language;
+            Action = action;
+        }
+
+        public SystemLanguage Language { get; set; }
+        public Action Action { get; set; }
+    }
+
     /// <summary>
     /// 文化帮助类
     /// </summary>
-    public class CultureHelper : IDisposable
+    public class CultureHelper
     {
         private static SystemLanguage CurrentLanguage = SystemLanguage.None;
 
@@ -48,31 +60,48 @@ namespace Senparc.Ncf.Utility.Helpers
             }
         }
 
-        public CultureHelper(SystemLanguage defaultLanguage)
+        public CultureHelper(SystemLanguage defaultLanguage, Dictionary<SystemLanguage, Action> languageActionCollection, bool throwIfNothingBeSet = true)
         {
             _defaultLanguage = defaultLanguage;
+            _languageActionCollection = languageActionCollection;
+
+            Invoke(Language, throwIfNothingBeSet);
         }
 
         /// <summary>
         /// 启动全球化输出
         /// </summary>
-        /// <param name="defaultLanguage"></param>
+        /// <param name="lauguageActions"></param>
         /// <returns></returns>
-        public static CultureHelper Global(SystemLanguage defaultLanguage = SystemLanguage.English)
+        public static CultureHelper Global(SystemLanguage defaultLanguage = SystemLanguage.English, bool throwIfNothingIsSet = true, params LauguageActionContainer[] lauguageActions)
         {
-            return new CultureHelper(defaultLanguage);
+            var collection = new Dictionary<SystemLanguage, Action>();
+            foreach (var item in lauguageActions)
+            {
+                collection[item.Language] = item.Action;
+            }
+            return new CultureHelper(defaultLanguage, collection, throwIfNothingIsSet);
         }
 
-        public CultureHelper SetChinese(Action action)
+        /// <summary>
+        /// 启动全球化输出
+        /// </summary>
+        /// <param name="lauguageActions"></param>
+        /// <returns></returns>
+        public static CultureHelper Global(params LauguageActionContainer[] lauguageActions)
         {
-            _languageActionCollection[SystemLanguage.Chinese] = action;
-            return this;
+            return Global(SystemLanguage.English, true, lauguageActions);
         }
 
-        public CultureHelper SetEnglish(Action action)
+
+        public static LauguageActionContainer SetChinese(Action action)
         {
-            _languageActionCollection[SystemLanguage.English] = action;
-            return this;
+            return new LauguageActionContainer(SystemLanguage.Chinese, action);
+        }
+
+        public static LauguageActionContainer SetEnglish(Action action)
+        {
+            return new LauguageActionContainer(SystemLanguage.English, action);
         }
 
         private void Invoke(SystemLanguage language, bool throwIfNothingIsSet = false)
@@ -104,11 +133,6 @@ namespace Senparc.Ncf.Utility.Helpers
                 //默认语言也未指定，取当前设定的第一个
                 _languageActionCollection.Values.First().Invoke();
             }
-        }
-
-        public void Dispose()
-        {
-            Invoke(Language);
         }
     }
 
