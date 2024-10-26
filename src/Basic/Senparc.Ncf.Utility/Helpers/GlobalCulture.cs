@@ -13,24 +13,12 @@ namespace Senparc.Ncf.Utility.Helpers
         English = 2,
     }
 
-    public class LauguageActionContainer
-    {
-        public LauguageActionContainer(SystemLanguage language, Action action)
-        {
-            Language = language;
-            Action = action;
-        }
-
-        public SystemLanguage Language { get; set; }
-        public Action Action { get; set; }
-    }
-
     /// <summary>
     /// 文化帮助类
     /// </summary>
     public class GlobalCulture
     {
-        private static SystemLanguage? CurrentSystemLanguage = null;
+        private static SystemLanguage? _currentSystemLanguage = null;
 
         private SystemLanguage _defaultLanguage;
         private Dictionary<SystemLanguage, Action> _languageActionCollection = new Dictionary<SystemLanguage, Action>();
@@ -42,21 +30,22 @@ namespace Senparc.Ncf.Utility.Helpers
         {
             get
             {
-                if (CurrentSystemLanguage == null)
+                if (_currentSystemLanguage == null)
                 {
                     CultureInfo currentCulture = CultureInfo.CurrentCulture;
                     CultureInfo currentUICulture = CultureInfo.CurrentUICulture;
                     if (currentCulture.TwoLetterISOLanguageName.Equals("zh", StringComparison.OrdinalIgnoreCase))
                     {
-                        CurrentSystemLanguage = SystemLanguage.Chinese;
+                        _currentSystemLanguage = SystemLanguage.Chinese;
                     }
                     else //if (currentCulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase))
                     {
-                        CurrentSystemLanguage = SystemLanguage.English;
+                        _currentSystemLanguage = SystemLanguage.English;
                     }
                 }
-                return CurrentSystemLanguage.Value;
+                return _currentSystemLanguage.Value;
             }
+            set { _currentSystemLanguage = value; }
         }
 
         private GlobalCulture(SystemLanguage defaultLanguage = SystemLanguage.English)
