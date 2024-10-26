@@ -390,8 +390,7 @@
                                                             <span class="time">{{ ritem.addTime | showFormatDate
                                                                 }}</span>
                                                         </div>
-                                                        <div class="taskrecord-listWrap-item-content">{{ ritem.message
-                                                            }}</div>
+                                                        <task-html-renderer :content="ritem.message" />
                                                     </div>
                                                 </div>
                                             </el-scrollbar>
@@ -480,8 +479,7 @@
                                                             }}</span>
                                                         <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                                     </div>
-                                                    <div class="taskrecord-listWrap-item-content">{{ ritem.message }}
-                                                    </div>
+                                                    <task-html-renderer :content="ritem.message" />
                                                 </div>
                                             </div>
                                         </el-scrollbar>
@@ -742,7 +740,7 @@
                                                 getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                         </div>
-                                        <div class="taskrecord-listWrap-item-content">{{ ritem.message }}</div>
+                                        <task-html-renderer :content="ritem.message" />
                                     </div>
                                 </div>
                             </el-scrollbar>
