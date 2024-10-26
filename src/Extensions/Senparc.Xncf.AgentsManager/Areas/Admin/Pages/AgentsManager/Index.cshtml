@@ -6,6 +6,7 @@
     Layout = "_Layout_Vue";
 }
 @section Style {
+    <link href="~/css/AgentsManager/fontawesome/all.min.css" rel="stylesheet" />
     <link href="~/css/AgentsManager/index.css" rel="stylesheet" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 }
@@ -190,7 +191,7 @@
                                 <span class="label">状态:</span>
                                 <span class="value">{{ getStatusText(agentDetails,'1') }}</span>
                                 <span class="btnText"
-                                    :style="{'color': agentDetails.agentTemplateDto.enable ? '#f00' : '#2a82e4' }"
+                                    :style="{'color': agentDetails.agentTemplateDto.enable ? '#F56C6C' : '#2a82e4' }"
                                     @@click="setAgentState('stop', agentDetails)">{{
                                     agentDetails.agentTemplateDto.enable ? '停用' : '启用' }}</span>
                             </div>
@@ -287,7 +288,7 @@
                                         :height="`calc(100vh - 458px)`" style="width: 100%;">
                                         <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
                                             <template slot-scope="{ row }">
-                                                <i class="el-icon-success"></i>
+                                                <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
                                                 <span>{{ row.name }}</span>
                                             </template>
                                         </el-table-column>
@@ -334,8 +335,11 @@
                                                 :title="agentDetailsGroupDetailsTaskDetails.name">
                                                 {{ agentDetailsGroupDetailsTaskDetails.name }}
                                             </div>
-                                            <div class="task-header2" style="flex-shrink: 0;">{{
-                                                taskStateText[agentDetailsGroupDetailsTaskDetails.status] }}</div>
+                                            <div class="task-header2" style="flex-shrink: 0;">
+                                                <i :class="[taskStateIcon[agentDetailsGroupDetailsTaskDetails.status],taskStateColor[agentDetailsGroupDetailsTaskDetails.status]]"></i>
+                                                {{
+                                                taskStateText[agentDetailsGroupDetailsTaskDetails.status] }}
+                                            </div>
                                         </template>
                                     </div>
                                     @*
@@ -429,6 +433,7 @@
                                             {{ agentDetailsTaskDetails.name }}
                                         </div>
                                         <div class="task-header2" style="flex-shrink: 0;">
+                                            <i :class="[taskStateIcon[agentDetailsTaskDetails.status],taskStateColor[agentDetailsTaskDetails.status]]"></i>
                                             {{ taskStateText[agentDetailsTaskDetails.status] }}
                                         </div>
                                     </template>
@@ -648,7 +653,7 @@
                         style="width: 100%;">
                         <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
-                                <i class="el-icon-success"></i>
+                                <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
                                 <span>{{ row.name }}</span>
                             </template>
                         </el-table-column>
@@ -691,8 +696,10 @@
                             <div class="task-header1 text-ellipsis" :title="groupTaskDetails.name">
                                 {{ groupTaskDetails.name }}
                             </div>
-                            <div class="task-header2" style="flex-shrink: 0;">{{
-                                taskStateText[groupTaskDetails.status] }}</div>
+                            <div class="task-header2" style="flex-shrink: 0;">
+                                <i :class="[taskStateIcon[groupTaskDetails.status],taskStateColor[groupTaskDetails.status]]"></i>
+                                {{ taskStateText[groupTaskDetails.status] }}
+                            </div>
                         </template>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
@@ -828,8 +835,10 @@
                         <div class="task-header1 text-ellipsis" :title="taskDetails.name">
                             {{ taskDetails.name }}
                         </div>
-                        <div class="task-header2" style="flex-shrink: 0;">{{ taskStateText[taskDetails.status]
-                            }}</div>
+                        <div class="task-header2" style="flex-shrink: 0;">
+                            <i :class="[taskStateIcon[taskDetails.status],taskStateColor[taskDetails.status]]"></i>
+                            {{ taskStateText[taskDetails.status] }}
+                        </div>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
                         <div class="itembox">

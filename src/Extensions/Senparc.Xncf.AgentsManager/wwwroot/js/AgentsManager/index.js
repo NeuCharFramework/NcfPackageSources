@@ -22,18 +22,25 @@ var app = new Vue({
                 drawerGroupStart: false, // 组 启动 
             },
             taskStateText: {
-                0: '等待',  // 等待 Waiting
-                1: '聊天', // 聊天 Chatting
-                2: '停顿', // 停顿 Paused
-                3: '完成', // 完成 Finished
-                4: '取消', // 取消 Cancelled
+                0: '等待',  // 等待 Waiting stand #409EFF
+                1: '聊天', // 聊天 Chatting loading #409EFF
+                2: '停顿', // 停顿 Paused loading #409EFF
+                3: '完成', // 完成 Finished success #67C23A
+                4: '取消', // 取消 Cancelled error #F56C6C
             },
             taskStateColor: {
-                0: 'proceColor',
-                1: 'proceColor',
-                2: 'proceColor',
-                3: 'proceColor',
-                4: 'proceColor',
+                0: 'waitColor',
+                1: 'chartColor',
+                2: 'chartColor',
+                3: 'successColor',
+                4: 'errorColor',
+            },
+            taskStateIcon:{
+                0: 'fas hourglass',
+                1: 'fas fa-sync fa-spin',
+                2: 'fas fa-sync fa-spin',
+                3: 'el-icon-success',
+                4: 'el-icon-error',
             },
             agentStateText: {
                 1: '待命',

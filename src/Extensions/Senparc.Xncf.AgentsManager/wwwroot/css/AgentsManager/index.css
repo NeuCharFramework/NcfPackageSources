@@ -847,7 +847,7 @@
 
 .proceColor {
     color: rgba(255, 255, 255, 1);
-    background: rgba(42, 130, 228, 1);
+    background: #409EFF;
 }
 
 .stopColor {
@@ -857,7 +857,23 @@
 
 .standColor {
     color: rgba(255, 255, 255, 1);
-    background: rgba(67, 207, 124, 1);
+    background: #67C23A;
+}
+
+.waitColor {
+    color: #a6a6a6;
+}
+
+.chartColor {
+    color: #409EFF;
+}
+
+.successColor {
+    color: #67C23A;
+}
+
+.errorColor {
+    color: #F56C6C;
 }
 
 .cursorPointer {
