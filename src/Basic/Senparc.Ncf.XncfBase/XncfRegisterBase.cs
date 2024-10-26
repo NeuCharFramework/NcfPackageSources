@@ -293,7 +293,7 @@ namespace Senparc.Ncf.XncfBase
                             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
                             //使用数据库
-                            currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConnectionConfigs.ClientConnectionString, new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
+                            currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConnectionConfigs.GetClientConnectionString(), new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
                                 {
                                     ////进行附加配置
                                     //this.DbContextOptionsAction?.Invoke(b);
