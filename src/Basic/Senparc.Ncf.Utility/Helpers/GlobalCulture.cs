@@ -28,7 +28,7 @@ namespace Senparc.Ncf.Utility.Helpers
     /// <summary>
     /// 文化帮助类
     /// </summary>
-    public class CultureHelper
+    public class GlobalCulture
     {
         private static SystemLanguage? CurrentSystemLanguage = null;
 
@@ -59,7 +59,7 @@ namespace Senparc.Ncf.Utility.Helpers
             }
         }
 
-        internal CultureHelper(SystemLanguage defaultLanguage = SystemLanguage.English)
+        internal GlobalCulture(SystemLanguage defaultLanguage = SystemLanguage.English)
         {
             _defaultLanguage = defaultLanguage;
         }
@@ -84,13 +84,13 @@ namespace Senparc.Ncf.Utility.Helpers
             }
         }
 
-        public CultureHelper SetChinese(Action action)
+        public GlobalCulture SetChinese(Action action)
         {
             CheckAndRun(SystemLanguage.Chinese, action);
             return this;
         }
 
-        public CultureHelper SetEnglish(Action action)
+        public GlobalCulture SetEnglish(Action action)
         {
             CheckAndRun(SystemLanguage.English, action);
             return this;

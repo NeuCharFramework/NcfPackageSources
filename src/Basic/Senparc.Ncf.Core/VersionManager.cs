@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core
             sb.AppendLine("");
 
 
-            CultureHelper.Global(
+            GlobalCulture.
                 CultureHelper.SetEnglish(() => {
                     sb.AppendLine("    AI Native / Build-in AI / Domain-Driven Design System");
                     sb.AppendLine("    OpenSource Template：https://github.com/NeuCharFramework/NCF");
@@ -38,7 +38,7 @@ namespace Senparc.Ncf.Core
                     sb.AppendLine("    Base Module Source Code：https://github.com/NeuCharFramework/NcfPackageSources");
                     sb.AppendLine("    Document：https://doc.ncf.pub/");
                 }),
-                CultureHelper.SetChinese(() => {
+                GlobalCulture.SetChinese(() => {
                     sb.AppendLine("    AI 原生 / 内置 AI / DDD（Domain-Driven Design） 系统");
                     sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
                     sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
