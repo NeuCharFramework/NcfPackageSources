@@ -141,15 +141,15 @@
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item2">
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label" style="width: 80px;">参与组</span>
-                                <span class="numerical">{{ agentDetails.participationGroup }}</span>
+                                <span class="numerical">{{ agentDetails.participationGroup || 0 }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label" style="width: 80px;">参与任务</span>
-                                <span class="numerical">{{ agentDetails.participationInTasks }}</span>
+                                <span class="numerical">{{ agentDetails.participationInTasks || 0 }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label" style="width: 80px;">运行中任务</span>
-                                <span class="numerical">{{ agentDetails.runTask }}</span>
+                                <span class="numerical">{{ agentDetails.agentTemplateDto.chattingCount || 0 }}</span>
                             </div>
                         </div>
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item3">

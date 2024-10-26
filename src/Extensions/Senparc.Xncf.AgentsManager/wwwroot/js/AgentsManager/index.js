@@ -601,6 +601,9 @@ var app = new Vue({
                         if (listType === 'agentGroup') {
                             this.agentDetailsGroupList = handleGroupData
                             const groupDetail = handleGroupData[this.agentDetailsGroupIndex]
+                            if (this.agentDetails) {
+                                this.agentDetails.participationGroup = handleGroupData.length
+                            }
                             // 获取详情
                             if (groupDetail && groupDetail.id) {
                                 this.getGroupDetailData(listType, groupDetail.id, groupDetail)
@@ -715,6 +718,9 @@ var app = new Vue({
                         // 智能体 任务
                         if (listType === 'agentTask') {
                             this.agentDetailsTaskList = handleTaskData
+                            if (this.agentDetails) {
+                                this.agentDetails.participationInTasks = handleTaskData.length
+                            }
                             // 默认展示第一个任务详情
                             if (handleTaskData && handleTaskData.length) {
                                 const taskDetail = this.agentDetailsTaskDetails ? this.agentDetailsTaskDetails : handleTaskData[0]
@@ -1312,6 +1318,7 @@ var app = new Vue({
 
         // 查看全部智能体 列表 
         handleAgentViewAll() {
+            this.clearHistoryTimer()
             this.scrollbarAgentIndex = '' // 清空索引
             this.agentDetails = '' // 清空详情数据
             this.getAgentListData('agent')
@@ -1323,14 +1330,14 @@ var app = new Vue({
             // 重置 数据
             this.resetAgentDetailsQuery()
             // 获取智能体 详情
-            this.getAgentDetailData(item.id)
+            this.getAgentDetailData(item.id, item)
             // 重置 组获取智能体query
-            if (this.agentDetailsTabsActiveName === 'first') {
-                this.getGroupListData('agentGroup', item.id)
-            }
-            if (this.agentDetailsTabsActiveName === 'second') {
-                this.gettaskListData('agentTask', item.id)
-            }
+            // if (this.agentDetailsTabsActiveName === 'first') {
+            this.getGroupListData('agentGroup', item.id)
+            // }
+            // if (this.agentDetailsTabsActiveName === 'second') {
+            this.gettaskListData('agentTask', item.id)
+            // }
         },
         // 重置 智能体详情下的组和任务数据
         resetAgentDetailsQuery() {
@@ -1618,6 +1625,7 @@ var app = new Vue({
         scrollbarDown(refName, istouchBottom = false, isFirst = false) {
             if (!refName) return
             const scrollbar = this.$refs[refName];
+            if (!scrollbar) return
             if (istouchBottom) {
                 const scrollTop = scrollbar.wrap.scrollTop; // 当前滚动的顶部
                 const scrollHeight = scrollbar.wrap.scrollHeight; // 内容总高度
