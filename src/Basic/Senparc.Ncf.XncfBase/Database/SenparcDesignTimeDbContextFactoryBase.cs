@@ -103,7 +103,7 @@ namespace Senparc.Ncf.XncfBase.Database
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
         /// <summary>
-        /// SQL Server 连接字符串
+        /// 数据库 连接字符串
         /// </summary>
         public virtual string DatabaseConnectionStr => SenparcDatabaseConnectionConfigs.GetClientConnectionString(); //?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
 

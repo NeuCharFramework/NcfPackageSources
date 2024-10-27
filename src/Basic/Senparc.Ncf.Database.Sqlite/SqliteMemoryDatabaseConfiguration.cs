@@ -33,20 +33,14 @@ namespace Senparc.Ncf.Database.Sqlite
             {
                 //其他更多配置
 
-                // 检查并调整路径  
-                const string PREFIX = "Filename=";
-                if (connectionString.StartsWith($"{PREFIX}\\") || connectionString.StartsWith("{PREFIX}./") || connectionString.StartsWith("Filename=.\\"))
-                {
-                    string relativePath = connectionString.Substring(PREFIX.Length); // 去掉 "Filename=" 前缀  
-                    string dbPath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, relativePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
-                    connectionString = $"{PREFIX}{dbPath}";
-                }
+                connectionString = SqliteDatabaseConfiguration.GetLocalConnectionString(connectionString);
 
                 //执行 UseSqlite（必须）
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseSqlite(connectionString, actionBase);
             };
+
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
