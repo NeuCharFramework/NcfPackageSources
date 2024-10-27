@@ -37,6 +37,7 @@ namespace Senparc.Ncf.Core.Config
                     }
                     return configs;
                 };
+
                 //ICommonDataCache<SenparcConfig> dataCache = new CommonDataCache<SenparcConfig>(SENPARC_CONFIG_KEY, func);
                 //return dataCache.Data;
 
