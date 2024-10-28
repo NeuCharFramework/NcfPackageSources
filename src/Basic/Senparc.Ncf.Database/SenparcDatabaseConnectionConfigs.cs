@@ -37,6 +37,7 @@ namespace Senparc.Ncf.Core.Config
                     }
                     return configs;
                 };
+
                 //ICommonDataCache<SenparcConfig> dataCache = new CommonDataCache<SenparcConfig>(SENPARC_CONFIG_KEY, func);
                 //return dataCache.Data;
 
@@ -48,30 +49,27 @@ namespace Senparc.Ncf.Core.Config
         /// <summary>
         /// 主站客户数据库连接字符串（根据当前配置数据库动态获得）
         /// </summary>
-        public static string ClientConnectionString
+        public static string GetClientConnectionString()
         {
-            get
-            {
-                var databaseName = GetFullDatabaseName(Config.SiteConfig.SenparcCoreSetting.DatabaseName ?? "Client");
+            var databaseName = GetFullDatabaseName(Config.SiteConfig.SenparcCoreSetting.DatabaseName ?? "Client");
 
-                if (SenparcDatabaseConnectionConfigs.Configs != null && SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
+            if (SenparcDatabaseConnectionConfigs.Configs != null && SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
+            {
+                return SenparcDatabaseConnectionConfigs.Configs[databaseName].ConnectionStringFull;
+            }
+            else
+            {
+                var code = 0;
+                if (SenparcDatabaseConnectionConfigs.Configs == null)
                 {
-                    return SenparcDatabaseConnectionConfigs.Configs[databaseName].ConnectionStringFull;
+                    code = 101;
                 }
-                else
+                else if (!SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
                 {
-                    var code = 0;
-                    if (SenparcDatabaseConnectionConfigs.Configs == null)
-                    {
-                        code = 101;
-                    }
-                    else if (!SenparcDatabaseConnectionConfigs.Configs.ContainsKey(databaseName))
-                    {
-                        code = 102;
-                        Console.WriteLine("SenparcDatabaseConnectionConfigs.Configs 配置：" + SenparcDatabaseConnectionConfigs.Configs.ToJson(true));
-                    }
-                    throw new NcfExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置（ErrCode: {code}）！");
+                    code = 102;
+                    Console.WriteLine("SenparcDatabaseConnectionConfigs.Configs 配置：" + SenparcDatabaseConnectionConfigs.Configs.ToJson(true));
                 }
+                throw new NcfExceptionBase($"无法找到数据库配置：{databaseName}，请在 SenparcConfig.config 中进行配置（ErrCode: {code}）！");
             }
         }
 

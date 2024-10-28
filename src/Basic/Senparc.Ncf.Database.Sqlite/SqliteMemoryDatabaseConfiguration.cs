@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Extensions;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,11 +33,14 @@ namespace Senparc.Ncf.Database.Sqlite
             {
                 //其他更多配置
 
+                connectionString = SqliteDatabaseConfiguration.GetLocalConnectionString(connectionString);
+
                 //执行 UseSqlite（必须）
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseSqlite(connectionString, actionBase);
             };
+
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {

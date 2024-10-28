@@ -7,6 +7,7 @@ using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,10 +27,28 @@ namespace Senparc.Ncf.Database.Sqlite
         //    return connection;
         //}
 
+
+        internal static string GetLocalConnectionString(string connectionString)
+        {
+            // 检查并调整路径  
+            const string PREFIX = "Filename=";
+            if (connectionString.StartsWith($"{PREFIX}\\") || connectionString.StartsWith($"{PREFIX}./") || connectionString.StartsWith($"{PREFIX}.\\"))
+            {
+                string relativePath = connectionString.Substring(PREFIX.Length); // 去掉 "Filename=" 前缀  
+                string dbPath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, relativePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
+                connectionString = $"{PREFIX}{dbPath}";
+            }
+
+            return connectionString;
+        }
+
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
                 //其他更多配置
+
+                // 检查并调整路径  
+                connectionString = GetLocalConnectionString(connectionString);
 
                 //执行 UseSqlite（必须）
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
