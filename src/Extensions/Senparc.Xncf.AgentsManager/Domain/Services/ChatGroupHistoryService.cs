@@ -31,7 +31,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         /// <returns></returns>
         public string GetRawMessage(string message)
         {
-            var arr = message.Split(new[] { "\r\n--------------------\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var arr = message.Split(new[] { $"{Environment.NewLine}--------------------{Environment.NewLine}" }, StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length >= 2)
             {
                 return arr[1].Trim();
