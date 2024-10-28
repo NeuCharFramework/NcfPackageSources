@@ -583,11 +583,13 @@
 }
 
 .agentDetails-main-right .task-main {
-    height: calc(100vh - 482px);
+    /* 482 */
+    height: calc(100vh - 494px);
 }
 
 .agentDetails-main-right .sidebar-taskrecord-container {
-    height: calc(100vh - 490px);
+    /* 490 */
+    height: calc(100vh - 502px);
 }
 
 .agentDetails-main-right .taskmain-members {
@@ -595,7 +597,8 @@
 }
 
 .agentDetails-main-right .sidebar-taskmembers-container {
-    height: calc(100vh - 552px);
+    /* 552 */
+    height: calc(100vh - 564px);
 }
 
 /* 组侧边 tree node */
@@ -660,6 +663,46 @@
     text-align: left;
     white-space: nowrap;
     /* vertical-align: top; */
+}
+
+.groupInfoRow-info .avatarBox {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin-left: -12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(229, 229, 229, 1);
+    /* box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1); */
+    /* cursor: pointer; */
+    overflow: hidden;
+}
+
+.groupInfoRow-info .avatarBox>img {
+    flex-shrink: 0;
+    width: 25px;
+    height: auto;
+    transform: translateY(-30px);
+    /* //颜色、x轴偏移量、y轴偏移量, */
+    filter: drop-shadow(#409eff 0 30px);
+}
+
+.groupInfoRow-info .more-avatars {
+    width: 30px;
+    height: 30px;
+    margin-left: -12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(229, 229, 229, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 1);
+    white-space: nowrap;
 }
 
 .groupInfoRow .groupInfoRow-operation {
@@ -861,11 +904,15 @@
 }
 
 .waitColor {
-    color: #a6a6a6;
+    color: #3376cd;
 }
 
 .chartColor {
     color: #409EFF;
+}
+
+.cancelledColor {
+    color: #666666;
 }
 
 .successColor {
@@ -955,10 +1002,6 @@
 }
 
 .backgroupbox {
-    /* position: absolute;
-    left: -15px;
-    top: -15px;
-    gap: 5px; */
     flex-shrink: 0;
     color: #2a82e4;
     cursor: pointer;
@@ -970,6 +1013,13 @@
 
 .backgroupbox>.text {
     font-size: 12px;
+}
+
+.task-header_left {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
 .task-header1 {
@@ -992,30 +1042,19 @@
     /* vertical-align: top; */
 }
 
-.taskheader2-item {
-    /* white-space: nowrap; */
-    flex-grow: 1;
-    /* gap: 5px; */
+.task-header_right {
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
-.task-header3 {
-    gap: 15px;
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(166, 166, 166, 1);
-    text-align: left;
-    /* vertical-align: top; */
-}
 
-.taskheader3-item {
-    flex: 1;
-}
 
 .task-info {
     margin-top: 15px;
-    height: 55px;
+    /* height: 55px; */
+    height: 67px;
     background-color: #f4f8fb;
     border-radius: 6px;
     padding: 5px 10px;
@@ -1053,7 +1092,8 @@
 
 .task-main {
     margin-top: 15px;
-    height: calc(100vh - 370px);
+    /* 370 */
+    height: calc(100vh - 382px);
     border: 1px solid rgba(229, 229, 229, 1);
 }
 
@@ -1062,7 +1102,8 @@
 }
 
 .sidebar-taskrecord-container {
-    height: calc(100vh - 372px);
+    /* 372 */
+    height: calc(100vh - 384px);
 }
 
 .taskrecord-listWrap {
@@ -1153,7 +1194,8 @@
 }
 
 .sidebar-taskmembers-container {
-    height: calc(100vh - 442px);
+    /* 442 */
+    height: calc(100vh - 454px);
 }
 
 .taskmain-members-listWrap {
