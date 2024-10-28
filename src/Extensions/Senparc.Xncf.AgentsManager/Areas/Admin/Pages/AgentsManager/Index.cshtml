@@ -269,9 +269,9 @@
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
                                                 <el-button type="primary" size="mini"
-                                                    @@click="handleGroupStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
+                                                    @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
                                                 <el-button type="danger" size="mini"
-                                                    @@click="handleGroupTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量删除</el-button>
+                                                    @@click="handleTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量删除</el-button>
                                             </div>
                                         </template>
                                     </div>
@@ -653,8 +653,8 @@
                         </div>
                     </div>
                     @* 255 *@
-                    <el-table :data="groupList" key="groupList" :height="`calc(100vh - 300px)`" style="width: 100%;"
-                        @@selection-change="handleGroupSelectionChange">
+                    <el-table ref="groupList" :data="groupList" key="groupList" :height="`calc(100vh - 300px)`"
+                        style="width: 100%;" @@selection-change="handleGroupSelectionChange">
                         <el-table-column type="selection" width="30"></el-table-column>
                         <el-table-column prop="name" label="组名称" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
@@ -707,9 +707,9 @@
                                 <el-button type="primary" size="mini"
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">编辑</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleGroupStartBatch('groupTaskBatch',groupDetails)">批量启动</el-button>
+                                    @@click="handleTaskStartBatch('groupTaskBatch',groupDetails)">批量启动</el-button>
                                 <el-button type="danger" size="mini"
-                                    @@click="handleGroupTaskDeleteBatch('groupTaskBatch',groupDetails)">批量删除</el-button>
+                                    @@click="handleTaskDeleteBatch('groupTaskBatch',groupDetails)">批量删除</el-button>
                             </div>
                         </template>
                     </div>
@@ -922,10 +922,10 @@
                     </div>
                 </div>
                 <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
-                    @* <div class="sidebar-agentitem text-ellipsis"
-                    :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
-                    全部任务
-                    </div> *@
+                    <div class="sidebar-agentitem text-ellipsis"
+                        :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
+                        全部任务
+                    </div>
                     <div v-for="(item,index) in taskList" :key="index" class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
                         @@click="handleTaskView('task',item,index)">
@@ -937,7 +937,64 @@
             </div>
             @* 主体内容 *@
             <div class="main-container agent-container">
-                <template v-if="taskDetails">
+                @* 全部任务 *@
+                <template v-if="scrollbarTaskIndex === ''">
+                    <div class="df-wn flex-ac flex-js groupInfoRow">
+                        <div class="groupInfoRow-name text-ellipsis">
+                            全部任务
+                        </div>
+                        <div class="df-wn groupInfoRow-operation">
+                            <el-button type="primary" size="mini"
+                                @@click="handleTaskStartBatch('taskBatch')">批量启动</el-button>
+                            <el-button type="danger" size="mini"
+                                @@click="handleTaskDeleteBatch('taskBatch')">批量删除</el-button>
+                        </div>
+                    </div>
+                    @* 255 *@
+                    <el-table ref="taskList" :data="taskList" key="taskList" :height="`calc(100vh - 300px)`"
+                        style="width: 100%;" @@selection-change="handleTaskSelectionChange">
+                        <el-table-column type="selection" width="30"></el-table-column>
+                        <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
+                            <template slot-scope="{ row }">
+                                <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
+                                <span>{{ row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="开始时间" min-width="100">
+                            <template slot-scope="{ row }">
+                                {{ row.startTime | showFormatDate }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="持续时长" width="100">
+                            <template slot-scope="{ row }">
+                                {{ calculateDuration(row.startTime,row.endTime) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="modelName" label="模型名称" min-width="100" show-overflow-tooltip>
+                            <template slot-scope="{ row }">
+                                {{ row.modelName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="promptCommand" label="任务描述" min-width="130" show-overflow-tooltip>
+                            <template slot-scope="{ row }">
+                                {{ row.promptCommand }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column fixed="right" label="操作" width="350">
+                            <template slot-scope="{ row,$index }">
+                                <el-button type="primary" size="mini"
+                                    @@click="viewAgentParameters('task', row)">智能体参数</el-button>
+                                <el-button type="primary" size="mini"
+                                    @@click="handleTaskView('task', row, $index)">详情</el-button>
+                                <el-button type="primary" size="mini"
+                                    @@click="handleTaskAgain('task', row)">再次执行</el-button>
+                                <el-button type="danger" size="mini"
+                                    @@click="handleTaskDelet('task', row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+                <template v-else-if="taskDetails">
                     <div class="df-wn flex-ac flex-js task-header">
                         <div class="task-header_left">
                             <div class="task-header1 text-ellipsis" :title="taskDetails.name">
