@@ -253,7 +253,8 @@ var app = new Vue({
                     checked: false
                 }
             ],
-            scrollbarTaskIndex: 0, // 侧边任务index 默认全部
+            scrollbarTaskIndex: '', // 侧边任务index 默认全部
+            taskSelection: [],
             taskList: [],
             taskDetails: '', // 任务详情数据 查看
             taskHistoryList: [],
@@ -1648,17 +1649,9 @@ var app = new Vue({
                 this.toggleSelection([this.groupAgentList[findIndex]])
             }
         },
-        // 智能体-组 任务列表table选中变化 (批量启动和删除)
-        handleAgentGroupTaskSelectionChange(val) {
-            this.agentGroupTaskSelection = val
-        },
         // 组列表选中变化 (批量删除)
         handleGroupSelectionChange(val) {
             this.groupSelection = val
-        },
-        // 组 任务列表table选中变化 (批量启动和删除)
-        handleGroupTaskSelectionChange(val) {
-            this.groupTaskSelection = val
         },
         // 组 删除
         handleGroupDelete(optype, row) {
@@ -1735,111 +1728,19 @@ var app = new Vue({
                 });
             });
         },
-        // 组-任务批量启动(任务) agentGroupTaskBatch groupTaskBatch
-        handleGroupStartBatch(opType, item) {
-            let serviceURL = ''
-            if (opType === 'agentGroupTaskBatch') {
-                // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
-                console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
-            } else if (opType === 'groupTaskBatch') {
-                // item.chatGroupDto.id
-                console.log('groupTaskBatch:', this.groupTaskSelection);
-            }
-            if (!serviceURL) return
-            // 操作确认 提示
-            this.$confirm('确认批量启动数据吗？', '操作确认', {
-                dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                // type: 'warning'
-            }).then(() => {
-                serviceAM.post(serviceURL).then(res => {
-                    if (res.data.success) {
-                        this.$message({
-                            type: 'success',
-                            message: '操作成功!'
-                        });
-                        let groupDetail = {}, groupType = ''
-                        if (opType === 'agentGroupTaskBatch') {
-                            groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
-                            groupType = 'agentGroupTask' //'agentGroup'
-                        } else if (opType === 'groupTaskBatch') {
-                            groupDetail = this.groupDetails?.chatGroupDto ?? {}
-                            groupType = 'groupTask' //'group'
-                        }
-                        if (groupDetail.id) {
-                            // 获取任务列表
-                            this.gettaskListData(groupType, groupDetail.id)
-                            // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消操作'
-                });
-            });
-        },
-        // 组-任务批量删除(任务) agentGroupTaskBatch groupTaskBatch
-        handleGroupTaskDeleteBatch(opType, item) {
-            let serviceURL = ''
-            if (opType === 'agentGroupTaskBatch') {
-                // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
-                console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
-            } else if (opType === 'groupTaskBatch') {
-                // item.chatGroupDto.id
-                console.log('groupTaskBatch:', this.groupTaskSelection);
-            }
-            if (!serviceURL) return
-            // 操作确认 提示
-            this.$confirm('确认批量删除数据吗？', '操作确认', {
-                dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                // type: 'warning'
-            }).then(() => {
-                serviceAM.post(serviceURL).then(res => {
-                    if (res.data.success) {
-                        this.$message({
-                            type: 'success',
-                            message: '操作成功!'
-                        });
-                        let groupDetail = {}, groupType = ''
-                        if (opType === 'agentGroupTaskBatch') {
-                            groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
-                            groupType = 'agentGroupTask' //'agentGroup'
-                        } else if (opType === 'groupTaskBatch') {
-                            groupDetail = this.groupDetails?.chatGroupDto ?? {}
-                            groupType = 'groupTask' //'group'
-                        }
-                        if (groupDetail.id) {
-                            // 获取任务列表
-                            this.gettaskListData(groupType, groupDetail.id)
-                            // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                    }
-                })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消操作'
-                });
-            });
-        },
 
+
+        // 任务 查看全部 列表 
+        handleTaskViewAll() {
+            this.clearHistoryTimer()
+            this.scrollbarTaskIndex = ''
+            // 清空详情数据
+            this.taskDetails = ''
+            this.taskSelection = []
+            this.taskHistoryList = []
+            this.taskMemberList = []
+            this.gettaskListData('task')
+        },
         // 查看 任务详情
         handleTaskView(clickType, item = {}, index = 0) {
             this.clearHistoryTimer()
@@ -1889,6 +1790,19 @@ var app = new Vue({
                 // this.getGroupDetailData('groupTable', item.id,this.groupDetails)
             }
         },
+        // 智能体-组 任务列表table选中变化 (批量启动和删除)
+        handleAgentGroupTaskSelectionChange(val) {
+            this.agentGroupTaskSelection = val
+        },
+
+        // 组 任务列表table选中变化 (批量启动和删除)
+        handleGroupTaskSelectionChange(val) {
+            this.groupTaskSelection = val
+        },
+        // 任务列表选择 
+        handleTaskSelectionChange(val) {
+            this.taskSelection = val
+        },
         // 查看智能体参数 列表
         viewAgentParameters(optype, item) {
             // 对接接口获取数据 this.agentParameterList
@@ -1923,10 +1837,120 @@ var app = new Vue({
                             groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
                         } else if (optype === 'groupTask') {
                             groupDetail = this.groupDetails?.chatGroupDto ?? {}
+                        } else {
+                            this.gettaskListData(optype)
                         }
                         if (groupDetail.id) {
                             // 获取任务列表
                             this.gettaskListData(optype, groupDetail.id)
+                        }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
+        // 组-任务批量启动(任务) agentGroupTaskBatch groupTaskBatch
+        handleTaskStartBatch(opType, item) {
+            let serviceURL = ''
+            if (opType === 'agentGroupTaskBatch') {
+                // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
+                console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
+            } else if (opType === 'groupTaskBatch') {
+                // item.chatGroupDto.id
+                console.log('groupTaskBatch:', this.groupTaskSelection);
+            } else if (opType === 'taskBatch') {
+                console.log('taskSelection:', this.taskSelection);
+            }
+            if (!serviceURL) return
+            // 操作确认 提示
+            this.$confirm('确认批量启动数据吗？', '操作确认', {
+                dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                // type: 'warning'
+            }).then(() => {
+                serviceAM.post(serviceURL).then(res => {
+                    if (res.data.success) {
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功!'
+                        });
+                        let groupDetail = {}, groupType = ''
+                        if (opType === 'agentGroupTaskBatch') {
+                            groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
+                            groupType = 'agentGroupTask' //'agentGroup'
+                        } else if (opType === 'groupTaskBatch') {
+                            groupDetail = this.groupDetails?.chatGroupDto ?? {}
+                            groupType = 'groupTask' //'group'
+                        }
+                        if (groupDetail.id) {
+                            // 获取任务列表
+                            this.gettaskListData(groupType, groupDetail.id)
+                            // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
+                        }
+                    } else {
+                        app.$message({
+                            message: res.data.errorMessage || res.data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
+        // 组-任务批量删除(任务) agentGroupTaskBatch groupTaskBatch
+        handleTaskDeleteBatch(opType, item) {
+            let serviceURL = ''
+            if (opType === 'agentGroupTaskBatch') {
+                // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
+                console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
+            } else if (opType === 'groupTaskBatch') {
+                // item.chatGroupDto.id
+                console.log('groupTaskBatch:', this.groupTaskSelection);
+            } else if (opType === 'taskBatch') {
+                console.log('taskSelection:', this.taskSelection);
+            }
+            if (!serviceURL) return
+            // 操作确认 提示
+            this.$confirm('确认批量删除数据吗？', '操作确认', {
+                dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                // type: 'warning'
+            }).then(() => {
+                serviceAM.post(serviceURL).then(res => {
+                    if (res.data.success) {
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功!'
+                        });
+                        let groupDetail = {}, groupType = ''
+                        if (opType === 'agentGroupTaskBatch') {
+                            groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
+                            groupType = 'agentGroupTask' //'agentGroup'
+                        } else if (opType === 'groupTaskBatch') {
+                            groupDetail = this.groupDetails?.chatGroupDto ?? {}
+                            groupType = 'groupTask' //'group'
+                        }
+                        if (groupDetail.id) {
+                            // 获取任务列表
+                            this.gettaskListData(groupType, groupDetail.id)
+                            // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
                         }
                     } else {
                         app.$message({
