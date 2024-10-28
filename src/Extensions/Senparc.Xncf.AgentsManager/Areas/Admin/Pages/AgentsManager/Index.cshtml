@@ -262,12 +262,16 @@
                                                 agentDetailsGroupDetails.chatGroupDto.name }}
                                             </div>
                                             <div class="df-wn groupInfoRow-operation">
-                                                <el-button type="primary" size="small"
+                                                <el-button type="danger" size="mini"
                                                     @@click="setAgentState('delete',agentDetailsGroupDetails)">退出组</el-button>
-                                                <el-button type="primary" size="small"
+                                                <el-button type="primary" size="mini"
                                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',agentDetailsGroupDetails)">启动</el-button>
-                                                <el-button type="primary" size="small"
+                                                <el-button type="primary" size="mini"
                                                     @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
+                                                <el-button type="primary" size="mini"
+                                                    @@click="handleGroupStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
+                                                <el-button type="danger" size="mini"
+                                                    @@click="handleGroupTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量删除</el-button>
                                             </div>
                                         </template>
                                     </div>
@@ -282,10 +286,24 @@
                                                 agentDetailsGroupDetails.chatGroupDto.adminAgentTemplateName }}</div>
                                             <div class="itembox">对接人: {{
                                                 agentDetailsGroupDetails.chatGroupDto.enterAgentTemplateName }}</div>
+                                            <div class="itembox df-wn flex-ac">
+                                                <span style="margin-right: 10px;">组成员：</span>
+                                                <div v-for="(v,i) in displayedAvatars(agentDetailsGroupDetails.agentTemplateDtoList)"
+                                                    :key="v.id" class="df-wn flex-ac flex-jc avatarBox"
+                                                    :style="{zIndex:100-i}">
+                                                    <img :src="v.avastar | showAvatar" alt="">
+                                                </div>
+                                                <div v-if="exceededCount(agentDetailsGroupDetails.agentTemplateDtoList)"
+                                                    class="more-avatars">
+                                                    +{{ exceededCount(agentDetailsGroupDetails.agentTemplateDtoList) }}
+                                                </div>
+                                            </div>
                                         </template>
                                     </div>
-                                    <el-table :data="agentDetailsGroupTaskList" key="agentDetailsGroupTaskList"
-                                        :height="`calc(100vh - 458px)`" style="width: 100%;">
+                                    <el-table ref="agentDetailsGroupTaskList" :data="agentDetailsGroupTaskList"
+                                        key="agentDetailsGroupTaskList" :height="`calc(100vh - 458px)`"
+                                        style="width: 100%;" @@selection-change="handleAgentGroupTaskSelectionChange">
+                                        <el-table-column type="selection" width="30"></el-table-column>
                                         <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
                                             <template slot-scope="{ row }">
                                                 <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
@@ -314,10 +332,16 @@
                                                 {{ row.promptCommand }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column fixed="right" label="操作" width="73">
+                                        <el-table-column fixed="right" label="操作" width="350">
                                             <template slot-scope="{ row }">
-                                                <el-button type="text" size="small"
-                                                    @@click="handleTaskView('agentGroupTask',row)">详情</el-button>
+                                                <el-button type="primary" size="mini"
+                                                    @@click="viewAgentParameters('agentGroupTask', row)">智能体参数</el-button>
+                                                <el-button type="primary" size="mini"
+                                                    @@click="handleTaskView('agentGroupTask', row)">详情</el-button>
+                                                <el-button type="primary" size="mini"
+                                                    @@click="handleTaskAgain('agentGroupTask', row)">再次执行</el-button>
+                                                <el-button type="danger" size="mini"
+                                                    @@click="handleTaskDelet('agentGroupTask', row)">删除</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -326,19 +350,28 @@
                                 <template v-else-if="agentDetailsGroupShowType === '2'">
                                     <div class="df-wn flex-ac flex-js task-header">
                                         <template v-if="agentDetailsGroupDetailsTaskDetails">
-                                            <div class="df-wn flex-ac backgroupbox" style="top: -11px;"
-                                                @@click="returnGroup('agentGroupTask')">
-                                                <i class="icon el-icon-back"></i>
-                                                @* <span class="text">返回</span> *@
+                                            <div class="task-header_left">
+                                                <div class="df-wn flex-ac backgroupbox" style="top: -11px;"
+                                                    @@click="returnGroup('agentGroupTask')">
+                                                    <i class="icon fas fa-reply"></i>
+                                                    @* <span class="text">返回</span> *@
+                                                </div>
+                                                <div class="task-header1 text-ellipsis"
+                                                    :title="agentDetailsGroupDetailsTaskDetails.name">
+                                                    {{ agentDetailsGroupDetailsTaskDetails.name }}
+                                                </div>
+                                                <div class="task-header2" style="flex-shrink: 0;">
+                                                    <i
+                                                        :class="[taskStateIcon[agentDetailsGroupDetailsTaskDetails.status],taskStateColor[agentDetailsGroupDetailsTaskDetails.status]]"></i>
+                                                    {{
+                                                    taskStateText[agentDetailsGroupDetailsTaskDetails.status] }}
+                                                </div>
                                             </div>
-                                            <div class="task-header1 text-ellipsis"
-                                                :title="agentDetailsGroupDetailsTaskDetails.name">
-                                                {{ agentDetailsGroupDetailsTaskDetails.name }}
-                                            </div>
-                                            <div class="task-header2" style="flex-shrink: 0;">
-                                                <i :class="[taskStateIcon[agentDetailsGroupDetailsTaskDetails.status],taskStateColor[agentDetailsGroupDetailsTaskDetails.status]]"></i>
-                                                {{
-                                                taskStateText[agentDetailsGroupDetailsTaskDetails.status] }}
+                                            <div class="task-header_right">
+                                                <el-button type="primary" size="mini"
+                                                    @@click="viewAgentParameters('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">智能体参数</el-button>
+                                                <el-button type="primary" size="mini"
+                                                    @@click="handleTaskAgain('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">再次执行</el-button>
                                             </div>
                                         </template>
                                     </div>
@@ -360,8 +393,10 @@
                                             </div>
                                             <div class="itembox">
                                                 <div class="lable">任务描述:</div>
-                                                <div class="value">{{ agentDetailsGroupDetailsTaskDetails.promptCommand
-                                                    }}
+                                                <div class="value">
+                                                    {{ agentDetailsGroupDetailsTaskDetails.promptCommand }}
+                                                    @* 详情 type="primary" *@
+                                                    <el-button type="text" size="mini">详情</el-button>
                                                 </div>
                                             </div>
                                             <div class="itembox">
@@ -375,7 +410,10 @@
                                             </div>
                                             <div class="itembox">
                                                 <div class="lable">任务评价:</div>
-                                                <div class="value">编辑</div>
+                                                <div class="value">
+                                                    @* 编辑 type="primary" *@
+                                                    <el-button type="text" size="mini">编辑</el-button>
+                                                </div>
                                             </div>
                                         </template>
                                     </div>
@@ -397,7 +435,7 @@
                                                             <span class="time">{{ ritem.addTime | showFormatDate
                                                                 }}</span>
                                                         </div>
-                                                        <task-html-renderer :content="ritem.message" />
+                                                        <task-html-renderer :content="ritem.messageHtml" />
                                                     </div>
                                                 </div>
                                             </el-scrollbar>
@@ -429,12 +467,22 @@
                             <template v-if="agentDetailsTabsActiveName === 'second'">
                                 <div class="df-wn flex-ac flex-js task-header">
                                     <template v-if="agentDetailsTaskDetails">
-                                        <div class="task-header1 text-ellipsis" :title="agentDetailsTaskDetails.name">
-                                            {{ agentDetailsTaskDetails.name }}
+                                        <div class="task-header_left">
+                                            <div class="task-header1 text-ellipsis"
+                                                :title="agentDetailsTaskDetails.name">
+                                                {{ agentDetailsTaskDetails.name }}
+                                            </div>
+                                            <div class="task-header2" style="flex-shrink: 0;">
+                                                <i
+                                                    :class="[taskStateIcon[agentDetailsTaskDetails.status],taskStateColor[agentDetailsTaskDetails.status]]"></i>
+                                                {{ taskStateText[agentDetailsTaskDetails.status] }}
+                                            </div>
                                         </div>
-                                        <div class="task-header2" style="flex-shrink: 0;">
-                                            <i :class="[taskStateIcon[agentDetailsTaskDetails.status],taskStateColor[agentDetailsTaskDetails.status]]"></i>
-                                            {{ taskStateText[agentDetailsTaskDetails.status] }}
+                                        <div class="task-header_right">
+                                            <el-button type="primary" size="mini"
+                                                @@click="viewAgentParameters('agentTask',agentDetailsTaskDetails)">智能体参数</el-button>
+                                            <el-button type="primary" size="mini"
+                                                @@click="handleTaskAgain('agentTask',agentDetailsTaskDetails)">再次执行</el-button>
                                         </div>
                                     </template>
                                 </div>
@@ -453,7 +501,11 @@
                                         </div>
                                         <div class="itembox">
                                             <div class="lable">任务描述:</div>
-                                            <div class="value">{{ agentDetailsTaskDetails.promptCommand }}</div>
+                                            <div class="value">
+                                                {{ agentDetailsTaskDetails.promptCommand }}
+                                                @* 详情 type="primary" *@
+                                                <el-button type="text" size="mini">详情</el-button>
+                                            </div>
                                         </div>
                                         <div class="itembox">
                                             <div class="lable">任务结束时间:</div>
@@ -466,7 +518,10 @@
                                         </div>
                                         <div class="itembox">
                                             <div class="lable">任务评价:</div>
-                                            <div class="value">编辑</div>
+                                            <div class="value">
+                                                @* 编辑 type="primary" *@
+                                                <el-button type="text" size="mini">编辑</el-button>
+                                            </div>
                                         </div>
                                     </template>
                                 </div>
@@ -487,7 +542,7 @@
                                                             }}</span>
                                                         <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                                     </div>
-                                                    <task-html-renderer :content="ritem.message" />
+                                                    <task-html-renderer :content="ritem.messageHtml" />
                                                 </div>
                                             </div>
                                         </el-scrollbar>
@@ -589,7 +644,18 @@
             <div class="main-container group-container">
                 @* 组全部 *@
                 <template v-if="groupShowType === '1'">
-                    <el-table :data="groupList" key="groupList" :height="`calc(100vh - 255px)`" style="width: 100%;">
+                    <div class="df-wn flex-ac flex-js groupInfoRow">
+                        <div class="groupInfoRow-name text-ellipsis">
+                            全部组
+                        </div>
+                        <div class="df-wn groupInfoRow-operation">
+                            <el-button type="danger" size="mini" @@click="handleGroupDeleteBatch">批量删除</el-button>
+                        </div>
+                    </div>
+                    @* 255 *@
+                    <el-table :data="groupList" key="groupList" :height="`calc(100vh - 300px)`" style="width: 100%;"
+                        @@selection-change="handleGroupSelectionChange">
+                        <el-table-column type="selection" width="30"></el-table-column>
                         <el-table-column prop="name" label="组名称" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 @* row.enable row.state *@
@@ -614,14 +680,16 @@
                                 {{ row.enterAgentTemplateName }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="220">
+                        <el-table-column fixed="right" label="操作" width="290">
                             <template slot-scope="{ row,$index }">
-                                <el-button type="primary" size="small"
+                                <el-button type="primary" size="mini"
                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',row)">启动</el-button>
-                                <el-button type="primary" size="small"
+                                <el-button type="primary" size="mini"
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',row)">编辑</el-button>
-                                <el-button type="primary" size="small"
+                                <el-button type="primary" size="mini"
                                     @@click="handleGroupView('groupTable',row,$index)">详情</el-button>
+                                <el-button type="danger" size="mini"
+                                    @@click="handleGroupDelete('groupTable',row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -634,10 +702,14 @@
                                 groupDetails.chatGroupDto.name }}
                             </div>
                             <div class="df-wn  groupInfoRow-operation">
-                                <el-button type="primary" size="small"
+                                <el-button type="primary" size="mini"
                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',groupDetails)">启动</el-button>
-                                <el-button type="primary" size="small"
+                                <el-button type="primary" size="mini"
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">编辑</el-button>
+                                <el-button type="primary" size="mini"
+                                    @@click="handleGroupStartBatch('groupTaskBatch',groupDetails)">批量启动</el-button>
+                                <el-button type="danger" size="mini"
+                                    @@click="handleGroupTaskDeleteBatch('groupTaskBatch',groupDetails)">批量删除</el-button>
                             </div>
                         </template>
                     </div>
@@ -647,10 +719,22 @@
                             </div>
                             <div class="itembox">群主: {{ groupDetails.chatGroupDto.adminAgentTemplateName }}</div>
                             <div class="itembox">对接人: {{ groupDetails.chatGroupDto.enterAgentTemplateName }}</div>
+                            <div class="itembox df-wn flex-ac">
+                                <span style="margin-right: 10px;">组成员：</span>
+                                <div v-for="(v,i) in displayedAvatars(groupDetails.agentTemplateDtoList)" :key="v.id"
+                                    class="df-wn flex-ac flex-jc avatarBox" :style="{zIndex:100-i}">
+                                    <img :src="v.avastar | showAvatar" alt="">
+                                </div>
+                                <div v-if="exceededCount(groupDetails.agentTemplateDtoList)" class="more-avatars">
+                                    +{{ exceededCount(groupDetails.agentTemplateDtoList) }}
+                                </div>
+                            </div>
                         </template>
                     </div>
-                    <el-table :data="groupTaskList" key="groupTaskList" :height="`calc(100vh - 345px)`"
-                        style="width: 100%;">
+                    <el-table ref="groupTaskList" :data="groupTaskList" key="groupTaskList"
+                        :height="`calc(100vh - 345px)`" style="width: 100%;"
+                        @@selection-change="handleGroupTaskSelectionChange">
+                        <el-table-column type="selection" width="30"></el-table-column>
                         <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
@@ -677,10 +761,16 @@
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="73">
+                        <el-table-column fixed="right" label="操作" width="350">
                             <template slot-scope="{ row }">
-                                <el-button type="text" size="small"
+                                <el-button type="primary" size="mini"
+                                    @@click="viewAgentParameters('groupTask', row)">智能体参数</el-button>
+                                <el-button type="primary" size="mini"
                                     @@click="handleTaskView('groupTask', row)">详情</el-button>
+                                <el-button type="primary" size="mini"
+                                    @@click="handleTaskAgain('groupTask', row)">再次执行</el-button>
+                                <el-button type="danger" size="mini"
+                                    @@click="handleTaskDelet('groupTask', row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -689,16 +779,25 @@
                 <template v-else-if="groupShowType === '3'">
                     <div class="df-wn flex-ac flex-js task-header">
                         <template v-if="groupTaskDetails">
-                            <div class="df-wn flex-ac backgroupbox" @@click="returnGroup('groupTask')">
-                                <i class="icon el-icon-back"></i>
-                                @* <span class="text">返回</span> *@
+                            <div class="task-header_left">
+                                <div class="df-wn flex-ac backgroupbox" @@click="returnGroup('groupTask')">
+                                    <i class="icon fas fa-reply"></i>
+                                    @* <span class="text">返回</span> *@
+                                </div>
+                                <div class="task-header1 text-ellipsis" :title="groupTaskDetails.name">
+                                    {{ groupTaskDetails.name }}
+                                </div>
+                                <div class="task-header2" style="flex-shrink: 0;">
+                                    <i
+                                        :class="[taskStateIcon[groupTaskDetails.status],taskStateColor[groupTaskDetails.status]]"></i>
+                                    {{ taskStateText[groupTaskDetails.status] }}
+                                </div>
                             </div>
-                            <div class="task-header1 text-ellipsis" :title="groupTaskDetails.name">
-                                {{ groupTaskDetails.name }}
-                            </div>
-                            <div class="task-header2" style="flex-shrink: 0;">
-                                <i :class="[taskStateIcon[groupTaskDetails.status],taskStateColor[groupTaskDetails.status]]"></i>
-                                {{ taskStateText[groupTaskDetails.status] }}
+                            <div class="task-header_right">
+                                <el-button type="primary" size="mini"
+                                    @@click="viewAgentParameters('groupTask',groupTaskDetails)">智能体参数</el-button>
+                                <el-button type="primary" size="mini"
+                                    @@click="handleTaskAgain('groupTask',groupTaskDetails)">再次执行</el-button>
                             </div>
                         </template>
                     </div>
@@ -716,7 +815,10 @@
                             </div>
                             <div class="itembox">
                                 <div class="lable">任务描述:</div>
-                                <div class="value">{{ groupTaskDetails.promptCommand }}
+                                <div class="value">
+                                    {{ groupTaskDetails.promptCommand }}
+                                    @* 详情 type="primary" *@
+                                    <el-button type="text" size="mini">详情</el-button>
                                 </div>
                             </div>
                             <div class="itembox">
@@ -730,7 +832,10 @@
                             </div>
                             <div class="itembox">
                                 <div class="lable">任务评价:</div>
-                                <div class="value">编辑</div>
+                                <div class="value">
+                                    @* 编辑 type="primary" *@
+                                    <el-button type="text" size="mini">编辑</el-button>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -750,7 +855,7 @@
                                                 getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                         </div>
-                                        <task-html-renderer :content="ritem.message" />
+                                        <task-html-renderer :content="ritem.messageHtml" />
                                     </div>
                                 </div>
                             </el-scrollbar>
@@ -817,14 +922,16 @@
                     </div>
                 </div>
                 <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
-                    <template v-if="taskList&&taskList.length">
-                        <div v-for="(item,index) in taskList" :key="index" class="sidebar-agentitem text-ellipsis"
-                            :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
-                            @@click="handleTaskView('task',item,index)">
-                            {{ item.name }}
-                        </div>
-                    </template>
-                    <div v-else class="df-wn flex-ac flex-jc emptyData"
+                    @* <div class="sidebar-agentitem text-ellipsis"
+                    :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
+                    全部任务
+                    </div> *@
+                    <div v-for="(item,index) in taskList" :key="index" class="sidebar-agentitem text-ellipsis"
+                        :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
+                        @@click="handleTaskView('task',item,index)">
+                        {{ item.name }}
+                    </div>
+                    <div v-if="taskList.length === 0" class="df-wn flex-ac flex-jc emptyData"
                         style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
@@ -832,12 +939,21 @@
             <div class="main-container agent-container">
                 <template v-if="taskDetails">
                     <div class="df-wn flex-ac flex-js task-header">
-                        <div class="task-header1 text-ellipsis" :title="taskDetails.name">
-                            {{ taskDetails.name }}
+                        <div class="task-header_left">
+                            <div class="task-header1 text-ellipsis" :title="taskDetails.name">
+                                {{ taskDetails.name }}
+                            </div>
+                            <div class="task-header2" style="flex-shrink: 0;">
+                                <i :class="[taskStateIcon[taskDetails.status],taskStateColor[taskDetails.status]]"></i>
+                                {{ taskStateText[taskDetails.status] }}
+                            </div>
                         </div>
-                        <div class="task-header2" style="flex-shrink: 0;">
-                            <i :class="[taskStateIcon[taskDetails.status],taskStateColor[taskDetails.status]]"></i>
-                            {{ taskStateText[taskDetails.status] }}
+                        @* type="text" *@
+                        <div class="task-header_right">
+                            <el-button type="primary" size="mini"
+                                @@click="viewAgentParameters('task',taskDetails)">智能体参数</el-button>
+                            <el-button type="primary" size="mini"
+                                @@click="handleTaskAgain('task',taskDetails)">再次执行</el-button>
                         </div>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
@@ -853,7 +969,10 @@
                         </div>
                         <div class="itembox">
                             <div class="lable">任务描述:</div>
-                            <div class="value">{{ taskDetails.promptCommand }}
+                            <div class="value">
+                                {{ taskDetails.promptCommand }}
+                                @* 详情 type="primary" *@
+                                <el-button type="text" size="mini">详情</el-button>
                             </div>
                         </div>
                         <div class="itembox">
@@ -867,7 +986,10 @@
                         </div>
                         <div class="itembox">
                             <div class="lable">任务评价:</div>
-                            <div class="value">编辑</div>
+                            <div class="value">
+                                @* 编辑 type="primary" *@
+                                <el-button type="text" size="mini">编辑</el-button>
+                            </div>
                         </div>
                     </div>
                     <div class="df-wn task-main">
@@ -886,7 +1008,7 @@
                                                 getTaskSenderInfo('task',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                         </div>
-                                        <task-html-renderer :content="ritem.message" />
+                                        <task-html-renderer :content="ritem.messageHtml" />
                                     </div>
                                 </div>
                             </el-scrollbar>
@@ -916,9 +1038,9 @@
     </el-tab-pane>
 </el-tabs>
 
-@* 抽屉 新增|编辑 智能体 *@
+@* 抽屉 新增|编辑 智能体 540px *@
 <el-drawer :visible.sync="visible.drawerAgent" direction="rtl" :with-header="false" :wrapper-closable="false"
-    :close-on-press-escape="false" size="540px">
+    :close-on-press-escape="false" size="960px">
     <div class="drawerRtl">
         @* 内容中的头（包括标题和关闭图标） *@
         <div class="drawerRtl__header">
@@ -941,7 +1063,7 @@
                 <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage"
-                        placeholder="请选择" />
+                        direction="vertical" placeholder="请选择" />
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
                     <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
@@ -1089,14 +1211,15 @@
                 </el-form-item>
                 <el-form-item label="选择模型" prop="aiModelId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" placeholder="请选择" />
+                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" direction="vertical"
+                        placeholder="请选择" />
                 </el-form-item>
                 <el-form-item label="个性化智能体" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
                 </el-form-item>
-                <el-form-item label="我能帮你做什么" prop="promptCommand">
+                <el-form-item label="任务描述" prop="promptCommand">
                     <el-input type="textarea" v-model="groupStartForm.promptCommand" :rows="8"
-                        placeholder="请填写"></el-input>
+                        placeholder="我能帮你做什么"></el-input>
                 </el-form-item>
                 <el-form-item label="说明" prop="description">
                     <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
@@ -1126,7 +1249,8 @@
             </el-radio-group>
         </el-form-item>
         <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
-            <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" placeholder="请选择" />
+            <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" direction="vertical"
+                placeholder="请选择" />
         </el-form-item>
         <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
             <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
@@ -1161,6 +1285,20 @@
     <div slot="footer" class="dialog-footer">
         <el-button @@click="handleElVisibleClose('dialogGroupAgent')">取 消</el-button>
         <el-button type="primary" @@click="handleElVisibleSubmit('dialogGroupAgent')">确 定</el-button>
+    </div>
+</el-dialog>
+@* Dialog Carousel 智能体 参数列表 *@
+<el-dialog title="智能体参数" :visible.sync="visible.dialogAgentParameter" :show-close="false" :close-on-click-modal="false"
+    :close-on-press-escape="false">
+    @* always/hover/never outside/none *@
+    <el-carousel type="card" height="200px" arrow="always" indicator-position="none" :autoplay="false">
+        @* agentParameterList *@
+        <el-carousel-item v-for="item in 6" :key="item">
+            <h3 class="medium">智能体{{ item }}</h3>
+        </el-carousel-item>
+    </el-carousel>
+    <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @@click="handleElVisibleClose('dialogAgentParameter')">关 闭</el-button>
     </div>
 </el-dialog>
 
