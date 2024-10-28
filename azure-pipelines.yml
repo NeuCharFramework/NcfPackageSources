@@ -10,13 +10,13 @@ variables:
   buildConfiguration: 'Release'  
   
 steps:  
-- task: UseDotNet@2  
-  displayName: 'Use .NET SDK 6'  
-  inputs:  
-    version: '6.x'  
-    packageType: 'sdk'  
-    performMultiLevelLookup: true  
-    includePreviewVersions: true  
+# - task: UseDotNet@2  
+#   displayName: 'Use .NET SDK 6'  
+#   inputs:  
+#     version: '6.x'  
+#     packageType: 'sdk'  
+#     performMultiLevelLookup: true  
+#     includePreviewVersions: true  
   
 - task: DotNetCoreCLI@2  
   displayName: 'dotnet --list-sdks '  
