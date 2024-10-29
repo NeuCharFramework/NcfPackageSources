@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<!--<TargetFramework>net5.0</TargetFramework>-->
+		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<DocumentationFile>../Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML</DocumentationFile>
+		<Configurations>Debug;Release;Debug-Dapr;ModifyPublish;ModifyPublish</Configurations>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+
+		<EmbeddedResource Include="wwwroot\**\*" />
+
+		<Compile Remove="Domain\Migrations\Oracle\**" />
+
+		<Content Remove="Domain\Migrations\Oracle\**" />
+
+		<EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
+
+		<None Remove="Domain\Migrations\Oracle\**" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="wwwroot\css\Admin\TenantInfo\Index.css" />
+		<Content Remove="wwwroot\css\Admin\SystemConfig\Index.css" />
+		<Content Remove="wwwroot\js\Admin\Pages\SystemConfig\Index.js" />
+		<Content Remove="wwwroot\js\Admin\Pages\TenantInfo\Index.js" />
+		<Content Remove="wwwroot\js\Admin\Pages\XncfModule\start.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.0.1-beta1" />
+		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="5.0.1-beta1" />
+		<!--<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.18.7-preview1" />
+		<PackageReference Include="Senparc.Ncf.Core" Version="0.21.3.2-preview1" />
+		<PackageReference Include="Senparc.Ncf.Log" Version="0.18.5-preview1" />
+		<PackageReference Include="Senparc.Ncf.Mvc.UI" Version="0.18.7-preview1" />
+		<PackageReference Include="Senparc.Ncf.Service" Version="0.21.1-preview1" />
+		<PackageReference Include="Senparc.Ncf.Utility" Version="0.18.7-preview1" />
+		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.21.12-preview1" />
+
+		<PackageReference Include="Senparc.Xncf.AreasBase" Version="0.9.9.2-preview1" />
+
+		<PackageReference Include="Senparc.Xncf.DynamicData" Version="0.2.8-pre-alpha" />
+		<PackageReference Include="Senparc.Xncf.SystemCore" Version="0.10.8-preview1" />
+		<PackageReference Include="Senparc.Xncf.SystemManager" Version="0.11.9-preview1" />
+		<PackageReference Include="Senparc.Xncf.XncfModuleManager" Version="0.11.9-preview1" />
+		<PackageReference Include="Senparc.Xncf.Tenant" Version="0.11.8-preview1" />
+		-->
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.16.4-preview1" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+	</ItemGroup>
+</Project>
