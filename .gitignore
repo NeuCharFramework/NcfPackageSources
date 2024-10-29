@@ -85,3 +85,4 @@ Thumbs.db
 ncf_obj/
 /BuildOutPut/net8.0
 /BuildOutPut
+appsettings.Development.json
