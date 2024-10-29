@@ -13,7 +13,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         {
             if (obj is RedisObjectCacheStrategy)
             {
-                var _obj = obj as RedisObjectCacheStrategy;
+                RedisObjectCacheStrategy _obj = obj as RedisObjectCacheStrategy;
                 return _obj.GetAllByPrefix<T>(key);
             }
             throw new Exception("未实现或缓存不支持前缀方式获取缓存！");
