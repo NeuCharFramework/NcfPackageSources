@@ -20,8 +20,8 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
 		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.0.0-beta1" />
 		<PackageReference Include="Senparc.CO2NET" Version="3.0.0-beta1" />
-		<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.18.7.4-preview1" />
-		<PackageReference Include="Senparc.Ncf.Database.SqlServer" Version="0.18.6-preview1" />
+		<!--<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.18.7.4-preview1" />
+		<PackageReference Include="Senparc.Ncf.Database.SqlServer" Version="0.18.6-preview1" />-->
 		<!--<PackageReference Include="Senparc.Xncf.AreasBase" Version="0.9.9.2-preview1" />
 		<PackageReference Include="Senparc.Xncf.DatabaseToolkit" Version="0.23.10-preview1" />
 		<PackageReference Include="Senparc.Xncf.Menu" Version="0.10.8-preview1" />
@@ -40,6 +40,8 @@
 	<ItemGroup>
 		<!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.ForNcf.csproj" />-->
 		<!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.ForNcf.csproj" />-->
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />

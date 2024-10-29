@@ -31,7 +31,7 @@
 	  <Folder Include="OHS\Remote\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="Senparc.Xncf.Tenant.Interface" Version="0.8.6-preview1" />
+	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 	</ItemGroup>
 
 
