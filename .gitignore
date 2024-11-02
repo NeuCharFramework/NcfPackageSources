@@ -83,3 +83,5 @@ SenparcConfig.Development.config
 Thumbs.db
 /src/ApiDocXML/Senparc.Xncf.AgentsManager.XML
 ncf_obj/
+/BuildOutPut
+/tools/NcfSimulatedSite/Senparc.Web/appsettings.Development.json
