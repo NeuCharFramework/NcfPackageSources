@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 .indexPage{
     position:relative;
-    overflow:auto;
+    overflow:hidden;
 
 }
 #chart2 {
-    width: 400px;
-    height: 400px;
+    width: 2vw;
+    height: 2vh;
 }
-    .indexPage > .headRow {
-        min-width: 1381px;
-        height: 182px;
-        position: relative;
-        border-radius: 10px;
-        background-color: #E0EBFF;
-        overflow: hidden;
-    }
+.indexPage > .headRow {
+    width: 100%;
+    height: 182px;
+    position: relative;
+    border-radius: 10px;
+    background-color: #E0EBFF;
+    overflow: hidden;
+}
     .indexPage > .headRow > .leftBox {
         position: absolute;
         left: 64px;
@@ -48,7 +48,7 @@
                 box-shadow: 0px 2px 2px 0px rgba(0, 131, 255, 0.25);
             }
         .indexPage>.headRow>.headBg {
-            position: absolute;
+            position: relative;
             left: 28px;
             top: 0;
             width: 100%;
@@ -86,19 +86,19 @@
     .indexPage>.mainBox {
         margin-top:12px;
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         align-items: flex-start;
-        justify-content: flex-start;
+        justify-content: center;
         gap:10px;
     }
 .mainBox > .leftBox {
-    width: 53%;
+    width:780px;
     height: 642px;
     overflow:auto;
     flex-shrink: 0;
 }
     .mainBox > .rightBox {
-        width: 47%;
+        width: 780px;
         height: 500px;
     }
     .mainBox .cardBox {
@@ -107,11 +107,12 @@
         border-radius: 10px;
         background: #FFF;
     }
- .usetimes {
+.usetimes {
     text-align: center;
     font-family: 'Roboto', sans-serif;
     padding: 20px;
-    background-color: #f0f2f5;
+    min-height: 400px;
+    /*background-color: #f0f2f5;*/
     min-height: 400px;
 }
         .mainBox >.cardBox> .usetimes >.title  {
@@ -148,17 +149,23 @@
                 border-radius: 4px;
                 background: #0083FF;
             }
-#main{
-    width: 100%;
-    height: 54vh;
-}
-.mainBox > .rightBox > .cardBox > #main {
+
+#main {
     display: flex;
     justify-content: center;
     gap: 40px;
     flex-wrap: wrap;
-    width: 47%;
-    height: 400px;
+    width: 90%;
+    height: 580px;
+}
+
+.mainBox > .rightBox > .cardBox > #main {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: nowrap;
+    width: 90%;
+    height: 580px;
 }
 
 #rank {
@@ -179,7 +186,7 @@ h1 {
     display: flex;
     justify-content: center;
     gap: 40px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .ranking {
