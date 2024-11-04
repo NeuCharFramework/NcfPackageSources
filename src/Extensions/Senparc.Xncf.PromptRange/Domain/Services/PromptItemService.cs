@@ -234,9 +234,9 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return await this.TransEntityToDtoAsync(toSavePromptItem);
     }
 
-    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(PromptItem promptItem)
+    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(List<PromptItem> allPromptItems, PromptItem promptItem)
     {
-        return await this.GenerateTacticTreeAsync(promptItem.RangeName);
+        return await this.GenerateTacticTreeAsync(allPromptItems, promptItem.RangeName);
     }
 
     /// <summary>
@@ -523,10 +523,10 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     /// <param name="rangeName">靶场名</param>
     /// <returns >版本树</returns>
     /// <exception cref="NcfExceptionBase"></exception>
-    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(string rangeName)
+    public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(List<PromptItem> allPromptitems, string rangeName)
     {
         // 获取同一个靶道下的所有的 PromptItem
-        List<PromptItem> fullList = await this.GetFullListAsync(p => p.RangeName == rangeName, z => z.Id, OrderingType.Ascending);
+        List<PromptItem> fullList = allPromptitems.Where(p => p.RangeName == rangeName).ToList();
         //Console.WriteLine("fulllist:" + fullList.OrderBy(z=>z.Id).Select(z => new { z.Id, z.RangeName, z.Tactic, z.Aiming, z.FullVersion,z.ParentTac }).ToJson(true));
 
         //设置顶部节点（Tx）
@@ -627,6 +627,9 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         seh.ValueCompare.AndAlso(!promptName.IsNullOrEmpty(), z => z.RangeName == promptName);
         var where = seh.BuildWhereExpression();
         var allPromptRanges = await promptRangeService.GetFullListAsync(where, z => z.Id, OrderingType.Ascending);
+        var promptRangeIds =allPromptRanges.Select(x => x.Id);
+        
+        var allPromptItems = await this.GetFullListAsync(z => true/*promptRangeIds.Contains(z.Id)*/, z => z.Id, OrderingType.Ascending);
 
         const string treeBranchMark = "┣";
         const string treeBranchArrowMark = "▽";
@@ -652,10 +655,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         //读取评分
         Func<decimal, string> GetScore = score => score < 0 ? "-" : score.ToString();
+
+
         foreach (var promptRange in allPromptRanges)
         {
             //获取树状结构
-            var rangeTree = await this.GenerateTacticTreeAsync(promptRange.RangeName);
+            var rangeTree = await this.GenerateTacticTreeAsync(allPromptItems, promptRange.RangeName);
 
             //Console.WriteLine("rangeTree:" + rangeTree.Select(z => new { z.Name, z.Data.FullVersion }).ToJson(true));
 
