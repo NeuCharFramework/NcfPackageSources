@@ -56,9 +56,9 @@
 		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.17.3.1-preview1" />
 		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.15.2-preview1+37312e28c788cba6605dfcc00947f80a36023b86" />
 		
-		<PackageReference Include="Senparc.Xncf.PromptRange" Version="0.6.4.22-preview1" />
 		<PackageReference Include="Senparc.Xncf.XncfBuilder" Version="0.24.3.50-beta1" />
 	</ItemGroup>-->
+		<PackageReference Include="Senparc.Xncf.PromptRange" Version="0.10.9-preview1" />
   <ItemGroup>
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
@@ -69,7 +69,7 @@
     <Content Remove="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <Compile Remove="obj\**" />
     <Content Remove="obj\**" />
@@ -95,5 +95,13 @@
     <Content Update="wwwroot\js\AgentsManager\lib\axios.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="wwwroot\css\AgentsManager\fontawesome\all.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Update="wwwroot\images\AgentsManager\prompt_selectPrompt.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
