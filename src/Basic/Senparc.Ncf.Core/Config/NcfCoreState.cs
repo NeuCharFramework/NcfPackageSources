@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senparc.Ncf.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -73,5 +74,7 @@ namespace Senparc.Ncf.Core.Config
         /// 被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面
         /// </summary>
         public List<string> DllFilePatterns { get; set; }
+
+        public SystemLanguage SystemLanguage => GlobalCulture.CurrentLanguage;
     }
 }
