@@ -221,7 +221,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<TacticTree_GetResponse>(
                 async (resp, logger) =>
                 {
-                    var tacticTree = await _promptItemService.GenerateTacticTreeAsync(rangeName);
+                    var allPromptItems = await _promptItemService.GetFullListAsync(z => true, z=>z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+                    var tacticTree = await _promptItemService.GenerateTacticTreeAsync(allPromptItems, rangeName);
 
                     return new TacticTree_GetResponse(tacticTree);
                 });
