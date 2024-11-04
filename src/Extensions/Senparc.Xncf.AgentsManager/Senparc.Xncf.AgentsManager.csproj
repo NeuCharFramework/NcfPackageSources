@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.5.15.3-preview1</Version>
+		<Version>0.6.1-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -38,10 +38,12 @@
 			[2024-10-16] v0.5.10-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-10-17] v0.5.11-preview1 完成能够全流程运行的基础版本
 			[2024-10-18] v0.5.12-preview1 优化功能
-			[2024-10-20] 0.5.13-preview1 升级 Senparc.Weixin.Work SDK
-			[2024-10-26] 0.5.15-preview1 发布 MVP 版本
-			[2024-10-26] 0.5.15.3-preview1 优化 Agents 输出
-		</PackageReleaseNotes>
+			[2024-10-20] v0.5.13-preview1 升级 Senparc.Weixin.Work SDK
+			[2024-10-26] v0.5.15-preview1 发布 MVP 版本
+			[2024-10-26] v0.5.15.3-preview1 优化 Agents 输出
+			[2024-11-04] v0.6.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
+			[2024-11-04] v0.6.1-preview1 发布 AgentsManager 新版本，更新 UI
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>

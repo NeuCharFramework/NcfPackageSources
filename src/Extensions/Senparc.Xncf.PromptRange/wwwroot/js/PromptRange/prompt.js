@@ -258,6 +258,15 @@ var app = new Vue({
                 label: 'label'
             },
             contentTextareaRows: 14, //prompt 输入框的行数
+            dialogVisible: false,
+            targetlaneName: '',
+            dailogpromptOptlist: [],
+            box1Hidden: false,
+            box2Hidden: false,
+            box3Hidden: false,
+            lastClickedBox: null,
+            isBoxVisible: true, // 控制盒子显示和隐藏的状态
+            foldsidebarShow: false
         };
     },
     computed: {
@@ -288,7 +297,7 @@ var app = new Vue({
             this.getFieldList()
             // 获取模型列表
             this.getModelOptData()
-
+          
         }, 100)
         // 获取分数趋势图
         // this.getScoringTrendData()
@@ -302,12 +311,118 @@ var app = new Vue({
             }
         });
         resizeObserver.observe(viewElem);
+        setTimeout(() => {
+          this.getTargetRangeIdFromUrl();
+      }, 200)
+      
     },
     beforeDestroy() {
         // 销毁之前移除事件监听器
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
     },
     methods: {
+        //获取路径id 页面数据回显
+        getTargetRangeIdFromUrl() {
+             const targetrangeId = this.$route.query.targetrangeId;
+           
+           
+            if (targetrangeId) {
+                this.setDefaultSelectedOption(targetrangeId);
+            }
+        },
+        setDefaultSelectedOption(targetrangeId) {
+           
+            const defaultOption = this.promptFieldOpt.find(item => item.id === targetrangeId);
+        
+            if (defaultOption) {
+                this.promptField = defaultOption.value;
+               
+                    // 获取靶道列表
+                  this.getPromptOptData().then(() => {
+                    
+                        // promptid is the last one of promptOpt
+                        if (this.promptOpt && this.promptOpt.length > 0) {
+                            const targetlaneId = this.$route.query.targetlaneId;
+                            const _el = this.promptOpt.find(item => item.id === targetlaneId);
+                 
+                            this.promptid = _el.value
+                            if (_el.isDraft) {
+                                this.sendBtns = [
+                                    {
+                                        text: '打靶'
+                                    },
+                                    {
+                                        text: '保存草稿'
+                                    }
+                                ]
+                                this.sendBtnText = '打靶'
+                            } else {
+                                this.sendBtns = [
+                                    {
+                                        text: '连发'
+                                    },
+                                    {
+                                        text: '保存草稿'
+                                    }
+                                ]
+                                this.sendBtnText = '连发'
+                            }
+
+                            // 获取详情
+                            this.getPromptetail(this.promptid, true, true)
+                        } else {
+                            this.sendBtns = [
+                                {
+                                    text: '打靶'
+                                },
+                                {
+                                    text: '保存草稿'
+                                }
+                            ]
+                            this.sendBtnText = '打靶'
+                        }
+
+                    })
+                    // 获取分数趋势图表数据
+                     this.getScoringTrendData()
+                
+
+            }
+        },
+        //侧边栏收起操作
+        foldsidebar() {
+            this.isBoxVisible = !this.isBoxVisible;
+            if (this.foldsidebarShow) {
+             
+                this.foldsidebarShow = false
+
+            } else {
+                this.foldsidebarShow = true
+               
+            }
+        },
+      
+        //放大输入区域
+       
+        Amplification(boxClicked) {
+        
+            if (this.lastClickedBox === boxClicked) {
+                this.box1Hidden = false;
+                this.box2Hidden = false;
+                this.box3Hidden = false;
+                this.lastClickedBox = null;
+                this.getScoringTrendData()
+            } else {
+                // 隐藏其他两个盒子
+                this.box1Hidden = boxClicked !== 'box1';
+                this.box2Hidden = boxClicked !== 'box2';
+                this.box3Hidden = boxClicked !== 'box3';
+                this.lastClickedBox = boxClicked;
+            }
+            // 更新上次点击的盒子
+           
+
+            },
         style(val) {
             const length = 10,
                 progress = val - 0,
@@ -377,33 +492,117 @@ var app = new Vue({
         },
         parameterViewToggle() {
             if (this.parameterViewShow) {
-                this.contentTextareaRows = 14
+               // this.contentTextareaRows = 14
                 this.parameterViewShow = false
 
             } else {
                 this.parameterViewShow = true
-                setTimeout(() => {
-                    this.contentTextareaRows = 21
-                }, 300)
+                //setTimeout(() => {
+                   // this.contentTextareaRows = 21
+               // }, 300)
             }
         },
-        // 靶道 名称
-        promptNameField(e, item) {
+   
+      //  promptNameField(e, item) {
+            // 阻止事件冒泡
+          //  e.stopPropagation();
+            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
+          //  this.$prompt('请输入新的靶道名称', '提示', {
+           //     confirmButtonText: '确定',
+           //     cancelButtonText: '取消',
+            //    inputErrorMessage: '靶道名称不能为空',
+           // }).then(async ({ value }) => {
+           //     this.btnEditHandle({ id: item.id, nickName: value })
+           // }).catch(() => {
+               // this.$message({
+              //      type: 'info',
+             //       message: '已取消操作'
+           //     });
+         //   });
+        // },
+        //重置靶道名称
+        promptNameRest(e,id) {
             // 阻止事件冒泡
             e.stopPropagation();
-            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
-            this.$prompt('请输入新的靶道名称', '提示', {
+            // 弹出提示框
+            this.$confirm('此操作将重置该靶道名称', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                inputErrorMessage: '靶道名称不能为空',
-            }).then(async ({ value }) => {
-                this.btnEditHandle({ id: item.id, nickName: value })
+                type: 'warning'
+            }).then(async () => {
+                this.btnEditHandle({ id: id, nickName: '' })
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消操作'
                 });
             });
+        },
+        // 靶道 名称弹窗
+        promptNameField(e, item) {
+            e.stopPropagation();
+            this.targetlaneNameid = item.id;
+     
+            this.dialogVisible = true
+        },
+        handleSelect(item) {
+            console.log(item);
+        },
+        // 修改靶道 名称弹窗 确认操作
+        confirmtargetlaneName() {
+            if(!this.targetlaneName){
+                this.$message({
+                    message: '靶道名称不能为空！',
+                    type: 'error'
+                })
+                return
+            }
+            const prefix = '名称：';
+            const suffix = ' | 版本号：';
+
+            const startIndex = this.targetlaneName.indexOf(prefix);
+            const endIndex = this.targetlaneName.indexOf(suffix, startIndex);
+
+            if (startIndex !== -1 && endIndex !== -1) {
+                // 如果找到了“名称：”和“| 版本号：”，则提取它们之间的文本
+                this.targetlaneName = this.targetlaneName.substring(startIndex + prefix.length, endIndex);
+                console.log(this.targetlaneName);
+                this.btnEditHandle({ id: this.targetlaneNameid, nickName: this.targetlaneName })
+          
+                this.dialogVisible = false
+                this.targetlaneName = ''
+            } else {
+                // 如果没有找到“名称：”或“| 版本号：”，则执行备用逻辑
+                this.btnEditHandle({ id: this.targetlaneNameid, nickName: this.targetlaneName })
+               
+                this.dialogVisible = false
+                this.targetlaneName = ''
+                console.log(this.targetlaneName);
+            }
+           
+        },
+        //获取靶道弹窗input列表 过滤没有名字的靶道
+        querySearch(queryString, cb) {
+            let restaurants = this.dailogpromptOptlist;
+            console.log(111,this.dailogpromptOptlist)
+            // let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+            let results = queryString
+                ? restaurants.filter(item => {
+                    return (
+                        this.createFilter(queryString)(item) &&
+                        !item.label.includes('未设置')
+                    );
+                })
+                : restaurants.filter(item => !item.label.includes('未设置'));
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (restaurant) => {
+                console.log('Filtering restaurant:', restaurant.label, 'with query:', queryString);
+                const label = restaurant.label || '';
+                return label.toLowerCase().includes(queryString.toLowerCase());
+            };
         },
         // 战术选择 dialog 提交
         tacticalFormSubmitBtn() {
@@ -1563,16 +1762,19 @@ var app = new Vue({
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
+                            console.log(333)
                         })
                     }).catch(() => {
-
+                        console.log(222)
                         this.resetPageData()
                     });
                     return
                 }
+                console.log(111)
                 // 重置页面数据
                 this.resetPageData()
             } else if (itemKey === 'promptid') {
+
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿
                     this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
@@ -1659,6 +1861,7 @@ var app = new Vue({
                 }
 
             } else {
+
                 // 其他
                 //if (itemKey === 'modelid'){}
                 // 页面变化记录
@@ -1703,6 +1906,7 @@ var app = new Vue({
             if (this.promptField) {
                 // 获取靶道列表
                 await this.getPromptOptData().then(() => {
+                    console.log(this.promptOpt)
                     // promptid is the last one of promptOpt
                     if (this.promptOpt && this.promptOpt.length > 0) {
                         let _el = this.promptOpt[this.promptOpt.length - 1]
@@ -1758,8 +1962,14 @@ var app = new Vue({
             }
             this.$refs.tacticalForm.resetFields();
         },
-        checkUseRed(item, which) {
+        checkUseRed(index,item, which) {
             if (item.finalScore === -1 || item.finalScore === '-1') return '';
+            this.$nextTick(() => {
+                const scoreViewElement = document.getElementById('scoreRow' );
+                if (scoreViewElement) {
+                    scoreViewElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
             return item.finalScore === item[which] ? 'warnRow' : ''
         },
         // 版本记录 获取版本记录 树形数据
@@ -1792,7 +2002,7 @@ var app = new Vue({
             for (let i in data) {
                 newData = {
                     id: data[i].data.id,
-                    label: data[i].name ? data[i].name : "未命名",
+                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : "未命名",
                     isPublic: false,
                     data: data[i].data,
                     attributes: data[i].attributes,
@@ -1982,6 +2192,9 @@ var app = new Vue({
                 }
             }
 
+        },
+        cancelManualScore(index) {
+            this.outputList[index].isScoreView = false
         },
         // 输出 选中切换
         outputSelectSwitch(index) {
@@ -2530,6 +2743,7 @@ var app = new Vue({
                         disabled: false,
                     }
                 })
+                this.dailogpromptOptlist = _promptOpt
                 if (isExpected) {
                     this.expectedPluginFoem.checkList.push(`${_find.value}`)
                     // 导出 树形数据 

@@ -41,14 +41,23 @@
         align-items: center;
         justify-content: flex-start;
     }
-
+.d-f-startr-start-title{
+    position:relative;
+}
 .d-f-startr-start-nowrap {
+    position:absolute;
+    top:10px;
+
     display: flex;
     flex-wrap: nowrap;
     align-items: flex-start;
     justify-content: flex-start;
 }
-
+.d-f-startr-start-img{
+    width:200px;
+    height:200px;
+    border:1px solid black;
+}
 .d-c-startr-start-nowrap {
     display: flex;
     flex-direction: column;
@@ -104,6 +113,8 @@
 
 .selectRow {
     width: 100%;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 .justify-content-between {
@@ -116,6 +127,8 @@
 
 .align-flex-end {
     align-items: flex-end;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
 .align-center {
@@ -292,9 +305,10 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 15px;
+    gap: 22px;
     position: relative;
     box-sizing: border-box;
+    height:940px;
     /*min-width: 1240px;
     overflow: auto;
     border-radius: 10px;
@@ -371,9 +385,9 @@
         flex-wrap: nowrap;
         align-items: center;
         justify-content: space-between;
-        overflow: hidden;
         position: relative;
         box-sizing: border-box;
+        height:35px;
     }
 
         .promptPage .titleRow > .titleRow_leftBox {
@@ -429,15 +443,16 @@
 
     /*左侧模块*/
     .promptPage > .promptPage_leftArea {
-        flex: 2;
-        min-width: 809.5px; /*632px*/
+        flex: 0;
+     
         max-height: 9999999px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
         gap: 15px;
         transition: max-height 0.3s ease-in-out;
-        overflow: hidden;
+        position:relative;
+       
     }
 
     .promptPage > .promptPage_leftAreaHide {
@@ -447,6 +462,8 @@
 .promptPage_leftArea > .configurineArea, .promptPage_leftArea > .inputPromptArea {
     display: flex;
     flex-direction: column;
+    min-width: 500px; /*632px*/
+    flex: 1;
     flex-wrap: nowrap;
     gap: 5px;
 }
@@ -455,7 +472,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    gap: 10px;
+    /*gap: 10px;*/
 }
     /*左侧模块 配置 下拉选择 区域*/
     .promptPage_leftArea .configurineAreaItem > .selectRow {
@@ -464,9 +481,9 @@
 
 /*左侧模块 配置 参数 内容 区域*/
 .promptPage_leftArea .paramBox > .paramBox_contentBox {
-    max-height: 300px;
+    max-height: 700px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
     gap: 10px 4%;
     overflow: hidden;
@@ -478,11 +495,13 @@
 }
 
 .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item {
-    width: 48%;
+    width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 8px;
+    gap: 20px;
+    margin-top:20px;
+
 }
 
     .promptPage_leftArea .paramBox > .paramBox_contentBox > .paramBox_contentBox_item > .lableRow {
@@ -558,7 +577,7 @@
                 margin: 0;
             }
 /*输入prompt盒子*/
-.promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox {
+.enterbox > .entertarget > .promptContetnPmroparaBox {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -567,28 +586,28 @@
     justify-content: flex-start;
 }
 
-    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox > .leftItemBox {
+    .enterbox > .entertarget > .promptContetnPmroparaBox > .leftItemBox {
         flex: 1;
     }
 
-    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox > .rightItemBox {
+    .enterbox > .entertarget > .promptContetnPmroparaBox > .rightItemBox {
         max-width: 430px;
         overflow: hidden;
         transition: max-width 0.3s ease-in-out;
     }
 
-    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox > .rightItemHide {
+    .enterbox > .entertarget > .promptContetnPmroparaBox > .rightItemHide {
         max-width: 0px !important;
     }
     /*输入prompt输入框盒子 内容*/
-    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox {
+    .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         gap: 10px;
     }
 
-        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
+        .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
             color: #333;
             font-size: 14px;
             font-style: normal;
@@ -596,7 +615,7 @@
             line-height: normal;
         }
 
-        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
+        .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
@@ -604,7 +623,7 @@
             gap: 10px;
         }
 
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
+            .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
@@ -612,7 +631,7 @@
                 gap: 5px;
             }
 
-                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
+                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
                     white-space: nowrap;
                     padding: 7px 10px;
                     background: #FFF;
@@ -622,17 +641,17 @@
                     cursor: pointer;
                 }
 
-                    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
+                    .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
                         display: inline-block;
                         width: 20px;
                         text-align: left;
                     }
 
-            .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
+            .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
                 position: relative;
             }
 
-                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
+                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
                     padding: 5px 15px 5px 55px;
                     color: #333;
                     font-size: 14px;
@@ -641,7 +660,7 @@
                     line-height: normal;
                 }
 
-                .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
+                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
                     content: '备注:';
                     position: absolute;
                     left: 15px;
@@ -654,7 +673,7 @@
 
 
     /*输入Prompt请求参数盒子 promptPmroparaBox */
-    .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox {
+    .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox {
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -664,7 +683,7 @@
         border: 1px solid #DCDFE6;
     }
 
-        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .formItem {
+        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .formItem {
             padding-right: 20px;
             display: flex;
             align-items: center;
@@ -675,14 +694,14 @@
         }
 
 
-        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
+        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
             margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
         }
 
-        .promptPage_leftArea > .inputPromptArea > .promptContetnPmroparaBox .promptPmroparaBox .footerBtnRow {
+        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .footerBtnRow {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -704,12 +723,30 @@
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 15px;
+    overflow: auto;
+    height: 100%;
 }
-
-    .promptPage_rightArea > .outputArea > .titleRow {
-        justify-content: flex-start;
-        gap: 30px;
+/* 定制滚动条样式 */
+    .outputArea::-webkit-scrollbar {
+        width: 10px; /* 滚动条的宽度 */
     }
+
+    .outputArea::-webkit-scrollbar-track {
+        background: transparent; /* 滚动条轨道的背景色 */
+    }
+
+    .outputArea::-webkit-scrollbar-thumb {
+        background: #DCDFE6; /* 滚动条滑块的背景色 */
+        border-radius: 5px; /* 滚动条滑块的圆角 */
+    }
+
+        .outputArea::-webkit-scrollbar-thumb:hover {
+            background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
+        }
+.promptPage_rightArea > .outputArea > .titleRow {
+    justify-content: flex-start;
+    gap: 30px;
+}
 
         .promptPage_rightArea > .outputArea > .titleRow > .titleRow_scoreBox {
             display: flex;
@@ -720,6 +757,7 @@
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
+            height: 50px;
         }
 
     .promptPage_rightArea > .outputArea > .outputArea_contentBox {
@@ -729,8 +767,6 @@
         flex-wrap: nowrap;
         gap: 10px;
         box-sizing: border-box;
-        overflow: hidden;
-        overflow-y: auto;
         min-height: 416px !important;
         max-height: 46Vh;
     }
@@ -740,6 +776,8 @@
             border-radius: 5px;
             border: 1px solid #DCDFE6;
             word-break: break-all;
+       
+            position: relative;
         }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxActiveItem {
@@ -801,6 +839,12 @@
             border-radius: 5px;
             border: 1px solid #DCDFE6;
             background-color: #FFF;
+            position:absolute;
+            top:-6px;
+            right:0px;
+            z-index:999999;
+            width:350px;
+        
         }
 
             .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .scoreBtnArea {
@@ -876,30 +920,45 @@
 
             .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .scoreRow > .manualScoreArea > .manualOperation {
                 margin-top: 15px;
-                padding-left: 10px;
+               display:flex;
+               justify-content:center;
+               align-items:end;
             }
 /*右侧模块 分析区域*/
-.promptPage_rightArea > .analysisArea {
-    width: 100%;
+.enterbox {
+    display: flex;
+    flex: 1;
+    gap: 15px;
+}
+.entertarget {
+   width:70%;
+   flex:1;
+}
+.promptPage_rightArea > .enterbox > .analysisArea {
+    width: 30%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 3px;
     box-sizing: border-box;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;
 }
 
-    .promptPage_rightArea > .analysisArea > .echartsBox {
+    .promptPage_rightArea > .enterbox > .analysisArea > .echartsBox {
         width: 100%;
         min-width: 379.5px; /*598px*/
         height: 200px;
         box-sizing: border-box;
+        
     }
 
 /*版本记录 btn*/
 .promptPage > .versionBtn {
     position: fixed;
     right: 0;
-    top: 90px;
+    top: 135px;
     padding-right: 5px;
     width: 60px;
     height: 22px;
@@ -1049,3 +1108,26 @@
             box-shadow: 0 0 5px rgb(38 169 233 / 87%);
             padding: 0px 5px;
         }
+
+.sidebarbtn{
+    position:absolute;
+    top:50%;
+    right:-20px;
+}
+.trapezoid {
+    position: absolute;
+    right:-19px;
+    top: 50%;
+    width: 20px;
+    height: 50px;
+    background: linear-gradient(90deg, #fff 13.46%, #fff 59.95%);
+    transform: perspective(0.1em) rotateY(181deg);
+    border-radius: 5px;
+}
+.sidebarview {
+    transform: rotate(180deg);
+}
+.promptVersion{
+    display:flex;
+    justify-content:space-between;
+}
