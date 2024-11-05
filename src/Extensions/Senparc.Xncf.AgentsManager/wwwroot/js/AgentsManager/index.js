@@ -509,7 +509,7 @@ var app = new Vue({
                     if (data.success) {
                         const agentData = data?.data?.list ?? []
                         if (listType === 'agent') {
-                            this.agentList = agentData
+                            this.$set(this,'agentList',agentData)
                             const agentDetail = this.agentDetails?.agentTemplateDto ?? {}
                             // 获取详情 
                             if (agentDetail.id) {
@@ -519,7 +519,7 @@ var app = new Vue({
                             this.calcAgentFillNum()
                         }
                         if (listType === 'groupAgent') {
-                            this.groupAgentList = agentData
+                            this.$set(this,'groupAgentList',agentData)
                             // 确保更新数据时 不会清空选中
                             this.$nextTick(() => {
                                 this.isGetGroupAgent = false
@@ -663,7 +663,7 @@ var app = new Vue({
                             //     children: groupData
                             // }]
                             this.groupSelection = [] // 清空选中
-                            this.groupList = handleGroupData
+                            this.$set(this,'groupList',handleGroupData)
                             const groupDetail = this.groupDetails?.chatGroupDto ?? {}
                             // 获取详情 
                             if (this.groupShowType === '2' && groupDetail.id) {
@@ -671,7 +671,7 @@ var app = new Vue({
                             }
                         }
                         if (listType === 'agentGroup') {
-                            this.agentDetailsGroupList = handleGroupData
+                            this.$set(this,'agentDetailsGroupList',handleGroupData)
                             const groupDetail = handleGroupData[this.agentDetailsGroupIndex]
                             // 获取详情
                             if (groupDetail && groupDetail.id) {
@@ -699,12 +699,12 @@ var app = new Vue({
                             groupDetail.chatGroupDto = chatGroupDto
                         }
                         if (detailType === 'agentGroup') {
-                            this.agentDetailsGroupDetails = groupDetail
+                            this.$set(this,'agentDetailsGroupDetails',groupDetail)
                             // 获取任务列表
                             this.gettaskListData('agentGroupTask', id)
                         }
                         if (['group', 'groupTable'].includes(detailType)) {
-                            this.groupDetails = groupDetail
+                            this.$set(this,'groupDetails',groupDetail)
                             // 获取任务列表
                             this.gettaskListData('groupTask', id)
                         }
@@ -777,7 +777,7 @@ var app = new Vue({
                         })
                         // 任务
                         if (listType === 'task') {
-                            this.taskList = handleTaskData
+                            this.$set(this,'taskList',handleTaskData)
                             // 默认展示第一个任务详情
                             if (handleTaskData && handleTaskData.length) {
                                 const taskDetail = this.taskDetails ? this.taskDetails : handleTaskData[0]
@@ -786,7 +786,7 @@ var app = new Vue({
                         }
                         // 智能体 任务
                         if (listType === 'agentTask') {
-                            this.agentDetailsTaskList = handleTaskData
+                            this.$set(this,'agentDetailsTaskList',handleTaskData)
                             // 默认展示第一个任务详情
                             if (handleTaskData && handleTaskData.length) {
                                 const taskDetail = this.agentDetailsTaskDetails ? this.agentDetailsTaskDetails : handleTaskData[0]
@@ -795,11 +795,11 @@ var app = new Vue({
                         }
                         // 智能体 组 任务
                         if (listType === 'agentGroupTask') {
-                            this.agentDetailsGroupTaskList = handleTaskData
+                            this.$set(this,'agentDetailsGroupTaskList',handleTaskData)
                         }
                         // 组 任务
                         if (listType === 'groupTask') {
-                            this.groupTaskList = handleTaskData
+                            this.$set(this,'groupTaskList',handleTaskData)
                         }
                     } else {
                         app.$message({
@@ -827,19 +827,19 @@ var app = new Vue({
                         }
                         // 智能体 组 任务
                         if (detailType === 'agentGroupTask') {
-                            this.agentDetailsGroupDetailsTaskDetails = taskDetail
+                            this.$set(this,'agentDetailsGroupDetailsTaskDetails',taskDetail)
                         }
                         // 组 任务
                         if (detailType === 'groupTask') {
-                            this.groupTaskDetails = taskDetail
+                            this.$set(this,'groupTaskDetails',taskDetail)
                         }
                         // 智能体 任务
                         if (detailType === 'agentTask') {
-                            this.agentDetailsTaskDetails = taskDetail
+                            this.$set(this,'agentDetailsTaskDetails',taskDetail)
                         }
                         // 任务
                         if (detailType === 'task') {
-                            this.taskDetails = taskDetail
+                            this.$set(this,'taskDetails',taskDetail)
                         }
 
                         if (!detailsOn && taskDetail) {
@@ -886,12 +886,13 @@ var app = new Vue({
                                 //     }, 1000)
                                 // }
                                 if (historiesData.length > 0) {
-                                    this.taskHistoryList = this.taskHistoryList.concat(historiesData);
+                                    const historyList = this.taskHistoryList.concat(historiesData);
+                                    this.$set(this,'taskHistoryList',historyList)
                                 }
                             } else {
                                 const isassignment = arraysEqual(this.taskHistoryList, historiesData)
                                 if (!isassignment && historiesData.length > 0) {
-                                    this.taskHistoryList = historiesData
+                                    this.$set(this,'taskHistoryList',historiesData)
                                 }
                             }
                             // 滚动区域 吸附底部
@@ -909,12 +910,13 @@ var app = new Vue({
                                 //     }, 1000)
                                 // }
                                 if (historiesData.length > 0) {
-                                    this.taskHistoryList = this.taskHistoryList.concat(historiesData);
+                                    const historyList = this.agentDetailsTaskHistoryList.concat(historiesData);
+                                    this.$set(this,'agentDetailsTaskHistoryList',historyList)
                                 }
                             } else {
                                 const isassignment = arraysEqual(this.agentDetailsTaskHistoryList, historiesData)
                                 if (!isassignment && historiesData.length > 0) {
-                                    this.agentDetailsTaskHistoryList = historiesData
+                                    this.$set(this,'agentDetailsTaskHistoryList',historiesData)
                                 }
                             }
                             // 滚动区域 吸附底部
@@ -932,12 +934,13 @@ var app = new Vue({
                                 //     }, 1000)
                                 // }
                                 if (historiesData.length > 0) {
-                                    this.taskHistoryList = this.taskHistoryList.concat(historiesData);
+                                    const historyList = this.agentDetailsGroupTaskHistoryList.concat(historiesData);
+                                    this.$set(this,'agentDetailsGroupTaskHistoryList',historyList)
                                 }
                             } else {
                                 const isassignment = arraysEqual(this.agentDetailsGroupTaskHistoryList, historiesData)
                                 if (!isassignment && historiesData.length > 0) {
-                                    this.agentDetailsGroupTaskHistoryList = historiesData
+                                    this.$set(this,'agentDetailsGroupTaskHistoryList',historiesData)
                                 }
                             }
                             // 滚动区域 吸附底部
@@ -948,19 +951,14 @@ var app = new Vue({
                         // 组 任务
                         if (recordType === 'groupTask') {
                             if (nextHistoryId) {
-                                // for (let index = 0; index < historiesData.length; index++) {
-                                //     const element = historiesData[index];
-                                //     setTimeout(() => {
-                                //         this.taskHistoryList.push(element)
-                                //     }, 1000)
-                                // }
                                 if (historiesData.length > 0) {
-                                    this.taskHistoryList = this.taskHistoryList.concat(historiesData);
+                                    const historyList = this.groupTaskHistoryList.concat(historiesData);
+                                    this.$set(this,'groupTaskHistoryList',historyList)
                                 }
                             } else {
                                 const isassignment = arraysEqual(this.groupTaskHistoryList, historiesData)
                                 if (!isassignment && historiesData.length > 0) {
-                                    this.groupTaskHistoryList = historiesData
+                                    this.$set(this,'groupTaskHistoryList',historiesData)
                                 }
                             }
                             // 滚动区域 吸附底部
@@ -983,14 +981,14 @@ var app = new Vue({
                 .then(res => {
                     const data = res?.data ?? {}
                     if (data.success) {
-                        const groupDetail = data?.data ?? {}
+                        const taskMemberList = data?.data?.agentTemplateDtoList ?? []
                         // 任务
                         if (memberType === 'task') {
-                            this.taskMemberList = groupDetail?.agentTemplateDtoList ?? []
+                            this.$set(this,'taskMemberList',taskMemberList)
                         }
                         // 智能体 任务
                         if (memberType === 'agentTask') {
-                            this.agentDetailsTaskMemberList = groupDetail?.agentTemplateDtoList ?? []
+                            this.$set(this,'agentDetailsTaskMemberList',taskMemberList)
                         }
                     } else {
                         app.$message({
@@ -1068,6 +1066,8 @@ var app = new Vue({
                         })
                         // 重新获取数据
                         if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+                            console.log('#***#',this.tabsActiveName,this.agentDetails);
+                            
                             if (this.tabsActiveName === 'first') {
                                 // agentTemplateStatus
                                 if (this.agentDetails) {
@@ -1221,8 +1221,8 @@ var app = new Vue({
                     // this.getAgentListData('groupAgent')
                 } else if (btnType === 'drawerTaskStart') {
                     Object.assign(this[formName], {
-                        ...item,
-                        groupName: item?.name ?? ''
+                        ...item
+                        // groupName: item?.name ?? ''
                     })
                 } else {
                     Object.assign(this[formName], item)

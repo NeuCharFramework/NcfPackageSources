@@ -33,7 +33,7 @@
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="agentQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'agent')"></el-input>
-                        <el-popover placement="bottom" width="90" trigger="click" v-model="agentFCPVisible">
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="agentFCPVisible" popper-class="filter-popover">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('agent','timeSort')">
                                     <span class="sortRowText">按时间排序</span>
@@ -392,7 +392,7 @@
                                             <div class="itembox">
                                                 <div class="lable">任务描述:</div>
                                                 <div class="value">
-                                                    {{ agentDetailsGroupDetailsTaskDetails.promptCommand }}
+                                                    <span class="text-ellipsis">{{ agentDetailsGroupDetailsTaskDetails.promptCommand }}</span>
                                                     @* 详情 type="primary" *@
                                                     <el-button type="text" size="mini"
                                                         @@click="viewTaskDescription(agentDetailsGroupDetailsTaskDetails)">详情</el-button>
@@ -503,7 +503,7 @@
                                         <div class="itembox">
                                             <div class="lable">任务描述:</div>
                                             <div class="value">
-                                                {{ agentDetailsTaskDetails.promptCommand }}
+                                                <span class="text-ellipsis">{{ agentDetailsTaskDetails.promptCommand }}</span>
                                                 @* 详情 type="primary" *@
                                                 <el-button type="text" size="mini"
                                                     @@click="viewTaskDescription(agentDetailsTaskDetails)">详情</el-button>
@@ -593,7 +593,7 @@
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="groupQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'group')"></el-input>
-                        <el-popover placement="bottom" width="90" trigger="click" v-model="groupFCPVisible">
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="groupFCPVisible" popper-class="filter-popover">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('group','timeSort')">
                                     <span class="sortRowText">按时间排序</span>
@@ -629,7 +629,8 @@
                     }}</span>
                     </span>
                     </el-tree> *@
-                    <div class="sidebar-agentitem text-ellipsis"
+                    <template v-if="groupList&&groupList.length">
+                        <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarGroupIndex === ''}" @@click="handleGroupViewAll">
                         全部组
                     </div>
@@ -638,7 +639,8 @@
                         @@click="handleGroupView('group',item,index)">
                         {{ item.name }}
                     </div>
-                    <div v-if="groupList.length===0" class="df-wn flex-ac flex-jc emptyData"
+                    </template>
+                    <div v-else class="df-wn flex-ac flex-jc emptyData"
                         style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
@@ -818,7 +820,7 @@
                             <div class="itembox">
                                 <div class="lable">任务描述:</div>
                                 <div class="value">
-                                    {{ groupTaskDetails.promptCommand }}
+                                    <span class="text-ellipsis">{{ groupTaskDetails.promptCommand }}</span>
                                     @* 详情 type="primary" *@
                                     <el-button type="text" size="mini"
                                         @@click="viewTaskDescription(groupTaskDetails)">详情</el-button>
@@ -899,7 +901,7 @@
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="taskQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'task')"></el-input>
-                        <el-popover placement="bottom" width="90" trigger="click" v-model="taskFCPVisible">
+                        <el-popover placement="bottom" width="90" trigger="click" v-model="taskFCPVisible" popper-class="filter-popover">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('task','timeSort')">
                                     <span class="sortRowText">按时间排序</span>
@@ -924,7 +926,8 @@
                     </div>
                 </div>
                 <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
-                    <div class="sidebar-agentitem text-ellipsis"
+                    <template v-if="taskList&&taskList.length">
+                        <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
                         全部任务
                     </div>
@@ -933,7 +936,8 @@
                         @@click="handleTaskView('task',item,index)">
                         {{ item.name }}
                     </div>
-                    <div v-if="taskList.length === 0" class="df-wn flex-ac flex-jc emptyData"
+                    </template>
+                    <div v-else class="df-wn flex-ac flex-jc emptyData"
                         style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
@@ -1029,7 +1033,7 @@
                         <div class="itembox">
                             <div class="lable">任务描述:</div>
                             <div class="value">
-                                {{ taskDetails.promptCommand }}
+                                <span class="text-ellipsis">{{ taskDetails.promptCommand }}</span>
                                 @* 详情 type="primary" *@
                                 <el-button type="text" size="mini"
                                     @@click="viewTaskDescription(taskDetails)">详情</el-button>
