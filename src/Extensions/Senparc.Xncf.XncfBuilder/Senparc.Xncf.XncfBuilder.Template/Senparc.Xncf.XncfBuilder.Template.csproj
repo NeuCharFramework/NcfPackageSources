@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.12.2</PackageVersion>
+    <PackageVersion>0.12.3</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -46,6 +46,7 @@
 		v0.12.0 添加达梦（Dm）数据库支持
 		v0.12.1 修正模板代码
 		v0.12.2 更新基础库
+		v0.12.3 更新基础库
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
