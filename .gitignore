@@ -72,9 +72,12 @@ obj/
 /src/Extensions/Senparc.Xncf.PromptRange/objForNcf
 /src/DevelopmentTools/Senparc.Web.DatabasePlant/App_Data/Database/SenparcConfig.config
 
-SenparcConfig.Development.config
+*.Development.config
+*.Development.json
 
 .idea/
 /src/Extensions/Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.PromptRange.XML
-/src/Extensions/Senparc.Xncf.AIAgentsHub.Tests/appsettings.Development.json
 *.zip
+/BuildOutPut
+ncf_obj/
+.vs/
