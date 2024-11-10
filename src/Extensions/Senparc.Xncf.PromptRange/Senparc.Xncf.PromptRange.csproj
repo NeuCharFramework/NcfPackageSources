@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.11.0-preview1</Version>
+		<Version>0.11.1-preview1</Version>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<LangVersion>10.0</LangVersion>
@@ -50,6 +50,7 @@
 			[2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-11-04] v0.11.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
+			[2024-11-08] v0.11.1-preview1 升级 Senparc.AI
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
