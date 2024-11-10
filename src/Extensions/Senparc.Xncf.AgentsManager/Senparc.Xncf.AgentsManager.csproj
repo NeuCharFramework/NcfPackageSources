@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.6.1.1-preview1</Version>
+		<Version>0.6.3-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -41,7 +41,9 @@
 			[2024-10-20] 0.5.13-preview1 升级 Senparc.Weixin.Work SDK
 			[2024-10-26] 0.5.15-preview1 发布 MVP 版本
 			[2024-10-26] 0.5.15.3-preview1 优化 Agents 输出
-		</PackageReleaseNotes>
+					[2024-11-08] v0.6.2-preview1 升级 Senparc.AI
+			[2024-11-08] v0.6.3-preview1 升级 Senparc.AI
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
@@ -51,7 +53,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 		<PackageReference Include="Senparc.AI.Agents" Version="0.2.0" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="1.7.0" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta2" />
 		<PackageReference Include="Senparc.Weixin.Work" Version="3.23.3" />
 	</ItemGroup>
 	<!--<ItemGroup>
