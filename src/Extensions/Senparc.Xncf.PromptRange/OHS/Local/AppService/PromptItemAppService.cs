@@ -221,7 +221,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<TacticTree_GetResponse>(
                 async (resp, logger) =>
                 {
-                    var allPromptItems = await _promptItemService.GetFullListAsync(z => true, z=>z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+                    var allPromptItems = await _promptItemService.GetFullListAsync(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
                     var tacticTree = await _promptItemService.GenerateTacticTreeAsync(allPromptItems, rangeName);
 
                     return new TacticTree_GetResponse(tacticTree);
@@ -240,11 +240,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     //删除其他同名的 PromptItem
                     var sameNameItem = await _promptItemService.GetObjectAsync(z => z.RangeId == item.RangeId && z.NickName == request.NickName);
-                    await _promptItemService.SaveObjectAsync(sameNameItem);
-
-                    //修改当前名称
-                    item.ModifyNickName(request.NickName);
+                    if (sameNameItem != null)
+                    {
+                        sameNameItem.ModifyNickName(null);
+                        await _promptItemService.SaveObjectAsync(sameNameItem);
+                    }
                 }
+
+                if (request.NickName != null)
+                {
+                    //修改当前名称（如果是 ""，则清空）
+                    item.ModifyNickName(request.NickName == "" ? null : request.NickName);
+                }
+
 
                 if (!string.IsNullOrWhiteSpace(request.Note))
                 {
