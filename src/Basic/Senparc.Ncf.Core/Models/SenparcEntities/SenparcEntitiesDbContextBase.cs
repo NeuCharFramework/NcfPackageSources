@@ -167,12 +167,16 @@ namespace Senparc.Ncf.Core.Models
             Console.WriteLine($"============ SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name} ({types.Count()} types) ============");
 
             //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
+
+            var maxLength = types.Max(z => z.Name.Length);
+            Console.WriteLine($" No.  |         Entity Type");
+            Console.WriteLine($"------|{new string('-', maxLength)}");
             for (int i = 0; i < types.Count; i++)
             {
                 //设置需要添加的全局查询
 
                 var entityType = types[i];
-                Console.WriteLine($"  {(i + 1)}.\tEntity Type: {entityType.Name}");
+                Console.WriteLine($"  {(i + 1).ToString().PadRight(4)}| {entityType.Name}");
                 SetGlobalQueryMethodInfo
                         .MakeGenericMethod(entityType.ClrType)
                         .Invoke(this, new object[] { modelBuilder });

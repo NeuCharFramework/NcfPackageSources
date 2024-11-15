@@ -221,7 +221,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<TacticTree_GetResponse>(
                 async (resp, logger) =>
                 {
-                    var allPromptItems = await _promptItemService.GetFullListAsync(z => true, z=>z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+                    var allPromptItems = await _promptItemService.GetFullListAsync(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
                     var tacticTree = await _promptItemService.GenerateTacticTreeAsync(allPromptItems, rangeName);
 
                     return new TacticTree_GetResponse(tacticTree);
@@ -234,12 +234,25 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
-                           throw new Exception($"未找到id为{request.Id}的prompt");
+                           throw new Exception($"未找到 id 为 {request.Id} 的 PromptItem");
                 // 根据 request 中的字段，对应修改
                 if (!string.IsNullOrWhiteSpace(request.NickName))
                 {
-                    item.ModifyNickName(request.NickName);
+                    //删除其他同名的 PromptItem
+                    var sameNameItem = await _promptItemService.GetObjectAsync(z => z.RangeId == item.RangeId && z.NickName == request.NickName);
+                    if (sameNameItem != null)
+                    {
+                        sameNameItem.ModifyNickName(null);
+                        await _promptItemService.SaveObjectAsync(sameNameItem);
+                    }
                 }
+
+                if (request.NickName != null)
+                {
+                    //修改当前名称（如果是 ""，则清空）
+                    item.ModifyNickName(request.NickName == "" ? null : request.NickName);
+                }
+
 
                 if (!string.IsNullOrWhiteSpace(request.Note))
                 {

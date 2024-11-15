@@ -704,11 +704,16 @@
                :visible.sync="dialogVisible"
                width="30%"
               >
-              <span>请选择或输入靶道名称</span>
+        <span>
+            请选择或输入备注名称 
+            <el-tooltip content="选择已存在的名称时，将把其名称转移到当前靶道，原靶道名称重置为“未设置”" placement="top">
+                <i class="el-icon-info"></i>
+            </el-tooltip>
+        </span>
         <el-autocomplete class="inline-input" 
                          v-model="targetlaneName"
                          :fetch-suggestions="querySearch"
-                         placeholder="请输入内容"
+                         placeholder="请输入靶道备注名称"
                          value-key="label"
                          style="width:100%"
         @@select="handleSelect"></el-autocomplete>
