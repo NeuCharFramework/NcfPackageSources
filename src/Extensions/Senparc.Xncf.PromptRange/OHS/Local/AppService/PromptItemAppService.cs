@@ -234,10 +234,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) ??
-                           throw new Exception($"未找到id为{request.Id}的prompt");
+                           throw new Exception($"未找到 id 为 {request.Id} 的 PromptItem");
                 // 根据 request 中的字段，对应修改
                 if (!string.IsNullOrWhiteSpace(request.NickName))
                 {
+                    //删除其他同名的 PromptItem
+                    var sameNameItem = await _promptItemService.GetObjectAsync(z => z.RangeId == item.RangeId && z.NickName == request.NickName);
+                    await _promptItemService.SaveObjectAsync(sameNameItem);
+
+                    //修改当前名称
                     item.ModifyNickName(request.NickName);
                 }
 
