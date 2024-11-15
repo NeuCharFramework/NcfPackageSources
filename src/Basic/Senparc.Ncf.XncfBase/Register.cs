@@ -596,43 +596,53 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            foreach (var autoConfigurationMapping in XncfAutoConfigurationMappingList)
+            var logs = new StringBuilder();
+
+            try
             {
-                if (autoConfigurationMapping == null)
+
+                foreach (var autoConfigurationMapping in XncfAutoConfigurationMappingList)
                 {
-                    continue;
-                }
+                    if (autoConfigurationMapping == null)
+                    {
+                        continue;
+                    }
 
-                SenparcTrace.SendCustomLog("监测到 ApplyAllAutoConfigurationMapping 执行", autoConfigurationMapping.GetType().FullName);
+                    logs.AppendLine(autoConfigurationMapping.GetType().FullName);
 
-                //获取配置实体类型，如：DbConfig_WeixinUserConfigurationMapping
-                Type mappintConfigType = autoConfigurationMapping.GetType();
-                //获取 IEntityTypeConfiguration<Entity> 接口
-                var interfaceType = mappintConfigType.GetInterfaces().FirstOrDefault(z => z.Name.StartsWith("IEntityTypeConfiguration"));
-                if (interfaceType == null)
-                {
-                    Console.WriteLine("interfaceType 为 null（不为 IEntityTypeConfiguration）");
-                    continue;
-                }
-                //实体类型，如：DbConfig
-                Type entityType = interfaceType.GenericTypeArguments[0];
+                    //获取配置实体类型，如：DbConfig_WeixinUserConfigurationMapping
+                    Type mappintConfigType = autoConfigurationMapping.GetType();
+                    //获取 IEntityTypeConfiguration<Entity> 接口
+                    var interfaceType = mappintConfigType.GetInterfaces().FirstOrDefault(z => z.Name.StartsWith("IEntityTypeConfiguration"));
+                    if (interfaceType == null)
+                    {
+                        Console.WriteLine("interfaceType 为 null（不为 IEntityTypeConfiguration）");
+                        continue;
+                    }
+                    //实体类型，如：DbConfig
+                    Type entityType = interfaceType.GenericTypeArguments[0];
 
-                //PS：此处不能过滤，否则可能导致如 SystemServiceEntities_SqlServer / SystemServiceEntities_Mysql 中只有先注册的对象才成功，后面的被忽略
-                //if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
-                //{
-                //    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
-                //    //continue;
-                //}
+                    //PS：此处不能过滤，否则可能导致如 SystemServiceEntities_SqlServer / SystemServiceEntities_Mysql 中只有先注册的对象才成功，后面的被忽略
+                    //if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
+                    //{
+                    //    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                    //    //continue;
+                    //}
 
-                entityTypeConfigurationMethod.MakeGenericMethod(entityType)
-                                .Invoke(modelBuilder, new object[1]
-                                {
+                    entityTypeConfigurationMethod.MakeGenericMethod(entityType)
+                                    .Invoke(modelBuilder, new object[1]
+                                    {
                                     autoConfigurationMapping
-                                });
+                                    });
 
-                ApplyedAutoConfigurationMappingTypes.Add(entityType);
+                    ApplyedAutoConfigurationMappingTypes.Add(entityType);
 
-                //entityTypeConfigurationMethod.Invoke(modelBuilder, new[] { autoConfigurationMapping });
+                    //entityTypeConfigurationMethod.Invoke(modelBuilder, new[] { autoConfigurationMapping });
+                }
+            }
+            finally
+            {
+                SenparcTrace.SendCustomLog("监测到 ApplyAllAutoConfigurationMapping 执行", logs.ToString());
             }
 
             //TODO：添加 IQueryTypeConfiguration<>

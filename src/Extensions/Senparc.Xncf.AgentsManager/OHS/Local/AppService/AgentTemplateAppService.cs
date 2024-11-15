@@ -171,11 +171,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var agentTemplateDto = this._agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
 
                 var promptCode = agentTemplateDto.PromptCode;
-                var version = PromptItem.GetVersionObject(promptCode);
-                var promptItem = await this._promptItemService.GetObjectAsync(z =>
-                        z.RangeName == version.RangeName
-                        && z.Tactic == version.Tactic
-                        && z.Aiming == version.Aim);
+                var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode, true);
                 var promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
 
                 var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);

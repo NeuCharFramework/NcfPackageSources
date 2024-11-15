@@ -1,5 +1,6 @@
 ﻿using AutoGen.Core;
 using AutoGen.SemanticKernel;
+using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
 using Senaprc.AI.Agents.AgentExtensions;
 using Senaprc.AI.Agents.AgentUtility;
@@ -53,7 +54,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="individuation"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<IMessage>> RunChatGroup(AppServiceLogger logger, int groupId, string userCommand, ISenparcAiSetting senparcAiSetting, bool individuation)
+        public async Task<IAsyncEnumerable<IMessage>> RunChatGroup(AppServiceLogger logger, int groupId, string userCommand, ISenparcAiSetting senparcAiSetting, bool individuation)
         {
             var chatGroupMemberService = base.GetService<ServiceBase<ChatGroupMember>>();
             var agentTemplateService = base.GetService<AgentsTemplateService>();
@@ -177,13 +178,26 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 var commandMessage = new TextMessage(Role.Assistant, userCommand, hearingMember.Name);
 
-                IEnumerable<IMessage> result = await enterAgent.SendMessageToGroupAsync(
-                      groupChat: aiTeam,
-                      chatHistory: [greetingMessage, commandMessage],
-                      maxRound: 10);
+                var result = aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
+          maxRound: 20);
 
-                Console.WriteLine("Chat finished.");
-                logger.Append("已完成运行：" + chatGroup.Name);
+                //await foreach (var message in )
+                //{
+                //    // process exit
+                //    if (message.GetContent()?.Contains("exit") is true)
+                //    {
+                //        //Console.WriteLine("您已推出对话");
+                //        //return;
+                //    }
+                //}
+
+                ////IEnumerable<IMessage> result = await enterAgent.SendMessageToGroupAsync(
+                ////      groupChat: aiTeam,
+                ////      chatHistory: [greetingMessage, commandMessage],
+                ////      maxRound: 10);
+
+                //Console.WriteLine("Chat finished.");
+                //logger.Append("已完成运行：" + chatGroup.Name);
 
                 return result;
             }
@@ -356,9 +370,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 var admin = new SemanticKernelAgent(
                     kernel: kernel,
-                    name: adminAgenttemplate.Name,
-                    systemMessage: adminPromptResult.PromptItem.Content)
-                    .RegisterTextMessageConnector();
+                    name: "admin"/*adminAgenttemplate.Name*//*,
+                    systemMessage: adminPromptResult.PromptItem.Content*/)
+                    .RegisterMessageConnector();
+                //.RegisterTextMessageConnector();
 
 
                 var graphConnector = GraphBuilder.Start()
@@ -383,10 +398,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                     var commandMessage = new TextMessage(Role.Assistant, userCommand, hearingMember.Name);
 
-                    IEnumerable<IMessage> result = await enterAgent.SendMessageToGroupAsync(
-                          groupChat: aiTeam,
-                          chatHistory: [greetingMessage, commandMessage],
-                          maxRound: 10);
+                    //IEnumerable<IMessage> result = await enterAgent.SendMessageToGroupAsync(
+                    //      groupChat: aiTeam,
+                    //      chatHistory: [greetingMessage, commandMessage],
+                    //      maxRound: 10);
+
+                    await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
+          maxRound: 20))
+                    {
+                        // process exit
+                        if (message.GetContent()?.Contains("exit") is true)
+                        {
+                            //Console.WriteLine("您已推出对话");
+                            return;
+                        }
+                    }
 
                     Console.WriteLine("Chat finished.");
                     logger.Append("已完成运行：" + chatGroup.Name);
@@ -404,6 +430,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 catch (Exception ex)
                 {
                     SenparcTrace.BaseExceptionLog(ex);
+                    SenparcTrace.SendCustomLog("异常详情", ex.StackTrace);
                     throw;
                 }
                 finally
