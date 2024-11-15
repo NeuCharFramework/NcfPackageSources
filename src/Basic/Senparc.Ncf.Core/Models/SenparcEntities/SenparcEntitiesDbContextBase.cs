@@ -161,9 +161,10 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var dt1 = SystemTime.Now;
             var types = modelBuilder.Model.GetEntityTypes().Where(e => typeof(EntityBase).IsAssignableFrom(e.ClrType)).ToList();
 
-            Console.WriteLine($"SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name} ({types.Count()} types)");
+            Console.WriteLine($"============ SenparcEntitiesDbContextBase OnModelCreating：{this.GetType().Name} ({types.Count()} types) ============");
 
             //Console.WriteLine("\t\t types:" + types.Select(z => z.Name).ToJson());
             for (int i = 0; i < types.Count; i++)
@@ -177,10 +178,11 @@ namespace Senparc.Ncf.Core.Models
                         .Invoke(this, new object[] { modelBuilder });
             }
 
-            Console.WriteLine();
 
             base.OnModelCreating(modelBuilder);
 
+            Console.WriteLine($"============ SenparcEntitiesDbContextBase OnModelCreating End({SystemTime.DiffTotalMS(dt1)}ms) ============");
+            Console.WriteLine();
         }
 
         /// <summary>

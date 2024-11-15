@@ -17,7 +17,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Mapping
     {
         public override void Configure(EntityTypeBuilder<TableData> builder)
         {
-            Console.WriteLine("==========DynamicData_TableDataConfigurationMapping===========");
+            Console.WriteLine("run DynamicData_TableDataConfigurationMapping");
 
             // 配置索引  
             builder.HasIndex(td => td.TableId)
@@ -49,9 +49,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Mapping
     {
         public override void Configure(EntityTypeBuilder<ColumnMetadata> builder)
         {
-            Console.WriteLine("==========DynamicData_ColumnMetadataConfigurationMapping============");
-
-
+            Console.WriteLine("run DynamicData_ColumnMetadataConfigurationMapping");
             builder.HasOne(cm => cm.TableMetadata)
                    .WithMany(tm => tm.ColumnMetadatas)
                    .HasForeignKey(cm => cm.TableMetadataId)

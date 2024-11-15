@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
@@ -27,23 +29,42 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
 
             #region 其他动态模块的 OnModelCreating 过程注入到当前 DbContext
 
+            var dt1 = SystemTime.Now;
+            Console.WriteLine();
             Console.WriteLine("============= SenparcEntities 动态加载 Start =============");
-            foreach (var databaseRegister in XncfRegisterManager.XncfDatabaseList)
+            var databaseList = XncfRegisterManager.XncfDatabaseList;
+
+            // 计算所有类型名称的最大长度  
+            int maxRegisterLength = databaseList.Max(db => db.GetType().FullName.Length);
+            int maxDbContextTypeLength = databaseList.Max(db => db.TryGetXncfDatabaseDbContextType.Name.Length);
+            Console.WriteLine($"{"Register".PadRight(maxRegisterLength)} | {"DbContextType"}");
+            Console.WriteLine($"{new string('-',maxRegisterLength)} | {new string('-', maxDbContextTypeLength)}");
+
+            foreach (var databaseRegister in databaseList)
             {
-                Console.WriteLine("SenparcEntities 动态加载：" + databaseRegister.GetType().Name + " | DbContextType:" + databaseRegister.TryGetXncfDatabaseDbContextType.Name);
+                string typeName = databaseRegister.GetType().FullName;
+                string dbContextTypeName = databaseRegister.TryGetXncfDatabaseDbContextType.Name;
+
+                // 使用字符串格式化，使输出对齐  
+                Console.WriteLine($"{typeName.PadRight(maxRegisterLength)} | {dbContextTypeName}");
+
                 databaseRegister.OnModelCreating(modelBuilder);
             }
-            Console.WriteLine("============= SenparcEntities 动态加载 End =============");
-
+            Console.WriteLine($"============= SenparcEntities 动态加载 End ({SystemTime.DiffTotalMS(dt1)}ms) =============");
+            Console.WriteLine();
             #endregion
 
             #region 【核心】全局自动注入（请勿改变此命令位置）
 
+            var dt2 = SystemTime.Now;
+            Console.WriteLine(" ============= SenparcEntities 数据库实体注入 Start =============");
+
             //注册所有 XncfAutoConfigurationMapping 动态模块
-            var dt1 = SystemTime.Now;
             Senparc.Ncf.XncfBase.Register.ApplyAllAutoConfigurationMapping(modelBuilder);
-            SenparcTrace.SendCustomLog("SenparcEntities 数据库实体注入", $"耗时：{SystemTime.DiffTotalMS(dt1)}ms");
-            Console.WriteLine($"SenparcEntities 数据库实体注入，耗时：{SystemTime.DiffTotalMS(dt1)}ms");
+
+            var diffDt2 = SystemTime.DiffTotalMS(dt2);
+            SenparcTrace.SendCustomLog("SenparcEntities 数据库实体注入结束", $"耗时：{diffDt2}ms");
+            Console.WriteLine($"============= SenparcEntities 数据库实体注入 End（{diffDt2}ms） =============");
             Console.WriteLine();
             #endregion
 
