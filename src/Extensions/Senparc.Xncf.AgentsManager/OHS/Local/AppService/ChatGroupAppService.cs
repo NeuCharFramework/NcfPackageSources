@@ -1,4 +1,5 @@
-﻿using Senparc.CO2NET;
+﻿using Microsoft.CodeAnalysis.CSharp;
+using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -134,9 +135,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 foreach (var chatGroupId in request.ChatGroups.SelectedValues.Select(z => int.Parse(z)))
                 {
-                    var task = _chatGroupService.RunChatGroup(logger, chatGroupId, request.Command, aiSetting, request.Individuation.IsSelected("1"));
+                    var task =  _chatGroupService.RunChatGroup(logger, chatGroupId, request.Command, aiSetting, request.Individuation.IsSelected("1"));
                     tasks.Add(task);
-                }
+                } 
 
                 Task.WaitAll(tasks.ToArray());
 

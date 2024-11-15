@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.31.1-preview1</Version>
+		<Version>0.32.0-preview1</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -56,6 +56,7 @@
 			[2024-10-16] v0.30.9-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-11-04] v0.31.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
 			[2024-11-08] v0.31.1-preview1 升级 Senparc.AI
+			[2024-11-15] v0.32.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

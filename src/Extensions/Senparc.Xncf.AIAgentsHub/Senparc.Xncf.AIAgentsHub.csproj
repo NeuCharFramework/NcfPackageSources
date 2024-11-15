@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.8.3-preview1</Version>
+		<Version>0.9.0-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -36,6 +36,7 @@
 			[2024-11-05] v0.8.1.1-preview1 AgentsManager 优化 UI
 			[2024-11-08] v0.8.2-preview1 升级 Senparc.AI
 			[2024-11-08] v0.8.3-preview1 升级 Senparc.AI
+			[2024-11-15] v0.9.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
