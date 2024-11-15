@@ -57,7 +57,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             #region 【核心】全局自动注入（请勿改变此命令位置）
 
             var dt2 = SystemTime.Now;
-            Console.WriteLine(" ============= SenparcEntities 数据库实体注入 Start =============");
+            Console.WriteLine("============= SenparcEntities 数据库实体注入 Start =============");
 
             //注册所有 XncfAutoConfigurationMapping 动态模块
             Senparc.Ncf.XncfBase.Register.ApplyAllAutoConfigurationMapping(modelBuilder);
