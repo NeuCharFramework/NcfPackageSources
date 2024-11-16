@@ -59,10 +59,10 @@ namespace Senparc.Ncf.Core
             return sb.ToString();
         }
 
-        public static void ShowSuccessTip(string note)
+        public static void ShowSuccessTip(string note,string systemVersion = null)
         {
             //输出启动成功标志
-            var systemVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+             systemVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var startupNote = Senparc.Ncf.Core.VersionManager.GetVersionNote(systemVersion, note);
             Console.WriteLine("----------------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;

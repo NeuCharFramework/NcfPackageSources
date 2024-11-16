@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.22.1-preview1</Version>
+		<Version>0.22.2-preview1</Version>
 		<AssemblyName>Senparc.Ncf.Core</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Core</RootNamespace>
 		<LangVersion>10.0</LangVersion>
@@ -39,7 +39,8 @@
 			[2024-10-16] v0.21.0 优化 AppServiceBase，提供依赖注入快捷方法
 			[2024-10-26] v0.21.2 更新启动标志信息
 			[2024-11-15] v0.22.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-</PackageReleaseNotes>
+			[2024-11-16] v0.22.2-preview1 启动日志的版本号提供外部自定义
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
