@@ -29,6 +29,17 @@ namespace Senparc.Xncf.Installer.OHS.Local.AppService
             this._httpContextAccessor = httpContextAccessor;
         }
 
+        [ApiBind]
+        public async Task<AppResponseBase<string>> KeepAlive()
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var content = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpGetAsync(base.ServiceProvider, "https://www.senparc.com", Encoding.UTF8);
+                return content;
+            });
+        }
+
+
         [ApiBind()]
         public async Task<AppResponseBase<InstallResponseDto>> InstallAsync(InstallRequestDto installRequestDto)
         {
