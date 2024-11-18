@@ -54,7 +54,7 @@
 		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.CO2NET" Version="3.0.0-beta1" />
+		<PackageReference Include="Senparc.CO2NET" Version="3.0.0-beta2.2" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
