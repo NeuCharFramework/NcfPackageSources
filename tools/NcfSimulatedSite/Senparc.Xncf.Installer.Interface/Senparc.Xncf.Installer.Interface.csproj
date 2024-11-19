@@ -28,7 +28,13 @@
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Folder Include="OHS\Remote\" />
+	  <Compile Remove="OHS\Remote\**" />
+	  <EmbeddedResource Remove="OHS\Remote\**" />
+	  <None Remove="OHS\Remote\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="OHS\AppService\" />
+	  <Folder Include="OHS\PL\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />

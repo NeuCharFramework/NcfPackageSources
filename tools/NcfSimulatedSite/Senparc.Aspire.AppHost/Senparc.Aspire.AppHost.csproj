@@ -15,6 +15,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Web\Senparc.Web.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
   </ItemGroup>
 
 </Project>

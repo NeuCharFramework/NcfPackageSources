@@ -7,7 +7,6 @@
 
 using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
-using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.WebApi;
 using System.Text;
 
@@ -27,6 +26,8 @@ System.Net.ServicePointManager.ServerCertificateValidationCallback =
 builder.Services.AddDaprClient();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
@@ -78,7 +79,7 @@ app.MapGet("/test", async httpContext =>
     var apiBindName = "InstallAppService";
     var methodName = "KeepAlive";
     var apiPath = NcfWebApiHelper.GetNcfApiClientPath(xncfName, apiBindName, methodName, null);
-    Console.WriteLine("/test url: "+apiPath);
+    Console.WriteLine("/test url: " + apiPath);
     //var apiPath = $"/api/{keyName}/{apiBindGroupNamePath}/{apiNamePath}{showStaticApiState}";
     var url = apiPath; //"/api/Senparc.Xncf.Installer/InstallAppService/Xncf.Installer_InstallAppService.KeepAlive";
     var result2 = await RequestUtility.HttpGetAsync(null, url, Encoding.UTF8, apiClient);
