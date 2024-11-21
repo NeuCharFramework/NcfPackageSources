@@ -56,15 +56,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Domain\Migrations\Oracle\**" />
-	  <Content Remove="Domain\Migrations\Oracle\**" />
-	  <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
-	  <None Remove="Domain\Migrations\Oracle\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Remove="appsettings.json" />
-	  <Content Remove="App_Data\Database\SenparcConfig.config" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -89,5 +81,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="App_Data\ApiDocXml\DynamicFiles\" />
 	</ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ namespace Senparc.Xncf.Installer
     {
         #region IXncfRegister 接口
 
-        public override string Name => Interface.Config.XncfName;
+        public override string Name => "Senparc.Xncf.Installer";
 
         public override string Uid => "62FBB022-B04E-423F-82FE-926D418A0815";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
