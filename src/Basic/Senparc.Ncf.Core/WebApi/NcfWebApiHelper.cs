@@ -1,4 +1,6 @@
-﻿using Senparc.CO2NET;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.WebApi;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,38 @@ namespace Senparc.Ncf.Core.WebApi
 
             var apiPath = WebApiEngine.GetApiPath(xncfName, appServiceName, apiName, showStaticApiState);
             return apiPath;
+        }
+
+        /// <summary>
+        /// 获取 Aspire 使用的统一默认 XNCF 名称
+        /// </summary>
+        /// <param name="projectType"></param>
+        /// <param name="uniqueCode"></param>
+        /// <returns></returns>
+        public static string GetXncfProjectName(Type projectType,string uniqueCode=null)
+        {
+            var name = projectType.Name.Replace("_", ".");
+            if (!uniqueCode.IsNullOrEmpty())
+            {
+                name += $".{uniqueCode}";
+            }
+            return name;
+        }
+
+
+        /// <summary>
+        /// 获取 Aspire 使用的统一默认 XNCF 名称
+        /// </summary>
+        /// <param name="uniqueCode"></param>
+        /// <returns></returns>
+        public static string GetXncfProjectName<T>(string uniqueCode = null)
+        {
+            var name = typeof(T).Name.Replace("_", ".");
+            if (!uniqueCode.IsNullOrEmpty())
+            {
+                name += $".{uniqueCode}";
+            }
+            return name;
         }
     }
 }
