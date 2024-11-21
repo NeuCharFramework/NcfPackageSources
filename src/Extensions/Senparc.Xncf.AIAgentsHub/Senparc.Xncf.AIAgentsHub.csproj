@@ -1,23 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.10.1-preview1</Version>
-    <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
-    <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
-    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>人工智能代理枢纽模块</Description>
-    <Copyright>Senparc</Copyright>
-    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.AIAgentsHub</PackageTags>
-    <Authors>Senparc</Authors>
-    <Owners>Senparc</Owners>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>AI Agent Hub</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Version>0.10.2-preview1</Version>
+		<AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
+		<RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<Description>人工智能代理枢纽模块</Description>
+		<Copyright>Senparc</Copyright>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.AIAgentsHub</PackageTags>
+		<Authors>Senparc</Authors>
+		<Owners>Senparc</Owners>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Title>AI Agent Hub</Title>
+		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
 			v0.1.0 创世
             [2024-08-06] v0.6.3.0-preview1 update Senparc.AI.Kernel
 			[2024-08-31] v0.7.0-preview1 PromptRange 支持 Markdown 输出格式展示
@@ -37,44 +37,45 @@
 			[2024-11-08] v0.8.2-preview1 升级 Senparc.AI
 			[2024-11-08] v0.8.3-preview1 升级 Senparc.AI
 			[2024-11-15] v0.9.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+			[2024-11-21] v0.10.2-preview1 更新 CO2NET 及缓存基础库
 </PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta3" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Repository\Senparc.Ncf.Repository.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-    <ProjectReference Include="..\..\DevelopmentTools\Senparc.Web.DatabasePlant\Senparc.Web.DatabasePlant.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
-  </ItemGroup>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta3" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="App_Data\SenparcTraceLog\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Repository\Senparc.Ncf.Repository.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
+		<ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\DevelopmentTools\Senparc.Web.DatabasePlant\Senparc.Web.DatabasePlant.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+		<ProjectReference Include="..\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+	</ItemGroup>
 </Project>
