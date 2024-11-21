@@ -1,12 +1,13 @@
 using Aspire.Hosting;
 using Projects;
+using Senparc.Ncf.Core.WebApi;
 using System.Text;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 //if (builder.ExecutionContext.IsRunMode)
 //{
-var installer = builder.AddProject<Projects.Senparc_Xncf_Installer>(nameof(Senparc_Xncf_Installer).Replace("_", "."))
+var installer = builder.AddProject<Projects.Senparc_Xncf_Installer>(NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Installer>())
          .WithExternalHttpEndpoints();
 
 // "../Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj"
@@ -15,7 +16,7 @@ var installer = builder.AddProject<Projects.Senparc_Xncf_Installer>(nameof(Senpa
 //}
 
 
-var ncfWeb = builder.AddProject<Projects.Senparc_Web>(nameof(Senparc_Web).Replace("_","."))
+var ncfWeb = builder.AddProject<Projects.Senparc_Web>(NcfWebApiHelper.GetXncfProjectName<Senparc_Web>())
            .WithReference(installer)
            .WithExternalHttpEndpoints();
 
