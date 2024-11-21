@@ -8,7 +8,6 @@
 using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.WebApi;
-using Senparc.Ncf.Core.WebApi;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +17,6 @@ builder.AddNcf();
 
 //添加 ServiceDefaults
 builder.AddServiceDefaults();
-
 
 System.Net.ServicePointManager.ServerCertificateValidationCallback =
     ((sender, certificate, chain, sslPolicyErrors) => true);
@@ -65,5 +63,39 @@ app.MapRazorPages();
 app.MapControllers();
 
 app.ShowSuccessTip();//显示系统准备成功提示
+
+string GetNcfApiClientPath(string xncfName,string appServiceName, string methodName,string showStaticApiState=null)
+{
+    var globalName = ApiBindAttribute.GetGlobalName(xncfName,$"{appServiceName}.{methodName}");
+
+    var indexOfApiGroupDot = globalName.IndexOf(".");
+    var apiName = globalName.Substring(indexOfApiGroupDot + 1, globalName.Length - indexOfApiGroupDot - 1);
+    //var apiBindGlobalName = globalName.Split('.')[0];
+    
+    var apiPath = WebApiEngine.GetApiPath(xncfName, appServiceName, apiName, showStaticApiState);
+    Console.WriteLine(apiPath);
+    return apiPath;
+}
+
+app.MapGet("/test", async httpContext =>
+{
+    //var senparcWebClient = httpContext.RequestServices.GetService<SenparcWebClient>();
+    //var result = await senparcWebClient.GetHtml();
+    //await httpContext.Response.WriteAsync(result);
+
+    var apiClientHelper = httpContext.RequestServices.GetService<ApiClientHelper>();
+    var apiClient = apiClientHelper.ConnectApiClient("installer");
+
+    var xncfName = "Senparc.Xncf.Installer";//Assembly name / catalog
+    var apiBindName = "InstallAppService";
+    var methodName = "KeepAlive";
+    var apiPath = GetNcfApiClientPath(xncfName, apiBindName, methodName, null);
+
+    //var apiPath = $"/api/{keyName}/{apiBindGroupNamePath}/{apiNamePath}{showStaticApiState}";
+    var url = apiPath; //"/api/Senparc.Xncf.Installer/InstallAppService/Xncf.Installer_InstallAppService.KeepAlive";
+    var result2 = await RequestUtility.HttpGetAsync(null, url, Encoding.UTF8, apiClient);
+
+    await httpContext.Response.WriteAsync(result2);
+});
 
 app.Run();
