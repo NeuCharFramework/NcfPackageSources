@@ -31,7 +31,24 @@ namespace Senparc.Ncf.Core.WebApi
             return apiPath;
         }
 
+      
         /// <summary>
+        /// 获取 Aspire 使用的统一默认 XNCF 名称
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="uniqueCode"></param>
+        /// <returns></returns>
+        public static string GetXncfProjectName(string name, string uniqueCode = null)
+        {
+            name = name.Replace(".", "-").Replace("_","-");
+            if (!uniqueCode.IsNullOrEmpty())
+            {
+                name += $"_{uniqueCode}";
+            }
+            return name;
+        }
+
+  /// <summary>
         /// 获取 Aspire 使用的统一默认 XNCF 名称
         /// </summary>
         /// <param name="projectType"></param>
@@ -39,12 +56,8 @@ namespace Senparc.Ncf.Core.WebApi
         /// <returns></returns>
         public static string GetXncfProjectName(Type projectType,string uniqueCode=null)
         {
-            var name = projectType.Name.Replace(".", "_");
-            if (!uniqueCode.IsNullOrEmpty())
-            {
-                name += $"_{uniqueCode}";
-            }
-            return name;
+            var name = projectType.Name;
+            return GetXncfProjectName(name, uniqueCode);
         }
 
 
@@ -55,12 +68,8 @@ namespace Senparc.Ncf.Core.WebApi
         /// <returns></returns>
         public static string GetXncfProjectName<T>(string uniqueCode = null)
         {
-            var name = typeof(T).Name.Replace(".", "_");
-            if (!uniqueCode.IsNullOrEmpty())
-            {
-                name += $".{uniqueCode}";
-            }
-            return name;
+            var name = typeof(T).Name;
+            return GetXncfProjectName(name, uniqueCode);
         }
     }
 }
