@@ -55,7 +55,7 @@ namespace Senparc.Ncf.Core.WebApi
         /// <returns></returns>
         public static string GetXncfProjectName<T>(string uniqueCode = null)
         {
-            var name = typeof(T).Name.Replace("_", ".");
+            var name = typeof(T).Name.Replace(".", "_");
             if (!uniqueCode.IsNullOrEmpty())
             {
                 name += $".{uniqueCode}";
