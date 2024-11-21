@@ -45,11 +45,11 @@ steps:
     dotnet workload install aspire  
   displayName: 'Install Aspire Workload'  
 
-- task: DotNetCoreCLI@2    
-  displayName: 'dotnet workload list'    
-  inputs:      
-    command: custom      
-    custom: 'workload list'    
+# - task: DotNetCoreCLI@2    
+#   displayName: 'dotnet workload list'    
+#   inputs:      
+#     command: custom      
+#     custom: 'workload list'    
 
 - task: NuGetToolInstaller@1    
   displayName: 'Use NuGet 6.3.0'    
