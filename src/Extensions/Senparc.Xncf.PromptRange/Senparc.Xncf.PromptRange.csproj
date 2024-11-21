@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.12.1-preview1</Version>
+		<Version>0.13.2-preview1</Version>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<LangVersion>10.0</LangVersion>
@@ -53,7 +53,8 @@
 			[2024-11-08] v0.11.1-preview1 升级 Senparc.AI
 			[2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 			[2024-11-15] v0.12.1-preview1 升级备注名称替换功能
-		</PackageReleaseNotes>
+			[2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
 		<DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>

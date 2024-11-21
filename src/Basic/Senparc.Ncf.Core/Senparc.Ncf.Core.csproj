@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.22.2-preview1</Version>
+		<Version>0.23.3-preview1</Version>
 		<AssemblyName>Senparc.Ncf.Core</AssemblyName>
 		<RootNamespace>Senparc.Ncf.Core</RootNamespace>
 		<LangVersion>10.0</LangVersion>
@@ -40,6 +40,9 @@
 			[2024-10-26] v0.21.2 更新启动标志信息
 			[2024-11-15] v0.22.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 			[2024-11-16] v0.22.2-preview1 启动日志的版本号提供外部自定义
+			[2024-11-19] v0.23.1-preview1 升级基础库，支持 Aspire提供对 的支持和优化
+			[2024-11-20] v0.23.2-preview1 新增发方法：获取 Aspire 使用的统一默认 XNCF 名称
+			[2024-11-21] v0.23.3-preview1 更新 CO2NET 及缓存基础库
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -68,8 +71,9 @@
 	<ItemGroup>
 		<!--<PackageReference Include="AutoMapper" Version="7.0.1" />-->
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-		<PackageReference Include="Senparc.CO2NET" Version="3.0.0-beta1" />
-		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.0.1-beta1" />
+		<PackageReference Include="Senparc.CO2NET" Version="3.0.0.1-beta3" />
+		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.1.0-beta1" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta3" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />

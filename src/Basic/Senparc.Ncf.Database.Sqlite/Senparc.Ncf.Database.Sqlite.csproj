@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.18.7.4-preview1</Version>
+    <Version>0.19.1.4-preview1</Version>
     <AssemblyName>Senparc.Ncf.Database.Sqlite</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Sqlite</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -20,7 +20,7 @@
 		v0.1.0 创世
 		[2024-09-10] v0.18.4-preview1 升级缓存基础库
 		[2024-10-27] v0.18.7-preview1 优化 MacOS 路径处理
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -37,7 +37,7 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="3.0.0-beta1" />
+    <PackageReference Include="Senparc.CO2NET" Version="3.0.0.1-beta3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

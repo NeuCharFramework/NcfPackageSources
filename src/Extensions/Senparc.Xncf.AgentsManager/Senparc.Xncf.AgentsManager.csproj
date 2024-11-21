@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.7.0-preview1</Version>
+		<Version>0.8.2-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -44,6 +44,7 @@
 					[2024-11-08] v0.6.2-preview1 升级 Senparc.AI
 			[2024-11-08] v0.6.3-preview1 升级 Senparc.AI
 			[2024-11-15] v0.7.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+			[2024-11-21] v0.8.2-preview1 更新 CO2NET 及缓存基础库
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -53,8 +54,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-		<PackageReference Include="Senparc.AI.Agents" Version="0.3.0" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta2" />
+		<PackageReference Include="Senparc.AI.Agents" Version="0.4.0" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta3" />
 		<PackageReference Include="Senparc.Weixin.Work" Version="3.24.0" />
 	</ItemGroup>
 	<!--<ItemGroup>

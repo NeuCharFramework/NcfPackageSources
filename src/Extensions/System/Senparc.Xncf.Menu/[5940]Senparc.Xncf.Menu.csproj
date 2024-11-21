@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.11.0-preview1</Version>
+		<Version>0.12.2-preview1</Version>
 		<AssemblyName>Senparc.Xncf.Menu</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Menu</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,6 +24,7 @@
 			[2024-10-16] v0.10.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-11-08] v0.10.9-preview1 升级 Senparc.AI
 			[2024-11-15] v0.11.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+			[2024-11-21] v0.12.2-preview1 更新 CO2NET 及缓存基础库
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -43,7 +44,7 @@
 	<ItemGroup>
 		<!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
 		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta2" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.0-beta3" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>
 	<ItemGroup>

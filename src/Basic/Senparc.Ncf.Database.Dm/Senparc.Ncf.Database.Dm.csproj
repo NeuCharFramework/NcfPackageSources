@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.5.0-preview1</Version>
+    <Version>0.6.1-preview1</Version>
     <Nullable>enable</Nullable>
     <AssemblyName>Senparc.Ncf.Database.Dm</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Dm</RootNamespace>
@@ -21,7 +21,7 @@
 		v0.1.0 创世
 		[2024-09-10] v0.4.4-preview1 升级缓存基础库
 		[2024-20-20] v0.5.0-preview1 支持 Dm 最新版本，支持 EF Core 8.0
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
