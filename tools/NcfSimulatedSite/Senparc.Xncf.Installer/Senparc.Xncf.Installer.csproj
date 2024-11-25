@@ -45,6 +45,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 		<!--<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />-->
@@ -72,6 +73,13 @@
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="wwwroot\**\*" />
+		<Compile Remove="Domain\Models\DatabaseModel\InstallerSenparcEntities.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\InstallerSenparcEntities_Dm.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\InstallerSenparcEntities_MySql.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\InstallerSenparcEntities_PostgreSQL.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\InstallerSenparcEntities_SQLite.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\InstallerSenparcEntities_SqlServer.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\SenparcDbContextFactoryConfig.cs" />
 		<!--<Compile Remove="Domain\Dto\**" />
 		<Compile Remove="Domain\Models\DatabaseModel\Mapping\**" />
 		<Content Remove="Domain\Dto\**" />
@@ -101,5 +109,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="App_Data\ApiDocXml\DynamicFiles\" />
+	  <Folder Include="Domain\Models\DatabaseModel\" />
+	  <Folder Include="Domain\Models\MultipleDatabase\" />
 	</ItemGroup>
 </Project>
