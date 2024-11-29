@@ -80,7 +80,7 @@ namespace Senparc.Xncf.Swagger
                     options.ShowDetailApiLog = true;
                     options.AdditionalAttributeFunc = null;
                     options.ForbiddenExternalAccess = false;
-                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
+                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName;
                 });
 
                 #endregion
