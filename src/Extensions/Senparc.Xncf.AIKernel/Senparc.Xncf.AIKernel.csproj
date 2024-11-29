@@ -89,7 +89,7 @@
 		<EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
 		<None Remove="Domain\Models\DatabaseModel\Mapping\**" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-		<PackageReference Include="Senparc.NeuChar.App" Version="1.5.0" />
+		<PackageReference Include="Senparc.NeuChar.App" Version="1.5.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
