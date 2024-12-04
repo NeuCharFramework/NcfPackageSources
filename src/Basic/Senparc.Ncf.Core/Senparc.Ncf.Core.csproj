@@ -1,23 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.23.5-preview1</Version>
-		<AssemblyName>Senparc.Ncf.Core</AssemblyName>
-		<RootNamespace>Senparc.Ncf.Core</RootNamespace>
-		<LangVersion>10.0</LangVersion>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-		<Description>Senparc.Ncf.Core</Description>
-		<Copyright>NeuCharFramework</Copyright>
-		<PackageTags>NeuCharFramework,NCF</PackageTags>
-		<Authors>NeuCharFramework</Authors>
-		<Owners>NeuCharFramework</Owners>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<Title>Senparc.Ncf.Core</Title>
-		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <Version>0.23.5.1-preview1</Version>
+    <AssemblyName>Senparc.Ncf.Core</AssemblyName>
+    <RootNamespace>Senparc.Ncf.Core</RootNamespace>
+    <LangVersion>10.0</LangVersion>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>Senparc.Ncf.Core</Description>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF</PackageTags>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>Senparc.Ncf.Core</Title>
+    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世
 			v0.1.1 完善自动部署模块 Xncf
 			v0.3.101 丰富 XncfModule 的数据库属性
@@ -44,48 +44,48 @@
 			[2024-11-20] v0.23.2-preview1 新增发方法：获取 Aspire 使用的统一默认 XNCF 名称
 			[2024-11-21] v0.23.3-preview1 更新 CO2NET 及缓存基础库
 			[2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		</PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Core.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Core.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
-		<!--<PackageReference Include="AutoMapper" Version="7.0.1" />-->
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-		<PackageReference Include="Senparc.CO2NET" Version="3.0.1-beta3" />
-		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.1.1-beta1" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.2-beta3" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Core.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Core.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--<PackageReference Include="AutoMapper" Version="7.0.1" />-->
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Senparc.CO2NET" Version="3.0.1-beta3" />
+    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.1.1-beta1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.2-beta3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

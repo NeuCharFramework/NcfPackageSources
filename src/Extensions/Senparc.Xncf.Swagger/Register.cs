@@ -36,7 +36,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.6.6";//必须填写版本号
+        public override string Version => "0.7.0";//必须填写版本号
 
         public override string MenuName => "接口说明文档";
 
@@ -59,12 +59,6 @@ namespace Senparc.Xncf.Swagger
                                             : serviceProvider.GetService<IWebHostEnvironment>();
 
 
-                ConfigurationHelper.Configuration = configuration;
-                ConfigurationHelper.HostEnvironment = env;
-                ConfigurationHelper.WebHostEnvironment = webEnv;
-                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder()
-                    .AddJsonFile($"appsettings.json")
-                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
 
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
@@ -79,8 +73,6 @@ namespace Senparc.Xncf.Swagger
                 })
                 .AddApiExplorer();
 
-                var senparcSetting = configuration.GetSection("SenparcSetting").Get<SenparcSetting>();
-
                 services.AddAndInitDynamicApi(builder, options =>
                 {
                     options.DocXmlPath = docXmlPath;
@@ -91,10 +83,17 @@ namespace Senparc.Xncf.Swagger
                     options.ShowDetailApiLog = true;
                     options.AdditionalAttributeFunc = null;
                     options.ForbiddenExternalAccess = false;
-                    options.UseLowerCaseApiName = senparcSetting.UseLowerCaseApiName ?? false;
+                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
                 });
 
                 #endregion
+
+                ConfigurationHelper.Configuration = configuration;
+                ConfigurationHelper.HostEnvironment = env;
+                ConfigurationHelper.WebHostEnvironment = webEnv;
+                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder()
+                    .AddJsonFile($"appsettings.json")
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
 
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
 
