@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
@@ -21,6 +21,7 @@ using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.Swagger
 {
+    [XncfOrder(0)]
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
@@ -57,6 +58,14 @@ namespace Senparc.Xncf.Swagger
                                             ? webHostEnv
                                             : serviceProvider.GetService<IWebHostEnvironment>();
 
+
+                ConfigurationHelper.Configuration = configuration;
+                ConfigurationHelper.HostEnvironment = env;
+                ConfigurationHelper.WebHostEnvironment = webEnv;
+                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder()
+                    .AddJsonFile($"appsettings.json")
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
+
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
                 var docXmlPath = ApiDocXmlPathFunc?.Invoke(webEnv);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
@@ -70,6 +79,8 @@ namespace Senparc.Xncf.Swagger
                 })
                 .AddApiExplorer();
 
+                var senparcSetting = configuration.GetSection("SenparcSetting").Get<SenparcSetting>();
+
                 services.AddAndInitDynamicApi(builder, options =>
                 {
                     options.DocXmlPath = docXmlPath;
@@ -80,17 +91,11 @@ namespace Senparc.Xncf.Swagger
                     options.ShowDetailApiLog = true;
                     options.AdditionalAttributeFunc = null;
                     options.ForbiddenExternalAccess = false;
-                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName;
+                    options.UseLowerCaseApiName = senparcSetting.UseLowerCaseApiName ?? false;
                 });
 
                 #endregion
 
-                ConfigurationHelper.Configuration = configuration;
-                ConfigurationHelper.HostEnvironment = env;
-                ConfigurationHelper.WebHostEnvironment = webEnv;
-                ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder()
-                    .AddJsonFile($"appsettings.json")
-                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
 
                 ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>() ?? new CustsomSwaggerOptions();
