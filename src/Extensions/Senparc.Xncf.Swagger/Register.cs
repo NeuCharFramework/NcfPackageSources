@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
@@ -21,6 +21,7 @@ using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.Swagger
 {
+    [XncfOrder(0)]
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
@@ -35,7 +36,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.6.6";//必须填写版本号
+        public override string Version => "0.7.0";//必须填写版本号
 
         public override string MenuName => "接口说明文档";
 
@@ -56,6 +57,8 @@ namespace Senparc.Xncf.Swagger
                 IWebHostEnvironment webEnv = (env is IWebHostEnvironment webHostEnv)
                                             ? webHostEnv
                                             : serviceProvider.GetService<IWebHostEnvironment>();
+
+
 
                 #region 配置动态 API（必须在 Swagger 配置之前）
 
@@ -80,7 +83,7 @@ namespace Senparc.Xncf.Swagger
                     options.ShowDetailApiLog = true;
                     options.AdditionalAttributeFunc = null;
                     options.ForbiddenExternalAccess = false;
-                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName;
+                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
                 });
 
                 #endregion
@@ -91,6 +94,7 @@ namespace Senparc.Xncf.Swagger
                 ConfigurationHelper.SwaggerConfiguration = new ConfigurationBuilder()
                     .AddJsonFile($"appsettings.json")
                     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true).Build();
+
                 services.Configure<CustsomSwaggerOptions>(ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger"));
 
                 ConfigurationHelper.CustsomSwaggerOptions = ConfigurationHelper.SwaggerConfiguration.GetSection("Swagger").Get<CustsomSwaggerOptions>() ?? new CustsomSwaggerOptions();

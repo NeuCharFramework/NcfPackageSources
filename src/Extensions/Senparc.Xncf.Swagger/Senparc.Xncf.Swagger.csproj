@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.16.3.1-preview1</Version>
+		<Version>0.16.4.1-preview1</Version>
 		<!--<LangVersion>lastest</LangVersion>-->
 		<LangVersion>preview</LangVersion>
 		<AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -30,6 +30,7 @@
 			[2024-11-15] v0.15.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 			[2024-11-21] v0.16.2-preview1 更新 CO2NET 及缓存基础库
 			[2024-11-28] v0.16.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+			[2024-12-04] v0.16.4-preview1 update Swagger Xncf module, fix UseLowerCaseApiName not applied
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test</Configurations>
@@ -58,7 +59,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.0.2-beta3" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0-beta3" />
 		<!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.128-beta1" />-->
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.9.0" />
