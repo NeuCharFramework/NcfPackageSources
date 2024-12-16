@@ -84,3 +84,4 @@ ncf_obj/
 /BuildOutPut
 *.Development.config
 *.Development.json
+/src/global.json.bak

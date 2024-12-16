@@ -94,6 +94,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
                 EndTime = DateTime.Now;
             }
         }
+
     }
 
     public enum ChatTask_Status
