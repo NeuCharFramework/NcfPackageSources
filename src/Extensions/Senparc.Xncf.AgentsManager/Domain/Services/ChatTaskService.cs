@@ -1,8 +1,12 @@
-﻿using Senparc.Ncf.Repository;
+﻿using AutoGen.Core;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
@@ -41,5 +45,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             await base.SaveObjectAsync(chatTask);
         }
 
+        /// <summary>
+        /// 关闭未完成的任务
+        /// </summary>
+        /// <param name="beforeStartDateTime">只是筛选在此时间之前的未完成（Chatting 任务）</param>
+        /// <returns></returns>
+        public async Task CloseUnfinishedTasksAsync(DateTime beforeStartDateTime)
+        {
+            var unfinishTasks = await base.GetObjectListAsync(0, 0, z => z.StartTime < beforeStartDateTime && z.Status == ChatTask_Status.Chatting, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+            foreach (var unfinishedTask in unfinishTasks)
+            {
+                SenparcTrace.SendCustomLog($"处理未完成任务({unfinishedTask.Id})", $"任务：{unfinishedTask.Name}，开始时间：{unfinishedTask.StartTime}，状态：{unfinishedTask.Status}");
+                unfinishedTask.ChangeStatus(ChatTask_Status.Cancelled);
+                await base.SaveObjectAsync(unfinishedTask);
+                SenparcTrace.SendCustomLog($"处理未完成任务({unfinishedTask.Id})", $"处理完成，当前状态：{unfinishedTask.Status}");
+            }
+        }
     }
 }

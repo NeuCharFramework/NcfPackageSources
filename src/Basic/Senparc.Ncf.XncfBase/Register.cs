@@ -125,86 +125,104 @@ namespace Senparc.Ncf.XncfBase
                         scanTypesCount++;
                         var aTypes = a.GetTypes();
 
+                        List<Exception> exceptions = new List<Exception>();
+
                         //遍历程序集内的所有类型
                         foreach (var t in aTypes)
                         {
-                            if (t.IsAbstract)
+                            try
                             {
-                                continue;//忽略抽象类
-                            }
-
-                            //Console.WriteLine(t.GetType().Name);
-                            //获取 XncfRegister
-                            if (t.GetInterfaces().Contains(typeof(IXncfRegister)))
-                            {
-                                types[t] = ScanTypeKind.IXncfRegister;
-                            }
-                            //获取 XncfFunction
-                            //if (t.GetInterfaces().Contains(typeof(IXncfFunction)))
-                            //{
-                            //    types[t] = ScanTypeKind.IXncfFunction; /* 暂时不收录处理 */
-                            //}
-                            //获取 XncfAutoConfigurationMapping
-                            if (t.GetCustomAttributes(true).FirstOrDefault(z => z is XncfAutoConfigurationMappingAttribute) != null
-                                /*&& t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>))*/)
-                            {
-                                types[t] = ScanTypeKind.XncfAutoConfigurationMappingAttribute;
-                            }
-
-
-                            //获取多数据库配置（XncfDatabaseDbContext 的子类）
-                            if (t.IsSubclassOf(typeof(DbContext)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
-                                t.GetInterface(nameof(ISenparcEntitiesDbContext)) != null &&
-                                t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) != null)
-                            {
-                                //获取特性
-                                var multiDbContextAttr = t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) as MultipleMigrationDbContextAttribute;
-
-                                //添加配置
-                                var multipleDatabasePool = MultipleDatabasePool.Instance;
-                                var result = multipleDatabasePool.TryAdd(multiDbContextAttr, t, new[] { columnWidth1, columnWidth2, columnWidth3 });
-                                SetLog(sb, result, false);
-                            }
-
-                            //配置 FunctionRender
-                            if (t.IsSubclassOf(typeof(AppServiceBase)))
-                            {
-                                //遍历其中具体方法
-                                var methods = t.GetMethods();
-                                var hasFunctionMethod = false;
-                                foreach (var method in methods)
+                                if (t.IsAbstract)
                                 {
-                                    var attr = method.GetCustomAttributes(typeof(FunctionRenderAttribute), true).FirstOrDefault() as FunctionRenderAttribute;
-                                    if (attr != null)
-                                    {
-                                        FunctionRenderCollection.Add(method, attr);
-                                        hasFunctionMethod = true;
-                                    }
+                                    continue;//忽略抽象类
                                 }
 
-                                services.AddScoped(t);
-                            }
-
-                            //配置 ServiceBase
-                            if (
-                                !t.IsAbstract && (
-
-                                //由于泛型是在编译时确定的，所以不能直接使用IsSubclassOf方法来判断一个类是否为一个带泛型的类的基类。需要使用GetGenericTypeDefinition方法来获取泛型的基类，然后进行比较。
-                                (t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(ServiceBase<>))
-                                || t.IsSubclassOf(typeof(ServiceDataBase))
-                                //|| t.IsSubclassOf(typeof(AppServiceBase))
-                                //|| t.IsInstanceOfType(typeof(IServiceDataBase))
-                                )
-                                )
-                            {
-                                if (t != typeof(ServiceBase<>))
+                                //Console.WriteLine(t.GetType().Name);
+                                //获取 XncfRegister
+                                if (t.GetInterfaces().Contains(typeof(IXncfRegister)))
                                 {
-                                    //Console.WriteLine("------------> Add Scope:" + t.FullName);
+                                    types[t] = ScanTypeKind.IXncfRegister;
+                                }
+                                //获取 XncfFunction
+                                //if (t.GetInterfaces().Contains(typeof(IXncfFunction)))
+                                //{
+                                //    types[t] = ScanTypeKind.IXncfFunction; /* 暂时不收录处理 */
+                                //}
+                                //获取 XncfAutoConfigurationMapping
+                                if (t.GetCustomAttributes(true).FirstOrDefault(z => z is XncfAutoConfigurationMappingAttribute) != null
+                                    /*&& t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>))*/)
+                                {
+                                    types[t] = ScanTypeKind.XncfAutoConfigurationMappingAttribute;
+                                }
+
+
+                                //获取多数据库配置（XncfDatabaseDbContext 的子类）
+                                if (t.IsSubclassOf(typeof(DbContext)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
+                                    t.GetInterface(nameof(ISenparcEntitiesDbContext)) != null &&
+                                    t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) != null)
+                                {
+                                    //获取特性
+                                    var multiDbContextAttr = t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) as MultipleMigrationDbContextAttribute;
+
+                                    //添加配置
+                                    var multipleDatabasePool = MultipleDatabasePool.Instance;
+                                    var result = multipleDatabasePool.TryAdd(multiDbContextAttr, t, new[] { columnWidth1, columnWidth2, columnWidth3 });
+                                    SetLog(sb, result, false);
+                                }
+
+                                //配置 FunctionRender
+                                if (t.IsSubclassOf(typeof(AppServiceBase)))
+                                {
+                                    //遍历其中具体方法
+                                    var methods = t.GetMethods();
+                                    var hasFunctionMethod = false;
+                                    foreach (var method in methods)
+                                    {
+                                        var attr = method.GetCustomAttributes(typeof(FunctionRenderAttribute), true).FirstOrDefault() as FunctionRenderAttribute;
+                                        if (attr != null)
+                                        {
+                                            FunctionRenderCollection.Add(method, attr);
+                                            hasFunctionMethod = true;
+                                        }
+                                    }
+
                                     services.AddScoped(t);
                                 }
 
+                                //配置 ServiceBase
+                                if (
+                                    !t.IsAbstract && (
+
+                                    //由于泛型是在编译时确定的，所以不能直接使用IsSubclassOf方法来判断一个类是否为一个带泛型的类的基类。需要使用GetGenericTypeDefinition方法来获取泛型的基类，然后进行比较。
+                                    (t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(ServiceBase<>))
+                                    || t.IsSubclassOf(typeof(ServiceDataBase))
+                                    //|| t.IsSubclassOf(typeof(AppServiceBase))
+                                    //|| t.IsInstanceOfType(typeof(IServiceDataBase))
+                                    )
+                                    )
+                                {
+                                    if (t != typeof(ServiceBase<>))
+                                    {
+                                        //Console.WriteLine("------------> Add Scope:" + t.FullName);
+                                        services.AddScoped(t);
+                                    }
+
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                exceptions.Add(ex);
+                                SenparcTrace.SendCustomLog("扫描程序集发生错误", $"Type:{t.FullName}");
                             }
                         }
+
+                        if (exceptions.Count>0)
+                        {
+                            var errMsg = $"程序集 [{a.FullName}] 共检测出 {exceptions.Count} 个异常，如果非核心程序集可忽略";
+                            Console.WriteLine(errMsg);
+                            SenparcTrace.SendCustomLog("程序集扫描异常记录", errMsg);
+                        }
+
                     }, true);
 
                     SetLog(sb, $"{new String('-', columnWidth1 + columnWidth2 + columnWidth3 + 6)}", false);
