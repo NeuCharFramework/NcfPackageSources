@@ -60,7 +60,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
             IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//当前方法的资源Code
             //Console.WriteLine("isAjax:{0}， isIgnore：{1}", isAjax, isIgnore);
             System.Diagnostics.Debug.WriteLine("isAjax:{0}, isIgnore: {1}", isAjax, isIgnore);
-            if (isIgnore || (resourceCodes.Any(_ => "*".Equals(_) && isAjax)))
+            if (isIgnore || (resourceCodes.Any(_ => "*".Equals(_)) && isAjax))
             {
                 await next();
             }
