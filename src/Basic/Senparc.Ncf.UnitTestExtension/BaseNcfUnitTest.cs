@@ -117,8 +117,6 @@ namespace Senparc.Ncf.UnitTestExtension
 
                     dbContext.SaveChanges();
                 }
-
-                seedDataBuilder?.OnExecutedAsync(this._serviceProvider, dataLists).GetAwaiter().GetResult();
             }
         }
 
