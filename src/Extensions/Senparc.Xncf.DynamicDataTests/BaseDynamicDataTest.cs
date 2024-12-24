@@ -12,21 +12,13 @@ namespace Senparc.Xncf.DynamicDataTests
 {
     public class BaseDynamicDataTest_Seed : UnitTestSeedDataBuilder
     {
-        private static object InitLock = new object();
-        private static bool InitFinished = false;
 
-        public override async Task ExecuteAsync(IServiceProvider serviceProvider, DataList dataList)
+        public override async Task<DataList> ExecuteAsync(IServiceProvider serviceProvider)
         {
-            lock (InitLock)
-            {
-                if (InitFinished)
-                {
-                    //由于单元测试每个 TestMethod 都会重新初始化 TestClass 类，因此需要防止静态储存的数据被重复添加。
-                    return;
-                }
+            DataList dataList = new DataList(nameof(BaseDynamicDataTest_Seed));
 
-                // TableMetadata
-                List<TableMetadata> tableMetadataList = new() {
+            // TableMetadata
+            List<TableMetadata> tableMetadataList = new() {
                      new("User","用户表"){
                           ColumnMetadatas=new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
@@ -52,9 +44,8 @@ namespace Senparc.Xncf.DynamicDataTests
                      },
                 };
 
-                dataList.Add(tableMetadataList);
-                InitFinished = true;
-            }
+            dataList.Add(tableMetadataList);
+            return dataList;
         }
 
         public override async Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList)
