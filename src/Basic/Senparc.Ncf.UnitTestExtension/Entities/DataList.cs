@@ -10,6 +10,11 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
     public class DataList : Dictionary<Type, List<object>>
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public string UUID { get; set; }
+
+        /// <summary>
         /// 获取强类型的列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -43,6 +48,34 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         public void Add<T>(List<T> list)
         {
             base[typeof(T)] = list.Cast<object>().ToList();
+        }
+
+        /// <summary>
+        /// 快速添加实体类型的列表数据
+        /// </summary>
+        /// <param name="DataList"></param>
+        public void AddRange(DataList dataList)
+        {
+            foreach (var item in dataList)
+            {
+                if (base.ContainsKey(item.Key))
+                {
+                    base[item.Key].AddRange(item.Value);
+                }
+                else
+                {
+                    base[item.Key] = item.Value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 创建 DataList
+        /// </summary>
+        /// <param name="uUID">唯一编号，相同编号的 DataList 数据在同一次单元门测试中不会被反复写入</param>
+        public DataList(string uUID)
+        {
+            UUID = uUID;
         }
     }
 }

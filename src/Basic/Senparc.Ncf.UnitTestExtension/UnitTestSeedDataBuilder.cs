@@ -13,19 +13,21 @@ namespace Senparc.Ncf.UnitTestExtension
     /// </summary>
     public abstract class UnitTestSeedDataBuilder
     {
+
+
         /// <summary>
         /// 填充种子数据前的操作
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="dataList"></param>
         /// <returns></returns>
-        public abstract Task ExecuteAsync(IServiceProvider serviceProvider, DataList dataList);
+        public abstract Task<DataList> ExecuteAsync(IServiceProvider serviceProvider);
 
         /// <summary>
         /// 填充种子数据后的操作
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="dataList"></param>
+        /// <param name="dataList">从 ExecuteAsync 中返回的 dataList</param>
         /// <returns></returns>
         public abstract Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList);
     }

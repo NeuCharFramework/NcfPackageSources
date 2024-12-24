@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -19,6 +14,12 @@ using Senparc.Ncf.Database.InMemory;
 using Senparc.Ncf.UnitTestExtension.Database;
 using Senparc.Ncf.UnitTestExtension.Entities;
 using Senparc.Xncf.SystemCore.Domain.Database;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
@@ -33,7 +34,8 @@ namespace Senparc.Ncf.UnitTestExtension
         protected SenparcSetting _senparcSetting;
 
         protected IServiceProvider _serviceProvider;
-        protected DataList dataLists = new DataList();
+        protected static DataList GlobalDataList = new DataList(Guid.NewGuid().ToString());
+        protected static ConcurrentDictionary<string, DataList> GlobalDataListCollection = new ConcurrentDictionary<string, DataList>();
 
         //public BaseNcfUnitTest() : this(null, null)
         //{
@@ -77,16 +79,21 @@ namespace Senparc.Ncf.UnitTestExtension
 
             #region 填充种子数据
             //执行前准备
-            seedDataBuilder?.ExecuteAsync(this._serviceProvider, dataLists).GetAwaiter().GetResult();
-            //自动填充
-            AutoFillSeedData(seedDataBuilder);
-            //填充后
-            seedDataBuilder?.OnExecutedAsync(this._serviceProvider, dataLists).GetAwaiter().GetResult();
+            var dataList = seedDataBuilder?.ExecuteAsync(this._serviceProvider).GetAwaiter().GetResult();
 
-            #endregion   
+            if (!GlobalDataListCollection.ContainsKey(dataList.UUID))
+            {
+                GlobalDataListCollection[dataList.UUID] = dataList;
+                //自动填充
+                AutoFillSeedData(seedDataBuilder, dataList);
+                //填充后
+                seedDataBuilder?.OnExecutedAsync(this._serviceProvider, dataList).GetAwaiter().GetResult();
+            }
+
+            #endregion
         }
 
-        private void AutoFillSeedData(UnitTestSeedDataBuilder seedDataBuilder)
+        private void AutoFillSeedData(UnitTestSeedDataBuilder seedDataBuilder,DataList dataLists)
         {
             using (var scope = this._serviceProvider.CreateScope())
             {
@@ -136,9 +143,9 @@ namespace Senparc.Ncf.UnitTestExtension
         /// <typeparam name="T">实体类型</typeparam>  
         public void TryInitSeedData<T>() where T : EntityBase
         {
-            if (!dataLists.ContainsKey(typeof(T)))
+            if (!GlobalDataList.ContainsKey(typeof(T)))
             {
-                dataLists[typeof(T)] = new List<object>();
+                GlobalDataList[typeof(T)] = new List<object>();
             }
         }
 
@@ -203,7 +210,7 @@ namespace Senparc.Ncf.UnitTestExtension
                                     //InMemory 不支持事务，如果不希望抛错，则忽略警告
                                     .ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                                     .Options;
-                var dbContext = new NcfUnitTestEntities(options, s, dataLists);
+                var dbContext = new NcfUnitTestEntities(options, s, GlobalDataList);
 
                 return dbContext;
 
