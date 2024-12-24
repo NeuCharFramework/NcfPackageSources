@@ -84,6 +84,8 @@ namespace Senparc.Ncf.UnitTestExtension
             if (!GlobalDataListCollection.ContainsKey(dataList.UUID))
             {
                 GlobalDataListCollection[dataList.UUID] = dataList;
+                GlobalDataList.AddRange(dataList);
+
                 //自动填充
                 AutoFillSeedData(seedDataBuilder, dataList);
                 //填充后
