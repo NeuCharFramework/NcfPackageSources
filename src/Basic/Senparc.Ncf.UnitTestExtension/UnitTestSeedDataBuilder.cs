@@ -19,7 +19,6 @@ namespace Senparc.Ncf.UnitTestExtension
         /// 填充种子数据前的操作
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="dataList"></param>
         /// <returns></returns>
         public abstract Task<DataList> ExecuteAsync(IServiceProvider serviceProvider);
 
