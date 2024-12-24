@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.3.5.1-preview1</Version>
+		<Version>0.3.6-preview1</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,14 +24,16 @@
 			v0.2.0 提供 UnitTestSeedDataBuilder 类，用于创建种子数据
 			[2024-08-12] v0.2.1-preview1 添加 TableData 的数据插入方法，通过单元测试
 			[2024-09-10] v0.2.2-preview1 升级缓存基础库
-					[2024-10-09] v0.2.3-preview1 升级基础库
+			[2024-10-09] v0.2.3-preview1 升级基础库
 			[2024-10-16] v0.2.4-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 			[2024-11-08] v0.2.5-preview1 升级 Senparc.AI
 			[2024-11-15] v0.3.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 			[2024-11-21] v0.3.1-preview1 更新 CO2NET 及缓存基础库
 			[2024-11-28] v0.3.2-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2024-12-23] v0.3.4-preview1 Update unit test seed data create progress			[2024-12-24] v0.3.5-preview1 Update unit test SeedData progress
-</PackageReleaseNotes>
+			[2024-12-23] v0.3.4-preview1 Update unit test SeedData create progress
+			[2024-12-24] v0.3.5-preview1 Update unit test SeedData progress
+			[2024-12-24] v0.3.6-preview1 Update unit test DataList, support for single object insert
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
