@@ -47,7 +47,24 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         /// <param name="list"></param>
         public void Add<T>(List<T> list)
         {
-            base[typeof(T)] = list.Cast<object>().ToList();
+            if (base.ContainsKey(typeof(T)))
+            {
+                base[typeof(T)].AddRange(list.Cast<object>().ToList());
+            }
+            else
+            {
+                base[typeof(T)] = list.Cast<object>().ToList();
+            }
+        }
+
+        /// <summary>
+        /// 快速添加 个对象，兼备自动根据类型分类
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        public void AddItem<T>(T item)
+        {
+            Add(new List<T>() { item });
         }
 
         /// <summary>
