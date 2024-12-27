@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.12.5</PackageVersion>
+    <PackageVersion>0.12.6</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -49,6 +49,7 @@
 		v0.12.3 更新基础库
 		v0.12.4 更新基础库
 		v0.12.5 更新 Demo
+		v0.12.6 添加项目引用，确保 Areas 页面能被识别
 	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
