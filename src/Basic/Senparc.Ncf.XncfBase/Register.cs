@@ -461,18 +461,18 @@ namespace Senparc.Ncf.XncfBase
             return sb.ToString();
         }
 
-        /// <summary>
-        /// 通常在 Startup.cs 中的 Configure() 方法中执行
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="registerService">CO2NET 注册对象</param>
-        /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseXncfModules<TDatabaseConfiguration>(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
-        where TDatabaseConfiguration : IDatabaseConfiguration, new()
-        {
-            return UseXncfModules<TDatabaseConfiguration>(app, registerService, senparcCoreSetting, autoRunInstall);
-        }
+        ///// <summary>
+        ///// 通常在 Startup.cs 中的 Configure() 方法中执行
+        ///// </summary>
+        ///// <param name="app"></param>
+        ///// <param name="registerService">CO2NET 注册对象</param>
+        ///// <param name="senparcCoreSetting">SenparcCoreSetting</param>
+        ///// <returns></returns>
+        //public static IApplicationBuilder UseXncfModules<TDatabaseConfiguration>(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
+        //where TDatabaseConfiguration : IDatabaseConfiguration, new()
+        //{
+        //    return UseXncfModules<TDatabaseConfiguration>(app, registerService, senparcCoreSetting, autoRunInstall);
+        //}
 
 
         /// <summary>
@@ -512,8 +512,12 @@ namespace Senparc.Ncf.XncfBase
                         SiteConfig.DatabaseXncfLoaded = true;
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
+                    SenparcTrace.SendCustomLog("从 XncfRegisterManager.RegisterList 执行 register.UseXncfModule() 方法发生异常",
+                        $@"模块：{register.Name}
+异常信息：{ex.Message}
+详情：{ex.ToString()}");
                 }
 
                 //执行中间件
