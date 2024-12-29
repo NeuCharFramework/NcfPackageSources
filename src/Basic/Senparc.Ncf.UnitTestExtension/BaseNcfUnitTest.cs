@@ -56,6 +56,7 @@ namespace Senparc.Ncf.UnitTestExtension
 
             var mockEnv = new Mock<IHostEnvironment/*IHostingEnvironment*/>();
             mockEnv.Setup(z => z.ContentRootPath).Returns(() => UnitTestHelper.RootPath);
+            mockEnv.Setup(z => z.EnvironmentName).Returns(() => "Test");
 
             Env = mockEnv.Object;
 
@@ -65,6 +66,11 @@ namespace Senparc.Ncf.UnitTestExtension
             //{
             //    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             //}));
+
+            //var configuration = builder.Configuration;
+            //configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            //      .AddJsonFile($"appsettings.{Env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
 
             BeforeRegisterServiceCollection(ServiceCollection);
             RegisterServiceCollection();
@@ -174,7 +180,7 @@ namespace Senparc.Ncf.UnitTestExtension
         public void RegisterServiceCollection()
         {
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddJsonFile(UnitTestHelper.GetAppSettingsFile(), false, false);
+            configBuilder.AddJsonFile(UnitTestHelper.GetAppSettingsFile(Env), false, false);
             var config = configBuilder.Build();
             Configuration = config;
 
