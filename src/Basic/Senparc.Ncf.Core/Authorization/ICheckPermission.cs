@@ -13,7 +13,7 @@ namespace Senparc.Ncf.Core.Authorization
         /// <summary>
         /// 检查权限
         /// </summary>
-        /// <param name="codes"></param>
+        /// <param name="resourceCodes"></param>
         /// <param name="adminUserInfoId"></param>
         /// <returns></returns>
         Task<bool> HasPermissionAsync(string[] resourceCodes, int adminUserInfoId);
