@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Moq;
 
 namespace Senparc.Ncf.UnitTestExtension
@@ -45,16 +46,17 @@ namespace Senparc.Ncf.UnitTestExtension
         /// Get AppSettings file name.
         /// </summary>
         /// <returns></returns>
-        public static string GetAppSettingsFile()
+        public static string GetAppSettingsFile(IHostEnvironment env=null)
         {
-            if (File.Exists("appsettings.test.json"))
+            var envStr = env?.EnvironmentName ?? "Test";
+            var appsettingFile = $"appsettings.{envStr}.json";
+            if (File.Exists(appsettingFile))
             {
-                Console.WriteLine("use appsettings.test.json");
-                return "appsettings.test.json";
+                Console.WriteLine($"use {appsettingFile}");
+                return appsettingFile;
             }
 
             Console.WriteLine("use appsettings.json");
-
             return "appsettings.json";
         }
 
