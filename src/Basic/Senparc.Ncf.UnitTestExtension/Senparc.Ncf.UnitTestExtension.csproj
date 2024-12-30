@@ -33,9 +33,9 @@
 			[2024-12-23] v0.3.4-preview1 Update unit test SeedData create progress
 			[2024-12-24] v0.3.5-preview1 Update unit test SeedData progress
 			[2024-12-24] v0.3.6-preview1 Update unit test DataList, support for single object insert
-					[2024-12-27] v0.3.7-preview1 Add exception log for UseXncfModules() auto progress
+			[2024-12-27] v0.3.7-preview1 Add exception log for UseXncfModules() auto progress
 			[2024-12-29] v0.3.8-preview1 update unit test init progress, support EnviromentName for appsettings.json
-</PackageReleaseNotes>
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
