@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.3.8-preview1</Version>
+		<Version>0.3.9-preview1</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,6 +35,7 @@
 			[2024-12-24] v0.3.6-preview1 Update unit test DataList, support for single object insert
 			[2024-12-27] v0.3.7-preview1 Add exception log for UseXncfModules() auto progress
 			[2024-12-29] v0.3.8-preview1 update unit test init progress, support EnviromentName for appsettings.json
+			[2024-12-31] v0.3.9-preview1 support null DataList in ctor() in UnitTestExtension
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

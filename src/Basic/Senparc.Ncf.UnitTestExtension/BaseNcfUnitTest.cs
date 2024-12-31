@@ -87,6 +87,8 @@ namespace Senparc.Ncf.UnitTestExtension
             //执行前准备
             var dataList = seedDataBuilder?.ExecuteAsync(this._serviceProvider).GetAwaiter().GetResult();
 
+            dataList ??= new DataList(Guid.Empty.ToString("N"));
+
             if (!GlobalDataListCollection.ContainsKey(dataList.UUID))
             {
                 GlobalDataListCollection[dataList.UUID] = dataList;
@@ -101,7 +103,7 @@ namespace Senparc.Ncf.UnitTestExtension
             #endregion
         }
 
-        private void AutoFillSeedData(UnitTestSeedDataBuilder seedDataBuilder,DataList dataLists)
+        private void AutoFillSeedData(UnitTestSeedDataBuilder seedDataBuilder, DataList dataLists)
         {
             using (var scope = this._serviceProvider.CreateScope())
             {
