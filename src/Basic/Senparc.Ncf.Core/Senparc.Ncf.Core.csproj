@@ -72,9 +72,9 @@
   <ItemGroup>
     <!--<PackageReference Include="AutoMapper" Version="7.0.1" />-->
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Senparc.CO2NET" Version="3.1.0-beta3" />
-    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.2.0-beta1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0-beta3" />
+    <PackageReference Include="Senparc.CO2NET" Version="3.1.1" />
+    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.2.0.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
