@@ -8,31 +8,31 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-using Senparc.Xncf.FileManager.Models;
-using Senparc.Xncf.FileManager.OHS.Local.AppService;
+using Senparc.Xncf.KnowledgeBase.Models;
+using Senparc.Xncf.KnowledgeBase.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
-using Senparc.Xncf.FileManager.Models.DatabaseModel.Dto;
+using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 
-namespace Senparc.Xncf.FileManager
+namespace Senparc.Xncf.KnowledgeBase
 {
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         #region IXncfRegister 接口
 
-        public override string Name => "Senparc.Xncf.FileManager";
+        public override string Name => "Senparc.Xncf.KnowledgeBase";
 
-        public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "CEAFC442-EE03-42EA-AD54-E607AD0C03A9";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.0";//必须填写版本号
+        public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "文件管理";
+        public override string MenuName => "AI 知识库";
 
-        public override string Icon => "fa fa-database";
+        public override string Icon => "fa fa-lightbulb-o";
 
-        public override string Description => "文件管理";
+        public override string Description => "AI 知识库";
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -62,7 +62,7 @@ namespace Senparc.Xncf.FileManager
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
-            FileManagerSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as FileManagerSenparcEntities;
+            KnowledgeBaseSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as KnowledgeBaseSenparcEntities;
 
             //指定需要删除的数据实体
 
