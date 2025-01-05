@@ -31,7 +31,13 @@ namespace Senparc.Ncf.Core.AppServices
 
         public void SaveLogs(string name)
         {
-            SenparcTrace.SendCustomLog(name, GetLogs());
+            string logs = GetLogs();
+
+            //确保能够处理中文字符
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(logs);
+            string utf8String = Encoding.UTF8.GetString(utf8Bytes);
+
+            SenparcTrace.SendCustomLog(name, utf8String);
         }
 
         public override string ToString()

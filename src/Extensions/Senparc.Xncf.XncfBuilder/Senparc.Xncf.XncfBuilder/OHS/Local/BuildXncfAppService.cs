@@ -46,9 +46,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
-            var oldEncodding = Console.OutputEncoding;
-            var newEncoddig = Encoding.Default; //Encoding.GetEncoding("GBK");
-            Console.OutputEncoding = newEncoddig;
+            var oldOutputEncodding = Console.OutputEncoding;
+            var oldInputEncodding = Console.InputEncoding;
+            var newOutputEncoddig = Encoding.UTF8; //Encoding.GetEncoding("GBK");
+            var newInputEncoddig = Encoding.UTF8; //Encoding.GetEncoding("GBK");
+
+            Console.OutputEncoding = newOutputEncoddig;
+            Console.InputEncoding = newInputEncoddig;
 
             Console.WriteLine("开始创建 XNCF 项目");
 
@@ -80,7 +84,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
             var icon = $" --Icon \"{request.Icon}\"";
             var description = $" --Description \"{request.Description}\"";
-            var version = $" --Version {request.Version}";
+            var version = $" --Version \"{request.Version}\"";
             var menuName = $" --MenuName \"{request.MenuName}\"";
             string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
             string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
@@ -88,10 +92,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             //版本号标准化处理：按照语义化版本规范（semver）
             try
             {
-                logger.Append($"规范版本号格式开始：{version}");
-                var versionInfo = VersionHelper.Parse(version);
-                version = versionInfo.ToString();
-                logger.Append($"规范版本号格式结束，最终输出：{version}");
+                logger.Append($"规范版本号格式开始：{request.Version}");
+                var versionInfo = VersionHelper.Parse(request.Version);
+                //version = versionInfo.ToString();
+                logger.Append($"规范版本号格式结束，最终输出：{request.Version}");
 
             }
             catch (Exception ex)
@@ -123,7 +127,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             var targetFramework = $" --TargetFramework {frameworkVersion}";
 
             var commandTexts = new List<string> {
-                $"cd {_outPutBaseDir}",
+                $"cd \"{_outPutBaseDir}\"",
                 //"echo %DATE:~0,4%-%DATE:~5,2%-%DATE:~8,2% %TIME:~0,2%:%TIME:~3,2%:%TIME:~6,2%",
                 //下一句如果上方执行了dotnet new的命令，执行大约需要1分钟
                 $"dotnet new XNCF -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
@@ -143,8 +147,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //强制设置编码，避免乱码
                 //p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
                 //p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
-                p.StartInfo.StandardOutputEncoding = newEncoddig;
-                p.StartInfo.StandardErrorEncoding = newEncoddig;
+                p.StartInfo.StandardInputEncoding = newInputEncoddig;
+                p.StartInfo.StandardOutputEncoding = newOutputEncoddig;
+                p.StartInfo.StandardErrorEncoding = newOutputEncoddig;
 
                 p.Start();
                 return p;
@@ -237,6 +242,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 logger.Append(strOutput);
 
+                string error = pCreate.StandardError.ReadToEnd();
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Console.WriteLine("Error:");
+                    Console.WriteLine(error);
+                }
+
                 //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
                 CloseProcess(pCreate);
             }
@@ -245,7 +257,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 strOutput = e.Message;
             }
 
-            Console.OutputEncoding = oldEncodding;
+            Console.OutputEncoding = oldOutputEncodding;
+            Console.InputEncoding = oldInputEncodding;
 
 
             return strOutput;

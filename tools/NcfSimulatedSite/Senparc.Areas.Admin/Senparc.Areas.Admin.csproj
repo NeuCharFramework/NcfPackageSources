@@ -21,7 +21,7 @@
 		<EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
 
 		<None Remove="Domain\Migrations\Oracle\**" />
-		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 	</ItemGroup>
 
@@ -35,8 +35,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.2.0-beta1" />
-		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="5.2.0-beta1" />
+		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.2.0.1" />
+		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="5.2.0.1" />
 		<!--<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.18.7-preview1" />
 		<PackageReference Include="Senparc.Ncf.Core" Version="0.21.3.2-preview1" />
 		<PackageReference Include="Senparc.Ncf.Log" Version="0.18.5-preview1" />
@@ -57,7 +57,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.16.4-preview1" />
+		<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.16.6-preview1" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
