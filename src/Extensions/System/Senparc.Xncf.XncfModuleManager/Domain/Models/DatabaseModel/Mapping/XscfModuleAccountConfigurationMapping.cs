@@ -25,7 +25,7 @@ namespace Senparc.Xncf.XncfModuleManager.DataBaseModel
 
             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
             if (currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.MySql ||
-                currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.PostgreSQL)
+                currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.PostgreSQL|| currentDatabaseConfiguration.MultipleDatabaseType == MultipleDatabaseType.Dm)
             {
                 builder.Property(e => e.UpdateLog).HasColumnType("text").IsRequired();
             }
