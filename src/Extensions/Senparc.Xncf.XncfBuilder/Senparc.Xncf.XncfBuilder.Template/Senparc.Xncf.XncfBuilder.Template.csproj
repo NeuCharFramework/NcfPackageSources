@@ -51,7 +51,7 @@
 		v0.12.5 更新 Demo
 		v0.12.6 添加项目引用，确保 Areas 页面能被识别
 		v0.12.7 同步最新 Nuget 包版本
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
