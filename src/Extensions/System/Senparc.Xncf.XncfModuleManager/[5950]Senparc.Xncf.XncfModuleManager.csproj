@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.5-preview1</Version>
+    <Version>0.13.6-preview1</Version>
     <AssemblyName>Senparc.Xncf.XncfModuleManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfModuleManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,17 +24,18 @@
 		v0.5.3 fix bug：模块菜单名更新后，无法更新到数据库中的菜单信息
 		v0.6.0 解决模块安装后直接授权菜单问题
 		v0.8.0 添加 XncfStateAppService
-			[2024-09-10] v0.11.4-preview1 升级缓存基础库
-			[2024-10-09] v0.11.6-preview1 升级基础库
-			[2024-10-09] v0.11.7-preview1 升级基础库
-			[2024-10-16] v0.11.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-11-08] v0.11.10-preview1 升级 Senparc.AI
-			[2024-11-08] v0.11.11-preview1 升级 Senparc.AI
-			[2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
-</PackageReleaseNotes>
+		[2024-09-10] v0.11.4-preview1 升级缓存基础库
+		[2024-10-09] v0.11.6-preview1 升级基础库
+		[2024-10-09] v0.11.7-preview1 升级基础库
+		[2024-10-16] v0.11.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+		[2024-11-08] v0.11.10-preview1 升级 Senparc.AI
+		[2024-11-08] v0.11.11-preview1 升级 Senparc.AI
+		[2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+		[2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
+		[2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+		[2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
+		[2025-01-08] v0.13.6-preview1 Deal with DaMeng(DM) database column type
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

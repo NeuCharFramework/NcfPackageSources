@@ -22,7 +22,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Migrations.Dm
                     MenuName = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: true),
                     Version = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR2(32767)", nullable: true),
-                    UpdateLog = table.Column<string>(type: "ntext", nullable: false),
+                    UpdateLog = table.Column<string>(type: "text", nullable: false),
                     AllowRemove = table.Column<bool>(type: "BIT", nullable: false),
                     MenuId = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: true),
                     Icon = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: true),
