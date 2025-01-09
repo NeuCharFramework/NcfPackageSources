@@ -46,145 +46,74 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
-            var oldOutputEncodding = Console.OutputEncoding;
-            var oldInputEncodding = Console.InputEncoding;
-            var newOutputEncoddig = Encoding.UTF8; //Encoding.GetEncoding("GBK");
-            var newInputEncoddig = Encoding.UTF8; //Encoding.GetEncoding("GBK");
+            var oldOutputEncoding = Console.OutputEncoding;
+            var oldInputEncoding = Console.InputEncoding;
+            var newOutputEncoding = Encoding.UTF8;
+            var newInputEncoding = Encoding.UTF8;
 
-            Console.OutputEncoding = newOutputEncoddig;
-            Console.InputEncoding = newInputEncoddig;
+            Console.OutputEncoding = newOutputEncoding;
+            Console.InputEncoding = newInputEncoding;
 
-            Console.WriteLine("开始创建 XNCF 项目");
-
-            string projectName = GetProjectName(request);
-            _outPutBaseDir = Path.GetDirectoryName(request.SlnFilePath);  //Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, ".."/*, $"{projectName}"*/);//找到sln根目录即可
-            //_outPutBaseDir = Path.GetFullPath(_outPutBaseDir);
-            if (!Directory.Exists(_outPutBaseDir))
-            {
-                Directory.CreateDirectory(_outPutBaseDir);
-            }
-
-            //TODO:参数合法性校验
-
-            //获取类库当前项目引用版本信息
-            Func<string, string, string> getLibVersionParam = (dllName, paramName) =>
+            string getLibVersionParam(string dllName, string paramName)
             {
                 var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
-                var libVBersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
-                return $" --{paramName} {libVBersion}";
-            };
-
-            //配置 true 或 false 的参数
-            Func<bool, string, string> getBoolParam = (condition, paramName) => $" --{paramName} {(condition ? "true" : "false")}";
-
-            //基础信息  注意： -- 前面统一加 1 个空格
-            var orgName = $" --OrgName {request.OrgName}";
-            var xncfName = $" --XncfName {request.XncfName}";
-            var guid = $" --Guid {Guid.NewGuid().ToString().ToUpper()}";
-            var icon = $" --Icon \"{request.Icon}\"";
-            var description = $" --Description \"{request.Description}\"";
-            var version = $" --Version \"{request.Version}\"";
-            var menuName = $" --MenuName \"{request.MenuName}\"";
-            string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
-            string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
-
-            //版本号标准化处理：按照语义化版本规范（semver）
-            try
-            {
-                logger.Append($"规范版本号格式开始：{request.Version}");
-                var versionInfo = VersionHelper.Parse(request.Version);
-                //version = versionInfo.ToString();
-                logger.Append($"规范版本号格式结束，最终输出：{request.Version}");
-
-            }
-            catch (Exception ex)
-            {
-                logger.Append($"规范版本号格式失败，保留原有字符串。失败信息：{ex.Message}");
+                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
+                return $"{libVersion}";
             }
 
-            //配置功能
-            var isUseSample = request.UseSammple.SelectedValues.Contains("1");
-            var isUseDatabase = isUseSample || request.UseModule.SelectedValues.Contains("database");
-            var useSample = getBoolParam(isUseSample, "Sample");
-            var useFunction = getBoolParam(request.UseModule.SelectedValues.Contains("function"), "Function");
-            var isUseWeb = isUseSample || request.UseModule.SelectedValues.Contains("web");
-            var useWeb = getBoolParam(isUseWeb, "Web");
-            var useDatabase = getBoolParam(isUseDatabase, "Database");
-            var useWebApi = getBoolParam(request.UseModule.SelectedValues.Contains("webapi"), "UseWebApi");
-
-            //获取当前配置的 FrameworkVersion
-            var frameworkVersion = request.OtherFrameworkVersion.IsNullOrEmpty()
-                                        ? request.FrameworkVersion.SelectedValues.First()
-                                        : request.OtherFrameworkVersion;
-
-            //if (isUseWeb && frameworkVersion == "netstandard2.1")
-            //{
-            //    //需要使用网页，强制修正为支持 Host 的目标框架
-            //    frameworkVersion = "net8.0";
-            //}
-
-            var targetFramework = $" --TargetFramework {frameworkVersion}";
-            var commandTexts = new List<string>
-{
-    $"chcp 65001", // 设置代码页为 UTF-8
-    $"cd {_outPutBaseDir}",
-    // Remove the duplicate cd command  
-    //$"cd \"{_outPutBaseDir}\"",  
-    $"dotnet new XNCF -n {projectName} --force --IntegrationToNcf {targetFramework}{useSample}{useFunction}{useWeb}{useDatabase}{useWebApi} {orgName}{xncfName}{guid}{icon}{description}{version}{menuName}{xncfBaseVersion}{ncfAreaBaseVersion}",
-    $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
-    $"dotnet sln \"{request.SlnFilePath}\" add \"./{projectName}/{projectName}.csproj\" --solution-folder XncfModules"
-};
-
-            Func<Process> GetNewProcess = () =>
+            Process StartNewProcess(string fileName = "cmd.exe")
             {
-                Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardInput = true;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.StandardInputEncoding = newInputEncoddig;
-                p.StartInfo.StandardOutputEncoding = newOutputEncoddig;
-                p.StartInfo.StandardErrorEncoding = newOutputEncoddig;
+                var p = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = fileName,
+                        UseShellExecute = false,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                        StandardInputEncoding = newInputEncoding,
+                        StandardOutputEncoding = newOutputEncoding,
+                        StandardErrorEncoding = newOutputEncoding
+                    }
+                };
                 p.Start();
                 return p;
-            };
+            }
 
-            Action<Process> CloseProcess = p =>
+            void CloseProcess(Process p)
             {
                 p.WaitForExit();
                 p.Close();
-            };
+            }
 
-            string strOutput;
-
+            string output;
             try
             {
-                #region 检查并安装模板  
-                Process pListTemplate = GetNewProcess();
-                Console.WriteLine("dotnet new - l ：");
-                pListTemplate.StandardInput.WriteLine($"dotnet new -l");
-                pListTemplate.StandardInput.WriteLine("exit"); //需要执行exit后才能读取 StandardOutput  
-                var output = pListTemplate.StandardOutput.ReadToEnd();
+                #region 检查并安装模板
+
+                var pListTemplate = StartNewProcess();
+                logger.Append("dotnet new -l :");
+                pListTemplate.StandardInput.WriteLine("dotnet new -l");
+                //pListTemplate.StandardInput.WriteLine("exit");
+                var templateOutput = pListTemplate.StandardOutput.ReadToEnd();
                 CloseProcess(pListTemplate);
 
-                Console.WriteLine("\t" + output);
-                var unInstallTemplatePackage = !output.Contains("Custom XNCF Module Template");
+                logger.Append(templateOutput);
+                var unInstallTemplatePackage = !templateOutput.Contains("Custom XNCF Module Template");
                 var installPackageCmd = string.Empty;
                 switch (request.TemplatePackage.SelectedValues.First())
                 {
                     case "online":
-                        Console.WriteLine("online");
                         logger.Append("配置在线安装 XNCF 模板");
                         installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
                         break;
                     case "local":
-                        Console.WriteLine("local");
                         var slnDir = Directory.GetParent(request.SlnFilePath).FullName;
                         var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
-                        if (packageFile.IsNullOrEmpty())
+                        if (string.IsNullOrEmpty(packageFile))
                         {
                             logger.Append("本地未找到文件：Senparc.Xncf.XncfBuilder.Template.*.nupkg，转为在线安装");
                             goto case "online";
@@ -193,60 +122,154 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         installPackageCmd = $"dotnet new -i {packageFile}";
                         break;
                     case "no":
-                        Console.WriteLine("no");
-                        logger.Append($"未要求安装 XNCF 模板");
+                        logger.Append("未要求安装 XNCF 模板");
                         if (unInstallTemplatePackage)
                         {
-                            logger.Append($"未发现已安装模板，转到在线安装");
+                            logger.Append("未发现已安装模板，转到在线安装");
                             goto case "online";
                         }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                if (!installPackageCmd.IsNullOrEmpty())
+
+                if (!string.IsNullOrEmpty(installPackageCmd))
                 {
-                    var pInstallTemplate = GetNewProcess();
+                    var pInstallTemplate = StartNewProcess();
                     logger.Append($"执行 XNCF 模板安装命令：" + installPackageCmd);
                     pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine("exit"); //需要执行exit后才能读取 StandardOutput  
+                    pInstallTemplate.StandardInput.WriteLine("exit");
                     CloseProcess(pInstallTemplate);
                 }
-                Console.WriteLine($"[{SystemTime.Now}] finish install template");
                 #endregion
 
-                var pCreate = GetNewProcess();
-                Console.WriteLine($"[{SystemTime.Now}] start to create xncf");
-                foreach (string item in commandTexts)
+                #region 从模板安装 XNCF 项目
+
+                Console.WriteLine("开始创建 XNCF 项目");
+                string projectName = GetProjectName(request);
+                _outPutBaseDir = Path.GetDirectoryName(request.SlnFilePath);
+
+                if (!Directory.Exists(_outPutBaseDir))
                 {
-                    Console.WriteLine("run:" + item);
-                    pCreate.StandardInput.WriteLine(item);
-                    Console.WriteLine($"[{SystemTime.Now}] run：{item}");
+                    Directory.CreateDirectory(_outPutBaseDir);
+                }
+
+                var frameworkVersion = string.IsNullOrEmpty(request.OtherFrameworkVersion)
+                    ? request.FrameworkVersion.SelectedValues.First()
+                    : request.OtherFrameworkVersion;
+
+                string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
+                string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
+
+                var isUseSample = request.UseSammple.SelectedValues.Contains("1");
+                var isUseDatabase = isUseSample || request.UseModule.SelectedValues.Contains("database");
+                //var useSample = getBoolParam(isUseSample, "Sample");
+                var useFunction = request.UseModule.SelectedValues.Contains("function");
+                var isUseWeb = isUseSample || request.UseModule.SelectedValues.Contains("web");
+                //var useWeb = getBoolParam(isUseWeb, "Web");
+                //var useDatabase = getBoolParam(isUseDatabase, "Database");
+                var useWebApi = request.UseModule.SelectedValues.Contains("webapi");
+
+                //采用一个独立的进程
+                var args = new List<string>
+                {
+                    "new", "XNCF",
+                    //$"-n {projectName} --force --IntegrationToNcf {targetFramework} {useSample} {useFunction} {useWeb} {useDatabase} {useWebApi} {orgName} {xncfName} {guid} {icon} {description} {version} {menuName} {xncfBaseVersion} {ncfAreaBaseVersion}"
+                    "-n", projectName,
+                    "-o",Path.Combine(_outPutBaseDir,projectName),
+                    "--force",
+                    "--IntegrationToNcf",
+                    "--TargetFramework", frameworkVersion,
+                    "--OrgName",request.OrgName,
+                    "--XncfName",request.XncfName,
+                    "--Guid", $"{Guid.NewGuid().ToString().ToUpper()}",
+                    "--Icon",$"\"{request.Icon}\"",
+                    "--Description",$"\"{request.Description}\"",
+                    "--Version",$"\"{request.Version}\"",
+                    "--MenuName",$"\"{request.MenuName}\"",
+                    "--XncfBaseVersion",xncfBaseVersion,
+                    "--NcfAreaBaseVersion",ncfAreaBaseVersion
+                };
+
+                if (isUseSample) args.Add("--Sample");
+                if (useFunction) args.Add("--Function");
+                if (isUseWeb) args.Add("--Web");
+                if (isUseDatabase) args.Add("--Database");
+                if (useWebApi) args.Add("--UseWebApi");
+
+                var pDotnet = StartNewProcess("dotnet");
+
+                foreach (var arg in args)
+                {
+                    pDotnet.StartInfo.ArgumentList.Add(arg);
+                }
+                //pDotnet.StandardInput.WriteLine(command);
+                pDotnet.Start();
+
+                logger.Append($"[{SystemTime.Now}] 开始创建 XNCF 项目");
+                logger.Append($"[{SystemTime.Now}] 执行命令：dotnet {string.Join(" ", args)}");
+                Console.WriteLine($"[{SystemTime.Now}] 执行命令：dotnet {string.Join(" ", args)}");
+
+                string outputDotNet = pDotnet.StandardOutput.ReadToEnd();
+                logger.Append(outputDotNet);
+                string errorDotNet = pDotnet.StandardError.ReadToEnd();
+                if (!string.IsNullOrEmpty(errorDotNet))
+                {
+                    logger.Append("Error:");
+                    logger.Append(errorDotNet);
+                }
+
+                CloseProcess(pDotnet);
+
+                #endregion
+
+                #region 修改项目文件引用等
+
+                var commandTexts = new List<string>
+                {
+                    "chcp 65001",
+                    $"cd {_outPutBaseDir}",
+                    //$"dotnet new XNCF ",//仅作为标记
+                    $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
+                    $"dotnet sln \"{request.SlnFilePath}\" add \"./{projectName}/{projectName}.csproj\" --solution-folder XncfModules"
+                };
+
+                var pCreate = StartNewProcess();
+                logger.Append($"[{SystemTime.Now}] start to create xncf");
+                foreach (var command in commandTexts)
+                {
+                    pCreate.StandardInput.WriteLine(command);
+                    logger.Append($"[{SystemTime.Now}] run：{command}");
                 }
                 pCreate.StandardInput.WriteLine("exit");
-                Console.WriteLine($"[{SystemTime.Now}] run：exit");
+                logger.Append($"[{SystemTime.Now}] run：exit");
 
-                strOutput = pCreate.StandardOutput.ReadToEnd();
-                Console.WriteLine($"[{SystemTime.Now}] ReadToEnd()");
-                logger.Append(strOutput);
-                string error = pCreate.StandardError.ReadToEnd();
+                output = pCreate.StandardOutput.ReadToEnd();
+                logger.Append(output);
+                var error = pCreate.StandardError.ReadToEnd();
                 if (!string.IsNullOrEmpty(error))
                 {
-                    Console.WriteLine("Error:");
-                    Console.WriteLine(error);
+                    logger.Append("Error:");
+                    logger.Append(error);
                 }
                 CloseProcess(pCreate);
+                #endregion
             }
             catch (Exception e)
             {
-                strOutput = e.Message;
+                output = e.Message;
+                logger.Append("Exception:");
+                logger.Append(e.Message);
+            }
+            finally
+            {
+                Console.OutputEncoding = oldOutputEncoding;
+                Console.InputEncoding = oldInputEncoding;
             }
 
-            Console.OutputEncoding = oldOutputEncodding;
-            Console.InputEncoding = oldInputEncodding;
-
-            return strOutput;
+            return output;
         }
+
 
         /// <summary>
         /// 项目名称
@@ -300,7 +323,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         File.Copy(request.SlnFilePath, backupFilePath);
                         logger.Append($"完成 {newSlnFilePath} 文件备份");
                     }
-
 
                     response.Data = $"项目生成成功！请打开  {newSlnFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
                     response.Success = true;
