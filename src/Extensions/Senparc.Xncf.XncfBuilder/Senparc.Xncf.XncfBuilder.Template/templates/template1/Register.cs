@@ -50,10 +50,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 case InstallOrUpdate.Install:
                     //新安装
 #if (Sample)
-            #region 初始化数据库数据
+                    #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
-            #endregion
+                    #endregion
 #endif
                     break;
                 case InstallOrUpdate.Update:

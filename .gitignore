@@ -85,3 +85,4 @@ ncf_obj/
 *.Development.config
 *.Development.json
 /src/global.json.bak
+/tools/NcfSimulatedSite/NcfSimulatedSite.sln-backup-20250109_160318.sln
