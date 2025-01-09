@@ -97,11 +97,6 @@
     <None Remove="templates\template1\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="templates\template1\Domain\Migrations\Dm\20250109084533_Init.cs" />
-    <Compile Include="templates\template1\Domain\Migrations\Dm\20250109084533_Init.Designer.cs" />
-    <Compile Include="templates\template1\Domain\Migrations\Dm\Template_XncfNameSenparcEntities_DmModelSnapshot.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="readme.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
