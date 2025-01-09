@@ -60,6 +60,7 @@
 		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
+		<ProjectReference Include="..\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='ModifyPublish'">
 		<Content Update="App_Data\**\*.*">

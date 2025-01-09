@@ -51,6 +51,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 }
 
                 var commandTexts = new List<string>();
+                commandTexts.Add($"chcp 65001"); // 设置代码页为 UTF-8
 
                 //添加停机坪引用（直接引用会有问题）
                 //var slnFilePath = Path.Combine(request.DatabasePlantPath, "..\\");

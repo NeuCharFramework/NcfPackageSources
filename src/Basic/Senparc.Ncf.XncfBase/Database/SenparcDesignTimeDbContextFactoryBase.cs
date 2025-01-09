@@ -150,7 +150,8 @@ namespace Senparc.Ncf.XncfBase.Database
         {
             //注释可能出现中文，对中文环境可以配置使用 GB2312
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            Console.OutputEncoding = Encoding.GetEncoding("GB2312");
+            Console.InputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
 
             SiteConfig.SenparcCoreSetting.DatabaseName = databaseName;
             CO2NET.Config.RootDirectoryPath = rootDirectoryPath;

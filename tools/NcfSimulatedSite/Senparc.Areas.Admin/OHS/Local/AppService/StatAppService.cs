@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Azure;
-using Senparc.Areas.Admin.Domain.Dto;
+﻿using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.Areas.Admin.OHS.Local.PL;
 using Senparc.Areas.Admin.SenparcTraceManager;
 using Senparc.CO2NET;
@@ -10,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {

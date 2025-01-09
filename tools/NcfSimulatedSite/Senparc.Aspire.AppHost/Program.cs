@@ -23,6 +23,7 @@ var ncfWeb = builder.AddProject<Projects.Senparc_Web>(NcfWebApiHelper.GetXncfPro
 
 //支持中文字符
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-Console.OutputEncoding = Encoding.GetEncoding("GB2312");
+//Console.InputEncoding = Encoding.UTF8;
+//Console.OutputEncoding = Encoding.UTF8;
 
 builder.Build().Run();

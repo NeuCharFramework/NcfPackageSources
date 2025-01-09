@@ -44,10 +44,10 @@ namespace Senparc.Xncf.KnowledgeBase
             {
                 case InstallOrUpdate.Install:
                     //新安装
-            #region 初始化数据库数据
+                    #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
-            #endregion
+                    #endregion
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -78,7 +78,7 @@ namespace Senparc.Xncf.KnowledgeBase
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-            
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
