@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>1.0.0</Version>
+    <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
+    <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>Template_Description</Description>
+    <Copyright>Template_OrgName</Copyright>
+    <PackageTags>Template_OrgName,NeuCharFramework,NCF,Template_OrgName.Xncf.Template_XncfName</PackageTags>
+    <Authors>Template_OrgName</Authors>
+    <Owners>Template_OrgName</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>Template_MenuName</Title>
+    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
+			v1.0.0 创世
+</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+	<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
+	<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.3-preview1" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.3-preview1+b2e750d8ac3fedfb9565684d45022d46a875c424" />
+    <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.20.4-preview1+b2e750d8ac3fedfb9565684d45022d46a875c424" />
+    <None Include="App_Data\SenparcTraceLog\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+</Project>
