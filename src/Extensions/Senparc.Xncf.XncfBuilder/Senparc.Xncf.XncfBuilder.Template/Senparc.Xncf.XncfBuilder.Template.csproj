@@ -52,7 +52,7 @@
 		v0.12.6 添加项目引用，确保 Areas 页面能被识别
 		v0.12.7 同步最新 Nuget 包版本
 		v0.12.8-beta1 添加达梦数据库迁移（测试）
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
