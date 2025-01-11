@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <Version>0.23.7-preview1</Version>
+    <Version>0.23.8-preview1</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -30,21 +30,22 @@
 			v0.16.4 重构 EntityBase 属性
 			v0.16.7 添加 MultipleDatabaseType.Dm 枚举类型
 			[2024-08-11] v0.19.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
-			[2024-08-22] v0.20.0-preview1 为MethodCache 添加异步方法
-			[2024-08-26] v0.20.1 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
-			[2024-08-27] v0.20.2 修改 FullSystemConfig，添加 NeuCharAppKey 等云端账户信息
-			[2024-08-28] v0.20.3 系统启动自检时已载入的 XNCF 模块显示版本号
-			[2024-09-10] v0.20.4-preview1 升级缓存基础库
-			[2024-10-16] v0.20.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-10-16] v0.21.0 优化 AppServiceBase，提供依赖注入快捷方法
-			[2024-10-26] v0.21.2 更新启动标志信息
-			[2024-11-15] v0.22.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-16] v0.22.2-preview1 启动日志的版本号提供外部自定义
-			[2024-11-19] v0.23.1-preview1 升级基础库，支持 Aspire 提供对 的支持和优化
-			[2024-11-20] v0.23.2-preview1 新增发方法：获取 Aspire 使用的统一默认 XNCF 名称
-			[2024-11-21] v0.23.3-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-</PackageReleaseNotes>
+		[2024-08-22] v0.20.0-preview1 为MethodCache 添加异步方法
+		[2024-08-26] v0.20.1 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
+		[2024-08-27] v0.20.2 修改 FullSystemConfig，添加 NeuCharAppKey 等云端账户信息
+		[2024-08-28] v0.20.3 系统启动自检时已载入的 XNCF 模块显示版本号
+		[2024-09-10] v0.20.4-preview1 升级缓存基础库
+		[2024-10-16] v0.20.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+		[2024-10-16] v0.21.0 优化 AppServiceBase，提供依赖注入快捷方法
+		[2024-10-26] v0.21.2 更新启动标志信息
+		[2024-11-15] v0.22.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+		[2024-11-16] v0.22.2-preview1 启动日志的版本号提供外部自定义
+		[2024-11-19] v0.23.1-preview1 升级基础库，支持 Aspire 提供对 的支持和优化
+		[2024-11-20] v0.23.2-preview1 新增发方法：获取 Aspire 使用的统一默认 XNCF 名称
+		[2024-11-21] v0.23.3-preview1 更新 CO2NET 及缓存基础库
+		[2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+		[2025-01-12] v0.23.8-preview1 add LoginLockException
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
