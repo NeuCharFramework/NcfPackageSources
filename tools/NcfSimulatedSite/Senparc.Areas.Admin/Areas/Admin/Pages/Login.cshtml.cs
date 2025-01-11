@@ -131,6 +131,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！102");
                     return Ok("pwd", false, "账号或密码错误！");
                 }
+                return Ok(true);
             }
             catch (LoginLockException ex)
             {
@@ -143,9 +144,6 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 //其他异常，不返回错误信息
                 return Ok("pwd", false, "账号或密码错误！");
             }
-
-
-            return Ok(true);
         }
 
         public async Task<IActionResult> OnGetLogoutAsync(string ReturnUrl)

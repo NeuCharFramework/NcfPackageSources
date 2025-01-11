@@ -121,10 +121,10 @@ namespace Senparc.Areas.Admin.Domain
         public async Task<AdminUserInfo> TryLoginAsync(AdminUserInfo adminUserInfo, string password, bool rememberMe)
         {
             var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
-            var failedLoginKey = $"FailedLogin:{adminUserInfo.UserName}";
             var lockTimeKey = $"LockTime:{adminUserInfo.UserName}";
+            var failedLoginKey = $"FailedLogin:{adminUserInfo.UserName}";
 
-            // 检查是否在锁定期
+            // 先检查是否在锁定期，避免不必要的数据库查询
             var lockEndTime = await cache.GetAsync<DateTime?>(lockTimeKey);
             if (lockEndTime.HasValue && lockEndTime.Value > DateTime.Now)
             {
