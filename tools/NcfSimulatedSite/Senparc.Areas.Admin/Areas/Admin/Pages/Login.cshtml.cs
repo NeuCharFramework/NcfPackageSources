@@ -125,6 +125,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             try
             {
+                //TODO 需要把 userInfo 获取过程封装到下面的方法中，统一处理账号锁定
                 if (await _userInfoService.TryLoginAsync(userInfo, loginInDto.Password, true) == null)
                 {
                     //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
