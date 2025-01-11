@@ -20,6 +20,7 @@ namespace Senparc.Xncf.FileManager
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"),"文件管理","fa fa-file"),
 			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 			 		};
 
