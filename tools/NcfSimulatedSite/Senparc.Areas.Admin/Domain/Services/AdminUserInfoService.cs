@@ -143,26 +143,26 @@ namespace Senparc.Areas.Admin.Domain
             }
             else
             {
-                // 记录失败次数
-                var failedCount = cache.Get<int>(failedLoginKey);
+                // 记录失败次数，即使锁定期已过，也要累加之前的失败次数
+                var failedCount = await cache.GetAsync<int>(failedLoginKey);
                 failedCount++;
 
                 // 设置锁定时间
                 DateTime? lockTime = null;
-                if (failedCount >= 20)
+                if (failedCount >= 5)
                 {
-                    lockTime = DateTime.Now.AddHours(2);
+                    lockTime = DateTime.Now.AddMinutes(5);
                 }
                 else if (failedCount >= 10)
                 {
                     lockTime = DateTime.Now.AddMinutes(30);
                 }
-                else if (failedCount >= 5)
+                else if (failedCount >= 20)
                 {
-                    lockTime = DateTime.Now.AddMinutes(5);
+                    lockTime = DateTime.Now.AddHours(2);
                 }
 
-                // 更新缓存
+                // 更新缓存，失败次数在24小时内有效
                 await cache.SetAsync(failedLoginKey, failedCount, TimeSpan.FromHours(24));
                 if (lockTime.HasValue)
                 {
