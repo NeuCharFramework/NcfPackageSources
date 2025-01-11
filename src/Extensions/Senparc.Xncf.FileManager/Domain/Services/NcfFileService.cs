@@ -20,18 +20,9 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             : base(repo, serviceProvider)
         {
             _baseFilePath = Path.Combine(AppContext.BaseDirectory, "App_Data", "NcfFiles");
-            InitMapper();
-        }
-
-        private void InitMapper()
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<NcfFile, NcfFileDto>();
-                cfg.CreateMap<NcfFileDto, NcfFile>();
-            });
-
-            Mapper = config.CreateMapper();
+           
+           // 尝试添加目录
+           Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
         }
 
         public async Task<NcfFileDto> UploadFile(IFormFile file, string description = null)

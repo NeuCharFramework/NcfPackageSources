@@ -14,6 +14,8 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.FileManager.Models.DatabaseModel.Dto;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.FileManager
 {
@@ -82,6 +84,7 @@ namespace Senparc.Xncf.FileManager
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
+                z.CreateMap<NcfFile, NcfFileDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
         }
