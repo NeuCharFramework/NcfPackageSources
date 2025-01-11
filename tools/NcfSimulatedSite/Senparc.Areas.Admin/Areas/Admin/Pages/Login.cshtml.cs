@@ -130,7 +130,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
                     SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！102");
                     return Ok("pwd", false, "账号或密码错误！");
-                }
+                }   
                 return Ok(true);
             }
             catch (LoginLockException ex)

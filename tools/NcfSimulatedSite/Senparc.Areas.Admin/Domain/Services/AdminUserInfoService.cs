@@ -123,54 +123,55 @@ namespace Senparc.Areas.Admin.Domain
             var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
             var lockTimeKey = $"LockTime:{adminUserInfo.UserName}";
             var failedLoginKey = $"FailedLogin:{adminUserInfo.UserName}";
-
-            // 先检查是否在锁定期，避免不必要的数据库查询
-            var lockEndTime = await cache.GetAsync<DateTime?>(lockTimeKey);
-            if (lockEndTime.HasValue && lockEndTime.Value > DateTime.Now)
+            using (var cacheLock = await cache.BeginCacheLockAsync("LoginLock-Admin", adminUserInfo.UserName))
             {
-                throw new LoginLockException(lockEndTime.Value);
-            }
-
-            if (adminUserInfo.CheckPassword(password))
-            {
-                // 登录成功，清除失败记录
-                await cache.RemoveFromCacheAsync(failedLoginKey);
-                await cache.RemoveFromCacheAsync(lockTimeKey);
-
-                // 登录
-                await LoginAsync(adminUserInfo, rememberMe);
-                return adminUserInfo;
-            }
-            else
-            {
-                // 记录失败次数，即使锁定期已过，也要累加之前的失败次数
-                var failedCount = await cache.GetAsync<int>(failedLoginKey);
-                failedCount++;
-
-                // 设置锁定时间
-                DateTime? lockTime = null;
-                if (failedCount >= 5)
+                // 先检查是否在锁定期，避免不必要的数据库查询
+                var lockEndTime = await cache.GetAsync<DateTime?>(lockTimeKey);
+                if (lockEndTime.HasValue && lockEndTime.Value > DateTime.Now)
                 {
-                    lockTime = DateTime.Now.AddMinutes(5);
-                }
-                else if (failedCount >= 10)
-                {
-                    lockTime = DateTime.Now.AddMinutes(30);
-                }
-                else if (failedCount >= 20)
-                {
-                    lockTime = DateTime.Now.AddHours(2);
+                    throw new LoginLockException(lockEndTime.Value);
                 }
 
-                // 更新缓存，失败次数在24小时内有效
-                await cache.SetAsync(failedLoginKey, failedCount, TimeSpan.FromHours(24));
-                if (lockTime.HasValue)
+                if (adminUserInfo.CheckPassword(password))
                 {
-                    await cache.SetAsync(lockTimeKey, lockTime.Value, TimeSpan.FromHours(24));
-                    throw new LoginLockException(lockTime.Value);
-                }
+                    // 登录成功，清除失败记录
+                    await cache.RemoveFromCacheAsync(failedLoginKey);
+                    await cache.RemoveFromCacheAsync(lockTimeKey);
 
-                return null;
+                    // 登录
+                    await LoginAsync(adminUserInfo, rememberMe);
+                    return adminUserInfo;
+                }
+                else
+                {
+                    // 记录失败次数，即使锁定期已过，也要累加之前的失败次数
+                    var failedCount = await cache.GetAsync<int>(failedLoginKey);
+                    failedCount++;
+
+                    // 设置锁定时间
+                    DateTime? lockTime = null;
+                    if (failedCount >= 5)
+                    {
+                        lockTime = DateTime.Now.AddMinutes(5);
+                    }
+                    else if (failedCount >= 10)
+                    {
+                        lockTime = DateTime.Now.AddMinutes(30);
+                    }
+                    else if (failedCount >= 20)
+                    {
+                        lockTime = DateTime.Now.AddHours(2);
+                    }
+
+                    // 更新缓存，失败次数在24小时内有效
+                    await cache.SetAsync(failedLoginKey, failedCount, TimeSpan.FromHours(24));
+                    if (lockTime.HasValue)
+                    {
+                        await cache.SetAsync(lockTimeKey, lockTime.Value, TimeSpan.FromHours(24));
+                        throw new LoginLockException(lockTime.Value);
+                    }
+                    return null;
+                }
             }
         }
 
@@ -316,7 +317,7 @@ namespace Senparc.Areas.Admin.Domain
             {
                 throw new NcfExceptionBase($"用户名不存在或密码不正确：{loginDto.UserName}！");
             }
-            try 
+            try
             {
                 var adminUserInfo = await TryLoginAsync(userInfo, loginDto.Password, false);
                 if (adminUserInfo == null)
@@ -338,7 +339,7 @@ namespace Senparc.Areas.Admin.Domain
             {
                 throw; // 直接向上层抛出登录锁定异常
             }
-            
+
             return result;
         }
 
