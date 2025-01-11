@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\tools\NcfSimulatedSite\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
 	</ItemGroup>
 
 </Project>
