@@ -16,6 +16,10 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.FileManager.Models.DatabaseModel.Dto;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
+using Senparc.CO2NET.RegisterServices;
 
 namespace Senparc.Xncf.FileManager
 {
@@ -87,6 +91,15 @@ namespace Senparc.Xncf.FileManager
                 z.CreateMap<NcfFile, NcfFileDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
         }
     }
 }
