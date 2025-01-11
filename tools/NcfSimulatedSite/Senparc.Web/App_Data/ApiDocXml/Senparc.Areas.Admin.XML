@@ -43,7 +43,9 @@
             <summary>
             获取某个用户下面的所有资源
             </summary>
-            <param name="i
+            <param name="adminUserInfoId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfoAuthorizationPageModel.OnGetDetailAsync(System.Int32)">
             <summary>
             获取用户的角色
