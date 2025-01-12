@@ -3,6 +3,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.FileManager.Models.DatabaseModel;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.FileManager.Models
 {
@@ -13,6 +14,8 @@ namespace Senparc.Xncf.FileManager.Models
         }
 
         public DbSet<Color> Colors { get; set; }
+
+        public DbSet<NcfFile> NcfFiles { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }

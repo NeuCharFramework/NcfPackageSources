@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.FileManager.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.FileManager.Models;
 namespace Senparc.Xncf.FileManager.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(FileManagerSenparcEntities_SqlServer))]
-    partial class FileManagerSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20250112085244_Ini_NcfFile")]
+    partial class Ini_NcfFile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -33,12 +33,12 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(new PagedList<NcfFileDto>(result, page, pageSize, result.TotalCount));
         }
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile file)
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile file, string description)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded");
 
-            var result = await _fileService.UploadFileAsync(file);
+            var result = await _fileService.UploadFile(file, description);
             return Ok(result);
         }
 
