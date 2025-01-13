@@ -10,22 +10,22 @@ using Senparc.Xncf.SenMapic.Domain.Utility;
 
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
-    public class SiteMapHandler
-    {
-        //private SiteMapOrder _siteMapOrder;
-        public SiteMapHandler(/*SiteMapOrder order*/)
-        {
-            //this._siteMapOrder = _siteMapOrder;
-        }
+    // public class SiteMapHandler
+    // {
+    //     //private SiteMapOrder _siteMapOrder;
+    //     public SiteMapHandler(/*SiteMapOrder order*/)
+    //     {
+    //         //this._siteMapOrder = _siteMapOrder;
+    //     }
 
-        public void RemoveSiteMapCollectionFiles(SiteMapOrder order)
-        {
-            //删除目录
-            string dir = Server.HttpContext.Server.MapPath(GlobalConfigString.GetSitemapCollectionFileDirectory(order.Id));
-            if (Directory.Exists(dir))
-            {
-                Directory.Delete(dir, true);
-            }
-        }
-    }
+    //     public void RemoveSiteMapCollectionFiles(SiteMapOrder order)
+    //     {
+    //         //删除目录
+    //         string dir = Server.HttpContext.Server.MapPath(GlobalConfigString.GetSitemapCollectionFileDirectory(order.Id));
+    //         if (Directory.Exists(dir))
+    //         {
+    //             Directory.Delete(dir, true);
+    //         }
+    //     }
+    // }
 }

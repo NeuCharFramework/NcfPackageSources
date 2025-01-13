@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ICSharpCode.SharpZipLib.GZip;
 using System.IO;
-using System.Net;
-
+using System.IO.Compression;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
     public static class SenMapicUtility
     {
-        public static Stream GetReceiveStream(string contentEncoding, HttpWebResponse webResponse)
+        public static Stream GetReceiveStream(string contentEncoding, HttpResponseMessage response)
         {
-            if (contentEncoding == "gzip")
+            var responseStream = response.Content.ReadAsStream();
+            
+            if (contentEncoding?.ToLower() == "gzip")
             {
-                //receiveStream = webResponse.GetResponseStream();
-                return new GZipInputStream(webResponse.GetResponseStream());
-                //receiveStream = new GZipStream(webResponse.GetResponseStream(), CompressionMode.Decompress);
+                return new GZipStream(responseStream, CompressionMode.Decompress);
             }
             else
             {
-                return webResponse.GetResponseStream();
+                return responseStream;
             }
         }
     }

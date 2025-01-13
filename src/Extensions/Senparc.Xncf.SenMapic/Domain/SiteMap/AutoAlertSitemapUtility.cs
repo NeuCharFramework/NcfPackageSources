@@ -123,8 +123,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //     } while (!BuildOnlyOnce);
         // }
 
-        private void BuildOnlyOnceEventHandler(object state, bool timeout)
-        {
+        // private void BuildOnlyOnceEventHandler(object state, bool timeout)
+        // {
             // try
             // {
             //     ctx = new SenparcEntities(Senparc.Xncf.SenMapic.Domain.Config.SenparcDatabaseConfigs.ClientConnectionString);
@@ -223,10 +223,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     ctx.Dispose();
             //     ctx = null;
             // }
-        }
+        // }
 
-        private void BuidSitemapEventHandler(object state)
-        {
+        // private void BuidSitemapEventHandler(object state)
+        // {
             // SiteMapCollection siteMapCollection = null;
             // SiteMapOrder order = state as SiteMapOrder;
             // bool threadStarted = false;
@@ -443,15 +443,15 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //         autoAlertThreadInUsing--;
             //     }
             // }
-        }
+        // }
 
         /// <summary>
         /// 检查是否超时未登录，如果是，则发送Email提示
         /// </summary>
         /// <param name="order"></param>
-        private void CheckLoginAndAlert(SiteMapOrder order)
-        {
-            // DateTime currentLoginTime = order.UserInfo.CurrentLoginTime;
+        // private void CheckLoginAndAlert(SiteMapOrder order)
+        // {
+          // DateTime currentLoginTime = order.UserInfo.CurrentLoginTime;
             // TimeSpan tsAllowMaxUnloginTime = TimeSpan.FromDays(SystemParameters.SitemapLogExpireDays);
             // if (currentLoginTime.Add(tsAllowMaxUnloginTime) < order.LastCreateTime)
             // {
@@ -459,7 +459,6 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     {
             //         return;//指定用户不提示
             //     }
-
 
             //     //已超时
             //     if (currentLoginTime.Add(tsAllowMaxUnloginTime + TimeSpan.FromDays(15)) < order.LastCreateTime)
@@ -770,5 +769,5 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
 
         // }
-    }
+    // }
 }

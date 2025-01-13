@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
-using Senparc.Xncf.KnowledgeBase.Domain.Services;
-using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
+using Senparc.Xncf.SenMapic.Domain.Services;
+using Senparc.Xncf.SenMapic.Models.DatabaseModel.Dto;
 using System;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.Models;
 
-namespace Senparc.Xncf.KnowledgeBase.Areas.KnowledgeBase.Pages
+namespace Senparc.Xncf.SenMapic.Areas.SenMapic.Pages
 {
     public class DatabaseSample : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {

@@ -297,5 +297,5 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //             template = template.Replace("{$" + valueName.ToLower() + "$}", value);
 //         }
 //         #endregion
-    }
+    // }
 }
