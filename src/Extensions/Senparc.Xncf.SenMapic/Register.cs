@@ -14,8 +14,6 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.SenMapic.Models.DatabaseModel.Dto;
-using Senparc.Xncf.SenMapic.Domain.Models.DatabaseModel;
-using Senparc.Xncf.SenMapic.Domain.Models.DatabaseModel.Dto;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
@@ -88,7 +86,6 @@ namespace Senparc.Xncf.SenMapic
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
-                z.CreateMap<NcfFile, NcfFileDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
         }

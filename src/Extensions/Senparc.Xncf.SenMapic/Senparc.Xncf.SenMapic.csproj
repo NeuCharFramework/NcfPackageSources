@@ -7,13 +7,13 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>文件管理</Description>
+    <Description>SenMapic 爬虫模块</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.SenMapic</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>文件管理</Title>
+    <Title>SenMapic 爬虫模块</Title>
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
