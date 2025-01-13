@@ -10,6 +10,8 @@ using System.Threading;
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
     using System.Threading;
+    using System.Threading.Tasks;
+    using Senparc.CO2NET.Extensions;
     using Senparc.CO2NET.Trace;
 
     public partial class SenMapicEngine
@@ -218,7 +220,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
                 catch (Exception e)
                 {
-                    SenparcTrace.BaseExceptionLog(e, $"Sitemap生成出错。url:{this._currentUrl}");
+                    var ex = new Exception($"Sitemap生成出错。url:{this._currentUrl}", e);
+                    SenparcTrace.BaseExceptionLog(ex);
                     throw;
                 }
                 finally
@@ -254,7 +257,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             homeUrl = this.RemoveUrlEndingSlash(homeUrl);
             this._currentAvaliableUrlTemp.Add(homeUrl, new AvailableUrl(homeUrl, "", 0, AvailableUrlStatus.UnStart));//首页加入待选
 
-            WaitCallback waitCallback = new WaitCallback(this.CrawlUrlEventHandler);//WaitCallback
+            WaitCallback waitCallback = new WaitCallback(async (url) => await this.CrawlUrlEventHandler(url));//WaitCallback
 
             //开始从第0层（首页）抓取
             for (int deep = 0; deep <= this._maxDeep; deep++)
@@ -262,7 +265,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 if (threadInUsing > 0)
                 {
                     //每层结束前，会等待所有线程结束，threadInUsing > 0 说明此时还有线程在工作
-                    LogUtility.SitemapLogger.Debug("Sitemap多线程出错！当前实际线程数：{0},Deep:{1},Url:{2}".With(threadInUsing, deep, homeUrl));
+                    SenparcTrace.SendCustomLog("Sitemap", $"Sitemap多线程出错！当前实际线程数：{threadInUsing},Deep:{deep},Url:{homeUrl}");
                 }
 
                 if (this._currentUrls.Count >= this._maxPageCount || this._currentUrlBuildStop)
@@ -309,7 +312,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }
                     catch (Exception e)
                     {
-                        LogUtility.SitemapLogger.Error(e.Message, e);
+                        var ex = new Exception($"Sitemap多线程出错！当前实际线程数：{threadInUsing},Deep:{deep},Url:{homeUrl}", e);
+                        SenparcTrace.BaseExceptionLog(ex);
                     }
 
                     #region 等待线程，依次执行
@@ -330,11 +334,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                         if ((DateTime.Now - dtStartWait).TotalMinutes > totalWaitMinutes)/*每个线程页面采集大于大于0.5分钟，强制退出*/
                         {
-                            LogUtility.SitemapLogger.Error(
-    @"线程超时，强制忽略。首页:{0}，已等待{1}分钟
-                    当前使用线程数：{2}，最大允许线程数：{3}，当前层Url数：{4}，当前使用线程数：{5}，当前剩余Url数：{6}"
-                                .With(homeUrl, totalWaitMinutes,
-                                threadInUsing, _maxThread, thisLayerUrls.Count.ToString(), threadInUsing.ToString(), _remainUrlCount));
+                            var ex = new Exception($"Sitemap线程超时，强制忽略。首页:{homeUrl}，已等待{totalWaitMinutes}分钟，当前使用线程数：{threadInUsing}，最大允许线程数：{_maxThread}，当前层Url数：{thisLayerUrls.Count}，当前使用线程数：{threadInUsing}，当前剩余Url数：{_remainUrlCount}");
+                            SenparcTrace.BaseExceptionLog(ex);
                             break;
                         }
 
@@ -360,7 +361,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         /// 提供多线程同时爪录
         /// </summary>
         /// <param name="url">完整URL，格式如：http://www.senparc.com/xx.html</param>
-        private void CrawlUrlEventHandler(object url)
+        private async Task CrawlUrlEventHandler(object url)
         {
             //bool threadStarted = false;
             string synDataID = Guid.NewGuid().ToString();
@@ -386,17 +387,19 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
                 catch (Exception e)
                 {
-                    SenparcTrace.BaseExceptionLog(e, $"CurrentCrawlingUrlList出错，Url:{url}");
+                    var ex = new Exception($"CurrentCrawlingUrlList出错，Url:{url}", e);
+                    SenparcTrace.BaseExceptionLog(ex);
                 }
                 UrlData urlData;
                 try
                 {
                     currentAvaliableUrl.StartBuildTime = DateTime.Now;
-                    urlData = this.CrawlUrl(avaliableUrl, parentUrl, _currentDeep, false);//爬行Url,获取Url,HTML等重要信息
+                    urlData = await this.CrawlUrl(avaliableUrl, parentUrl, _currentDeep, false);//爬行Url,获取Url,HTML等重要信息
                 }
                 catch (Exception e)
                 {
-                    LogUtility.SitemapLogger.Error("Sitemap出错！当前Url:{0}，ParentUrl:{1}".With(avaliableUrl, parentUrl), e);
+                    var ex = new Exception($"Sitemap出错！当前Url:{avaliableUrl}，ParentUrl:{parentUrl}", e);
+                    SenparcTrace.BaseExceptionLog(ex);
                     urlData = new UrlData(avaliableUrl, -1, "", "", -1, 0.00, parentUrl);
                 }
 
@@ -446,7 +449,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
-                LogUtility.SitemapLogger.Error("Url:{0}。出错信息：{1}".With(url, e.Message), e);
+                var ex = new Exception($"Url:{url}。出错信息：{e.Message}", e);
+                SenparcTrace.BaseExceptionLog(ex);
             }
             finally
             {

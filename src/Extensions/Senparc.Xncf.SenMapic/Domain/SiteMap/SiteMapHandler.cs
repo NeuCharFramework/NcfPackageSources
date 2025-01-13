@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Senparc.Xncf.SenMapic.Domain.Models;
 using Senparc.Xncf.SenMapic.Domain.SiteMap;
-using Senparc.Xncf.SenMapic.Domain.Config;
 using System.IO;
-using Senparc.Xncf.SenMapic.Domain.Utility;
 
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {

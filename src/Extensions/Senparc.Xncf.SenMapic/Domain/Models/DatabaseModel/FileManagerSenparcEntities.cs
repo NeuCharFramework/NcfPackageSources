@@ -3,7 +3,6 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.SenMapic.Models.DatabaseModel;
-using Senparc.Xncf.SenMapic.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.SenMapic.Models
 {

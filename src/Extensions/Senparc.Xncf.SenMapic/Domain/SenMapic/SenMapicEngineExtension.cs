@@ -11,6 +11,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     using Senparc.CO2NET.Extensions;
     using Senparc.CO2NET.Trace;
     using System.Diagnostics;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -296,7 +297,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //BMK:此方法收集时有的网站会发生“未将对象引用设置到对象的实例”错误，如：http://www.w2tx.cn/batch.common.php?action=viewnews&op=up&itemid=77&catid=70
 
             UrlData urlData = null;
-            HttpWebResponse webResponse = null;
+            HttpResponseMessage webResponse = null;
             DateTime requestStartTime = DateTime.MinValue;
             DateTime requestEndTime = DateTime.MinValue;
             try
@@ -328,18 +329,18 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 //开始访问
                 var responseResult = await RequestPage(url);//爬行获取webReponse
-                var response = responseResult.response;
+                webResponse = responseResult.response;
                 requestStartTime = responseResult.requestStartTime;
                 requestEndTime = responseResult.requestEndTime;
 
                 this._currentAvaliableUrlTemp[url].Status = AvailableUrlStatus.Finished;//标记完成
 
                 //比对URL，如果发生302或301（自动添加末尾/）的情况
-                if (url.ToUpper() != webResponse.ResponseUri.AbsoluteUri.ToUpper())
+                if (url.ToUpper() != webResponse.RequestMessage.RequestUri.AbsoluteUri.ToUpper())
                 {
                     //发生改变
-                    this._currentAvaliableUrlTemp[url].Url = webResponse.ResponseUri.AbsoluteUri;//更新AvaliableUrlTemp中的信息。
-                    url = webResponse.ResponseUri.AbsoluteUri;//url调整为新的url
+                    this._currentAvaliableUrlTemp[url].Url = webResponse.RequestMessage.RequestUri.AbsoluteUri;//更新AvaliableUrlTemp中的信息。
+                    url = webResponse.RequestMessage.RequestUri.AbsoluteUri;//url调整为新的url
                     if (this._currentUrls.ContainsKey(url) || this.ContainsFilterOmitWord(url))
                     {
                         return null;//已经收录过，或包含过滤词，停止收录
@@ -352,23 +353,23 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 if (webResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.ContentLength > 0 ? webResponse.ContentLength : 0, null);
+                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.Content.Headers.ContentLength ?? 0, null, (int)TimeSpan.FromTicks(_requestPageTicks).TotalMilliseconds);
                 }
-                else if (!webResponse.ContentType.StartsWith("text"))
+                else if (!webResponse.Content.Headers.ContentType?.MediaType?.StartsWith("text") ?? true)
                 {
-                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.ContentLength > 0 ? webResponse.ContentLength : 0, null);
+                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.Content.Headers.ContentLength ?? 0, null);
                 }
 
                 //DateTime dt1 = DateTime.Now;
 
                 //判断Gzip压缩
-                string ce = webResponse.Headers["Content-Encoding"];//webResponse.ContentEncoding;方法SL中不支持
+                string ce = webResponse.Content.Headers.ContentEncoding.FirstOrDefault();
                 Stream receiveStream = null;
                 receiveStream = SenMapicUtility.GetReceiveStream(ce, webResponse);
 
                 //判断字符集
-                string contentType = webResponse.ContentType;// text/html; charset=utf-8
-                string charterSet = webResponse.Headers["Content-Type"];//webResponse.CharacterSet ?? "";//获取系统查询到的编码
+                string contentType = webResponse.Content.Headers.ContentType?.MediaType;
+                string charterSet = webResponse.Content.Headers.ContentType?.ToString();
 
                 //从Content-Type中获取charterSet。出于效率考虑不使用LINQ
                 charterSet = GetCharterSetFromContentType(charterSet);
@@ -430,7 +431,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 if (webResponse != null)
                 {
-                    webResponse.Close();//关闭链接
+                    webResponse.Dispose();//关闭链接
                 }
 
                 if (urlData != null)
