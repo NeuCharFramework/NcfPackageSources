@@ -34,6 +34,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private int _maxThread = 2;//最大线程数
         private readonly int _maxTimeoutTimes = 10;//最大超时页面数（超过此数量，终止收集）
         private readonly int _pageRequestTimeoutMillionSeconds = 1000 * 20;//页面请求超时时间（毫秒）
+        private readonly IServiceProvider _serviceProvider;
         private int _maxBuildMinutesForSingleSite = 10;//默认最长收集时间（每一个站点）
 
         private IEnumerable<string> _urls;//带收录的列队Url
@@ -115,24 +116,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public List<FilterOmitWord> FilterOmitWords;//过滤Url中的关键字
         //public Dictionary<string,Dictionary<string,UrlData>> TotalUrlDataCollection { get; set; }
 
-        public SenMapicEngine(IEnumerable<string> urls)
-            : this(urls, 0, 20, null)
+      
+        public SenMapicEngine(IServiceProvider serviceProvider, IEnumerable<string> urls, int maxThread=4, int maxBuildMinutesForSingleSite=10, string priority=null, string changefreq=null, DateTime? updateDate=null, int maxDeep=5, int maxPageCount=500, List<string> filterOmitWords=null)
         {
-        }
-
-
-        public SenMapicEngine(IEnumerable<string> urls, int maxThread, int maxBuildMinutesForSingleSite)
-            : this(urls, maxThread, maxBuildMinutesForSingleSite, null)
-        {
-        }
-
-        public SenMapicEngine(IEnumerable<string> urls, int maxThread, int maxBuildMinutesForSingleSite, List<string> filterOmitWords)
-            : this(urls, maxThread, maxBuildMinutesForSingleSite, null, null, null, -1, -1, filterOmitWords)
-        {
-        }
-
-        public SenMapicEngine(IEnumerable<string> urls, int maxThread, int maxBuildMinutesForSingleSite, string priority, string changefreq, DateTime? updateDate, int maxDeep, int maxPageCount, List<string> filterOmitWords)
-        {
+            this._serviceProvider = serviceProvider;
             if (changefreq != null && priority != "none")
             {
                 Priority = priority;
