@@ -8,11 +8,11 @@ using System.Net;
 
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
-    using Senparc.Xncf.SenMapic.Domain.SiteMap.Extensions;
-    using Senparc.Xncf.SenMapic.Domain.SiteMap.Log;
+    using Senparc.CO2NET.Extensions;
+    using Senparc.CO2NET.Trace;
     using System.Diagnostics;
     using System.Threading;
-
+    using System.Threading.Tasks;
 
     public partial class SenMapicEngine
     {
@@ -142,12 +142,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         || newUrl.StartsWith("\\")
                         || newUrl.StartsWith("+")
                         || (!newUrl.Contains("?") && (this.EndWithAny(newUrl, new[] { ".js", ".mp3", ".chm", ".wmv", ".flv", ".zip", ".rar", ".jpg", ".gif", ".bmp", ".png" })))
-                    //|| newUrl.EndsWith(".mp3")
-                    //|| newUrl.EndsWith(".chm")
-                    //|| newUrl.EndsWith(".wmv")
-                    //|| newUrl.EndsWith(".flv")
-                    //|| newUrl.EndsWith(".zip")
-                    //|| newUrl.EndsWith(".rar")
+                        //|| newUrl.EndsWith(".mp3")
+                        //|| newUrl.EndsWith(".chm")
+                        //|| newUrl.EndsWith(".wmv")
+                        //|| newUrl.EndsWith(".flv")
+                        //|| newUrl.EndsWith(".zip")
+                        //|| newUrl.EndsWith(".rar")
                         )
                 {
                     return null;
@@ -264,7 +264,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
-                LogUtility.SitemapLogger.Error("GetFullUrl方法内部出错：" + e.Message + "URL:" + url + ",newUrl:" + newUrl, e);
+                var ex = new Exception($"GetFullUrl方法内部出错：URL:{url},newUrl:{newUrl}", e);
+                SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
         }
@@ -276,13 +277,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public UrlData CrawSingleUrl(string url)
+        public async Task<UrlData> CrawSingleUrl(string url)
         {
             if (string.IsNullOrEmpty(_currentDomain))
             {
                 _currentDomain = this.GetDomain(url);
             }
-            return CrawlUrl(url, null, 0, true);
+            return await CrawlUrl(url, null, 0, true);
         }
 
         /// <summary>
@@ -290,7 +291,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         /// </summary>
         /// <param name="url"></param>
         /// <returns>返回UrlData信息，如果不符合爬行条件（如CotentType类型不符合等），则返回null</returns>
-        private UrlData CrawlUrl(string url, string parentUrl, int deep, bool singleUrl)
+        private async Task<UrlData> CrawlUrl(string url, string parentUrl, int deep, bool singleUrl)
         {
             //BMK:此方法收集时有的网站会发生“未将对象引用设置到对象的实例”错误，如：http://www.w2tx.cn/batch.common.php?action=viewnews&op=up&itemid=77&catid=70
 
@@ -326,7 +327,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
 
                 //开始访问
-                RequestPage(url, out requestStartTime, out webResponse, out requestEndTime);//爬行获取webReponse
+                var responseResult = await RequestPage(url);//爬行获取webReponse
+                var response = responseResult.response;
+                requestStartTime = responseResult.requestStartTime;
+                requestEndTime = responseResult.requestEndTime;
 
                 this._currentAvaliableUrlTemp[url].Status = AvailableUrlStatus.Finished;//标记完成
 
@@ -417,8 +421,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
+                var ex = new Exception($"SitemapDebug异常({url})", e);
                 //记录异常
-                LogUtility.SitemapLogger.Error("SitemapDebug异常({0})：{1}".With(url, e.Message), e);
+                SenparcTrace.BaseExceptionLog(ex);
                 return new UrlData(url, deep, "", "", 0, 0, null);
             }
             finally
@@ -441,8 +446,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 if (!singleUrl && (DateTime.Now - this.CurrentSiteStartTime).TotalMinutes >= MaxBuildMinutesForSingleSite)
                 {
-                    this.StopBuild();//超时，停止收集
-                    LogUtility.SitemapLogger.Error("SitemapBuild超时退出（{0}分钟）。当前Url:{1}".With(MaxBuildMinutesForSingleSite, url));
+                    this.StopBuild();
+                    SenparcTrace.SendCustomLog("SiteMap", $"SitemapBuild超时退出（{MaxBuildMinutesForSingleSite}分钟）。当前Url:{url}");
                 }
             }
             return urlData;//返回收集完成的UrlData

@@ -10,6 +10,7 @@ using System.Threading;
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
     using System.Threading;
+    using Senparc.CO2NET.Trace;
 
     public partial class SenMapicEngine
     {
@@ -213,11 +214,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     DateTime dt2 = DateTime.Now;
                     TimeSpan ts = dt2 - dt1;
                     //写入日志
-                    Log.LogUtility.SitemapLogger.Info("Sitemap生成：{0}，收录页面：{1}，总耗时：{2}毫秒，平均{3}毫秒。".With(this._currentUrl, this._currentUrls.Count, ts.TotalMilliseconds.ToString("###,###"), this._currentUrls.Count > 0 ? (ts.TotalMilliseconds / this._currentUrls.Count).ToString("###,###") : "0"));
+                    SenparcTrace.SendCustomLog("SiteMap", $"Sitemap生成：{this._currentUrl}，收录页面：{this._currentUrls.Count}，总耗时：{ts.TotalMilliseconds:###,###}毫秒，平均{(this._currentUrls.Count > 0 ? (ts.TotalMilliseconds / this._currentUrls.Count).ToString("###,###") : "0")}毫秒。");
                 }
                 catch (Exception e)
                 {
-                    Log.LogUtility.SitemapLogger.Error("Sitemap生成出错：{0}。url:{1}。".With(e.Message, this._currentUrl), e);
+                    SenparcTrace.BaseExceptionLog(e, $"Sitemap生成出错。url:{this._currentUrl}");
                     throw;
                 }
                 finally
@@ -385,7 +386,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
                 catch (Exception e)
                 {
-                    LogUtility.SitemapLogger.Error("CurrentCrawlingUrlList出错，Url:{0}。出错信息：{1}".With(url, e.Message), e);
+                    SenparcTrace.BaseExceptionLog(e, $"CurrentCrawlingUrlList出错，Url:{url}");
                 }
                 UrlData urlData;
                 try
