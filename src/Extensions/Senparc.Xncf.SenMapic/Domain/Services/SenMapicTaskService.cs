@@ -4,17 +4,21 @@ using Senparc.Ncf.Service;
 using Senparc.Xncf.SenMapic.Domain.SiteMap;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Senparc.Xncf.SenMapic.Domain.Services
 {
     public class SenMapicTaskService : ServiceBase<SenMapicTask>
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IRepositoryBase<SenMapicTaskItem> _taskItemRepository;
 
-        public SenMapicTaskService(IRepositoryBase<SenMapicTask> repo, IServiceProvider serviceProvider)
+        public SenMapicTaskService(IRepositoryBase<SenMapicTask> repo, IServiceProvider serviceProvider, IRepositoryBase<SenMapicTaskItem> taskItemRepository)
             : base(repo, serviceProvider)
         {
             _serviceProvider = serviceProvider;
+            _taskItemRepository = taskItemRepository;
         }
 
         public async Task<SenMapicTask> CreateTaskAsync(string name, string startUrl, 
@@ -72,6 +76,20 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
                     await SaveTaskStateAsync(task, t => t.Error(ex.Message));
                 }
             });
+        }
+
+        public IQueryable<SenMapicTaskItem> GetTaskItems(int taskId)
+        {
+            return _taskItemRepository.GetAll().Where(x => x.TaskId == taskId);
+        }
+
+        public async Task SaveTaskItemsAsync(SenMapicTask task, Dictionary<string, UrlData> urlDatas)
+        {
+            foreach (var urlData in urlDatas)
+            {
+                var taskItem = new SenMapicTaskItem(task, urlData.Value);
+                await _taskItemRepository.AddAsync(taskItem);
+            }
         }
     }
 } 

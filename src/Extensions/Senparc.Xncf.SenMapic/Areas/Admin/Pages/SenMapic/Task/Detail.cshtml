@@ -1,0 +1,93 @@
+@page
+@model Senparc.Xncf.SenMapic.Areas.Admin.Pages.SenMapic.Task.DetailModel
+@{
+    ViewData["Title"] = "爬虫任务详情";
+}
+
+<div class="admin-site">
+    <div class="admin-site-header">
+        <el-breadcrumb separator="/">
+            <el-breadcrumb-item>首页</el-breadcrumb-item>
+            <el-breadcrumb-item>爬虫任务管理</el-breadcrumb-item>
+            <el-breadcrumb-item>任务详情</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+
+    <div class="admin-site-content">
+        <div class="task-info">
+            <el-descriptions title="任务信息" :column="2" border>
+                <el-descriptions-item label="任务名称">{{ task.name }}</el-descriptions-item>
+                <el-descriptions-item label="状态">
+                    <el-tag :type="getStatusType(task.status)">{{getStatusText(task.status)}}</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="开始时间">{{ task.startTime }}</el-descriptions-item>
+                <el-descriptions-item label="结束时间">{{ task.endTime }}</el-descriptions-item>
+                <el-descriptions-item label="已爬取页面数">{{ task.crawledPages }}</el-descriptions-item>
+                <el-descriptions-item label="错误信息">{{ task.errorMessage }}</el-descriptions-item>
+            </el-descriptions>
+        </div>
+
+        <div class="url-stats" style="margin-top: 20px;">
+            <el-card>
+                <div slot="header">
+                    <span>URL统计</span>
+                </div>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <div class="stat-item">
+                            <div class="stat-value">{{stats.totalUrls}}</div>
+                            <div class="stat-label">总URL数</div>
+                        </div>
+                    </el-col>
+                    <el-col :span="8">
+                        <div class="stat-item">
+                            <div class="stat-value">{{stats.successUrls}}</div>
+                            <div class="stat-label">成功数</div>
+                        </div>
+                    </el-col>
+                    <el-col :span="8">
+                        <div class="stat-item">
+                            <div class="stat-value">{{stats.failedUrls}}</div>
+                            <div class="stat-label">失败数</div>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </div>
+
+        <div class="url-list" style="margin-top: 20px;">
+            <el-tabs v-model="activeTab" @tab-click="handleTabClick">
+                <el-tab-pane v-for="domain in domains" :key="domain" :label="domain" :name="domain">
+                    <el-table :data="urlList" style="width: 100%" v-loading="loading">
+                        <el-table-column prop="url" label="URL" width="300"></el-table-column>
+                        <el-table-column prop="parentUrl" label="父URL" width="300"></el-table-column>
+                        <el-table-column prop="deep" label="深度" width="80"></el-table-column>
+                        <el-table-column prop="crawlTime" label="爬取时间" width="180"></el-table-column>
+                        <el-table-column prop="pageSize" label="页面大小" width="120"></el-table-column>
+                        <el-table-column prop="statusCode" label="状态码" width="100">
+                            <template slot-scope="scope">
+                                <el-tag :type="getHttpStatusType(scope.row.statusCode)">{{scope.row.statusCode}}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="title" label="标题"></el-table-column>
+                    </el-table>
+                    <div class="pagination" style="margin-top: 20px; text-align: right;">
+                        <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[10, 20, 50, 100]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total">
+                        </el-pagination>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/SenMapic/task-detail.js"></script>
+} 
