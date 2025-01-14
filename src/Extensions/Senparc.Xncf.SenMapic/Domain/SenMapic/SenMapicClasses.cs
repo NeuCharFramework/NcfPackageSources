@@ -35,25 +35,78 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     var titleMatch = Regex.Match(text, @"<title[^>]*>(.*?)</title>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     if (titleMatch.Success)
                     {
-                        sb.AppendLine($"标题: {WebUtility.HtmlDecode(titleMatch.Groups[1].Value.Trim())}");
+                        sb.AppendLine($"# {WebUtility.HtmlDecode(titleMatch.Groups[1].Value.Trim())}");
+                        sb.AppendLine();
                     }
 
                     // 提取 meta description
                     var descMatch = Regex.Match(text, @"<meta\s+name=[""']description[""']\s+content=[""']([^""']*)[""']", RegexOptions.IgnoreCase);
                     if (descMatch.Success)
                     {
-                        sb.AppendLine($"描述: {WebUtility.HtmlDecode(descMatch.Groups[1].Value.Trim())}");
+                        sb.AppendLine($"> {WebUtility.HtmlDecode(descMatch.Groups[1].Value.Trim())}");
+                        sb.AppendLine();
                     }
 
                     // 提取 meta keywords
                     var keywordsMatch = Regex.Match(text, @"<meta\s+name=[""']keywords[""']\s+content=[""']([^""']*)[""']", RegexOptions.IgnoreCase);
                     if (keywordsMatch.Success)
                     {
-                        sb.AppendLine($"关键词: {WebUtility.HtmlDecode(keywordsMatch.Groups[1].Value.Trim())}");
+                        var keywords = WebUtility.HtmlDecode(keywordsMatch.Groups[1].Value.Trim());
+                        sb.AppendLine($"**关键词**: {keywords}");
+                        sb.AppendLine();
                     }
 
-                    sb.AppendLine("正文内容:");
-                    
+                    // 处理图片
+                    text = Regex.Replace(text, 
+                        @"<img[^>]+(alt=[""']([^""']*)[""'])?[^>]*(title=[""']([^""']*)[""'])?[^>]*(src=[""']([^""']*)[""'])?[^>]*>",
+                        delegate(Match match)
+                        {
+                            string alt = match.Groups[2].Value.Trim();
+                            string title = match.Groups[4].Value.Trim();
+                            string src = ResolveUrl(match.Groups[6].Value.Trim());
+                            string description = !string.IsNullOrEmpty(alt) ? alt : title;
+                            
+                            if (!string.IsNullOrEmpty(description))
+                            {
+                                return $"![{description}]({src})";
+                            }
+                            return string.Empty;
+                        },
+                        RegexOptions.IgnoreCase);
+
+                    // 处理链接
+                    text = Regex.Replace(text, 
+                        @"<a\s[^>]*href=[""']([^""']*)[""'][^>]*(title=[""']([^""']*)[""'])?[^>]*>(.*?)</a>",
+                        delegate(Match match)
+                        {
+                            string href = ResolveUrl(match.Groups[1].Value.Trim());
+                            string title = match.Groups[3].Value.Trim();
+                            string linkText = match.Groups[4].Value.Trim();
+                            
+                            if (!string.IsNullOrEmpty(title) && title != linkText)
+                            {
+                                return $"[{linkText}]({href} \"{title}\")";
+                            }
+                            return $"[{linkText}]({href})";
+                        },
+                        RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理标题标签
+                    text = Regex.Replace(text, @"<h1[^>]*>(.*?)</h1>", "# $1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    text = Regex.Replace(text, @"<h2[^>]*>(.*?)</h2>", "## $1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    text = Regex.Replace(text, @"<h3[^>]*>(.*?)</h3>", "### $1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理段落和换行
+                    text = Regex.Replace(text, @"<p[^>]*>(.*?)</p>", "$1\n\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    text = Regex.Replace(text, @"<br[^>]*>", "  \n", RegexOptions.IgnoreCase);
+
+                    // 处理强调
+                    text = Regex.Replace(text, @"<strong[^>]*>(.*?)</strong>", "**$1**", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    text = Regex.Replace(text, @"<em[^>]*>(.*?)</em>", "*$1*", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理列表
+                    text = Regex.Replace(text, @"<li[^>]*>(.*?)</li>", "- $1\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
                     // 移除 script、style 标签及内容
                     text = Regex.Replace(text, @"<script[^>]*>[\s\S]*?</script>", "", RegexOptions.IgnoreCase);
                     text = Regex.Replace(text, @"<style[^>]*>[\s\S]*?</style>", "", RegexOptions.IgnoreCase);
@@ -136,6 +189,26 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl)
             : this(url, deep, html, titleHtml, result, sizeKB, parentUrl, 0) { }
 
+        private string ResolveUrl(string relativeUrl)
+        {
+            if (string.IsNullOrEmpty(relativeUrl))
+                return string.Empty;
+
+            // 如果已经是绝对路径，直接返回
+            if (Uri.TryCreate(relativeUrl, UriKind.Absolute, out _))
+                return relativeUrl;
+
+            try
+            {
+                var baseUri = new Uri(Url);
+                var absoluteUri = new Uri(baseUri, relativeUrl);
+                return absoluteUri.ToString();
+            }
+            catch
+            {
+                return relativeUrl;
+            }
+        }
     }
 
     /// <summary>
