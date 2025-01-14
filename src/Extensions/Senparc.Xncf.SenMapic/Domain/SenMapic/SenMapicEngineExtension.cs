@@ -369,7 +369,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 //判断字符集
                 string contentType = webResponse.Content.Headers.ContentType?.MediaType;
-                string charterSet = webResponse.Content.Headers.ContentType?.ToString();
+                string charterSet = webResponse.Content.Headers.ContentType?.CharSet;
 
                 //从Content-Type中获取charterSet。出于效率考虑不使用LINQ
                 charterSet = GetCharterSetFromContentType(charterSet);
@@ -492,7 +492,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             Encoding encode = null;
             try
             {
-                encode = Encoding.GetEncoding(charterSet);
+                encode = Encoding.GetEncoding(charterSet ?? "UTF-8");
             }
             catch
             {
