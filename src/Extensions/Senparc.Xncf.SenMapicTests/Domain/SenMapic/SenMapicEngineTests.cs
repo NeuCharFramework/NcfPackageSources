@@ -11,11 +11,13 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
     public class SenMapicEngineTests : BaseSenMapicTest
     {
 
+        string testUrl_Ncf = "https://doc.ncf.pub";
+
         [TestMethod]
         public void Build_WithValidUrl_ShouldReturnUrlData()
         {
             // Arrange
-            var urls = new[] { "https://www.senparc.com/" };
+            var urls = new[] { testUrl_Ncf };
             var engine = new SenMapicEngine(
                 serviceProvider: _serviceProvider,
                 urls: urls,
@@ -59,7 +61,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
         public void Build_WithMaxPageCountLimit_ShouldRespectLimit()
         {
             // Arrange
-            var urls = new[] { "https://www.senparc.com/" };
+            var urls = new[] { testUrl_Ncf };
             const int maxPageCount = 5;
             var engine = new SenMapicEngine(
                 serviceProvider: _serviceProvider,
@@ -80,7 +82,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
         public void Build_WithFilterOmitWords_ShouldFilterUrls()
         {
             // Arrange
-            var urls = new[] { "https://www.senparc.com/" };
+            var urls = new[] { testUrl_Ncf };
             var filterOmitWords = new List<string> { "教育背景", "盛派成功案列" };
             var engine = new SenMapicEngine(
                 serviceProvider: _serviceProvider,
