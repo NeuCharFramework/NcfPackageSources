@@ -13,7 +13,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
         private SenMapicTaskService _senMapicTaskService;
 
         public SenMapicTaskServiceTests()
-        { 
+        {
             _senMapicTaskService = _serviceProvider.GetRequiredService<SenMapicTaskService>();
 
         }
@@ -33,7 +33,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
 
             // Act
             var result = await _senMapicTaskService.CreateTaskAsync(
-                name, startUrl, maxThread, maxBuildMinutes, maxDeep, maxPageCount, 
+                name, startUrl, maxThread, maxBuildMinutes, maxDeep, maxPageCount,
                 startImmediately: true);
 
             // Assert
@@ -51,14 +51,23 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
         {
             // Arrange
             var task = await _senMapicTaskService.CreateTaskAsync(
-                "Test", "https://test.com", 5, 60, 3, 100,
+                "Test", "https://www.ncf.pub", 5, 60, 1, 1,
                 startImmediately: false);
 
             // Act
             await _senMapicTaskService.StartTaskAsync(task);
 
             // Assert
-            Assert.AreEqual(SenMapicTaskStatus.Waiting, task.Status);
+            Assert.AreEqual(SenMapicTaskStatus.Running, task.Status);
+
+            var dt = SystemTime.Now;
+            while (task.Status == SenMapicTaskStatus.Running && SystemTime.DiffTotalMS(dt) < 3000)
+            {
+                await Task.Delay(500);
+                task = await _senMapicTaskService.GetObjectAsync(z => z.Id == task.Id);
+            }
+
+            Assert.AreEqual(SenMapicTaskStatus.Completed, task.Status);
         }
 
         [TestMethod]
@@ -104,7 +113,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(name, result.Name);
             Assert.AreEqual(startUrl, result.StartUrl);
-            Assert.AreEqual(SenMapicTaskStatus.Running, result.Status); // 验证初始状态
+            Assert.AreEqual(SenMapicTaskStatus.Waiting, result.Status); // 验证初始状态
         }
 
         [TestMethod]
