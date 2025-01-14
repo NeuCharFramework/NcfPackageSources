@@ -3,7 +3,7 @@
 namespace Senparc.Xncf.SenMapicTests
 {
     [TestClass]
-    public sealed class TestBase: BaseNcfUnitTest
+    public class BaseSenMapicTest : BaseNcfUnitTest
     {
  
     }
