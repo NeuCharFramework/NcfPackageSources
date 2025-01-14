@@ -12,11 +12,13 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
     {
         private SenMapicTaskService _senMapicTaskService;
 
-        [TestInitialize]
-        public void Setup()
-        {
+        public SenMapicTaskServiceTests()
+        { 
             _senMapicTaskService = _serviceProvider.GetRequiredService<SenMapicTaskService>();
+
         }
+
+
 
         [TestMethod]
         public async Task CreateTaskAsync_ValidParameters_CreatesAndSavesTask()

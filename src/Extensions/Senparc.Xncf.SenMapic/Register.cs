@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 using Senparc.CO2NET.RegisterServices;
+using Senparc.Xncf.SenMapic.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.SenMapic.Domain.Services;
 
 namespace Senparc.Xncf.SenMapic
 {
@@ -82,10 +84,15 @@ namespace Senparc.Xncf.SenMapic
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-            
+            services.AddScoped<SenMapicTaskService>();
+            services.AddScoped<SenMapicTaskItemService>();
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
+                z.CreateMap<SenMapicTask, SenMapicTaskDto>().ReverseMap();
+                z.CreateMap<SenMapicTask, SenMapicTask_CreateUpdateDto>().ReverseMap();
+                z.CreateMap<SenMapicTaskItem, SenMapicTaskItem_ListItemDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
         }

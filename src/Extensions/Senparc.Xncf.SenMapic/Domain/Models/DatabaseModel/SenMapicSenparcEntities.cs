@@ -11,5 +11,6 @@ public class SenMapicSenparcEntities : XncfDatabaseDbContext
     }
 
     public DbSet<Color> Colors { get; set; }
-    public DbSet<SenMapicTask> Tasks { get; set; }
+    public DbSet<SenMapicTask> SenMapicTasks { get; set; }
+    public DbSet<SenMapicTaskItem> SenMapicTaskItems { get; set; }
 } 
