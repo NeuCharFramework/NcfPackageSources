@@ -7,7 +7,7 @@ namespace Senparc.Xncf.SenMapic
     /// <summary>
     /// 任务状态枚举
     /// </summary>
-    public enum TaskStatus
+    public enum SenMapicTaskStatus
     {
         /// <summary>
         /// 出错
@@ -67,7 +67,7 @@ namespace Senparc.Xncf.SenMapic
         /// <summary>
         /// 任务状态
         /// </summary>
-        public TaskStatus Status { get; private set; }
+        public SenMapicTaskStatus Status { get; private set; }
 
         /// <summary>
         /// 开始时间
@@ -100,25 +100,25 @@ namespace Senparc.Xncf.SenMapic
             MaxBuildMinutes = maxBuildMinutes;
             MaxDeep = maxDeep;
             MaxPageCount = maxPageCount;
-            Status = TaskStatus.Waiting;
+            Status = SenMapicTaskStatus.Waiting;
             CrawledPages = 0;
         }
 
         public void Start()
         {
-            Status = TaskStatus.Running;
+            Status = SenMapicTaskStatus.Running;
             StartTime = DateTime.Now;
         }
 
         public void Complete()
         {
-            Status = TaskStatus.Completed;
+            Status = SenMapicTaskStatus.Completed;
             EndTime = DateTime.Now;
         }
 
         public void Error(string message)
         {
-            Status = TaskStatus.Error;
+            Status = SenMapicTaskStatus.Error;
             EndTime = DateTime.Now;
             ErrorMessage = message;
         }

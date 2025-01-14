@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.XncfBase.Database;
+using Senparc.Xncf.SenMapic;
 using Senparc.Xncf.SenMapic.Models;
 
 public class SenMapicSenparcEntities : XncfDatabaseDbContext

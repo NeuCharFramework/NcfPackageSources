@@ -1,4 +1,5 @@
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.SenMapic.Domain.SiteMap;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,12 @@ namespace Senparc.Xncf.SenMapic
         public DateTime CrawlTime { get; set; }
         public long PageSize { get; set; }
         public string Title { get; set; }
+        public int ResponseMillionSeconds { get; private set; }
+        public string Html { get; private set; }
+        public int Result { get; private set; }
+        public string TitleHtml { get; private set; }
+        public string MarkDownHtmlContent { get; private set; }
+        public double SizeKB { get; private set; }
         public string Description { get; set; }
         public string Keywords { get; set; }
         public string ContentType { get; set; }
@@ -31,14 +38,13 @@ namespace Senparc.Xncf.SenMapic
             Url = urlData.Url;
             ParentUrl = urlData.ParentUrl;
             Deep = urlData.Deep;
-            CrawlTime = urlData.LastUpdateTime;
-            PageSize = urlData.PageSize;
             Title = urlData.Title;
-            Description = urlData.Description;
-            Keywords = urlData.Keywords;
-            ContentType = urlData.ContentType;
-            StatusCode = urlData.StatusCode;
-            ErrorMessage = urlData.ErrorMessage;
+            ResponseMillionSeconds = urlData.ResponseMillionSeconds;
+            Html = urlData.Html;
+            Result = urlData.Result;
+            TitleHtml = urlData.TitleHtml;
+            MarkDownHtmlContent = urlData.MarkDownHtmlContent;
+            SizeKB = urlData.SizeKB;
         }
     }
 } 

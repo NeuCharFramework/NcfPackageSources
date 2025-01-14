@@ -6,27 +6,33 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.SenMapic.Domain.Services
 {
     public class SenMapicTaskService : ServiceBase<SenMapicTask>
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IRepositoryBase<SenMapicTaskItem> _taskItemRepository;
+        private readonly SenMapicTaskItemService _senMapicTaskIitemService;
 
-        public SenMapicTaskService(IRepositoryBase<SenMapicTask> repo, IServiceProvider serviceProvider, IRepositoryBase<SenMapicTaskItem> taskItemRepository)
+        public SenMapicTaskService(IRepositoryBase<SenMapicTask> repo, IServiceProvider serviceProvider,
+            SenMapicTaskItemService senMapicTaskIitemService)
             : base(repo, serviceProvider)
         {
-            _serviceProvider = serviceProvider;
-            _taskItemRepository = taskItemRepository;
+            this._senMapicTaskIitemService = senMapicTaskIitemService;
         }
 
         public async Task<SenMapicTask> CreateTaskAsync(string name, string startUrl, 
-            int maxThread, int maxBuildMinutes, int maxDeep, int maxPageCount)
+            int maxThread, int maxBuildMinutes, int maxDeep, int maxPageCount, bool startImmediately)
         {
             var task = new SenMapicTask(name, startUrl, maxThread, 
                 maxBuildMinutes, maxDeep, maxPageCount);
             await SaveObjectAsync(task);
+            
+            if (startImmediately)
+            {
+                await StartTaskAsync(task);
+            }
+            
             return task;
         }
 
@@ -78,18 +84,5 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
             });
         }
 
-        public IQueryable<SenMapicTaskItem> GetTaskItems(int taskId)
-        {
-            return _taskItemRepository.GetAll().Where(x => x.TaskId == taskId);
-        }
-
-        public async Task SaveTaskItemsAsync(SenMapicTask task, Dictionary<string, UrlData> urlDatas)
-        {
-            foreach (var urlData in urlDatas)
-            {
-                var taskItem = new SenMapicTaskItem(task, urlData.Value);
-                await _taskItemRepository.AddAsync(taskItem);
-            }
-        }
     }
-} 
+}
