@@ -11,7 +11,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
     public class SenMapicEngineTests : BaseSenMapicTest
     {
 
-        string testUrl_Ncf = "https://ld.suzhou.edu.cn/index.htm";
+        string testUrl_Ncf = $"https://doc.ncf.pub";
 
         [TestMethod]
         public void Build_WithValidUrl_ShouldReturnUrlData()

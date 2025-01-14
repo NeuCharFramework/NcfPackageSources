@@ -214,6 +214,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public double SizeKB { get; set; }
         public string ParentUrl { get; set; }
         public int ResponseMillionSeconds { get; set; }
+        public string LinkText { get; }
+
         //public DateTime CreateTime { get; set; }
         public string Title
         {
@@ -239,7 +241,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
 
-        public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl, int responseMillionSeconds)
+        public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl, int responseMillionSeconds,string linkText)
         {
             Url = url;
             Deep = deep;
@@ -249,11 +251,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             SizeKB = sizeKB;
             ParentUrl = parentUrl;
             ResponseMillionSeconds = responseMillionSeconds;
+            LinkText = linkText;
             //CreateTime = DateTime.Now;
         }
 
-        public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl)
-            : this(url, deep, html, titleHtml, result, sizeKB, parentUrl, 0) { }
+        public UrlData(string url, int deep, string html, string titleHtml, int result, double sizeKB, string parentUrl,string linkText)
+            : this(url, deep, html, titleHtml, result, sizeKB, parentUrl, 0, linkText) { }
 
         private string ResolveUrl(string relativeUrl)
         {
@@ -324,13 +327,18 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public string Url { get; set; }
         public string ParentUrl { get; set; }
         public int Deep { get; set; }
+        public string LinkText { get; }
         public AvailableUrlStatus Status { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime StartBuildTime { get; set; }
 
-        public AvailableUrl(string url, string parentUrl, int deep, AvailableUrlStatus status)
+        public AvailableUrl(string url, string parentUrl, int deep,string linkText, AvailableUrlStatus status)
         {
-            Url = url; ParentUrl = parentUrl; Deep = deep; Status = status;
+            Url = url;
+            ParentUrl = parentUrl;
+            Deep = deep;
+            LinkText = linkText;
+            Status = status;
             CreateTime = DateTime.Now;
         }
     }
