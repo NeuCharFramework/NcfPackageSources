@@ -12,7 +12,8 @@ new Vue({
                 maxThread: 4,
                 maxBuildMinutes: 10,
                 maxDeep: 5,
-                maxPageCount: 500
+                maxPageCount: 500,
+                startImmediately: false
             },
             rules: {
                 name: [
@@ -65,7 +66,8 @@ new Vue({
                 maxThread: 4,
                 maxBuildMinutes: 10,
                 maxDeep: 5,
-                maxPageCount: 500
+                maxPageCount: 500,
+                startImmediately: false
             }
         },
         async handleSubmit() {

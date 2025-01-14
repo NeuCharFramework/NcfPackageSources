@@ -28,9 +28,15 @@ namespace Senparc.Xncf.SenMapic.Areas.Admin.Pages.SenMapic.Task
         [HttpPost]
         public async Task<IActionResult> OnPostCreateAsync([FromBody] SenMapicTaskDto dto)
         {
-            var task = new SenMapicTask(dto.Name, dto.StartUrl, dto.MaxThread, 
+            var task = await _taskService.CreateTaskAsync(
+                dto.Name, dto.StartUrl, dto.MaxThread,
                 dto.MaxBuildMinutes, dto.MaxDeep, dto.MaxPageCount);
-            await _taskService.SaveObjectAsync(task);
+            
+            if (dto.StartImmediately)
+            {
+                await _taskService.StartTaskAsync(task);
+            }
+            
             return new JsonResult(new { success = true });
         }
 
@@ -57,5 +63,10 @@ namespace Senparc.Xncf.SenMapic.Areas.Admin.Pages.SenMapic.Task
             }
             return NotFound();
         }
+    }
+
+    public class SenMapicTaskDto
+    {
+        public bool StartImmediately { get; set; }
     }
 } 
