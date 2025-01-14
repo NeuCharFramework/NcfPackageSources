@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
@@ -18,7 +19,78 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         public string Url { get; set; }
         public int Deep { get; set; }
         public string TitleHtml { get; set; }
-        public string Html { get; set; }
+        private string _html;
+        public string Html 
+        { 
+            get => _html;
+            set
+            {
+                _html = value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    var text = value;
+                    var sb = new StringBuilder();
+
+                    // 提取标题
+                    var titleMatch = Regex.Match(text, @"<title[^>]*>(.*?)</title>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    if (titleMatch.Success)
+                    {
+                        sb.AppendLine($"标题: {WebUtility.HtmlDecode(titleMatch.Groups[1].Value.Trim())}");
+                    }
+
+                    // 提取 meta description
+                    var descMatch = Regex.Match(text, @"<meta\s+name=[""']description[""']\s+content=[""']([^""']*)[""']", RegexOptions.IgnoreCase);
+                    if (descMatch.Success)
+                    {
+                        sb.AppendLine($"描述: {WebUtility.HtmlDecode(descMatch.Groups[1].Value.Trim())}");
+                    }
+
+                    // 提取 meta keywords
+                    var keywordsMatch = Regex.Match(text, @"<meta\s+name=[""']keywords[""']\s+content=[""']([^""']*)[""']", RegexOptions.IgnoreCase);
+                    if (keywordsMatch.Success)
+                    {
+                        sb.AppendLine($"关键词: {WebUtility.HtmlDecode(keywordsMatch.Groups[1].Value.Trim())}");
+                    }
+
+                    sb.AppendLine("正文内容:");
+                    
+                    // 移除 script、style 标签及内容
+                    text = Regex.Replace(text, @"<script[^>]*>[\s\S]*?</script>", "", RegexOptions.IgnoreCase);
+                    text = Regex.Replace(text, @"<style[^>]*>[\s\S]*?</style>", "", RegexOptions.IgnoreCase);
+                    
+                    // 移除注释
+                    text = Regex.Replace(text, @"<!--[\s\S]*?-->", "", RegexOptions.IgnoreCase);
+                    
+                    // 移除 header、footer、nav、广告相关区域
+                    text = Regex.Replace(text, @"<(header|footer|nav|aside)[^>]*>[\s\S]*?</\1>", "", RegexOptions.IgnoreCase);
+                    
+                    // 移除常见无意义内容区域
+                    text = Regex.Replace(text, @"<div[^>]*(class|id)=['""]?(advertisement|comment|sidebar|footer|header|menu|nav)['""]\s*[^>]*>[\s\S]*?</div>", "", RegexOptions.IgnoreCase);
+                    
+                    // 移除其他HTML标签，但保留一些有语义的换行
+                    text = Regex.Replace(text, @"<(br|p|div|h[1-6])[^>]*>", "\n", RegexOptions.IgnoreCase);
+                    text = Regex.Replace(text, "<[^>]+>", "");
+                    
+                    // 处理特殊字符
+                    text = WebUtility.HtmlDecode(text);
+                    
+                    // 清理空白字符
+                    text = Regex.Replace(text, @"[\s\r\n]+", " ").Trim();
+                    
+                    sb.Append(text);
+                    HtmlText = sb.ToString();
+                }
+                else
+                {
+                    HtmlText = null;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 存储不带HTML标记的纯文本内容
+        /// </summary>
+        public string HtmlText { get; private set; }
         public int Result { get; set; }
         public double SizeKB { get; set; }
         public string ParentUrl { get; set; }
