@@ -46,6 +46,8 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DynamicData\Senparc.Xncf.DynamicData.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.KnowledgeBase\Senparc.Xncf.KnowledgeBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />

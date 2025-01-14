@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,12 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.FileManager.Models.DatabaseModel.Dto;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
+using Senparc.CO2NET.RegisterServices;
 
 namespace Senparc.Xncf.FileManager
 {
@@ -26,7 +32,7 @@ namespace Senparc.Xncf.FileManager
 
         public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.0";//必须填写版本号
+        public override string Version => "0.1.2";//必须填写版本号
 
         public override string MenuName => "文件管理";
 
@@ -82,8 +88,20 @@ namespace Senparc.Xncf.FileManager
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
+                z.CreateMap<NcfFile, NcfFileDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
         }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+            return base.UseXncfModule(app, registerService);
+        }
     }
 }
+
+
