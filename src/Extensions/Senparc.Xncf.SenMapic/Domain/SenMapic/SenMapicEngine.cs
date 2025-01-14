@@ -344,7 +344,6 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     #endregion
                     #endregion
 
-
                     #region 单线程爬行方案
                     //CrawlUrlEventHandler(url);//不使用多线程，单线程
                     #endregion

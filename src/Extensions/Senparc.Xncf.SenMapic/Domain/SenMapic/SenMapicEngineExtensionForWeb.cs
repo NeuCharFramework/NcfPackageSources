@@ -21,9 +21,18 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         {
            var requestStartTime = DateTime.Now;//开始请求
             var cookieContainer = new CookieContainer();
-           var webResponse = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpResponseGetAsync(_serviceProvider, url, cookieContainer);
-           var requestEndTime = DateTime.Now;//结束请求
-           return (webResponse,requestStartTime,requestEndTime);
+            var headers = new Dictionary<string, string>();
+            headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+            headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+            headers.Add("Accept-Language", "zh-CN,zh;q=0.9");
+            headers.Add("Accept-Encoding", "gzip, deflate, br");
+            headers.Add("Connection", "keep-alive");
+            headers.Add("Upgrade-Insecure-Requests", "1");
+            
+            var webResponse = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpResponseGetAsync(_serviceProvider, url, cookieContainer, 
+                headerAddition: headers, refererUrl:url);
+            var requestEndTime = DateTime.Now;//结束请求
+            return (webResponse,requestStartTime,requestEndTime);
         }
     }
 }
