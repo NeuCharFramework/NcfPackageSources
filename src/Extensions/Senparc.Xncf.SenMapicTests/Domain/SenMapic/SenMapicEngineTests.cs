@@ -81,7 +81,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
         {
             // Arrange
             var urls = new[] { "https://www.senparc.com/" };
-            var filterOmitWords = new List<string> { "admin", "login" };
+            var filterOmitWords = new List<string> { "教育背景", "盛派成功案列" };
             var engine = new SenMapicEngine(
                 serviceProvider: _serviceProvider,
                 urls: urls,
