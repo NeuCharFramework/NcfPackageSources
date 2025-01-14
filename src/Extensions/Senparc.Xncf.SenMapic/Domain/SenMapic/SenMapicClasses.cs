@@ -197,19 +197,19 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
                     sb.Append(text);
-                    HtmlText = sb.ToString();
+                    MarkDownHtmlContent = sb.ToString();
                 }
                 else
                 {
-                    HtmlText = null;
+                    MarkDownHtmlContent = null;
                 }
             }
         }
         
         /// <summary>
-        /// 存储不带HTML标记的纯文本内容
+        /// 存储不带HTML标记的纯文本内容，转换为Markdown格式
         /// </summary>
-        public string HtmlText { get; private set; }
+        public string MarkDownHtmlContent { get; private set; }
         public int Result { get; set; }
         public double SizeKB { get; set; }
         public string ParentUrl { get; set; }

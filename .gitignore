@@ -86,3 +86,4 @@ ncf_obj/
 *.Development.json
 /src/global.json.bak
 *-backup-*.sln
+appsettings.Test.json

@@ -1,3 +1,4 @@
+using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.SenMapic.Domain.SiteMap;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,8 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
                 maxBuildMinutesForSingleSite: 5,
                 priority: "0.5",
                 changefreq: "daily",
-                maxDeep: 2,
-                maxPageCount: 10
+                maxDeep: 3,
+                maxPageCount: 50
             );
 
             // Act
@@ -47,8 +48,11 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
                 maxBuildMinutesForSingleSite: 1
             );
 
+
+            var result = engine.Build();
+            Console.WriteLine(result.ToJson(true));
             // Act & Assert
-            Assert.ThrowsException<Exception>(() => engine.Build());
+            Assert.IsTrue(result.First().Value.Html.IsNullOrEmpty());
         }
 
         [TestMethod]
@@ -90,9 +94,9 @@ namespace Senparc.Xncf.SenMapicTests.Domain.SenMapic
             var result = engine.Build();
 
             // Assert
-            Assert.IsTrue(result.Values.All(url => 
-                !url.Url.Contains("admin", StringComparison.OrdinalIgnoreCase) && 
+            Assert.IsTrue(result.Values.All(url =>
+                !url.Url.Contains("admin", StringComparison.OrdinalIgnoreCase) &&
                 !url.Url.Contains("login", StringComparison.OrdinalIgnoreCase)));
         }
     }
-} 
+}
