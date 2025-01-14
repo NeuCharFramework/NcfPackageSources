@@ -16,10 +16,13 @@ namespace Senparc.Xncf.SenMapicTests
             return Task.CompletedTask;
         }
     }
+
+
     [TestClass]
     public class BaseSenMapicTest : BaseNcfUnitTest
     {
-        public BaseSenMapicTest(Action<IServiceCollection> servicesRegister = null, UnitTestSeedDataBuilder seedDataBuilder = null) 
+        public BaseSenMapicTest(Action<IServiceCollection> servicesRegister = null,
+                                UnitTestSeedDataBuilder seedDataBuilder = null) 
             : base(servicesRegister, seedDataBuilder??new BaseSenMapicTest_Seed())
         {
         }
