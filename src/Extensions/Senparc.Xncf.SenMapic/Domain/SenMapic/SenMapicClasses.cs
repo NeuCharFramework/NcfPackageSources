@@ -130,6 +130,72 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     // 清理空白字符
                     text = Regex.Replace(text, @"[\s\r\n]+", " ").Trim();
                     
+                    // 处理引用块
+                    text = Regex.Replace(text, @"<blockquote[^>]*>(.*?)</blockquote>", "> $1\n\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理代码块
+                    text = Regex.Replace(text, @"<pre[^>]*><code[^>]*>(.*?)</code></pre>", "```\n$1\n```\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    text = Regex.Replace(text, @"<code[^>]*>(.*?)</code>", "`$1`", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理表格
+                    text = Regex.Replace(text, 
+                        @"<table[^>]*>(.*?)</table>",
+                        delegate(Match match)
+                        {
+                            string tableContent = match.Groups[1].Value;
+                            var rows = Regex.Matches(tableContent, @"<tr[^>]*>(.*?)</tr>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            if (rows.Count == 0) return string.Empty;
+
+                            var sb = new StringBuilder();
+                            bool isHeader = true;
+
+                            foreach (Match row in rows)
+                            {
+                                string rowContent = row.Groups[1].Value;
+                                var cells = Regex.Matches(rowContent, @"<t[dh][^>]*>(.*?)</t[dh]>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                                
+                                if (cells.Count > 0)
+                                {
+                                    sb.AppendLine("|" + string.Join("|", cells.Cast<Match>().Select(c => c.Groups[1].Value.Trim())) + "|");
+                                    
+                                    if (isHeader)
+                                    {
+                                        sb.AppendLine("|" + string.Join("|", Enumerable.Repeat("---", cells.Count)) + "|");
+                                        isHeader = false;
+                                    }
+                                }
+                            }
+                            return sb.ToString();
+                        },
+                        RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理水平线
+                    text = Regex.Replace(text, @"<hr[^>]*>", "---\n", RegexOptions.IgnoreCase);
+
+                    // 处理删除线
+                    text = Regex.Replace(text, @"<(del|strike)[^>]*>(.*?)</\1>", "~~$2~~", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理下划线
+                    text = Regex.Replace(text, @"<u[^>]*>(.*?)</u>", "__$1__", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    // 处理有序列表和无序列表
+                    text = Regex.Replace(text, @"<ol[^>]*>(.*?)</ol>", delegate(Match m)
+                    {
+                        int counter = 1;
+                        return Regex.Replace(m.Groups[1].Value,
+                            @"<li[^>]*>(.*?)</li>",
+                            m2 => $"{counter++}. {m2.Groups[1].Value.Trim()}\n",
+                            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    }, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                    text = Regex.Replace(text, @"<ul[^>]*>(.*?)</ul>", delegate(Match m)
+                    {
+                        return Regex.Replace(m.Groups[1].Value,
+                            @"<li[^>]*>(.*?)</li>",
+                            m2 => $"- {m2.Groups[1].Value.Trim()}\n",
+                            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    }, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
                     sb.Append(text);
                     HtmlText = sb.ToString();
                 }
