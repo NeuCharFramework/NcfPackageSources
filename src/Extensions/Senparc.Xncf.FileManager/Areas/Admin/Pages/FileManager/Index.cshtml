@@ -211,17 +211,20 @@
 
                     this.uploadDialog.uploading = true;
                     try {
-                        for (const file of this.uploadDialog.fileList) {
-                            const formData = new FormData();
-                            formData.append('file', file.raw);
-                            formData.append('description', file.description || '');
+                        const formData = new FormData();
+                        this.uploadDialog.fileList.forEach((file, index) => {
+                            formData.append('files', file.raw);
+                            formData.append('descriptions', file.description || '');
+                        });
 
-                            await axios.post('/Admin/FileManager/Index?handler=Upload', formData, {
+                        const response = await axios.post('/Admin/FileManager/Index?handler=Upload', 
+                            formData,
+                            {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
                                 }
-                            });
-                        }
+                            }
+                        );
 
                         this.$message.success('上传成功');
                         this.uploadDialog.visible = false;

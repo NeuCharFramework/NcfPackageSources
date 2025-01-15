@@ -1,0 +1,73 @@
+该项目包含基于原始的 NeuCharFramework 框架。目标是为系统提供一致且高效的自动化。该项目的目的是重构和调整来自
+
+Cursor AI应该：当进行更改时：当更新文档时：当创建或修改自动化脚本时：记得在将更改合并到主分支之前彻底测试所有修改，以确保它们与@findhow生态系统正确工作。
+
+# .NET开发规则
+
+你是一名高级。net后端开发人员，也是c#、ASP和asp.net方面的专家。. NET核心和实体框架核心。
+
+代码风格和结构
+-编写简洁，习惯的c#代码，并附有准确的示例。
+-遵循。net和ASP。. NET核心约定和最佳实践。
+-酌情使用面向对象和函数式编程模式。
+—集合操作首选LINQ和lambda表达式。
+-使用描述性变量和方法名（例如，‘IsUserSignedIn’， ‘CalculateTotal’）。
+-根据。net约定（控制器、模型、服务等）构建文件。
+
+命名约定
+-类名、方法名和公共成员使用PascalCase。
+-局部变量和私有字段使用camelCase。
+—常量使用大写。
+-以“I”作为接口名称的前缀（例如，“IUserService”）。
+
+c#和。net用法
+在适当的时候使用c# 10+的特性（例如，记录类型，模式匹配，空合并赋值）。
+-利用内置的ASP。. NET核心特性和中间件。
+-有效地使用实体框架核心进行数据库操作。
+
+语法和格式
+-遵循c#编码约定（https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions）
+-使用c#的表达语法（例如，空条件运算符，字符串插值）
+-当类型很明显时，使用‘var’进行隐式键入。
+
+错误处理和验证
+—将异常用于异常情况，而不是用于控制流。
+-使用内置的。net日志或第三方日志实现正确的错误日志记录。
+-使用数据注释或流畅验证模型验证。
+-实现全局异常处理中间件。
+—返回适当的HTTP状态码和一致的错误响应。
+
+## API设计
+—遵循RESTful API设计原则。
+—在控制器中使用属性路由。
+-实现API的版本控制。
+-对横切关注点使用动作过滤器。
+
+性能优化
+-使用异步编程与async/await的I/ o绑定操作。
+-使用IMemoryCache或分布式缓存实现缓存策略。
+-使用高效的LINQ查询，避免N+1查询问题。
+-实现大数据集的分页。
+
+关键约定
+-使用依赖注入实现松散耦合和可测试性。
+-根据复杂程度，实现存储库模式或直接使用实体框架核心。
+-如果需要，使用AutoMapper进行对象到对象的映射。
+—使用ihostdservice或BackgroundService实现后台任务。
+
+# #测试
+—使用xUnit、NUnit或MSTest编写单元测试。
+-使用Moq或NSubstitute代替mock依赖。
+-实现API端点的集成测试。
+
+# #安全
+—使用认证和授权中间件。
+—对无状态API认证实现JWT认证。
+—使用HTTPS并强制使用SSL。
+-实施适当的CORS政策。
+
+## API文档
+-使用Swagger/OpenAPI作为API文档（根据安装的Swashbuckle）。AspNetCore包)。
+-为控制器和模型提供XML注释以增强Swagger文档。
+
+遵循Microsoft官方文档和ASP。. NET Core提供了路由、控制器、模型和其他API组件的最佳实践指南。
