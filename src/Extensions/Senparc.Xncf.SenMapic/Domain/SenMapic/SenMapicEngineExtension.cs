@@ -284,7 +284,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 _currentDomain = this.GetDomain(url);
             }
-            return await CrawlUrl(url, null, 0, true);
+            return await CrawlUrl(url, null, 0, true, null);
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         /// </summary>
         /// <param name="url"></param>
         /// <returns>返回UrlData信息，如果不符合爬行条件（如CotentType类型不符合等），则返回null</returns>
-        private async Task<UrlData> CrawlUrl(string url, string parentUrl, int deep, bool singleUrl)
+        private async Task<UrlData> CrawlUrl(string url, string parentUrl, int deep, bool singleUrl, string linkText)
         {
             //BMK:此方法收集时有的网站会发生“未将对象引用设置到对象的实例”错误，如：http://www.w2tx.cn/batch.common.php?action=viewnews&op=up&itemid=77&catid=70
 
@@ -320,7 +320,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 if (!this._currentAvaliableUrlTemp.ContainsKey(url))
                 {
-                    this._currentAvaliableUrlTemp.Add(url, new AvailableUrl(url, parentUrl, deep, AvailableUrlStatus.Started));//添加到待选Url
+                    this._currentAvaliableUrlTemp.Add(url, new AvailableUrl(url, parentUrl, deep, linkText, AvailableUrlStatus.Started));//添加到待选Url
                 }
                 else if (this._currentAvaliableUrlTemp[url].Status != AvailableUrlStatus.UnStart)
                 {
@@ -353,11 +353,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 if (webResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.Content.Headers.ContentLength ?? 0, null, (int)TimeSpan.FromTicks(_requestPageTicks).TotalMilliseconds);
+                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.Content.Headers.ContentLength ?? 0, null, (int)TimeSpan.FromTicks(_requestPageTicks).TotalMilliseconds, linkText);
                 }
                 else if (!webResponse.Content.Headers.ContentType?.MediaType?.StartsWith("text") ?? true)
                 {
-                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.Content.Headers.ContentLength ?? 0, null);
+                    return new UrlData(url, _currentDeep, "", "", (int)webResponse.StatusCode, webResponse.Content.Headers.ContentLength ?? 0, null, linkText);
                 }
 
                 //DateTime dt1 = DateTime.Now;
@@ -369,7 +369,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 //判断字符集
                 string contentType = webResponse.Content.Headers.ContentType?.MediaType;
-                string charterSet = webResponse.Content.Headers.ContentType?.ToString();
+                string charterSet = webResponse.Content.Headers.ContentType?.CharSet;
 
                 //从Content-Type中获取charterSet。出于效率考虑不使用LINQ
                 charterSet = GetCharterSetFromContentType(charterSet);
@@ -385,7 +385,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 int htmlByteCount = htmlTotal.IsNullOrEmpty() ? 0 : encode.GetByteCount(htmlTotal); //System.Text.Encoding.Default.GetByteCount(htmlTotal);
                 string titleHtml = htmlTotal.Length > 1000 ? htmlTotal.Substring(0, 1000) : htmlTotal;//取Html前一部分（只用于取网页Title），否则当网页非常大的时候（出现过790k），服务器运算时间过长
-                urlData = new UrlData(url, deep, htmlTotal, titleHtml, (int)HttpStatusCode.OK, (double)htmlByteCount / 1024, null, (int)TimeSpan.FromTicks(_requestPageTicks).TotalMilliseconds);
+                urlData = new UrlData(url, deep, htmlTotal, titleHtml, (int)HttpStatusCode.OK, (double)htmlByteCount / 1024, null, (int)TimeSpan.FromTicks(_requestPageTicks).TotalMilliseconds, linkText);
 
                 #region 调试 - 下载记录时间
                 //DateTime dt2 = DateTime.Now;
@@ -418,14 +418,14 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }
                 }
                 //LogUtility.WebLogger.Error("SitemapDebug异常({0})：{1}".With(url, e.Message), e);
-                return new UrlData(url, deep, "", "", result, 0, null);
+                return new UrlData(url, deep, "", "", result, 0, null, linkText);
             }
             catch (Exception e)
             {
                 var ex = new Exception($"SitemapDebug异常({url})", e);
                 //记录异常
                 SenparcTrace.BaseExceptionLog(ex);
-                return new UrlData(url, deep, "", "", 0, 0, null);
+                return new UrlData(url, deep, "", "", 0, 0, null, linkText);
             }
             finally
             {
@@ -492,7 +492,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             Encoding encode = null;
             try
             {
-                encode = Encoding.GetEncoding(charterSet);
+                encode = Encoding.GetEncoding(charterSet ?? "UTF-8");
             }
             catch
             {

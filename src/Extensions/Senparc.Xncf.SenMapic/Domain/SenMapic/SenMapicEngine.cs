@@ -33,7 +33,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         private const string charSetPttern = @"(?i)\bcharset=(?<charset>[-a-zA-Z_0-9]+)";
-        private const string urlPattern = "(?<=<a[^>]+href=['\"]{0,1})([^'\"#>\\s\\(\\)]+)(?=['\"#>]{1})";//TODO:过滤js中此类情形："<a href=\""+ url +"\">";Joomla中，url有;出现
+        private const string urlPattern = "<a[^>]+href=(['\"]{0,1})([^'\"#>\\s\\(\\)]+)(?=['\"#>]{1}).*?>(.*?)</a>";//TODO:过滤js中此类情形："<a href=\""+ url +"\">";Joomla中，url有;出现
         private int _maxThread = 2;//最大线程数
         private readonly int _maxTimeoutTimes = 10;//最大超时页面数（超过此数量，终止收集）
         private readonly int _pageRequestTimeoutMillionSeconds = 1000 * 20;//页面请求超时时间（毫秒）
@@ -255,7 +255,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private void SearchWebSite(string homeUrl)
         {
             homeUrl = this.RemoveUrlEndingSlash(homeUrl);
-            this._currentAvaliableUrlTemp.Add(homeUrl, new AvailableUrl(homeUrl, "", 0, AvailableUrlStatus.UnStart));//首页加入待选
+            this._currentAvaliableUrlTemp.Add(homeUrl, new AvailableUrl(homeUrl, "", 0, "",AvailableUrlStatus.UnStart));//首页加入待选
 
             WaitCallback waitCallback = new WaitCallback(async (url) => await this.CrawlUrlEventHandler(url));//WaitCallback
 
@@ -393,13 +393,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 try
                 {
                     currentAvaliableUrl.StartBuildTime = DateTime.Now;
-                    urlData = await this.CrawlUrl(avaliableUrl, parentUrl, _currentDeep, false);//爬行Url,获取Url,HTML等重要信息
+                    urlData = await this.CrawlUrl(avaliableUrl, parentUrl, _currentDeep, false, currentAvaliableUrl.LinkText);//爬行Url,获取Url,HTML等重要信息
                 }
                 catch (Exception e)
                 {
                     var ex = new Exception($"Sitemap出错！当前Url:{avaliableUrl}，ParentUrl:{parentUrl}", e);
                     SenparcTrace.BaseExceptionLog(ex);
-                    urlData = new UrlData(avaliableUrl, -1, "", "", -1, 0.00, parentUrl);
+                    urlData = new UrlData(avaliableUrl, -1, "", "", -1, 0.00, parentUrl, currentAvaliableUrl.LinkText);
                 }
 
                 this._currentAvaliableUrlTemp[avaliableUrl].Status = AvailableUrlStatus.Finished;//爬行完成
@@ -428,14 +428,15 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     //TODO: Distinct aTags
                     foreach (Match tag in aTags)
                     {
-                        string newUrl = tag.Value;
+                        string newUrl = tag.Groups[2].Value; // 获取 href 属性值  
+                        string linkText = tag.Groups[4].Value; // 获取超链接文本 
                         newUrl = GetFullUrl(newUrl, avaliableUrl);
                         if (!newUrl.IsNullOrEmpty())
                         {
                             //存入有效链接库
                             if (!this._currentAvaliableUrlTemp.ContainsKey(newUrl))
                             {
-                                this._currentAvaliableUrlTemp.Add(newUrl, new AvailableUrl(newUrl, urlData.Url/*当前Url*/, _currentDeep + 1/*属于下一层*/, AvailableUrlStatus.UnStart));//标记未开始
+                                this._currentAvaliableUrlTemp.Add(newUrl, new AvailableUrl(newUrl, urlData.Url/*当前Url*/, _currentDeep + 1/*属于下一层*/, linkText/*超链接文字*/, AvailableUrlStatus.UnStart));//标记未开始
                             }
                         }
                         else
