@@ -2,6 +2,7 @@
 using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using Senaprc.AI.Agents.AgentExtensions;
 using Senaprc.AI.Agents.AgentUtility;
 using Senparc.AI;
@@ -9,6 +10,7 @@ using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
@@ -17,6 +19,7 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.ACL;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -24,10 +27,12 @@ using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
@@ -88,6 +93,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
             MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
 
+            IAgent carwlAgent = null;
 
             foreach (var groupMember in groupMemebers)
             {
@@ -100,35 +106,66 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
                 var itemKernel = kernel;
+                var isCarwl = agentTemplate.Name == "爬虫";
                 if (individuation)
                 {
                     var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
                     var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
                                 .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
                                 .BuildKernel();
+
+                    if (isCarwl)
+                    {
+                        //添加保存文件的 Plugin
+                        var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
+                        var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: "CrawlPlugin").kernelPlugin;
+
+                        KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+
+                        iWantToRunItem.ImportPluginFromFunctions("抓取网页", functionPiple);
+                    }
+
                     itemKernel = iWantToRunItem.Kernel;
                 }
+
+
 
                 var agent = new SemanticKernelAgent(
                             kernel: itemKernel,
                             name: agentTemplate.Name,
                             systemMessage: promptResult.PromptItem.Content);
-                var agentMiddleware = agent
+
+                if (!isCarwl)
+                {
+                    var agentMiddleware =
+                        agent
                             .RegisterTextMessageConnector()
+                            //.RegisterMiddleware(async (messages, ct) =>
+                            //{
+                            //    return messages;
+                            //})
                             .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
                             {
                                 PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
                                 logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
                             }));
 
-                if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
+
+                    if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
+                    {
+                        //TODO：添加指定入口对接人员，参考群主
+                        enterAgentTemplate = agentTemplate;
+                        enterAgent = agentMiddleware;
+                    }
+
+                    agentsMiddlewares.Add(agentMiddleware);
+                }
+                else
                 {
-                    //TODO：添加指定入口对接人员，参考群主
-                    enterAgentTemplate = agentTemplate;
-                    enterAgent = agentMiddleware;
+                    carwlAgent = agent;
                 }
 
-                agentsMiddlewares.Add(agentMiddleware);
+
                 agents.Add(agent);
             }
 
@@ -160,13 +197,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
             //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
+           
             for (int i = 0; i < agentsMiddlewares.Count; i++)
             {
                 for (int j = i + 1; j < agentsMiddlewares.Count; j++)
                 {
                     graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
                 }
+
+                if (carwlAgent != null)
+                {
+                    graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(carwlAgent);
+                }
             }
+
 
             var finishedGraph = graphConnector.Finish();
 
