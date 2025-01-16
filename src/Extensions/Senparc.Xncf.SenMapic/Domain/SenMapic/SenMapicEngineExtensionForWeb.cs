@@ -30,7 +30,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             headers.Add("Upgrade-Insecure-Requests", "1");
             
             var webResponse = await Senparc.CO2NET.HttpUtility.RequestUtility.HttpResponseGetAsync(_serviceProvider, url, cookieContainer, 
-                headerAddition: headers, refererUrl:url);
+                headerAddition: headers, refererUrl:url, timeOut:30000);
             var requestEndTime = DateTime.Now;//结束请求
             return (webResponse,requestStartTime,requestEndTime);
         }
