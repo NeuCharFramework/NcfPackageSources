@@ -88,3 +88,4 @@ ncf_obj/
 *-backup-*.sln
 appsettings.Test.json
 .cursorrules
+/.cursorrules.bak

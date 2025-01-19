@@ -40,9 +40,10 @@ namespace Senparc.Ncf.Service
         public IServiceProvider ServiceProvider { get; set; }
         public IDataBase BaseData { get; set; }
 
-        public ServiceDataBase(IDataBase baseData)
+        public ServiceDataBase(IDataBase baseData,IServiceProvider serviceProvider=null)
         {
             BaseData = baseData;
+            ServiceProvider = serviceProvider;
         }
 
         public virtual void CloseConnection()
