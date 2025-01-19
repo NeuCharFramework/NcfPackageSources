@@ -13,7 +13,11 @@ namespace Senparc.Ncf.UnitTestExtension
     /// </summary>
     public abstract class UnitTestSeedDataBuilder
     {
-
+        [Obsolete("请使用 ExecuteAsync 方法", true)]
+        public virtual Task<DataList> Execute(IServiceProvider serviceProvider)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 填充种子数据前的操作
