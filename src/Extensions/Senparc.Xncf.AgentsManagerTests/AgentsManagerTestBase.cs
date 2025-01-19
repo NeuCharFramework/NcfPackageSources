@@ -164,7 +164,7 @@ namespace Senparc.Xncf.AgentsManagerTests
     }
 
     [TestClass]
-    public sealed class AgentsManagerTestBase : BaseNcfUnitTest
+    public class AgentsManagerTestBase : BaseNcfUnitTest
     {
         public AgentsManagerTestBase() : base(null, new AgentsManagerSeedData())
         {

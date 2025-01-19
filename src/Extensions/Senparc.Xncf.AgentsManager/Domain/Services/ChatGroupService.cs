@@ -429,60 +429,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                                         var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
                                         var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, mStr, MessageType.Text, Status.Finished);
                                         await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
-
-
-                                        #region 自动创建项目演示
-
-                                        if (!isBuilt && a.Name == "爬虫")
-                                        {
-                                            try
-                                            {
-                                                //创建一个XNCF项目
-                                                var buildAppService = serviceProvider.GetService<BuildXncfAppService>();
-                                                var xncfBuildResult = await buildAppService.Build(new XncfBuilder.OHS.PL.BuildXncf_BuildRequest()
-                                                {
-                                                    Description = "这是一个香港理工大学的活动宣传网站",
-                                                    Icon = "fa fa-star",
-                                                    FrameworkVersion = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList)
-                                                    {
-                                                        SelectedValues = new[] { "net8.0" },
-                                                    },
-                                                    MenuName = "香港理工大学宣传网站",
-                                                    NewSlnFile = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
-                                                    {
-                                                        SelectedValues = new string[] {  },
-                                                    },
-                                                    OrgName = "Senparc",
-                                                    XncfName = "HKPolyU",
-                                                    SlnFilePath = "X:\\SenparcProjects\\NeuCharFramework\\NCF\\src\\back-end\\NCF.sln",
-                                                    OtherFrameworkVersion = "",
-                                                    TemplatePackage = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList)
-                                                    {
-                                                        SelectedValues = new string[] { "no" },
-                                                    },
-                                                    Version = "0.1.0",
-                                                    UseModule = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
-                                                    {
-                                                        SelectedValues = new[] { "function", "database", "webapi", "web" },
-                                                    },
-                                                    UseSammple = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
-                                                    {
-                                                        SelectedValues = new string[] { "1" }
-                                                    }
-                                                });
-                                                isBuilt = true;
-                                            }
-                                            catch (Exception)
-                                            {
-
-                                                throw;
-                                            }
-                                        }
-                                        #endregion
-
                                     }
-
-
                                 }));
 
                     if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
