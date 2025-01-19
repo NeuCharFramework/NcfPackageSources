@@ -15,6 +15,7 @@ using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
+using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -98,6 +99,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
+
+            //测试
+            services.AddScoped<BuildXncfAppService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

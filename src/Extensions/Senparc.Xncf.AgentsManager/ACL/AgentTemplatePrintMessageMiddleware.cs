@@ -47,12 +47,12 @@ namespace Senparc.Xncf.AgentsManager.ACL
 
             //记录到聊天记录
             //TODO: serviceProvider 是 null
-            using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
-            {
-                var chatGroupHistoryService = scope.ServiceProvider.GetService<ChatGroupHistoryService>();
-                var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, message, Models.DatabaseModel.Models.MessageType.Text, Models.DatabaseModel.Models.Status.Finished);
-                await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
-            }
+            //using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
+            //{
+            //    var chatGroupHistoryService = scope.ServiceProvider.GetService<ChatGroupHistoryService>();
+            //    var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, message, Models.DatabaseModel.Models.MessageType.Text, Models.DatabaseModel.Models.Status.Finished);
+            //    await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
+            //}
 
            
         };

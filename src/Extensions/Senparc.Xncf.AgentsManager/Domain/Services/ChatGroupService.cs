@@ -1,4 +1,5 @@
 ﻿using AutoGen.Core;
+using AutoGen.Ollama;
 using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
+using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -117,6 +119,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     if (isCarwl)
                     {
                         //添加保存文件的 Plugin
+
                         var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
                         var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: "CrawlPlugin").kernelPlugin;
 
@@ -197,7 +200,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
             //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
-           
+
             for (int i = 0; i < agentsMiddlewares.Count; i++)
             {
                 for (int j = i + 1; j < agentsMiddlewares.Count; j++)
@@ -343,6 +346,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
                 MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
 
+                IAgent carwlAgent = null;
+
                 foreach (var groupMember in groupMemebers)
                 {
                     var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);
@@ -361,27 +366,123 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
                     var itemKernel = kernel;
+                    var isCarwl = agentTemplate.Name == "爬虫";
                     if (personality)
                     {
                         var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
                         var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
                                     .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
                                     .BuildKernel();
+
+                        if (isCarwl)
+                        {
+                            //添加保存文件的 Plugin
+
+                            var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
+                            var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: "CrawlPlugin").kernelPlugin;
+
+                            KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+
+                            iWantToRunItem.ImportPluginFromFunctions("CrawlWebPagesAndAnswerQuestion", functionPiple);
+
+
+                        }
+
                         itemKernel = iWantToRunItem.Kernel;
                     }
 
-                    var agent = new SemanticKernelAgent(
-                                kernel: itemKernel,
-                                name: agentTemplate.Name,
-                                systemMessage: promptResult.PromptItem.Content);
+                    SemanticKernelAgent agent = new SemanticKernelAgent(
+                                    kernel: itemKernel,
+                                    name: agentTemplate.Name,
+                                    systemMessage: promptResult.PromptItem.Content);
+                    //if (isCarwl)
+                    //{
+                    //    carwlAgent = agent;
+                    //}
+                    //else
+                    //{
+
+                    var isBuilt = false;
+
                     var agentMiddleware = agent
                                 .RegisterTextMessageConnector()
-                                .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
+                                .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware(async (a, m, mStr) =>
                                 {
-                                    AgentTemplatePrintMessageMiddleware.SendWechatMessage
-                                    .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
+                                    try
+                                    {
+                                        AgentTemplatePrintMessageMiddleware.SendWechatMessage
+                                   .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                        SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
+                                    }
+
                                     //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
                                     logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
+
+                                    //using (var scope = ServiceProvider.CreateScope())//已关闭
+                                    using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
+                                    {
+                                        var serviceProvider = scope.ServiceProvider;
+                                        var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
+                                        var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, mStr, MessageType.Text, Status.Finished);
+                                        await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
+
+
+                                        #region 自动创建项目演示
+
+                                        if (!isBuilt && a.Name == "爬虫")
+                                        {
+                                            try
+                                            {
+                                                //创建一个XNCF项目
+                                                var buildAppService = serviceProvider.GetService<BuildXncfAppService>();
+                                                var xncfBuildResult = await buildAppService.Build(new XncfBuilder.OHS.PL.BuildXncf_BuildRequest()
+                                                {
+                                                    Description = "这是一个香港理工大学的活动宣传网站",
+                                                    Icon = "fa fa-star",
+                                                    FrameworkVersion = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList)
+                                                    {
+                                                        SelectedValues = new[] { "net8.0" },
+                                                    },
+                                                    MenuName = "香港理工大学宣传网站",
+                                                    NewSlnFile = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
+                                                    {
+                                                        SelectedValues = new string[] {  },
+                                                    },
+                                                    OrgName = "Senparc",
+                                                    XncfName = "HKPolyU",
+                                                    SlnFilePath = "X:\\SenparcProjects\\NeuCharFramework\\NCF\\src\\back-end\\NCF.sln",
+                                                    OtherFrameworkVersion = "",
+                                                    TemplatePackage = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList)
+                                                    {
+                                                        SelectedValues = new string[] { "no" },
+                                                    },
+                                                    Version = "0.1.0",
+                                                    UseModule = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
+                                                    {
+                                                        SelectedValues = new[] { "function", "database", "webapi", "web" },
+                                                    },
+                                                    UseSammple = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
+                                                    {
+                                                        SelectedValues = new string[] { "1" }
+                                                    }
+                                                });
+                                                isBuilt = true;
+                                            }
+                                            catch (Exception)
+                                            {
+
+                                                throw;
+                                            }
+                                        }
+                                        #endregion
+
+                                    }
+
+
                                 }));
 
                     if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
@@ -392,6 +493,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     }
 
                     agentsMiddlewares.Add(agentMiddleware);
+                    //}
+
+
                     agents.Add(agent);
                 }
 
@@ -429,6 +533,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     for (int j = i + 1; j < agentsMiddlewares.Count; j++)
                     {
                         graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
+                    }
+
+                    if (carwlAgent != null)
+                    {
+                        graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(carwlAgent);
                     }
                 }
 
