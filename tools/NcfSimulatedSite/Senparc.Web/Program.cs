@@ -8,6 +8,7 @@
 using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.WebApi;
+using Senparc.Ncf.Database.SqlServer;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +35,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //Use NCF（必须）
-app.UseNcf<BySettingDatabaseConfiguration>();
+app.UseNcf<SqlServerDatabaseConfiguration>();
 /*  UseNcf<TDatabaseConfiguration>() 泛型类型说明
  *                
  *                  方法                            |         说明

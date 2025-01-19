@@ -216,7 +216,7 @@ namespace Senparc.Ncf.XncfBase
                             }
                         }
 
-                        if (exceptions.Count>0)
+                        if (exceptions.Count > 0)
                         {
                             var errMsg = $"程序集 [{a.FullName}] 共检测出 {exceptions.Count} 个异常，如果非核心程序集可忽略";
                             Console.WriteLine(errMsg);
@@ -262,7 +262,21 @@ namespace Senparc.Ncf.XncfBase
                         {
                             if (XncfRegisterManager.RegisterList.Exists(z => z.Uid.Equals(register.Uid, StringComparison.OrdinalIgnoreCase)))
                             {
-                                if (DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType == MultipleDatabaseType.InMemory)
+                                MultipleDatabaseType? multipleDatabaseType = null;
+                                try
+                                {
+                                    multipleDatabaseType = DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
+                                }
+                                catch (Exception ex)
+                                {
+                                    SenparcTrace.BaseExceptionLog(ex);
+                                }
+
+                                if (multipleDatabaseType == null)
+                                { 
+                                    Console.WriteLine($"MultipleDatabaseType 为 null（轮询${type.FullName}）");
+                                }
+                                else if (multipleDatabaseType == MultipleDatabaseType.InMemory)
                                 {
                                     //单元测试，忽略
                                     Console.WriteLine("MultipleDatabaseType.InMemory 模式，单元测试忽略重复加载");
@@ -512,7 +526,7 @@ namespace Senparc.Ncf.XncfBase
                         SiteConfig.DatabaseXncfLoaded = true;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     SenparcTrace.SendCustomLog("从 XncfRegisterManager.RegisterList 执行 register.UseXncfModule() 方法发生异常",
                         $@"模块：{register.Name}
