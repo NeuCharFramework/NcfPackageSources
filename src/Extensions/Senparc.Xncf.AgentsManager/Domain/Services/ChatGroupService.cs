@@ -19,6 +19,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.ACL;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -518,7 +519,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 Console.WriteLine("Chat finished.");
                 logger.Append("已完成运行：" + chatGroup.Name);
 
-                await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Finished, chatTask);
+                await chatTaskService.SetStatus(ChatTask_Status.Finished, chatTask);
+
                 //完成后移除缓存
                 await _cache.RemoveFromCacheAsync(runningKey);
 

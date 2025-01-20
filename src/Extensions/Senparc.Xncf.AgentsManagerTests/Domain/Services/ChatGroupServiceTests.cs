@@ -41,17 +41,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             });
 
 
-            var chatTaskService = base._serviceProvider.GetRequiredService<ChatTaskService>();
             ChatTask chatTask = null;
             for (int i = 0; i < 100; i++)
             {
                 // 验证聊天组状态已更新为运行中
                 await Task.Delay(1000);
-                chatTask = await chatTaskService.GetObjectAsync(z => true, z => z, Ncf.Core.Enums.OrderingType.Descending);
-                if (chatTask != null && chatTask.Status == ChatTask_Status.Finished)
+
+                //说明：此处使用 CreateAsyncScope() 方法是由于还有其他线程在读写 ChatTask，此处缓存可能读取不到最新的更新
+                await using (var scope = base._serviceProvider.CreateAsyncScope())
                 {
-                    break;
+                    var chatTaskService = scope.ServiceProvider.GetRequiredService<ChatTaskService>();
+                    chatTask = await chatTaskService.GetObjectAsync(z => true, z => z, Ncf.Core.Enums.OrderingType.Descending);
+                    if (chatTask != null && chatTask.Status == ChatTask_Status.Finished)
+                    {
+                        break;
+                    }
                 }
+               
             }
 
             Assert.AreEqual(ChatTask_Status.Finished, chatTask.Status);
