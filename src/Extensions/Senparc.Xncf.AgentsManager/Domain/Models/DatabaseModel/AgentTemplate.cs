@@ -1,5 +1,6 @@
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -99,6 +100,19 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         {
             Enable = false;
             return true;
+        }
+
+        public void UpdateFromDto(AgentTemplateDto agentTemplateDto)
+        {
+            Name = agentTemplateDto.Name;
+            SystemMessage = agentTemplateDto.SystemMessage;
+            Enable = agentTemplateDto.Enable;
+            Description = agentTemplateDto.Description;
+            PromptCode = agentTemplateDto.PromptCode;
+            HookRobotType = agentTemplateDto.HookRobotType;
+            HookRobotParameter = agentTemplateDto.HookRobotParameter;
+            FunctionCallNames = agentTemplateDto.FunctionCallNames;
+            Avastar = agentTemplateDto.Avastar;
         }
     }
 

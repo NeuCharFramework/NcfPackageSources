@@ -1008,17 +1008,20 @@ var app = new Vue({
         },
         // 保存 submitForm 数据
         async saveSubmitFormData(saveType, serviceForm = {}) {
-            // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
             let serviceURL = ''
             // agent 新增|编辑
             if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
-                // 处理 FunctionCallNames
-                if (this.functionCallTags && this.functionCallTags.length > 0) {
-                    serviceForm.functionCallNames = this.functionCallTags.join(',') // 将数组转为逗号分隔的字符串
-                } else {
-                    serviceForm.functionCallNames = '' // 如果没有标签则设为空字符串
-                }
+                // 确保 serviceForm 是正确的对象
+                serviceForm = serviceForm || {};
                 
+                // 直接将 functionCallTags 数组转换为字符串并赋值
+                serviceForm.functionCallNames = this.functionCallTags.length > 0 ? this.functionCallTags.join(',') : '';
+                
+                // 打印日志以便调试
+                console.log('Submitting serviceForm:', serviceForm);
+                console.log('functionCallTags:', this.functionCallTags);
+                console.log('functionCallNames:', serviceForm.functionCallNames);
+
                 serviceURL = '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem'
                 if (saveType === 'dialogGroupAgent') {
                     this.isGetGroupAgent = true
@@ -1041,103 +1044,103 @@ var app = new Vue({
                 serviceURL = ''
             }
             if (!serviceURL) return
-            await serviceAM.post(serviceURL, serviceForm)
-                .then(res => {
-                    if (res.data.success) {
-
-                        let refName = '', formName = ''
-                        // 智能体
-                        if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
-                            refName = 'agentELForm'
-                            formName = 'agentForm'
-                        }
-                        // 组
-                        if (saveType === 'drawerGroup') {
-                            refName = 'groupELForm'
-                            formName = 'groupForm'
-                            // 重置 组获取智能体query
-                            this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
-                        }
-                        // 组 启动
-                        if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
-                            refName = 'groupStartELForm'
-                            formName = 'groupStartForm'
-                        }
-                        // 任务评价
-                        if (saveType === 'dialogTaskEvaluation') {
-                            refName = 'evaluationELForm'
-                            formName = 'evaluationForm'
-                        }
-                        if (formName) {
-                            this.$set(this, `${formName}`, this.$options.data()[formName])
-                            // Object.assign(this[formName],this.$options.data()[formName] )
-                        }
-                        if (refName) {
-                            this.$refs[refName].resetFields();
-                        }
-                        this.$nextTick(() => {
-                            this.visible[saveType] = false
-                        })
-                        // 重新获取数据
-                        if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
-                            console.log('#***#',this.tabsActiveName,this.agentDetails);
-                            
-                            if (this.tabsActiveName === 'first') {
-                                // agentTemplateStatus
-                                if (this.agentDetails) {
-                                    const id = this.agentDetails.agentTemplateDto ? this.agentDetails.agentTemplateDto.id : this.agentDetails.id
-                                    if (this.agentDetailsTabsActiveName === 'first') {
-                                        this.getGroupListData('agentGroup', id)
-                                    } else {
-                                        this.gettaskListData('agentTask', id)
-                                    }
-                                }
-                            } else if (this.tabsActiveName === 'second') {
-                                this.getGroupListData('group')
-                            } else {
-                                this.gettaskListData('task')
-                            }
-                        } else if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
-                            const agentMapStr = {
-                                'drawerAgent': 'agent',
-                                'dialogGroupAgent': 'groupAgent'
-                            }
-                            this.getAgentListData(agentMapStr[saveType])
-                        } else if (saveType === 'dialogTaskEvaluation') {
-                            // 重新获取任务详情 
-                            let detail = {}
-                            if (this.tabsActiveName === 'first') {
-                                if (this.agentDetailsTabsActiveName === 'first') {
-                                    detail.serviceType = 'agentGroupTask'
-                                    detail.id = this.agentDetailsGroupDetailsTaskDetails?.id ?? ''
-                                } else if (this.agentDetailsTabsActiveName === 'second') {
-                                    detail.serviceType = 'agentTask'
-                                    detail.id = this.agentDetailsTaskDetails?.id ?? ''
-                                }
-                            } else if (this.tabsActiveName === 'second') {
-                                detail.serviceType = 'groupTask'
-                                detail.id = this.groupTaskDetails?.id ?? ''
-                            } else {
-                                detail.serviceType = 'task'
-                                detail.id = this.taskDetails?.id ?? ''
-                            }
-                            if (detail.id) {
-                                // detailType, id, detail = {} true
-                                this.getTaskDetailData(detail.serviceType, detail.id, detail, true)
-                            }
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                        this.isGetGroupAgent = false
+            try {
+                const response = await serviceAM.post(serviceURL, serviceForm)
+                if (response.data.success) {
+                    let refName = '', formName = ''
+                    // 智能体
+                    if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
+                        refName = 'agentELForm'
+                        formName = 'agentForm'
                     }
-                }).catch((err) => {
-                    console.log('err', err)
+                    // 组
+                    if (saveType === 'drawerGroup') {
+                        refName = 'groupELForm'
+                        formName = 'groupForm'
+                        // 重置 组获取智能体query
+                        this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+                    }
+                    // 组 启动
+                    if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+                        refName = 'groupStartELForm'
+                        formName = 'groupStartForm'
+                    }
+                    // 任务评价
+                    if (saveType === 'dialogTaskEvaluation') {
+                        refName = 'evaluationELForm'
+                        formName = 'evaluationForm'
+                    }
+                    if (formName) {
+                        this.$set(this, `${formName}`, this.$options.data()[formName])
+                        // Object.assign(this[formName],this.$options.data()[formName] )
+                    }
+                    if (refName) {
+                        this.$refs[refName].resetFields();
+                    }
+                    this.$nextTick(() => {
+                        this.visible[saveType] = false
+                    })
+                    // 重新获取数据
+                    if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+                        console.log('#***#',this.tabsActiveName,this.agentDetails);
+                        
+                        if (this.tabsActiveName === 'first') {
+                            // agentTemplateStatus
+                            if (this.agentDetails) {
+                                const id = this.agentDetails.agentTemplateDto ? this.agentDetails.agentTemplateDto.id : this.agentDetails.id
+                                if (this.agentDetailsTabsActiveName === 'first') {
+                                    this.getGroupListData('agentGroup', id)
+                                } else {
+                                    this.gettaskListData('agentTask', id)
+                                }
+                            }
+                        } else if (this.tabsActiveName === 'second') {
+                            this.getGroupListData('group')
+                        } else {
+                            this.gettaskListData('task')
+                        }
+                    } else if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
+                        const agentMapStr = {
+                            'drawerAgent': 'agent',
+                            'dialogGroupAgent': 'groupAgent'
+                        }
+                        this.getAgentListData(agentMapStr[saveType])
+                    } else if (saveType === 'dialogTaskEvaluation') {
+                        // 重新获取任务详情 
+                        let detail = {}
+                        if (this.tabsActiveName === 'first') {
+                            if (this.agentDetailsTabsActiveName === 'first') {
+                                detail.serviceType = 'agentGroupTask'
+                                detail.id = this.agentDetailsGroupDetailsTaskDetails?.id ?? ''
+                            } else if (this.agentDetailsTabsActiveName === 'second') {
+                                detail.serviceType = 'agentTask'
+                                detail.id = this.agentDetailsTaskDetails?.id ?? ''
+                            }
+                        } else if (this.tabsActiveName === 'second') {
+                            detail.serviceType = 'groupTask'
+                            detail.id = this.groupTaskDetails?.id ?? ''
+                        } else {
+                            detail.serviceType = 'task'
+                            detail.id = this.taskDetails?.id ?? ''
+                        }
+                        if (detail.id) {
+                            // detailType, id, detail = {} true
+                            this.getTaskDetailData(detail.serviceType, detail.id, detail, true)
+                        }
+                    }
+                } else {
+                    console.error('API Error:', response.data);
+                    app.$message({
+                        message: response.data.errorMessage || response.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    })
                     this.isGetGroupAgent = false
-                })
+                }
+            } catch (err) {
+                console.error('Request Error:', err);
+                this.isGetGroupAgent = false
+            }
         },
         // 轮询获取 task 历史对话记录
         pollGetTaskHistoryData(listType, fun, id) {
@@ -1210,14 +1213,22 @@ var app = new Vue({
                 formName = 'evaluationForm'
             }
             if (formName) {
-                if (btnType === 'drawerAgent' && item.agentTemplateDto) {
-                    Object.assign(this[formName], item.agentTemplateDto)
-                    // 处理 FunctionCallNames
-                    if (item.agentTemplateDto.functionCallNames) {
-                        this.functionCallTags = item.agentTemplateDto.functionCallNames.split(',').filter(Boolean)
-                    } else {
-                        this.functionCallTags = []
-                    }
+                if (btnType === 'drawerAgent' && item) {
+                    console.log('item', item);
+                    // 创建一个新的对象来存储表单数据
+                    const formData = { ...item };
+                    console.log('formData', formData);
+                    
+                    // 确保 functionCallNames 被正确初始化
+                    this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
+                    
+                    // 将数据赋值给表单
+                    Object.assign(this[formName], formData);
+                    
+                    // 打印日志以便调试
+                    console.log('Loaded form data:', formData);
+                    console.log('functionCallTags:', this.functionCallTags);
+                    
                 } else if (btnType === 'drawerGroup') {
                     if (item.chatGroupDto) {
                         Object.assign(this[formName], {
@@ -1327,6 +1338,12 @@ var app = new Vue({
                     this.$nextTick(() => {
                         this.visible[btnType] = false
                     })
+                    // 清理 Function Calls 数据
+                    if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+                        this.functionCallTags = []
+                        this.functionCallInputVisible = false
+                        this.functionCallInputValue = ''
+                    }
                 })
                 .catch(_ => { });
         },
@@ -2353,7 +2370,32 @@ var app = new Vue({
                 return list.length > limit ? list.length - limit : 0;
             }
             return 0
-        }
+        },
+        // 显示新增 Function Call 输入框
+        showFunctionCallInput() {
+            this.functionCallInputVisible = true;
+            this.$nextTick(_ => {
+                this.$refs.functionCallInput.$refs.input.focus();
+            });
+        },
+
+        // 处理 Function Call 输入确认
+        handleFunctionCallInputConfirm() {
+            let inputValue = this.functionCallInputValue;
+            if (inputValue) {
+                // 确保不重复添加
+                if (!this.functionCallTags.includes(inputValue)) {
+                    this.functionCallTags.push(inputValue);
+                }
+            }
+            this.functionCallInputVisible = false;
+            this.functionCallInputValue = '';
+        },
+
+        // 删除 Function Call 标签
+        handleFunctionCallClose(tag) {
+            this.functionCallTags.splice(this.functionCallTags.indexOf(tag), 1);
+        },
     }
 });
 
