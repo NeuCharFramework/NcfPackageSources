@@ -13,6 +13,7 @@ using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -21,7 +22,7 @@ using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.ACL;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -367,7 +368,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
                 var itemKernel = kernel;
-                var isCarwl = agentTemplate.Name == "爬虫机器人";
+                var hasFunctionCalls = agentTemplate.FunctionCallNames.IsNullOrEmpty() 
+                                        ? new string[] { }
+                                        : agentTemplate.FunctionCallNames.Split(',');
                 if (personality)
                 {
                     var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
@@ -375,15 +378,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
                                 .BuildKernel();
 
-                    if (isCarwl)
+                    if (hasFunctionCalls.Length > 0)
                     {
-                        //添加保存文件的 Plugin
-
-                        var crawlPlugin = ServiceProvider.GetService<CrawlPlugin>();
-                        var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: nameof(CrawlPlugin)).kernelPlugin;
-
-                        //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
-                        //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
+                        //添加 Plugin
+                        foreach (var functionCall in hasFunctionCalls)
+                        {   
+                            var functionCallType = Type.GetType(functionCall);
+                            var functionName = functionCallType.Name;
+                            var plugin = ServiceProvider.GetService(functionCallType);
+                            var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
+                            //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+                            //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
+                        }
                     }
 
                     itemKernel = iWantToRunItem.Kernel;

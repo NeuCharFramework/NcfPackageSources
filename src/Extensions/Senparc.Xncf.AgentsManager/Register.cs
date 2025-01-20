@@ -11,7 +11,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
-using Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
