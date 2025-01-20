@@ -59,6 +59,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions
 
             var senMapicResult = senMapicEngine.Build();
 
+            return senMapicResult.Values.FirstOrDefault()?.Html;
+
             foreach (var item in senMapicResult)
             {
                 var urlData = item.Value;

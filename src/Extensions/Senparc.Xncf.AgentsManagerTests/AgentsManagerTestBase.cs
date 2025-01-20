@@ -44,7 +44,10 @@ namespace Senparc.Xncf.AgentsManagerTests
                 ParentTac = "",
                 Aiming = 1,
                 NickName = "项目经理",
-                Content = "你是一名项目经理，负责管理和协调软件开发项目，当需要获取外部资源时，你可以向其他人寻求帮助。",
+                Content = @"你是一名项目经理，负责管理和协调软件开发项目，请注意：
+- 当需要获取外部资源时，你可以向其他人寻求帮助。
+- 你不需要回答任何与协调管理工作无关的内容。
+- 你不需要编写任何代码。",
                 ModelId = aiModel.Id,
                 TopP = 0.95f,
                 Temperature = 0.7f,
@@ -94,7 +97,9 @@ namespace Senparc.Xncf.AgentsManagerTests
                 ParentTac = "",
                 Aiming = 1,
                 NickName = "爬虫",
-                Content = "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。",
+                Content = @"你是一个爬虫，你负责从互联网上获取信息，并返回给用户。请注意：
+- 你应该使用 function call 执行爬虫职责，不想应该编写任何代码。
+- 你无需回答任何问题，如果有人向你提出和网络爬虫无关的问题，请让他们找其他更合适的人。",
                 ModelId = aiModel.Id,
                 TopP = 0.95f,
                 Temperature = 0.7f,

@@ -365,7 +365,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
                 var itemKernel = kernel;
-                var isCarwl = agentTemplate.Name == "爬虫";
+                var isCarwl = agentTemplate.Name == "爬虫机器人";
                 if (personality)
                 {
                     var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
@@ -411,10 +411,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 {
                                     AgentTemplatePrintMessageMiddleware.SendWechatMessage
                                .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
+
+                                    Console.WriteLine("Agents消息：");
+                                    Console.WriteLine(m);
                                 }
                                 catch (Exception ex)
                                 {
-
                                     SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
                                 }
 
@@ -521,8 +523,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 await _cache.RemoveFromCacheAsync(runningKey);
 
                 SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
-
-
 
                 //return result;
             }
