@@ -281,7 +281,7 @@ var app = new Vue({
                 hookRobotType: 0, // 外接平台
                 hookRobotParameter: '', // 外接参数
                 avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
-                functionCallNames: ''
+                functionCallNames: '', // Function Call 名称，逗号分隔
             },
             agentFormRules: {
                 name: [
@@ -301,6 +301,9 @@ var app = new Vue({
                 // ],
                 avastar: [
                     { required: true, message: '请选择', trigger: 'change' },
+                ],
+                functionCallNames: [
+                    { required: false, message: '请输入Function Call名称', trigger: 'change' }
                 ]
             },
             // 组 新增|编辑
@@ -373,9 +376,9 @@ var app = new Vue({
             agentParameterList: [],
             // 描述内容
             describeContent: '',
-            functionCallTags: [],
             functionCallInputVisible: false,
-            functionCallInputValue: ''
+            functionCallInputValue: '',
+            functionCallTags: [], // 用于编辑时临时存储标签
         };
     },
     computed: {
@@ -1009,6 +1012,13 @@ var app = new Vue({
             let serviceURL = ''
             // agent 新增|编辑
             if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
+                // 处理 FunctionCallNames
+                if (this.functionCallTags && this.functionCallTags.length > 0) {
+                    serviceForm.functionCallNames = this.functionCallTags.join(',') // 将数组转为逗号分隔的字符串
+                } else {
+                    serviceForm.functionCallNames = '' // 如果没有标签则设为空字符串
+                }
+                
                 serviceURL = '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem'
                 if (saveType === 'dialogGroupAgent') {
                     this.isGetGroupAgent = true
@@ -1202,6 +1212,12 @@ var app = new Vue({
             if (formName) {
                 if (btnType === 'drawerAgent' && item.agentTemplateDto) {
                     Object.assign(this[formName], item.agentTemplateDto)
+                    // 处理 FunctionCallNames
+                    if (item.agentTemplateDto.functionCallNames) {
+                        this.functionCallTags = item.agentTemplateDto.functionCallNames.split(',').filter(Boolean)
+                    } else {
+                        this.functionCallTags = []
+                    }
                 } else if (btnType === 'drawerGroup') {
                     if (item.chatGroupDto) {
                         Object.assign(this[formName], {
@@ -2337,62 +2353,7 @@ var app = new Vue({
                 return list.length > limit ? list.length - limit : 0;
             }
             return 0
-        },
-        // 处理Function Call标签
-        handleFunctionCallClose(tag) {
-            this.functionCallTags.splice(this.functionCallTags.indexOf(tag), 1);
-            this.agentForm.functionCallNames = this.functionCallTags.join(',');
-        },
-
-        showFunctionCallInput() {
-            this.functionCallInputVisible = true;
-            this.$nextTick(_ => {
-                this.$refs.functionCallInput.$refs.input.focus();
-            });
-        },
-
-        handleFunctionCallInputConfirm() {
-            let inputValue = this.functionCallInputValue;
-            if (inputValue) {
-                if (!this.functionCallTags.includes(inputValue)) {
-                    this.functionCallTags.push(inputValue);
-                    this.agentForm.functionCallNames = this.functionCallTags.join(',');
-                }
-            }
-            this.functionCallInputVisible = false;
-            this.functionCallInputValue = '';
-        },
-
-        // 修改现有的编辑表单初始化方法
-        handleEditDrawerOpenBtn(type, row = {}) {
-            // ... existing code ...
-            if (type === 'drawerAgent') {
-                this.visible[type] = true
-                if (row.id) {
-                    // 编辑
-                    this.agentForm = deepClone(row)
-                    // 初始化Function Call标签
-                    this.functionCallTags = this.agentForm.functionCallNames ? 
-                        this.agentForm.functionCallNames.split(',').filter(Boolean) : [];
-                } else {
-                    // 新增
-                    this.agentForm = {
-                        id: 0,
-                        name: '',
-                        systemMessageType: '1',
-                        systemMessage: '',
-                        enable: true,
-                        description: '',
-                        hookRobotType: 0,
-                        hookRobotParameter: '',
-                        avastar: '/images/AgentsManager/avatar/avatar1.png',
-                        functionCallNames: ''
-                    }
-                    this.functionCallTags = [];
-                }
-            }
-            // ... existing code ...
-        },
+        }
     }
 });
 
