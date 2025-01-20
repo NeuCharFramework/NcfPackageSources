@@ -32,7 +32,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             {
                 ChatGroupId = chatGroup.Id,
                 AiModelId = aiModel.Id,
-                PromptCommand = "请对 https://www.ncf.pub 首页内容进行抓取,并分析其中 HTML 代码",
+                PromptCommand = "请对 https://ld.suzhou.edu.cn 进行分析，告诉我这所学校的概况，以及校训，搜索最多80个页面，找出“金波”老师的信息。",
                 Name = "测试项目聊天组",
                 HookPlatform = HookPlatform.None,
                 HookParameter = "",
@@ -42,7 +42,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
 
 
             ChatTask chatTask = null;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 80; i++)
             {
                 // 验证聊天组状态已更新为运行中
                 await Task.Delay(1000);

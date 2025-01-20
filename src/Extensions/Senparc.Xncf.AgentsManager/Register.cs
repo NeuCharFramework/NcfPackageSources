@@ -11,6 +11,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions;
 using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
@@ -94,11 +95,15 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
             });
 
+            //Service DI
             services.AddScoped<AgentsTemplateService>();
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
+
+            //AI Plugins DI
+            services.AddScoped<CrawlPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();

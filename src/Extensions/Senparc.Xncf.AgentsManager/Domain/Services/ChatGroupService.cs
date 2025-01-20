@@ -121,8 +121,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     //添加保存文件的 Plugin
 
-                    var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
-                    var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: "CrawlPlugin").kernelPlugin;
+                    //var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
+                    var crawlPlugin = ServiceProvider.GetService<CrawlPlugin>();
+                    var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: nameof(CrawlPlugin)).kernelPlugin;
 
                     KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
 
@@ -290,7 +291,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var chatTask = await chatTaskService.CreateTask(chatTaskDto);
             chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
                                                                          //更新状态
-            await chatTaskService.SetStatus(Models.DatabaseModel.ChatTask_Status.Chatting, chatTask);
+            await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
 
             //运行中进行缓存
             var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
@@ -378,14 +379,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     {
                         //添加保存文件的 Plugin
 
-                        var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
-                        var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: "CrawlPlugin").kernelPlugin;
+                        var crawlPlugin = ServiceProvider.GetService<CrawlPlugin>();
+                        var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: nameof(CrawlPlugin)).kernelPlugin;
 
-                        KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
-
-                        iWantToRunItem.ImportPluginFromFunctions("CrawlWebPagesAndAnswerQuestion", functionPiple);
-
-
+                        //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+                        //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
                     }
 
                     itemKernel = iWantToRunItem.Kernel;
@@ -395,14 +393,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 kernel: itemKernel,
                                 name: agentTemplate.Name,
                                 systemMessage: promptResult.PromptItem.Content);
-                //if (isCarwl)
-                //{
-                //    carwlAgent = agent;
-                //}
-                //else
-                //{
-
-                var isBuilt = false;
 
                 var agentMiddleware = agent
                             .RegisterTextMessageConnector()
@@ -412,9 +402,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 {
                                     AgentTemplatePrintMessageMiddleware.SendWechatMessage
                                .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
-
-                                    Console.WriteLine("Agents消息：");
-                                    Console.WriteLine(m);
                                 }
                                 catch (Exception ex)
                                 {
@@ -532,6 +519,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 SenparcTrace.BaseExceptionLog(ex);
                 SenparcTrace.SendCustomLog("异常详情", ex.StackTrace);
+                Console.WriteLine(ex);
                 throw;
             }
             finally
