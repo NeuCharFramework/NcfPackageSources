@@ -141,14 +141,14 @@ namespace Senparc.Xncf.AgentsManagerTests
             #region 初始化 AgentsManager
             //模板
             var agentTemplateService = serviceProvider.GetRequiredService<AgentsTemplateService>();
-            var agentTemplate = new AgentTemplate("产品经理机器人", "你是一名产品经理，负责管理和协调软件开发项目，当需要获取外部资源时，你可以向其他人寻求帮助。", false, "", promptItem.FullVersion, HookRobotType.None, "", "");
+            var agentTemplate = new AgentTemplate("产品经理机器人", "你是一名产品经理，负责管理和协调软件开发项目，当需要获取外部资源时，你可以向其他人寻求帮助。", true, "", promptItem.FullVersion, HookRobotType.None, "", "");
             await agentTemplateService.SaveObjectAsync(agentTemplate);
-            var agentTemplate2 = new AgentTemplate("爬虫机器人", "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。", false, "", promptItem2.FullVersion, HookRobotType.None, "", "");
+            var agentTemplate2 = new AgentTemplate("爬虫机器人", "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。", true, "", promptItem2.FullVersion, HookRobotType.None, "", "");
             await agentTemplateService.SaveObjectAsync(agentTemplate2);
 
             //聊天组
             var chatGroupService = serviceProvider.GetRequiredService<ChatGroupService>();
-            var chatGroup = new ChatGroup("测试项目", true, ChatGroupState.Unstart, "测试项目", agentTemplate.Id, agentTemplate2.Id);
+            var chatGroup = new ChatGroup("测试项目", true, ChatGroupState.Unstart, "测试项目", agentTemplate.Id, agentTemplate.Id);
             await chatGroupService.SaveObjectAsync(chatGroup);
 
             //聊天组成员

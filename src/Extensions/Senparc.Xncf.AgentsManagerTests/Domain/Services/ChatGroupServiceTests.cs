@@ -38,14 +38,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
                 HookParameter = "",
                 Description = "测试项目聊天组",
                 Personality = true,
-
             });
 
-            await Task.Delay(1000);
 
-            // 验证聊天组状态已更新为运行中
-            var updatedChatGroup = await chatGroupService.GetObjectAsync(z => z.Id == chatGroup.Id);
-            Assert.AreEqual(ChatGroupState.Unstart, updatedChatGroup.State);
+            var chatTaskService = base._serviceProvider.GetRequiredService<ChatTaskService>();
+            ChatTask chatTask = null;
+            for (int i = 0; i < 100; i++)
+            {
+                // 验证聊天组状态已更新为运行中
+                await Task.Delay(1000);
+                chatTask = await chatTaskService.GetObjectAsync(z => true, z => z, Ncf.Core.Enums.OrderingType.Descending);
+                if (chatTask != null && chatTask.Status == ChatTask_Status.Finished)
+                {
+                    break;
+                }
+            }
+
+            Assert.AreEqual(ChatTask_Status.Finished, chatTask.Status);
         }
     }
 }
