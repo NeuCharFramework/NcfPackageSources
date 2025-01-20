@@ -5,6 +5,7 @@ using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
@@ -50,10 +51,14 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public string Avastar { get; set; }
 
+        /// <summary>
+        /// 可调用的函数名称列表,以逗号分隔
+        /// </summary>
+        public string FunctionCallNames { get; set; }
 
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -63,6 +68,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
             Avastar = avastar;
+            FunctionCallNames = functionCallNames;
         }
     }
 

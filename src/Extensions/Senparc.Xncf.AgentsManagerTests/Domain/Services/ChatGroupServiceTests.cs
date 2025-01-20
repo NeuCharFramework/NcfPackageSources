@@ -41,7 +41,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             });
 
 
-            ChatTask chatTask = null;
+            ChatTask? chatTask = null;
             for (int i = 0; i < 80; i++)
             {
                 // 验证聊天组状态已更新为运行中
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
                
             }
 
-            Assert.AreEqual(ChatTask_Status.Finished, chatTask.Status);
+            Assert.AreEqual(ChatTask_Status.Finished, chatTask?.Status);
         }
     }
 }

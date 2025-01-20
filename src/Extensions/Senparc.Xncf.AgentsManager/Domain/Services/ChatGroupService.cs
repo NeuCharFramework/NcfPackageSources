@@ -261,7 +261,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     /// 在独立进程中运行 ChatGroup
     /// </summary>
     /// <returns></returns>
-    public async Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
+    public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
     {
         var task = Task.Factory.StartNew(async () =>
         {
@@ -529,5 +529,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         });
 
         TaskList.Add(task);
+
+        return Task.CompletedTask;
     }
 }

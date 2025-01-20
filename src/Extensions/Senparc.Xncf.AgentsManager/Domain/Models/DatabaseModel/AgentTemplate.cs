@@ -54,6 +54,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         public string Avastar { get; set; }
 
+        /// <summary>
+        /// Function Call 名称列表，多个用逗号分隔
+        /// </summary>
+        public string FunctionCallNames { get; private set; }
 
         //[InverseProperty(nameof(ChatGroupMember.AgentTemplate))]
         public ICollection<ChatGroupMember> ChatGroupMembers { get; private set; }
@@ -72,7 +76,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -82,6 +86,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             HookRobotType = hookRobotType;
             HookRobotParameter = hookRobotParameter;
             Avastar = avastar;
+            FunctionCallNames = functionCallNames;
         }
 
         public bool EnableAgent()

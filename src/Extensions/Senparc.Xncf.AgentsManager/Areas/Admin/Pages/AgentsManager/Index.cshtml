@@ -1159,6 +1159,30 @@
                         </div>
                     </div>
                 </el-form-item>
+                <el-form-item label="Function Calls" prop="functionCallNames">
+                    <div class="function-call-tags">
+                        <el-tag
+                            v-for="tag in functionCallTags"
+                            :key="tag"
+                            closable
+                            :disable-transitions="false"
+                            @@close="handleFunctionCallClose(tag)"
+                            style="margin-right: 10px; margin-bottom: 10px;">
+                            {{tag}}
+                        </el-tag>
+                        <el-input
+                            v-if="functionCallInputVisible"
+                            ref="functionCallInput"
+                            v-model="functionCallInputValue"
+                            class="input-new-tag"
+                            size="small"
+                            @@keyup.enter.native="handleFunctionCallInputConfirm"
+                            @@blur="handleFunctionCallInputConfirm"
+                            style="width: 90px; margin-right: 10px; vertical-align: bottom;">
+                        </el-input>
+                        <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
+                    </div>
+                </el-form-item>
             </el-form>
         </div>
         @* 内容中固定的footer *@
@@ -1344,6 +1368,30 @@
                     @@click="handleFormValidateField('agentELForm','agentForm','avastar',aitem)">
                     <img :src="aitem" alt="">
                 </div>
+            </div>
+        </el-form-item>
+        <el-form-item label="Function Calls" prop="functionCallNames">
+            <div class="function-call-tags">
+                <el-tag
+                    v-for="tag in functionCallTags"
+                    :key="tag"
+                    closable
+                    :disable-transitions="false"
+                    @@close="handleFunctionCallClose(tag)"
+                    style="margin-right: 10px; margin-bottom: 10px;">
+                    {{tag}}
+                </el-tag>
+                <el-input
+                    v-if="functionCallInputVisible"
+                    ref="functionCallInput"
+                    v-model="functionCallInputValue"
+                    class="input-new-tag"
+                    size="small"
+                    @@keyup.enter.native="handleFunctionCallInputConfirm"
+                    @@blur="handleFunctionCallInputConfirm"
+                    style="width: 90px; margin-right: 10px; vertical-align: bottom;">
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
             </div>
         </el-form-item>
     </el-form>

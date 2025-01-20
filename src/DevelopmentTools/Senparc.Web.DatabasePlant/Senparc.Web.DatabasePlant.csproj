@@ -14,8 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <!--<ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
-	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 	</ItemGroup>
 
 </Project>
