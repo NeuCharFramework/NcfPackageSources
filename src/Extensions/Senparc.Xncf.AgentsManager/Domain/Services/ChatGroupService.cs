@@ -35,6 +35,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -287,7 +288,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
             var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
-            var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, Models.DatabaseModel.ChatTask_Status.Waiting,
+            var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, ChatTask_Status.Waiting,
                 userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
                 DateTime.Now, DateTime.Now, null);
             var chatTask = await chatTaskService.CreateTask(chatTaskDto);
@@ -304,11 +305,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             await _cache.SetAsync(runningKey, cacheTask);
 
             logger.Append($"开始运行 {chatGroup.Name}");
-
-            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId);
-            var agentsTemplates = new List<AgentTemplateDto>();
-            var agents = new List<SemanticKernelAgent>();
-            List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
 
             #region 确定 AiSetting
 
@@ -329,6 +325,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             #endregion
 
+            #region 确定默认公共使用的模型
             var _semanticAiHandler = new SemanticAiHandler(senparcAiSetting);
 
             var parameter = new PromptConfigParameter()
@@ -338,24 +335,53 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 TopP = 0.5,
             };
 
+            //全局默认模型
             var iWantToRunGlobal = _semanticAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, "JeffreySu")
                             .BuildKernel();
+            #endregion
 
+            #region 收集所有对话人员
 
-            IWantToRun iWantToRunAdmin = null;
-            IWantToRun iWantToRunEnter = null;
-
-            //作为唯一入口和汇报的关键人（TODO：需要增加一个设置）
-            AgentTemplate enterAgentTemplate = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.EnterAgentTemplateId);
-
-
-            MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
-
-            var aiPlugins = AIPluginHub.Instance;
-            foreach (var groupMember in groupMemebers)
+            List<(int AgentTemplateId, string Uid)> memberCollection = new();
+         
+            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId);
+            foreach (var member in groupMemebers)
             {
-                var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);//TODO: + .ToDto<>()
+                memberCollection.Add((member.AgentTemplateId, member.UID));
+            }
+
+
+            //确保已添加 Admin 和 Enter Agent
+            if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.AdminAgentTemplateId))
+            {
+                memberCollection.Add((chatGroup.AdminAgentTemplateId, "Admin"));
+            }
+
+            if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.EnterAgentTemplateId))
+            {
+                memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
+            }
+
+            var agentsTemplates = new List<AgentTemplateDto>();
+            var agents = new List<SemanticKernelAgent>();
+            List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
+
+            IWantToRun iWantToRunAdmin = null;// Admin Agent 配置
+            IWantToRun iWantToRunEnter = null;// Enter Agent 配置
+            MiddlewareAgent<SemanticKernelAgent> enterAgent = null;// Enter Agent 中间件对象
+
+            #endregion
+
+            var aiPlugins = AIPluginHub.Instance;// Function Call 全局对象集合
+
+            //遍历每一个成员
+            foreach (var memberInfo in memberCollection)
+            {
+                var agentTemplateId = memberInfo.AgentTemplateId;
+                var uid = memberInfo.Uid;
+
+                var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == agentTemplateId);//TODO: + .ToDto<>()
                 if (!agentTemplate.Enable)
                 {
                     logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
@@ -370,25 +396,29 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
-                IWantToRun iWantToRunItem = null;
+                IWantToRun iWantToRunItem = null;//当前 Agent 配置
 
                 //判断是否需要个性化模型参数
                 if (personality)
                 {
+                    //使用个性化参数创建
                     var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
                     iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
-                                .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + groupMember.UID)
+                                .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid)
                                 .BuildKernel();
                 }
+                else
+                {
+                    iWantToRunItem = _semanticAiHandler.IWantTo(senparcAiSetting)
+                                   .ConfigModel(ConfigModel.Chat, agentTemplate.Name + uid)
+                                   .BuildKernel();
+                }
 
-                iWantToRunItem ??= _semanticAiHandler.IWantTo(senparcAiSetting)
-                               .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
-                               .BuildKernel();
 
                 //判断是否需要 Function Call
 
                 var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
-                                        ? new string[] { }
+                                        ? Array.Empty<string>()
                                         : agentTemplateDto.FunctionCallNames.Split(',');
 
                 if (hasFunctionCalls.Length > 0)
@@ -452,14 +482,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 }
                             }));
 
-                if (groupMember.AgentTemplateId == chatGroup.EnterAgentTemplateId)
+                if (agentTemplateId == chatGroup.EnterAgentTemplateId)
                 {
                     //TODO：添加指定入口对接人员，参考群主
-                    enterAgentTemplate = agentTemplate;
                     enterAgent = agentMiddleware;
                     iWantToRunEnter = iWantToRunItem;
                 }
-                else if (groupMember.AgentTemplateId == chatGroup.AdminAgentTemplateId)
+                
+                if (agentTemplateId == chatGroup.AdminAgentTemplateId)
                 {
                     iWantToRunAdmin = iWantToRunItem;
                 }
