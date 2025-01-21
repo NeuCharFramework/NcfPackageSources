@@ -1160,27 +1160,44 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="Function Calls" prop="functionCallNames">
-                    <div class="function-call-tags">
-                        <el-tag
-                            v-for="tag in functionCallTags"
-                            :key="tag"
-                            closable
-                            :disable-transitions="false"
-                            @@close="handleFunctionCallClose(tag)"
-                            style="margin-right: 10px; margin-bottom: 10px;">
-                            {{tag}}
-                        </el-tag>
-                        <el-input
-                            v-if="functionCallInputVisible"
-                            ref="functionCallInput"
-                            v-model="functionCallInputValue"
-                            class="input-new-tag"
-                            size="small"
-                            @@keyup.enter.native="handleFunctionCallInputConfirm"
-                            @@blur="handleFunctionCallInputConfirm"
-                            style="margin-right: 10px; vertical-align: bottom;">
-                        </el-input>
-                        <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
+                    <div class="function-call-container">
+                        <div class="function-call-tags">
+                            <el-tag
+                                v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
+                                :key="tag"
+                                closable
+                                :disable-transitions="false"
+                                @@close="handleFunctionCallClose(tag)"
+                                class="function-call-tag">
+                                {{tag}}
+                            </el-tag>
+                            <el-input
+                                v-if="functionCallInputVisible"
+                                ref="functionCallInput"
+                                v-model="functionCallInputValue"
+                                class="input-new-tag"
+                                size="small"
+                                @@keyup.enter.native="handleFunctionCallInputConfirm"
+                                @@blur="handleFunctionCallInputConfirm">
+                            </el-input>
+                            <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
+                        </div>
+                        
+                        <div class="plugin-types-container" v-if="availablePluginTypes.length">
+                            <div class="plugin-types-title">可用插件类型:</div>
+                            <div class="plugin-types-list">
+                                <el-button
+                                    v-for="pluginType in availablePluginTypes"
+                                    :key="pluginType"
+                                    size="small"
+                                    type="info"
+                                    plain
+                                    class="plugin-type-btn"
+                                    @@click="handleAddPluginType(pluginType)">
+                                    {{ pluginType }}
+                                </el-button>
+                            </div>
+                        </div>
                     </div>
                 </el-form-item>
             </el-form>
@@ -1371,27 +1388,44 @@
             </div>
         </el-form-item>
         <el-form-item label="Function Calls" prop="functionCallNames">
-            <div class="function-call-tags">
-                <el-tag
-                    v-for="tag in agentForm.functionCallNames"
-                    :key="tag"
-                    closable
-                    :disable-transitions="false"
-                    @@close="handleFunctionCallClose(tag)"
-                    style="margin-right: 10px; margin-bottom: 10px;">
-                    {{tag}}
-                </el-tag>
-                <el-input
-                    v-if="functionCallInputVisible"
-                    ref="functionCallInput"
-                    v-model="functionCallInputValue"
-                    class="input-new-tag"
-                    size="small"
-                    @@keyup.enter.native="handleFunctionCallInputConfirm"
-                    @@blur="handleFunctionCallInputConfirm"
-                    style="width: 90px; margin-right: 10px; vertical-align: bottom;">
-                </el-input>
-                <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
+            <div class="function-call-container">
+                <div class="function-call-tags">
+                    <el-tag
+                        v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
+                        :key="tag"
+                        closable
+                        :disable-transitions="false"
+                        @@close="handleFunctionCallClose(tag)"
+                        class="function-call-tag">
+                        {{tag}}
+                    </el-tag>
+                    <el-input
+                        v-if="functionCallInputVisible"
+                        ref="functionCallInput"
+                        v-model="functionCallInputValue"
+                        class="input-new-tag"
+                        size="small"
+                        @@keyup.enter.native="handleFunctionCallInputConfirm"
+                        @@blur="handleFunctionCallInputConfirm">
+                    </el-input>
+                    <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
+                </div>
+                
+                <div class="plugin-types-container" v-if="availablePluginTypes.length">
+                    <div class="plugin-types-title">可用插件类型:</div>
+                    <div class="plugin-types-list">
+                        <el-button
+                            v-for="pluginType in availablePluginTypes"
+                            :key="pluginType"
+                            size="small"
+                            type="info"
+                            plain
+                            class="plugin-type-btn"
+                            @@click="handleAddPluginType(pluginType)">
+                            {{ pluginType }}
+                        </el-button>
+                    </div>
+                </div>
             </div>
         </el-form-item>
     </el-form>
