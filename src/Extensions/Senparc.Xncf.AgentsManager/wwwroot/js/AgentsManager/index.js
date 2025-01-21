@@ -2425,7 +2425,7 @@ var app = new Vue({
             try {
                 const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetPluginTypes');
                 if (res?.data?.success) {
-                    this.pluginTypes = Object.keys(res.data.data || {}).sort();
+                    this.pluginTypes = res.data.data || [];
                 }
             } catch (error) {
                 console.error('获取插件类型失败:', error);
