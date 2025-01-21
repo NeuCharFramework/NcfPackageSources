@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
@@ -116,6 +117,10 @@ namespace Senparc.Xncf.AgentsManager
             {
                 FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
             });
+
+            var aiPlugins = AIPluginHub.Instance;
+            aiPlugins.Add(typeof(CrawlPlugin));
+
             return base.UseXncfModule(app, registerService);
         }
     }

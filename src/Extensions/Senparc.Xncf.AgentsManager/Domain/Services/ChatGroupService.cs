@@ -15,6 +15,7 @@ using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
@@ -348,11 +349,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
 
-            IAgent carwlAgent = null;
+            var aiPlugins = AIPluginHub.Instance;
 
             foreach (var groupMember in groupMemebers)
             {
-                var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);
+                var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);//TODO: + .ToDto<>()
                 if (!agentTemplate.Enable)
                 {
                     logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
@@ -368,27 +369,41 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
                 var itemKernel = kernel;
-                var hasFunctionCalls = agentTemplate.FunctionCallNames.IsNullOrEmpty() 
+                var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
                                         ? new string[] { }
-                                        : agentTemplate.FunctionCallNames.Split(',');
+                                        : agentTemplateDto.FunctionCallNames.Split(',');
                 if (personality)
                 {
                     var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
                     var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
-                                .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
+                                .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + groupMember.UID)
                                 .BuildKernel();
 
                     if (hasFunctionCalls.Length > 0)
                     {
-                        //添加 Plugin
+                        //添加 Plugins
                         foreach (var functionCall in hasFunctionCalls)
-                        {   
-                            var functionCallType = Type.GetType(functionCall);
-                            var functionName = functionCallType.Name;
-                            var plugin = ServiceProvider.GetService(functionCallType);
-                            var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
-                            //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
-                            //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
+                        {
+                            try
+                            {
+                                var functionCallType = aiPlugins.GetPluginType(functionCall, true);
+
+                                if (functionCallType == null)
+                                {
+                                    throw new NcfExceptionBase($"导入 Plugin 失败，FunctionCall 名称不存在：{functionCall}");
+                                }
+
+                                var functionName = functionCallType.Name;
+                                var plugin = services.GetService(functionCallType);
+                                var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
+                                //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+                                //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
+                            }
+                            catch (Exception ex)
+                            {
+                                SenparcTrace.SendCustomLog("导入 Plugin 失败", ex.Message);
+                                Console.WriteLine(ex);
+                            }
                         }
                     }
 
@@ -476,11 +491,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
                 }
-
-                if (carwlAgent != null)
-                {
-                    graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(carwlAgent);
-                }
             }
 
             var finishedGraph = graphConnector.Finish();
@@ -499,7 +509,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 //      maxRound: 10);
 
                 await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
-      maxRound: 20))
+            maxRound: 20))
                 {
                     // process exit
                     if (message.GetContent()?.Contains("exit") is true)

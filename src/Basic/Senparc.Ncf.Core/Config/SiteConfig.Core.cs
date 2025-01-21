@@ -122,6 +122,10 @@ namespace Senparc.Ncf.Core.Config
         /// 是否是单元测试
         /// </summary>
         public static readonly bool IsUnitTest = false;
+        ///// <summary>
+        ///// AI 插件注册
+        ///// </summary>
+        //public static readonly AIPlugins AIPlugins = new AIPlugins();
 
         /// <summary>
         /// 是否正在进行安装，如果是，则不抛出监测安装的异常

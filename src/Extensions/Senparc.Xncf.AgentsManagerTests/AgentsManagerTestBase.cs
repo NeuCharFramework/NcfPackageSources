@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.UnitTestExtension;
 using Senparc.Ncf.UnitTestExtension.Entities;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AIKernel.Domain.Services;
@@ -148,7 +151,7 @@ namespace Senparc.Xncf.AgentsManagerTests
             var agentTemplateService = serviceProvider.GetRequiredService<AgentsTemplateService>();
             var agentTemplate = new AgentTemplate("产品经理机器人", "你是一名产品经理，负责管理和协调软件开发项目，当需要获取外部资源时，你可以向其他人寻求帮助。", true, "", promptItem.FullVersion, HookRobotType.None, "", "");
             await agentTemplateService.SaveObjectAsync(agentTemplate);
-            var agentTemplate2 = new AgentTemplate("爬虫机器人", "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。", true, "", promptItem2.FullVersion, HookRobotType.None, "", "");
+            var agentTemplate2 = new AgentTemplate("爬虫机器人", "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。", true, "", promptItem2.FullVersion, HookRobotType.None, "", "", typeof(CrawlPlugin).FullName);
             await agentTemplateService.SaveObjectAsync(agentTemplate2);
 
             //聊天组
@@ -183,11 +186,11 @@ namespace Senparc.Xncf.AgentsManagerTests
             var promptRangeService = _serviceProvider.GetRequiredService<PromptRangeService>();
             var promptItemService = _serviceProvider.GetRequiredService<PromptItemService>();
             var promptResultService = _serviceProvider.GetRequiredService<PromptResultService>();
-
+            
             // 验证 AIModel
             var aiModel = await aiModelService.GetObjectAsync(z => true);
             Assert.IsNotNull(aiModel);
-            Assert.AreEqual("测试", aiModel.Note );
+            Assert.AreEqual("测试", aiModel.Note);
 
             // 验证 PromptRange
             var promptRange = await promptRangeService.GetObjectAsync(z => z.Alias == "Agents靶场");
@@ -199,6 +202,7 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.AreEqual(2, promptItems.Count);
             Assert.IsTrue(promptItems.Any(z => z.NickName == "项目经理"));
             Assert.IsTrue(promptItems.Any(z => z.NickName == "爬虫"));
+
 
             // 验证 PromptResult
             var promptResults = await promptResultService.GetFullListAsync(z => true);
@@ -215,6 +219,16 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.AreEqual(2, templates.Count);
             Assert.IsTrue(templates.Any(z => z.Name == "产品经理机器人"));
             Assert.IsTrue(templates.Any(z => z.Name == "爬虫机器人"));
+
+            var robotTemplate = templates[1];
+            Console.WriteLine("爬虫 FunctionCall：" + robotTemplate.FunctionCallNames);
+
+            var functionCallNames = robotTemplate.FunctionCallNames.Split(',');
+            Assert.AreEqual("Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.CrawlPlugin", functionCallNames[0]);
+
+            var aiPlugin = AIPluginHub.Instance;
+            var functionCall = aiPlugin.GetPluginType(functionCallNames[0], true);
+            Assert.IsNotNull(functionCall);
 
             // 验证 ChatGroup
             var chatGroup = await chatGroupService.GetObjectAsync(z => z.Name == "测试项目");

@@ -13,6 +13,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.InMemory;
 using Senparc.Ncf.UnitTestExtension.Database;
 using Senparc.Ncf.UnitTestExtension.Entities;
+using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.SystemCore.Domain.Database;
 using System;
 using System.Collections.Concurrent;
@@ -82,6 +83,8 @@ namespace Senparc.Ncf.UnitTestExtension
 
             var app = builder.Build();
             app.UseNcfDatabase<InMemoryDatabaseConfiguration>();
+
+            app.UseXncfModules(registerService);
 
             #region 填充种子数据
             //执行前准备
