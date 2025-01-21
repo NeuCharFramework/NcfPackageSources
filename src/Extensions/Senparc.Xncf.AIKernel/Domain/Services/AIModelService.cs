@@ -198,7 +198,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
             var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
             var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey", maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
-            var iWantToRun = chatConfig.iWantToRun;
+            var iWantToRun = chatConfig;
 
             var request = iWantToRun.CreateRequest(prompt);
             var aiResult = await iWantToRun.RunAsync(request);
