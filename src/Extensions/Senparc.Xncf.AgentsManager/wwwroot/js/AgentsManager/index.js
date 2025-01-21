@@ -2400,10 +2400,12 @@ var app = new Vue({
             if (inputValue) {
                 if (!this.agentForm.functionCallNames) {
                     this.agentForm.functionCallNames = inputValue;
+                    this.functionCallTags = [inputValue];
                 } else {
                     const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
                     if (!currentNames.includes(inputValue)) {
                         this.agentForm.functionCallNames = [...currentNames, inputValue].join(',');
+                        this.functionCallTags = [...currentNames, inputValue];
                     }
                 }
             }
@@ -2419,6 +2421,7 @@ var app = new Vue({
                 currentNames.splice(index, 1);
                 this.agentForm.functionCallNames = currentNames.join(',');
             }
+            this.functionCallTags = currentNames;
         },
         // 获取插件类型列表
         async getPluginTypes() {
@@ -2437,12 +2440,14 @@ var app = new Vue({
         handleAddPluginType(pluginType) {
             if (!this.agentForm.functionCallNames) {
                 this.agentForm.functionCallNames = pluginType;
+                this.functionCallTags = [pluginType];
             } else {
                 // 将现有值分割为数组
                 const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
                 if (!currentNames.includes(pluginType)) {
                     // 添加新值并用逗号连接
                     this.agentForm.functionCallNames = [...currentNames, pluginType].join(',');
+                    this.functionCallTags = [...currentNames, pluginType];
                 }
             }
         },
