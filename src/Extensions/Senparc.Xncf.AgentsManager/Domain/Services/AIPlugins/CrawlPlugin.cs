@@ -20,7 +20,7 @@ using Senparc.CO2NET.Extensions;
 using System.IO;
 using Senparc.AI.Entities;
 
-namespace Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions
+namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 {
     public enum ContentType
     {
@@ -30,12 +30,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions
 
     public class CrawlPlugin
     {
-        private readonly IWantToRun _iWantToRun;
+        //private readonly IWantToRun _iWantToRun;
         private readonly IServiceProvider _serviceProvider;
 
-        public CrawlPlugin(IWantToRun iWantToRun, IServiceProvider serviceProvider)
+        public CrawlPlugin(/*IWantToRun iWantToRun, */IServiceProvider serviceProvider)
         {
-            this._iWantToRun = iWantToRun;
+            //this._iWantToRun = iWantToRun;
             this._serviceProvider = serviceProvider;
         }
 
@@ -43,21 +43,29 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIFuntions
         public async Task<string> Crawl(
             [Description("爬取网址")]
             string url,
+            [Description("最大爬取深度")]
+            int maxDeepth,
+            [Description("最大爬取页数")]
+            int maxPageCount,
             [Description("提问")]
             string question
          )
         {
             List<KeyValuePair<ContentType, string>> contentMap = new List<KeyValuePair<ContentType, string>>();
 
+            Console.WriteLine($"Crawl 爬取：{url}，深度：{maxDeepth}，最大页面数：{maxPageCount}");
+
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: _serviceProvider,
                                 urls: new[] { url },
                                 maxThread: 20,
                                 maxBuildMinutesForSingleSite: 5,
-                                maxDeep: 2,
-                                maxPageCount: 30);
+                                maxDeep: maxDeepth,
+                                maxPageCount: maxPageCount);
 
             var senMapicResult = senMapicEngine.Build();
+
+            return senMapicResult.Values.FirstOrDefault()?.Html;
 
             foreach (var item in senMapicResult)
             {

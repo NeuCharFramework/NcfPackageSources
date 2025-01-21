@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
@@ -11,6 +12,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
@@ -32,7 +34,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.2.15";//必须填写版本号
+        public override string Version => "0.2.18";//必须填写版本号
 
         public override string MenuName => "Agents 管理模块";
 
@@ -94,11 +96,15 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
             });
 
+            //Service DI
             services.AddScoped<AgentsTemplateService>();
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
+
+            //AI Plugins DI
+            services.AddScoped<CrawlPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
@@ -111,10 +117,17 @@ namespace Senparc.Xncf.AgentsManager
             {
                 FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
             });
+
+            var aiPlugins = AIPluginHub.Instance;
+            aiPlugins.Add(typeof(CrawlPlugin));
+
             return base.UseXncfModule(app, registerService);
         }
     }
 }
+
+
+
 
 
 

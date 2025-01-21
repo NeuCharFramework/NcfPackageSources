@@ -43,6 +43,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             chatTask.ChangeStatus(status);
             await base.SaveObjectAsync(chatTask);
+
+            //TODO 检查是否所有任务已经完成，如果完成则设置 ChatGroup 状态为闲置状态
         }
 
         /// <summary>

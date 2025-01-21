@@ -17,7 +17,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -123,6 +123,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
 
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("FunctionCallNames")
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("HookRobotParameter")
                         .HasColumnType("NVARCHAR2(2000)");

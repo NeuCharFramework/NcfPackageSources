@@ -53,6 +53,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [Description("外界平台参数||通常为 Key 之类的参数")]
         public string HookRobotParameter { get; set; }
 
+        [Description("Function Calls||Function Calls 名称列表，多个用逗号分隔")]
+        public string FunctionCallNames { get; set; }
+
         public string GetySystemMessagePromptCode()
         {
             var selectionValue = SystemMessagePromptCodeSelection.SelectedValues.FirstOrDefault();
