@@ -1,14 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.DynamicData.Domain.Models.Extensions;
-using Senparc.Xncf.DynamicData.Domain.Services;
 using Senparc.Xncf.DynamicDataTests;
 using Senparc.Xncf.DynamicDataTests.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
 {
@@ -43,10 +36,10 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             Assert.AreEqual(4, columnTemplate.TableId);
 
             Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "Id"));
-            Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "Flag")); 
+            Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "Flag"));
             Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "Guid"));
             Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "UserName"));
-            Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "Password")); 
+            Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "Password"));
             Assert.IsTrue(columnTemplate.Exists(z => z.ColumnName == "LastLoginTime"));
 
         }

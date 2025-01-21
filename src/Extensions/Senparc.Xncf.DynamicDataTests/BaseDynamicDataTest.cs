@@ -19,21 +19,21 @@ namespace Senparc.Xncf.DynamicDataTests
 
             // TableMetadata
             List<TableMetadata> tableMetadataList = new() {
-                     new("User","ÓÃ»§±í"){
+                     new("User","ï¿½Ã»ï¿½ï¿½ï¿½"){
                           ColumnMetadatas=new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"UserName","Text",false,""),
                                new ColumnMetadata(0,"Balance","Float",false,"0.0"),
                           }
                          },
-                         new("Product","²úÆ·±í"){
+                         new("Product","ï¿½ï¿½Æ·ï¿½ï¿½"){
                           ColumnMetadatas = new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"Name","Text",false,""),
                                new ColumnMetadata(0,"Price","Float",false,"0.0"),
                           }
                          },
-                         new("Order","¶©µ¥±í"){
+                         new("Order","ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"){
                           ColumnMetadatas = new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"UserGuid","Text",false,""),
@@ -53,13 +53,13 @@ namespace Senparc.Xncf.DynamicDataTests
             var tableDataService = serviceProvider.GetRequiredService<TableDataService>();
             var columnMetadataService = serviceProvider.GetRequiredService<ColumnMetadataService>();
 
-            // User ±í
+            // User ï¿½ï¿½
             var userTableColumns = await columnMetadataService.GetColumnDtos(1);
             var tableDataDtos = new List<TableDataDto>();
 
-            //´´ÔìÒ»Ð©Êý¾Ý
+            //ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½
 
-            /* User ±í
+            /* User ï¿½ï¿½
              * | Column   | Value  |
              * |----------|--------|
              * | Guid     |        |

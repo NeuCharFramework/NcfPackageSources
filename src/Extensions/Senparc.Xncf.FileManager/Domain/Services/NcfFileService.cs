@@ -107,19 +107,40 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         }
 
         /// <summary>
-        /// 异步上传文件（待实现）
+        /// 异步上传文件
         /// </summary>
         /// <param name="file">上传的文件</param>
         /// <returns>文件实体</returns>
         public async Task<NcfFile> UploadFileAsync(IFormFile file)
         {
-            // TODO: Implement file upload logic
-            var ncfFile = new NcfFile 
+            // 确保目录存在
+            var datePath = Path.Combine(DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString("00"));
+            var fullPath = Path.Combine(_baseFilePath, datePath);
+            Directory.CreateDirectory(fullPath);
+
+            // 生成存储文件名
+            var storageFileName = Guid.NewGuid().ToString("N");
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+            // 保存文件
+            var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
+            using (var stream = new FileStream(physicalPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // 创建数据库记录
+            var ncfFile = new NcfFile
             {
                 FileName = file.FileName,
-                FilePath = "path/to/save", // Implement actual path logic
-                FileSize = file.Length
+                StorageFileName = storageFileName,
+                FilePath = datePath,
+                FileSize = file.Length,
+                FileExtension = fileExtension,
+                FileType = GetFileType(fileExtension),
+                UploadTime = DateTime.Now
             };
+
             await SaveObjectAsync(ncfFile);
             return ncfFile;
         }

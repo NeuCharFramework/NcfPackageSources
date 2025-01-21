@@ -15,7 +15,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
                 {
@@ -114,6 +114,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("FunctionCallNames")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("HookRobotParameter")
                         .HasColumnType("TEXT");

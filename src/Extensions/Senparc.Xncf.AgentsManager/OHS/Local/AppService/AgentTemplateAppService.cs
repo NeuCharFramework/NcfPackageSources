@@ -57,7 +57,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
                     request.Description, promptCode,
-                    Enum.Parse<HookRobotType>(request.HookRobotType.SelectedValues.FirstOrDefault()), request.HookRobotParameter);
+                    Enum.Parse<HookRobotType>(request.HookRobotType.SelectedValues.FirstOrDefault()), request.HookRobotParameter, request.FunctionCallNames);
 
                 await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 

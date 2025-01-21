@@ -164,6 +164,7 @@ namespace Senparc.Ncf.Core.Cache
 
             //}
         }
+
         #region 同步方法
 
         public override TValue Update()
@@ -257,7 +258,6 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         #endregion
-
 
         #region 异步方法
 

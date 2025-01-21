@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.2</Version>
+    <Version>0.1.2.1</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -33,11 +33,10 @@
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.2-preview1" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.2-preview1+b9d167a60371caa072da22971f223e526a73fb3c" />
-    <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.20.3.1-preview1+24b893e3122fbcd76382db75ef8cc65bfdc279ec" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>

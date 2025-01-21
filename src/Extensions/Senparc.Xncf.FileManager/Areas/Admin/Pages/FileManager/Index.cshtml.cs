@@ -7,6 +7,8 @@ using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.FileManager.Domain.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
@@ -33,13 +35,32 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(new PagedList<NcfFileDto>(result, page, pageSize, result.TotalCount));
         }
 
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile file)
+        public class FileUploadModel
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded");
+            public IFormFile File { get; set; }
+            public string Description { get; set; }
+        }
 
-            var result = await _fileService.UploadFileAsync(file);
-            return Ok(result);
+        public async Task<IActionResult> OnPostUploadAsync([FromForm] List<IFormFile> files, [FromForm] string[] descriptions)
+        {
+            if (files == null || !files.Any())
+                return BadRequest("No files uploaded");
+
+            var results = new List<NcfFileDto>();
+            
+            for (int i = 0; i < files.Count; i++)
+            {
+                var file = files[i];
+                var description = descriptions?.Length > i ? descriptions[i] : "";
+                
+                if (file.Length > 0)
+                {
+                    var result = await _fileService.UploadFileAsync(file);
+                    results.Add(_fileService.Mapper.Map<NcfFileDto>(result));
+                }
+            }
+
+            return Ok(results);
         }
 
         public async Task<IActionResult> OnPostEditNoteAsync(int id, string note)

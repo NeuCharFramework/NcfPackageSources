@@ -21,12 +21,12 @@ namespace Senparc.Ncf.Service
         public IMapper Mapper { get; set; } //TODO: add in to Wapper
 
         public IRepositoryBase<T> RepositoryBase { get; set; }
-        protected IServiceProvider _serviceProvider;
+        protected IServiceProvider _serviceProvider=> base.ServiceProvider;
 
         public ServiceBase(IRepositoryBase<T> repo, IServiceProvider serviceProvider)
-            : base(repo)
+            : base(repo,serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            //_serviceProvider = serviceProvider;
             RepositoryBase = repo;
             Mapper = _serviceProvider.GetService<IMapper>();//确保 Mapper 中有值
         }
