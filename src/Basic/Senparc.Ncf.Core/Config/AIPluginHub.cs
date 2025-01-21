@@ -88,5 +88,14 @@ namespace Senparc.Ncf.Core
                 return null;
             }
         }
+
+        /// <summary>
+        /// 获取所有 Plugin 类型
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllPluginNames()
+        {
+            return _types.Values.Select(z=>z.FullName).OrderBy(z => z).ToList();
+        }
     }
 }

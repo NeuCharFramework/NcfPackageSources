@@ -303,6 +303,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         }
                     };
                     break;
+                case AiPlatform.DeepSeek:
+                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        Endpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
                 default:
                     throw new NcfExceptionBase($"PromptRange 暂时不支持 {aiSettings.AiPlatform} 类型");
             }

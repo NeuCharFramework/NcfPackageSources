@@ -379,12 +379,27 @@ var app = new Vue({
             functionCallInputVisible: false,
             functionCallInputValue: '',
             functionCallTags: [], // 用于编辑时临时存储标签
+            pluginTypes: [], // 存储所有可用的插件类型
         };
     },
     computed: {
+        // 计算未被选择的插件类型
+        availablePluginTypes() {
+            if (!this.agentForm.functionCallNames) {
+                return this.pluginTypes;
+            }
+            // 将逗号分隔的字符串转换为数组进行比较
+            const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
+            return this.pluginTypes.filter(type => 
+                !currentNames.includes(type)
+            );
+        }
     },
     watch: {},
-    created() { },
+    created() {
+        // 在组件创建时获取插件类型列表
+        this.getPluginTypes();
+    },
     mounted() {
         // 智能体
         if (this.tabsActiveName === 'first') {
@@ -2381,11 +2396,17 @@ var app = new Vue({
 
         // 处理 Function Call 输入确认
         handleFunctionCallInputConfirm() {
-            let inputValue = this.functionCallInputValue;
+            const inputValue = this.functionCallInputValue;
             if (inputValue) {
-                // 确保不重复添加
-                if (!this.functionCallTags.includes(inputValue)) {
-                    this.functionCallTags.push(inputValue);
+                if (!this.agentForm.functionCallNames) {
+                    this.agentForm.functionCallNames = inputValue;
+                    this.functionCallTags = [inputValue];
+                } else {
+                    const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
+                    if (!currentNames.includes(inputValue)) {
+                        this.agentForm.functionCallNames = [...currentNames, inputValue].join(',');
+                        this.functionCallTags = [...currentNames, inputValue];
+                    }
                 }
             }
             this.functionCallInputVisible = false;
@@ -2394,7 +2415,41 @@ var app = new Vue({
 
         // 删除 Function Call 标签
         handleFunctionCallClose(tag) {
-            this.functionCallTags.splice(this.functionCallTags.indexOf(tag), 1);
+            const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
+            const index = currentNames.indexOf(tag);
+            if (index > -1) {
+                currentNames.splice(index, 1);
+                this.agentForm.functionCallNames = currentNames.join(',');
+            }
+            this.functionCallTags = currentNames;
+        },
+        // 获取插件类型列表
+        async getPluginTypes() {
+            try {
+                const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetPluginTypes');
+                if (res?.data?.success) {
+                    this.pluginTypes = res.data.data || [];
+                }
+            } catch (error) {
+                console.error('获取插件类型失败:', error);
+                this.$message.error('获取插件类型失败');
+            }
+        },
+
+        // 添加插件类型到 functionCallNames
+        handleAddPluginType(pluginType) {
+            if (!this.agentForm.functionCallNames) {
+                this.agentForm.functionCallNames = pluginType;
+                this.functionCallTags = [pluginType];
+            } else {
+                // 将现有值分割为数组
+                const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
+                if (!currentNames.includes(pluginType)) {
+                    // 添加新值并用逗号连接
+                    this.agentForm.functionCallNames = [...currentNames, pluginType].join(',');
+                    this.functionCallTags = [...currentNames, pluginType];
+                }
+            }
         },
     }
 });

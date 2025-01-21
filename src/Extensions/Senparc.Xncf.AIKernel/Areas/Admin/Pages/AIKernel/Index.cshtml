@@ -44,6 +44,7 @@
                 <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
                 <span v-else-if="scope.row.aiPlatform===128">FastAPI</span>
                 <span v-else-if="scope.row.aiPlatform===256">Ollama</span>
+                <span v-else-if="scope.row.aiPlatform===512">DeepSeek</span>
                 <span v-else type="danger">未知</span>
             </template>
         </el-table-column>
@@ -110,6 +111,7 @@
                     <el-option label="HuggingFace" value="32"></el-option>
                     <el-option label="FastAPI" value="128"></el-option>
                     <el-option label="Ollama" value="256"></el-option>
+                    <el-option label="DeepSeek" value="512"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="模型类型" prop="configModelType">
@@ -134,10 +136,16 @@
                     <el-option label="dall-e-3" value="dall-e-3"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" v-else="addForm.aiPlatform!=='4'" prop="modelId">
+            <el-form-item label="模型名称" v-else-if="addForm.aiPlatform==='512'" prop="modelId">
+                <el-select v-model="addForm.modelId" filterable allow-create default-first-option placeholder="请选择">
+                    <el-option label="deepseek-chat" value="deepseek-chat"></el-option>
+                    <el-option label="deepseek-coder" value="deepseek-coder"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="模型名称" v-else="addForm.aiPlatform!=='4'&&addForm.aiPlatform!=='512'" prop="modelId">
                 <el-input v-model="addForm.modelId"></el-input>
             </el-form-item>
-            <el-form-item label="部署名称" prop="deploymentName">
+            <el-form-item label="部署名称" prop="deploymentName" v-if="addForm.aiPlatform!=='512'">
                 <el-input v-model="addForm.deploymentName"></el-input>
             </el-form-item>
             @* ,[ApiVersion] *@
@@ -145,11 +153,11 @@
                 <el-input v-model="addForm.apiVersion"></el-input>
             </el-form-item>
             @* ,[ApiKey] *@
-            <el-form-item label="ApiKey" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='8'||addForm.aiPlatform==='4'" prop="apiKey">
+            <el-form-item label="ApiKey" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='8'||addForm.aiPlatform==='4'||addForm.aiPlatform==='512'" prop="apiKey">
                 <el-input v-model="addForm.apiKey" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'||addForm.aiPlatform==='128'||addForm.aiPlatform==='256'" prop="endpoint">
-                <el-input v-model="addForm.endpoint"></el-input>
+            <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'||addForm.aiPlatform==='128'||addForm.aiPlatform==='256'||addForm.aiPlatform==='512'" prop="endpoint">
+                <el-input v-model="addForm.endpoint = addForm.aiPlatform==='512' ? 'https://api.deepseek.com' : addForm.endpoint"></el-input>
             </el-form-item>
            <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
                 <el-input v-model="addForm.organizationId" type="password"></el-input>
@@ -183,6 +191,7 @@
                 @*  HuggingFace = 32 *@
                 @*  FastAPI = 128 *@
                 @*  Ollama = 256 *@
+                @*  DeepSeek = 512 *@
                 @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
                 @* use el-select *@
                 <el-select v-model="editForm.aiPlatform" placeholder="请选择">
@@ -192,6 +201,7 @@
                     <el-option label="HuggingFace" value="32"></el-option>
                     <el-option label="FastAPI" value="128"></el-option>
                     <el-option label="Ollama" value="256"></el-option>
+                    <el-option label="DeepSeek" value="512"></el-option>
                  </el-select>
             </el-form-item>
 
@@ -217,9 +227,13 @@
                     <el-option label="gpt-35-turbo-instruct" value="gpt-35-turbo-instruct"></el-option>
                     <el-option label="dall-e-3" value="dall-e-3"></el-option>
                 </el-select>
-                <el-input v-if="editForm.aiPlatform!=='4'" v-model="editForm.modelId"></el-input>
+                <el-select v-if="editForm.aiPlatform==='512'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="请选择">
+                    <el-option label="deepseek-chat" value="deepseek-chat"></el-option>
+                    <el-option label="deepseek-coder" value="deepseek-coder"></el-option>
+                </el-select>
+                <el-input v-if="editForm.aiPlatform!=='4'&&editForm.aiPlatform!=='512'" v-model="editForm.modelId"></el-input>
             </el-form-item>
-            <el-form-item label="部署名称" prop="deploymentName">
+            <el-form-item label="部署名称" prop="deploymentName" v-if="editForm.aiPlatform!=='512'">
                     <el-input v-model="editForm.deploymentName"></el-input>
                 </el-form-item>
                 @* ,[ApiVersion] *@
@@ -227,11 +241,11 @@
                     <el-input v-model="editForm.apiVersion"></el-input>
                 </el-form-item>
                 @* ,[ApiKey] *@
-               <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'" prop="apiKey">
+               <el-form-item label="ApiKey" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='8'||editForm.aiPlatform==='4'||editForm.aiPlatform==='512'" prop="apiKey">
                     <el-input v-model="editForm.apiKey" type="password" placeholder="********"></el-input>
                 </el-form-item>
-                <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'||editForm.aiPlatform==='256'" prop="endpoint">
-                    <el-input v-model="editForm.endpoint"></el-input>
+                <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'||editForm.aiPlatform==='256'||editForm.aiPlatform==='512'" prop="endpoint">
+                    <el-input v-model="editForm.endpoint = editForm.aiPlatform==='512' ? 'https://api.deepseek.com' : editForm.endpoint"></el-input>
                 </el-form-item>
              <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
                     <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
