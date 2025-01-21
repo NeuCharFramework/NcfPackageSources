@@ -269,7 +269,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var task = Task.Factory.StartNew(async () =>
         {
             //base.ServiceProvider = base._serviceProvider;
-            var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope(); //base.ServiceProvider.CreateScope();
+            var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider(true).CreateScope(); //base.ServiceProvider.CreateScope();
             var services = scope.ServiceProvider;
 
             var groupId = request.ChatGroupId;
@@ -456,31 +456,32 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 systemMessage: promptResult.PromptItem.Content);
 
                 var agentMiddleware = agent
-                            .RegisterTextMessageConnector()
-                            .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware(async (a, m, mStr) =>
-                            {
-                                try
-                                {
-                                    AgentTemplatePrintMessageMiddleware.SendWechatMessage
-                               .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
-                                }
-                                catch (Exception ex)
-                                {
-                                    SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
-                                }
+                    .RegisterTextMessageConnector()
+                    .RegisterCustomPrintMessage(
+                    new PrintWechatMessageMiddleware(async (a, m, mStr) =>
+                    {
+                        try
+                        {
+                            AgentTemplatePrintMessageMiddleware.SendWechatMessage
+                                .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
+                        }
+                        catch (Exception ex)
+                        {
+                            SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
+                        }
 
-                                //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
-                                logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
+                        //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
+                        logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
 
-                                //using (var scope = ServiceProvider.CreateScope())//已关闭
-                                using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
-                                {
-                                    var serviceProvider = scope.ServiceProvider;
-                                    var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
-                                    var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, mStr, MessageType.Text, Status.Finished);
-                                    await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
-                                }
-                            }));
+                        //using (var scope = ServiceProvider.CreateScope())//已关闭
+                        using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
+                        {
+                            var serviceProvider = scope.ServiceProvider;
+                            var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
+                            var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, mStr, MessageType.Text, Status.Finished);
+                            await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
+                        }
+                    }));
 
                 if (agentTemplateId == chatGroup.EnterAgentTemplateId)
                 {
