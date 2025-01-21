@@ -1147,7 +1147,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="外接平台参数" prop="hookRobotParameter">
-                    <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
+                    <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写" :disabled="agentForm.hookRobotType === 0"></el-input>
                 </el-form-item>
                 <el-form-item label="Agent 头像" prop="avastar">
                     <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
@@ -1375,7 +1375,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="外接平台参数" prop="hookRobotParameter">
-            <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写"></el-input>
+            <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写" :disabled="agentForm.hookRobotType === 0"></el-input>
         </el-form-item>
         <el-form-item label="Agent 头像" prop="avastar">
             <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
