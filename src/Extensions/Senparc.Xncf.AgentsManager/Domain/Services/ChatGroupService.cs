@@ -338,19 +338,21 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 TopP = 0.5,
             };
 
-            var iWantToRun = _semanticAiHandler.IWantTo(senparcAiSetting)
+            var iWantToRunGlobal = _semanticAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, "JeffreySu")
                             .BuildKernel();
 
-            var kernel = iWantToRun.Kernel;//同一外围 Agent
+
+            IWantToRun iWantToRunAdmin = null;
+            IWantToRun iWantToRunEnter = null;
 
             //作为唯一入口和汇报的关键人（TODO：需要增加一个设置）
             AgentTemplate enterAgentTemplate = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.EnterAgentTemplateId);
 
+
             MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
 
             var aiPlugins = AIPluginHub.Instance;
-
             foreach (var groupMember in groupMemebers)
             {
                 var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);//TODO: + .ToDto<>()
@@ -368,50 +370,58 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
-                var itemKernel = kernel;
-                var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
-                                        ? new string[] { }
-                                        : agentTemplateDto.FunctionCallNames.Split(',');
+                IWantToRun iWantToRunItem = null;
+
+                //判断是否需要个性化模型参数
                 if (personality)
                 {
                     var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
-                    var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
+                    iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
                                 .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + groupMember.UID)
                                 .BuildKernel();
-
-                    if (hasFunctionCalls.Length > 0)
-                    {
-                        //添加 Plugins
-                        foreach (var functionCall in hasFunctionCalls)
-                        {
-                            try
-                            {
-                                var functionCallType = aiPlugins.GetPluginType(functionCall, true);
-
-                                if (functionCallType == null)
-                                {
-                                    throw new NcfExceptionBase($"导入 Plugin 失败，FunctionCall 名称不存在：{functionCall}");
-                                }
-
-                                var functionName = functionCallType.Name;
-                                var plugin = services.GetService(functionCallType);
-                                var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
-                                //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
-                                //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
-                            }
-                            catch (Exception ex)
-                            {
-                                SenparcTrace.SendCustomLog("导入 Plugin 失败", ex.Message);
-                                Console.WriteLine(ex);
-                            }
-                        }
-                    }
-
-                    itemKernel = iWantToRunItem.Kernel;
                 }
 
+                iWantToRunItem ??= _semanticAiHandler.IWantTo(senparcAiSetting)
+                               .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
+                               .BuildKernel();
+
+                //判断是否需要 Function Call
+
+                var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
+                                        ? new string[] { }
+                                        : agentTemplateDto.FunctionCallNames.Split(',');
+
+                if (hasFunctionCalls.Length > 0)
+                {
+                    //添加 Plugins
+                    foreach (var functionCall in hasFunctionCalls)
+                    {
+                        try
+                        {
+                            var functionCallType = aiPlugins.GetPluginType(functionCall, true);
+
+                            if (functionCallType == null)
+                            {
+                                throw new NcfExceptionBase($"导入 Plugin 失败，FunctionCall 名称不存在：{functionCall}");
+                            }
+
+                            var functionName = functionCallType.Name;
+                            var plugin = services.GetService(functionCallType);
+                            var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
+                            //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+                            //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
+                        }
+                        catch (Exception ex)
+                        {
+                            SenparcTrace.SendCustomLog("导入 Plugin 失败", ex.Message);
+                            Console.WriteLine(ex);
+                        }
+                    }
+                }
+
+                //设置 Agent
                 SemanticKernelAgent agent = new SemanticKernelAgent(
-                                kernel: itemKernel,
+                                kernel: iWantToRunItem.Kernel,
                                 name: agentTemplate.Name,
                                 systemMessage: promptResult.PromptItem.Content);
 
@@ -442,11 +452,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 }
                             }));
 
-                if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
+                if (groupMember.AgentTemplateId == chatGroup.EnterAgentTemplateId)
                 {
                     //TODO：添加指定入口对接人员，参考群主
                     enterAgentTemplate = agentTemplate;
                     enterAgent = agentMiddleware;
+                    iWantToRunEnter = iWantToRunItem;
+                }
+                else if (groupMember.AgentTemplateId == chatGroup.AdminAgentTemplateId)
+                {
+                    iWantToRunAdmin = iWantToRunItem;
                 }
 
                 agentsMiddlewares.Add(agentMiddleware);
@@ -463,18 +478,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             // Create the group admin
             var adminAgenttemplate = await agentTemplateService.GetObjectAsync(x => x.Id == chatGroup.AdminAgentTemplateId);
             var adminPromptResult = await promptItemService.GetWithVersionAsync(adminAgenttemplate.PromptCode, isAvg: true);
-            var adminKernel = kernel;
+
             if (personality)
             {
                 var semanticAiHandler = new SemanticAiHandler(adminPromptResult.SenparcAiSetting);
                 var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, adminAgenttemplate.Name)
                             .BuildKernel();
-                adminKernel = iWantToRunItem.Kernel;
             }
 
             var admin = new SemanticKernelAgent(
-                kernel: kernel,
+                kernel: iWantToRunAdmin.Kernel,
                 name: "admin"/*adminAgenttemplate.Name*//*,
                     systemMessage: adminPromptResult.PromptItem.Content*/)
                 .RegisterMessageConnector();
