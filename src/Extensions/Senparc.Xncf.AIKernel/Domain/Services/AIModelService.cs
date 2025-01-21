@@ -168,6 +168,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         Endpoint = aiModel.Endpoint,
                     };
                     break;
+                case AiPlatform.DeepSeek:
+                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        Endpoint = aiModel.Endpoint,
+                        ModelName = modelName,
+                    };
+                    break;
                 default:
                     throw new NcfExceptionBase($"Senparc.Xncf.AIKernel 暂时不支持 {aiSettings.AiPlatform} 类型");
             }
@@ -222,10 +230,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 {
                     AiPlatform = AiPlatform.NeuCharAI,
                     ApiKey = apiKey,
-                    Alias = neucharModel.Name,
+                    Alias = $"NeuChar-{neucharModel.Name}",
                     DeploymentName = neucharModel.Name,
                     ModelId = neucharModel.Name,
-                    ApiVersion = "2022-12-01",
+                    ApiVersion = model.AiPlatform == AiPlatform.AzureOpenAI || model.AiPlatform == AiPlatform.OpenAI
+                                    ? "2024-05-13"
+                                    : "",
                     Endpoint = $"https://www.neuchar.com/{developerId}",
                     ConfigModelType = Models.ConfigModelType.Chat,
                     Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
