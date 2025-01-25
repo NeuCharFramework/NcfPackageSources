@@ -94,9 +94,8 @@ namespace Senparc.Ncf.XncfBase
         {
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
-            Console.WriteLine("NeuCharFramework Engine Starts");
-            Console.WriteLine();
-            Console.WriteLine("The Global Health Scan Starts");
+
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip("\t\t启动前自检开始", null, false);
 
             var scanTypesCount = 0;
             var hideTypeCount = 0;
@@ -277,7 +276,7 @@ namespace Senparc.Ncf.XncfBase
                                 }
 
                                 if (multipleDatabaseType == null)
-                                { 
+                                {
                                     Console.WriteLine($"MultipleDatabaseType 为 null（轮询${type.FullName}）");
                                 }
                                 else if (multipleDatabaseType == MultipleDatabaseType.InMemory)

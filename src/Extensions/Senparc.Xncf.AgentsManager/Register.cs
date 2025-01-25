@@ -105,6 +105,8 @@ namespace Senparc.Xncf.AgentsManager
 
             //AI Plugins DI
             services.AddScoped<CrawlPlugin>();
+            services.AddScoped<FormatorPlugin>();
+            services.AddScoped<TranslatorPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
@@ -120,6 +122,8 @@ namespace Senparc.Xncf.AgentsManager
 
             var aiPlugins = AIPluginHub.Instance;
             aiPlugins.Add(typeof(CrawlPlugin));
+            aiPlugins.Add(typeof(FormatorPlugin));
+            aiPlugins.Add(typeof(TranslatorPlugin));
 
             return base.UseXncfModule(app, registerService);
         }

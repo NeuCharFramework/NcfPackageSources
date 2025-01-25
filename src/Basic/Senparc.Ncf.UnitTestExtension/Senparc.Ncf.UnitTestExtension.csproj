@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.3.10-preview1</Version>
+		<Version>0.3.11-preview1</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -37,6 +37,7 @@
 			[2024-12-29] v0.3.8-preview1 update unit test init progress, support EnviromentName for appsettings.json
 			[2024-12-31] v0.3.9-preview1 support null DataList in ctor() in UnitTestExtension
 					[2025-01-19] v0.3.10-preview1 update UnitTestSeedDatabase, change Execute method name to ExecuteAsync
+			[2025-01-25] v0.3.11-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
