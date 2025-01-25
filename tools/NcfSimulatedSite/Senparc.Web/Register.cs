@@ -11,6 +11,7 @@ using Senparc.Xncf.AreasBase;
 
 namespace Senparc.Web
 {
+  
     /// <summary>
     /// 全局注册
     /// </summary>
@@ -23,7 +24,7 @@ namespace Senparc.Web
             StartTime = SystemTime.Now.DateTime;
 
             //激活 Xncf 扩展引擎（必须）
-            var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin"});
+            var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin" });
             //如果不需要启用 Areas，可以只使用 services.StartEngine() 或 services.StartEngine() 方法
 
             Console.WriteLine("============ logMsg =============");
@@ -70,6 +71,9 @@ namespace Senparc.Web
         public static void UseNcf<TDatabaseConfiguration>(this WebApplication app)
             where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
+            app.UseMiddleware<PostBodyLoggingMiddleware>();
+
+
             //注入DI对象
             app.UseSenparcMvcDI();
 
@@ -178,6 +182,32 @@ namespace Senparc.Web
                 //加入每次触发Log后需要执行的代码
             };
         }
+    }
 
+    public class PostBodyLoggingMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public PostBodyLoggingMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            context.Request.EnableBuffering();
+
+            if (context.Request.Method == HttpMethods.Post)
+            {
+                var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
+                context.Request.Body.Position = 0;
+
+                Console.WriteLine("URL:" + context.Request.Host.Value);
+                Console.WriteLine("Body:" + body);
+                Console.WriteLine();
+            }
+
+            await _next(context);
+        }
     }
 }

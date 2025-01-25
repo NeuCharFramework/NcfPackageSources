@@ -65,7 +65,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
             var senMapicResult = senMapicEngine.Build();
 
-            return senMapicResult.Values.FirstOrDefault()?.Html;
+            return senMapicResult.Values.FirstOrDefault()?.MarkDownHtmlContent;
 
             foreach (var item in senMapicResult)
             {
