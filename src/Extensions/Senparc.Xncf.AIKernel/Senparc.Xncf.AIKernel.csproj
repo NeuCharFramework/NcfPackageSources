@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.12.8.2-preview1</Version>
+		<Version>0.12.9-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -45,6 +45,7 @@
 			[2024-11-28] v0.12.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
 			[2024-12-27] v0.12.4-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.12.8-preview1 Update Agents functions, support for function calling
+			[2025-01-28] v0.12.9-preview1 update Senparc.AI
 </PackageReleaseNotes>
 		<PackageIcon>icon.jpg</PackageIcon>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -54,7 +55,7 @@
 		<OutputPath>..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.22.0" />
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.22.1" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>
