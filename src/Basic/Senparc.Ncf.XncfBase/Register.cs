@@ -95,7 +95,7 @@ namespace Senparc.Ncf.XncfBase
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
 
-            Senparc.Ncf.Core.VersionManager.ShowSuccessTip("\t\t启动前自检开始", null, false);
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t启动前自检开始 {SystemTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}", null, false);
 
             var scanTypesCount = 0;
             var hideTypeCount = 0;

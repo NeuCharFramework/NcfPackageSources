@@ -190,7 +190,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate)
         {
             if (senparcAiSetting == null)
             {
@@ -205,7 +205,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             };
 
             var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey", maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
+            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey",
+                 chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
+                 maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
             var iWantToRun = chatConfig;
 
             var request = iWantToRun.CreateRequest(prompt);
