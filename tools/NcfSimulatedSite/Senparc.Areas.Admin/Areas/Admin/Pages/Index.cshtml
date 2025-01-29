@@ -86,7 +86,7 @@
 
                 /* 模块卡片样式优化 */
 #xncf-modules-area .xncf-item .box-card {
-    height: 150px;
+    height: 160px;
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -99,19 +99,39 @@
 
 /* 模块图标样式优化 */
 .component-item {
-    text-align: center;
-    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    height: 100%;
 }
 
 .component-item .icon {
     font-size: 40px;
     color: #8c52ff;
     transition: all 0.3s ease;
+    margin-right: 15px;
+    flex-shrink: 0;
 }
+
+.component-item .description {
+    flex: 1;
+    font-size: 13px;
+    color: #666;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 1.5;
+}
+
+
 
 #xncf-modules-area .xncf-item .box-card:hover .icon {
     transform: scale(1.1);
 }
+
+
 
 /* 版本号样式优化 */
 .xncf-item .version {
@@ -237,6 +257,7 @@
                                 </div>
                                 <div class="component-item">
                                     <i :class="[item.icon, 'icon']"></i>
+                                    <div class="description">{{item.description || '暂无描述'}}</div>
                                 </div>
                             </el-card>
                         </a>
