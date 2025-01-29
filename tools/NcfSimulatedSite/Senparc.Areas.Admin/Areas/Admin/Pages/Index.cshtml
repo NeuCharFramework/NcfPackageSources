@@ -9,35 +9,36 @@
     <style>
         .xncf-stat-item {
             position: relative;
-            display: block;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border: 1px solid #E4E4E4;
-            overflow: hidden;
-            padding-bottom: 5px;
+            padding: 15px;
+            height: 140px;
             border-radius: 5px;
-            background-clip: padding-box;
             background: #FFF;
             transition: all 300ms ease-in-out;
-            padding-left: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
             .xncf-stat-item .icon {
-                font-size: 60px;
+                font-size: 45px;
                 color: #BAB8B8;
                 position: absolute;
                 right: 20px;
-                top: -5px;
+                top: 50%;
+                transform: translateY(-50%);
             }
 
             .xncf-stat-item .count {
-                font-size: 38px;
+                font-size: 32px;
                 font-weight: bold;
                 line-height: 1.65857;
             }
 
             .xncf-stat-item .tit {
                 color: #BAB8B8;
-                font-size: 24px;
+                font-size: 18px;
             }
 
             .xncf-stat-item p {
@@ -61,7 +62,7 @@
             }
 
         .box-card {
-            margin-top: 20px
+            margin-top: 0;
         }
 
             .box-card:hover {
@@ -165,8 +166,12 @@
 
 /* 响应式布局优化 */
 @@media screen and (max-width: 1200px) {
-    #xncf-modules-area .el-col-6 {
-        width: 33.33%;
+    .xncf-stat-item, .el-main .box-card {
+        height: 120px;
+    }
+    
+    .charts-container {
+        height: 100px;
     }
 }
 
@@ -181,6 +186,53 @@
         width: 100%;
     }
 }
+
+/* 图表容器样式 */
+.charts-container {
+    height: 120px;
+    width: 100%;
+    position: relative;
+}
+
+/* 确保行间距一致 */
+.el-row {
+    margin: 0 !important;
+}
+
+/* 调整网格间距 */
+.el-row--flex {
+    margin: 0 -10px;
+}
+
+/* 调整内容区域padding */
+.el-main {
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* 确保卡片内容对齐 */
+.el-card__body {
+    padding: 10px;
+    height: calc(100% - 20px);
+}
+
+/* 图表卡片样式 */
+.el-main .box-card {
+    height: 140px;
+    margin: 0;
+    background: #FFF;
+}
+
+/* 确保图表区域背景色正确 */
+.el-card {
+    background: #FFF !important;
+    border: 1px solid #E4E4E4;
+}
+
+/* 调整网格间距 */
+.el-col {
+    padding: 0 10px;
+}
     </style>
 }
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -191,68 +243,78 @@
         <el-header class="module-header">
             <span class="start-title"><span class="module-header-v">NeuCharFramework 管理员后台</span></span>
         </el-header>
-        <el-main></el-main>
+        <el-main>
+            <el-row :gutter="20">
+                <!-- 左侧统计数据 2x2 布局 -->
+                <el-col :span="8">
+                    <el-row :gutter="10">
+                        <!-- 第一行 -->
+                        <el-col :span="12">
+                            <a href="~/Admin/XncfModule/Index">
+                                <div class="grid-content xncf-stat-item">
+                                    <span class="count">{{xncfStat.installedXncfCount || 0}}</span>
+                                    <div class="icon">
+                                        <i class="fa fa-caret-square-o-right"></i>
+                                    </div>
+                                    <p class="tit">已安装模块</p>
+                                </div>
+                            </a>
+                        </el-col>
+                        <el-col :span="12">
+                            <a href="~/Admin/XncfModule/Index">
+                                <div class="grid-content xncf-stat-item">
+                                    <span class="count">{{xncfStat.updateVersionXncfCount || 0}}</span>
+                                    <div class="icon">
+                                        <i class="fa fa-comments-o"></i>
+                                    </div>
+                                    <p class="tit">待更新模块</p>
+                                </div>
+                            </a>
+                        </el-col>
+                        <!-- 第二行 -->
+                        <el-col :span="12">
+                            <a href="~/Admin/XncfModule/Index">
+                                <div class="grid-content xncf-stat-item">
+                                    <span class="count">{{xncfStat.newXncfCount || 0}}</span>
+                                    <div class="icon">
+                                        <i class="fa fa-sort-amount-desc"></i>
+                                    </div>
+                                    <p class="tit">发现新模块</p>
+                                </div>
+                            </a>
+                        </el-col>
+                        <el-col :span="12">
+                            <a href="~/Admin/XncfModule/Index">
+                                <div class="grid-content xncf-stat-item">
+                                    <span class="count">{{xncfStat.missingXncfCount || 0}}</span>
+                                    <div class="icon">
+                                        <i class="fa fa-check-square-o"></i>
+                                    </div>
+                                    <p class="tit">模块异常</p>
+                                </div>
+                            </a>
+                        </el-col>
+                    </el-row>
+                </el-col>
+                
+                <!-- 右侧图表区域 -->
+                <el-col :span="16">
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-card class="box-card">
+                                <div id="firstChart" class="charts-container"></div>
+                            </el-card>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-card class="box-card">
+                                <div id="secondChart" class="charts-container"></div>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </el-main>
     </el-container>
-    <el-row :gutter="20">
-        <el-col :span="6">
-            <a href="~/Admin/XncfModule/Index">
-                <div class="grid-content xncf-stat-item">
-                    <span class="count">{{xncfStat.installedXncfCount || 0}}</span>
-                    <div class="icon">
-                        <i class="fa fa-caret-square-o-right"></i>
-                    </div>
-                    <p class="tit">已安装模块</p>
-                </div>
-            </a>
-        </el-col>
-        <el-col :span="6">
-            <a href="~/Admin/XncfModule/Index">
-                <div class="grid-content bg-purple xncf-stat-item">
-                    <span class="count">{{xncfStat.updateVersionXncfCount || 0}}</span>
-                    <div class="icon">
-                        <i class="fa fa-comments-o"></i>
-                    </div>
-                    <p class="tit">待更新模块</p>
-                </div>
-            </a>
-        </el-col>
-        <el-col :span="6">
-            <a href="~/Admin/XncfModule/Index">
-                <div class="grid-content bg-purple xncf-stat-item">
-                    <span class="count">{{xncfStat.newXncfCount || 0}}</span>
-                    <div class="icon">
-                        <i class="fa fa-sort-amount-desc"></i>
-                    </div>
-                    <p class="tit">发现新模块</p>
-                </div>
-            </a>
-        </el-col>
-        <el-col :span="6">
-            <a href="~/Admin/XncfModule/Index">
-                <div class="grid-content bg-purple xncf-stat-item">
-                    <span class="count">{{xncfStat.missingXncfCount || 0}}</span>
-                    <div class="icon">
-                        <i class="fa fa-check-square-o"></i>
-                    </div>
-                    <p class="tit">模块异常</p>
-                </div>
-            </a>
-        </el-col>
-    </el-row>
-    <el-row :gutter="10">
-        <el-col :xs="20" :sm="20" :md="20" :lg="12" :xl="12">
-            <el-card class="box-card">
-                <div id="firstChart" style="height:350px;width: 100%">
-                </div>
-            </el-card>
-        </el-col>
-        <el-col :xs="20" :sm="20" :md="20" :lg="12" :xl="12">
-            <el-card class="box-card">
-                <div id="secondChart" style="height:350px;width: 100%">
-                </div>
-            </el-card>
-        </el-col>
-    </el-row>
 </div>
 
 <!-- 功能模块 -->
