@@ -83,6 +83,68 @@
                 #xncf-modules-area .xncf-item .icon {
                     float: left;
                 }
+
+                /* 模块卡片样式优化 */
+#xncf-modules-area .xncf-item .box-card {
+    height: 150px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#xncf-modules-area .xncf-item .box-card:hover {
+    transform: translateY(-5px);
+    border-color: #8c52ff;
+    box-shadow: 0 5px 15px rgba(140, 82, 255, 0.2);
+}
+
+/* 模块图标样式优化 */
+.component-item {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.component-item .icon {
+    font-size: 40px;
+    color: #8c52ff;
+    transition: all 0.3s ease;
+}
+
+#xncf-modules-area .xncf-item .box-card:hover .icon {
+    transform: scale(1.1);
+}
+
+/* 版本号样式优化 */
+.xncf-item .version {
+    background: #f0f2f5;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* 模块名称样式 */
+.xncf-item .el-card__header {
+    padding: 10px 15px;
+}
+
+/* 响应式布局优化 */
+@@media screen and (max-width: 1200px) {
+    #xncf-modules-area .el-col-6 {
+        width: 33.33%;
+    }
+}
+
+@@media screen and (max-width: 768px) {
+    #xncf-modules-area .el-col-6 {
+        width: 50%;
+    }
+}
+
+@@media screen and (max-width: 480px) {
+    #xncf-modules-area .el-col-6 {
+        width: 100%;
+    }
+}
     </style>
 }
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -162,26 +224,25 @@
     <el-row>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span>功能模块</span>
+                <span><i class="fa fa-cubes"></i> 功能模块</span>
             </div>
             <div id="xncf-modules-area">
                 <el-row :gutter="20">
-                    <el-col :span="6" class="xncf-item" v-for="item in xncfOpeningList" v-key="item.Id">
+                    <el-col :span="6" class="xncf-item" v-for="item in xncfOpeningList" :key="item.uid">
                         <a v-bind:href="'/Admin/XncfModule/Start/?uid='+item.uid">
-                            <el-card class="box-card" @* @@click="navigateTo(item.uid)" *@>
+                            <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>{{item.menuName}}</span>
-                                    <small class="version">v{{item.version}}</small>
+                                    <span class="version">v{{item.version}}</span>
                                 </div>
                                 <div class="component-item">
-                                    <span class=""><i :class="[item.icon, 'icon']"></i></span>
+                                    <i :class="[item.icon, 'icon']"></i>
                                 </div>
                             </el-card>
                         </a>
                     </el-col>
                 </el-row>
             </div>
-
         </el-card>
     </el-row>
 </div>
