@@ -140,6 +140,14 @@
     border-radius: 10px;
     font-size: 12px;
     color: #666;
+    display: flex;
+    align-items: center;
+}
+
+.version-upgrade-icon {
+    color: #409EFF;
+    margin-left: 4px;
+    font-size: 14px;
 }
 
 /* 模块名称样式 */
@@ -253,7 +261,12 @@
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>{{item.menuName}}</span>
-                                    <span class="version">v{{item.version}}</span>
+                                    <span class="version">
+                                        v{{item.version}}
+                                        <el-tooltip v-if="item.hasNewVersion" effect="light" :content="'当前版本: v' + item.version + ' -> 可更新至: v' + item.newVersion">
+                                            <i class="fa fa-arrow-circle-up version-upgrade-icon"></i>
+                                        </el-tooltip>
+                                    </span>
                                 </div>
                                 <div class="component-item">
                                     <i :class="[item.icon, 'icon']"></i>
