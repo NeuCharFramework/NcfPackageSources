@@ -7,8 +7,8 @@
 }
 @section style {
     <style>
-        .module-header .el-main{
-            padding: 20px 0px 0px 0px;
+        #home-header .el-main{
+            padding: 20px 10px 0px 10px;
         }
         
         .xncf-stat-item {
@@ -205,12 +205,70 @@
 .el-card__body .charts-container {
     margin-bottom: -40px;  /* 抵消父元素的padding，底部有足够留白 */
 }
+
+/* 添加更强烈的抖动动画关键帧 */
+@@keyframes shake {
+    0%, 100% { 
+        transform: translateX(0) rotate(0deg); 
+    }
+    15% { 
+        transform: translateX(-8px) rotate(-2deg); 
+    }
+    30% { 
+        transform: translateX(6px) rotate(1.5deg); 
+    }
+    45% { 
+        transform: translateX(-4px) rotate(-0.5deg); 
+    }
+    60% { 
+        transform: translateX(2px) rotate(0.25deg); 
+    }
+    75% { 
+        transform: translateX(-1px) rotate(-0.125deg); 
+    }
+}
+
+/* 添加发光动画关键帧 */
+@@keyframes glow {
+    0%, 100% { 
+        box-shadow: 0 0 5px rgba(140, 82, 255, 0.2);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(140, 82, 255, 0.6);
+        transform: scale(1.02);
+    }
+}
+
+/* 添加淡化效果动画 */
+@@keyframes fade {
+    0%, 100% { 
+        opacity: 1;
+    }
+    50% { 
+        opacity: 0.6;
+    }
+}
+
+/* 动画类 */
+.shake-animation {
+    animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.glow-animation {
+    animation: glow 1.2s ease-in-out;
+}
+
+.fade-animation {
+    animation: fade 1.2s ease-in-out;
+}
     </style>
 }
+
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 
 <!-- 统计数据 -->
-<div>
+<div id="home-header">
     <el-container>
         <el-header class="module-header">
             <span class="start-title"><span class="module-header-v">NeuCharFramework 管理员后台</span></span>
