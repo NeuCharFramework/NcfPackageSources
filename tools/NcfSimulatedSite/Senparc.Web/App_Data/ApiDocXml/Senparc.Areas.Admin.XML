@@ -637,6 +637,21 @@
             给Error_Error404VD用
             </summary>
         </member>
+        <member name="T:Senparc.Areas.Admin.Domain.XncfModuleDisplayDto">
+            <summary>
+            XNCF 模块显示 DTO
+            </summary>
+        </member>
+        <member name="P:Senparc.Areas.Admin.Domain.XncfModuleDisplayDto.HasNewVersion">
+            <summary>
+            是否有新版本
+            </summary>
+        </member>
+        <member name="P:Senparc.Areas.Admin.Domain.XncfModuleDisplayDto.NewVersion">
+            <summary>
+            新版本号
+            </summary>
+        </member>
         <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.CheckUserNameExisted(System.Int64,System.String)">
             <summary>
             
