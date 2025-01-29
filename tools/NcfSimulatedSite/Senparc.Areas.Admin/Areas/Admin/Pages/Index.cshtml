@@ -142,6 +142,14 @@
     color: #666;
     display: flex;
     align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* 可升级版本的样式 */
+.version-upgradeable {
+    background: #e6f1fc;
+    color: #409EFF;
+    border: 1px solid #b3d8ff;
 }
 
 .version-upgrade-icon {
@@ -261,10 +269,13 @@
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>{{item.menuName}}</span>
-                                    <span class="version">
+                                    <span class="version version-container" :class="{ 'version-upgradeable': item.hasNewVersion }">
                                         v{{item.version}}
-                                        <el-tooltip v-if="item.hasNewVersion" effect="light" :content="'当前版本: v' + item.version + ' -> 可更新至: v' + item.newVersion">
-                                            <i class="fa fa-arrow-circle-up version-upgrade-icon"></i>
+                                        <el-tooltip v-if="item.hasNewVersion" 
+                                                   class="version-tooltip" 
+                                                   effect="light" 
+                                                   :content="`当前版本: v${item.version} -> 可更新至: v${item.newVersion}`">
+                                            <i class="fa fa-level-up version-upgrade-icon"></i>
                                         </el-tooltip>
                                     </span>
                                 </div>
