@@ -235,7 +235,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     Alias = $"NeuChar-{neucharModel.Name}",
                     DeploymentName = neucharModel.Name,
                     ModelId = neucharModel.Name,
-                    ApiVersion = model.AiPlatform == AiPlatform.AzureOpenAI || model.AiPlatform == AiPlatform.OpenAI
+                    ApiVersion = model?.AiPlatform == AiPlatform.AzureOpenAI || model?.AiPlatform == AiPlatform.OpenAI
                                     ? "2024-05-13"
                                     : "",
                     Endpoint = $"https://www.neuchar.com/{developerId}",
