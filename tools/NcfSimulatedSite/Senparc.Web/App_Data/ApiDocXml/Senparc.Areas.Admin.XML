@@ -973,6 +973,12 @@
             <param name="executeFuncParamDto2">提交参数</param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Areas.Admin.OHS.Local.AppService.StatAppService.GetTodayLog">
+            <summary>
+            获取当天日志信息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Senparc.Areas.Admin.OHS.Local.AppService.SysMenuAppService">
             <summary>
             菜单表

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.11.4-preview1</Version>
+		<Version>0.11.5-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -43,6 +43,7 @@
 			[2025-01-09] v0.11.0-preview1 reconstruction XncfBuilder for generate XNCF
 			[2025-01-25] v0.11.3-preview1 Update Agents functions, support for function calling
 			[2025-01-28] v0.11.4-preview1 update Senparc.AI
+			[2025-02-06] v0.11.5-preview1 update NeuCharAI model update
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

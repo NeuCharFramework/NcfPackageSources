@@ -32,7 +32,7 @@ namespace Senparc.Xncf.SenMapic
 
         public override string Uid => "8D02B05B-7FBE-461F-9F8F-43BE0CE6EFE9";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.1";//必须填写版本号
+        public override string Version => "0.1.2";//必须填写版本号
 
         public override string MenuName => "SenMapic";
 
