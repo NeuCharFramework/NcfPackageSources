@@ -190,14 +190,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter=null)
         {
             if (senparcAiSetting == null)
             {
                 throw new SenparcAiException("SenparcAiSetting 不能为空");
             }
 
-            var parameter = new PromptConfigParameter()
+            promptConfigParameter ??= new PromptConfigParameter()
             {
                 MaxTokens = 2000,
                 Temperature = 0.7,
@@ -205,7 +205,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             };
 
             var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey",
+            var chatConfig = semanticAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
                  chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
                  maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
             var iWantToRun = chatConfig;
