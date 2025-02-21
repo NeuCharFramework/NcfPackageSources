@@ -1,45 +1,45 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<Version>0.11.5-preview1</Version>
-		<AssemblyName>Senparc.Xncf.OfficeExtension</AssemblyName>
-		<RootNamespace>Senparc.Xncf.OfficeExtension</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<Description>Office 插件</Description>
-		<Copyright>Senparc</Copyright>
-		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.OfficeExtension</PackageTags>
-		<Authors>Senparc</Authors>
-		<Owners>Senparc</Owners>
-		<!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
-		<Title>Office 插件</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>0.11.5.1-preview1</Version>
+    <AssemblyName>Senparc.Xncf.OfficeExtension</AssemblyName>
+    <RootNamespace>Senparc.Xncf.OfficeExtension</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>Office 插件</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.OfficeExtension</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
+    <Title>Office 插件</Title>
+    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>-->
-		<PackageReleaseNotes>
+    <PackageReleaseNotes>
 			v0.1 创世
 			[2024-09-10] v0.10.4-preview1 升级缓存基础库
 			[2025-01-25] v0.11.5-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\..\BuildOutPut</OutputPath>
-		<!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.OfficeExtension.XML</DocumentationFile>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\..\BuildOutPut</OutputPath>
+    <!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.OfficeExtension.XML</DocumentationFile>
 		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
 		<Optimize>true</Optimize>
 		<DebugType>pdbonly</DebugType>
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="EPPlus" Version="5.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-	</ItemGroup>
-	<!--<ItemGroup>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+  <!--<ItemGroup>
 	  <Content Remove="templates\template1\App_Data\Database\SenparcConfig.config" />
 	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml" />
 	  <Content Remove="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml" />
@@ -56,14 +56,14 @@
 	  <None Include="templates\template1\Areas\Admin\Pages\OfficeExtension\DatabaseSample.cshtml" />
 	  <None Include="templates\template1\Areas\Admin\Pages\OfficeExtension\Index.cshtml" />
 	</ItemGroup>-->
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
-		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />-->
-		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-		<!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.21" />-->
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
+    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1" />-->
+    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
+    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.21" />-->
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
 </Project>
