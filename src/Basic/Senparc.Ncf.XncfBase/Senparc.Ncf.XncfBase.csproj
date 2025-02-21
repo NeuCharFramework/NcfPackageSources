@@ -1,24 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-		<Version>0.22.6.1-preview1</Version>
-		<LangVersion>10.0</LangVersion>
-		<AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
-		<RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-		<Description>Senparc.Ncf.XncfBase</Description>
-		<Copyright>NeuCharFramework</Copyright>
-		<PackageTags>NeuCharFramework,NCF</PackageTags>
-		<Authors>NeuCharFramework</Authors>
-		<Owners>NeuCharFramework</Owners>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<Title>XNCF 模块基础库</Title>
-		<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
-		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
+    <Version>0.22.6.2-preview1</Version>
+    <LangVersion>10.0</LangVersion>
+    <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
+    <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>Senparc.Ncf.XncfBase</Description>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF</PackageTags>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>XNCF 模块基础库</Title>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世
 			v0.2.100 完成基础架构，功能跑通
 			v0.3.100 优化 Function 返回值
@@ -48,40 +48,40 @@
 			[2024-12-27] v0.22.2-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.22.6-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.XncfBase.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.XncfBase.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Senparc.CO2NET" Version="3.1.2" />
-		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
-	</ItemGroup>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.XncfBase.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.XncfBase.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Senparc.CO2NET" Version="3.1.2" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,49 +1,49 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.9.5-preview1</Version>
-		<AssemblyName>Senparc.Xncf.Tenant.Interface</AssemblyName>
-		<RootNamespace>Senparc.Xncf.Tenant.Interface</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-		<Description>系统核心模块（运行系统必须）</Description>
-		<Copyright>NeuCharFramework</Copyright>
-		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Tenant.Interface</PackageTags>
-		<Authors>NeuCharFramework</Authors>
-		<Owners>NeuCharFramework</Owners>
-		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
-		<Title>租户管理-接口</Title>
-		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-		<PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
-		<PackageReleaseNotes>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.9.5.1-preview1</Version>
+    <AssemblyName>Senparc.Xncf.Tenant.Interface</AssemblyName>
+    <RootNamespace>Senparc.Xncf.Tenant.Interface</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>系统核心模块（运行系统必须）</Description>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Tenant.Interface</PackageTags>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
+    <Title>租户管理-接口</Title>
+    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
+    <PackageReleaseNotes>
 			v0.1.0 创世
 			[2024-09-10] v0.8.4-preview1 升级缓存基础库
 			[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\..\BuildOutPut</OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<Compile Remove="Domain\DatabaseModel\Mapping\**" />
-		<Compile Remove="OHS\**" />
-		<Content Remove="Domain\DatabaseModel\Mapping\**" />
-		<Content Remove="OHS\**" />
-		<EmbeddedResource Remove="Domain\DatabaseModel\Mapping\**" />
-		<EmbeddedResource Remove="OHS\**" />
-		<None Remove="Domain\DatabaseModel\Mapping\**" />
-		<None Remove="OHS\**" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Domain\DatabaseModel\Dto\" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-	</ItemGroup>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Domain\DatabaseModel\Mapping\**" />
+    <Compile Remove="OHS\**" />
+    <Content Remove="Domain\DatabaseModel\Mapping\**" />
+    <Content Remove="OHS\**" />
+    <EmbeddedResource Remove="Domain\DatabaseModel\Mapping\**" />
+    <EmbeddedResource Remove="OHS\**" />
+    <None Remove="Domain\DatabaseModel\Mapping\**" />
+    <None Remove="OHS\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\DatabaseModel\Dto\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+  </ItemGroup>
 </Project>
