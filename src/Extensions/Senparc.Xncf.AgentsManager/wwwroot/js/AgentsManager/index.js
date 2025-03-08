@@ -643,10 +643,12 @@ var app = new Vue({
         this.agentDetailsGroupQueryList.agentTemplateId = id
         Object.assign(queryList, this.agentDetailsGroupQueryList)
       }
+      debugger
       // 获取agent列表
       let agentAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList')
         .then(res => {
+          debugger
           const data = res?.data ?? {}
           if (data.success) {
             agentAllList = data?.data?.list ?? []
@@ -664,6 +666,7 @@ var app = new Vue({
       // 获取组列表
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
+          debugger
           const data = res?.data ?? {}
           if (data.success) {
             const groupData = data?.data?.chatGroupDtoList ?? []
@@ -1427,7 +1430,7 @@ var app = new Vue({
 
     // 筛选输入变化
     handleFilterChange(value, filterType) {
-      //console.log('handleFilterChange', filterType, value)
+      console.log('handleFilterChange', filterType, value)
       if (filterType === 'agent') {
 
         this.agentQueryList.filter = value
