@@ -1,4 +1,5 @@
 ﻿using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Utility;
@@ -22,7 +23,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize)
+        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize, string filter = "")
         {
             return await this.GetResponseAsync<ChatTask_GetListResponse>(async (response, logger) =>
                   {
@@ -41,6 +42,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                       seh.ValueCompare
                           .AndAlso(chatGroupId > 0, z => z.ChatGroupId == chatGroupId)
                           .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
+                      //增加模糊搜索任务
+                      seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
                       var where = seh.BuildWhereExpression();
 
                       var list = await this._chatTaskService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
