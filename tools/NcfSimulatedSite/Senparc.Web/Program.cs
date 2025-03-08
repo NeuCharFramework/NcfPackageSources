@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //Use NCF（必须）
-app.UseNcf<SqlServerDatabaseConfiguration>();
+app.UseNcf<BySettingDatabaseConfiguration>();
 /*  UseNcf<TDatabaseConfiguration>() 泛型类型说明
  *                
  *                  方法                            |         说明
