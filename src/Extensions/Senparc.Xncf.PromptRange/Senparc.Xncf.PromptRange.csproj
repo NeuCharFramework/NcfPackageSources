@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.11.1-preview1</Version>
+    <Version>0.13.11.2-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -60,7 +60,7 @@
 		[2025-01-28] v0.13.9-preview1 update Senparc.AI
 		[2025-02-06] v0.13.10-preview1 update NeuCharAI model update
 		[2025-02-22] v0.13.11-preview1 add DeepSeek-R1 &lt;think&gt; tag style
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
