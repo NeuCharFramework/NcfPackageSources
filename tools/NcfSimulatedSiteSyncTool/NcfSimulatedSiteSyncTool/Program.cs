@@ -165,18 +165,19 @@ class Program
             else if (targetIndex > 0 && 
                     (sourceIndex == 0 || lcs[sourceIndex, targetIndex - 1] >= lcs[sourceIndex - 1, targetIndex]))
             {
-                tempDiff.Add((targetLines[targetIndex - 1], '+'));
+                // 目标文件（旧文件）中的行将被删除
+                tempDiff.Add((targetLines[targetIndex - 1], '-'));
                 targetIndex--;
             }
             else if (sourceIndex > 0 && 
                     (targetIndex == 0 || lcs[sourceIndex - 1, targetIndex] >= lcs[sourceIndex, targetIndex - 1]))
             {
-                tempDiff.Add((sourceLines[sourceIndex - 1], '-'));
+                // 源文件（新文件）中的行将被添加
+                tempDiff.Add((sourceLines[sourceIndex - 1], '+'));
                 sourceIndex--;
             }
         }
 
-        // 反转并返回结果
         tempDiff.Reverse();
         return tempDiff;
     }
@@ -188,26 +189,26 @@ class Program
 
         Console.WriteLine("\n差异对比：");
         Console.WriteLine("=".PadRight(50, '='));
+        Console.WriteLine($"源文件（新）: {Path.GetFileName(sourceFile)}");
+        Console.WriteLine($"目标文件（旧）: {Path.GetFileName(targetFile)}");
+        Console.WriteLine("-".PadRight(50, '-'));
 
         var diff = GetDiff(sourceLines, targetLines);
         
-        // 显示差异，最多显示 3 行上下文
         const int contextLines = 3;
         bool hasDiff = false;
-        bool hasRealDiff = false; // 用于检查是否有实际内容差异
+        bool hasRealDiff = false;
         
         for (int k = 0; k < diff.Count; k++)
         {
             var (line, type) = diff[k];
             
-            // 检查这行是否在任何差异的上下文范围内
             bool showLine = type != ' ' || 
                 Enumerable.Range(Math.Max(0, k - contextLines), Math.Min(contextLines * 2, diff.Count - k))
                     .Any(idx => diff[idx].Type != ' ');
 
             if (!showLine) continue;
 
-            // 检查是否存在实际内容差异（忽略空白字符）
             if (type != ' ' && !string.IsNullOrWhiteSpace(line.Trim()))
             {
                 hasRealDiff = true;
@@ -215,19 +216,21 @@ class Program
 
             switch (type)
             {
-                case '-':
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"- {line}");
+                case '+':
+                    // 源文件（新文件）中的行，显示为绿色的加号
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"+ {line}");  // 新增的行
                     hasDiff = true;
                     break;
-                case '+':
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"+ {line}");
+                case '-':
+                    // 目标文件（旧文件）中的行，显示为红色的减号
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"- {line}");  // 将被删除的行
                     hasDiff = true;
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine($"  {line}");
+                    Console.WriteLine($"  {line}");  // 未变更的行
                     break;
             }
         }
