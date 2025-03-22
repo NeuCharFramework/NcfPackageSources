@@ -9,7 +9,7 @@ class Program
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 
-        ".csproj", ".user", ".DS_Store","SimulatedSite.sln"
+        ".csproj", ".user", ".DS_Store","SimulatedSite.sln", ".Development.config"
     };
     // 新增忽略的文件名数组
     private static readonly string[] IgnoredFileNames = new[]
@@ -105,7 +105,9 @@ class Program
         var extension = Path.GetExtension(path);
 
         // 检查扩展名
-        if (IgnoredExtensions.Any(ext => ext.Equals(extension, StringComparison.OrdinalIgnoreCase)))
+        if (IgnoredExtensions.Any(ext => 
+            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+            fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
         // 检查完整文件名
