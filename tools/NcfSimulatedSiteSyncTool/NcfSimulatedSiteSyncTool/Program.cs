@@ -5,7 +5,7 @@ class Program
     private static readonly ILogger _logger;
     private static readonly string[] IgnoredFolders = new[] 
     { 
-        "bin", "obj", "SenparcTraceLog", "logs", ".git" ,"Template_OrgName.Xncf.Template_XncfName"
+        "bin", "obj", "SenparcTraceLog", "logs", ".git" ,"Template_OrgName.Xncf.Template_XncfName",".vs"
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 
@@ -98,6 +98,61 @@ class Program
         return false;
     }
 
+    // 添加 LCS (Longest Common Subsequence) 算法来找到真正的差异
+    static List<(string Line, char Type)> GetDiff(string[] sourceLines, string[] targetLines)
+    {
+        var diff = new List<(string Line, char Type)>();
+        
+        // 创建 LCS 长度矩阵
+        int[,] lcs = new int[sourceLines.Length + 1, targetLines.Length + 1];
+        for (int i = 1; i <= sourceLines.Length; i++)
+        {
+            for (int j = 1; j <= targetLines.Length; j++)
+            {
+                if (sourceLines[i - 1].Trim() == targetLines[j - 1].Trim())
+                {
+                    lcs[i, j] = lcs[i - 1, j - 1] + 1;
+                }
+                else
+                {
+                    lcs[i, j] = Math.Max(lcs[i - 1, j], lcs[i, j - 1]);
+                }
+            }
+        }
+
+        // 回溯找出差异
+        int sourceIndex = sourceLines.Length;
+        int targetIndex = targetLines.Length;
+        var tempDiff = new List<(string Line, char Type)>();
+
+        while (sourceIndex > 0 || targetIndex > 0)
+        {
+            if (sourceIndex > 0 && targetIndex > 0 && 
+                sourceLines[sourceIndex - 1].Trim() == targetLines[targetIndex - 1].Trim())
+            {
+                tempDiff.Add((sourceLines[sourceIndex - 1], ' '));
+                sourceIndex--;
+                targetIndex--;
+            }
+            else if (targetIndex > 0 && 
+                    (sourceIndex == 0 || lcs[sourceIndex, targetIndex - 1] >= lcs[sourceIndex - 1, targetIndex]))
+            {
+                tempDiff.Add((targetLines[targetIndex - 1], '+'));
+                targetIndex--;
+            }
+            else if (sourceIndex > 0 && 
+                    (targetIndex == 0 || lcs[sourceIndex - 1, targetIndex] >= lcs[sourceIndex, targetIndex - 1]))
+            {
+                tempDiff.Add((sourceLines[sourceIndex - 1], '-'));
+                sourceIndex--;
+            }
+        }
+
+        // 反转并返回结果
+        tempDiff.Reverse();
+        return tempDiff;
+    }
+
     static void ShowFileDifference(string sourceFile, string targetFile)
     {
         var sourceLines = File.ReadAllLines(sourceFile);
@@ -106,43 +161,12 @@ class Program
         Console.WriteLine("\n差异对比：");
         Console.WriteLine("=".PadRight(50, '='));
 
-        var diff = new List<(string Line, char Type)>();
-        int i = 0, j = 0;
-
-        while (i < sourceLines.Length || j < targetLines.Length)
-        {
-            if (i >= sourceLines.Length)
-            {
-                // 目标文件有额外的行
-                diff.Add((targetLines[j], '+'));
-                j++;
-            }
-            else if (j >= targetLines.Length)
-            {
-                // 源文件有额外的行
-                diff.Add((sourceLines[i], '-'));
-                i++;
-            }
-            else if (sourceLines[i] == targetLines[j])
-            {
-                // 相同的行
-                diff.Add((sourceLines[i], ' '));
-                i++;
-                j++;
-            }
-            else
-            {
-                // 不同的行
-                diff.Add((sourceLines[i], '-'));
-                diff.Add((targetLines[j], '+'));
-                i++;
-                j++;
-            }
-        }
-
-        // 显示差异，最多显示 10 行上下文
-        const int contextLines = 5;
+        var diff = GetDiff(sourceLines, targetLines);
+        
+        // 显示差异，最多显示 3 行上下文
+        const int contextLines = 3;
         bool hasDiff = false;
+        bool hasRealDiff = false; // 用于检查是否有实际内容差异
         
         for (int k = 0; k < diff.Count; k++)
         {
@@ -154,6 +178,12 @@ class Program
                     .Any(idx => diff[idx].Type != ' ');
 
             if (!showLine) continue;
+
+            // 检查是否存在实际内容差异（忽略空白字符）
+            if (type != ' ' && !string.IsNullOrWhiteSpace(line.Trim()))
+            {
+                hasRealDiff = true;
+            }
 
             switch (type)
             {
@@ -174,10 +204,16 @@ class Program
             }
         }
 
-        if (!hasDiff)
+        if (!hasDiff || !hasRealDiff)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("文件内容相同，仅修改时间不同");
+            Console.WriteLine("请按 U 更新时间戳，或按 N 跳过");
+        }
+        else
+        {
+            Console.WriteLine("\n文件内容存在差异");
+            Console.WriteLine("请按 Y 覆盖文件，或按 N 跳过");
         }
 
         Console.ResetColor();
@@ -213,13 +249,47 @@ class Program
                 // 显示文件差异
                 ShowFileDifference(sourceFile, targetFile);
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("Do you want to overwrite? (Y/N): ");
-                Console.ResetColor();
+                while (true)
+                {
+                    var response = Console.ReadKey();
+                    Console.WriteLine();
 
-                var response = Console.ReadKey();
-                Console.WriteLine();
-                shouldCopy = response.Key == ConsoleKey.Y;
+                    // 检查文件内容是否相同
+                    var sourceContent = File.ReadAllText(sourceFile).Trim();
+                    var targetContent = File.ReadAllText(targetFile).Trim();
+                    bool contentSame = string.Equals(sourceContent, targetContent, StringComparison.Ordinal);
+
+                    if (contentSame)
+                    {
+                        // 内容相同时只接受 U 或 N
+                        if (response.Key == ConsoleKey.U)
+                        {
+                            shouldCopy = true;
+                            break;
+                        }
+                        else if (response.Key == ConsoleKey.N)
+                        {
+                            shouldCopy = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        // 内容不同时接受 Y 或 N
+                        if (response.Key == ConsoleKey.Y)
+                        {
+                            shouldCopy = true;
+                            break;
+                        }
+                        else if (response.Key == ConsoleKey.N)
+                        {
+                            shouldCopy = false;
+                            break;
+                        }
+                    }
+
+                    Console.WriteLine("无效的输入，请重试");
+                }
             }
         }
 
