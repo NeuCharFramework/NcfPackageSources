@@ -31,7 +31,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
             public string Y { get; set; }
 
-            public int Z { get; set; }
+            public decimal Z { get; set; }
 
             public PromptItemDto Data { get; set; }
 
@@ -44,7 +44,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             {
             }
 
-            public Point(string x, string y, int z, PromptItemDto data)
+            public Point(string x, string y, decimal z, PromptItemDto data)
             {
                 X = x;
                 Y = y;
