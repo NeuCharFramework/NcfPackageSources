@@ -9,12 +9,12 @@ class Program
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 
-        ".csproj", ".user", ".DS_Store","SimulatedSite.sln", ".Development.config"
+        ".csproj", ".user", ".DS_Store", ".Development.config"
     };
     // 新增忽略的文件名数组
     private static readonly string[] IgnoredFileNames = new[]
     {
-        "launchSettings.json"
+        "launchSettings.json", "NcfSimulatedSite.sln"
     };
     // 新增包含特定字符串的文件过滤规则
     private static readonly string[] IgnoredFilePatterns = new[]
@@ -102,16 +102,16 @@ class Program
 
         // 获取文件名和扩展名
         var fileName = Path.GetFileName(path);
-        var extension = Path.GetExtension(path);
+
+        // 首先检查完整文件名
+        if (IgnoredFileNames.Any(name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+            return true;
 
         // 检查扩展名
+        var extension = Path.GetExtension(path);
         if (IgnoredExtensions.Any(ext => 
             ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
-            return true;
-
-        // 检查完整文件名
-        if (IgnoredFileNames.Any(name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
             return true;
 
         // 检查 .sln 文件是否包含指定模式
@@ -279,6 +279,7 @@ class Program
 
         bool shouldCopy = true;
         bool isReverseUpdate = false;
+        bool updateTimestampOnly = false;
 
         if (File.Exists(targetFile))
         {
@@ -328,6 +329,7 @@ class Program
                     if (_autoUpdateChoice != null)
                     {
                         shouldCopy = _autoUpdateChoice == ConsoleKey.U;
+                        updateTimestampOnly = shouldCopy;
                         Console.WriteLine($"自动{(shouldCopy ? "更新" : "跳过")}文件");
                     }
                     else
@@ -341,6 +343,7 @@ class Program
                             {
                                 case ConsoleKey.U:
                                     shouldCopy = true;
+                                    updateTimestampOnly = true;
                                     break;
                                 case ConsoleKey.N:
                                     shouldCopy = false;
@@ -354,6 +357,7 @@ class Program
                                     {
                                         _autoUpdateChoice = autoChoice.Key;
                                         shouldCopy = autoChoice.Key == ConsoleKey.U;
+                                        updateTimestampOnly = shouldCopy;
                                         Console.WriteLine($"已设置自动{(shouldCopy ? "更新" : "跳过")}后续内容相同的文件");
                                         break;
                                     }
@@ -407,14 +411,24 @@ class Program
                 {
                     // 反向更新：将目标文件复制到源文件
                     await FileExtensions.CopyAsync(targetFile, sourceFile, true);
-                    Console.ForegroundColor = ConsoleColor.Cyan; // 使用不同的颜色表示反向更新
+                    File.SetLastWriteTime(sourceFile, File.GetLastWriteTime(targetFile));
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine($"Reverse updated: {relativePath} (target -> source)");
+                    Console.ResetColor();
+                }
+                else if (updateTimestampOnly)
+                {
+                    // 只更新时间戳
+                    File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Updated timestamp: {relativePath}");
                     Console.ResetColor();
                 }
                 else
                 {
                     // 正常更新：将源文件复制到目标文件
                     await FileExtensions.CopyAsync(sourceFile, targetFile, true);
+                    File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Copied: {relativePath} (source -> target)");
                     Console.ResetColor();
