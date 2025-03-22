@@ -168,6 +168,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         Endpoint = aiModel.Endpoint,
                     };
                     break;
+                case AiPlatform.DeepSeek:
+                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
+                    {
+                        ApiKey = aiModel.ApiKey,
+                        Endpoint = aiModel.Endpoint,
+                        ModelName = modelName,
+                    };
+                    break;
                 default:
                     throw new NcfExceptionBase($"Senparc.Xncf.AIKernel 暂时不支持 {aiSettings.AiPlatform} 类型");
             }
@@ -182,14 +190,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter=null)
         {
             if (senparcAiSetting == null)
             {
                 throw new SenparcAiException("SenparcAiSetting 不能为空");
             }
 
-            var parameter = new PromptConfigParameter()
+            promptConfigParameter ??= new PromptConfigParameter()
             {
                 MaxTokens = 2000,
                 Temperature = 0.7,
@@ -197,8 +205,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             };
 
             var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-            var chatConfig = semanticAiHandler.ChatConfig(parameter, userId: "Jeffrey", maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
-            var iWantToRun = chatConfig.iWantToRun;
+            var chatConfig = semanticAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
+                 chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
+                 maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
+            var iWantToRun = chatConfig;
 
             var request = iWantToRun.CreateRequest(prompt);
             var aiResult = await iWantToRun.RunAsync(request);
@@ -222,10 +232,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 {
                     AiPlatform = AiPlatform.NeuCharAI,
                     ApiKey = apiKey,
-                    Alias = neucharModel.Name,
+                    Alias = $"NeuChar-{neucharModel.Name}",
                     DeploymentName = neucharModel.Name,
                     ModelId = neucharModel.Name,
-                    ApiVersion = "2022-12-01",
+                    ApiVersion = model?.AiPlatform == AiPlatform.AzureOpenAI || model?.AiPlatform == AiPlatform.OpenAI
+                                    ? "2024-05-13"
+                                    : "",
                     Endpoint = $"https://www.neuchar.com/{developerId}",
                     ConfigModelType = Models.ConfigModelType.Chat,
                     Note = $"从 NeuChar AI 导入（DevId:{developerId}）",

@@ -65,7 +65,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
             var senMapicResult = senMapicEngine.Build();
 
-            return senMapicResult.Values.FirstOrDefault()?.Html;
+            return senMapicResult.Values.FirstOrDefault()?.MarkDownHtmlContent;
 
             foreach (var item in senMapicResult)
             {
@@ -186,7 +186,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                                  userId: "Jeffrey",
                                  maxHistoryStore: 10,
                                  chatSystemMessage: systemMessage,
-                                 senparcAiSetting: null).iWantToRun;
+                                 senparcAiSetting: null);
 
             var questionDt = DateTime.Now;
             var limit = 3;

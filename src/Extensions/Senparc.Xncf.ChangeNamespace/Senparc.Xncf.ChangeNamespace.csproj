@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.20.4-preview1</Version>
+    <Version>0.20.5.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xncf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -22,6 +22,7 @@
 			v0.3 完成还原命名空间功能
 			v0.4 升级命名空间修改功能
 			[2024-09-10] v0.19.4-preview1 升级缓存基础库
+			[2025-01-25] v0.20.5-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

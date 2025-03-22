@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Utility;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -14,6 +16,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -76,11 +79,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <param name="pageIndex"></param>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<AgentTemplate_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0)
+        public async Task<AppResponseBase<AgentTemplate_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0,string filter = "")
         {
             return await this.GetResponseAsync<AgentTemplate_GetListResponse>(async (response, logger) =>
             {
-                var list = await this._agentsTemplateService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+                var seh = new SenparcExpressionHelper<Models.DatabaseModel.AgentTemplate>();
+                seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
+                var where = seh.BuildWhereExpression();
+                var list = await this._agentsTemplateService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 var listDto = new PagedList<AgentTemplateSimpleStatusDto>(list
                     .Select(z =>
@@ -219,6 +225,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 await this._agentsTemplateService.SaveObjectAsync(agent);
 
                 return $"已完成{(enable ? "启用" : "停用")}";
+            });
+        }
+
+        /// <summary>
+        /// 获取所有已注册的 AI Plugin 类型
+        /// </summary>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<List<string>>> GetPluginTypes()
+        {
+            return await this.GetResponseAsync<List<string>>((response, logger) =>
+            {
+                var pluginTypes = AIPluginHub.Instance.GetAllPluginNames();
+                return Task.FromResult(pluginTypes);
             });
         }
     }

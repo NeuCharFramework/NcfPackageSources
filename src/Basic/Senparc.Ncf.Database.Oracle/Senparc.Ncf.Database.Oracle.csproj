@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.4-preview1</Version>
+    <Version>0.9.5.2-preview1</Version>
     <AssemblyName>Senparc.Ncf.Database.Oracle</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Oracle</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -19,6 +19,7 @@
     <PackageReleaseNotes>
 			v0.1.0 创世
 			[2024-09-10] v0.8.4-preview1 升级缓存基础库
+			[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -36,7 +37,7 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="3.1.1" />
+    <PackageReference Include="Senparc.CO2NET" Version="3.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

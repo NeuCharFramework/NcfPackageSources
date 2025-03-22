@@ -69,12 +69,12 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 评估参数, 平均分
         /// </summary>
-        public int EvalAvgScore { get; set; } = -1;
+        public decimal EvalAvgScore { get; set; } = -1;
 
         /// <summary>
         /// 评估参数
         /// </summary>
-        public int EvalMaxScore { get; set; } = -1;
+        public decimal EvalMaxScore { get; set; } = -1;
 
         /// <summary>
         /// 期望结果Json

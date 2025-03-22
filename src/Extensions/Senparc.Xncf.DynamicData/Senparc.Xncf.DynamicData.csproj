@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.4.7-pre-alpha</Version>
+    <Version>0.4.8.2-pre-alpha</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -32,6 +32,7 @@
 			[2024-11-21] v0.4.2-pre-alpha 更新 CO2NET 及缓存基础库
 			[2024-11-28] v0.4.3-pre-alpha update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
 			[2024-12-27] v0.4.4-pre-alpha Add exception log for UseXncfModules() auto progress
+			[2025-01-25] v0.4.8-pre-alpha Update Agents functions, support for function calling
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

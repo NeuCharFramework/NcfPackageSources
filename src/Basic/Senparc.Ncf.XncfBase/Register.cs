@@ -94,6 +94,9 @@ namespace Senparc.Ncf.XncfBase
         {
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "Start scanning XncfModules");
+
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t启动前自检开始 {SystemTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}", null, false);
+
             var scanTypesCount = 0;
             var hideTypeCount = 0;
             ConcurrentDictionary<Type, ScanTypeKind> types = new ConcurrentDictionary<Type, ScanTypeKind>();
@@ -273,7 +276,7 @@ namespace Senparc.Ncf.XncfBase
                                 }
 
                                 if (multipleDatabaseType == null)
-                                { 
+                                {
                                     Console.WriteLine($"MultipleDatabaseType 为 null（轮询${type.FullName}）");
                                 }
                                 else if (multipleDatabaseType == MultipleDatabaseType.InMemory)

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.8-preview1</Version>
+    <Version>0.13.9.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.XncfModuleManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfModuleManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,6 +35,7 @@
 		[2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
 		[2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
 		[2025-01-08] v0.13.6-preview1 Deal with DaMeng(DM) database column type
+			[2025-01-25] v0.13.9-preview1 Update Agents functions, support for function calling
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

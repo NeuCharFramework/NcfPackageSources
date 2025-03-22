@@ -34,7 +34,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.2.18";//必须填写版本号
+        public override string Version => "0.2.18.9";//必须填写版本号
 
         public override string MenuName => "Agents 管理模块";
 
@@ -105,6 +105,8 @@ namespace Senparc.Xncf.AgentsManager
 
             //AI Plugins DI
             services.AddScoped<CrawlPlugin>();
+            services.AddScoped<FormatorPlugin>();
+            services.AddScoped<TranslatorPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
@@ -120,6 +122,8 @@ namespace Senparc.Xncf.AgentsManager
 
             var aiPlugins = AIPluginHub.Instance;
             aiPlugins.Add(typeof(CrawlPlugin));
+            aiPlugins.Add(typeof(FormatorPlugin));
+            aiPlugins.Add(typeof(TranslatorPlugin));
 
             return base.UseXncfModule(app, registerService);
         }

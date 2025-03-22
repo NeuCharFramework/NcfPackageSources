@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Core
         /// 返回版本信息
         /// </summary>
         /// <returns></returns>
-        public static string GetVersionNote(string ncfVersion = null, string note = null)
+        public static string GetVersionNote(string ncfVersion = null, string note = null, bool showOpenSourceInfo = true)
         {
             ncfVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
@@ -34,19 +34,26 @@ namespace Senparc.Ncf.Core
                 {
                     sb.AppendLine("    AI Native / Domain-Driven Design System");
                     sb.AppendLine("");
-                    sb.AppendLine("    OpenSource Template：https://github.com/NeuCharFramework/NCF");
-                    //sb.AppendLine("    OpenSource Template：https://gitee.com/NeuCharFramework/NCF");
-                    //sb.AppendLine("    Base Module Source Code：https://github.com/NeuCharFramework/NcfPackageSources");
-                    sb.AppendLine("    Document：https://doc.ncf.pub/");
+                    if (showOpenSourceInfo)
+                    {
+
+                        sb.AppendLine("    OpenSource Template：https://github.com/NeuCharFramework/NCF");
+                        //sb.AppendLine("    OpenSource Template：https://gitee.com/NeuCharFramework/NCF");
+                        //sb.AppendLine("    Base Module Source Code：https://github.com/NeuCharFramework/NcfPackageSources");
+                        sb.AppendLine("    Document：https://doc.ncf.pub/");
+                    }
                 })
                 .SetChinese(() =>
                 {
                     sb.AppendLine("    AI 原生 / DDD（Domain-Driven Design）系统");
                     sb.AppendLine("");
-                    sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
-                    sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
-                    //sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
-                    sb.AppendLine("    文档：https://doc.ncf.pub/");
+                    if (showOpenSourceInfo)
+                    {
+                        sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
+                        sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
+                        //sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
+                        sb.AppendLine("    文档：https://doc.ncf.pub/");
+                    }
                 })
                 .InvokeDefault();
 
@@ -59,11 +66,11 @@ namespace Senparc.Ncf.Core
             return sb.ToString();
         }
 
-        public static void ShowSuccessTip(string note,string systemVersion = null)
+        public static void ShowSuccessTip(string note, string systemVersion = null, bool showOpenSourceInfo = true)
         {
             //输出启动成功标志
-             systemVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var startupNote = Senparc.Ncf.Core.VersionManager.GetVersionNote(systemVersion, note);
+            systemVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var startupNote = Senparc.Ncf.Core.VersionManager.GetVersionNote(systemVersion, note, showOpenSourceInfo);
             Console.WriteLine("----------------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine(startupNote);
