@@ -1235,13 +1235,8 @@
                                 <el-button size="small" icon="el-icon-search"
                                     @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
                             </div>
-                            <div class="df-wn flex-ac" style="gap: 10px;">
-                                <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogGroupAgent')">
-                                    新增智能体
-                                </div>
-                                <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('graph')">
-                                    智能体关系图谱
-                                </div>
+                            <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogGroupAgent')">
+                                新增智能体
                             </div>
                         </div>
                         <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
@@ -1605,76 +1600,3 @@
     <script src="~/js/AgentsManager/axios.js"></script>
     <script src="~/js/AgentsManager/index.js"></script>
 }
-
-@* 关系图谱抽屉 *@
-<el-drawer :visible.sync="visible.graph" direction="rtl" :with-header="false" :wrapper-closable="false"
-    :close-on-press-escape="false" size="960px">
-    <div class="drawerRtl">
-        @* 内容中的头（包括标题和关闭图标） *@
-        <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">智能体关系图谱</div>
-            <div class="drawerRtl__header__close" @@click="handleElVisibleClose('graph')">
-                <i class="el-icon-close"></i>
-            </div>
-        </div>
-        @* 内容中的主体内容 *@
-        <div class="drawerRtl__body">
-            <div class="graph-container">
-                <div class="graph-toolbar">
-                    <button class="graph-toolbar-btn" @@click="showGraphDialog">打开关系图谱</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</el-drawer>
-
-@* 关系图谱弹窗 *@
-<el-dialog
-    title="智能体关系图谱"
-    :visible.sync="graphDialogVisible"
-    width="90%"
-    :close-on-click-modal="false"
-    class="graph-dialog">
-    <div class="graph-container">
-        <canvas class="graph-canvas"></canvas>
-    </div>
-    <div slot="footer" class="dialog-footer">
-        <el-button @@click="graphDialogVisible = false">关闭</el-button>
-    </div>
-</el-dialog>
-
-@* 右键菜单 *@
-<div v-if="contextMenuVisible" 
-     class="graph-context-menu"
-     :style="{ left: contextMenuPosition.x + 'px', top: contextMenuPosition.y + 'px' }">
-    <div class="graph-context-menu-item" @@click="addBidirectionalEdge">添加双向连接</div>
-    <div class="graph-context-menu-item" @@click="addUnidirectionalEdge">添加单向连接</div>
-    <div class="graph-context-menu-item" @@click="removeEdge">删除连接</div>
-</div>
-
-@* 关系图谱对话框 *@
-<el-dialog
-    title="智能体关系图谱"
-    :visible.sync="visible.graphDialogVisible"
-    width="90%"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    class="graph-dialog">
-    <div class="graph-container">
-        <canvas ref="graphCanvas" class="graph-canvas"></canvas>
-        <div class="graph-toolbar">
-            <el-button class="graph-toolbar-btn" @@click="resetGraph">重置视图</el-button>
-            <el-button class="graph-toolbar-btn" @@click="saveGraphData">保存关系</el-button>
-        </div>
-    </div>
-    <div slot="footer" class="dialog-footer">
-        <el-button @@click="visible.graphDialogVisible = false">关闭</el-button>
-    </div>
-</el-dialog>
-
-@* 关系图谱右键菜单 *@
-<div v-show="contextMenuVisible" class="graph-context-menu" :style="{ left: contextMenuPosition.x + 'px', top: contextMenuPosition.y + 'px' }">
-    <div class="graph-context-menu-item" @@click="addUnidirectionalEdge">添加单向连接</div>
-    <div class="graph-context-menu-item" @@click="addBidirectionalEdge">添加双向连接</div>
-    <div class="graph-context-menu-item" @@click="deleteEdge">删除连接</div>
-</div>
