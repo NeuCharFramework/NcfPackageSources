@@ -29,6 +29,21 @@ namespace Senparc.Areas.Admin.Filter
             var result = base.AuthorizeCore(httpContext);// base.AuthorizeCore(httpContext);
             if (result)
             {
+#if DEBUG
+                var adminSession = httpContext.Session.GetString("AdminLogin") as string;
+                if (adminSession.IsNullOrEmpty())
+                {
+                    try
+                    {
+                        var accountService = httpContext.RequestServices.GetService<AccountService>();
+                        accountService.Logout();//强制退出登陆
+                    }
+                    catch
+                    {
+                    }
+                    result = false;
+                }
+#endif
             }
             return result;
         }

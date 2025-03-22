@@ -19,21 +19,21 @@ namespace Senparc.Xncf.DynamicDataTests
 
             // TableMetadata
             List<TableMetadata> tableMetadataList = new() {
-                     new("User","�û���"){
+                     new("User","用户名"){
                           ColumnMetadatas=new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"UserName","Text",false,""),
                                new ColumnMetadata(0,"Balance","Float",false,"0.0"),
                           }
                          },
-                         new("Product","��Ʒ��"){
+                         new("Product","产品表"){
                           ColumnMetadatas = new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"Name","Text",false,""),
                                new ColumnMetadata(0,"Price","Float",false,"0.0"),
                           }
                          },
-                         new("Order","������"){
+                         new("Order","订单表"){
                           ColumnMetadatas = new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"UserGuid","Text",false,""),
@@ -53,13 +53,13 @@ namespace Senparc.Xncf.DynamicDataTests
             var tableDataService = serviceProvider.GetRequiredService<TableDataService>();
             var columnMetadataService = serviceProvider.GetRequiredService<ColumnMetadataService>();
 
-            // User ��
+            // User 表
             var userTableColumns = await columnMetadataService.GetColumnDtos(1);
             var tableDataDtos = new List<TableDataDto>();
 
-            //����һЩ����
+            //添加一些数据
 
-            /* User ��
+            /* User 表
              * | Column   | Value  |
              * |----------|--------|
              * | Guid     |        |
