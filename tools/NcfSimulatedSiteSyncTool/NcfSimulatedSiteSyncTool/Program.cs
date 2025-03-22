@@ -9,7 +9,7 @@ class Program
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 
-        ".csproj", ".user", ".DS_Store"
+        ".csproj", ".user", ".DS_Store","SimulatedSite.sln"
     };
     // 新增忽略的文件名数组
     private static readonly string[] IgnoredFileNames = new[]
@@ -289,30 +289,49 @@ class Program
                 Console.WriteLine($"Target: {relativePath} ({targetTime})");
                 Console.ResetColor();
 
-                // 检查文件内容是否相同
-                var sourceContent = File.ReadAllText(sourceFile).Trim();
-                var targetContent = File.ReadAllText(targetFile).Trim();
-                bool contentSame = string.Equals(sourceContent, targetContent, StringComparison.Ordinal);
+                // 首先比较文件大小，如果大小不同则直接进行详细比较
+                var sourceFileInfo = new FileInfo(sourceFile);
+                var targetFileInfo = new FileInfo(targetFile);
+                bool contentSame = false;
 
-                // 显示文件差异
-                ShowFileDifference(sourceFile, targetFile, contentSame);
-
-                if (contentSame && _autoUpdateChoice != null)
+                if (sourceFileInfo.Length == targetFileInfo.Length)
                 {
-                    // 如果已设置自动选择且内容相同，直接使用自动选择的选项
-                    shouldCopy = _autoUpdateChoice == ConsoleKey.U;
-                    Console.WriteLine($"自动{(shouldCopy ? "更新" : "跳过")}文件");
+                    // 如果文件大小相同，计算 MD5 进行比较
+                    var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
+                    var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
+                    contentSame = sourceMD5 == targetMD5;
                 }
-                else
-                {
-                    while (true)
-                    {
-                        var response = Console.ReadKey();
-                        Console.WriteLine();
 
-                        if (contentSame)
+                if (contentSame)
+                {
+                    // 如果 MD5 相同，直接显示内容相同的提示
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("文件内容相同，仅修改时间不同");
+                    if (_autoUpdateChoice == null)
+                    {
+                        Console.WriteLine("请选择操作：");
+                        Console.WriteLine("U - 更新时间戳");
+                        Console.WriteLine("N - 跳过此文件");
+                        Console.WriteLine("A - 自动执行后续操作（之后每次都执行相同选择）");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"自动执行操作：{(_autoUpdateChoice == ConsoleKey.U ? "更新时间戳" : "跳过")}");
+                    }
+                    Console.ResetColor();
+
+                    if (_autoUpdateChoice != null)
+                    {
+                        shouldCopy = _autoUpdateChoice == ConsoleKey.U;
+                        Console.WriteLine($"自动{(shouldCopy ? "更新" : "跳过")}文件");
+                    }
+                    else
+                    {
+                        while (true)
                         {
-                            // 内容相同时的处理
+                            var response = Console.ReadKey();
+                            Console.WriteLine();
+
                             switch (response.Key)
                             {
                                 case ConsoleKey.U:
@@ -322,7 +341,6 @@ class Program
                                     shouldCopy = false;
                                     break;
                                 case ConsoleKey.A:
-                                    // 提示用户选择自动执行的操作
                                     Console.Write("请选择要自动执行的操作 (U/N): ");
                                     var autoChoice = Console.ReadKey();
                                     Console.WriteLine();
@@ -339,28 +357,36 @@ class Program
                                     Console.WriteLine("无效的输入，请重试");
                                     continue;
                             }
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // 如果 MD5 不同，才进行详细的差异比较
+                    ShowFileDifference(sourceFile, targetFile, false);
+                    while (true)
+                    {
+                        var response = Console.ReadKey();
+                        Console.WriteLine();
+
+                        if (response.Key == ConsoleKey.Y)
+                        {
+                            shouldCopy = true;
+                        }
+                        else if (response.Key == ConsoleKey.R)
+                        {
+                            shouldCopy = true;
+                            isReverseUpdate = true;
+                        }
+                        else if (response.Key == ConsoleKey.N)
+                        {
+                            shouldCopy = false;
                         }
                         else
                         {
-                            // 内容不同时的处理（Y/R/N）保持不变
-                            if (response.Key == ConsoleKey.Y)
-                            {
-                                shouldCopy = true;
-                            }
-                            else if (response.Key == ConsoleKey.R)
-                            {
-                                shouldCopy = true;
-                                isReverseUpdate = true;
-                            }
-                            else if (response.Key == ConsoleKey.N)
-                            {
-                                shouldCopy = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("无效的输入，请重试");
-                                continue;
-                            }
+                            Console.WriteLine("无效的输入，请重试");
+                            continue;
                         }
                         break;
                     }
@@ -413,5 +439,13 @@ public static class FileExtensions
         using var sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
         using var destinationStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
         await sourceStream.CopyToAsync(destinationStream);
+    }
+
+    public static async Task<string> CalculateMD5Async(string filePath)
+    {
+        using var md5 = System.Security.Cryptography.MD5.Create();
+        using var stream = File.OpenRead(filePath);
+        var hash = await md5.ComputeHashAsync(stream);
+        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
     }
 }
