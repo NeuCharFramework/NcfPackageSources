@@ -17,14 +17,21 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
     {
         private readonly NcfFileService _fileService;
 
+        public string UpFileUrl { get; set; }
+        public string BaseUrl { get; set; }
+
         public Index(Lazy<XncfModuleService> xncfModuleService, NcfFileService fileService)
             : base(xncfModuleService)
         {
             _fileService = fileService;
         }
 
-        public void OnGet()
+        public Task OnGetAsync()
         {
+            ///Admin/FileManager/Index?handler=Upload
+            BaseUrl = $"{Request.Scheme}://{Request.Host.Value}"; 
+            UpFileUrl = $"{BaseUrl}/Admin/FileManager/Index?handler=Upload";
+            return Task.CompletedTask;
         }
 
         public async Task<IActionResult> OnGetListAsync(int page = 1, int pageSize = 10)

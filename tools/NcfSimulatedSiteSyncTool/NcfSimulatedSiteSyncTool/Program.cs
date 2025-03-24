@@ -9,12 +9,12 @@ class Program
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 
-        ".csproj", ".user", ".DS_Store","SimulatedSite.sln", ".Development.config"
+        ".csproj", ".user", ".DS_Store", ".Development.config"
     };
     // 新增忽略的文件名数组
     private static readonly string[] IgnoredFileNames = new[]
     {
-        "launchSettings.json"
+        "launchSettings.json", "NcfSimulatedSite.sln"
     };
     // 新增包含特定字符串的文件过滤规则
     private static readonly string[] IgnoredFilePatterns = new[]
@@ -102,16 +102,16 @@ class Program
 
         // 获取文件名和扩展名
         var fileName = Path.GetFileName(path);
-        var extension = Path.GetExtension(path);
+
+        // 首先检查完整文件名
+        if (IgnoredFileNames.Any(name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+            return true;
 
         // 检查扩展名
+        var extension = Path.GetExtension(path);
         if (IgnoredExtensions.Any(ext => 
             ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
-            return true;
-
-        // 检查完整文件名
-        if (IgnoredFileNames.Any(name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
             return true;
 
         // 检查 .sln 文件是否包含指定模式
@@ -279,39 +279,39 @@ class Program
 
         bool shouldCopy = true;
         bool isReverseUpdate = false;
+        bool updateTimestampOnly = false;
 
         if (File.Exists(targetFile))
         {
             var sourceTime = File.GetLastWriteTime(sourceFile);
             var targetTime = File.GetLastWriteTime(targetFile);
 
-            if (targetTime > sourceTime)
+            // 首先比较文件大小，如果大小不同则直接进行详细比较
+            var sourceFileInfo = new FileInfo(sourceFile);
+            var targetFileInfo = new FileInfo(targetFile);
+            bool contentSame = false;
+
+            if (sourceFileInfo.Length == targetFileInfo.Length)
             {
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Warning: Target file is newer than source file:");
-                Console.WriteLine($"Source: {relativePath} ({sourceTime})");
-                Console.WriteLine($"Target: {relativePath} ({targetTime})");
-                Console.ResetColor();
+                // 如果文件大小相同，计算 MD5 进行比较
+                var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
+                var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
+                contentSame = sourceMD5 == targetMD5;
+            }
 
-                // 首先比较文件大小，如果大小不同则直接进行详细比较
-                var sourceFileInfo = new FileInfo(sourceFile);
-                var targetFileInfo = new FileInfo(targetFile);
-                bool contentSame = false;
-
-                if (sourceFileInfo.Length == targetFileInfo.Length)
+            if (contentSame)
+            {
+                // 如果内容相同，只更新时间戳
+                if (targetTime > sourceTime)
                 {
-                    // 如果文件大小相同，计算 MD5 进行比较
-                    var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
-                    var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
-                    contentSame = sourceMD5 == targetMD5;
-                }
-
-                if (contentSame)
-                {
-                    // 如果 MD5 相同，直接显示内容相同的提示
+                    Console.WriteLine();
                     Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Warning: Target file is newer than source file:");
+                    Console.WriteLine($"Source: {relativePath} ({sourceTime})");
+                    Console.WriteLine($"Target: {relativePath} ({targetTime})");
                     Console.WriteLine("文件内容相同，仅修改时间不同");
+                    Console.ResetColor();
+
                     if (_autoUpdateChoice == null)
                     {
                         Console.WriteLine("请选择操作：");
@@ -323,11 +323,11 @@ class Program
                     {
                         Console.WriteLine($"自动执行操作：{(_autoUpdateChoice == ConsoleKey.U ? "更新时间戳" : "跳过")}");
                     }
-                    Console.ResetColor();
 
                     if (_autoUpdateChoice != null)
                     {
                         shouldCopy = _autoUpdateChoice == ConsoleKey.U;
+                        updateTimestampOnly = shouldCopy;
                         Console.WriteLine($"自动{(shouldCopy ? "更新" : "跳过")}文件");
                     }
                     else
@@ -341,6 +341,7 @@ class Program
                             {
                                 case ConsoleKey.U:
                                     shouldCopy = true;
+                                    updateTimestampOnly = true;
                                     break;
                                 case ConsoleKey.N:
                                     shouldCopy = false;
@@ -354,6 +355,7 @@ class Program
                                     {
                                         _autoUpdateChoice = autoChoice.Key;
                                         shouldCopy = autoChoice.Key == ConsoleKey.U;
+                                        updateTimestampOnly = shouldCopy;
                                         Console.WriteLine($"已设置自动{(shouldCopy ? "更新" : "跳过")}后续内容相同的文件");
                                         break;
                                     }
@@ -368,35 +370,59 @@ class Program
                 }
                 else
                 {
-                    // 如果 MD5 不同，才进行详细的差异比较
-                    ShowFileDifference(sourceFile, targetFile, false);
-                    while (true)
-                    {
-                        var response = Console.ReadKey();
-                        Console.WriteLine();
-
-                        if (response.Key == ConsoleKey.Y)
-                        {
-                            shouldCopy = true;
-                        }
-                        else if (response.Key == ConsoleKey.R)
-                        {
-                            shouldCopy = true;
-                            isReverseUpdate = true;
-                        }
-                        else if (response.Key == ConsoleKey.N)
-                        {
-                            shouldCopy = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("无效的输入，请重试");
-                            continue;
-                        }
-                        break;
-                    }
+                    // 如果目标文件时间更早，直接更新时间戳
+                    shouldCopy = true;
+                    updateTimestampOnly = true;
+                    // 直接更新时间戳，不需要询问
+                    File.SetLastWriteTime(targetFile, sourceTime);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Updated timestamp: {relativePath}");
+                    Console.ResetColor();
+                    return; // 直接返回，不需要继续执行
                 }
             }
+            else
+            {
+                // 如果内容不同，显示差异并询问
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Warning: Files have different content:");
+                Console.WriteLine($"Source: {relativePath} ({sourceTime})");
+                Console.WriteLine($"Target: {relativePath} ({targetTime})");
+                Console.ResetColor();
+
+                ShowFileDifference(sourceFile, targetFile, false);
+                while (true)
+                {
+                    var response = Console.ReadKey();
+                    Console.WriteLine();
+
+                    if (response.Key == ConsoleKey.Y)
+                    {
+                        shouldCopy = true;
+                    }
+                    else if (response.Key == ConsoleKey.R)
+                    {
+                        shouldCopy = true;
+                        isReverseUpdate = true;
+                    }
+                    else if (response.Key == ConsoleKey.N)
+                    {
+                        shouldCopy = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("无效的输入，请重试");
+                        continue;
+                    }
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // 目标文件不存在，直接复制
+            shouldCopy = true;
         }
 
         if (shouldCopy)
@@ -407,14 +433,24 @@ class Program
                 {
                     // 反向更新：将目标文件复制到源文件
                     await FileExtensions.CopyAsync(targetFile, sourceFile, true);
-                    Console.ForegroundColor = ConsoleColor.Cyan; // 使用不同的颜色表示反向更新
+                    File.SetLastWriteTime(sourceFile, File.GetLastWriteTime(targetFile));
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine($"Reverse updated: {relativePath} (target -> source)");
+                    Console.ResetColor();
+                }
+                else if (updateTimestampOnly)
+                {
+                    // 只更新时间戳
+                    File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Updated timestamp: {relativePath}");
                     Console.ResetColor();
                 }
                 else
                 {
                     // 正常更新：将源文件复制到目标文件
                     await FileExtensions.CopyAsync(sourceFile, targetFile, true);
+                    File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Copied: {relativePath} (source -> target)");
                     Console.ResetColor();
