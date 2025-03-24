@@ -851,6 +851,28 @@ steps:
   condition: succeededOrFailed()  
   
 - task: NuGetCommand@2    
+  displayName: Senparc.Xncf.SenMapic    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.SenMapic.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.SenMapic - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.SenMapic.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
   displayName: Senparc.Ncf.UnitTestExtension    
   inputs:      
     command: push      
@@ -872,6 +894,8 @@ steps:
   continueOnError: true    
   condition: succeededOrFailed()  
   
+  
+
 # 系统模块 结束  
 - task: DotNetCoreCLI@2    
   displayName: Publish    
