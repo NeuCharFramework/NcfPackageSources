@@ -71,7 +71,7 @@
         <el-upload
             class="upload-demo"
             ref="upload"
-            action="/Admin/FileManager/Index?handler=Upload"
+            action="@Model.UpFileUrl"
             :auto-upload="false"
             :show-file-list="true"
             :on-success="handleUploadSuccess"
