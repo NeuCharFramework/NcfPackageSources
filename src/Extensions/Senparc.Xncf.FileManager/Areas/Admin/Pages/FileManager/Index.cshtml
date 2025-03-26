@@ -71,15 +71,17 @@
         <el-upload
             class="upload-demo"
             ref="upload"
-            action="@Model.UpFileUrl"
+            action="#"
             :auto-upload="false"
+            :multiple="true"
             :show-file-list="true"
             :on-success="handleUploadSuccess"
             :on-error="handleUploadError"
             :on-change="handleFileChange"
+            :on-progress="handleProgress"
             :before-upload="beforeUpload"
             :file-list="uploadDialog.fileList"
-            multiple>
+            >
             <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
         </el-upload>
@@ -199,11 +201,15 @@
                     }
                     this.uploadDialog.fileList = fileList;
                 },
+                handleProgress(){
+
+                },
                 beforeUpload(file) {
                     // 返回 false 阻止自动上传，改为手动上传
                     return false;
                 },
                 async submitUpload() {
+                    console.log("@Model.UpFileUrl")
                     if (this.uploadDialog.fileList.length === 0) {
                         this.$message.warning('请选择要上传的文件');
                         return;
@@ -217,14 +223,14 @@
                             formData.append('descriptions', file.description || '');
                         });
 
-                        const response = await axios.post('/Admin/FileManager/Index?handler=Upload', 
+                        const response = await axios.post("@Model.UpFileUrl", 
                             formData,
                             {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
                                 }
                             }
-                        );
+                        )
 
                         this.$message.success('上传成功');
                         this.uploadDialog.visible = false;
