@@ -1,6 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ModelContextProtocol;
+using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol.Transport;
+using ModelContextProtocol.Protocol.Types;
+using ModelContextProtocol.Server;
+using Senparc.CO2NET.HttpUtility;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
@@ -11,7 +17,10 @@ using Senparc.Xncf.MCP.Models.DatabaseModel.Dto;
 using Senparc.Xncf.MCP.OHS.Local.AppService;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.MCP
@@ -74,6 +83,8 @@ namespace Senparc.Xncf.MCP
         }
         #endregion
 
+        public IMcpClient McpClient { get; set; }
+
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
@@ -82,7 +93,21 @@ namespace Senparc.Xncf.MCP
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
+
+
+            services.AddMcpServer()
+                    .WithStdioServerTransport()
+                    .WithToolsFromAssembly();
+
+
             return base.AddXncfModule(services, configuration, env);
         }
+    }
+
+    [McpToolType]
+    public static class EchoTool
+    {
+        [McpTool, Description("Echoes the message back to the client.")]
+        public static string Echo(string message) => $"hello {message}";
     }
 }
