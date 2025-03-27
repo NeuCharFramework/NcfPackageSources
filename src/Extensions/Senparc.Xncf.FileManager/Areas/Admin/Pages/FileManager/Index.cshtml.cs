@@ -19,6 +19,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         private readonly NcfFileService _fileService;
 
         public string UpFileUrl { get; set; }
+        public string DelFileUrl {  get; set; }
         public string BaseUrl { get; set; }
 
         public Index(Lazy<XncfModuleService> xncfModuleService, NcfFileService fileService)
@@ -30,6 +31,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         public Task OnGetAsync()
         {
             UpFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostUploadAsync";
+            UpFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostDeleteAsync";
             return Task.CompletedTask;
         }
 
@@ -76,6 +78,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(true);
         }
 
+        [ApiBind("FileManager", ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             await _fileService.DeleteFileAsync(id);
