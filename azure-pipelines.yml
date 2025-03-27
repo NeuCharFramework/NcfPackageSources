@@ -871,6 +871,28 @@ steps:
     arguments: '-skipDuplicate'    
   continueOnError: true    
   condition: succeededOrFailed()  
+
+- task: NuGetCommand@2    
+  displayName: Senparc.Xncf.MCP    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.MCP.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.MCP - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.MCP.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()    
   
 - task: NuGetCommand@2    
   displayName: Senparc.Ncf.UnitTestExtension    
