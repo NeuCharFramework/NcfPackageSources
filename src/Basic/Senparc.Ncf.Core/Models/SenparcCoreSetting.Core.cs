@@ -60,5 +60,10 @@ namespace Senparc.Ncf.Core.Models
         /// 密码加密加强选项，此值在首个账号生成后不修改，否则会导致所有密码失效
         /// </summary>
         public string PasswordSaltToken { get; set; }
+
+        /// <summary>
+        /// MCP 访问令牌，用于 SSE 连接鉴权
+        /// </summary>
+        public string McpAccessToken { get; set; }
     }
 }

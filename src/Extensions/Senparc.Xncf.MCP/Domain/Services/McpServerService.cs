@@ -30,7 +30,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         private CancellationTokenSource? _cts;
         private bool _isRunning = false;
 
-        public void Start()
+        public void Start(IServiceProvider serviceProvider)
         {
             if (_isRunning) return;  // 防止重复启动
             _cts = new CancellationTokenSource();
@@ -46,7 +46,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
                                   {
                                       opt.ServerInfo = new Implementation()
                                       {
-                                          Name = "ncf-mcp-server",
+                                          Name = "ncf-mcp-server-one",
                                           Version = "1.0.0",
                                       };
                                   })
@@ -66,12 +66,6 @@ namespace Senparc.Xncf.MCP.Domain.Services
                                           await context.Response.WriteAsync("Hello NCF");
                                       });
 
-                                      endpoints.MapGet("/time", async context =>
-                                      {
-                                          var currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                          await context.Response.WriteAsync(currentTime);
-                                      });
-
                                       IMcpServer? server = null;
                                       SseResponseStreamTransport? transport = null;
                                       var loggerFactory = endpoints.ServiceProvider.GetRequiredService<ILoggerFactory>();
@@ -79,8 +73,26 @@ namespace Senparc.Xncf.MCP.Domain.Services
 
                                       var routeGroup = endpoints.MapGroup("");
 
-                                      routeGroup.MapGet("/sse", async (HttpResponse response, CancellationToken requestAborted) =>
+                                      routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
                                       {
+                                          // 检查 Token
+                                          var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
+                                          
+                                          if (string.IsNullOrEmpty(configuredToken))
+                                          {
+                                              context.Response.StatusCode = 500;
+                                              await context.Response.WriteAsync("MCP access token is not configured");
+                                              return;
+                                          }
+
+                                          if (!context.Request.Headers.TryGetValue("X-MCP-Token", out var requestToken) || 
+                                              requestToken != configuredToken)
+                                          {
+                                              context.Response.StatusCode = 401;
+                                              await context.Response.WriteAsync("Unauthorized: Invalid or missing MCP access token");
+                                              return;
+                                          }
+
                                           await using var localTransport = transport = new SseResponseStreamTransport(response.Body);
                                           await using var localServer = server = McpServerFactory.Create(transport, mcpServerOptions.Value, loggerFactory, endpoints.ServiceProvider);
 

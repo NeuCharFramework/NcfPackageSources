@@ -104,7 +104,16 @@ namespace Senparc.Xncf.MCP
             });
 
 
-
+            services.AddMcpServer(opt =>
+                                 {
+                                     opt.ServerInfo = new Implementation()
+                                     {
+                                         Name = "ncf-mcp-server",
+                                         Version = "1.0.0",
+                                     };
+                                 })
+                                         //   .WithStdioServerTransport()
+                                         .WithToolsFromAssembly();
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -112,24 +121,58 @@ namespace Senparc.Xncf.MCP
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
+            // var ncfMcpServerService = new McpServerService();
+            // ncfMcpServerService.Start();
 
-            var ncfMcpServerService = new McpServerService();
-            ncfMcpServerService.Start();
 
+            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 var serviceProvider = app.ApplicationServices;
-
                 //放置 NCF-MCP-Server SSE
                 IMcpServer? server = null;
                 SseResponseStreamTransport? transport = null;
                 var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 var mcpServerOptions = serviceProvider.GetRequiredService<IOptions<McpServerOptions>>();
 
+
+                endpoints.MapGet("/ho", async context =>
+                {
+                    await context.Response.WriteAsync("Hello NCF Service!");
+                });
+
                 var routeGroup = endpoints.MapGroup("");
 
-                routeGroup.MapGet("/sse", async (HttpResponse response, CancellationToken requestAborted) =>
+                endpoints.MapGet("/hoe", async context =>
                 {
+                    await context.Response.WriteAsync("Hello NCF Service EEE!");
+                });
+
+                routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
+                {
+                    // 获取配置的 Token
+                    var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
+
+                    // 从请求头获取 Token
+
+                    if (string.IsNullOrEmpty(configuredToken))
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("MCP access token is not configured");
+                        return;
+                    }
+
+                    if (!context.Request.Query.TryGetValue("token", out var requestToken) ||
+                        requestToken != configuredToken)
+                    {
+                        Console.WriteLine($"requestToken: {requestToken}");
+                        Console.WriteLine($"configuredToken: {configuredToken}");
+
+                        context.Response.StatusCode = 401;
+                        await context.Response.WriteAsync("Unauthorized");
+                        return;
+                    }
+
                     await using var localTransport = transport = new SseResponseStreamTransport(response.Body);
                     await using var localServer = server = McpServerFactory.Create(transport, mcpServerOptions.Value, loggerFactory, endpoints.ServiceProvider);
 
@@ -170,6 +213,7 @@ namespace Senparc.Xncf.MCP
                 });
 
             });
+
             return base.UseXncfModule(app, registerService);
         }
 
@@ -177,14 +221,4 @@ namespace Senparc.Xncf.MCP
 
 
 
-
-    [McpToolType()]
-    public static class NcfMcpTools
-    {
-        [McpTool, Description("Echoes the message back to the client.")]
-        public static string Echo(string message) => $"hello {message}";
-
-        [McpTool, Description("return current time.")]
-        public static string Now(string message) => $"{DateTime.Now}";
-    }
 }
