@@ -7,8 +7,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.KernelMemory;
-using Microsoft.KernelMemory.MemoryStorage.DevTools;
+
 using Senparc.Xncf.KnowledgeBase.Models;
 using Senparc.Xncf.KnowledgeBase.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
@@ -79,19 +78,7 @@ namespace Senparc.Xncf.KnowledgeBase
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-            services.AddScoped<KnowledgeBaseService>();
-            services.AddKernelMemory(builder =>
-                builder
-                .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig()
-                {
-                    APIKey = configuration["AzureOpenAI:ApiKey"],
-                    Endpoint = configuration["AzureOpenAI:Endpoint"],
-                    Deployment = "text-embedding-3-small",
-                    Auth = AzureOpenAIConfig.AuthTypes.APIKey
-                })
-                .WithoutTextGenerator()
-                .Build<MemoryServerless>());
-            
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
