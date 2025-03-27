@@ -142,8 +142,8 @@
                     this.tableLoading = true
                     try {
                         const res = await axios.get(`/Admin/FileManager/Index?handler=List&page=${this.page.page}&pageSize=${this.page.size}`)
-                        this.tableData = res.data.items
-                        this.total = res.data.totalCount
+                        this.tableData = res.data.data
+                        this.total = res.data.data.totalCount
                     } finally {
                         this.tableLoading = false
                     }
