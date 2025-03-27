@@ -7,6 +7,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto
         public int Id { get; set; }
         public string FileName { get; set; }
         public string FileExtension { get; set; }
+        public string FilePath { get; set; }
         public long FileSize { get; set; }
         public FileType FileType { get; set; }
         public string Description { get; set; }

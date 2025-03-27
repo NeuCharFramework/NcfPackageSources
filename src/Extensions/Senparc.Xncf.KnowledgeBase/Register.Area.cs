@@ -20,7 +20,8 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/KnowledgeBase"),"知识库管理","fa fa-bookmark-o"),
+                         new AreaPageMenuItem(GetAreaUrl("/Admin/KnowledgeBase/RetrievalTest"),"召回测试","fa fa-bookmark-o"),
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

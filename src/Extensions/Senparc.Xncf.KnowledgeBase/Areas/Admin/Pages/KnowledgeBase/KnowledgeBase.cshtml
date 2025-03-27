@@ -1,0 +1,260 @@
+﻿@page
+@model Senparc.Xncf.KnowledgeBase.Areas.KnowledgeBase.Pages.KnowledgeBase
+@{
+    ViewData["Title"] = "知识库管理";
+    Layout = "_Layout_Vue";
+}
+
+@section HeaderContent{
+    <style>
+        .extensionAreaTemplate .box {
+            margin: 20px;
+            padding: 20px;
+        }
+        .extensionAreaTemplate .el-menu {
+            min-height: 400px;
+        }
+        .collection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chunk-item {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .chunk-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .chunk-content {
+            white-space: pre-wrap;
+            background: #f5f7fa;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .chunk-tags {
+            margin-top: 10px;
+        }
+        .chunk-tag {
+            margin-right: 5px;
+        }
+        .el-upload {
+            display: inline-block;
+        }
+        .collection-header > div {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>AI知识库</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理</el-breadcrumb-item>
+}
+
+<div class="extensionAreaTemplate">
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title">
+                <i class="fa fa-database"></i>&nbsp;
+                <span class="module-header-v">知识库管理</span>
+            </span>
+        </el-header>
+        <el-container>
+            <el-aside width="300px">
+                <div class="box">
+                    <div class="collection-header">
+                        <h3>知识库列表</h3>
+                        <el-button type="primary" size="small" @@click="showCreateCollection">
+                            <i class="fa fa-plus"></i> 新建
+                        </el-button>
+                    </div>
+                    <el-menu :default-active="currentCollection" @@select="handleCollectionSelect">
+                        <el-menu-item v-for="collection in collections" :key="collection" :index="collection">
+                            <span>{{ collection }}</span>
+                            <el-button type="text" style="float: right" @@click.stop="deleteCollection(collection)">
+                                <i class="el-icon-delete"></i>
+                            </el-button>
+                        </el-menu-item>
+                    </el-menu>
+                </div>
+            </el-aside>
+            <el-main>
+                <div class="box" v-if="currentCollection">
+                    <div class="collection-header">
+                        <h3>{{ currentCollection }} - 文档列表</h3>
+                        <div>
+                            <el-button type="primary" @@click="showImportDialog">
+                                <i class="fa fa-upload"></i> 导入文本
+                            </el-button>
+                        </div>
+                    </div>
+                    <div class="chunk-list">
+                        <div v-for="chunk in chunks" :key="chunk.id" class="chunk-item">
+                            <div class="chunk-header">
+                                <span>ID: {{ chunk.id }}</span>
+                                <el-button type="text" @@click="deleteChunk(chunk.id)">
+                                    <i class="el-icon-delete"></i>
+                                </el-button>
+                            </div>
+                            <div class="chunk-content">{{ chunk.text }}</div>
+                            <div class="chunk-tags" v-if="chunk.tags">
+                                <el-tag v-for="(value, key) in chunk.tags" 
+                                       :key="key" 
+                                       size="small" 
+                                       class="chunk-tag">
+                                    {{key}}: {{value}}
+                                </el-tag>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </el-main>
+        </el-container>
+    </el-container>
+
+    <!-- 创建Collection对话框 -->
+    <el-dialog title="创建知识库" :visible.sync="createCollectionVisible">
+        <el-form :model="createCollectionForm">
+            <el-form-item label="知识库名称">
+                <el-input v-model="createCollectionForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="向量维度">
+                <el-input-number v-model="createCollectionForm.vectorSize" :min="1"></el-input-number>
+            </el-form-item>
+        </el-form>
+        <div slot="footer">
+            <el-button @@click="createCollectionVisible = false">取消</el-button>
+            <el-button type="primary" @@click="createCollection">确定</el-button>
+        </div>
+    </el-dialog>
+
+    <!-- 导入文本对话框 -->
+    <el-dialog title="导入文本" :visible.sync="importTextVisible">
+        <el-form :model="importTextForm">
+            <el-form-item label="文本内容">
+                <el-input type="textarea" v-model="importTextForm.text" :rows="10"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer">
+            <el-button @@click="importTextVisible = false">取消</el-button>
+            <el-button type="primary" @@click="importText">确定</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+@section scripts{
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    collections: [],
+                    currentCollection: '',
+                    chunks: [],
+                    createCollectionVisible: false,
+                    createCollectionForm: {
+                        name: '',
+                        vectorSize: 1536
+                    },
+                    importTextVisible: false,
+                    importTextForm: {
+                        text: ''
+                    },
+                    uploadUrl: '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.ImportDocument'
+                };
+            },
+            mounted() {
+                this.loadCollections();
+            },
+            methods: {
+                async loadCollections() {
+                    const res = await service.get('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.ListCollectionsAsync');
+                    this.collections = res.data.data.collections;
+                },
+                async loadChunks() {
+                    if (!this.currentCollection) return;
+                    const res = await service.post('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.ListChunksAsync', {
+                        collectionName: this.currentCollection
+                    });
+                    this.chunks = res.data.data.chunks;
+                },
+                handleCollectionSelect(index) {
+                    this.currentCollection = index;
+                    this.loadChunks();
+                },
+                showCreateCollection() {
+                    this.createCollectionVisible = true;
+                    this.createCollectionForm = { name: '', vectorSize: 1536 };
+                },
+                async createCollection() {
+                    await service.post('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.CreateCollectionAsync', {
+                        collectionName: this.createCollectionForm.name,
+                        vectorSize: this.createCollectionForm.vectorSize
+                    });
+                    this.createCollectionVisible = false;
+                    this.loadCollections();
+                },
+                async deleteCollection(collection) {
+                    try {
+                        await this.$confirm('确认删除该知识库吗？', '提示', {
+                            type: 'warning'
+                        });
+                        await service.post('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.DeleteCollectionAsync', {
+                            collectionName: collection
+                        });
+                        this.loadCollections();
+                        if (this.currentCollection === collection) {
+                            this.currentCollection = '';
+                            this.chunks = [];
+                        }
+                    } catch {
+                        // 用户取消删除
+                    }
+                },
+                showImportDialog() {
+                    this.importTextVisible = true;
+                    this.importTextForm.text = '';
+                },
+                async importText() {
+                    const params = {
+                        collectionName: this.currentCollection,
+                        text: this.importTextForm.text
+                    };
+                    
+                    await service.post('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.ImportText', params);
+                    this.importTextVisible = false;
+                    this.loadChunks();
+                },
+                async deleteChunk(id) {
+                    try {
+                        await this.$confirm('确认删除该文档片段吗？', '提示', {
+                            type: 'warning'
+                        });
+                        await service.delete('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.DeleteChunkAsync', {
+                            collectionName: this.currentCollection,
+                            id: id
+                        });
+                        this.loadChunks();
+                    } catch {
+                        // 用户取消删除
+                    }
+                },
+                handleUploadSuccess(response) {
+                    this.$message.success('文档上传成功');
+                    this.loadChunks(); // 重新加载文档列表
+                },
+                handleUploadError(error) {
+                    this.$message.error('文档上传失败：' + (error.message || '未知错误'));
+                }
+            }
+        });
+    </script>
+}
