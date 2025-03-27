@@ -15,6 +15,9 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
+using Senparc.Ncf.Core.WebApi;
+using Microsoft.KernelMemory.AI;
+using System.Threading;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
@@ -27,7 +30,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Uid => "CEAFC442-EE03-42EA-AD54-E607AD0C03A9";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.2";//必须填写版本号
 
         public override string MenuName => "AI 知识库";
 
@@ -78,25 +81,74 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            var myConfig = new MyEmbeddingGeneratorConfig
+            {
+                MaxToken = 4096
+            };
+
             services.AddScoped<ColorAppService>();
             services.AddScoped<KnowledgeBaseService>();
             services.AddKernelMemory(builder =>
                 builder
-                .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig()
-                {
-                    APIKey = configuration["AzureOpenAI:ApiKey"],
-                    Endpoint = configuration["AzureOpenAI:Endpoint"],
-                    Deployment = "text-embedding-3-small",
-                    Auth = AzureOpenAIConfig.AuthTypes.APIKey
-                })
+                .WithoutEmbeddingGenerator()
+                .WithCustomEmbeddingGenerator<MyEmbeddingGenerator>()                                   
+                //.WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig()
+                //{
+                //    APIKey = configuration["AzureOpenAI:ApiKey"],
+                //    Endpoint = configuration["AzureOpenAI:Endpoint"],
+                //    Deployment = "text-embedding-3-small",
+                //    Auth = AzureOpenAIConfig.AuthTypes.APIKey
+                //})
                 .WithoutTextGenerator()
                 .Build<MemoryServerless>());
-            
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
+        }
+    }
+    public class MyEmbeddingGeneratorConfig
+    {
+        public int MaxToken { get; set; } = 4096;
+
+    }
+
+    public class MyEmbeddingGenerator : ITextEmbeddingGenerator
+    {
+        public MyEmbeddingGenerator(MyEmbeddingGeneratorConfig embeddingGeneratorConfig)
+        {
+            this.MaxTokens = embeddingGeneratorConfig.MaxToken;
+
+        }
+
+        /// <inheritdoc />
+        public int MaxTokens { get; }
+
+        /// <inheritdoc />
+        public int CountTokens(string text)
+        {
+            // ... calculate and return the number of tokens ...
+
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<string> GetTokens(string text)
+        {
+            // ... calculate and return the list of tokens ...
+
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<Embedding> GenerateEmbeddingAsync(
+            string text, CancellationToken cancellationToken = default)
+        {
+            // ... generate and return the embedding for the given text ...
+
+            throw new NotImplementedException();
         }
     }
 }
