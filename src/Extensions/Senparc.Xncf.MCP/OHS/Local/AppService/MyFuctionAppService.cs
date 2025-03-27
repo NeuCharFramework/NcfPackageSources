@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol.Transport;
+using ModelContextProtocol.Server;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -9,6 +10,7 @@ using Senparc.Xncf.MCP.Domain.Services;
 using Senparc.Xncf.MCP.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
+    [McpToolType]
     public class MyFuctionAppService : AppServiceBase
     {
         private ColorService _colorService;
@@ -26,54 +29,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender("MCP Client", "MCP Client Test", typeof(Register))]
-        public async Task<StringAppResponse> MCP()
-        {
-            return await this.GetStringResponseAsync(async (response, logger) =>
-            {
-                try
-                {
-                    McpClientOptions options = new()
-                    {
-                        ClientInfo = new() { Name = "TestClient", Version = "1.0.0" }
-                    };
-
-                    McpClient = await McpClientFactory.CreateAsync(new()
-                    {
-                        Id = "everything",
-                        Name = "Everything",
-                        TransportType = TransportTypes.StdIo,
-                        TransportOptions = new()
-                        {
-                            ["command"] = "npx",
-                            ["arguments"] = "-y @modelcontextprotocol/server-everything",
-                        }
-                    }, options);
-
-
-                    // Print the list of tools available from the server.
-                    await foreach (var tool in McpClient.ListToolsAsync())
-                    {
-                        Console.WriteLine($"{tool.Name} ({tool.Description})");
-                    }
-
-                    // Execute a tool (this would normally be driven by LLM tool invocations).
-                    var result = await McpClient.CallToolAsync(
-                        "echo",
-                        new Dictionary<string, object?>() { ["message"] = "Hello MCP!" },
-                        System.Threading.CancellationToken.None);
-
-                    // echo always returns one and only one text content object
-                    return result.Content.First(c => c.Type == "text").Text;
-                }
-                catch (Exception ex)
-                {
-                    return ex.Message;
-                }
-            });
-        }
-
-
+        [McpTool, Description("进行加减乘除的计算器")]
         [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {

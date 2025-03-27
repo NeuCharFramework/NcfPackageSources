@@ -1,17 +1,26 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ModelContextProtocol;
 using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol.Messages;
 using ModelContextProtocol.Protocol.Transport;
 using ModelContextProtocol.Protocol.Types;
 using ModelContextProtocol.Server;
+using ModelContextProtocol.Utils.Json;
 using Senparc.CO2NET.HttpUtility;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
+using Senparc.Xncf.MCP.Domain.Services;
 using Senparc.Xncf.MCP.Models;
 using Senparc.Xncf.MCP.Models.DatabaseModel.Dto;
 using Senparc.Xncf.MCP.OHS.Local.AppService;
@@ -95,19 +104,87 @@ namespace Senparc.Xncf.MCP
             });
 
 
-            services.AddMcpServer()
-                    .WithStdioServerTransport()
-                    .WithToolsFromAssembly();
 
 
             return base.AddXncfModule(services, configuration, env);
         }
+
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+
+            var ncfMcpServerService = new McpServerService();
+            ncfMcpServerService.Start();
+
+            app.UseEndpoints(endpoints =>
+            {
+                var serviceProvider = app.ApplicationServices;
+
+                //放置 NCF-MCP-Server SSE
+                IMcpServer? server = null;
+                SseResponseStreamTransport? transport = null;
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                var mcpServerOptions = serviceProvider.GetRequiredService<IOptions<McpServerOptions>>();
+
+                var routeGroup = endpoints.MapGroup("");
+
+                routeGroup.MapGet("/sse", async (HttpResponse response, CancellationToken requestAborted) =>
+                {
+                    await using var localTransport = transport = new SseResponseStreamTransport(response.Body);
+                    await using var localServer = server = McpServerFactory.Create(transport, mcpServerOptions.Value, loggerFactory, endpoints.ServiceProvider);
+
+                    await localServer.StartAsync(requestAborted);
+
+                    response.Headers.ContentType = "text/event-stream";
+                    response.Headers.CacheControl = "no-cache";
+
+                    try
+                    {
+                        await transport.RunAsync(requestAborted);
+                    }
+                    catch (OperationCanceledException) when (requestAborted.IsCancellationRequested)
+                    {
+                        // RequestAborted always triggers when the client disconnects before a complete response body is written,
+                        // but this is how SSE connections are typically closed.
+                    }
+                });
+
+                routeGroup.MapPost("/message", async context =>
+                {
+                    if (transport is null)
+                    {
+                        await Results.BadRequest("Connect to the /sse endpoint before sending messages.").ExecuteAsync(context);
+                        return;
+                    }
+
+                    var message = await context.Request.ReadFromJsonAsync<IJsonRpcMessage>(McpJsonUtilities.DefaultOptions, context.RequestAborted);
+                    if (message is null)
+                    {
+                        await Results.BadRequest("No message in request body.").ExecuteAsync(context);
+                        return;
+                    }
+
+                    await transport.OnMessageReceivedAsync(message, context.RequestAborted);
+                    context.Response.StatusCode = StatusCodes.Status202Accepted;
+                    await context.Response.WriteAsync("Accepted");
+                });
+
+            });
+            return base.UseXncfModule(app, registerService);
+        }
+
     }
 
-    [McpToolType]
-    public static class EchoTool
+
+
+
+    [McpToolType()]
+    public static class NcfMcpTools
     {
         [McpTool, Description("Echoes the message back to the client.")]
         public static string Echo(string message) => $"hello {message}";
+
+        [McpTool, Description("return current time.")]
+        public static string Now(string message) => $"{DateTime.Now}";
     }
 }
