@@ -30,7 +30,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 		<EmbeddedResource Include="wwwroot\**\*" />
-		<PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.1.25171.12" />
+		<PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.2" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 	</ItemGroup>
 	<ItemGroup>

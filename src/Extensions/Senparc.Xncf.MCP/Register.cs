@@ -103,7 +103,6 @@ namespace Senparc.Xncf.MCP
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
 
-
             services.AddMcpServer(opt =>
                                  {
                                      opt.ServerInfo = new Implementation()
