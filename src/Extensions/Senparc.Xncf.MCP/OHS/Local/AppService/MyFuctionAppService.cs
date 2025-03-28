@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
+
+
     [McpServerToolType()]
     public static class NcfMcpTools
     {
