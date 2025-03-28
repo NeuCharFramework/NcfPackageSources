@@ -97,6 +97,7 @@ namespace Senparc.Xncf.MCP
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
+            services.AddScoped<ColorService>();
 
             services.AddAutoMapper(z =>
             {
