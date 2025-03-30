@@ -99,8 +99,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
 
-        IAgent carwlAgent = null;
-
         foreach (var groupMember in groupMemebers)
         {
             var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);
@@ -143,36 +141,28 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         name: agentTemplate.Name,
                         systemMessage: promptResult.PromptItem.Content);
 
-            if (!isCarwl)
+            var agentMiddleware =
+                agent
+                    .RegisterTextMessageConnector()
+                    //.RegisterMiddleware(async (messages, ct) =>
+                    //{
+                    //    return messages;
+                    //})
+                    .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
+                    {
+                        PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
+                        logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
+                    }));
+
+
+            if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
             {
-                var agentMiddleware =
-                    agent
-                        .RegisterTextMessageConnector()
-                        //.RegisterMiddleware(async (messages, ct) =>
-                        //{
-                        //    return messages;
-                        //})
-                        .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
-                        {
-                            PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
-                            logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
-                        }));
-
-
-                if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
-                {
-                    //TODO：添加指定入口对接人员，参考群主
-                    enterAgentTemplate = agentTemplate;
-                    enterAgent = agentMiddleware;
-                }
-
-                agentsMiddlewares.Add(agentMiddleware);
-            }
-            else
-            {
-                carwlAgent = agent;
+                //TODO：添加指定入口对接人员，参考群主
+                enterAgentTemplate = agentTemplate;
+                enterAgent = agentMiddleware;
             }
 
+            agentsMiddlewares.Add(agentMiddleware);
 
             agents.Add(agent);
         }
@@ -212,15 +202,32 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
             }
-
-            if (carwlAgent != null)
-            {
-                graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(carwlAgent);
-            }
         }
 
 
         var finishedGraph = graphConnector.Finish();
+
+        admin = admin.RegisterMiddleware(async (messages, option, next, ct) =>
+        {
+            var response = await next.GenerateReplyAsync(messages, option, ct);
+
+            // check response's format
+            // if the response's format is not From xxx where xxx is a valid group member
+            // use reflection to get it auto-fixed by LLM
+
+            var responseContent = response.GetContent();
+            if (responseContent?.StartsWith("From") is false)
+            {
+                // random pick from agents
+                var agent = new Random().Next(0, agents.Count);
+
+                return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
+            }
+            else
+            {
+                return response;
+            }
+        });
 
         var aiTeam = finishedGraph.CreateAiTeam(admin);
 
@@ -344,7 +351,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             #region 收集所有对话人员
 
             List<(int AgentTemplateId, string Uid)> memberCollection = new();
-         
+
             var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId);
             foreach (var member in groupMemebers)
             {
@@ -489,7 +496,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     enterAgent = agentMiddleware;
                     iWantToRunEnter = iWantToRunItem;
                 }
-                
+
                 if (agentTemplateId == chatGroup.AdminAgentTemplateId)
                 {
                     iWantToRunAdmin = iWantToRunItem;
