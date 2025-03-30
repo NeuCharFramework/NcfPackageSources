@@ -126,6 +126,7 @@ namespace Senparc.Xncf.MCP
 
 
             app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 var serviceProvider = app.ApplicationServices;
