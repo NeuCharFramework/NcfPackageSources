@@ -59,7 +59,7 @@
 		<!--<OutputPath>..\..\BuildOutPut</OutputPath>-->
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.23.0" />
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.23.1" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>
@@ -71,6 +71,8 @@
 	<ItemGroup>
 		<Content Remove="App_Data\Database\SenparcConfig.config" />
 		<Content Remove="App_Data\Database\SenparcConfig.Development.config" />
+		<Content Remove="wwwroot\css\Admin\AIVector\index.css" />
+		<Content Remove="wwwroot\js\Admin\AIVector\index.js" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="App_Data\Database\SenparcConfig.config" />
