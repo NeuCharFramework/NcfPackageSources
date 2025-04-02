@@ -84,5 +84,11 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             await _fileService.DeleteFileAsync(id);
             return Ok(true);
         }
+
+        public async Task<IActionResult> OnGetDownloadAsync(int id)
+        {
+            //await _fileService.UpdateFileNoteAsync(id, note);
+            return Ok(true);
+        }
     }
 }
