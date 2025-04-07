@@ -30,9 +30,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <!--<PackageReference Include="Microsoft.KernelMemory.AI.AzureOpenAI" Version="0.97.250211.1" />
-    <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.97.250211.1" />
-    <PackageReference Include="Microsoft.KernelMemory.MemoryDb.Redis" Version="0.97.250211.1" />-->
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
   </ItemGroup>
   <ItemGroup>
@@ -53,7 +50,4 @@
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
-  <!--<ItemGroup>
-    <Compile Remove="Domain\Models\VectorDatabaseType.cs" />
-  </ItemGroup>-->
 </Project>
