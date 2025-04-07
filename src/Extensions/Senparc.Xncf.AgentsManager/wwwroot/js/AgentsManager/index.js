@@ -643,12 +643,12 @@ var app = new Vue({
         this.agentDetailsGroupQueryList.agentTemplateId = id
         Object.assign(queryList, this.agentDetailsGroupQueryList)
       }
-      debugger
+      // debugger
       // 获取agent列表
       let agentAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList')
         .then(res => {
-          debugger
+          // debugger
           const data = res?.data ?? {}
           if (data.success) {
             agentAllList = data?.data?.list ?? []
@@ -666,7 +666,7 @@ var app = new Vue({
       // 获取组列表
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
-          debugger
+          // debugger
           const data = res?.data ?? {}
           if (data.success) {
             const groupData = data?.data?.chatGroupDtoList ?? []
@@ -1212,7 +1212,7 @@ var app = new Vue({
     // 编辑 Dailog|抽屉 按钮 
     async handleEditDrawerOpenBtn(btnType, item) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      // console.log('handleEditDrawerOpenBtn', btnType, item);
+      //console.log('handleEditDrawerOpenBtn', btnType, item);
       let formName = ''
       // 智能体
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
@@ -1234,7 +1234,7 @@ var app = new Vue({
         if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
           // 创建一个新的对象来存储表单数据
-          const formData = { ...item };
+            const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
           // 确保 functionCallNames 被正确初始化
@@ -2740,10 +2740,10 @@ Vue.component('load-more-select', {
         <el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
     <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
     <template v-if="direction==='horizontal'">
-        <i class="cursorPointer fas fa-redo" title="刷新" @click="managementListOption" />
+        <i class="cursorPointer fas fa-redo" title="刷新" @click="refreshManagementList" />
     </template>
     <template v-else>
-        <el-button size="mini" @click="managementListOption" :loading="interesLoading">刷新</el-button>
+        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">刷新</el-button>
         <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">管理PromptRange</el-button>
         <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">管理模型</el-button>
     </template>
@@ -2827,7 +2827,7 @@ Vue.component('load-more-select', {
     // )
     // // 对dom新增class
     // rulesDom?.classList.add('el-icon-arrow-up')
-    this.managementListOption()
+     this.refreshManagementList()
   },
   methods: {
     jumpPromptRange(urlType) {
@@ -2885,6 +2885,13 @@ Vue.component('load-more-select', {
         this.managementListOption()
       }, 1000)
     },
+      // 刷新接口
+      refreshManagementList() {
+          this.listQuery.pageIndex = 1
+          this.interestsOptions = []
+          this.interesLoading = true
+          this.managementListOption()
+      },
     // 调用接口
     managementListOption() {
       // console.log('managementListOption',this.serviceType);
