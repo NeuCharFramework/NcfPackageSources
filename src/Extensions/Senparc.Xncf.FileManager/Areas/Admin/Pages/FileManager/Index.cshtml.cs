@@ -31,7 +31,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         public Task OnGetAsync()
         {
             UpFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostUploadAsync";
-            UpFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostDeleteAsync";
+            DelFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostDeleteAsync";
             return Task.CompletedTask;
         }
 
