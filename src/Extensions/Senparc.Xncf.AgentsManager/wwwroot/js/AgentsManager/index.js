@@ -419,6 +419,24 @@ var app = new Vue({
     this.clearHistoryTimer()
   },
   methods: {
+    //寻找目标字符串
+    findDest(arg1) {
+      // 待判断的字符串
+      //const str = '2025.05.07.1-T1-A1-草稿';
+      const str = arg1;
+
+      // 正则表达式：匹配 XXXX.XX.XX.X 的结构（X为数字）
+      const regex = /^\d{4}\.\d{2}\.\d{2}\.\d+/;
+
+      // 判断字符串是否符合规则
+      if (regex.test(str)) {
+        console.log('目标字符串');
+        return true;
+      } else {
+        console.log('非目标字符串');
+        return false;
+      }
+    },
     calculateDuration,
     // 计算 agent列表 需要填充的元素数量
     calcAgentFillNum() {
@@ -1425,6 +1443,19 @@ var app = new Vue({
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
       }
+    },
+
+    // 识别事件
+    handleIdentify(e) {
+
+      debugger
+      let bRes = this.findDest(e)
+      if (bRes) {
+        console.log('命中')
+      } else {
+        console.log('未命中')
+      }
+      console.log('识别事件', e);
     },
 
 
