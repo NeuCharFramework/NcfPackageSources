@@ -36,7 +36,6 @@ namespace Senparc.Xncf.AIKernel.Models
         [MaxLength(150)]
         public string DeploymentName { get; private set; }
 
-
         /// <summary>
         /// Endpoint（可选）
         /// </summary>
