@@ -105,11 +105,11 @@
                                  @@change="selectEmbeddingModel"
                                  clearable
                                  filterable
-                                 :props="{label:'name',value:'id'}">
+                                 :props="{label:'alias',value:'id'}">
                     </el-cascader>
                 </el-form-item>
 
-                <el-form-item label="训练模型Id" prop="embeddingModelId">
+                <el-form-item label="训练模型Id" prop="embeddingModelId" class="hidden">
                     <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入训练模型Id" />
                 </el-form-item>
 
@@ -123,7 +123,7 @@
                     </el-cascader>
                 </el-form-item>
 
-                <el-form-item label="向量数据库Id" prop="vectorDBId">
+                <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
                     <el-input size="mini" v-model="dialog.data.vectorDBId" clearable placeholder="请输入向量数据库Id" />
                 </el-form-item>
 
@@ -133,15 +133,13 @@
                                  @@change="selectChatModel"
                                  clearable
                                  filterable
-                                 :props="{label:'name',value:'id'}">
+                                 :props="{label:'alias',value:'id'}">
                     </el-cascader>
                 </el-form-item>
 
-                <el-form-item label="对话模型Id" prop="chatModelId">
+                <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
                     <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
                 </el-form-item>
-
-                
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
@@ -150,7 +148,7 @@
         </el-dialog>
 
         <!-- 详情 -->
-        <el-dialog :title="detailDialog.title"
+        @* <el-dialog :title="detailDialog.title"
                    :visible.sync="detailDialog.visible"
                    :close-on-click-modal="false"
                    width="700px">
@@ -188,7 +186,7 @@
                 </el-descriptions-item>
 
             </el-descriptions>
-        </el-dialog>
+        </el-dialog> *@
     </div>
 </div>
 @section scripts

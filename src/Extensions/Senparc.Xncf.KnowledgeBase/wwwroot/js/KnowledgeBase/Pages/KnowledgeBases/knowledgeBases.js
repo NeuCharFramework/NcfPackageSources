@@ -198,39 +198,37 @@ new Vue({
     },
     async getEmbeddingModelList() {
       let that = this
-      debugger
-      await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', {
-        "page": that.page.page,
-        "size": that.page.size,
-      })
+      let param = {
+        page: that.page.page,
+        size: that.page.size,
+      }
+      await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
         .then(res => {
-          debugger
           console.log(res)
           that.embeddingModelData = res.data.data.data;
-      })
+        })
+
     },
     async getVectorDBList() {
       let that = this
-      debugger
-      await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', {
-        "page": that.page.page,
-        "size": that.page.size,
-      })
+      let param = {
+        page: that.page.page,
+        size: that.page.size,
+      }
+      await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', param)
         .then(res => {
-          debugger
         console.log(res)
         that.vectorDBData = res.data.data.data;
       })
     },
     async getChatModelList() {
       let that = this
-      debugger
-      await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', {
-        "page": that.page.page,
-        "size": that.page.size,
-      })
+      let param = {
+        page: that.page.page,
+        size: that.page.size,
+      }
+      await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
         .then(res => {
-          debugger
           console.log(res)
           that.chatModelData = res.data.data.data;
       })
@@ -378,6 +376,7 @@ new Vue({
           };
           console.log('add-' + JSON.stringify(data));
           service.post("/Admin/KnowledgeBases/Edit?handler=Save", data).then(res => {
+            debugger
             if (res.data.success) {
               that.getList();
               that.$notify({
