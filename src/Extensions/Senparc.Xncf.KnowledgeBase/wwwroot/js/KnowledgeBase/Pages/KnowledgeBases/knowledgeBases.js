@@ -369,9 +369,9 @@ new Vue({
           that.dialog.updateLoading = true;
           let data = {
             Id: that.dialog.data.id,
-            EmbeddingModelId: that.dialog.data.embeddingModelId,
-            VectorDBId: that.dialog.data.vectorDBId,
-            ChatModelId: that.dialog.data.chatModelId,
+            EmbeddingModelId: that.dialog.data.embeddingModelId.toString(),
+            VectorDBId: that.dialog.data.vectorDBId.toString(),
+            ChatModelId: that.dialog.data.chatModelId.toString(),
             Name: that.dialog.data.name
           };
           console.log('add-' + JSON.stringify(data));
