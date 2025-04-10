@@ -84,8 +84,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var parameter = new PromptConfigParameter()
         {
             MaxTokens = 2000,
-            Temperature = 0.7,
-            TopP = 0.5,
+            Temperature = 0.3,
+            TopP = 0.3,
         };
 
         var iWantToRun = _semanticAiHandler.IWantTo(senparcAiSetting)
@@ -94,7 +94,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         var kernel = iWantToRun.Kernel;//同一外围 Agent
 
-        //作为唯一入口和汇报的关键人（TODO：需要增加一个设置）
+        //作为唯一入口和汇报的关键人
         AgentTemplate enterAgentTemplate = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.EnterAgentTemplateId);
 
         MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
@@ -110,31 +110,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
             var itemKernel = kernel;
-            var isCarwl = agentTemplate.Name == "爬虫";
+
             if (individuation)
             {
                 var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
                 var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
                             .BuildKernel();
-
-                if (isCarwl)
-                {
-                    //添加保存文件的 Plugin
-
-                    //var crawlPlugin = new CrawlPlugin(iWantToRunItem, ServiceProvider);
-                    var crawlPlugin = ServiceProvider.GetService<CrawlPlugin>();
-                    var kernelPlugin = iWantToRunItem.ImportPluginFromObject(crawlPlugin, pluginName: nameof(CrawlPlugin)).kernelPlugin;
-
-                    KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
-
-                    iWantToRunItem.ImportPluginFromFunctions("抓取网页", functionPiple);
-                }
-
                 itemKernel = iWantToRunItem.Kernel;
             }
-
-
 
             var agent = new SemanticKernelAgent(
                         kernel: itemKernel,
@@ -338,8 +322,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var parameter = new PromptConfigParameter()
             {
                 MaxTokens = 2000,
-                Temperature = 0.7,
-                TopP = 0.5,
+                Temperature = 0.3,
+                TopP = 0.3,
             };
 
             //全局默认模型
@@ -532,6 +516,28 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 .RegisterMessageConnector();
             //.RegisterTextMessageConnector();
 
+
+           //var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
+           // {
+           //     var response = await next.GenerateReplyAsync(messages, option, ct);
+
+           //     // check response's format
+           //     // if the response's format is not From xxx where xxx is a valid group member
+           //     // use reflection to get it auto-fixed by LLM
+
+           //     var responseContent = response.GetContent();
+           //     if (responseContent?.StartsWith("From") is false)
+           //     {
+           //         // random pick from agents
+           //         var agent = new Random().Next(0, agents.Count);
+
+           //         return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
+           //     }
+           //     else
+           //     {
+           //         return response;
+           //     }
+           // });
 
             var graphConnector = GraphBuilder.Start()
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
