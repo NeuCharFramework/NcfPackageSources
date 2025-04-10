@@ -1426,7 +1426,22 @@ var app = new Vue({
       this.$refs[refFormEL]?.validateField(propName, () => { })
     },
 
+    // 识别事件
+    handleIdentify(e) {
 
+      //debugger
+      let bRes = this.findDest(e)
+      if (bRes) {
+        console.log('命中')
+        //自动选出PromptRange（不做处理）
+
+      } else {
+        console.log('未命中')
+        //TODO:默认成为新的提示词，zai
+
+      }
+      console.log('识别事件', e);
+    },
 
     // 切换 tabs 页面
     handleTabsClick(tab, event) {
@@ -1444,20 +1459,6 @@ var app = new Vue({
         this.gettaskListData('task')
       }
     },
-
-    // 识别事件
-    handleIdentify(e) {
-
-      debugger
-      let bRes = this.findDest(e)
-      if (bRes) {
-        console.log('命中')
-      } else {
-        console.log('未命中')
-      }
-      console.log('识别事件', e);
-    },
-
 
     // 筛选输入变化
     handleFilterChange(value, filterType) {

@@ -1131,7 +1131,14 @@
                         direction="vertical" placeholder="请选择" />
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-                    <el-input v-model="agentForm.systemMessage" @@change="handleIdentify" placeholder="请填写"></el-input>
+                    <el-input  
+                       type="textarea"  
+                       v-model="agentForm.systemMessage"  
+                       @@change="handleIdentify"  
+                       placeholder="请填写"  
+                       :rows="4">  
+                    </el-input>
+                    
                 </el-form-item>
                 <el-form-item label="是否启用" prop="enable">
                     <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
