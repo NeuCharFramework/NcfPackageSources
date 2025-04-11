@@ -17,7 +17,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -101,6 +101,68 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Oracle
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_AIKernel_AIModel");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AIVector", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<string>("ConnectionString")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<bool>("Show")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("VectorDBType")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("VectorId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AIKernel_AIVector");
                 });
 #pragma warning restore 612, 618
         }

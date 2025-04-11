@@ -1,0 +1,74 @@
+.el-dialog .el-form-item .el-input,
+.el-dialog .el-form-item .el-textarea {
+    width: 15rem;
+}
+
+.el-form-item__content {
+    width: 30rem;
+}
+
+.filter-condition {
+    margin-bottom: 0.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.col-thumb img {
+    width: 6rem;
+    height: 4rem;
+}
+
+.col-file video {
+    width: 8rem;
+    height: 5rem;
+}
+
+.col-file audio {
+    width: 10rem;
+    height: 5rem;
+}
+
+.item .item-left {
+    text-align: right;
+    padding-right: 1rem;
+    background: #909399;
+    color: #fff;
+    height: 2rem;
+    line-height: 2rem;
+}
+
+.item .item-right {
+    text-align: left;
+    padding-left: 1rem;
+    /*background: #909399;*/
+    border:1px solid #909399;
+    color: #000;
+    height: 2rem;
+    line-height: 2rem;
+}
+
+.item-right img, .item-right video {
+    width: 15rem;
+    -webkit-filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5)); /*考虑浏览器兼容性：兼容 Chrome, Safari, Opera */
+    filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5));
+}
+
+/*.el-row{padding-bottom:1rem;}*/
+
+.el-form-item{margin-bottom:5px;}
+
+.operator_button {
+    display: flex;
+    flex-direction: row;
+}
+
+.row-bg {
+    padding: 5px;
+    background-color: #f9fafc;
+}
+
+/*.el-input__inner{
+    width: 250px;
+}*/

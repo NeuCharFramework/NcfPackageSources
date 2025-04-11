@@ -1,0 +1,195 @@
+@page
+@model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases.IndexModel
+@{
+    ViewData["Title"] = "知识库管理列表页面";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/KnowledgeBase/KnowledgeBases/KnowledgeBases.css" rel="stylesheet" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理管理</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理列表</el-breadcrumb-item>
+}
+
+<div>
+    <div class="admin-role">
+        <el-row class="filter-condition" :gutter="8">
+            <el-col :span="2"></el-col>
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="2" class="operator_button">
+                <el-button type="primary" size="mini" @@click="handleSearch()">查询</el-button>
+                <el-button type="primary" size="mini" @@click="resetCondition()">重置</el-button>
+            </el-col>
+        </el-row>
+        <div class="filter-container">
+            <el-row type="flex" class="row-bg" justify="end">
+                <el-col :span="23">
+                    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">新增</el-button>
+                </el-col>
+                <el-col :span="1">
+                    <!-- 筛选按钮 -->
+                    <el-popover placement="bottom" title="筛选列" trigger="click" width="40">
+                        <el-checkbox-group v-model="checkedColumns" size="mini">
+                            <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
+                        </el-checkbox-group>
+                        <div title="筛选列" class="filter-table-col" slot="reference">
+                            <i class="el-icon-s-operation"></i>
+                        </div>
+                    </el-popover>
+                </el-col>
+            </el-row>
+        </div>
+        <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="训练模型Id" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" label="向量数据库Id" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" label="对话模型Id" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[3].istrue" prop="name" align="left" label="名称" sortable :filters="filterTableHeader.name" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column align="center"
+                             label="添加时间" sortable>
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" fixed="right" width="150">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               type="primary"
+                               @@click="handleEdit(scope.$index, scope.row,'edit')">编辑</el-button>
+                    <el-popconfirm placement="top" title="确认删除此知识库管理吗？" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
+                    </el-popconfirm>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <pagination :total="paginationQuery.total"
+                    :page.sync="listQuery.pageIndex"
+                    :limit.sync="listQuery.pageSize"
+                    @@pagination="getList"></pagination>
+        <!--编辑、新增-->
+        <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="600px">
+            <el-form ref="dataForm"
+                     :rules="dialog.rules"
+                     :model="dialog.data"
+                     :disabled="dialog.disabled"
+                     size="mini"
+                     label-position="left"
+                     label-width="150px"
+                     style="max-width: 600px; margin-left:50px;">
+                <el-form-item label="名称" prop="name">
+                    <el-input size="mini" v-model="dialog.data.name" clearable placeholder="请输入名称" />
+                </el-form-item>
+
+                <el-form-item label="选择训练模型">
+                    <el-cascader v-model="selectDefaultEmbeddingModel"
+                                 :options="embeddingModelData"
+                                 @@change="selectEmbeddingModel"
+                                 clearable
+                                 filterable
+                                 :props="{label:'alias',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="训练模型Id" prop="embeddingModelId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入训练模型Id" />
+                </el-form-item>
+
+                <el-form-item label="选择向量数据库">
+                    <el-cascader v-model="selectDefaultVectorDB"
+                                 :options="vectorDBData"
+                                 @@change="selectVectorDB"
+                                 clearable
+                                 filterable
+                                 :props="{label:'name',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.vectorDBId" clearable placeholder="请输入向量数据库Id" />
+                </el-form-item>
+
+                <el-form-item label="选择对话模型">
+                    <el-cascader v-model="selectDefaultChatModel"
+                                 :options="chatModelData"
+                                 @@change="selectChatModel"
+                                 clearable
+                                 filterable
+                                 :props="{label:'alias',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
+                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
+            </div>
+        </el-dialog>
+
+        <!-- 详情 -->
+        @* <el-dialog :title="detailDialog.title"
+                   :visible.sync="detailDialog.visible"
+                   :close-on-click-modal="false"
+                   width="700px">
+            <el-descriptions class="margin-top" title="带边框列表" :column="3" :size="size" border>
+                <template slot="extra">
+                    <el-button type="primary" size="small">操作</el-button>
+                </template>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        训练模型Id
+                    </template>
+                    embeddingModelId
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        向量数据库Id
+                    </template>
+                    vectorDBId
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        对话模型Id
+                    </template>
+                    chatModelId
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        名称
+                    </template>
+                    name
+                </el-descriptions-item>
+
+            </el-descriptions>
+        </el-dialog> *@
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/js/KnowledgeBase/Pages/KnowledgeBases/knowledgeBases.js"></script>
+}

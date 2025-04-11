@@ -186,7 +186,7 @@
                         await this.$confirm('确认删除该文件?', '提示', {
                             type: 'warning'
                         })
-                        await axios.post("@Model.UpFileUrl" + `?id=${row.id}`)
+                        await axios.post("@Model.DelFileUrl" + `?id=${row.id}`)
                         this.$message.success('删除成功')
                         this.getList()
                     } catch {
@@ -194,6 +194,7 @@
                     }
                 },
                 downloadFile(row) {
+                    debugger
                     window.open(`/Admin/FileManager/Index?handler=Download&id=${row.id}`)
                 },
                 showUploadDialog() {
