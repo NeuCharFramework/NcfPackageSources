@@ -209,6 +209,7 @@ var app = new Vue({
       },
       groupTaskSelection: [],
       groupTaskList: [],
+      groupTaskListLastNew: [],
       groupTaskDetails: '',
       groupTaskHistoryList: [],
       groupTaskMemberfilter: '',
@@ -679,6 +680,8 @@ var app = new Vue({
           const data = res?.data ?? {}
           if (data.success) {
             taskAllList = data?.data?.chatTaskList ?? []
+            //设置最新的任务信息
+            this.groupTaskListLastNew = taskAllList[0]
           }
         })
       // 获取组列表
@@ -1044,6 +1047,7 @@ var app = new Vue({
     },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
+      //debugger
       let serviceURL = ''
       // agent 新增|编辑
       if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
@@ -1252,7 +1256,7 @@ var app = new Vue({
         if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
           // 创建一个新的对象来存储表单数据
-            const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
+          const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
           // 确保 functionCallNames 被正确初始化
@@ -1411,7 +1415,12 @@ var app = new Vue({
       this.$refs[refName].validate((valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
+          //提交数据给后端
           this.saveSubmitFormData(btnType, submitForm)
+          //切换到对应的tab
+          this.tabsActiveName = 'third'
+          //跳转到任务详情
+          this.handleTaskView('task', this.groupTaskListLastNew)
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');
@@ -2859,7 +2868,7 @@ Vue.component('load-more-select', {
     // )
     // // 对dom新增class
     // rulesDom?.classList.add('el-icon-arrow-up')
-     this.refreshManagementList()
+    this.refreshManagementList()
   },
   methods: {
     jumpPromptRange(urlType) {
@@ -2917,13 +2926,13 @@ Vue.component('load-more-select', {
         this.managementListOption()
       }, 1000)
     },
-      // 刷新接口
-      refreshManagementList() {
-          this.listQuery.pageIndex = 1
-          this.interestsOptions = []
-          this.interesLoading = true
-          this.managementListOption()
-      },
+    // 刷新接口
+    refreshManagementList() {
+      this.listQuery.pageIndex = 1
+      this.interestsOptions = []
+      this.interesLoading = true
+      this.managementListOption()
+    },
     // 调用接口
     managementListOption() {
       // console.log('managementListOption',this.serviceType);
