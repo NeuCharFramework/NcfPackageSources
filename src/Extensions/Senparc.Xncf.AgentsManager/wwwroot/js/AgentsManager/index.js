@@ -2954,7 +2954,8 @@ Vue.component('load-more-select', {
               })
               this.interesLoading = false
               this.currentPageSize = listData?.length ?? 0
-              this.interestsOptions = this.interestsOptions.concat(listData)
+              //this.interestsOptions = this.interestsOptions.concat(listData)
+              this.interestsOptions = listData
               // [...this.interestsOptions, ...listData]
               // console.log(this.interestsOptions, 888)
             } else {
