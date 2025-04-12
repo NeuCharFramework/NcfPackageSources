@@ -25,8 +25,7 @@
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <!--<OutputPath>..\..\BuildOutPut</OutputPath>-->
-    <OutputPath>C:\Env\local_nuget</OutputPath>
+	  <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
