@@ -1417,10 +1417,14 @@ var app = new Vue({
           const submitForm = this[formName] ?? {}
           //提交数据给后端
           this.saveSubmitFormData(btnType, submitForm)
-          //切换到对应的tab
-          this.tabsActiveName = 'third'
-          //跳转到任务详情
-          this.handleTaskView('task', this.groupTaskListLastNew)
+          debugger
+          //只有执行分配任务启动的时候，保存后，才跳入到任务详情
+          if (btnType === 'drawerGroupStart') {
+            //切换到对应的tab
+            this.tabsActiveName = 'third'
+            //跳转到任务详情
+            this.handleTaskView('task', this.groupTaskListLastNew)
+          }
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');
