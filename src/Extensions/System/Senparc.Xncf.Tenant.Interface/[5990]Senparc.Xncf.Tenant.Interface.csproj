@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.5.2-preview1</Version>
+    <Version>0.9.5.3-preview1</Version>
     <AssemblyName>Senparc.Xncf.Tenant.Interface</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant.Interface</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
