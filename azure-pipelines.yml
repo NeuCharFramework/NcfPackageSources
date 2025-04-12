@@ -79,11 +79,9 @@ steps:
   inputs:
     versionSpec: '6.3.0'
 
-- task: NuGetCommand@2  
+- script: |  
+    dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org  
   displayName: 'Add NuGet Source'  
-  inputs:  
-    command: 'sources'  
-    arguments: 'add -name nuget.org -source https://api.nuget.org/v3/index.json'  
     
 # ✅ 恢复 NuGet 依赖（使用缓存）
 - task: NuGetCommand@2
