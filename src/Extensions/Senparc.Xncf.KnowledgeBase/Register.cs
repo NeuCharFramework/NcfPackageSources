@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,8 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-
+//using Microsoft.KernelMemory;
+//using Microsoft.KernelMemory.MemoryStorage.DevTools;
 using Senparc.Xncf.KnowledgeBase.Models;
 using Senparc.Xncf.KnowledgeBase.OHS.Local.AppService;
 using Senparc.Ncf.Core.Models;
@@ -26,7 +27,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Uid => "CEAFC442-EE03-42EA-AD54-E607AD0C03A9";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1.1";//必须填写版本号
 
         public override string MenuName => "AI 知识库";
 
@@ -78,7 +79,6 @@ namespace Senparc.Xncf.KnowledgeBase
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
-
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
@@ -87,3 +87,4 @@ namespace Senparc.Xncf.KnowledgeBase
         }
     }
 }
+

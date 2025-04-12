@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
@@ -18,6 +19,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         private readonly NcfFileService _fileService;
 
         public string UpFileUrl { get; set; }
+        public string DelFileUrl {  get; set; }
         public string BaseUrl { get; set; }
 
         public Index(Lazy<XncfModuleService> xncfModuleService, NcfFileService fileService)
@@ -28,9 +30,8 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public Task OnGetAsync()
         {
-            ///Admin/FileManager/Index?handler=Upload
-            BaseUrl = $"{Request.Scheme}://{Request.Host.Value}"; 
-            UpFileUrl = $"{BaseUrl}/Admin/FileManager/Index?handler=Upload";
+            UpFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostUploadAsync";
+            DelFileUrl = $"{BaseUrl}/api/FileManager/Index/OnPostDeleteAsync";
             return Task.CompletedTask;
         }
 
@@ -42,24 +43,25 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(new PagedList<NcfFileDto>(result, page, pageSize, result.TotalCount));
         }
 
-        public class FileUploadModel
+        public record FileUploadModel
         {
-            public IFormFile File { get; set; }
-            public string Description { get; set; }
+            public List<IFormFile> files { get; set; }
+            public string descriptions { get; set; }
         }
 
-        public async Task<IActionResult> OnPostUploadAsync([FromForm] List<IFormFile> files, [FromForm] string[] descriptions)
+        [ApiBind("FileManager",ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        public async Task<IActionResult> OnPostUploadAsync([FromForm] FileUploadModel model)
         {
-            if (files == null || !files.Any())
+            if (model.files == null || !model.files.Any())
                 return BadRequest("No files uploaded");
 
             var results = new List<NcfFileDto>();
-            
-            for (int i = 0; i < files.Count; i++)
+
+            for (int i = 0; i < model.files.Count; i++)
             {
-                var file = files[i];
-                var description = descriptions?.Length > i ? descriptions[i] : "";
-                
+                var file = model.files[i];
+                var description = model.descriptions?.Length > i ? model.descriptions : "";
+
                 if (file.Length > 0)
                 {
                     var result = await _fileService.UploadFileAsync(file);
@@ -76,9 +78,16 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(true);
         }
 
+        [ApiBind("FileManager", ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             await _fileService.DeleteFileAsync(id);
+            return Ok(true);
+        }
+
+        public async Task<IActionResult> OnGetDownloadAsync(int id)
+        {
+            //await _fileService.UpdateFileNoteAsync(id, note);
             return Ok(true);
         }
     }

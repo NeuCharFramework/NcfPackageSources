@@ -209,6 +209,7 @@ var app = new Vue({
       },
       groupTaskSelection: [],
       groupTaskList: [],
+      groupTaskListLastNew: [],
       groupTaskDetails: '',
       groupTaskHistoryList: [],
       groupTaskMemberfilter: '',
@@ -419,6 +420,24 @@ var app = new Vue({
     this.clearHistoryTimer()
   },
   methods: {
+    //寻找目标字符串
+    findDest(arg1) {
+      // 待判断的字符串
+      //const str = '2025.05.07.1-T1-A1-草稿';
+      const str = arg1;
+
+      // 正则表达式：匹配 XXXX.XX.XX.X 的结构（X为数字）
+      const regex = /^\d{4}\.\d{2}\.\d{2}\.\d+/;
+
+      // 判断字符串是否符合规则
+      if (regex.test(str)) {
+        console.log('目标字符串');
+        return true;
+      } else {
+        console.log('非目标字符串');
+        return false;
+      }
+    },
     calculateDuration,
     // 计算 agent列表 需要填充的元素数量
     calcAgentFillNum() {
@@ -643,12 +662,12 @@ var app = new Vue({
         this.agentDetailsGroupQueryList.agentTemplateId = id
         Object.assign(queryList, this.agentDetailsGroupQueryList)
       }
-      debugger
+      // debugger
       // 获取agent列表
       let agentAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList')
         .then(res => {
-          debugger
+          // debugger
           const data = res?.data ?? {}
           if (data.success) {
             agentAllList = data?.data?.list ?? []
@@ -661,12 +680,14 @@ var app = new Vue({
           const data = res?.data ?? {}
           if (data.success) {
             taskAllList = data?.data?.chatTaskList ?? []
+            //设置最新的任务信息
+            this.groupTaskListLastNew = taskAllList[0]
           }
         })
       // 获取组列表
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
-          debugger
+          // debugger
           const data = res?.data ?? {}
           if (data.success) {
             const groupData = data?.data?.chatGroupDtoList ?? []
@@ -1026,6 +1047,7 @@ var app = new Vue({
     },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
+      //debugger
       let serviceURL = ''
       // agent 新增|编辑
       if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
@@ -1212,7 +1234,7 @@ var app = new Vue({
     // 编辑 Dailog|抽屉 按钮 
     async handleEditDrawerOpenBtn(btnType, item) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      // console.log('handleEditDrawerOpenBtn', btnType, item);
+      //console.log('handleEditDrawerOpenBtn', btnType, item);
       let formName = ''
       // 智能体
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
@@ -1234,7 +1256,7 @@ var app = new Vue({
         if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
           // 创建一个新的对象来存储表单数据
-          const formData = { ...item };
+          const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
           // 确保 functionCallNames 被正确初始化
@@ -1393,7 +1415,12 @@ var app = new Vue({
       this.$refs[refName].validate((valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
+          //提交数据给后端
           this.saveSubmitFormData(btnType, submitForm)
+          //切换到对应的tab
+          this.tabsActiveName = 'third'
+          //跳转到任务详情
+          this.handleTaskView('task', this.groupTaskListLastNew)
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');
@@ -1408,7 +1435,22 @@ var app = new Vue({
       this.$refs[refFormEL]?.validateField(propName, () => { })
     },
 
+    // 识别事件
+    handleIdentify(e) {
 
+      //debugger
+      let bRes = this.findDest(e)
+      if (bRes) {
+        console.log('命中')
+        //自动选出PromptRange（不做处理）
+
+      } else {
+        console.log('未命中')
+        //TODO:默认成为新的提示词，zai
+
+      }
+      console.log('识别事件', e);
+    },
 
     // 切换 tabs 页面
     handleTabsClick(tab, event) {
@@ -1426,7 +1468,6 @@ var app = new Vue({
         this.gettaskListData('task')
       }
     },
-
 
     // 筛选输入变化
     handleFilterChange(value, filterType) {
@@ -2740,10 +2781,10 @@ Vue.component('load-more-select', {
         <el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
     <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
     <template v-if="direction==='horizontal'">
-        <i class="cursorPointer fas fa-redo" title="刷新" @click="managementListOption" />
+        <i class="cursorPointer fas fa-redo" title="刷新" @click="refreshManagementList" />
     </template>
     <template v-else>
-        <el-button size="mini" @click="managementListOption" :loading="interesLoading">刷新</el-button>
+        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">刷新</el-button>
         <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">管理PromptRange</el-button>
         <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">管理模型</el-button>
     </template>
@@ -2827,7 +2868,7 @@ Vue.component('load-more-select', {
     // )
     // // 对dom新增class
     // rulesDom?.classList.add('el-icon-arrow-up')
-    this.managementListOption()
+    this.refreshManagementList()
   },
   methods: {
     jumpPromptRange(urlType) {
@@ -2885,6 +2926,13 @@ Vue.component('load-more-select', {
         this.managementListOption()
       }, 1000)
     },
+    // 刷新接口
+    refreshManagementList() {
+      this.listQuery.pageIndex = 1
+      this.interestsOptions = []
+      this.interesLoading = true
+      this.managementListOption()
+    },
     // 调用接口
     managementListOption() {
       // console.log('managementListOption',this.serviceType);
@@ -2906,7 +2954,8 @@ Vue.component('load-more-select', {
               })
               this.interesLoading = false
               this.currentPageSize = listData?.length ?? 0
-              this.interestsOptions = this.interestsOptions.concat(listData)
+              //this.interestsOptions = this.interestsOptions.concat(listData)
+              this.interestsOptions = listData
               // [...this.interestsOptions, ...listData]
               // console.log(this.interestsOptions, 888)
             } else {

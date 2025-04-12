@@ -28,7 +28,7 @@ new Vue({
             this.tableLoading = true
             try {
                 const res = await service.get(`/Admin/FileManager/Index?handler=List&page=${this.page}&pageSize=${this.pageSize}`)
-                this.tableData = res.data.data.items
+                this.tableData = res.data.data
                 this.total = res.data.data.total
             } catch (error) {
                 console.error(error)
