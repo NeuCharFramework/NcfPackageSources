@@ -858,6 +858,15 @@ var app = new Vue({
     },
     // 获取 任务详情 
     async getTaskDetailData(detailType, id, detail = {}, detailsOn = false) {
+      //TODO:
+      if (id == undefined) {
+        app.$message({
+          message: '当前还没有可执行的任务',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${id}`)
         .then(res => {
           const data = res?.data ?? {}
@@ -1417,10 +1426,14 @@ var app = new Vue({
           const submitForm = this[formName] ?? {}
           //提交数据给后端
           this.saveSubmitFormData(btnType, submitForm)
-          //切换到对应的tab
-          this.tabsActiveName = 'third'
-          //跳转到任务详情
-          this.handleTaskView('task', this.groupTaskListLastNew)
+          debugger
+          //只有执行分配任务启动的时候，保存后，才跳入到任务详情
+          if (btnType === 'drawerGroupStart') {
+            //切换到对应的tab
+            this.tabsActiveName = 'third'
+            //跳转到任务详情
+            this.handleTaskView('task', this.groupTaskListLastNew)
+          }
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');
