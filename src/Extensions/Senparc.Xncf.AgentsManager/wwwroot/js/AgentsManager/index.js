@@ -858,6 +858,15 @@ var app = new Vue({
     },
     // 获取 任务详情 
     async getTaskDetailData(detailType, id, detail = {}, detailsOn = false) {
+      //TODO:
+      if (id == undefined) {
+        app.$message({
+          message: '当前还没有可执行的任务',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${id}`)
         .then(res => {
           const data = res?.data ?? {}
