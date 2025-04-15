@@ -135,7 +135,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
                                       await using var localTransport = transport = new SseResponseStreamTransport(response.Body);
                                       await using var localServer = server = McpServerFactory.Create(transport, mcpServerOptions.Value, loggerFactory, endpoints.ServiceProvider);
 
-                                      await localServer.StartAsync(requestAborted);
+                                      await localServer.RunAsync(requestAborted);
 
                                       response.Headers.ContentType = "text/event-stream";
                                       response.Headers.CacheControl = "no-cache";
