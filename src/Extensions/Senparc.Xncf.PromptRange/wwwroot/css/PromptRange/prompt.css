@@ -305,10 +305,10 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 22px;
+    gap: 20px;
     position: relative;
     box-sizing: border-box;
-    height:940px;
+    height:820px;
     /*min-width: 1240px;
     overflow: auto;
     border-radius: 10px;
@@ -368,11 +368,11 @@
 
     /*卡片*/
     .promptPage .boxCard {
-        padding: 15px;
+        padding: 10px;
         overflow: hidden;
         position: relative;
         box-sizing: border-box;
-        border-radius: 8px;
+        border-radius: 3px;
         background-color: #FFF;
     }
 
@@ -581,7 +581,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: 10px;
+    /*gap: 10px;*/
     align-items: flex-start;
     justify-content: flex-start;
 }
@@ -767,7 +767,7 @@
         flex-wrap: nowrap;
         gap: 10px;
         box-sizing: border-box;
-        min-height: 416px !important;
+        min-height: 290px !important;
         max-height: 46Vh;
     }
 

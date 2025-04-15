@@ -15,7 +15,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AIModel", b =>
                 {
@@ -94,6 +94,66 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_AIKernel_AIModel");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AIVector", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConnectionString")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Show")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("VectorDBType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VectorId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AIKernel_AIVector");
                 });
 #pragma warning restore 612, 618
         }

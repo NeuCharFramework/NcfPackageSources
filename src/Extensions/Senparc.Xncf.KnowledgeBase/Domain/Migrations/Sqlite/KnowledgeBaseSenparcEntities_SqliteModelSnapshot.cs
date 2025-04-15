@@ -15,7 +15,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Color", b =>
                 {
@@ -58,6 +58,48 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_KnowledgeBase_Color");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChatModelId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmbeddingModelId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VectorDBId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
                 });
 #pragma warning restore 612, 618
         }

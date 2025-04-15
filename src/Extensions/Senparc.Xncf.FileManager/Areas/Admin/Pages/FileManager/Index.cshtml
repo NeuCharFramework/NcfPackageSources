@@ -11,12 +11,19 @@
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
+@section style{
+    <style>
+        .hidden {display:none;}
+    </style>
+}
+
 <div>
     <div class="filter-container">
         <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
+        <el-table-column prop="id" label="表Id" width="auto" class-name="hidden"></el-table-column>
         <el-table-column prop="fileName" label="文件名" width="auto"></el-table-column>
         <el-table-column prop="fileSize" label="大小" width="120">
             <template slot-scope="scope">
@@ -71,15 +78,17 @@
         <el-upload
             class="upload-demo"
             ref="upload"
-            action="@Model.UpFileUrl"
+            action="#"
             :auto-upload="false"
+            :multiple="true"
             :show-file-list="true"
             :on-success="handleUploadSuccess"
             :on-error="handleUploadError"
             :on-change="handleFileChange"
+            :on-progress="handleProgress"
             :before-upload="beforeUpload"
             :file-list="uploadDialog.fileList"
-            multiple>
+            >
             <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
         </el-upload>
@@ -140,8 +149,8 @@
                     this.tableLoading = true
                     try {
                         const res = await axios.get(`/Admin/FileManager/Index?handler=List&page=${this.page.page}&pageSize=${this.page.size}`)
-                        this.tableData = res.data.items
-                        this.total = res.data.totalCount
+                        this.tableData = res.data.data
+                        this.total = res.data.data.totalCount
                     } finally {
                         this.tableLoading = false
                     }
@@ -172,13 +181,12 @@
                     }
                 },
                 async deleteFile(row) {
+
                     try {
                         await this.$confirm('确认删除该文件?', '提示', {
                             type: 'warning'
                         })
-                        await axios.post('/Admin/FileManager/Index?handler=Delete', {
-                            id: row.id
-                        })
+                        await axios.post("@Model.DelFileUrl" + `?id=${row.id}`)
                         this.$message.success('删除成功')
                         this.getList()
                     } catch {
@@ -186,6 +194,7 @@
                     }
                 },
                 downloadFile(row) {
+                    debugger
                     window.open(`/Admin/FileManager/Index?handler=Download&id=${row.id}`)
                 },
                 showUploadDialog() {
@@ -199,11 +208,15 @@
                     }
                     this.uploadDialog.fileList = fileList;
                 },
+                handleProgress(){
+
+                },
                 beforeUpload(file) {
                     // 返回 false 阻止自动上传，改为手动上传
                     return false;
                 },
                 async submitUpload() {
+                    console.log("@Model.UpFileUrl")
                     if (this.uploadDialog.fileList.length === 0) {
                         this.$message.warning('请选择要上传的文件');
                         return;
@@ -217,14 +230,14 @@
                             formData.append('descriptions', file.description || '');
                         });
 
-                        const response = await axios.post('/Admin/FileManager/Index?handler=Upload', 
+                        const response = await axios.post("@Model.UpFileUrl", 
                             formData,
                             {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
                                 }
                             }
-                        );
+                        )
 
                         this.$message.success('上传成功');
                         this.uploadDialog.visible = false;

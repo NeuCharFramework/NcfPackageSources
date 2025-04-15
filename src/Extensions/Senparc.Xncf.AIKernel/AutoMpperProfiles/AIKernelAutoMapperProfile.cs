@@ -17,6 +17,11 @@ namespace Senparc.Xncf.AIKernel.AutoMapperProfiles
             CreateMap<AIModelDto, AIModel>();
             
             CreateMap<AIModel_CreateOrEditRequest, AIModel>();
+
+            CreateMap<AIVector, AIVectorDto>();
+            CreateMap<AIVectorDto, AIVector>();
+
+            CreateMap<AIVector_CreateOrEditRequest, AIVector>();
             // CreateMap<AIModel, AIModel_GetDetailResponse>();
             // CreateMap<AIModel, AIModel_GetIdAndNameResponse>();
         }

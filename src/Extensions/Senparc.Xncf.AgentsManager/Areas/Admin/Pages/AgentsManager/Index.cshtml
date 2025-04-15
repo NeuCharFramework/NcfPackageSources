@@ -1131,13 +1131,17 @@
                         direction="vertical" placeholder="请选择" />
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-                    <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+                    <el-input  
+                       type="textarea"  
+                       v-model="agentForm.systemMessage"  
+                       @@change="handleIdentify"  
+                       placeholder="请填写"  
+                       :rows="4">  
+                    </el-input>
+                    
                 </el-form-item>
                 <el-form-item label="是否启用" prop="enable">
                     <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
-                </el-form-item>
-                <el-form-item label="说明" prop="description">
-                    <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
                 </el-form-item>
                 <el-form-item label="外接平台" prop="hookRobotType">
                     <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
@@ -1200,6 +1204,9 @@
                             </div>
                         </div>
                     </div>
+                </el-form-item>
+                <el-form-item label="备注" prop="description">
+                    <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写(仅管理员可见)"></el-input>
                 </el-form-item>
             </el-form>
         </div>

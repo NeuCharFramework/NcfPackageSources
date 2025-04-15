@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.12-preview1</Version>
+    <Version>0.13.13-preview1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -105,8 +105,6 @@
     <Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-    <!--<PackageReference Include="Senparc.AI.Kernel" Version="0.6.4-rc3" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>

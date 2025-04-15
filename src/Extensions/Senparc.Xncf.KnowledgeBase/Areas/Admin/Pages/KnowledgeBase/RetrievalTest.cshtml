@@ -1,0 +1,155 @@
+﻿@page
+@model Senparc.Xncf.KnowledgeBase.Areas.KnowledgeBase.Pages.RetrievalTest
+@{
+    ViewData["Title"] = "召回测试";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>AI知识库</el-breadcrumb-item>
+    <el-breadcrumb-item>召回测试</el-breadcrumb-item>
+}
+
+<div id="app" v-cloak>
+    <el-card>
+        <el-form :model="form" label-width="120px">
+            <el-form-item label="知识库">
+                <el-select v-model="form.collectionName" placeholder="请选择知识库">
+                    <el-option
+                        v-for="collection in collections"
+                        :key="collection"
+                        :label="collection"
+                        :value="collection">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            
+            <el-form-item label="查询文本">
+                <el-input
+                    v-model="form.query"
+                    type="textarea"
+                    :rows="3"
+                    placeholder="请输入要查询的文本">
+                </el-input>
+            </el-form-item>
+            
+            <el-form-item label="最大召回数量">
+                <el-input-number 
+                    v-model="form.limit" 
+                    :min="1" 
+                    :max="100">
+                </el-input-number>
+            </el-form-item>
+            
+            <el-form-item label="最小相似度">
+                <el-input-number 
+                    v-model="form.minRelevance" 
+                    :min="0" 
+                    :max="1" 
+                    :step="0.1">
+                </el-input-number>
+            </el-form-item>
+            
+            <el-form-item>
+                <el-button type="primary" @@click="onSearch" :loading="loading">开始测试</el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
+
+    <el-card v-if="searchResults.length > 0" style="margin-top: 20px">
+        <template #header>
+            <div class="card-header">
+                <span>召回结果</span>
+            </div>
+        </template>
+        
+        <el-table :data="searchResults" style="width: 100%">
+            <el-table-column prop="id" label="ID" width="280"></el-table-column>
+            <el-table-column prop="text" label="文本内容"></el-table-column>
+            <el-table-column prop="relevance" label="相似度" width="100">
+                <template #default="scope">
+                    {{ (scope.row.relevance * 100).toFixed(2) }}%
+                </template>
+            </el-table-column>
+            <el-table-column label="标签" width="200">
+                <template #default="scope">
+                    <el-tag 
+                        v-for="(value, key) in scope.row.tags" 
+                        :key="key"
+                        size="small"
+                        style="margin-right: 5px">
+                        {{key}}: {{value}}
+                    </el-tag>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-card>
+</div>
+
+@section scripts{
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    collections: [],
+                    form: {
+                        collectionName: '',
+                        query: '',
+                        limit: 10,
+                        minRelevance: 0.7
+                    },
+                    searchResults: [],
+                    loading: false
+                }
+            },
+            methods: {
+                async loadCollections() {
+                    try {
+                        const response = await service.get('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.ListCollectionsAsync');
+                        if (response.data.success) {
+                            this.collections = response.data.data.collections;
+                        } else {
+                            this.$message.error('加载知识库列表失败：' + response.data.message);
+                        }
+                    } catch (error) {
+                        this.$message.error('加载知识库列表失败：' + error.message);
+                    }
+                },
+                async onSearch() {
+                    if (!this.form.collectionName) {
+                        this.$message.warning('请选择知识库');
+                        return;
+                    }
+                    if (!this.form.query) {
+                        this.$message.warning('请输入查询文本');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    try {
+                        const response = await service.post('/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseService/Xncf.KnowledgeBase_KnowledgeBaseService.SearchAsync', this.form);
+                        if (response.data.success) {
+                            this.searchResults = response.data.data.results;
+                            if (this.searchResults.length === 0) {
+                                this.$message.info('未找到相关内容');
+                            }
+                        } else {
+                            this.$message.error('搜索失败：' + response.data.message);
+                        }
+                    } catch (error) {
+                        this.$message.error('搜索失败：' + error.message);
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            },
+            mounted() {
+                this.loadCollections();
+            }
+        });
+    </script>
+}
+
+
