@@ -30,6 +30,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
@@ -383,28 +384,40 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
                 agentsTemplates.Add(agentTemplateDto);
 
-                //TODO：确认 Prompt 此时是否存在，如果不存在需要给出提示
+                var isPromptCodeVersion = PromptItem.IsPromptVersion(agentTemplateDto.PromptCode);
+                var agentSystemMessagePrompt = string.Empty;
+                ISenparcAiSetting currentAgentAiSetting = null;
 
-                var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
+                if (isPromptCodeVersion)
+                {
+                    var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
+                    agentSystemMessagePrompt = promptResult?.PromptItem.Content;
+                    currentAgentAiSetting = promptResult.SenparcAiSetting;
+                }
+                else
+                {
+                    agentSystemMessagePrompt = agentTemplateDto.PromptCode;
+                    currentAgentAiSetting = senparcAiSetting;
+                }
 
-                IWantToRun iWantToRunItem = null;//当前 Agent 配置
+                IWantToConfig iWantToConfig = null;//当前 Agent 配置
 
                 //判断是否需要个性化模型参数
                 if (personality)
                 {
                     //使用个性化参数创建
-                    var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
-                    iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
-                                .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid)
-                                .BuildKernel();
+                    var personalitySemanticAiHandler = new SemanticAiHandler(currentAgentAiSetting);
+                    iWantToConfig = personalitySemanticAiHandler.IWantTo();
                 }
                 else
                 {
-                    iWantToRunItem = _semanticAiHandler.IWantTo(senparcAiSetting)
-                                   .ConfigModel(ConfigModel.Chat, agentTemplate.Name + uid)
-                                   .BuildKernel();
+                    iWantToConfig = _semanticAiHandler.IWantTo(senparcAiSetting);
                 }
 
+                //当前 Agent 配置
+                var iWantToRunItem = iWantToConfig
+                                   .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid)
+                                   .BuildKernel();
 
                 //判断是否需要 Function Call
 
@@ -444,7 +457,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 SemanticKernelAgent agent = new SemanticKernelAgent(
                                 kernel: iWantToRunItem.Kernel,
                                 name: agentTemplate.Name,
-                                systemMessage: promptResult.PromptItem.Content);
+                                systemMessage: agentSystemMessagePrompt);
 
                 var agentMiddleware = agent
                     .RegisterTextMessageConnector()
@@ -517,27 +530,27 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             //.RegisterTextMessageConnector();
 
 
-           //var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
-           // {
-           //     var response = await next.GenerateReplyAsync(messages, option, ct);
+            //var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
+            // {
+            //     var response = await next.GenerateReplyAsync(messages, option, ct);
 
-           //     // check response's format
-           //     // if the response's format is not From xxx where xxx is a valid group member
-           //     // use reflection to get it auto-fixed by LLM
+            //     // check response's format
+            //     // if the response's format is not From xxx where xxx is a valid group member
+            //     // use reflection to get it auto-fixed by LLM
 
-           //     var responseContent = response.GetContent();
-           //     if (responseContent?.StartsWith("From") is false)
-           //     {
-           //         // random pick from agents
-           //         var agent = new Random().Next(0, agents.Count);
+            //     var responseContent = response.GetContent();
+            //     if (responseContent?.StartsWith("From") is false)
+            //     {
+            //         // random pick from agents
+            //         var agent = new Random().Next(0, agents.Count);
 
-           //         return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
-           //     }
-           //     else
-           //     {
-           //         return response;
-           //     }
-           // });
+            //         return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
+            //     }
+            //     else
+            //     {
+            //         return response;
+            //     }
+            // });
 
             var graphConnector = GraphBuilder.Start()
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
