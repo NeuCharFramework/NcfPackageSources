@@ -5,6 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.MCP.OHS.Local.PL
 {
+    public class MyFunction_MCPCallRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [Description("请求||提出对 MCP 服务器的请求")]
+        public string RequestPrompt { get; set; }
+    }
     public class MyFunction_CaculateRequest : FunctionAppRequestBase
     {
         [Required]

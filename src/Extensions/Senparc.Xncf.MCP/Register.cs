@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -97,23 +98,24 @@ namespace Senparc.Xncf.MCP
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
+            services.AddScoped<ColorService>();
 
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
 
-
             services.AddMcpServer(opt =>
-                                 {
-                                     opt.ServerInfo = new Implementation()
-                                     {
-                                         Name = "ncf-mcp-server",
-                                         Version = "1.0.0",
-                                     };
-                                 })
-                                         //   .WithStdioServerTransport()
-                                         .WithToolsFromAssembly();
+                                {
+                                    opt.ServerInfo = new Implementation()
+                                    {
+                                        Name = "ncf-mcp-server",
+                                        Version = "1.0.0",
+                                    };
+                                })
+                .WithHttpTransport()
+                                        //   .WithStdioServerTransport()
+                                        .WithToolsFromAssembly();
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -124,95 +126,130 @@ namespace Senparc.Xncf.MCP
             // var ncfMcpServerService = new McpServerService();
             // ncfMcpServerService.Start();
 
-
-            app.UseRouting();
-            app.UseEndpoints(endpoints =>
+            if (app is IEndpointRouteBuilder endpoints)
             {
-                var serviceProvider = app.ApplicationServices;
-                //放置 NCF-MCP-Server SSE
-                IMcpServer? server = null;
-                SseResponseStreamTransport? transport = null;
-                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-                var mcpServerOptions = serviceProvider.GetRequiredService<IOptions<McpServerOptions>>();
+                Console.WriteLine("开始启用 MCP 服务");
+                var routePattern = "sse";
+                endpoints.MapMcp(routePattern);
+
+                ////恢复首页
+                //var routeGroup = endpoints.MapGroup(routePattern);
+                //var routeEndpoints  = endpoints.DataSources.SelectMany(z=>z.Endpoints)
+                //    .OfType<RouteEndpoint>()
+                //    .Where(z=>z.RoutePattern.RawText == routePattern,)
+            }
+
+            //app.UseRouting();
+            //app.UseAuthorization();
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapMcp("", async (context, options, ct) =>
+            //    {
+            //        var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
+
+            //        // 从请求头获取 Token
+
+            //        //if (string.IsNullOrEmpty(configuredToken))
+            //        //{
+            //        //    context.Response.StatusCode = 500;
+            //        //    await context.Response.WriteAsync("MCP access token is not configured");
+            //        //    return;
+            //        //}
+
+            //        //if (!context.Request.Query.TryGetValue("token", out var requestToken) ||
+            //        //    requestToken != configuredToken)
+            //        //{
+            //        //    Console.WriteLine($"requestToken: {requestToken}");
+            //        //    Console.WriteLine($"configuredToken: {configuredToken}");
+
+            //        //    context.Response.StatusCode = 401;
+            //        //    await context.Response.WriteAsync("Unauthorized");
+            //        //    return;
+            //        //}
+            //    }, async (context, mcpServer, ct) =>
+            //    {
+            //    }
+            //    );
+            //});
 
 
-                endpoints.MapGet("/ho", async context =>
-                {
-                    await context.Response.WriteAsync("Hello NCF Service!");
-                });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    var serviceProvider = app.ApplicationServices;
+            //    //放置 NCF-MCP-Server SSE
+            //    IMcpServer? server = null;
+            //    SseResponseStreamTransport? transport = null;
+            //    var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            //    var mcpServerOptions = serviceProvider.GetRequiredService<IOptions<McpServerOptions>>();
 
-                var routeGroup = endpoints.MapGroup("");
+            //    var routeGroup = endpoints.MapGroup("");
+            //    routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
+            //    {
+            //        // 获取配置的 Token
+            //        var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
 
-                endpoints.MapGet("/hoe", async context =>
-                {
-                    await context.Response.WriteAsync("Hello NCF Service EEE!");
-                });
+            //        // 从请求头获取 Token
 
-                routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
-                {
-                    // 获取配置的 Token
-                    var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
+            //        if (string.IsNullOrEmpty(configuredToken))
+            //        {
+            //            context.Response.StatusCode = 500;
+            //            await context.Response.WriteAsync("MCP access token is not configured");
+            //            return;
+            //        }
 
-                    // 从请求头获取 Token
+            //        if (!context.Request.Query.TryGetValue("token", out var requestToken) ||
+            //            requestToken != configuredToken)
+            //        {
+            //            Console.WriteLine($"requestToken: {requestToken}");
+            //            Console.WriteLine($"configuredToken: {configuredToken}");
 
-                    if (string.IsNullOrEmpty(configuredToken))
-                    {
-                        context.Response.StatusCode = 500;
-                        await context.Response.WriteAsync("MCP access token is not configured");
-                        return;
-                    }
+            //            context.Response.StatusCode = 401;
+            //            await context.Response.WriteAsync("Unauthorized");
+            //            return;
+            //        }
 
-                    if (!context.Request.Query.TryGetValue("token", out var requestToken) ||
-                        requestToken != configuredToken)
-                    {
-                        Console.WriteLine($"requestToken: {requestToken}");
-                        Console.WriteLine($"configuredToken: {configuredToken}");
+            //        await using var localTransport = transport = new SseResponseStreamTransport(response.Body);
+            //        await using var localServer = server = McpServerFactory.Create(transport, mcpServerOptions.Value, loggerFactory, endpoints.ServiceProvider);
 
-                        context.Response.StatusCode = 401;
-                        await context.Response.WriteAsync("Unauthorized");
-                        return;
-                    }
+            //        await localServer.RunAsync(requestAborted);
 
-                    await using var localTransport = transport = new SseResponseStreamTransport(response.Body);
-                    await using var localServer = server = McpServerFactory.Create(transport, mcpServerOptions.Value, loggerFactory, endpoints.ServiceProvider);
+            //        response.Headers.ContentType = "text/event-stream";
+            //        response.Headers.CacheControl = "no-cache";
 
-                    await localServer.StartAsync(requestAborted);
+            //        try
+            //        {
+            //            await transport.RunAsync(requestAborted);
+            //        }
+            //        catch (OperationCanceledException) when (requestAborted.IsCancellationRequested)
+            //        {
+            //            // RequestAborted always triggers when the client disconnects before a complete response body is written,
+            //            // but this is how SSE connections are typically closed.
+            //        }
+            //    });
 
-                    response.Headers.ContentType = "text/event-stream";
-                    response.Headers.CacheControl = "no-cache";
+            //    routeGroup.MapPost("/message", async context =>
+            //    {
+            //        if (transport is null)
+            //        {
+            //            await Results.BadRequest("Connect to the /ncf-mcp-sse endpoint before sending messages.").ExecuteAsync(context);
+            //            return;
+            //        }
 
-                    try
-                    {
-                        await transport.RunAsync(requestAborted);
-                    }
-                    catch (OperationCanceledException) when (requestAborted.IsCancellationRequested)
-                    {
-                        // RequestAborted always triggers when the client disconnects before a complete response body is written,
-                        // but this is how SSE connections are typically closed.
-                    }
-                });
+            //        var message = await context.Request.ReadFromJsonAsync<IJsonRpcMessage>(McpJsonUtilities.DefaultOptions, context.RequestAborted);
+            //        if (message is null)
+            //        {
+            //            await Results.BadRequest("No message in request body.").ExecuteAsync(context);
+            //            return;
+            //        }
 
-                routeGroup.MapPost("/message", async context =>
-                {
-                    if (transport is null)
-                    {
-                        await Results.BadRequest("Connect to the /sse endpoint before sending messages.").ExecuteAsync(context);
-                        return;
-                    }
+            //        await transport.OnMessageReceivedAsync(message, context.RequestAborted);
+            //        context.Response.StatusCode = StatusCodes.Status202Accepted;
+            //        await context.Response.WriteAsync("Accepted");
+            //    });
 
-                    var message = await context.Request.ReadFromJsonAsync<IJsonRpcMessage>(McpJsonUtilities.DefaultOptions, context.RequestAborted);
-                    if (message is null)
-                    {
-                        await Results.BadRequest("No message in request body.").ExecuteAsync(context);
-                        return;
-                    }
+            //});
 
-                    await transport.OnMessageReceivedAsync(message, context.RequestAborted);
-                    context.Response.StatusCode = StatusCodes.Status202Accepted;
-                    await context.Response.WriteAsync("Accepted");
-                });
 
-            });
 
             return base.UseXncfModule(app, registerService);
         }
