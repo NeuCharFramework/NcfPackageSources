@@ -6,14 +6,22 @@
 trigger:   
   - master  
   
-pool:   
-  vmImage: 'windows-latest'  
-  
+# pool:   
+#   vmImage: 'windows-latest'  
+
+
+# 🎯 使用自托管代理池，加快 CI/CD 速度
+pool:
+  name: 'SenparcOpenSource'  # 这里填你的自托管 Agent Pool 名称
+  demands:
+    - Agent.OS -equals Windows_NT
+
 variables:   
   solution: '**/NcfPackageSources.sln'    
   buildPlatform: 'Any CPU'    
   buildConfiguration: 'Release'  
-  
+  NUGET_PACKAGES: $(Agent.ToolsDirectory)/nuget/packages  # NuGet 缓存路径
+
 steps:  
 # - task: UseDotNet@2  
 #   displayName: 'Use .NET Core SDK 3'  
@@ -34,16 +42,64 @@ steps:
 #     packageType: 'sdk'  
 #     performMultiLevelLookup: true  
 #     includePreviewVersions: true  
-  
+
+# 🟢 缓存 NuGet 及依赖项
+- task: Cache@2
+  inputs:
+    key: 'nuget | "$(Agent.OS)" | **/*.csproj'  # NuGet 缓存 Key
+    path: '$(NUGET_PACKAGES)'  # NuGet 包的存储路径
+    restoreKeys: 'nuget'
+  displayName: 'Cache NuGet Packages'
+
+# 🟢 缓存 Aspire Workload
+- task: Cache@2
+  inputs:
+    key: 'aspire-workload | "$(Agent.OS)"'
+    path: '~/.dotnet'  # .NET SDK 及 workload 缓存目录
+    restoreKeys: 'aspire-workload'
+  displayName: 'Cache Aspire Workload'
+
+# 🟢 缓存 NuGet 工具（减少安装时间）
+- task: Cache@2
+  inputs:
+    key: 'nuget-tool | "$(Agent.OS)"'
+    path: 'C:\ProgramData\nuget'  # NuGetTool 的全局存储位置
+    restoreKeys: 'nuget-tool'
+  displayName: 'Cache NuGet Tool'
+
+# ✅ 仅当缓存未命中时安装 Aspire Workload
+- script: |
+    dotnet workload list | findstr /C:"aspire" || dotnet workload install aspire
+  displayName: 'Check & Install Aspire Workload'
+  condition: ne(variables['CACHE_RESTORED'], 'true')
+
+# ✅ 使用缓存的 NuGet 版本，避免重复安装
+- task: NuGetToolInstaller@1
+  displayName: 'Use Cached NuGet 6.3.0'
+  inputs:
+    versionSpec: '6.3.0'
+
+- script: |  
+    nuget sources remove -name nuget.org  
+  displayName: 'Remove Existing NuGet Source'  
+- script: |  
+    dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org  
+  displayName: 'Add NuGet Source'  
+    
+# ✅ 恢复 NuGet 依赖（使用缓存）
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/NcfPackageSources.sln'
+
 - task: DotNetCoreCLI@2    
   displayName: 'dotnet --list-sdks '    
   inputs:      
     command: custom      
     custom: '--list-sdks '  
   
-- script: |  
-    dotnet workload install aspire  
-  displayName: 'Install Aspire Workload'  
+# - script: |  
+#     dotnet workload install aspire  
+#   displayName: 'Install Aspire Workload'  
 
 # - task: DotNetCoreCLI@2    
 #   displayName: 'dotnet workload list'    
@@ -51,18 +107,18 @@ steps:
 #     command: custom      
 #     custom: 'workload list'    
 
-- task: NuGetToolInstaller@1    
-  displayName: 'Use NuGet 6.3.0'    
-  inputs:      
-    versionSpec: '6.3.0'      
-    checkLatest: true  
+# - task: NuGetToolInstaller@1    
+#   displayName: 'Use NuGet 6.3.0'    
+#   inputs:      
+#     versionSpec: '6.3.0'      
+#     checkLatest: true  
   
-- task: NuGetCommand@2    
-  inputs:      
-    command: 'restore'      
-    restoreSolution: '**/NcfPackageSources.sln'      
-    feedsToUse: 'config'      
-    externalFeedCredentials: 'nuget-jeffrey-full-key'      
+# - task: NuGetCommand@2    
+#   inputs:      
+#     command: 'restore'      
+#     restoreSolution: '**/NcfPackageSources.sln'      
+#     feedsToUse: 'config'      
+#     externalFeedCredentials: 'nuget-jeffrey-full-key'      
   
 # - task: VSBuild@1  
 #   inputs:  
@@ -871,6 +927,28 @@ steps:
     arguments: '-skipDuplicate'    
   continueOnError: true    
   condition: succeededOrFailed()  
+
+- task: NuGetCommand@2    
+  displayName: Senparc.Xncf.MCP    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.MCP.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.MCP - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.MCP.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()    
   
 - task: NuGetCommand@2    
   displayName: Senparc.Ncf.UnitTestExtension    
