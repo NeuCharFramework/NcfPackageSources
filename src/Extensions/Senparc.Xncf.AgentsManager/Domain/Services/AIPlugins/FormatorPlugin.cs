@@ -43,8 +43,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             var parameter = new PromptConfigParameter()
             {
                 MaxTokens = 3000,
-                Temperature = 0.7,
-                TopP = 0.5,
+                Temperature = 0.3,
+                TopP = 0.3,
             };
 
             //await Console.Out.WriteLineAsync(localResponse);
