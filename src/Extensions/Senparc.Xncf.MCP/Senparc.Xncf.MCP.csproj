@@ -39,6 +39,7 @@
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
 		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>

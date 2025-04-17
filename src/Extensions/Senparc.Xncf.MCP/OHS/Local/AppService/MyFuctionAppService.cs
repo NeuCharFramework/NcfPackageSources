@@ -2,6 +2,7 @@
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol.Transport;
 using ModelContextProtocol.Server;
+using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -15,6 +16,14 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ModelContextProtocol.SemanticKernel;
+using ModelContextProtocol.SemanticKernel.Extensions;
+using Microsoft.SemanticKernel;
+using Senparc.AI.Kernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.Extensions.DependencyInjection;
+using Azure.AI.OpenAI;
+using Azure.Core;
 
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
@@ -24,14 +33,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     [McpServerToolType()]
     public static class NcfMcpTools
     {
-        [McpServerTool, Description("Echoes the message back to the client.")]
+        [McpServerTool, Description("处理字符串")]
         public static string Echo(string message)
         {
             Console.WriteLine("Echo 收到来自 MCP的 请求，Message:" + message);
             return $"hello {message}";
         }
 
-        [McpServerTool, Description("return current time.")]
+        [McpServerTool, Description("获取当前时间")]
         public static string Now(string message) { return $"{DateTime.Now}"; }
 
         //自动增加小时数
@@ -62,7 +71,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         [FunctionRender("获取当前时间", "获取当前时间", typeof(Register))]
-        public async Task<StringAppResponse> GetNoew()
+        public async Task<StringAppResponse> GetMcpResult(MyFunction_MCPCallRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
@@ -81,29 +90,91 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
-                var clientTransport = new SseClientTransport(new SseClientTransportOptions() { 
-                 Endpoint= new Uri( "http://localhost:5000/sse/sse"),
-                  Name= "NCF-Server"
+                //var clientTransport = new SseClientTransport(new SseClientTransportOptions() { 
+                // Endpoint= new Uri( "http://localhost:5000/sse/sse"),
+                //  Name= "NCF-Server"
 
-                });
+                //});
 
-                var client = await McpClientFactory.CreateAsync(clientTransport);
+                //var client = await McpClientFactory.CreateAsync(clientTransport);
 
-                // Print the list of tools available from the server.
-                foreach (var tool in await client.ListToolsAsync())
+                //// Print the list of tools available from the server.
+                //foreach (var tool in await client.ListToolsAsync())
+                //{
+                //    Console.WriteLine($"{tool.Name} ({tool.Description})");
+                //}
+
+
+
+                //// Execute a tool (this would normally be driven by LLM tool invocations).
+                //var result = await client.CallToolAsync(
+                //    "Echo",
+                //    new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
+                //    /*System.Threading.CancellationToken.None*/);
+
+                //Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
+                //return result.ToJson(true);
+
+
+
+                /*
+                var builder = Kernel.CreateBuilder();
+                //builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
+
+
+                var certs = Senparc.AI.Config.SenparcAiSetting.AzureOpenAIKeys;
+
+                builder.Services.AddAzureOpenAIChatCompletion("gpt-4o",new AzureOpenAIClient(new Uri(certs.AzureEndpoint),new System.ClientModel.ApiKeyCredential(certs.ApiKey)));
+
+
+                var kernel = builder.Build();
+                await kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-MCP"+SystemTime.NowTicks, "http://localhost:5000/sse/sse");
+
+                var executionSettings = new OpenAIPromptExecutionSettings
                 {
-                    Console.WriteLine($"{tool.Name} ({tool.Description})");
-                }
+                    Temperature = 0,
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                };
 
-                // Execute a tool (this would normally be driven by LLM tool invocations).
-                var result = await client.CallToolAsync(
-                    "Echo",
-                    new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
-                    /*System.Threading.CancellationToken.None*/);
-
-                Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
+                var prompt = request.RequestPrompt;
+                var result = await kernel.InvokePromptAsync(prompt, new(executionSettings)).ConfigureAwait(false);
+                Console.WriteLine($"\n\n{prompt}\n{result}");
 
                 return result.ToJson(true);
+
+                */
+
+
+                var semanticAiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
+
+                var iWantToConfig = semanticAiHandler.IWantTo()
+                                            .ConfigModel(AI.ConfigModel.Chat, "Jeffrey");
+
+                var mcpPlugin = await iWantToConfig.Kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server"+SystemTime.NowTicks, "http://localhost:5000/sse/sse");
+
+                //iWantToConfig.Kernel.Plugins.Add(mcpPlugin);
+
+                var functions = mcpPlugin.Select(z => z).ToArray();
+
+                var iWantToRun = iWantToConfig.BuildKernel();
+
+                var executionSettings2 = new OpenAIPromptExecutionSettings
+                {
+                    Temperature = 0,
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                };
+                var ka = new KernelArguments(executionSettings2);
+
+                //var aiRrequest = iWantToRun.CreateRequest(request.RequestPrompt
+                //    //, true, functions
+                //    );
+
+                //var result = await iWantToRun.RunAsync(aiRrequest);
+                //return result.OutputString;
+
+                var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
+                //return resultRaw.ToJson(true);
+                return resultRaw.ToString();
             });
         }
 
