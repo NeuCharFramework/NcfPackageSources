@@ -25,7 +25,11 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     public static class NcfMcpTools
     {
         [McpServerTool, Description("Echoes the message back to the client.")]
-        public static string Echo(string message) => $"hello {message}";
+        public static string Echo(string message)
+        {
+            Console.WriteLine("Echo 收到来自 MCP的 请求，Message:" + message);
+            return $"hello {message}";
+        }
 
         [McpServerTool, Description("return current time.")]
         public static string Now(string message) { return $"{DateTime.Now}"; }
@@ -37,13 +41,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             return $"{DateTime.Now.AddHours(hours)}";
         }
 
-       
+
     }
 
     [McpServerToolType]
     public class MyFuctionAppServiceForCalc
     {
-        
+
     }
 
     [McpServerToolType]
@@ -56,6 +60,54 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         {
             _colorService = colorService;
         }
+
+        [FunctionRender("获取当前时间", "获取当前时间", typeof(Register))]
+        public async Task<StringAppResponse> GetNoew()
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                //Client
+                //var clientTransport = new StdioClientTransport(new StdioClientTransportOptions
+                //{
+                //    Name = "Everything",
+                //    Command = "npx",
+                //    Arguments = ["-y", "@modelcontextprotocol/server-everything"],
+                //});
+
+                //var clientTransport = new StdioClientTransport(new StdioClientTransportOptions
+                //{
+                //    Name = "NCF-Server",
+                //    Command = "curl http://localhost:5000/sse/sse",
+                //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
+                //});
+
+                var clientTransport = new SseClientTransport(new SseClientTransportOptions() { 
+                 Endpoint= new Uri( "http://localhost:5000/sse/sse"),
+                  Name= "NCF-Server"
+
+                });
+
+                var client = await McpClientFactory.CreateAsync(clientTransport);
+
+                // Print the list of tools available from the server.
+                foreach (var tool in await client.ListToolsAsync())
+                {
+                    Console.WriteLine($"{tool.Name} ({tool.Description})");
+                }
+
+                // Execute a tool (this would normally be driven by LLM tool invocations).
+                var result = await client.CallToolAsync(
+                    "Echo",
+                    new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
+                    /*System.Threading.CancellationToken.None*/);
+
+                Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
+
+                return result.ToJson(true);
+            });
+        }
+
+
 
         [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
@@ -122,7 +174,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
 
         [McpServerTool, Description("计算器工具，负责处理加减乘除计算")]
-        public async Task<string> Calculator(RequestType request)
+        public async Task<string> Calculator(
+            //int number1, int number2, int power, [Description("Number1 和 Number2 之间的运算符，可选：+ - × ÷")] string operatorMark
+            RequestType request
+            )
         {
             /* 页面上点击"执行"后，将调用这里的方法
               *
@@ -133,6 +188,15 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
               * 如果直接对 response 的属性修改，则最终 return null，
               * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
               */
+            //RequestType request = new RequestType
+            //{
+            //    Power = power,
+            //    Number1 = number1,
+            //    Number2 = number2,
+            //    TheOperator = operatorMark
+            //};
+
+            Console.WriteLine("收到 MCP 请求：" + request.ToJson(true));
 
             double calcResult = request.Number1;
             switch (request.TheOperator)

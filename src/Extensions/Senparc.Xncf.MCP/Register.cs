@@ -113,6 +113,7 @@ namespace Senparc.Xncf.MCP
                                         Version = "1.0.0",
                                     };
                                 })
+                .WithHttpTransport()
                                         //   .WithStdioServerTransport()
                                         .WithToolsFromAssembly();
 
@@ -128,7 +129,14 @@ namespace Senparc.Xncf.MCP
             if (app is IEndpointRouteBuilder endpoints)
             {
                 Console.WriteLine("开始启用 MCP 服务");
-                endpoints.MapMcp();
+                var routePattern = "sse";
+                endpoints.MapMcp(routePattern);
+
+                ////恢复首页
+                //var routeGroup = endpoints.MapGroup(routePattern);
+                //var routeEndpoints  = endpoints.DataSources.SelectMany(z=>z.Endpoints)
+                //    .OfType<RouteEndpoint>()
+                //    .Where(z=>z.RoutePattern.RawText == routePattern,)
             }
 
             //app.UseRouting();
