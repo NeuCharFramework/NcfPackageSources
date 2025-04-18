@@ -24,6 +24,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.Extensions.DependencyInjection;
 using Azure.AI.OpenAI;
 using Azure.Core;
+using Microsoft.Extensions.AI;
 
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
@@ -90,29 +91,34 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
-                //var clientTransport = new SseClientTransport(new SseClientTransportOptions() { 
-                // Endpoint= new Uri( "http://localhost:5000/sse/sse"),
-                //  Name= "NCF-Server"
+                var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                {
+                    Endpoint = new Uri("http://localhost:5000/sse/sse"),
+                    Name = "NCF-Server"
 
-                //});
+                });
 
-                //var client = await McpClientFactory.CreateAsync(clientTransport);
+                var client = await McpClientFactory.CreateAsync(clientTransport);
+                var tools = await client.ListToolsAsync();
+                // Print the list of tools available from the server.
+                foreach (var tool in tools)
+                {
+                    Console.WriteLine($"{tool.Name} ({tool.Description})");
+                }
 
-                //// Print the list of tools available from the server.
-                //foreach (var tool in await client.ListToolsAsync())
-                //{
-                //    Console.WriteLine($"{tool.Name} ({tool.Description})");
-                //}
+
+
+                // Execute a tool (this would normally be driven by LLM tool invocations).
+                var result = await client.CallToolAsync(
+                    "Echo",
+                    new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
+                    /*System.Threading.CancellationToken.None*/);
+
+                Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
 
 
 
-                //// Execute a tool (this would normally be driven by LLM tool invocations).
-                //var result = await client.CallToolAsync(
-                //    "Echo",
-                //    new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
-                //    /*System.Threading.CancellationToken.None*/);
 
-                //Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
                 //return result.ToJson(true);
 
 
@@ -144,13 +150,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 */
 
-
-                var semanticAiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
+                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
+                var semanticAiHandler = new SemanticAiHandler(aiSetting);
 
                 var iWantToConfig = semanticAiHandler.IWantTo()
                                             .ConfigModel(AI.ConfigModel.Chat, "Jeffrey");
 
-                var mcpPlugin = await iWantToConfig.Kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server"+SystemTime.NowTicks, "http://localhost:5000/sse/sse");
+                var mcpPlugin = await iWantToConfig.Kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server", "http://localhost:5000/sse/sse");
 
                 //iWantToConfig.Kernel.Plugins.Add(mcpPlugin);
 
@@ -161,16 +167,25 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var executionSettings2 = new OpenAIPromptExecutionSettings
                 {
                     Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Required()// FunctionChoiceBehavior.Auto()
                 };
-                var ka = new KernelArguments(executionSettings2);
+                var ka = new KernelArguments(executionSettings2) {  };
 
-                //var aiRrequest = iWantToRun.CreateRequest(request.RequestPrompt
-                //    //, true, functions
-                //    );
+            //var aiRrequest = iWantToRun.CreateRequest(request.RequestPrompt
+            //    //, true, functions
+            //    );
 
-                //var result = await iWantToRun.RunAsync(aiRrequest);
-                //return result.OutputString;
+            //var result = await iWantToRun.RunAsync(aiRrequest);
+            //return result.OutputString;
+
+            //var options = new ChatOptions
+            //{
+            //    MaxOutputTokens = 1000,
+            //    ModelId = aiSetting.ModelName.Chat,
+            //    Tools = [.. tools]
+            //};
+
+
 
                 var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
                 //return resultRaw.ToJson(true);
