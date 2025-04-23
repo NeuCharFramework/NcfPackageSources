@@ -30,8 +30,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 		<EmbeddedResource Include="wwwroot\**\*" />
-		<PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.9" />
-		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.9" />
+		<PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.10" />
+		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.10" />
 		<PackageReference Include="ModelContextProtocol-SemanticKernel" Version="0.0.1-preview-09" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 	</ItemGroup>
@@ -40,6 +40,7 @@
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.SenMapic\Senparc.Xncf.SenMapic.csproj" />
 		<ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
 		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>
