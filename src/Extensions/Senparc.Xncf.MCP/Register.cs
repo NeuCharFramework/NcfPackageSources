@@ -112,126 +112,28 @@ namespace Senparc.Xncf.MCP
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
 
-// Assembly assembly = Assembly.Load("MyAssembly");
-// Type type2 = assembly.GetType("MyNamespace.MyClass");
+            // Assembly assembly = Assembly.Load("MyAssembly");
+            // Type type2 = assembly.GetType("MyNamespace.MyClass");
 
             var type = typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService);
             var methodInfo = type.GetMethod("WebSpider");
             var aiFunction = AIFunctionFactory.Create(methodInfo,
-            targetType: typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService));
-
+             typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService));
             var tool = McpServerTool.Create(aiFunction);
-            
+
             // System.Console.WriteLine("aiFunction: " + aiFunction.JsonSchema);
 
             var mcpServerBuilder = services.AddMcpServer(opt =>
                         {
-                        opt.ServerInfo = new Implementation()
-                        {
-                            Name = "ncf-mcp-server",
-                            Version = "1.0.0",
-                        };
-//                         opt.Capabilities = new ServerCapabilities()
-//                         {
-//                             Tools = new ToolsCapability()
-//                             {
-//                                 ListToolsHandler = (request, cancellationToken) =>
-//                                 ValueTask.FromResult(new ListToolsResult()
-//                                 {
-//                                     Tools = new List<Tool>()
-//                                          {
-//                                              new Tool()
-//                                              {
-//                                                  Name="WebSpider",
-//                                                Description = "网络爬虫",
-//                                                  InputSchema = aiFunction.JsonSchema
-//                                 //                  InputSchema =JsonSerializer.Deserialize<JsonElement>("""
-//                                 // {
-//                                 //     "type": "object",
-//                                 //     "properties": {
-//                                 //       "message": {
-//                                 //         "type": "string",
-//                                 //         "description": "The input to echo back"
-//                                 //       }
-//                                 //     },
-//                                 //     "required": ["message"]
-//                                 // }
-//                                 // """),
-//                                              }
-//                                          }
-//
-//                                 }),
-//
-//                                 CallToolHandler =  (request, cancellationToken) =>
-//    {
-//        if (request.Params?.Name == "WebSpider")
-//        {
-//          if (request.Params.Arguments?.TryGetValue("request", out var requestOHS) is not true)
-//            {
-//                throw new McpException("Missing required argument 'request'");
-//            }
-// System.Console.WriteLine("requestOHS: "+requestOHS.ToString());
-//
-// var requestObj =  requestOHS.ToString().GetObject<SenMapic.OHS.Local.PL.MyFunction_SenMapicRequest>();
-//         //    if (requestOHS["url"]?.TryGetValue("url", out var url) is not true)
-//         //    {
-//         //        throw new McpException("Missing required argument 'url'");
-//         //    }
-//         //    if (request.Params.Arguments?.TryGetValue("deepth", out var deepth) is not true)
-//         //    {
-//         //        throw new McpException("Missing required argument 'deepth'");
-//         //    }
-//         //    if (request.Params.Arguments?.TryGetValue("pageNumber", out var pageNumber) is not true)
-//         //    {
-//         //        throw new McpException("Missing required argument 'pageNumber'");
-//         //    }
-//
-//
-//            var appService = request.Services.GetRequiredService<Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService>();
-//         //    var result =  appService.WebSpider(new SenMapic.OHS.Local.PL.MyFunction_SenMapicRequest
-//         //    {
-//         //        Url = url.ToString(),
-//         //        Deepth = int.Parse(deepth.ToString()),
-//         //        PageNumber = int.Parse(pageNumber.ToString())
-//         //    }).GetAwaiter().GetResult();
-//    var result =  appService.WebSpider(requestObj).GetAwaiter().GetResult();
-//
-//            var htmlReuslt = result.Data;
-//
-//            return ValueTask.FromResult(new CallToolResponse()
-//            {
-//
-//                Content = [new Content() { Text = $"{htmlReuslt}", Type = "text" }]
-//            });
-//
-//        }
-//
-//            if (request.Params?.Name == "echo")
-//            {
-//                if (request.Params.Arguments?.TryGetValue("message", out var message) is not true)
-//                {
-//                    throw new McpException("Missing required argument 'message'");
-//                }
-//
-//                return ValueTask.FromResult(new CallToolResponse()
-//                {
-//                    Content = [new Content() { Text = $"Echo: {message}", Type = "text" }]
-//                });
-//            }
-//
-//            throw new McpException($"Unknown tool: '{request.Params?.Name}'");
-//        }
-//    ,
-//
-//                                 },
-//
-//
-//                             };
-
+                            opt.ServerInfo = new Implementation()
+                            {
+                                Name = "ncf-mcp-server",
+                                Version = "1.0.0",
+                            };
                         })
                         .WithHttpTransport()
                                             //   .WithStdioServerTransport()
-                                            .WithTools(new[]{tool})
+                                            .WithTools(new[] { tool })
                                             .WithToolsFromAssembly()
                                             //.WithToolsFromAssembly(typeof(Senparc.Xncf.SenMapic.Register).Assembly)
                                             ;
