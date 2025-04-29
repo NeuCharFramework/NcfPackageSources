@@ -1,4 +1,6 @@
-<img src="https://weixin.senparc.com/images/NCF/logo.png" width="300" />
+<img src="https://github.com/user-attachments/assets/f4377f39-7f2d-4030-84e1-1095c07f3e84" alt="NeuCharFramework" width="300" >
+
+<!--<img src="https://weixin.senparc.com/images/NCF/logo.png" width="300" />-->
 
 # NcfPackageSources
 
