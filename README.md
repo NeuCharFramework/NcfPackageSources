@@ -124,7 +124,7 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Xncf.FileManager | 文件管理模块 | [![Senparc.Xncf.FileManager][badge-Senparc.Xncf.FileManager]][nuget-Senparc.Xncf.FileManager] |
 | Senparc.Xncf.KnowledgeBase | AI 知识库 | [![Senparc.Xncf.KnowledgeBase][badge-Senparc.Xncf.KnowledgeBase]][nuget-Senparc.Xncf.KnowledgeBase] |
 | Senparc.Xncf.MCP | MCF 多租户微服务平台 | [![Senparc.Xncf.MCP][badge-Senparc.Xncf.MCP]][nuget-Senparc.Xncf.MCP] |
-| Senparc.Xncf.PromptRange | AI 提示词范围 | [![Senparc.Xncf.PromptRange][badge-Senparc.Xncf.PromptRange]][nuget-Senparc.Xncf.PromptRange] |
+| Senparc.Xncf.PromptRange | AI 提示词靶场 | [![Senparc.Xncf.PromptRange][badge-Senparc.Xncf.PromptRange]][nuget-Senparc.Xncf.PromptRange] |
 | Senparc.Xncf.SenMapic | SenMapic 爬虫模块 | [![Senparc.Xncf.SenMapic][badge-Senparc.Xncf.SenMapic]][nuget-Senparc.Xncf.SenMapic] |
 | Senparc.Xncf.Swagger | Swagger 接口文档 | [![Senparc.Xncf.Swagger][badge-Senparc.Xncf.Swagger]][nuget-Senparc.Xncf.Swagger] |
 | Senparc.Xncf.Terminal | 终端命令模块 | [![Senparc.Xncf.Terminal][badge-Senparc.Xncf.Terminal]][nuget-Senparc.Xncf.Terminal] |
@@ -134,8 +134,8 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Xncf.SystemCore | 系统核心模块 | [![Senparc.Xncf.SystemCore][badge-Senparc.Xncf.SystemCore]][nuget-Senparc.Xncf.SystemCore] |
 | Senparc.Xncf.SystemManager | 系统管理模块 | [![Senparc.Xncf.SystemManager][badge-Senparc.Xncf.SystemManager]][nuget-Senparc.Xncf.SystemManager] |
 | Senparc.Xncf.SystemPermission | 系统权限模块 | [![Senparc.Xncf.SystemPermission][badge-Senparc.Xncf.SystemPermission]][nuget-Senparc.Xncf.SystemPermission] |
-| Senparc.Xncf.Tenant | 租户管理模块 | [![Senparc.Xncf.Tenant][badge-Senparc.Xncf.Tenant]][nuget-Senparc.Xncf.Tenant] |
-| Senparc.Xncf.Tenant.Interface | 租户接口模块 | [![Senparc.Xncf.Tenant.Interface][badge-Senparc.Xncf.Tenant.Interface]][nuget-Senparc.Xncf.Tenant.Interface] |
+| Senparc.Xncf.Tenant | 多租户管理模块 | [![Senparc.Xncf.Tenant][badge-Senparc.Xncf.Tenant]][nuget-Senparc.Xncf.Tenant] |
+| Senparc.Xncf.Tenant.Interface | 多租户接口模块 | [![Senparc.Xncf.Tenant.Interface][badge-Senparc.Xncf.Tenant.Interface]][nuget-Senparc.Xncf.Tenant.Interface] |
 | Senparc.Xncf.XncfModuleManager | XNCF 模块管理器 | [![Senparc.Xncf.XncfModuleManager][badge-Senparc.Xncf.XncfModuleManager]][nuget-Senparc.Xncf.XncfModuleManager] |
 
 ## 贡献指南 / Contributing
