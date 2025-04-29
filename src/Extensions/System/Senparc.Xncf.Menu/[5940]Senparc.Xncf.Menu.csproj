@@ -1,22 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.12.9-preview1</Version>
-    <AssemblyName>Senparc.Xncf.Menu</AssemblyName>
-    <RootNamespace>Senparc.Xncf.Menu</RootNamespace>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>系统菜单管理</Description>
-    <Copyright>NeuCharFramework</Copyright>
-    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Menu</PackageTags>
-    <Authors>NeuCharFramework</Authors>
-    <Owners>NeuCharFramework</Owners>
-    <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
-    <Title>菜单管理</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Version>0.12.10-preview1</Version>
+		<AssemblyName>Senparc.Xncf.Menu</AssemblyName>
+		<RootNamespace>Senparc.Xncf.Menu</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+		<Description>系统菜单管理</Description>
+		<Copyright>NeuCharFramework</Copyright>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Menu</PackageTags>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
+		<!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
+		<Title>菜单管理</Title>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
 		v0.1.0 创世
 		v0.3.3.1 添加 Oracle 数据库迁移代码
 			[2024-09-10] v0.10.4-preview1 升级缓存基础库
@@ -28,46 +28,47 @@
 			[2024-11-28] v0.12.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
 			[2024-12-27] v0.12.4-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.12.8-preview1 Update Agents functions, support for function calling
+			[2025-04-29] v0.12.10-preview1 Update CO2NET and AIKernel
 </PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.Menu.XML</DocumentationFile>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+		<!--<DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.Menu.XML</DocumentationFile>
 		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
 		<Optimize>true</Optimize>
 		<DebugType>pdbonly</DebugType>
 		<ErrorReport>prompt</ErrorReport>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>-->
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App_Data\SenparcTraceLog\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Domain\Migrations\Oracle\**" />
-    <Content Remove="Domain\Migrations\Oracle\**" />
-    <EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
-    <None Remove="Domain\Migrations\Oracle\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />-->
-    <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.32" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-  </ItemGroup>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="App_Data\SenparcTraceLog\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Domain\Migrations\Oracle\**" />
+		<Content Remove="Domain\Migrations\Oracle\**" />
+		<EmbeddedResource Remove="Domain\Migrations\Oracle\**" />
+		<None Remove="Domain\Migrations\Oracle\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />-->
+		<!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
+		<!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.32" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	</ItemGroup>
 </Project>
