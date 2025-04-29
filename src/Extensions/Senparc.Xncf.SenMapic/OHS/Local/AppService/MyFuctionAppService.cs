@@ -4,21 +4,67 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.SenMapic.Domain.Services;
+using Senparc.Xncf.SenMapic.Domain.SiteMap;
 using Senparc.Xncf.SenMapic.OHS.Local.PL;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using ModelContextProtocol.Server;
 
 
 namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 {
+    //[McpServerToolType]
     public class MyFuctionAppService: AppServiceBase
     {
         private ColorService _colorService;
-        public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
+        private SenMapicTaskService _senMapicTaskService;
+        public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService, SenMapicTaskService senMapicTaskService) : base(serviceProvider)
         {
             _colorService = colorService;
+            _senMapicTaskService = senMapicTaskService;
+        }
+
+        
+        //[McpServerTool]
+        [FunctionRender("爬虫", "爬取网页信息", typeof(Register))]
+        public async Task<StringAppResponse> WebSpider(MyFunction_SenMapicRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+        //     var crawTask = await _senMapicTaskService.CreateTaskAsync("爬虫任务"+SystemTime.Now.Ticks, 
+        //             request.Url, 5, 10, request.Deepth, request.PageNumber, true);
+        //    logger.Append("爬虫任务创建成功");
+        //    logger.Append("爬虫任务ID："+crawTask.Id);
+        //    logger.Append("爬虫任务名称："+crawTask.Name);
+        //    logger.Append("爬虫任务开始时间："+crawTask.StartTime);
+        //    logger.Append("爬虫任务结束时间："+crawTask.EndTime);
+        //    logger.Append("爬虫任务状态："+crawTask.Status);
+           
+        //      await _senMapicTaskService.StartTaskAsync(crawTask);
+
+            List<KeyValuePair<ContentType, string>> contentMap = new List<KeyValuePair<ContentType, string>>();
+
+            Console.WriteLine($"Crawl 爬取：{request.Url}，深度：{request.Deepth}，最大页面数：{request.PageNumber}");
+
+            var senMapicEngine = new SenMapicEngine(
+                                serviceProvider: base.ServiceProvider,
+                                urls: new[] { request.Url },
+                                maxThread: 20,
+                                maxBuildMinutesForSingleSite: 5,
+                                maxDeep: request.Deepth,
+                                maxPageCount: request.PageNumber);
+
+            var senMapicResult = senMapicEngine.Build();
+
+            var htmlResult =  string.Join("\r\n\r\n", senMapicResult.Values.Select(z=> " - "+ z.Url +":\n"+ z.MarkDownHtmlContent).ToArray());
+            logger.Append(htmlResult);
+            System.Console.WriteLine("htmlResult: "+htmlResult);
+            return htmlResult;
+            });
         }
 
         [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]

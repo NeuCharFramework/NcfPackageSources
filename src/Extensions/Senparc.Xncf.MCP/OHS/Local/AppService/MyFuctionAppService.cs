@@ -106,8 +106,6 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     Console.WriteLine($"{tool.Name} ({tool.Description})");
                 }
 
-
-
                 // Execute a tool (this would normally be driven by LLM tool invocations).
                 var result = await client.CallToolAsync(
                     "Echo",

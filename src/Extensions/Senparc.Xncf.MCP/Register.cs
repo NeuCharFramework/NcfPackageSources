@@ -29,9 +29,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Helpers;
 
 namespace Senparc.Xncf.MCP
 {
@@ -95,8 +99,11 @@ namespace Senparc.Xncf.MCP
 
         public IMcpClient McpClient { get; set; }
 
+        public List<string> McpFunctionMetaInfo { get; set; }
+
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+
             services.AddScoped<ColorAppService>();
             services.AddScoped<ColorService>();
 
@@ -105,17 +112,32 @@ namespace Senparc.Xncf.MCP
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
 
-            services.AddMcpServer(opt =>
-                                {
-                                    opt.ServerInfo = new Implementation()
-                                    {
-                                        Name = "ncf-mcp-server",
-                                        Version = "1.0.0",
-                                    };
-                                })
-                .WithHttpTransport()
-                                        //   .WithStdioServerTransport()
-                                        .WithToolsFromAssembly();
+            // Assembly assembly = Assembly.Load("MyAssembly");
+            // Type type2 = assembly.GetType("MyNamespace.MyClass");
+
+            var type = typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService);
+            var methodInfo = type.GetMethod("WebSpider");
+            var aiFunction = AIFunctionFactory.Create(methodInfo,
+             typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService));
+            var tool = McpServerTool.Create(aiFunction);
+
+            // System.Console.WriteLine("aiFunction: " + aiFunction.JsonSchema);
+
+            var mcpServerBuilder = services.AddMcpServer(opt =>
+                        {
+                            opt.ServerInfo = new Implementation()
+                            {
+                                Name = "ncf-mcp-server",
+                                Version = "1.0.0",
+                            };
+                        })
+                        .WithHttpTransport()
+                                            //   .WithStdioServerTransport()
+                                            .WithTools(new[] { tool })
+                                            .WithToolsFromAssembly()
+                                            //.WithToolsFromAssembly(typeof(Senparc.Xncf.SenMapic.Register).Assembly)
+                                            ;
+
 
             return base.AddXncfModule(services, configuration, env);
         }

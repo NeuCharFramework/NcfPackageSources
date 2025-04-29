@@ -151,25 +151,25 @@ namespace Senparc.Xncf.MCP.Domain.Services
                                       }
                                   });
 
-                                  routeGroup.MapPost("/message", async context =>
-                                  {
-                                      if (transport is null)
-                                      {
-                                          await Results.BadRequest("Connect to the /ncf-mcp-sse endpoint before sending messages.").ExecuteAsync(context);
-                                          return;
-                                      }
-
-                                      var message = await context.Request.ReadFromJsonAsync<IJsonRpcMessage>(McpJsonUtilities.DefaultOptions, context.RequestAborted);
-                                      if (message is null)
-                                      {
-                                          await Results.BadRequest("No message in request body.").ExecuteAsync(context);
-                                          return;
-                                      }
-
-                                      await transport.OnMessageReceivedAsync(message, context.RequestAborted);
-                                      context.Response.StatusCode = StatusCodes.Status202Accepted;
-                                      await context.Response.WriteAsync("Accepted");
-                                  });
+                                  // routeGroup.MapPost("/message", async context =>
+                                  // {
+                                  //     if (transport is null)
+                                  //     {
+                                  //         await Results.BadRequest("Connect to the /ncf-mcp-sse endpoint before sending messages.").ExecuteAsync(context);
+                                  //         return;
+                                  //     }
+                                  //
+                                  //     var message = await context.Request.ReadFromJsonAsync<IJsonRpcMessage>(McpJsonUtilities.DefaultOptions, context.RequestAborted);
+                                  //     if (message is null)
+                                  //     {
+                                  //         await Results.BadRequest("No message in request body.").ExecuteAsync(context);
+                                  //         return;
+                                  //     }
+                                  //
+                                  //     await transport.OnMessageReceivedAsync(message, context.RequestAborted);
+                                  //     context.Response.StatusCode = StatusCodes.Status202Accepted;
+                                  //     await context.Response.WriteAsync("Accepted");
+                                  // });
                               });
 
                           });
