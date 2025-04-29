@@ -83,9 +83,10 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 
 ## 可用的 Nuget 包 / Available NuGet Packages
 
+### 基础库 / Basic Libraries
+
 | 包名 / Package Name | 描述 / Description | 版本 / Version |
 |---------------------|-------------------|----------------|
-| Senparc.AI | 为所有标准接口和基础功能的基础模块 | <img src="https://img.shields.io/nuget/v/Senparc.AI.svg" alt="Senparc.AI"></img> |
 | Senparc.Ncf.XncfBase | XNCF 模块基础库 | <img src="https://img.shields.io/nuget/v/Senparc.Ncf.XncfBase.svg" alt="Senparc.Ncf.XncfBase"></img> |
 | Senparc.Ncf.Core | 核心基础库 | <img src="https://img.shields.io/nuget/v/Senparc.Ncf.Core.svg" alt="Senparc.Ncf.Core"></img> |
 | Senparc.Ncf.DatabasePlant | 数据库组装厂 | <img src="https://img.shields.io/nuget/v/Senparc.Ncf.DatabasePlant.svg" alt="Senparc.Ncf.DatabasePlant"></img> |
@@ -106,6 +107,11 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Ncf.Service | 服务层 | <img src="https://img.shields.io/nuget/v/Senparc.Ncf.Service.svg" alt="Senparc.Ncf.Service"></img> |
 | Senparc.Ncf.SMS | 短信服务 | <img src="https://img.shields.io/nuget/v/Senparc.Ncf.SMS.svg" alt="Senparc.Ncf.SMS"></img> |
 | Senparc.Ncf.Utility | 工具类库 | <img src="https://img.shields.io/nuget/v/Senparc.Ncf.Utility.svg" alt="Senparc.Ncf.Utility"></img> |
+
+### 扩展 XNCF 模块 / Extension XNCF Modules
+
+| 包名 / Package Name | 描述 / Description | 版本 / Version |
+|---------------------|-------------------|----------------|
 | Senparc.Xncf.AgentsManager | 智能体管理器 | <img src="https://img.shields.io/nuget/v/Senparc.Xncf.AgentsManager.svg" alt="Senparc.Xncf.AgentsManager"></img> |
 | Senparc.Xncf.AIAgentsHub | AI 智能体中心 | <img src="https://img.shields.io/nuget/v/Senparc.Xncf.AIAgentsHub.svg" alt="Senparc.Xncf.AIAgentsHub"></img> |
 | Senparc.Xncf.AIKernel | AI 内核 | <img src="https://img.shields.io/nuget/v/Senparc.Xncf.AIKernel.svg" alt="Senparc.Xncf.AIKernel"></img> |
