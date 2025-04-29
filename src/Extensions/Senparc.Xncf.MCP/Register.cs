@@ -151,7 +151,7 @@ namespace Senparc.Xncf.MCP
             if (app is IEndpointRouteBuilder endpoints)
             {
                 Console.WriteLine("开始启用 MCP 服务");
-                var routePattern = "sse";
+                var routePattern = "mcp";
                 endpoints.MapMcp(routePattern);
 
                 ////恢复首页
