@@ -24,7 +24,7 @@
 
 当您需要了解、修改或调试相关基础库时，您可以通过本项目获取源码。
 
-[NCF](https://github.com/NeuCharFramework/NCF) 文档地址：[https://www.ncf.pub/docs/](https://www.ncf.pub/docs/)。
+[NCF](https://github.com/NeuCharFramework/NCF) 文档地址：[https://doc.ncf.pub/](https://doc.ncf.pub/)。
 
 ## 开发环境 / Development Environment
 
