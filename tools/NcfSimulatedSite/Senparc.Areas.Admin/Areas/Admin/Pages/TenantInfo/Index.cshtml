@@ -96,10 +96,10 @@
                 </template>
             </el-table-column>
         </el-table>
-        @*<pagination :total="paginationQuery.total"
-            :page.sync="listQuery.pageIndex"
-            :limit.sync="listQuery.pageSize"
-            @@pagination="getList"></pagination>*@
+        <pagination :total="paginationQuery.total"
+                    :page.sync="listQuery.pageIndex"
+                    :limit.sync="listQuery.pageSize"
+                    @@pagination="getList"></pagination>
         <!--编辑、新增 -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"

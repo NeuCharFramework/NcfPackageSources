@@ -4,12 +4,12 @@
         return {
             //分页参数
             paginationQuery: {
-                total: 5
+                total: 0
             },
             //分页接口传参
             listQuery: {
                 pageIndex: 1,
-                pageSize: 20,
+                pageSize: 10,
                 adminUserInfoName: ''
             },
             tableData: [],
@@ -102,8 +102,10 @@
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/TenantInfo/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
-                this.tableData = res.data.data.list;
-                this.paginationQuery.total = res.data.data.totalCount;
+                if (res.data.success) {
+                    this.tableData = res.data.data.list;
+                    this.paginationQuery.total = res.data.data.totalCount;
+                }
             });
         },
         // 新增

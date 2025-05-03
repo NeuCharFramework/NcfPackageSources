@@ -327,10 +327,14 @@ namespace Senparc.Ncf.Service
                 //Console.WriteLine("sysMenus DbConte HashCode: " + this.BaseData.BaseDB.BaseDataContext.GetHashCode());
 
 
-                await this.SaveObjectListAsync(sysMenus);
-                await sysRoleService.SaveObjectListAsync(sysRoles);
-                await sysRolePermissionService.SaveObjectListAsync(sysPermissions);
-                await sysRoleAdminUserInfoService.SaveObjectListAsync(sysRoleAdminUserInfos);
+                await base.SaveObjectListAsync(sysMenus)
+                    .ContinueWith(async t =>
+                {
+                    await sysRoleService.SaveObjectListAsync(sysRoles);
+                    await sysRolePermissionService.SaveObjectListAsync(sysPermissions);
+                    await sysRoleAdminUserInfoService.SaveObjectListAsync(sysRoleAdminUserInfos);
+                });
+
 
 
                 //_senparcEntities.Set<SysRole>().AddRange(sysRoles);
