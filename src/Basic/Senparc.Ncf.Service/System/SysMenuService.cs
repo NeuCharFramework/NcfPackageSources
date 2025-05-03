@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Service
 
         //private readonly SenparcEntitiesBase _senparcEntities;
 
-        public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider, 
+        public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider,
             SysRoleService sysRoleService, SysMenuService sysMenuService, ServiceBase<SysRolePermission> sysRolePermissionService,
             SysRoleAdminUserInfoService sysRoleAdminUserInfoService
             ) : base(repo, serviceProvider)
@@ -67,13 +67,20 @@ namespace Senparc.Ncf.Service
                 {
                     return menu;//TODO：需要给出提示
                 }
-                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id);
+
+                isRepeat = await sysMenuService.GetObjectAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id) != null;
+
+                //isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id);
+
                 menu.Update(sysMenuDto);
             }
             else
             {
                 menu = new SysMenu(sysMenuDto);
-                isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
+
+                isRepeat = await sysMenuService.GetObjectAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode) != null;
+
+                //isRepeat = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().AnyAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode);
             }
             if (isRepeat && sysMenuDto.MenuType == MenuType.按钮)
             {
@@ -332,7 +339,7 @@ namespace Senparc.Ncf.Service
             IConfigurationProvider configurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
 
             var sysMenuList = await sysMenuService.GetFullListAsync(z => true);
-            
+
             selectListItems = sysMenuService.Mapping<SysMenuDto>(sysMenuList);  //await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
 
             //List<SysMenu> sysMenus = (await GetFullListAsync(_ => _.Visible).ConfigureAwait(false)).OrderByDescending(z => z.Sort).ToList();
