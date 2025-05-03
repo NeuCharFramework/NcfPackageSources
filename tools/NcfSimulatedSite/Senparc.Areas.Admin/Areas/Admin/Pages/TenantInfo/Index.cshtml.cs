@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Pipelines.Sockets.Unofficial.Buffers;
 using Senparc.Areas.Admin.Domain;
+using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
     public class TenantInfo_IndexModel(IServiceProvider serviceProvider, TenantInfoService tenantInfoService,
+            InstallerService installerService,
             /*, FullSystemConfigCache fullSystemConfigCache*/ AdminUserInfoService adminUserInfoService) 
             : BaseAdminPageModel(serviceProvider)
     {
@@ -134,7 +136,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
                 var adminUserInfo = _adminUserInfoService.Init(dto.AdminAccount, out string password);
 
-
+                await installerService.InitSystemAsync(dto.SystemName, tenantInfo);
 
 
                 return Ok(new {

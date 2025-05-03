@@ -17,7 +17,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 {
     public class InstallerService(ServiceProvider serviceProvider, TenantInfoService tenantInfoService)
     {
-        public async Task InstallSystem(string systemName, TenantInfo tenantInfo)
+        public async Task InitSystemAsync(string systemName, TenantInfo tenantInfo)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
 
