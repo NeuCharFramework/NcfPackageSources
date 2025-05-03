@@ -37,7 +37,7 @@
                                 <el-input v-model.number="ruleForm.user" placeholder="请输入用户名"></el-input>
                             </el-form-item>
                             <el-form-item prop="tenant" v-if="enableMultiTenant">
-                                <el-input v-model="ruleForm.tenant" placeholder="请输入租户"></el-input>
+                                <el-input v-model="ruleForm.tenant" placeholder="请输入租户名称"></el-input>
                             </el-form-item>
                             <el-form-item prop="pass">
                                 <el-input type="password" v-model="ruleForm.pass" placeholder="请输入密码" autocomplete="off"></el-input>
@@ -52,6 +52,10 @@
                 </div>
             </div>
         </div>
+        <pagination :total="paginationQuery.total"
+                    :page.sync="listQuery.pageIndex"
+                    :limit.sync="listQuery.pageSize"
+                    @@pagination="getList"></pagination>
     </div>
     <!--lib-->
     <script src="~/lib/vue/vue.js"></script>
