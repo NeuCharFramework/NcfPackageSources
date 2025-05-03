@@ -667,21 +667,23 @@
             <param name="userName"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.LoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.Boolean)">
+        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.LoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.Boolean,System.String)">
             <summary>
             Performs the login operation for the specified admin user
             </summary>
             <param name="userInfo">The admin user information</param>
             <param name="rememberMe">Whether to persist the login</param>
+            <param name="tenantKey"></param>
             <returns>A task representing the asynchronous operation</returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.TryLoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.String,System.Boolean)">
+        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.TryLoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.String,System.Boolean,System.String)">
             <summary>
             如果密码正确，则尝试登录
             </summary>
             <param name="adminUserInfo"></param>
             <param name="password"></param>
             <param name="rememberMe"></param>
+            <param name="tenantKey"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.CreateAdminUserInfo(Senparc.Ncf.Core.Models.CreateOrUpdate_AdminUserInfoDto)">

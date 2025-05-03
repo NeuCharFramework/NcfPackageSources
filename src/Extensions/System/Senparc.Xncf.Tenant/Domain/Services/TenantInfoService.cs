@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
@@ -14,6 +16,7 @@ using Senparc.Xncf.Tenant.Domain.Cache;
 using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,7 +42,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
             httpContext = httpContext ?? _httpContextAccessor.Value.HttpContext;
             string tenantKey = null;
-            string[] tanantCookieInfo = null;
+            //string[] tanantCookieInfo = null;
             switch (SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
@@ -57,15 +60,19 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                     break;
                 case TenantRule.LoginInput:
                     {
-                        var loginTenantKey = httpContext.Request.Cookies["TenantKey"];
-                        if (string.IsNullOrEmpty(loginTenantKey))
+                        // 检查是否存在 TenantKey
+                        var tenantKeyClaim = httpContext.User?.Claims.FirstOrDefault(c => c.Type == "TenantKey");
+
+                        if (tenantKeyClaim == null)
                         {
                             tenantKey = null;
                             break;
                         }
-
-                        tanantCookieInfo = loginTenantKey.Split('-');
-                        tenantKey = tanantCookieInfo[0];
+                        else
+                        {
+                            // 读取 TenantKey 的值
+                            tenantKey = tenantKeyClaim.Value;
+                        }
                     }
                     break;
                 default:
@@ -201,5 +208,34 @@ namespace Senparc.Xncf.Tenant.Domain.Services
 
             await base.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 获取 RequestTenantInfo
+        /// </summary>
+        /// <param name="tenantInfo"></param>
+        /// <returns></returns>
+        public RequestTenantInfo GetRequestTenantInfo(TenantInfo tenantInfo)
+        {
+            var requestTenantInfo = new RequestTenantInfo()
+            {
+                Id = tenantInfo.Id,
+                Name = tenantInfo.Name,
+                TenantKey = tenantInfo.TenantKey
+            };
+            requestTenantInfo.TryMatch(true);
+            return requestTenantInfo;
+        }
+
+        /// <summary>
+        /// 强制设置租户信息
+        /// </summary>
+        /// <param name="requestTenantInfo"></param>
+        /// <returns></returns>
+        public bool SetTenantInfo(TenantInfo tenantInfo)
+        {
+            var requestTenantInfo = this.GetRequestTenantInfo(tenantInfo);
+            return base.SetTenantInfo(requestTenantInfo);
+        }
+
     }
 }

@@ -74,8 +74,9 @@ namespace Senparc.Areas.Admin.Domain
         /// </summary>
         /// <param name="userInfo">The admin user information</param>
         /// <param name="rememberMe">Whether to persist the login</param>
+        /// <param name="tenantKey"></param>
         /// <returns>A task representing the asynchronous operation</returns>
-        public virtual async Task LoginAsync(AdminUserInfo userInfo, bool rememberMe)
+        public virtual async Task LoginAsync(AdminUserInfo userInfo, bool rememberMe,string tenantKey = null)
         {
             #region 使用 .net core 的方法写入 cookie 验证信息
 
@@ -85,6 +86,12 @@ namespace Senparc.Areas.Admin.Domain
                 new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString(), ClaimValueTypes.Integer),
                 new Claim("AdminMember", "", ClaimValueTypes.String)
             };
+
+            if (userInfo.TenantId > 0)
+            {
+                claims.Add(new Claim("TenantKey", tenantKey, ClaimValueTypes.String));
+            }
+
             var identity = new ClaimsIdentity(SiteConfig.NcfAdminAuthorizeScheme);
             identity.AddClaims(claims);
             var authProperties = new AuthenticationProperties
@@ -117,8 +124,10 @@ namespace Senparc.Areas.Admin.Domain
         /// <param name="adminUserInfo"></param>
         /// <param name="password"></param>
         /// <param name="rememberMe"></param>
+        /// <param name="tenantKey"></param>
         /// <returns></returns>
-        public async Task<AdminUserInfo> TryLoginAsync(AdminUserInfo adminUserInfo, string password, bool rememberMe)
+        public async Task<AdminUserInfo> TryLoginAsync(AdminUserInfo adminUserInfo, string password, 
+            bool rememberMe, string tenantKey = null)
         {
             var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
             var lockTimeKey = $"LockTime:{adminUserInfo.UserName}";
@@ -139,7 +148,7 @@ namespace Senparc.Areas.Admin.Domain
                     await cache.RemoveFromCacheAsync(lockTimeKey);
 
                     // 登录
-                    await LoginAsync(adminUserInfo, rememberMe);
+                    await LoginAsync(adminUserInfo, rememberMe, tenantKey);
                     return adminUserInfo;
                 }
                 else
@@ -323,7 +332,7 @@ namespace Senparc.Areas.Admin.Domain
             }
             try
             {
-                var adminUserInfo = await TryLoginAsync(userInfo, loginDto.Password, false);
+                var adminUserInfo = await TryLoginAsync(userInfo, loginDto.Password, false, loginDto.TenantKey);
                 if (adminUserInfo == null)
                 {
                     throw new NcfExceptionBase("用户名不存在或密码不正确！");

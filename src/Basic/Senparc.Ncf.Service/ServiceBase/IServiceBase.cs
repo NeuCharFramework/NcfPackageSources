@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Senparc.Ncf.Core.DI;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
 using System;
 using System.Collections.Generic;
@@ -76,5 +77,12 @@ namespace Senparc.Ncf.Service
         /// <param name="entity"></param>
         /// <returns></returns>
         TDto Mapping<TDto>(T entity);
+
+        /// <summary>
+        /// 强制设置租户信息
+        /// </summary>
+        /// <param name="requestTenantInfo"></param>
+        /// <returns></returns>
+        bool SetTenantInfo(RequestTenantInfo requestTenantInfo);
     }
 }
