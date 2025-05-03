@@ -57,7 +57,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                     break;
                 case TenantRule.LoginInput:
                     {
-                        var loginTenantKey = httpContext.Request.Cookies["TenantKey"] ;
+                        var loginTenantKey = httpContext.Request.Cookies["TenantKey"];
                         if (string.IsNullOrEmpty(loginTenantKey))
                         {
                             tenantKey = null;
@@ -78,21 +78,21 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             Dictionary<string, TenantInfoDto> tenantInfoCollection;
             try
             {
-                tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
+                tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();//
             }
             catch (Exception ex)
             {
                 if (!Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 {
                     //数据库读取失败，且未登录任何租户
-                    return new RequestTenantInfo();
-                    //throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
+                    //tenantKey = null;
+                    throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
                 }
 
                 //数据库错误，通常为系统未安装
-                return new RequestTenantInfo();
+                //tenantKey = null;
 
-                //throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
+                throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
             }
 
             //Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");
@@ -109,7 +109,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             {
                 //Console.WriteLine($"\t\t 未匹配到 tenantKey：{tenantKey}");
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
-                requestTenantInfo.TryMatch(false);
+                requestTenantInfo.TryMatch(tenantKey == null || false);
             }
 
             return requestTenantInfo;

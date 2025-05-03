@@ -138,13 +138,22 @@ namespace Senparc.Ncf.Core.Config
         {
             get
             {
-                var fileExist = File.Exists(Server.GetMapPath("~/App_Data/install-hold.txt"));
-                return fileExist || _isInstalling;
+                return _isInstalling || CheckInstallHoldFileExisted();
             }
             set
             {
                 _isInstalling = false;
             }
+        }
+
+        /// <summary>
+        /// 检查安装状态文件是否存在
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckInstallHoldFileExisted()
+        {
+            var fileExist = File.Exists(Server.GetMapPath("~/App_Data/install-hold.txt"));
+            return fileExist;
         }
 
         /// <summary>
@@ -154,8 +163,7 @@ namespace Senparc.Ncf.Core.Config
         {
             _isInstalling = false;
             var filePath = Server.GetMapPath("~/App_Data/install-hold.txt");
-            var fileExist = File.Exists(filePath);
-            if (fileExist)
+            if (CheckInstallHoldFileExisted())
             {
                 File.Copy(filePath, filePath + ".finished");
                 File.Delete(filePath);
