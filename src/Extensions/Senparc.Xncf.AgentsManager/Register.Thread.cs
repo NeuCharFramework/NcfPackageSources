@@ -19,46 +19,46 @@ namespace Senparc.Xncf.AgentsManager
         {
             //TOOD: 按照不同租户，需要区分
             DateTime lastAlertTime = DateTime.MinValue;
+            //TODO: 调试多租户，暂时禁用
 
-            xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
-                name: "Agents 定时清理未完成任务",
-                intervalTime: TimeSpan.FromSeconds(60),
-                task: async (app, threadInfo) =>
-                {
-                    try
-                    {
-                        return;//TODO: 调试多租户，暂时禁用
-                        //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
-                        threadInfo.RecordStory("Agents 任务开始检测并");
+//            xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
+//                name: "Agents 定时清理未完成任务",
+//                intervalTime: TimeSpan.FromSeconds(60),
+//                task: async (app, threadInfo) =>
+//                {
+//                    try
+//                    {
+//                        //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
+//                        threadInfo.RecordStory("Agents 任务开始检测并");
 
-                        using (var scope = app.ApplicationServices.CreateScope())
-                        {
-                            var serviceProvider = scope.ServiceProvider;
+//                        using (var scope = app.ApplicationServices.CreateScope())
+//                        {
+//                            var serviceProvider = scope.ServiceProvider;
 
-                            var chatTaskService = serviceProvider.GetService<ChatTaskService>();
-                            await chatTaskService.CloseUnfinishedTasksAsync(SystemTime.Now.DateTime.AddDays(-3));
-                        }
-                    }
-                    catch (NcfModuleException ex)
-                    {
-                        throw;
-                    }
-                    catch
-                    {
-                        throw;
-                    }
-                    finally
-                    {
-                        threadInfo.RecordStory("检测并备份结束");
-                    }
-                },
-                exceptionHandler: ex =>
-                {
-                    SenparcTrace.SendCustomLog("AgentsManager", $@"{ex.Message}
-{ex.StackTrace}
-{ex.InnerException?.StackTrace}");
-                    return Task.CompletedTask;
-                }));
+//                            var chatTaskService = serviceProvider.GetService<ChatTaskService>();
+//                            await chatTaskService.CloseUnfinishedTasksAsync(SystemTime.Now.DateTime.AddDays(-3));
+//                        }
+//                    }
+//                    catch (NcfModuleException ex)
+//                    {
+//                        throw;
+//                    }
+//                    catch
+//                    {
+//                        throw;
+//                    }
+//                    finally
+//                    {
+//                        threadInfo.RecordStory("检测并备份结束");
+//                    }
+//                },
+//                exceptionHandler: ex =>
+//                {
+//                    SenparcTrace.SendCustomLog("AgentsManager", $@"{ex.Message}
+//{ex.StackTrace}
+//{ex.InnerException?.StackTrace}");
+//                    return Task.CompletedTask;
+//                }));
         }
     }
 }
