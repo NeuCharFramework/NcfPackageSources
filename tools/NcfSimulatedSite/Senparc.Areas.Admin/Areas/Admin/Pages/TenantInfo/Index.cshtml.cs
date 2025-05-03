@@ -134,6 +134,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
                 var adminUserInfo = _adminUserInfoService.Init(dto.AdminAccount, out string password);
 
+
+
+
                 return Ok(new {
                     tenantInfo = new
                     {

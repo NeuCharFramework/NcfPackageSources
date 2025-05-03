@@ -749,6 +749,15 @@
             <param name="memberId"></param>
             <returns></returns>
         </member>
+        <member name="M:Senparc.Areas.Admin.Domain.Services.InstallerService.InstallAndOpenModuleAsync(Senparc.Ncf.XncfBase.IXncfRegister,System.IServiceProvider,Senparc.Xncf.Tenant.Domain.DataBaseModel.TenantInfo,System.Boolean,System.Boolean)">
+            <summary>
+            安装并且开放模块
+            </summary>
+            <param name="register"></param>
+            <param name="installNow">是否立即安装</param>
+            <param name="addMenu">是否添加菜单（必须 installNow 为 true 时生效）</param>
+            <returns></returns>
+        </member>
         <member name="T:Senparc.Areas.Admin.Domain.Services.SysMenuService">
             <summary>
             菜单
