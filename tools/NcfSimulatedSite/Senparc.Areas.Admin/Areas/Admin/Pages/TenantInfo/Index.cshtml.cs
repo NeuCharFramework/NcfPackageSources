@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Pipelines.Sockets.Unofficial.Buffers;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.Cache;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
-    public class TenantInfo_IndexModel(IServiceProvider serviceProvider, TenantInfoService tenantInfoService
+    public class TenantInfo_IndexModel(IServiceProvider serviceProvider, TenantInfoService tenantInfoService,
             /*, FullSystemConfigCache fullSystemConfigCache*/ AdminUserInfoService adminUserInfoService) 
             : BaseAdminPageModel(serviceProvider)
     {
@@ -133,17 +134,19 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
                 var adminUserInfo = _adminUserInfoService.Init(dto.AdminAccount, out string password);
 
-                return Ok(true, "初始化成功", new {
-                    tenantInfo = new {
+                return Ok(new {
+                    tenantInfo = new
+                    {
                         id = tenantInfo.Id,
                         name = tenantInfo.Name,
                         tenantKey = tenantInfo.TenantKey
                     },
-                    adminAccount = new {
+                    adminAccount = new
+                    {
                         username = dto.AdminAccount,
                         password = password
                     }
-                });
+                },true, "初始化成功");
             }
             catch (Exception ex)
             {
