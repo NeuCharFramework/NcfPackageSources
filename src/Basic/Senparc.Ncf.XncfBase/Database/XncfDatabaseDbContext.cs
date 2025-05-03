@@ -1,9 +1,12 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
@@ -44,6 +47,7 @@ namespace Senparc.Ncf.XncfBase.Database
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister => MultipleMigrationDbContext.XncfDatabaseRegister;
 
+
         protected XncfDatabaseDbContext(DbContextOptions dbContextOptions)
             : base(dbContextOptions)
         { }
@@ -67,6 +71,50 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         #region ISenparcEntities 接口
+
+
+        public bool? _enableMultiTenant;
+
+        /// <summary>
+        /// 是否启用多租户，默认读取 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// </summary>
+        public bool EnableMultiTenant
+        {
+            get
+            {
+                if (!_enableMultiTenant.HasValue)
+                {
+                    _enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
+                }
+                return _enableMultiTenant.Value;
+            }
+            private set
+            {
+                _enableMultiTenant = value;
+            }
+        }
+
+        private RequestTenantInfo _tenantInfo;
+
+        /// <summary>
+        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        /// </summary>
+        public RequestTenantInfo TenantInfo
+        {
+            get
+            {
+                if (this.EnableMultiTenant && _tenantInfo == null)
+                {
+                    var serviceProvicer = Senparc.CO2NET.SenparcDI.GetServiceProvider();
+                    _tenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(serviceProvicer, $"SenparcEntitiesDbContextBase.TenantInfo", this);
+                }
+                return _tenantInfo;
+            }
+            set
+            {
+                _tenantInfo = value;
+            }
+        }
 
         private static readonly bool[] _migrated = { true };
 

@@ -28,10 +28,10 @@ namespace Senparc.Ncf.Core.MultiTenant
             if (!SiteConfig.IsInstalling)
             {
                 //如果未设置，则进行设定
-               if (!requestTenantInfo.TriedMatching)
-                {
-                    throw new NcfUninstallException("TriedMatching 为 false，推测系统未进行安装。如果在调试状态下（F5）看到此消息请忽略，继续执行。", null);
-                }
+               //if (!requestTenantInfo.TriedMatching)
+               // {
+               //     throw new NcfUninstallException("TriedMatching 为 false，推测系统未进行安装。如果在调试状态下（F5）看到此消息请忽略，继续执行。", null);
+               // }
 
                 if (!requestTenantInfo.MatchSuccess)
                 {
