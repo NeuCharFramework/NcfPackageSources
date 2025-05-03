@@ -46,7 +46,11 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                 try
                 {
+                    //安装权限、菜单等默认模块和配置
+
                     NcfSysMenuService _sysMenuService = serviceProvider.GetService<NcfSysMenuService>();
+                    //.Init 内部还会执行一次
+                    _sysMenuService.SetTenantInfoForAllServices(tenantInfoService.GetRequestTenantInfo(tenantInfo));
 
                     _sysMenuService.Init(tenantInfoService.GetRequestTenantInfo(tenantInfo));
                 }
