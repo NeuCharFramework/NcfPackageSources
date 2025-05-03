@@ -138,7 +138,7 @@ namespace Senparc.Ncf.Core.Config
         {
             get
             {
-                return _isInstalling || CheckInstallHoldFileExisted();
+                return _isInstalling || !CheckInstallFinishedFileExisted();
             }
             set
             {
@@ -147,26 +147,28 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 检查安装状态文件是否存在
+        /// 检查安装完成状态文件是否存在
         /// </summary>
         /// <returns></returns>
-        public static bool CheckInstallHoldFileExisted()
+        public static bool CheckInstallFinishedFileExisted()
         {
-            var fileExist = File.Exists(Server.GetMapPath("~/App_Data/install-hold.txt"));
+            var fileExist = File.Exists(Server.GetMapPath("~/App_Data/install-finished.txt"));
             return fileExist;
         }
 
         /// <summary>
         /// 手动设置安装状态-结束
         /// </summary>
-        public static void SetInstallFinished()
+        public static async void SetInstallFinished()
         {
             _isInstalling = false;
-            var filePath = Server.GetMapPath("~/App_Data/install-hold.txt");
-            if (CheckInstallHoldFileExisted())
+            var filePath = Server.GetMapPath("~/App_Data/install-finished.txt");
+            if (!CheckInstallFinishedFileExisted())
             {
-                File.Copy(filePath, filePath + ".finished");
-                File.Delete(filePath);
+                var text = @$"After this file is successfully installed by the system, it should only be modified or removed when you need to reinstall the entire system! Please operate with caution!!
+
+此文件由系统成功安装后，仅在您需要全部重新安装系统时将其修改或移除！请谨慎操作！！";
+                await File.WriteAllTextAsync(filePath, text);
             }
         }
 
