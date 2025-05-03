@@ -19,7 +19,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
     public class TenantInfo_IndexModel(IServiceProvider serviceProvider, TenantInfoService tenantInfoService,
             InstallerService installerService,
-            /*, FullSystemConfigCache fullSystemConfigCache*/ AdminUserInfoService adminUserInfoService) 
+            /*, FullSystemConfigCache fullSystemConfigCache*/ AdminUserInfoService adminUserInfoService)
             : BaseAdminPageModel(serviceProvider)
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
@@ -127,7 +127,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     return Ok(false, "租户信息设置失败");
                 }
 
-                senparcDB.TenantInfo = new RequestTenantInfo() {
+                senparcDB.TenantInfo = new RequestTenantInfo()
+                {
                     Id = tenantInfo.Id,
                     Name = tenantInfo.Name,
                     TenantKey = tenantInfo.TenantKey,
@@ -136,10 +137,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
                 var adminUserInfo = _adminUserInfoService.Init(dto.AdminAccount, out string password);
 
-                await installerService.InitSystemAsync(dto.SystemName, tenantInfo);
+                await installerService.InitSystemAsync(dto.SystemName, adminUserInfo.Id, tenantInfo);
 
 
-                return Ok(new {
+                return Ok(new
+                {
                     tenantInfo = new
                     {
                         id = tenantInfo.Id,
@@ -151,7 +153,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                         username = dto.AdminAccount,
                         password = password
                     }
-                },true, "初始化成功");
+                }, true, "初始化成功");
             }
             catch (Exception ex)
             {

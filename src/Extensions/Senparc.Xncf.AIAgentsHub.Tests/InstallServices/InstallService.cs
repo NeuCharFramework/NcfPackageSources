@@ -36,7 +36,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         /// 初始化安装系统
         /// </summary>
         /// <returns></returns>
-        private async Task InitSystemAsync(string systemName, IServiceProvider serviceProvider)
+        private async Task InitSystemAsync(string systemName, int adminUserInfoId, IServiceProvider serviceProvider)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
 
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 {
                     SysMenuService _sysMenuService = serviceProvider.GetService<SysMenuService>();
 
-                    _sysMenuService.Init();
+                    _sysMenuService.Init(null, adminUserInfoId);
                 }
                 catch (Exception ex)
                 {

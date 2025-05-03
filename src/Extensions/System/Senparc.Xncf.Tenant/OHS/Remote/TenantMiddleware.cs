@@ -20,7 +20,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
 
         static TenantMiddleware()
         {
-            FirstRunAndInstalling = SiteConfig.CheckInstallFinishedFileExisted();
+            FirstRunAndInstalling = !SiteConfig.CheckInstallFinishedFileExisted();
         }
 
         private string SetLog(string msg)

@@ -15,9 +15,9 @@ using NcfSysMenuService = Senparc.Ncf.Service.SysMenuService;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
-    public class InstallerService(IServiceProvider serviceProvider, TenantInfoService tenantInfoService)
+    public class InstallerService(IServiceProvider serviceProvider, TenantInfoService tenantInfoService, XncfModuleServiceExtension xncfModuleServiceExtension)
     {
-        public async Task InitSystemAsync(string systemName, TenantInfo tenantInfo)
+        public async Task InitSystemAsync(string systemName,int adminUserInfoId, TenantInfo tenantInfo)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
 
@@ -52,7 +52,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                     //.Init 内部还会执行一次
                     _sysMenuService.SetTenantInfoForAllServices(tenantInfoService.GetRequestTenantInfo(tenantInfo));
 
-                    _sysMenuService.Init(tenantInfoService.GetRequestTenantInfo(tenantInfo));
+                    _sysMenuService.Init(tenantInfoService.GetRequestTenantInfo(tenantInfo), adminUserInfoId);
                 }
                 catch (Exception ex)
                 {
@@ -121,7 +121,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 
             {
-                var _xncfModuleService = serviceProvider.GetService<XncfModuleServiceExtension>();
+                var _xncfModuleService = xncfModuleServiceExtension;
                 _xncfModuleService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
 
                 //开始安装并启用系统模块（Admin）
