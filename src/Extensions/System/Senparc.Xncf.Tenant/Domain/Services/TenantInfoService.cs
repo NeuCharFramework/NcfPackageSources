@@ -39,6 +39,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
             httpContext = httpContext ?? _httpContextAccessor.Value.HttpContext;
             string tenantKey = null;
+            string[] tanantCookieInfo = null;
             switch (SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
@@ -52,6 +53,19 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                     if (!string.IsNullOrEmpty(headerTenantKey))
                     {
                         tenantKey = headerTenantKey[0].ToUpper();
+                    }
+                    break;
+                case TenantRule.LoginInput:
+                    {
+                        var loginTenantKey = httpContext.Request.Cookies["TenantKey"] ;
+                        if (string.IsNullOrEmpty(loginTenantKey))
+                        {
+                            tenantKey = null;
+                            break;
+                        }
+
+                        tanantCookieInfo = loginTenantKey.Split('-');
+                        tenantKey = tanantCookieInfo[0];
                     }
                     break;
                 default:
@@ -70,12 +84,15 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             {
                 if (!Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 {
-                    //数据库读取失败，且多租户未启用
-                    throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
+                    //数据库读取失败，且未登录任何租户
+                    return new RequestTenantInfo();
+                    //throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
                 }
 
                 //数据库错误，通常为系统未安装
-                throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
+                return new RequestTenantInfo();
+
+                //throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
             }
 
             //Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");
