@@ -16,6 +16,7 @@ using AutoMapper.QueryableExtensions;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Service;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Senparc.Ncf.Service
 {
@@ -26,17 +27,27 @@ namespace Senparc.Ncf.Service
     {
         private readonly SysButtonService _sysButtonService;
         private readonly IDistributedCache _distributedCache;
-
+        private readonly SysRoleService sysRoleService;
+        private readonly SysMenuService sysMenuService;
+        private readonly ServiceBase<SysRolePermission> sysRolePermissionService;
+        private readonly SysRoleAdminUserInfoService sysRoleAdminUserInfoService;
         public const string MenuCacheKey = "AllMenus";
         public const string MenuTreeCacheKey = "AllMenusTree";
 
-        private readonly SenparcEntitiesBase _senparcEntities;
+        //private readonly SenparcEntitiesBase _senparcEntities;
 
-        public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider, 
+            SysRoleService sysRoleService, SysMenuService sysMenuService, ServiceBase<SysRolePermission> sysRolePermissionService,
+            SysRoleAdminUserInfoService sysRoleAdminUserInfoService
+            ) : base(repo, serviceProvider)
         {
             _sysButtonService = _serviceProvider.GetService<SysButtonService>();
             _distributedCache = _serviceProvider.GetService<IDistributedCache>();
-            _senparcEntities = _serviceProvider.GetService<SenparcEntitiesBase>();
+            this.sysRoleService = sysRoleService;
+            this.sysMenuService = sysMenuService;
+            this.sysRolePermissionService = sysRolePermissionService;
+            this.sysRoleAdminUserInfoService = sysRoleAdminUserInfoService;
+            //_senparcEntities = _serviceProvider.GetService<SenparcEntitiesBase>();
         }
 
         /// <summary>
@@ -211,13 +222,13 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 初始化菜单及其权限
         /// </summary>
-        public void Init()
+        public async void Init(RequestTenantInfo requestTenantInfo)
         {
             //设置 TenantId 前缀，避免不同租户之间的 ID 冲突
             string tenantId = null;
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
-                var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
+                requestTenantInfo ??= _serviceProvider.GetRequiredService<RequestTenantInfo>();
                 tenantId = $"{requestTenantInfo.Id}-";
             }
 
@@ -293,11 +304,16 @@ namespace Senparc.Ncf.Service
 
             try
             {
-                _senparcEntities.Set<SysRole>().AddRange(sysRoles);
-                _senparcEntities.Set<SysMenu>().AddRange(sysMenus);
-                _senparcEntities.Set<SysRolePermission>().AddRange(sysPermissions);
-                _senparcEntities.Set<SysRoleAdminUserInfo>().AddRange(sysRoleAdminUserInfos);
-                _senparcEntities.SaveChanges();
+                await sysRoleService.SaveObjectListAsync(sysRoles);
+                await sysMenuService.SaveObjectListAsync(sysMenus);
+                await sysRolePermissionService.SaveObjectListAsync(sysPermissions);
+                await sysRoleAdminUserInfoService.SaveObjectListAsync(sysRoleAdminUserInfos);
+
+                //_senparcEntities.Set<SysRole>().AddRange(sysRoles);
+                //_senparcEntities.Set<SysMenu>().AddRange(sysMenus);
+                //_senparcEntities.Set<SysRolePermission>().AddRange(sysPermissions);
+                //_senparcEntities.Set<SysRoleAdminUserInfo>().AddRange(sysRoleAdminUserInfos);
+                //_senparcEntities.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -314,7 +330,11 @@ namespace Senparc.Ncf.Service
         {
             List<SysMenuDto> selectListItems = null;
             IConfigurationProvider configurationProvider = _serviceProvider.GetService<IMapper>().ConfigurationProvider;
-            selectListItems = await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
+
+            var sysMenuList = await sysMenuService.GetFullListAsync(z => true);
+            
+            selectListItems = sysMenuService.Mapping<SysMenuDto>(sysMenuList);  //await _serviceProvider.GetService<SenparcEntitiesBase>().Set<SysMenu>().OrderByDescending(_ => _.AddTime).ProjectTo<SysMenuDto>(configurationProvider).ToListAsync();
+
             //List<SysMenu> sysMenus = (await GetFullListAsync(_ => _.Visible).ConfigureAwait(false)).OrderByDescending(z => z.Sort).ToList();
             //List<SysButton> sysButtons = (await _sysButtonService.GetFullListAsync(_ => true).ConfigureAwait(false)).OrderBy(z => z.Id).ToList();
             //selectListItems = Mapper.Map<List<SysMenuDto>>(sysMenus);

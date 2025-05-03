@@ -75,7 +75,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 {
                     SysMenuService _sysMenuService = serviceProvider.GetService<SysMenuService>();
 
-                    _sysMenuService.Init();
+                    _sysMenuService.Init(null);
                 }
                 catch (Exception ex)
                 {

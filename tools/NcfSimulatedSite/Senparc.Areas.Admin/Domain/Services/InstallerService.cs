@@ -15,7 +15,7 @@ using NcfSysMenuService = Senparc.Ncf.Service.SysMenuService;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
-    public class InstallerService(ServiceProvider serviceProvider, TenantInfoService tenantInfoService)
+    public class InstallerService(IServiceProvider serviceProvider, TenantInfoService tenantInfoService)
     {
         public async Task InitSystemAsync(string systemName, TenantInfo tenantInfo)
         {
@@ -48,7 +48,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 {
                     NcfSysMenuService _sysMenuService = serviceProvider.GetService<NcfSysMenuService>();
 
-                    _sysMenuService.Init();
+                    _sysMenuService.Init(tenantInfoService.GetRequestTenantInfo(tenantInfo));
                 }
                 catch (Exception ex)
                 {

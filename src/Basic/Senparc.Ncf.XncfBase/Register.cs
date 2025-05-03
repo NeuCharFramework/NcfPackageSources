@@ -357,7 +357,7 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
             //多租户
-            services.AddScoped<RequestTenantInfo>();
+            services.AddScoped<RequestTenantInfo>();//TODO:需要动态识别，当前请求缓存中读取并转换
 
             services.ScanAssamblesForAutoDI();
             //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
