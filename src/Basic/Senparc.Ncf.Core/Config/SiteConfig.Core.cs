@@ -8,6 +8,8 @@ using Senparc.Ncf.Utility;
 using System.Collections.Generic;
 using System.Threading;
 using System;
+using Senparc.Ncf.Core.Utility;
+using System.IO;
 
 namespace Senparc.Ncf.Core.Config
 {
@@ -127,10 +129,30 @@ namespace Senparc.Ncf.Core.Config
         ///// </summary>
         //public static readonly AIPlugins AIPlugins = new AIPlugins();
 
+        private static bool _isInstalling = false;
+
         /// <summary>
         /// 是否正在进行安装，如果是，则不抛出监测安装的异常
         /// </summary>
-        public static bool IsInstalling { get; set; } = false;
+        public static bool IsInstalling
+        {
+            get
+            {
+                var fileExist = File.Exists( Server.GetWebMapPath("~/App_Data/install-hold.txt"));
+                return fileExist || _isInstalling;
+            }
+            set
+            {
+                _isInstalling = false;
+                var filePath = Server.GetWebMapPath("~/App_Data/install-hold.txt");
+                var fileExist = File.Exists(filePath);
+                if (fileExist)
+                {
+                    File.Copy(filePath, filePath + ".finished");
+                    File.Delete(filePath);
+                }
+            }
+        }
 
         public static int PageViewCount { get; set; } //网站启动后前台页面浏览量
 

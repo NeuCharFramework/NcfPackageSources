@@ -124,6 +124,8 @@ namespace Senparc.Xncf.Instraller.Pages
             }
             catch (Exception)
             {
+                SiteConfig.IsInstalling = true;
+
                 Console.WriteLine("开始初始化");
 
                 //var database = _accountInfoService.BaseClientRepository.BaseDB.BaseDataContext.Database;
