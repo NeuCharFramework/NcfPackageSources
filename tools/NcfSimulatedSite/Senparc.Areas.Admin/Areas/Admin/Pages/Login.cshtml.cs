@@ -17,7 +17,6 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.Tenant.Domain.Services;
 using Microsoft.EntityFrameworkCore;
-using Senparc.Ncf.Core.Enums;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -191,22 +190,6 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public IActionResult OnGetCheckMultiTenant()
         {
             return Ok(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
-        }
-
-        /// <summary>
-        /// 获取租户列表
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> OnGetListAsync(int pageIndex = 1, int pageSize = 10)
-        {
-            var tenantInfo = await _tenantInfoService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, OrderingType.Ascending);
-            return Ok(new { 
-                List = tenantInfo,
-                TotalCount = tenantInfo.TotalCount,
-                PageIndex = tenantInfo.PageIndex
-            });
         }
     }
 

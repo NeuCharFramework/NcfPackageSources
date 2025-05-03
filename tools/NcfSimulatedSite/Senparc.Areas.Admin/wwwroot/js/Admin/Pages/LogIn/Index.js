@@ -28,37 +28,15 @@ var app = new Vue({
             pass: [
                 { validator: validatePass, trigger: 'blur' }
             ]
-        },
-        loading: false,
-        //分页参数
-        paginationQuery: {
-            total: 0
-        },
-        //分页接口传参
-        listQuery: {
-            pageIndex: 1,
-            pageSize: 10
-        },
-        tableData: []
+        }, loading: false
     },
     mounted() {
         // 检查是否启用多租户
         service.get('/Admin/Login?handler=CheckMultiTenant').then(res => {
             this.enableMultiTenant = res.data;
         });
-        this.getList();
     },
     methods: {
-        // 获取数据
-        getList() {
-            let { pageIndex, pageSize } = this.listQuery;
-            service.get(`/Admin/Login?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
-                if (res.data.success) {
-                    this.tableData = res.data.data.list;
-                    this.paginationQuery.total = res.data.data.totalCount;
-                }
-            });
-        },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 this.loading = true;
