@@ -38,6 +38,37 @@
                 updateLoadingSet: false, // 确认loading按钮
                 nameError: '',
                 tenantKeyError: ''
+            },
+            initializeDialog: {
+                visible: false,
+                loading: false,
+                data: {
+                    tenantId: 0,
+                    systemName: '',
+                    adminAccount: ''
+                },
+                rules: {
+                    systemName: [
+                        { required: true, message: "系统名称为必填项", trigger: "blur" }
+                    ],
+                    adminAccount: [
+                        { required: true, message: "默认管理员账号为必填项", trigger: "blur" }
+                    ]
+                }
+            },
+            resultDialog: {
+                visible: false,
+                data: {
+                    tenantInfo: {
+                        id: 0,
+                        name: '',
+                        tenantKey: ''
+                    },
+                    adminAccount: {
+                        username: '',
+                        password: ''
+                    }
+                }
             }
         };
     },
@@ -74,6 +105,18 @@
                 this.tableData = res.data.data.list;
                 this.paginationQuery.total = res.data.data.totalCount;
             });
+        },
+        // 新增
+        handleAdd() {
+            this.dialog.title = '新增租户信息';
+            this.dialog.visible = true;
+            this.dialog.data = {
+                id: 0,
+                name: '',
+                tenantKey: '',
+                adminRemark: '',
+                enable: true
+            };
         },
         // 编辑
         handleEdit(index, row) {
@@ -143,6 +186,41 @@
                     this.requestTenantInfo = res.data.data.requestTenantInfo;
                     this.tenantRule = res.data.data.tenantRule;
                     this.enableMultiTenant = res.data.data.enableMultiTenant;
+                }
+            });
+        },
+        // 初始化
+        handleInitialize(row) {
+            this.initializeDialog.visible = true;
+            this.initializeDialog.data = {
+                tenantId: row.id,
+                systemName: '',
+                adminAccount: ''
+            };
+        },
+
+        // 提交初始化
+        submitInitialize() {
+            this.$refs['initializeForm'].validate(valid => {
+                if (valid) {
+                    this.initializeDialog.loading = true;
+                    service.post("/Admin/TenantInfo/Index?handler=Initialize", this.initializeDialog.data).then(res => {
+                        if (res.data.success) {
+                            this.initializeDialog.visible = false;
+                            // 显示结果弹窗
+                            this.resultDialog.data = res.data.data;
+                            this.resultDialog.visible = true;
+                        } else {
+                            this.$notify({
+                                title: "Error",
+                                message: res.data.msg || "初始化失败",
+                                type: "error",
+                                duration: 2000
+                            });
+                        }
+                    }).finally(() => {
+                        this.initializeDialog.loading = false;
+                    });
                 }
             });
         }

@@ -191,7 +191,14 @@
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.TenantInfo_IndexModel.OnPostSaveAsync(Senparc.Xncf.Tenant.Domain.DataBaseModel.CreateOrUpdate_TenantInfoDto)">
             <summary>
             Handler=Save
-            保存
+            新增、编辑租户
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.TenantInfo_IndexModel.OnPostInitializeAsync(Senparc.Areas.Admin.Areas.Admin.Pages.TenantInitializeDto)">
+            <summary>
+            初始化租户
             </summary>
             <param name="dto"></param>
             <returns></returns>
