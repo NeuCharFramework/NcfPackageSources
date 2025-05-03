@@ -342,7 +342,7 @@ namespace Senparc.Areas.Admin.Domain
                 var roleCodes = roles
                     .Select(o => o.RoleCode).Distinct().ToList();
                 result.Token = token;
-                var permissions = await _serviceProvider.GetService<SysPermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
+                var permissions = await _serviceProvider.GetService<SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
                 result.MenuTree = await _serviceProvider.GetService<Domain.Services.SysMenuService>().GetAllMenusTreeAsync(false);
                 result.UserName = adminUserInfo.UserName;
                 result.RoleCodes = roleCodes;
@@ -368,7 +368,7 @@ namespace Senparc.Areas.Admin.Domain
             var roles = await _serviceProvider.GetService<SysRoleAdminUserInfoService>().GetFullListAsync(o => o.AccountId == adminUserInfo.Id);
             var roleCodes = roles
                 .Select(o => o.RoleCode).Distinct().ToList();
-            var permissions = await _serviceProvider.GetService<SysPermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
+            var permissions = await _serviceProvider.GetService<SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
             result.MenuTree = await _serviceProvider.GetService<Domain.Services.SysMenuService>().GetAllMenusTreeAsync(false);
             result.UserName = adminUserInfo.UserName;
             result.RealName = adminUserInfo.RealName;

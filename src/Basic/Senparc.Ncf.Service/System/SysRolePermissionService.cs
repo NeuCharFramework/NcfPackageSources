@@ -17,7 +17,7 @@ using Senparc.Respository;
 
 namespace Senparc.Ncf.Service
 {
-    public class SysPermissionService : ClientServiceBase<SysRolePermission>, Core.Authorization.ICheckPermission
+    public class SysRolePermissionService : ClientServiceBase<SysRolePermission>, Core.Authorization.ICheckPermission
     {
         private readonly IDistributedCache _distributedCache;
 
@@ -27,7 +27,7 @@ namespace Senparc.Ncf.Service
         private readonly SysRoleService _sysRoleService;
         private const string PermissionKey = "Permission";
         private readonly ISysRolePermissionRepository _repo;
-        public SysPermissionService(ISysRolePermissionRepository repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        public SysRolePermissionService(ISysRolePermissionRepository repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
             this._distributedCache = _serviceProvider.GetService<IDistributedCache>();
             this._sysMenuService = _serviceProvider.GetService<SysMenuService>();

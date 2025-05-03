@@ -362,8 +362,8 @@ namespace Senparc.Ncf.XncfBase
             //注册 Senarc.Ncf.Service 中的服务
             services.AddScoped<SysButtonService>();
             services.AddScoped<SysMenuService>();
-            services.AddScoped<SysPermissionDto>();
             services.AddScoped<SysRoleAdminUserInfoService>();
+            services.AddScoped<SysRolePermissionService>();
             services.AddScoped<SysRoleService>();
 
             services.ScanAssamblesForAutoDI();

@@ -28,7 +28,7 @@ namespace Senparc.Ncf.Service
         private readonly SysButtonService _sysButtonService;
         private readonly IDistributedCache _distributedCache;
         private readonly SysRoleService sysRoleService;
-        private readonly ServiceBase<SysRolePermission> sysRolePermissionService;
+        private readonly SysRolePermissionService sysRolePermissionService;
         private readonly SysRoleAdminUserInfoService sysRoleAdminUserInfoService;
         public const string MenuCacheKey = "AllMenus";
         public const string MenuTreeCacheKey = "AllMenusTree";
@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Service
         //private readonly SenparcEntitiesBase _senparcEntities;
 
         public SysMenuService(ClientRepositoryBase<SysMenu> repo, IServiceProvider serviceProvider,
-            SysRoleService sysRoleService, ServiceBase<SysRolePermission> sysRolePermissionService,
+            SysRoleService sysRoleService, SysRolePermissionService sysRolePermissionService,
             SysRoleAdminUserInfoService sysRoleAdminUserInfoService, SysButtonService sysButtonService
             ) : base(repo, serviceProvider)
         {
@@ -320,15 +320,18 @@ namespace Senparc.Ncf.Service
 
             try
             {
+                Console.WriteLine("sysRoleService DbConte HashCode: " + sysRoleService.BaseData.BaseDB.BaseDataContext.GetHashCode());
+                Console.WriteLine("sysRolePermissionService DbConte HashCode: " + sysRolePermissionService.BaseData.BaseDB.BaseDataContext.GetHashCode());
+                Console.WriteLine("sysRoleAdminUserInfoService DbConte HashCode: " + sysRoleAdminUserInfoService.BaseData.BaseDB.BaseDataContext.GetHashCode());
+                Console.WriteLine("sysMenus DbConte HashCode: " + this.BaseData.BaseDB.BaseDataContext.GetHashCode());
+
+
                 await sysRoleService.SaveObjectListAsync(sysRoles);
                 await this.SaveObjectListAsync(sysMenus);
                 await sysRolePermissionService.SaveObjectListAsync(sysPermissions);
                 await sysRoleAdminUserInfoService.SaveObjectListAsync(sysRoleAdminUserInfos);
 
-                Console.WriteLine("sysRoleService DbConte HashCode: "+sysRoleService.BaseData.BaseDB.BaseDataContext.GetHashCode());
-                Console.WriteLine("sysRolePermissionService DbConte HashCode: " + sysRolePermissionService.BaseData.BaseDB.BaseDataContext.GetHashCode());
-                Console.WriteLine("sysRoleAdminUserInfoService DbConte HashCode: " + sysRoleAdminUserInfoService.BaseData.BaseDB.BaseDataContext.GetHashCode());
-                Console.WriteLine("sysMenus DbConte HashCode: " + this.BaseData.BaseDB.BaseDataContext.GetHashCode());
+             
 
                 //_senparcEntities.Set<SysRole>().AddRange(sysRoles);
                 //_senparcEntities.Set<SysMenu>().AddRange(sysMenus);

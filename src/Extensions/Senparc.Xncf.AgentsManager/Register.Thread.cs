@@ -27,6 +27,7 @@ namespace Senparc.Xncf.AgentsManager
                 {
                     try
                     {
+                        return;//TODO: 调试多租户，暂时禁用
                         //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
                         threadInfo.RecordStory("Agents 任务开始检测并");
 

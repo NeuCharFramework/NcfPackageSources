@@ -329,14 +329,14 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuTreeAsync(Senparc.Ncf.Service.SysPermissionService)">
+        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuTreeAsync(Senparc.Ncf.Service.SysRolePermissionService)">
             <summary>
             获取无状态的菜单信息
             </summary>
             <param name="sysPermissionService"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuResourceAsync(Senparc.Ncf.Service.SysPermissionService)">
+        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuResourceAsync(Senparc.Ncf.Service.SysRolePermissionService)">
             <summary>
             获取包含当前停留页面信息的菜单信息
             </summary>
