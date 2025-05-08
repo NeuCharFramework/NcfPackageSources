@@ -89,3 +89,4 @@ ncf_obj/
 appsettings.Test.json
 .cursorrules
 /.cursorrules.bak
+/tools/NcfSimulatedSite/Senparc.Web/App_Data/install-finished.txt
