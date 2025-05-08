@@ -18,8 +18,12 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// </summary>
         RequestHeader = 1,
         /// <summary>
+        /// 以登录输入的租户名称区分
+        /// </summary>
+        LoginInput = 2,
+        /// <summary>
         /// 默认
         /// </summary>
-        Default = DomainName
+        Default = LoginInput
     }
 }

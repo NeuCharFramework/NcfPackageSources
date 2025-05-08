@@ -51,7 +51,7 @@ namespace Senparc.Ncf.Core.Models
         /// <summary>
         /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
         /// </summary>
-        protected RequestTenantInfo TenantInfo
+        public RequestTenantInfo TenantInfo
         {
             get
             {
@@ -60,6 +60,10 @@ namespace Senparc.Ncf.Core.Models
                     _tenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, $"SenparcEntitiesDbContextBase.TenantInfo", this);
                 }
                 return _tenantInfo;
+            }
+            set
+            {
+                _tenantInfo = value;
             }
         }
 
@@ -77,13 +81,13 @@ namespace Senparc.Ncf.Core.Models
                                             .Select(z => z.Entity)
                                             .ToList();
 
-                RequestTenantInfo requestTenantInfo = null;
+                RequestTenantInfo requestTenantInfo = TenantInfo;
                 foreach (var entity in addedEntities)
                 {
                     if (!(entity is IIgnoreMulitTenant) && (entity is IMultiTenancy multiTenantEntity))
                     {
-                        //如果未设置，则进行设定
-                        requestTenantInfo = requestTenantInfo ?? MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesDbContextBase.AddTenandId()", this);
+                        ////如果未设置，则进行设定
+                        //requestTenantInfo = requestTenantInfo ?? MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesDbContextBase.AddTenandId()", this);
                         multiTenantEntity.TenantId = requestTenantInfo.Id;
                     }
                 }

@@ -20,11 +20,11 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
     [Obsolete("AuthenticationResultFilterAttribute")]
     public class AuthenticationAsyncPageFilterAttribute : IAsyncPageFilter
     {
-        private readonly SysPermissionService _sysPermissionService;
+        private readonly SysRolePermissionService _sysPermissionService;
         private readonly IAdminWorkContextProvider _adminWorkContextProvider;
         private readonly SysMenuService _sysMenuService;
 
-        public AuthenticationAsyncPageFilterAttribute(SysPermissionService sysPermissionService, Core.WorkContext.Provider.IAdminWorkContextProvider adminWorkContextProvider, SysMenuService _sysMenuService)
+        public AuthenticationAsyncPageFilterAttribute(SysRolePermissionService sysPermissionService, Core.WorkContext.Provider.IAdminWorkContextProvider adminWorkContextProvider, SysMenuService _sysMenuService)
         {
             this._sysPermissionService = sysPermissionService;
             this._adminWorkContextProvider = adminWorkContextProvider;
