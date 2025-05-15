@@ -1775,6 +1775,26 @@ height:100%;
     color: #606266;
 }
 
+.param-item-table {
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 5px;
+}
+
+.param-item-table:last-child {
+    border-bottom: none;
+}
+
+.empty-tools {
+    text-align: center;
+    padding: 20px;
+}
+
+.empty-text {
+    color: #909399;
+    font-size: 14px;
+}
+
 .mcp-endpoint-add {
     margin-top: 10px;
 }

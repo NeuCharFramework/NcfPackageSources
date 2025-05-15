@@ -23,6 +23,7 @@ var app = new Vue({
         dialogAgentParameter: false, // 智能体参数 列表
         dialogTaskDescription: false, // 任务描述
         dialogTaskEvaluation: false, // 任务评价页面
+        dialogMcpTools: false, // MCP工具列表对话框
       },
       taskStateText: {
         0: '等待',  // 等待 Waiting stand #3376cd
@@ -388,6 +389,7 @@ var app = new Vue({
       mcpEndpointUrlValue: '',
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
+      currentMcpTools: [], // 当前查看的MCP工具列表
     };
   },
   computed: {
@@ -421,6 +423,33 @@ var app = new Vue({
     this.getPluginTypes();
   },
   mounted() {
+    this.tabsActiveName = "first";
+    this.agentForm.systemMessageType = "2";
+    this.getPluginTypes();
+    
+    // 调试对话框相关变量
+    console.log('Vue实例挂载完成');
+    console.log('visible对象:', this.visible);
+    console.log('dialogMcpTools初始状态:', this.visible.dialogMcpTools);
+    
+    // 测试对话框显示
+    window.testDialog = () => {
+      console.log('测试显示对话框');
+      this.visible.dialogMcpTools = true;
+      console.log('dialogMcpTools新状态:', this.visible.dialogMcpTools);
+    };
+    
+    // 测试创建假工具列表
+    window.testTools = () => {
+      console.log('测试创建工具列表');
+      this.currentMcpTools = [
+        { name: '测试工具1', description: '这是一个测试工具', parameters: [{ name: 'param1', description: '参数1' }] },
+        { name: '测试工具2', description: '这是另一个测试工具', parameters: [] }
+      ];
+      console.log('currentMcpTools:', this.currentMcpTools);
+      this.visible.dialogMcpTools = true;
+    };
+    
     // 智能体
     if (this.tabsActiveName === 'first') {
       this.getAgentListData('agent')
@@ -2514,18 +2543,70 @@ var app = new Vue({
           }
         });
         
-        // 处理响应
+        // 详细日志
         console.log('MCP测试响应数据:', response);
         
         // 根据实际API返回的数据结构进行判断
         if (response.data && response.data.success) {
-          const testResult = {
-            success: true,
-            tools: response.data.data.tools || [],
-            status: response.data.data.status
-          };
-          this.$set(endpoint, 'testResult', testResult);
+          // 尝试从不同位置获取工具列表
+          let tools = [];
+          let status = 200;
+          
+          // 调试完整响应
+          console.log('API返回数据结构:', JSON.stringify(response.data, null, 2));
+          
+          // 检查可能的数据结构
+          if (response.data.data) {
+            console.log('data字段:', response.data.data);
+            
+            // 结构1: response.data.data.tools
+            if (response.data.data.tools) {
+              console.log('从data.tools获取工具列表');
+              tools = response.data.data.tools;
+              status = response.data.data.status || 200;
+            } 
+            // 结构2: response.data.data直接是工具列表
+            else if (Array.isArray(response.data.data)) {
+              console.log('data直接是工具列表');
+              tools = response.data.data;
+            }
+          }
+          
+          console.log('提取的工具列表:', tools);
+          
+          // 确保工具列表是数组
+          if (!Array.isArray(tools)) {
+            console.warn('工具列表不是数组，将转换为空数组');
+            tools = [];
+          }
+          
+          // 确保每个工具对象都有必要的属性
+          tools = tools.map(tool => ({
+            name: tool.name || '未命名工具', 
+            description: tool.description || '无描述',
+            parameters: Array.isArray(tool.parameters) ? tool.parameters : []
+          }));
+          
+          console.log('处理后的工具列表:', tools);
+          
+          // 初始化testResult对象
+          if (!endpoint.testResult) {
+            this.$set(endpoint, 'testResult', {});
+          }
+          
+          // 设置结果属性
+          this.$set(endpoint.testResult, 'success', true);
+          this.$set(endpoint.testResult, 'tools', tools);
+          this.$set(endpoint.testResult, 'status', status);
+          
+          console.log('更新后的endpoint对象:', JSON.parse(JSON.stringify(endpoint)));
+          
           this.$message.success('连接测试成功');
+          
+          // 如果有工具列表，直接显示弹窗
+          if (tools && tools.length > 0) {
+            this.showMcpToolsDialog(endpoint);
+          }
         } else {
           const testResult = {
             success: false,
@@ -2674,6 +2755,85 @@ var app = new Vue({
           ? JSON.stringify(endpoints) 
           : '';
       }
+    },
+    
+    // 显示MCP工具列表对话框
+    showMcpToolsDialog(endpoint) {
+      console.log('调用showMcpToolsDialog函数', endpoint);
+      
+      // 检查endpoint对象及其属性
+      if (!endpoint) {
+        console.error('endpoint参数为空');
+        this.$message.warning('endpoint参数为空');
+        return;
+      }
+      
+      console.log('endpoint.testResult:', endpoint.testResult);
+      
+      if (endpoint && endpoint.testResult && endpoint.testResult.tools) {
+        // 创建一个工具列表的副本
+        const tools = [...endpoint.testResult.tools];
+        console.log('显示工具列表:', tools);
+        console.log('工具列表数量:', tools.length);
+        
+        // 设置当前MCP工具列表，并显示对话框
+        this.currentMcpTools = tools;
+        this.visible.dialogMcpTools = true;
+        
+        console.log('设置currentMcpTools:', this.currentMcpTools);
+        console.log('设置dialogMcpTools为可见');
+        
+        // 如果对话框不显示，则尝试使用备用弹窗
+        setTimeout(() => {
+          if (!document.querySelector('.el-dialog__wrapper[aria-label="MCP 工具列表"]')) {
+            console.warn('对话框未显示，使用备用弹窗');
+            this.showMcpToolsAlert(tools);
+          }
+        }, 500);
+      } else {
+        console.warn('没有可用的工具信息', endpoint);
+        this.$message.warning('没有可用的工具信息');
+      }
+    },
+
+    // 备用的MCP工具列表弹窗 (使用alert)
+    showMcpToolsAlert(tools) {
+      if (!tools || !tools.length) {
+        this.$message.warning('没有可用的工具信息');
+        return;
+      }
+      
+      this.$alert(
+        `<div>
+          <h3>工具列表 (${tools.length}个)</h3>
+          <ul style="padding-left: 20px; text-align: left;">
+            ${tools.map(tool => 
+              `<li style="margin-bottom: 10px;">
+                <div style="font-weight: bold; color: #409EFF;">${tool.name}</div>
+                <div style="margin: 5px 0; color: #606266;">${tool.description || '无描述'}</div>
+                ${tool.parameters && tool.parameters.length > 0 ? 
+                  `<div style="margin-top: 5px;">
+                    <div style="font-weight: bold;">参数:</div>
+                    <ul style="padding-left: 20px;">
+                      ${tool.parameters.map(param => 
+                        `<li><span style="color: #409EFF;">${param.name}</span>: ${param.description || ''}</li>`
+                      ).join('')}
+                    </ul>
+                  </div>` : 
+                  '<div>无参数</div>'
+                }
+              </li>`
+            ).join('')}
+          </ul>
+        </div>`,
+        'MCP工具列表',
+        {
+          dangerouslyUseHTMLString: true,
+          closeOnClickModal: true,
+          closeOnPressEscape: true,
+          confirmButtonText: '关闭'
+        }
+      );
     },
   }
 });
