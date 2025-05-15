@@ -481,10 +481,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 };
                 var ka = new KernelArguments(executionSettings2) { };
 
-                iWantToRunItem.Kernel.Data["Arguments"] = ka;
-                iWantToRunItem.Kernel.Data["Argument"] = ka;
-                iWantToRunItem.Kernel.Data["KernelArguments"] = ka;
-                iWantToRunItem.Kernel.Data["KernelArgument"] = ka;
+                // iWantToRunItem.Kernel.Data["Arguments"] = ka;
+                // iWantToRunItem.Kernel.Data["Argument"] = ka;
+                // iWantToRunItem.Kernel.Data["KernelArguments"] = ka;
+                // iWantToRunItem.Kernel.Data["KernelArgument"] = ka;
 
 
                 #region Function-calling
