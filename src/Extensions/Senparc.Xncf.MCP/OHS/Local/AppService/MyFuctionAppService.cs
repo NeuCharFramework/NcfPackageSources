@@ -157,7 +157,6 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 }
 
-
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
                 var semanticAiHandler = new SemanticAiHandler(aiSetting);
 
