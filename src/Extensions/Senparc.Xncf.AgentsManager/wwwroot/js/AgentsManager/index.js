@@ -2500,6 +2500,54 @@ var app = new Vue({
       }
       this.functionCallTags = currentNames;
     },
+    
+    // 测试MCP Endpoint连接
+    async testMcpEndpoint(name, endpoint) {
+      // 设置加载状态
+      this.$set(endpoint, 'testing', true);
+      
+      try {
+        const response = await axios.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.TestMcpConnection', {
+          params: {
+            endpointName: name,
+            endpointUrl: endpoint.url
+          }
+        });
+        
+        // 处理响应
+        console.log('MCP测试响应数据:', response);
+        
+        // 根据实际API返回的数据结构进行判断
+        if (response.data && response.data.success) {
+          const testResult = {
+            success: true,
+            tools: response.data.data.tools || [],
+            status: response.data.data.status
+          };
+          this.$set(endpoint, 'testResult', testResult);
+          this.$message.success('连接测试成功');
+        } else {
+          const testResult = {
+            success: false,
+            message: response.data.errorMessage || '未知错误'
+          };
+          this.$set(endpoint, 'testResult', testResult);
+          this.$message.error('连接测试失败: ' + testResult.message);
+        }
+      } catch (error) {
+        console.error('测试MCP连接出错:', error);
+        const testResult = {
+          success: false,
+          message: error.message || '未知错误'
+        };
+        this.$set(endpoint, 'testResult', testResult);
+        this.$message.error('连接测试出错: ' + testResult.message);
+      } finally {
+        // 清除加载状态
+        this.$set(endpoint, 'testing', false);
+      }
+    },
+    
     // 获取插件类型列表
     async getPluginTypes() {
       try {

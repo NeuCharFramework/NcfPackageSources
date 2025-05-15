@@ -1213,8 +1213,49 @@
                                 <div class="mcp-endpoint-info">
                                     <span class="mcp-endpoint-name">{{name}}</span>
                                     <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                                    <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                        <div class="test-status success">连接成功</div>
+                                        <div class="test-tools">
+                                            <el-tag 
+                                                v-for="tool in endpoint.testResult.tools" 
+                                                :key="tool.name" 
+                                                size="mini" 
+                                                class="tool-tag"
+                                                v-popover:popover>
+                                                {{tool.name}}
+                                                <el-popover
+                                                  placement="top"
+                                                  width="200"
+                                                  trigger="hover">
+                                                  <div class="tool-info">
+                                                    <div v-if="tool.description" class="tool-description">{{tool.description}}</div>
+                                                    <div v-if="tool.parameters && tool.parameters.length > 0" class="tool-params">
+                                                      <div class="param-title">参数:</div>
+                                                      <div v-for="param in tool.parameters" :key="param.name" class="param-item">
+                                                        <span class="param-name">{{param.name}}</span>
+                                                        <span v-if="param.description" class="param-desc">: {{param.description}}</span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </el-popover>
+                                            </el-tag>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                        <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                                    </div>
                                 </div>
                                 <div class="mcp-endpoint-actions">
+                                    <el-button 
+                                        size="mini" 
+                                        type="success" 
+                                        icon="el-icon-connection" 
+                                        circle 
+                                        @@click="testMcpEndpoint(name, endpoint)"
+                                        :loading="endpoint.testing"
+                                        style="margin-right: 5px;"
+                                        title="测试连接">
+                                    </el-button>
                                     <el-button 
                                         size="mini" 
                                         type="primary" 
@@ -1506,8 +1547,49 @@
                         <div class="mcp-endpoint-info">
                             <span class="mcp-endpoint-name">{{name}}</span>
                             <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                            <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                <div class="test-status success">连接成功</div>
+                                <div class="test-tools">
+                                    <el-tag 
+                                        v-for="tool in endpoint.testResult.tools" 
+                                        :key="tool.name" 
+                                        size="mini" 
+                                        class="tool-tag"
+                                        v-popover:popover>
+                                        {{tool.name}}
+                                        <el-popover
+                                          placement="top"
+                                          width="200"
+                                          trigger="hover">
+                                          <div class="tool-info">
+                                            <div v-if="tool.description" class="tool-description">{{tool.description}}</div>
+                                            <div v-if="tool.parameters && tool.parameters.length > 0" class="tool-params">
+                                              <div class="param-title">参数:</div>
+                                              <div v-for="param in tool.parameters" :key="param.name" class="param-item">
+                                                <span class="param-name">{{param.name}}</span>
+                                                <span v-if="param.description" class="param-desc">: {{param.description}}</span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </el-popover>
+                                    </el-tag>
+                                </div>
+                            </div>
+                            <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                            </div>
                         </div>
                         <div class="mcp-endpoint-actions">
+                            <el-button 
+                                size="mini" 
+                                type="success" 
+                                icon="el-icon-connection" 
+                                circle 
+                                @@click="testMcpEndpoint(name, endpoint)"
+                                :loading="endpoint.testing"
+                                style="margin-right: 5px;"
+                                title="测试连接">
+                            </el-button>
                             <el-button 
                                 size="mini" 
                                 type="primary" 

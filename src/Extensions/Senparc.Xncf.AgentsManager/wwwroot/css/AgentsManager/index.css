@@ -1715,6 +1715,66 @@ height:100%;
     font-size: 12px;
 }
 
+.mcp-endpoint-test-result {
+    margin-top: 5px;
+}
+
+.test-status {
+    font-size: 12px;
+    padding: 2px 0;
+}
+
+.test-status.success {
+    color: #67C23A;
+}
+
+.test-status.failed {
+    color: #F56C6C;
+}
+
+.test-tools {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+    gap: 5px;
+}
+
+.tool-tag {
+    cursor: pointer;
+}
+
+.tool-info {
+    font-size: 12px;
+}
+
+.tool-description {
+    margin-bottom: 8px;
+    color: #606266;
+}
+
+.tool-params {
+    color: #303133;
+}
+
+.param-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.param-item {
+    margin-bottom: 3px;
+    padding-left: 5px;
+}
+
+.param-name {
+    font-weight: bold;
+    color: #409EFF;
+}
+
+.param-desc {
+    color: #606266;
+}
+
 .mcp-endpoint-add {
     margin-top: 10px;
 }
