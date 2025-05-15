@@ -283,6 +283,7 @@ var app = new Vue({
         hookRobotParameter: '', // 外接参数
         avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
         functionCallNames: '', // Function Call 名称，逗号分隔
+        mcpEndpoints: '', // MCP Endpoints
       },
       agentFormRules: {
         name: [
@@ -381,6 +382,10 @@ var app = new Vue({
       functionCallInputValue: '',
       functionCallTags: [], // 用于编辑时临时存储标签
       pluginTypes: [], // 存储所有可用的插件类型
+      // MCP Endpoints相关
+      mcpEndpointInputVisible: false,
+      mcpEndpointNameValue: '',
+      mcpEndpointUrlValue: '',
     };
   },
   computed: {
@@ -394,7 +399,19 @@ var app = new Vue({
       return this.pluginTypes.filter(type =>
         !currentNames.includes(type)
       );
-    }
+    },
+    // 解析 McpEndpoints JSON 字符串
+    parsedMcpEndpoints() {
+      try {
+        if (!this.agentForm.mcpEndpoints) {
+          return {};
+        }
+        return JSON.parse(this.agentForm.mcpEndpoints);
+      } catch (e) {
+        console.error('Failed to parse mcpEndpoints:', e);
+        return {};
+      }
+    },
   },
   watch: {},
   created() {
@@ -2507,6 +2524,77 @@ var app = new Vue({
           this.agentForm.functionCallNames = [...currentNames, pluginType].join(',');
           this.functionCallTags = [...currentNames, pluginType];
         }
+      }
+    },
+    // McpEndpoints 相关方法
+    
+    // 显示添加 Endpoint 输入框
+    showMcpEndpointInput() {
+      this.mcpEndpointInputVisible = true;
+      this.mcpEndpointNameValue = '';
+      this.mcpEndpointUrlValue = '';
+      this.$nextTick(() => {
+        if (this.$refs.mcpEndpointNameInput) {
+          this.$refs.mcpEndpointNameInput.$refs.input.focus();
+        }
+      });
+    },
+    
+    // 取消添加 Endpoint
+    cancelMcpEndpointInput() {
+      this.mcpEndpointInputVisible = false;
+      this.mcpEndpointNameValue = '';
+      this.mcpEndpointUrlValue = '';
+    },
+    
+    // 确认添加 Endpoint
+    handleMcpEndpointInputConfirm() {
+      const name = this.mcpEndpointNameValue.trim();
+      const url = this.mcpEndpointUrlValue.trim();
+      
+      if (!name || !url) {
+        this.$message.warning('名称和URL不能为空');
+        return;
+      }
+      
+      let endpoints = {};
+      try {
+        if (this.agentForm.mcpEndpoints) {
+          endpoints = JSON.parse(this.agentForm.mcpEndpoints);
+        }
+      } catch (e) {
+        console.error('Failed to parse mcpEndpoints:', e);
+        endpoints = {};
+      }
+      
+      // 添加新的 Endpoint
+      endpoints[name] = { url };
+      this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
+      
+      // 清空输入框
+      this.mcpEndpointInputVisible = false;
+      this.mcpEndpointNameValue = '';
+      this.mcpEndpointUrlValue = '';
+    },
+    
+    // 删除 Endpoint
+    handleMcpEndpointRemove(name) {
+      let endpoints = {};
+      try {
+        if (this.agentForm.mcpEndpoints) {
+          endpoints = JSON.parse(this.agentForm.mcpEndpoints);
+        }
+      } catch (e) {
+        console.error('Failed to parse mcpEndpoints:', e);
+        return;
+      }
+      
+      // 删除指定 Endpoint
+      if (endpoints[name]) {
+        delete endpoints[name];
+        this.agentForm.mcpEndpoints = Object.keys(endpoints).length > 0 
+          ? JSON.stringify(endpoints) 
+          : '';
       }
     },
   }

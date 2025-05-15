@@ -1205,6 +1205,56 @@
                         </div>
                     </div>
                 </el-form-item>
+                
+                <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
+                    <div class="mcp-endpoints-container">
+                        <div class="mcp-endpoints-list">
+                            <div v-for="(endpoint, name) in parsedMcpEndpoints" :key="name" class="mcp-endpoint-item">
+                                <div class="mcp-endpoint-info">
+                                    <span class="mcp-endpoint-name">{{name}}</span>
+                                    <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                                </div>
+                                <el-button 
+                                    size="mini" 
+                                    type="danger" 
+                                    icon="el-icon-delete" 
+                                    circle 
+                                    @@click="handleMcpEndpointRemove(name)">
+                                </el-button>
+                            </div>
+                        </div>
+                        
+                        <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
+                            <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                        </div>
+                        
+                        <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
+                            <el-input
+                                ref="mcpEndpointNameInput"
+                                v-model="mcpEndpointNameValue"
+                                class="input-endpoint-name"
+                                size="small"
+                                placeholder="Endpoint 名称 (例如: mcp-server-NCF-7)"
+                                style="margin-bottom: 10px; width: 100%">
+                            </el-input>
+                            
+                            <el-input
+                                ref="mcpEndpointUrlInput"
+                                v-model="mcpEndpointUrlValue"
+                                class="input-endpoint-url"
+                                size="small"
+                                placeholder="Endpoint URL (例如: http://localhost:5000/mcp/sse)"
+                                style="margin-bottom: 10px; width: 100%">
+                            </el-input>
+                            
+                            <div class="endpoint-input-actions">
+                                <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">确认</el-button>
+                                <el-button size="small" @@click="cancelMcpEndpointInput">取消</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </el-form-item>
+                
                 <el-form-item label="备注" prop="description">
                     <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写(仅管理员可见)"></el-input>
                 </el-form-item>
@@ -1433,6 +1483,55 @@
                             @@click="handleAddPluginType(pluginType)">
                             {{ pluginType }}
                         </el-button>
+                    </div>
+                </div>
+            </div>
+        </el-form-item>
+        
+        <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
+            <div class="mcp-endpoints-container">
+                <div class="mcp-endpoints-list">
+                    <div v-for="(endpoint, name) in parsedMcpEndpoints" :key="name" class="mcp-endpoint-item">
+                        <div class="mcp-endpoint-info">
+                            <span class="mcp-endpoint-name">{{name}}</span>
+                            <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                        </div>
+                        <el-button 
+                            size="mini" 
+                            type="danger" 
+                            icon="el-icon-delete" 
+                            circle 
+                            @@click="handleMcpEndpointRemove(name)">
+                        </el-button>
+                    </div>
+                </div>
+                
+                <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
+                    <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                </div>
+                
+                <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
+                    <el-input
+                        ref="mcpEndpointNameInput"
+                        v-model="mcpEndpointNameValue"
+                        class="input-endpoint-name"
+                        size="small"
+                        placeholder="Endpoint 名称 (例如: mcp-server-NCF-7)"
+                        style="margin-bottom: 10px; width: 100%">
+                    </el-input>
+                    
+                    <el-input
+                        ref="mcpEndpointUrlInput"
+                        v-model="mcpEndpointUrlValue"
+                        class="input-endpoint-url"
+                        size="small"
+                        placeholder="Endpoint URL (例如: http://localhost:5000/mcp/sse)"
+                        style="margin-bottom: 10px; width: 100%">
+                    </el-input>
+                    
+                    <div class="endpoint-input-actions">
+                        <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">确认</el-button>
+                        <el-button size="small" @@click="cancelMcpEndpointInput">取消</el-button>
                     </div>
                 </div>
             </div>
