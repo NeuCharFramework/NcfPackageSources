@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 {
@@ -60,6 +61,88 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// </summary>
         public string FunctionCallNames { get; private set; }
 
+        /// <summary>
+        /// McpEndpoints，多个用逗号分隔
+        /// </summary>
+        public string McpEndpoints { get; private set; }
+
+        /// <summary>
+        /// 获取McpEndpoints的JSON对象
+        /// </summary>
+        /// <returns>包含所有Endpoints的Dictionary对象</returns>
+        public Dictionary<string, Dictionary<string, string>> GetMcpEndpointsDict()
+        {
+            if (string.IsNullOrEmpty(McpEndpoints))
+            {
+                return new Dictionary<string, Dictionary<string, string>>();
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(McpEndpoints);
+            }
+            catch
+            {
+                return new Dictionary<string, Dictionary<string, string>>();
+            }
+        }
+
+        /// <summary>
+        /// 添加一个MCP Endpoint
+        /// </summary>
+        /// <param name="name">Endpoint名称</param>
+        /// <param name="url">Endpoint URL</param>
+        /// <returns>是否添加成功</returns>
+        public bool AddMcpEndpoint(string name, string url)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(url))
+            {
+                return false;
+            }
+
+            var endpointsDict = GetMcpEndpointsDict();
+            
+            // 添加或更新Endpoint
+            endpointsDict[name] = new Dictionary<string, string>
+            {
+                { "url", url }
+            };
+
+            // 序列化回字符串
+            McpEndpoints = JsonSerializer.Serialize(endpointsDict);
+            return true;
+        }
+
+        /// <summary>
+        /// 移除一个MCP Endpoint
+        /// </summary>
+        /// <param name="name">Endpoint名称</param>
+        /// <returns>是否移除成功</returns>
+        public bool RemoveMcpEndpoint(string name)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(McpEndpoints))
+            {
+                return false;
+            }
+
+            var endpointsDict = GetMcpEndpointsDict();
+            
+            if (!endpointsDict.ContainsKey(name))
+            {
+                return false;
+            }
+
+            // 移除Endpoint
+            endpointsDict.Remove(name);
+
+            // 如果为空则设为null，否则序列化回字符串
+            McpEndpoints = endpointsDict.Count > 0 
+                ? JsonSerializer.Serialize(endpointsDict)
+                : null;
+                
+            return true;
+        }
+
         //[InverseProperty(nameof(ChatGroupMember.AgentTemplate))]
         public ICollection<ChatGroupMember> ChatGroupMembers { get; private set; }
 
@@ -77,7 +160,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -88,6 +171,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             HookRobotParameter = hookRobotParameter;
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
+            McpEndpoints = mcpEndpoints;
         }
 
         public bool EnableAgent()
@@ -113,6 +197,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             HookRobotParameter = agentTemplateDto.HookRobotParameter;
             FunctionCallNames = agentTemplateDto.FunctionCallNames;
             Avastar = agentTemplateDto.Avastar;
+            McpEndpoints = agentTemplateDto.McpEndpoints;
         }
     }
 

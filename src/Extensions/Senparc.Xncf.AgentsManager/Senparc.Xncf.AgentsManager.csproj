@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.9.9-preview1</Version>
+		<Version>0.9.10-preview1</Version>
 		<AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,44 +18,45 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
 		<PackageIcon>icon.jpg</PackageIcon>
 		<PackageReleaseNotes>
-		v0.1.0 创世
-		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
-		[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
-		[2024-09-03] v0.5.1-preview1 PromptRange 结果提供“复制”功能
-		[2024-09-04] v0.5.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
-		[2024-09-07] v0.5.3-preview1 XncfBuilder 更新默认 Prompt
-		[2024-09-07] v0.5.3.1-preview1 更新 PromptRange 中代码自动生成的 Prompt
-		[2024-09-07] v0.5.3.2-preview1 PromptRange 优化输出格式
-		[2024-09-07] v0.5.3.3-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
-		[2024-09-07] v0.5.3.4-preview1 更新 XNCF AI 代码生成逻辑
-		[2024-09-07] v0.5.4-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-		[2024-09-07] v0.5.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-		[2024-09-07] v0.5.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
-		[2024-09-08] v0.5.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
-		[2024-09-10] v0.5.6-preview1 升级缓存基础库
-		[2024-10-09] v0.5.8-preview1 升级基础库
-		[2024-10-09] v0.5.9-preview1 升级基础库
-		[2024-10-16] v0.5.10-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-10-17] v0.5.11-preview1 完成能够全流程运行的基础版本
-		[2024-10-18] v0.5.12-preview1 优化功能
-		[2024-10-20] v0.5.13-preview1 升级 Senparc.Weixin.Work SDK
-		[2024-10-26] v0.5.15-preview1 发布 MVP 版本
-		[2024-10-26] v0.5.15.3-preview1 优化 Agents 输出
-		[2024-11-08] v0.6.2-preview1 升级 Senparc.AI
-		[2024-11-08] v0.6.3-preview1 升级 Senparc.AI
-		[2024-11-15] v0.7.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-		[2024-11-21] v0.8.2-preview1 更新 CO2NET 及缓存基础库
-		[2024-11-28] v0.8.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		[2024-12-27] v0.8.4-preview1 Add exception log for UseXncfModules() auto progress
-		[2025-01-09] v0.9.0-preview1 reconstruction XncfBuilder for generate XNCF
-		[2025-01-25] v0.9.3-preview1 Update Agents functions, support for function calling
-		[2025-01-25] v0.9.4-preview1 Update Agents functions, support for function calling
-		[2025-01-28] v0.9.5-preview1 update Senparc.AI
-		[2025-01-28] v0.9.6-preview1 update Senparc.AI
-		[2025-02-06] v0.9.7-preview1 update NeuCharAI model update
-		[2025-03-24] v0.9.7.12-preview1 update Dm support
-				[2025-04-29] v0.9.9-preview1 Update CO2NET and AIKernel
-</PackageReleaseNotes>
+			v0.1.0 创世
+			[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
+			[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
+			[2024-09-03] v0.5.1-preview1 PromptRange 结果提供“复制”功能
+			[2024-09-04] v0.5.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
+			[2024-09-07] v0.5.3-preview1 XncfBuilder 更新默认 Prompt
+			[2024-09-07] v0.5.3.1-preview1 更新 PromptRange 中代码自动生成的 Prompt
+			[2024-09-07] v0.5.3.2-preview1 PromptRange 优化输出格式
+			[2024-09-07] v0.5.3.3-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
+			[2024-09-07] v0.5.3.4-preview1 更新 XNCF AI 代码生成逻辑
+			[2024-09-07] v0.5.4-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
+			[2024-09-07] v0.5.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
+			[2024-09-07] v0.5.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
+			[2024-09-08] v0.5.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
+			[2024-09-10] v0.5.6-preview1 升级缓存基础库
+			[2024-10-09] v0.5.8-preview1 升级基础库
+			[2024-10-09] v0.5.9-preview1 升级基础库
+			[2024-10-16] v0.5.10-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+			[2024-10-17] v0.5.11-preview1 完成能够全流程运行的基础版本
+			[2024-10-18] v0.5.12-preview1 优化功能
+			[2024-10-20] v0.5.13-preview1 升级 Senparc.Weixin.Work SDK
+			[2024-10-26] v0.5.15-preview1 发布 MVP 版本
+			[2024-10-26] v0.5.15.3-preview1 优化 Agents 输出
+			[2024-11-08] v0.6.2-preview1 升级 Senparc.AI
+			[2024-11-08] v0.6.3-preview1 升级 Senparc.AI
+			[2024-11-15] v0.7.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+			[2024-11-21] v0.8.2-preview1 更新 CO2NET 及缓存基础库
+			[2024-11-28] v0.8.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+			[2024-12-27] v0.8.4-preview1 Add exception log for UseXncfModules() auto progress
+			[2025-01-09] v0.9.0-preview1 reconstruction XncfBuilder for generate XNCF
+			[2025-01-25] v0.9.3-preview1 Update Agents functions, support for function calling
+			[2025-01-25] v0.9.4-preview1 Update Agents functions, support for function calling
+			[2025-01-28] v0.9.5-preview1 update Senparc.AI
+			[2025-01-28] v0.9.6-preview1 update Senparc.AI
+			[2025-02-06] v0.9.7-preview1 update NeuCharAI model update
+			[2025-03-24] v0.9.7.12-preview1 update Dm support
+			[2025-04-29] v0.9.9-preview1 Update CO2NET and AIKernel
+			[2025-05-15] v0.9.10-preview1 Add MCP to AgentsManager module
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>
@@ -106,6 +107,7 @@
 		<ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.SenMapic\Senparc.Xncf.SenMapic.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--<ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />

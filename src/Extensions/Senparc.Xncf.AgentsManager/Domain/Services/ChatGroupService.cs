@@ -4,6 +4,9 @@ using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol.Transport;
 using Senparc.AI;
 using Senparc.AI.Agents.AgentExtensions;
 using Senparc.AI.Agents.AgentUtility;
@@ -38,10 +41,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
+
+
+public class McpEndpoint
+{
+    
+    public string url { get; set; }
+}
 
 public class ChatGroupService : ServiceBase<ChatGroup>
 {
@@ -253,7 +264,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 在独立进程中运行 ChatGroup
+    /// 在独立进程中运行 ChatGroup（UI 界面中进行）
     /// </summary>
     /// <returns></returns>
     public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
@@ -408,6 +419,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     //使用个性化参数创建
                     var personalitySemanticAiHandler = new SemanticAiHandler(currentAgentAiSetting);
                     iWantToConfig = personalitySemanticAiHandler.IWantTo();
+
                 }
                 else
                 {
@@ -415,9 +427,67 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
 
                 //当前 Agent 配置
-                var iWantToRunItem = iWantToConfig
-                                   .ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid)
-                                   .BuildKernel();
+
+                #region 设置 MCP
+
+                var iWantToConfigModel = iWantToConfig.ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid);
+
+                // 获取当前 Agent 的 MCP Endpoints
+                var mcpEndpoints = agentTemplateDto.McpEndpoints;
+                if (!string.IsNullOrEmpty(mcpEndpoints))
+                {
+                    var endpointsDict = JsonSerializer.Deserialize<Dictionary<string, McpEndpoint>>(mcpEndpoints);
+
+                    // 遍历 endpointsDict 中的每个键值对
+                    foreach (var endpoint in endpointsDict)
+                    {
+                        // 获取键和值
+                        var mcpName = endpoint.Key;
+
+                        var mcpEndpoint = endpoint.Value.url;
+
+                        var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                        {
+                            Endpoint = new Uri(mcpEndpoint),
+                            Name = mcpName
+                        });
+
+                        var client = await McpClientFactory.CreateAsync(clientTransport);
+                        var tools = await client.ListToolsAsync();
+                        // Print the list of tools available from the server.
+                        foreach (var tool in tools)
+                        {
+                            Console.WriteLine($"Agent: {memberInfo.AgentTemplateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
+                        }
+
+                        // 使用 key 和 value 进行操作
+#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                        iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcpPlugin{memberInfo.Uid}", tools.Select(z => z.AsKernelFunction()));
+#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+
+                    }
+                }
+                #endregion
+
+
+                var iWantToRunItem = iWantToConfigModel.BuildKernel();
+
+
+                var executionSettings2 = new OpenAIPromptExecutionSettings
+                {
+                    Temperature = 0,
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()// FunctionChoiceBehavior.Auto()
+                };
+                var ka = new KernelArguments(executionSettings2) { };
+
+                iWantToRunItem.Kernel.Data["Arguments"] = ka;
+                iWantToRunItem.Kernel.Data["Argument"] = ka;
+                iWantToRunItem.Kernel.Data["KernelArguments"] = ka;
+                iWantToRunItem.Kernel.Data["KernelArgument"] = ka;
+
+
+                #region Function-calling
 
                 //判断是否需要 Function Call
 
@@ -452,6 +522,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         }
                     }
                 }
+
+                #endregion
 
                 //设置 Agent
                 SemanticKernelAgent agent = new SemanticKernelAgent(

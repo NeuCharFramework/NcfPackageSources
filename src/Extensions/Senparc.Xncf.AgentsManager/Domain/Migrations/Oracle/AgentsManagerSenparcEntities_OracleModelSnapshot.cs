@@ -136,6 +136,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<string>("McpEndpoints")
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");

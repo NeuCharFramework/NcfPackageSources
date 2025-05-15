@@ -133,6 +133,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Dm
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP");
 
+                    b.Property<string>("McpEndpoints")
+                        .HasColumnType("NVARCHAR2(32767)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(32767)");

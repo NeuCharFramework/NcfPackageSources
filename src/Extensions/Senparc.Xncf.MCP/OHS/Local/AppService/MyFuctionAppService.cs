@@ -25,12 +25,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Azure.AI.OpenAI;
 using Azure.Core;
 using Microsoft.Extensions.AI;
+using Senparc.AI.Entities;
 
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
-
-
     [McpServerToolType()]
     public static class NcfMcpTools
     {
@@ -71,7 +70,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender("获取当前时间", "获取当前时间", typeof(Register))]
+        [FunctionRender("执行MCP", "执行 MCP", typeof(Register))]
         public async Task<StringAppResponse> GetMcpResult(MyFunction_MCPCallRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -93,9 +92,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 var clientTransport = new SseClientTransport(new SseClientTransportOptions()
                 {
-                    Endpoint = new Uri("http://localhost:5000/sse/sse"),
+                    Endpoint = new Uri("http://localhost:5000/mcp/sse"),
                     Name = "NCF-Server"
-
                 });
 
                 var client = await McpClientFactory.CreateAsync(clientTransport);
@@ -148,41 +146,53 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 */
 
+                var client2 = await McpClientFactory.CreateAsync(clientTransport);
+                var tools2 = await client2.ListToolsAsync();
+                // Print the list of tools available from the server.
+                foreach (var tool in tools2)
+                {
+                    Console.WriteLine($"{tool.Name} ({tool.Description})");
+                    //var kf = tool.AsKernelFunction();
+
+
+                }
+
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
                 var semanticAiHandler = new SemanticAiHandler(aiSetting);
 
-                var iWantToConfig = semanticAiHandler.IWantTo()
-                                            .ConfigModel(AI.ConfigModel.Chat, "Jeffrey");
+                var parameter = new PromptConfigParameter()
+                {
+                    MaxTokens = 2000,
+                    Temperature = 0.7,
+                    TopP = 0.5,
+                };
 
-                var mcpPlugin = await iWantToConfig.Kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server", "http://localhost:5000/sse/sse");
+                var iWantToRun = semanticAiHandler.ChatConfig(parameter,
+                  userId: "Jeffrey",
+                  maxHistoryStore: 10,
+                  chatSystemMessage: "你是一位智能助手，负责帮我选择最合适的硬件执行",
+                  senparcAiSetting: aiSetting,
+                  kernelBuilderAction: kh =>
+                  {
 
-                //iWantToConfig.Kernel.Plugins.Add(mcpPlugin);
+                      // kh.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server", "http://localhost:5000/sse/sse");
 
-                var functions = mcpPlugin.Select(z => z).ToArray();
-
-                var iWantToRun = iWantToConfig.BuildKernel();
-
+#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                      kh.Plugins.AddFromFunctions("SenparcMcpPlugin", tools2.Select(z => z.AsKernelFunction()));
+#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                  }
+                      );
                 var executionSettings2 = new OpenAIPromptExecutionSettings
                 {
                     Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Required()// FunctionChoiceBehavior.Auto()
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()// FunctionChoiceBehavior.Auto()
                 };
-                var ka = new KernelArguments(executionSettings2) {  };
+                var ka = new KernelArguments(executionSettings2) { };
 
-            //var aiRrequest = iWantToRun.CreateRequest(request.RequestPrompt
-            //    //, true, functions
-            //    );
-
-            //var result = await iWantToRun.RunAsync(aiRrequest);
-            //return result.OutputString;
-
-            //var options = new ChatOptions
-            //{
-            //    MaxOutputTokens = 1000,
-            //    ModelId = aiSetting.ModelName.Chat,
-            //    Tools = [.. tools]
-            //};
-
+                ////输出结果
+                //SenparcAiResult ret = await semanticAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
+                
+                //////////var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
 
 
                 var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
