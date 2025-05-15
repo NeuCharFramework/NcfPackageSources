@@ -191,7 +191,14 @@
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.TenantInfo_IndexModel.OnPostSaveAsync(Senparc.Xncf.Tenant.Domain.DataBaseModel.CreateOrUpdate_TenantInfoDto)">
             <summary>
             Handler=Save
-            保存
+            新增、编辑租户
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.TenantInfo_IndexModel.OnPostInitializeAsync(Senparc.Areas.Admin.Areas.Admin.Pages.TenantInitializeDto)">
+            <summary>
+            初始化租户
             </summary>
             <param name="dto"></param>
             <returns></returns>
@@ -322,14 +329,14 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuTreeAsync(Senparc.Ncf.Service.SysPermissionService)">
+        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuTreeAsync(Senparc.Ncf.Service.SysRolePermissionService)">
             <summary>
             获取无状态的菜单信息
             </summary>
             <param name="sysPermissionService"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuResourceAsync(Senparc.Ncf.Service.SysPermissionService)">
+        <member name="M:Senparc.Areas.Admin.Pages.IndexModel.OnGetMenuResourceAsync(Senparc.Ncf.Service.SysRolePermissionService)">
             <summary>
             获取包含当前停留页面信息的菜单信息
             </summary>
@@ -660,21 +667,23 @@
             <param name="userName"></param>
             <returns></returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.LoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.Boolean)">
+        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.LoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.Boolean,System.String)">
             <summary>
             Performs the login operation for the specified admin user
             </summary>
             <param name="userInfo">The admin user information</param>
             <param name="rememberMe">Whether to persist the login</param>
+            <param name="tenantKey"></param>
             <returns>A task representing the asynchronous operation</returns>
         </member>
-        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.TryLoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.String,System.Boolean)">
+        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.TryLoginAsync(Senparc.Areas.Admin.Domain.Models.AdminUserInfo,System.String,System.Boolean,System.String)">
             <summary>
             如果密码正确，则尝试登录
             </summary>
             <param name="adminUserInfo"></param>
             <param name="password"></param>
             <param name="rememberMe"></param>
+            <param name="tenantKey"></param>
             <returns></returns>
         </member>
         <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.CreateAdminUserInfo(Senparc.Ncf.Core.Models.CreateOrUpdate_AdminUserInfoDto)">
@@ -738,6 +747,15 @@
             GenerateToken
             </summary>
             <param name="memberId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Areas.Admin.Domain.Services.InstallerService.InstallAndOpenModuleAsync(Senparc.Ncf.XncfBase.IXncfRegister,System.IServiceProvider,Senparc.Xncf.Tenant.Domain.DataBaseModel.TenantInfo,System.Boolean,System.Boolean)">
+            <summary>
+            安装并且开放模块
+            </summary>
+            <param name="register"></param>
+            <param name="installNow">是否立即安装</param>
+            <param name="addMenu">是否添加菜单（必须 installNow 为 true 时生效）</param>
             <returns></returns>
         </member>
         <member name="T:Senparc.Areas.Admin.Domain.Services.SysMenuService">

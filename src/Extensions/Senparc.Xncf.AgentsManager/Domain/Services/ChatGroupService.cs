@@ -253,7 +253,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 在独立进程中运行 ChatGroup
+    /// 在独立进程中运行 ChatGroup（UI 界面中进行）
     /// </summary>
     /// <returns></returns>
     public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)

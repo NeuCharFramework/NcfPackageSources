@@ -60,6 +60,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// </summary>
         public string FunctionCallNames { get; private set; }
 
+        /// <summary>
+        /// McpEndpoints，多个用逗号分隔
+        /// </summary>
+        public string McpEndpoints { get; private set; }
+
         //[InverseProperty(nameof(ChatGroupMember.AgentTemplate))]
         public ICollection<ChatGroupMember> ChatGroupMembers { get; private set; }
 
@@ -77,7 +82,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -88,6 +93,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             HookRobotParameter = hookRobotParameter;
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
+            McpEndpoints = mcpEndpoints;
         }
 
         public bool EnableAgent()
@@ -113,6 +119,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             HookRobotParameter = agentTemplateDto.HookRobotParameter;
             FunctionCallNames = agentTemplateDto.FunctionCallNames;
             Avastar = agentTemplateDto.Avastar;
+            McpEndpoints = agentTemplateDto.McpEndpoints;
         }
     }
 

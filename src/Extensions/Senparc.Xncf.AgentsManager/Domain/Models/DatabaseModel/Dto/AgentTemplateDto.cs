@@ -56,9 +56,14 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// </summary>
         public string FunctionCallNames { get; set; }
 
+        /// <summary>
+        /// McpEndpoints，多个用逗号分隔
+        /// </summary>
+        public string McpEndpoints { get; set; }
+
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -69,6 +74,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             HookRobotParameter = hookRobotParameter;
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
+            McpEndpoints = mcpEndpoints;
         }
     }
 
