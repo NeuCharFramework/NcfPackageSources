@@ -386,6 +386,8 @@ var app = new Vue({
       mcpEndpointInputVisible: false,
       mcpEndpointNameValue: '',
       mcpEndpointUrlValue: '',
+      mcpEndpointEditMode: false,
+      mcpEndpointOriginalName: '',
     };
   },
   computed: {
@@ -2533,6 +2535,23 @@ var app = new Vue({
       this.mcpEndpointInputVisible = true;
       this.mcpEndpointNameValue = '';
       this.mcpEndpointUrlValue = '';
+      this.mcpEndpointEditMode = false;
+      this.mcpEndpointOriginalName = '';
+      this.$nextTick(() => {
+        if (this.$refs.mcpEndpointNameInput) {
+          this.$refs.mcpEndpointNameInput.$refs.input.focus();
+        }
+      });
+    },
+    
+    // 编辑 Endpoint
+    handleMcpEndpointEdit(name, endpoint) {
+      this.mcpEndpointInputVisible = true;
+      this.mcpEndpointNameValue = name;
+      this.mcpEndpointUrlValue = endpoint.url;
+      this.mcpEndpointEditMode = true;
+      this.mcpEndpointOriginalName = name;
+      
       this.$nextTick(() => {
         if (this.$refs.mcpEndpointNameInput) {
           this.$refs.mcpEndpointNameInput.$refs.input.focus();
@@ -2545,9 +2564,11 @@ var app = new Vue({
       this.mcpEndpointInputVisible = false;
       this.mcpEndpointNameValue = '';
       this.mcpEndpointUrlValue = '';
+      this.mcpEndpointEditMode = false;
+      this.mcpEndpointOriginalName = '';
     },
     
-    // 确认添加 Endpoint
+    // 确认添加或更新 Endpoint
     handleMcpEndpointInputConfirm() {
       const name = this.mcpEndpointNameValue.trim();
       const url = this.mcpEndpointUrlValue.trim();
@@ -2567,7 +2588,14 @@ var app = new Vue({
         endpoints = {};
       }
       
-      // 添加新的 Endpoint
+      if (this.mcpEndpointEditMode) {
+        // 编辑模式：如果名称变了，需要删除旧的再添加新的
+        if (this.mcpEndpointOriginalName !== name) {
+          delete endpoints[this.mcpEndpointOriginalName];
+        }
+      }
+      
+      // 添加/更新 Endpoint
       endpoints[name] = { url };
       this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
       
@@ -2575,6 +2603,8 @@ var app = new Vue({
       this.mcpEndpointInputVisible = false;
       this.mcpEndpointNameValue = '';
       this.mcpEndpointUrlValue = '';
+      this.mcpEndpointEditMode = false;
+      this.mcpEndpointOriginalName = '';
     },
     
     // 删除 Endpoint

@@ -1730,7 +1730,18 @@ height:100%;
     margin-top: 10px;
 }
 
+.mcp-endpoint-form-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #409EFF;
+}
+
 .endpoint-input-actions {
     display: flex;
     justify-content: flex-end;
+}
+
+.mcp-endpoint-actions {
+    display: flex;
+    align-items: center;
 }

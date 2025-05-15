@@ -1214,13 +1214,23 @@
                                     <span class="mcp-endpoint-name">{{name}}</span>
                                     <span class="mcp-endpoint-url">{{endpoint.url}}</span>
                                 </div>
-                                <el-button 
-                                    size="mini" 
-                                    type="danger" 
-                                    icon="el-icon-delete" 
-                                    circle 
-                                    @@click="handleMcpEndpointRemove(name)">
-                                </el-button>
+                                <div class="mcp-endpoint-actions">
+                                    <el-button 
+                                        size="mini" 
+                                        type="primary" 
+                                        icon="el-icon-edit" 
+                                        circle 
+                                        @@click="handleMcpEndpointEdit(name, endpoint)"
+                                        style="margin-right: 5px;">
+                                    </el-button>
+                                    <el-button 
+                                        size="mini" 
+                                        type="danger" 
+                                        icon="el-icon-delete" 
+                                        circle 
+                                        @@click="handleMcpEndpointRemove(name)">
+                                    </el-button>
+                                </div>
                             </div>
                         </div>
                         
@@ -1229,6 +1239,7 @@
                         </div>
                         
                         <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
+                            <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? '编辑 MCP Endpoint' : '添加 MCP Endpoint' }}</div>
                             <el-input
                                 ref="mcpEndpointNameInput"
                                 v-model="mcpEndpointNameValue"
@@ -1496,13 +1507,23 @@
                             <span class="mcp-endpoint-name">{{name}}</span>
                             <span class="mcp-endpoint-url">{{endpoint.url}}</span>
                         </div>
-                        <el-button 
-                            size="mini" 
-                            type="danger" 
-                            icon="el-icon-delete" 
-                            circle 
-                            @@click="handleMcpEndpointRemove(name)">
-                        </el-button>
+                        <div class="mcp-endpoint-actions">
+                            <el-button 
+                                size="mini" 
+                                type="primary" 
+                                icon="el-icon-edit" 
+                                circle 
+                                @@click="handleMcpEndpointEdit(name, endpoint)"
+                                style="margin-right: 5px;">
+                            </el-button>
+                            <el-button 
+                                size="mini" 
+                                type="danger" 
+                                icon="el-icon-delete" 
+                                circle 
+                                @@click="handleMcpEndpointRemove(name)">
+                            </el-button>
+                        </div>
                     </div>
                 </div>
                 
@@ -1511,6 +1532,7 @@
                 </div>
                 
                 <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
+                    <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? '编辑 MCP Endpoint' : '添加 MCP Endpoint' }}</div>
                     <el-input
                         ref="mcpEndpointNameInput"
                         v-model="mcpEndpointNameValue"
