@@ -109,9 +109,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
+                var endpoint = request.Endpoint.IsNullOrEmpty()? "http://localhost:5000/mcp/sse" : request.Endpoint;
+
+                Console.WriteLine("MCP Request Endpoint:" + endpoint);
+
                 var clientTransport = new SseClientTransport(new SseClientTransportOptions()
                 {
-                    Endpoint = new Uri("http://localhost:5000/mcp/sse"),
+                    Endpoint = new Uri(endpoint),
                     Name = "NCF-Server"
                 });
 
@@ -123,13 +127,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     Console.WriteLine($"{tool.Name} ({tool.Description})");
                 }
 
-                // Execute a tool (this would normally be driven by LLM tool invocations).
-                var result = await client.CallToolAsync(
-                    "Echo",
-                    new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
-                    /*System.Threading.CancellationToken.None*/);
+                // // Execute a tool (this would normally be driven by LLM tool invocations).
+                // var result = await client.CallToolAsync(
+                //     "Echo",
+                //     new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
+                //     /*System.Threading.CancellationToken.None*/);
 
-                Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
+                // Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
 
 
 

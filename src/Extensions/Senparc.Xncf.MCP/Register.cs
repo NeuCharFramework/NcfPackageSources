@@ -122,20 +122,20 @@ namespace Senparc.Xncf.MCP
 
             // System.Console.WriteLine("aiFunction: " + aiFunction.JsonSchema);
 
-            var mcpServerBuilder = services.AddMcpServer(opt =>
-                        {
-                            opt.ServerInfo = new Implementation()
-                            {
-                                Name = "ncf-mcp-server",
-                                Version = "1.0.0",
-                            };
-                        })
-                        .WithHttpTransport()
-                                            //   .WithStdioServerTransport()
-                                            .WithTools(new[] { tool })
-                                            .WithToolsFromAssembly()
-                                            //.WithToolsFromAssembly(typeof(Senparc.Xncf.SenMapic.Register).Assembly)
-                                            ;
+            // var mcpServerBuilder = services.AddMcpServer(opt =>
+            //             {
+            //                 opt.ServerInfo = new Implementation()
+            //                 {
+            //                     Name = "ncf-mcp-server",
+            //                     Version = "1.0.0",
+            //                 };
+            //             })
+            //             .WithHttpTransport()
+            //                                 //   .WithStdioServerTransport()
+            //                                 .WithTools(new[] { tool })
+            //                                 .WithToolsFromAssembly()
+            //                                 //.WithToolsFromAssembly(typeof(Senparc.Xncf.SenMapic.Register).Assembly)
+            //                                 ;
 
 
             return base.AddXncfModule(services, configuration, env);
@@ -149,9 +149,9 @@ namespace Senparc.Xncf.MCP
 
             if (app is IEndpointRouteBuilder endpoints)
             {
-                Console.WriteLine("开始启用 MCP 服务");
-                var routePattern = "mcp";
-                endpoints.MapMcp(routePattern);
+                // Console.WriteLine("开始启用 MCP 服务（全局）");
+                // var routePattern = "mcp";
+                // endpoints.MapMcp(routePattern);
 
                 ////恢复首页
                 //var routeGroup = endpoints.MapGroup(routePattern);
