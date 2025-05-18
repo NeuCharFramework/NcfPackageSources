@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.4.10-pre-alpha</Version>
+		<Version>0.4.11-pre-alpha</Version>
 		<AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
 		<RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -34,6 +34,7 @@
 			[2024-12-27] v0.4.4-pre-alpha Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.4.8-pre-alpha Update Agents functions, support for function calling
 			[2025-04-29] v0.4.10-pre-alpha Update CO2NET and AIKernel
+			[2025-05-18] v0.4.11-pre-alpha Update Installation 
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

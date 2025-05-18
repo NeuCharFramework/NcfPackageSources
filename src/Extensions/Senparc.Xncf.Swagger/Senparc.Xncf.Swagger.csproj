@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.16.10-preview1</Version>
+		<Version>0.16.11-preview1</Version>
 		<!--<LangVersion>lastest</LangVersion>-->
 		<LangVersion>preview</LangVersion>
 		<AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -33,6 +33,7 @@
 			[2024-12-04] v0.16.4-preview1 update Swagger Xncf module, fix UseLowerCaseApiName not applied
 			[2025-01-25] v0.16.8-preview1 Update Agents functions, support for function calling
 			[2025-04-29] v0.16.10-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.16.11-preview1 Update Installation 
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test</Configurations>
