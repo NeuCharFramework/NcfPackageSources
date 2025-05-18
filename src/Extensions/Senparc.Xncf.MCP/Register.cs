@@ -9,11 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ModelContextProtocol;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol.Messages;
-using ModelContextProtocol.Protocol.Transport;
-using ModelContextProtocol.Protocol.Types;
 using ModelContextProtocol.Server;
-using ModelContextProtocol.Utils.Json;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
@@ -36,6 +32,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
+using ModelContextProtocol.Protocol;
 
 namespace Senparc.Xncf.MCP
 {
@@ -117,7 +114,9 @@ namespace Senparc.Xncf.MCP
 
             var type = typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService);
             var methodInfo = type.GetMethod("WebSpider");
-            var aiFunction = AIFunctionFactory.Create(methodInfo,
+
+            
+            var aiFunction = global::Microsoft.Extensions.AI.AIFunctionFactory.Create(methodInfo,
              typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService));
             var tool = McpServerTool.Create(aiFunction);
 
