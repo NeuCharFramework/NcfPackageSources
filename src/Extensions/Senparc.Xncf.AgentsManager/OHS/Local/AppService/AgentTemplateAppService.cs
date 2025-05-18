@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.Timeouts;
+using Microsoft.AspNetCore.Mvc;
+using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol.Transport;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
@@ -79,7 +82,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <param name="pageIndex"></param>
         /// <returns></returns>
         [ApiBind]
-        public async Task<AppResponseBase<AgentTemplate_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0,string filter = "")
+        public async Task<AppResponseBase<AgentTemplate_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0, string filter = "")
         {
             return await this.GetResponseAsync<AgentTemplate_GetListResponse>(async (response, logger) =>
             {
@@ -241,5 +244,135 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 return Task.FromResult(pluginTypes);
             });
         }
+
+        /// <summary>
+        /// 测试MCP连接
+        /// </summary>
+        /// <param name="endpointName">Endpoint名称</param>
+        /// <param name="endpointUrl">Endpoint URL</param>
+        /// <returns>包含工具列表和连接状态的响应</returns>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<McpConnectionTestResult>> TestMcpConnection(string endpointName, string endpointUrl)
+        {
+            return await this.GetResponseAsync<McpConnectionTestResult>(async (response, logger) =>
+            {
+                List<McpTool> mcpToolList = new List<McpTool>();
+                try
+                {
+                    var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                    {
+                        Endpoint = new Uri(endpointUrl),
+                        Name = endpointName
+                    });
+
+                    var client = await McpClientFactory.CreateAsync(clientTransport);
+                    var tools = await client.ListToolsAsync();
+
+                    mcpToolList = tools.Select(z => new McpTool()
+                    {
+                        Name = z.Name,
+                        Description = z.Description,
+                        Parameters = z.AdditionalProperties.Select(z => new McpToolParameter()
+                        {
+                            Name = z.Key,
+                            Description = z.Value.ToString()
+                        }).ToList()
+                    }).ToList();
+
+                    await clientTransport.DisposeAsync();
+
+                    return new McpConnectionTestResult()
+                    {
+                        Success = true,
+                        Status = 200,
+                        StatusMessage = "连接成功",
+                        Tools = mcpToolList
+                    };
+
+                }
+                catch (System.Text.Json.JsonException ex)
+                {
+                    logger.Append($"解析工具列表时出错: {ex.Message}");
+                    // 创建一个假工具以显示错误信息
+                    mcpToolList.Add(new McpTool
+                    {
+                        Name = "解析错误",
+                        Description = $"无法解析工具列表: {ex.Message}"
+                    });
+
+                    return new McpConnectionTestResult()
+                    {
+                        Success = false,
+                        Status = 500,
+                        StatusMessage = "连接失败",
+                        Tools = mcpToolList
+                    };
+                }
+
+            });
+        }
+    }
+
+    /// <summary>
+    /// MCP连接测试结果
+    /// </summary>
+    public class McpConnectionTestResult
+    {
+        /// <summary>
+        /// 连接是否成功
+        /// </summary>
+        public bool Success { get; set; }
+
+        /// <summary>
+        /// HTTP状态码
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 状态消息
+        /// </summary>
+        public string StatusMessage { get; set; }
+
+        /// <summary>
+        /// 工具列表
+        /// </summary>
+        public List<McpTool> Tools { get; set; } = new List<McpTool>();
+    }
+
+    /// <summary>
+    /// MCP工具信息
+    /// </summary>
+    public class McpTool
+    {
+        /// <summary>
+        /// 工具名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 工具描述
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// 工具参数列表
+        /// </summary>
+        public List<McpToolParameter> Parameters { get; set; } = new List<McpToolParameter>();
+    }
+
+    /// <summary>
+    /// MCP工具参数
+    /// </summary>
+    public class McpToolParameter
+    {
+        /// <summary>
+        /// 参数名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 参数描述
+        /// </summary>
+        public string Description { get; set; }
     }
 }

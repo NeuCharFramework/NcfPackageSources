@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol.Transport;
 using ModelContextProtocol.Server;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.CO2NET;
@@ -30,6 +29,15 @@ using Senparc.AI.Entities;
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
+    [Serializable]
+    public class DoFuncReq
+    {
+        [Required]
+        [Description("传入字符串")]
+        public string Str { get; set; }
+    }
+
+
     [McpServerToolType()]
     public static class NcfMcpTools
     {
@@ -41,7 +49,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         [McpServerTool, Description("获取当前时间")]
-        public static string Now(string message) { return $"{DateTime.Now}"; }
+        public static string Now(string message)
+        {
+            Console.WriteLine("Now tool 收到请求(messag)：" + message);
+            return $"{message}: {DateTime.Now}";
+        }
+
+        //[McpServerTool, Description("获取当前时间")]
+        //public static string Now(DoFuncReq reqeust)
+        //{
+        //    Console.WriteLine("Now tool 收到请求：" + reqeust.ToJson());
+        //    return $"{reqeust.Str}: {DateTime.Now}";
+        //}
 
         //自动增加小时数
         [McpServerTool, Description("自动增加小时数")]
@@ -191,7 +210,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 ////输出结果
                 //SenparcAiResult ret = await semanticAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
-                
+
                 //////////var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
 
 

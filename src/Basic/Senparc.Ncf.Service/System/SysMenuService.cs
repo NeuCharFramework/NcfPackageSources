@@ -50,11 +50,14 @@ namespace Senparc.Ncf.Service
 
         public void SetTenantInfoForAllServices(RequestTenantInfo requestTenantInfo)
         {
-            base.SetTenantInfo(requestTenantInfo);
-            _sysButtonService.SetTenantInfo(requestTenantInfo);
-            sysRoleService.SetTenantInfo(requestTenantInfo);
-            (sysRolePermissionService.BaseDB.BaseDataContext as ISenparcEntitiesDbContext).TenantInfo = requestTenantInfo;
-            sysRoleAdminUserInfoService.SetTenantInfo(requestTenantInfo);
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                base.SetTenantInfo(requestTenantInfo);
+                _sysButtonService.SetTenantInfo(requestTenantInfo);
+                sysRoleService.SetTenantInfo(requestTenantInfo);
+                (sysRolePermissionService.BaseDB.BaseDataContext as ISenparcEntitiesDbContext).TenantInfo = requestTenantInfo;
+                sysRoleAdminUserInfoService.SetTenantInfo(requestTenantInfo);
+            }
         }
 
         /// <summary>

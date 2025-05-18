@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.12.17-preview1</Version>
+		<Version>0.12.19-preview.1</Version>
 		<AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
 		<RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -51,6 +51,7 @@
 		[2025-02-22] v0.12.13-preview1 add DeepSeek-R1 model option
 			[2025-04-29] v0.12.16-preview1 Update CO2NET and AIKernel
 			[2025-04-29] v0.12.17-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.12.18-preview1 Update Installation 
 </PackageReleaseNotes>
 		<PackageIcon>icon.jpg</PackageIcon>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -60,7 +61,7 @@
 		<OutputPath>..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Senparc.AI.Kernel" Version="0.23.2-beta.4" />
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.23.4" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
 	</ItemGroup>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.12.10-preview1</Version>
+		<Version>0.12.11-preview1</Version>
 		<AssemblyName>Senparc.Xncf.Menu</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Menu</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -29,6 +29,7 @@
 			[2024-12-27] v0.12.4-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.12.8-preview1 Update Agents functions, support for function calling
 			[2025-04-29] v0.12.10-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.12.11-preview1 Update Installation 
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

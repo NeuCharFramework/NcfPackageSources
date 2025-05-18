@@ -1213,8 +1213,27 @@
                                 <div class="mcp-endpoint-info">
                                     <span class="mcp-endpoint-name">{{name}}</span>
                                     <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                                    <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                        <div class="test-status success">连接成功</div>
+                                        <el-button size="mini" type="primary" plain @@click="showMcpToolsDialog(endpoint)">
+                                            查看工具列表 ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
+                                        </el-button>
+                                    </div>
+                                    <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                        <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                                    </div>
                                 </div>
                                 <div class="mcp-endpoint-actions">
+                                    <el-button 
+                                        size="mini" 
+                                        type="success" 
+                                        icon="el-icon-connection" 
+                                        circle 
+                                        @@click="testMcpEndpoint(name, endpoint)"
+                                        :loading="endpoint.testing"
+                                        style="margin-right: 5px;"
+                                        title="测试连接">
+                                    </el-button>
                                     <el-button 
                                         size="mini" 
                                         type="primary" 
@@ -1506,8 +1525,27 @@
                         <div class="mcp-endpoint-info">
                             <span class="mcp-endpoint-name">{{name}}</span>
                             <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                            <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                <div class="test-status success">连接成功</div>
+                                <el-button size="mini" type="primary" plain @@click="showMcpToolsDialog(endpoint)">
+                                    查看工具列表 ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
+                                </el-button>
+                            </div>
+                            <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                            </div>
                         </div>
                         <div class="mcp-endpoint-actions">
+                            <el-button 
+                                size="mini" 
+                                type="success" 
+                                icon="el-icon-connection" 
+                                circle 
+                                @@click="testMcpEndpoint(name, endpoint)"
+                                :loading="endpoint.testing"
+                                style="margin-right: 5px;"
+                                title="测试连接">
+                            </el-button>
                             <el-button 
                                 size="mini" 
                                 type="primary" 
@@ -1720,6 +1758,31 @@
     <div slot="footer" class="dialog-footer">
         <el-button type="primary" @@click="handleElVisibleSubmit('dialogTaskEvaluation')">确 定</el-button>
         <el-button @@click="handleElVisibleClose('dialogTaskEvaluation')">取 消</el-button>
+    </div>
+</el-dialog>
+@* Dialog MCP工具列表 *@
+<el-dialog title="MCP 工具列表" :visible.sync="visible.dialogMcpTools" :append-to-body="true" width="80%" :show-close="true" :destroy-on-close="false" center>
+    <div v-if="currentMcpTools && currentMcpTools.length > 0">
+        <el-table :data="currentMcpTools" style="width: 100%">
+            <el-table-column prop="name" label="工具名称" width="180"></el-table-column>
+            <el-table-column prop="description" label="描述"></el-table-column>
+            <el-table-column label="参数" width="300">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.parameters && scope.row.parameters.length > 0">
+                        <div v-for="param in scope.row.parameters" :key="param.name" class="param-item-table">
+                            <strong>{{param.name}}</strong>: {{param.description}}
+                        </div>
+                    </div>
+                    <span v-else>无参数</span>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <div v-else class="empty-tools">
+        <div class="empty-text">没有可用的工具</div>
+    </div>
+    <div class="dialog-footer" slot="footer">
+        <el-button type="primary" @@click="visible.dialogMcpTools = false">关闭</el-button>
     </div>
 </el-dialog>
 @section scripts {
