@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.1.0-beta.4</Version>
+		<Version>0.2.0-beta.4</Version>
 		<AssemblyName>Senparc.Xncf.MCP</AssemblyName>
 		<RootNamespace>Senparc.Xncf.MCP</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -19,6 +19,7 @@
 		<PackageIcon>icon.jpg</PackageIcon>
 		<PackageReleaseNotes>
 			v0.1.0 创世
+			v0.2.0 Update new ModelContextProtocol library
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -30,9 +31,9 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 		<EmbeddedResource Include="wwwroot\**\*" />
-		<PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.11" />
-		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.11" />
-		<PackageReference Include="ModelContextProtocol-SemanticKernel" Version="0.0.1-preview-10" />
+		<PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.1" />
+		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.1" />
+		<PackageReference Include="ModelContextProtocol-SemanticKernel" Version="0.0.1-preview-15" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
