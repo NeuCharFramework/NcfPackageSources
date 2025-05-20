@@ -48,7 +48,7 @@
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfoAuthorizationPageModel.OnGetDetailAsync(System.Int32)">
             <summary>
-            ��ȡ�û��Ľ�ɫ
+            获取用户的角色
             </summary>
             <param name="accountId"></param>
             <returns></returns>
@@ -61,7 +61,7 @@
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_EditModel.OnGetDetail(System.Int32)">
             <summary>
             Handler=Detail
-            ��ȡ����
+            获取详情
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -69,19 +69,19 @@
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_EditModel.OnPostSave(Senparc.Ncf.Core.Models.CreateOrUpdate_AdminUserInfoDto)">
             <summary>
             Handler=Save
-            ����
+            保存
             </summary>
             <param name="dto"></param>
             <returns></returns>
         </member>
         <member name="P:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel.PageIndex">
             <summary>
-            ���԰󶨣�֧��GET
+            属性绑定，支持GET
             </summary>
         </member>
         <member name="P:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel.OrderField">
             <summary>
-            ���򷽷�
+            排序方法
             </summary>
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel.OnGetListAsync(System.String,System.Int32,System.Int32)">
@@ -102,13 +102,13 @@
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.MenuEditModel.OnGetMenuAsync">
             <summary>
-            ��ȡ�˵�
+            获取菜单
             </summary>
             <returns></returns>
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.MenuEditModel.OnGetButtonsAsync(System.String)">
             <summary>
-            ��ȡ�˵��µİ�ť
+            获取菜单下的按钮
             </summary>
             <returns></returns>
         </member>
@@ -175,7 +175,7 @@
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.SystemConfig_IndexModel.OnPostEditAsync(Senparc.Ncf.Core.Models.FullSystemConfig)">
             <summary>
-            �༭ SystemConfig ��Ϣ
+            编辑 SystemConfig 信息
             </summary>
             <returns></returns>
         </member>
@@ -704,15 +704,7 @@
             </summary>
             <param name="objDto"></param>
         </member>
-        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.Init(System.String@,System.String@)">
-            <summary>
-            初始化，随机生成用户名和密码
-            </summary>
-            <param name="userName"></param>
-            <param name="password"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.Init(System.String,System.String@)">
+        <member name="M:Senparc.Areas.Admin.Domain.AdminUserInfoService.InitAsync(System.String)">
             <summary>
             初始化，随机生成密码
             </summary>

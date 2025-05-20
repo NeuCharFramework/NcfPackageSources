@@ -357,56 +357,62 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #region MCP AI 接入（由于官方组件 bug，暂时使用平铺参数方式接入
 
-        [McpServerTool,Description("生成 XNCF 模块")]
+        [McpServerTool, Description("生成 XNCF 模块")]
         [FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
         public async Task<StringAppResponse> Build(
             // [Required,Description("解决方案文件路径")]
             // string slnFilePath, 
             [Description("组织名称，默认为 Senparc")]
-            string orgName, 
+            string orgName,
             [Required, Description("模块名称")]
-            string xncfName, 
+            string xncfName,
             [Required, Description("版本号，默认为 1.0.0")]
-            string version, 
+            string version,
             [Required, Description("菜单显示名称")]
-            string menuName, 
+            string menuName,
             [Required, Description("图标，支持 Font Awesome 图标集")]
-            string icon, 
+            string icon,
             [Description("模块说明")]
             string description)
         {
-            BuildXncf_BuildRequest request = new BuildXncf_BuildRequest() { 
-            //   SlnFilePath = slnFilePath,
-              OrgName = orgName,
-              XncfName = xncfName,
-              Version = version,
-              MenuName = menuName,
-              Icon = icon,
-              Description = description,
-              UseSammple =  new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
+            Console.WriteLine("XNCF Builder: Receive MCP Call");
+
+            BuildXncf_BuildRequest request = new BuildXncf_BuildRequest()
+            {
+                //   SlnFilePath = slnFilePath,
+                OrgName = orgName,
+                XncfName = xncfName,
+                Version = version,
+                MenuName = menuName,
+                Icon = icon,
+                Description = description,
+                UseSammple = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 new Ncf.XncfBase.Functions.SelectionItem("1","使用示例","使用示例",true),
               }),
-              UseModule = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
+                UseModule = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 new Ncf.XncfBase.Functions.SelectionItem("database","数据库","使用数据库",true),
               }),
-            //   UseWeb = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-            //     new Ncf.XncfBase.Functions.SelectionItem("1","使用Web","使用Web",true),
-            //   }),
-            //   UseWebApi = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-            //     new Ncf.XncfBase.Functions.SelectionItem("1","使用WebApi","使用WebApi",true),
-            //   }),
-              NewSlnFile = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
+                //   UseWeb = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
+                //     new Ncf.XncfBase.Functions.SelectionItem("1","使用Web","使用Web",true),
+                //   }),
+                //   UseWebApi = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
+                //     new Ncf.XncfBase.Functions.SelectionItem("1","使用WebApi","使用WebApi",true),
+                //   }),
+                NewSlnFile = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 new Ncf.XncfBase.Functions.SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
               }),
-              TemplatePackage = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
+                TemplatePackage = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
                 new Ncf.XncfBase.Functions.SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
               }),
-              FrameworkVersion = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
+                FrameworkVersion = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
                 new Ncf.XncfBase.Functions.SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
               })
             };
 
             request.SlnFilePath = request.GetSlnFilePath();
+
+            Console.WriteLine("XNCF Builder parameters:" + request.ToJson(true));
+
 
             return await this.Build(request);
 
@@ -478,9 +484,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         }
 
-            #endregion
+        #endregion
 
-            #endregion
+        #endregion
 
-        }
+    }
 }
