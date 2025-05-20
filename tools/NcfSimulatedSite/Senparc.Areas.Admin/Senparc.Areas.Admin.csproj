@@ -13,6 +13,14 @@
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
 
 		<EmbeddedResource Include="wwwroot\**\*" />
+
+		<Compile Remove="Areas\Admin\Pages\Dto\**" />
+
+		<Content Remove="Areas\Admin\Pages\Dto\**" />
+
+		<EmbeddedResource Remove="Areas\Admin\Pages\Dto\**" />
+
+		<None Remove="Areas\Admin\Pages\Dto\**" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 	</ItemGroup>
@@ -55,9 +63,5 @@
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Areas\Admin\Pages\Dto\" />
 	</ItemGroup>
 </Project>
