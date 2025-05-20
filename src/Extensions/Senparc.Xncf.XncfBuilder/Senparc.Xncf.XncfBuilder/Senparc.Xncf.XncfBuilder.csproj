@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.34.8-preview1</Version>
+		<Version>0.35.0-preview.1</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -49,7 +49,7 @@
 			[2024-09-07] v0.30.4.3-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
 			[2024-09-07] v0.30.4.4-preview1 更新 XNCF AI 代码生成逻辑
 			[2024-09-07] v0.30.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-					[2024-09-07] v0.30.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
+			[2024-09-07] v0.30.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
 			[2024-09-08] v0.30.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
 			[2024-09-10] v0.30.6-preview1 升级缓存基础库
 			[2024-10-09] v0.30.8-preview1 升级基础库
@@ -65,8 +65,9 @@
 			[2025-01-28] v0.34.4-preview1 update Senparc.AI
 			[2025-02-06] v0.34.5-preview1 update NeuCharAI model update
 			[2025-04-29] v0.34.7-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.34.8-preview1 Update Installation 
-</PackageReleaseNotes>
+			[2025-05-18] v0.34.8-preview1 Update Installation
+			[2025-05-20] v0.35.0-beta.1 Update AI powered XNCF Builder
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>

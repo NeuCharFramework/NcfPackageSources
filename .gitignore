@@ -90,3 +90,4 @@ appsettings.Test.json
 .cursorrules
 /.cursorrules.bak
 install-finished.txt
+/tools/NcfSimulatedSite/Senparc.Web/App_Data/Database/NCF.DB
