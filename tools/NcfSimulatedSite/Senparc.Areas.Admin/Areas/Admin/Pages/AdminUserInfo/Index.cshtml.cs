@@ -52,7 +52,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             var seh = new SenparcExpressionHelper<AdminUserInfo>();
             seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(adminUserInfoName), _ => _.UserName.Contains(adminUserInfoName));
             var where = seh.BuildWhereExpression();
-            PagedList<AdminUserInfo> admins = await _adminUserInfoService.GetObjectListAsync(pageIndex, pageSize, where, OrderField);
+            var admins = await _adminUserInfoService.GetObjectListAsync(pageIndex, pageSize, where, OrderField);
             return Ok(new { admins.TotalCount, admins.PageIndex, List = admins.AsEnumerable() });
         }
 

@@ -360,8 +360,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         [McpServerTool,Description("生成 XNCF 模块")]
         [FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
         public async Task<StringAppResponse> Build(
-            [Required,Description("解决方案文件路径")]
-            string slnFilePath, 
+            // [Required,Description("解决方案文件路径")]
+            // string slnFilePath, 
             [Description("组织名称，默认为 Senparc")]
             string orgName, 
             [Required, Description("模块名称")]
@@ -373,10 +373,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             [Required, Description("图标，支持 Font Awesome 图标集")]
             string icon, 
             [Description("模块说明")]
-            string description    )
+            string description)
         {
             BuildXncf_BuildRequest request = new BuildXncf_BuildRequest() { 
-              SlnFilePath = slnFilePath,
+            //   SlnFilePath = slnFilePath,
               OrgName = orgName,
               XncfName = xncfName,
               Version = version,
@@ -405,6 +405,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 new Ncf.XncfBase.Functions.SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
               })
             };
+
+            request.SlnFilePath = request.GetSlnFilePath();
 
             return await this.Build(request);
 
