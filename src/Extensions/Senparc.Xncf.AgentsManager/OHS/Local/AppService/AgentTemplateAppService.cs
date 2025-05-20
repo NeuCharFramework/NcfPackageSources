@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol.Transport;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;

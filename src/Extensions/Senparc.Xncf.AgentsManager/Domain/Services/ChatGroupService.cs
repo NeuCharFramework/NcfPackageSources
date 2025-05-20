@@ -1,12 +1,10 @@
 ﻿using AutoGen.Core;
-using AutoGen.Ollama;
 using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol.Transport;
 using Senparc.AI;
 using Senparc.AI.Agents.AgentExtensions;
 using Senparc.AI.Agents.AgentUtility;
@@ -14,7 +12,6 @@ using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.KernelConfigExtensions;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -26,7 +23,6 @@ using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.ACL;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -35,22 +31,19 @@ using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.Xncf.XncfBuilder.Domain.Services.Plugins;
-using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 
 public class McpEndpoint
 {
-    
+
     public string url { get; set; }
 }
 
@@ -59,6 +52,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
     //临时使用本机线程
 
+    public static int ChatMaxRound = 20;
     public static List<Task> TaskList = new List<Task>();
     private readonly IBaseObjectCacheStrategy _cache;
 
@@ -348,9 +342,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             List<(int AgentTemplateId, string Uid)> memberCollection = new();
 
-            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId);
+            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId,includes: "AgentTemplate");
             foreach (var member in groupMemebers)
             {
+                if (member.AgentTemplate.Enable is false)
+                {
+                    Console.WriteLine($"{member.AgentTemplate.Name} 已被禁用");
+                    continue;
+                }
                 memberCollection.Add((member.AgentTemplateId, member.UID));
             }
 
@@ -594,36 +593,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             .BuildKernel();
             }
 
-            var admin = new SemanticKernelAgent(
-                kernel: iWantToRunAdmin.Kernel,
-                name: "admin"/*adminAgenttemplate.Name*//*,
-                    systemMessage: adminPromptResult.PromptItem.Content*/)
-                .RegisterMessageConnector();
-            //.RegisterTextMessageConnector();
-
-
-            //var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
-            // {
-            //     var response = await next.GenerateReplyAsync(messages, option, ct);
-
-            //     // check response's format
-            //     // if the response's format is not From xxx where xxx is a valid group member
-            //     // use reflection to get it auto-fixed by LLM
-
-            //     var responseContent = response.GetContent();
-            //     if (responseContent?.StartsWith("From") is false)
-            //     {
-            //         // random pick from agents
-            //         var agent = new Random().Next(0, agents.Count);
-
-            //         return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
-            //     }
-            //     else
-            //     {
-            //         return response;
-            //     }
-            // });
-
             var graphConnector = GraphBuilder.Start()
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
@@ -638,11 +607,48 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             var finishedGraph = graphConnector.Finish();
 
+            #region 定义 Admin
+
+            var admin = new SemanticKernelAgent(
+                kernel: iWantToRunAdmin.Kernel,
+                name: "admin",
+                systemMessage: "You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents. You are strictly fobidden to use function-calling, include _tool_use.parallel."
+                        /*adminAgenttemplate.Name*//*,
+                            systemMessage: adminPromptResult.PromptItem.Content*/)
+                .RegisterMessageConnector();
+            //.RegisterTextMessageConnector();
+
+
+            var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
+            {
+                var response = await next.GenerateReplyAsync(messages, option, ct);
+
+                // check response's format
+                // if the response's format is not From xxx where xxx is a valid group member
+                // use reflection to get it auto-fixed by LLM
+
+                var responseContent = response.GetContent();
+                if (responseContent?.StartsWith("From") is false)
+                {
+                    // random pick from agents
+                    var agent = new Random().Next(0, agents.Count);
+
+                    return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
+                }
+                else
+                {
+                    return response;
+                }
+            });
+
+            #endregion
+
             var aiTeam = finishedGraph.CreateAiTeam(admin);
+            //var aiTeam = finishedGraph.CreateAiTeam(admin1);
 
             try
             {
-                var greetingMessage = await enterAgent.SendAsync($"你好，如果已经就绪，请告诉我们“已就位”，并和 {hearingMember.Name} 打个招呼");
+                var greetingMessage = await enterAgent.SendAsync($"你好，如果已经就绪，请告诉我们“已就位”，并和 {hearingMember.Name} 打个招呼。打招呼请使用用户要求的语言，默认为英文。");
 
                 var commandMessage = new TextMessage(Role.Assistant, userCommand, hearingMember.Name);
 
@@ -652,7 +658,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 //      maxRound: 10);
 
                 await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
-            maxRound: 20))
+            maxRound: ChatMaxRound))
                 {
                     // process exit
                     if (message.GetContent()?.Contains("exit") is true)

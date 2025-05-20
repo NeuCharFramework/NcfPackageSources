@@ -48,7 +48,7 @@
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfoAuthorizationPageModel.OnGetDetailAsync(System.Int32)">
             <summary>
-            获取用户的角色
+            ��ȡ�û��Ľ�ɫ
             </summary>
             <param name="accountId"></param>
             <returns></returns>
@@ -61,7 +61,7 @@
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_EditModel.OnGetDetail(System.Int32)">
             <summary>
             Handler=Detail
-            获取详情
+            ��ȡ����
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -69,19 +69,19 @@
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_EditModel.OnPostSave(Senparc.Ncf.Core.Models.CreateOrUpdate_AdminUserInfoDto)">
             <summary>
             Handler=Save
-            保存
+            ����
             </summary>
             <param name="dto"></param>
             <returns></returns>
         </member>
         <member name="P:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel.PageIndex">
             <summary>
-            属性绑定，支持GET
+            ���԰󶨣�֧��GET
             </summary>
         </member>
         <member name="P:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel.OrderField">
             <summary>
-            排序方法
+            ���򷽷�
             </summary>
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel.OnGetListAsync(System.String,System.Int32,System.Int32)">
@@ -102,13 +102,13 @@
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.MenuEditModel.OnGetMenuAsync">
             <summary>
-            获取菜单
+            ��ȡ�˵�
             </summary>
             <returns></returns>
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.MenuEditModel.OnGetButtonsAsync(System.String)">
             <summary>
-            获取菜单下的按钮
+            ��ȡ�˵��µİ�ť
             </summary>
             <returns></returns>
         </member>
@@ -175,7 +175,7 @@
         </member>
         <member name="M:Senparc.Areas.Admin.Areas.Admin.Pages.SystemConfig_IndexModel.OnPostEditAsync(Senparc.Ncf.Core.Models.FullSystemConfig)">
             <summary>
-            编辑 SystemConfig 信息
+            �༭ SystemConfig ��Ϣ
             </summary>
             <returns></returns>
         </member>

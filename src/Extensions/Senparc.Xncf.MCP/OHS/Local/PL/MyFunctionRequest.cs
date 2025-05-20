@@ -7,6 +7,9 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
 {
     public class MyFunction_MCPCallRequest : FunctionAppRequestBase
     {
+        [Description("MCP 服务器地址||MCP 服务器地址，默认为 http://localhost:5000/mcp/sse")]
+        public string Endpoint{get;set;}
+
         [Required]
         [Description("请求||提出对 MCP 服务器的请求")]
         public string RequestPrompt { get; set; }

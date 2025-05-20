@@ -15,6 +15,11 @@ using Senparc.Xncf.XncfBuilder.Domain.Services;
 using Senparc.AI.Kernel;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.OHS.Local.AppService;
+using OllamaSharp.Models.Chat;
+using ModelContextProtocol.Protocol;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using Microsoft.AspNetCore.Routing;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -73,9 +78,33 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<AIModelService>();
             services.AddScoped<AIModelAppService>();
 
+            var mcpServerBuilder = services.AddMcpServer(opt =>
+            {
+                opt.ServerInfo = new Implementation()
+                {
+                    Name = $"ncf-mcp-server-{this.Name.Replace(".", "-")}",
+                    Version = this.Version,
+                };
+            })
+                    .WithHttpTransport()
+                    .WithToolsFromAssembly(); ;
+
+
             return base.AddXncfModule(services, configuration, env);
         }
 
         #endregion
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            if (app is IEndpointRouteBuilder endpoints)
+            {
+                Console.WriteLine($"开始启用 MCP 服务（{this.Name}）");
+                var routePattern = "mcp-xncf-xncfbuilder";
+                endpoints.MapMcp(routePattern);
+            }
+
+            return base.UseXncfModule(app, registerService);
+        }
     }
 }
