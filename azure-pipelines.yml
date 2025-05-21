@@ -480,7 +480,7 @@ steps:
   displayName: Senparc.Xncf.XncfBuilder    
   inputs:      
     command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.*.nupkg'      
+    packagesToPush: '**/Senparc.Xncf.XncfBuilder.0.*.nupkg'      
     nuGetFeedType: external      
     publishFeedCredentials: 'nuget-jeffrey-full-key'
     arguments: '-skipDuplicate'    
