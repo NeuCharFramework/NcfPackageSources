@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.35.0-preview.1</Version>
+		<Version>0.35.0-preview.2</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -66,7 +66,8 @@
 			[2025-02-06] v0.34.5-preview1 update NeuCharAI model update
 			[2025-04-29] v0.34.7-preview1 Update CO2NET and AIKernel
 			[2025-05-18] v0.34.8-preview1 Update Installation
-			[2025-05-20] v0.35.0-beta.1 Update AI powered XNCF Builder
+			[2025-05-20] v0.35.0-preview.1 Update AI powered XNCF Builder
+			[2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

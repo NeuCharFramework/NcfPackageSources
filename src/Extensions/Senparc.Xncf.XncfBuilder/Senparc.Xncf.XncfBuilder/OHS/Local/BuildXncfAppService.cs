@@ -358,7 +358,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         #region MCP AI 接入（由于官方组件 bug，暂时使用平铺参数方式接入
 
         [McpServerTool, Description("生成 XNCF 模块")]
-        [FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
+        //[FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
         public async Task<StringAppResponse> Build(
             // [Required,Description("解决方案文件路径")]
             // string slnFilePath, 
