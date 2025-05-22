@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.35.0-preview.2</Version>
+		<Version>0.35.0-preview.3</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -68,6 +68,7 @@
 			[2025-05-18] v0.34.8-preview1 Update Installation
 			[2025-05-20] v0.35.0-preview.1 Update AI powered XNCF Builder
 			[2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
+			[2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
