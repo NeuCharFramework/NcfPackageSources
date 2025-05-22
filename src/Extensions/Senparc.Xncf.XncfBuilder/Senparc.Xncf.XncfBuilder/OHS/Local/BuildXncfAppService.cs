@@ -431,9 +431,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             };
 
             request.SlnFilePath = request.GetSlnFilePath();
+            request.UseSammple.SelectedValues = new[] { "1" };
+            request.UseModule.SelectedValues = new[] { "database" };
+            request.NewSlnFile.SelectedValues = new[] { "backup" };
+            request.TemplatePackage.SelectedValues = new[] { "no" };
+            request.FrameworkVersion.SelectedValues = new[] { "net8.0" };
 
             Console.WriteLine("XNCF Builder parameters:" + request.ToJson(true));
-
 
             return await this.Build(request);
 
