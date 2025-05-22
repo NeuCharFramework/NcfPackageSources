@@ -48,7 +48,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// 执行模板生成
         /// </summary>
         /// <returns></returns>
-        private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
+        private async Task<string> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
             var oldOutputEncoding = Console.OutputEncoding;
             var oldInputEncoding = Console.InputEncoding;
@@ -93,6 +93,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.Close();
             }
 
+            async Task<string> ReadOutputAsync(Process process)
+            {
+                var output = new StringBuilder();
+                while (!process.StandardOutput.EndOfStream)
+                {
+                    var line = await process.StandardOutput.ReadLineAsync();
+                    output.AppendLine(line);
+                }
+                return output.ToString();
+            }
+
             string output;
             try
             {
@@ -101,8 +112,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 var pListTemplate = StartNewProcess();
                 logger.Append("dotnet new -l :");
                 pListTemplate.StandardInput.WriteLine("dotnet new -l");
+                // Read output asynchronously while the process is running.
+                var templateOutputTask = ReadOutputAsync(pListTemplate);
+
+                // Await the completion of the output reading task.
+
                 //pListTemplate.StandardInput.WriteLine("exit");
-                var templateOutput = pListTemplate.StandardOutput.ReadToEnd();
+                var templateOutput = await templateOutputTask; //pListTemplate.StandardOutput.ReadToEnd();
                 CloseProcess(pListTemplate);
 
                 logger.Append(templateOutput);
@@ -115,7 +131,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
                         break;
                     case "local":
-                        var slnDir = Directory.GetParent(request.SlnFilePath).FullName;
+                        string slnDir = Directory.GetParent(request.SlnFilePath).FullName;
                         var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
                         if (string.IsNullOrEmpty(packageFile))
                         {
@@ -290,7 +306,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var outputStr = BuildSample(request, logger); //执行模板生成
+                var outputStr = await BuildSampleAsync(request, logger); //执行模板生成
                 var projectFilePath = $"{request.OrgName}.Xncf.{request.XncfName}\\{request.OrgName}.Xncf.{request.XncfName}.csproj";
 
                 #region 生成 .sln
