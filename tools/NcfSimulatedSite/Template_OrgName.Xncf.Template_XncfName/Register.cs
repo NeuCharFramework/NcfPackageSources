@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 
 using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
@@ -82,6 +83,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
+            services.AddScoped<ColorService>();
             
             services.AddAutoMapper(z =>
             {

@@ -32,27 +32,52 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <returns></returns>
         public async Task<IActionResult> OnGetColorListAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
-            var seh = new SenparcExpressionHelper<Color>();
-            // 可以根据需要添加搜索条件
-            // seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Remark.Contains(keyword));
-            var where = seh.BuildWhereExpression();
-            var response = await _colorService.GetObjectListAsync(pageIndex, pageSize, where, orderField ?? "Id desc");
-            
-            return Ok(new
+            try
             {
-                totalCount = response.TotalCount,
-                pageIndex = response.PageIndex,
-                list = response.Select(_ => new
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"ColorList API Called - PageIndex: {pageIndex}, PageSize: {pageSize}, OrderField: {orderField}");
+                
+                var seh = new SenparcExpressionHelper<Color>();
+                // 可以根据需要添加搜索条件
+                // seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Remark.Contains(keyword));
+                var where = seh.BuildWhereExpression();
+                var response = await _colorService.GetObjectListAsync(pageIndex, pageSize, where, orderField ?? "Id desc");
+                
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"Database Query Result - TotalCount: {response.TotalCount}, ItemCount: {response.Count()}");
+                
+                var result = new
                 {
-                    id = _.Id,
-                    red = _.Red,
-                    green = _.Green,
-                    blue = _.Blue,
-                    addTime = _.AddTime,
-                    lastUpdateTime = _.LastUpdateTime,
-                    remark = _.Remark
-                })
-            });
+                    totalCount = response.TotalCount,
+                    pageIndex = response.PageIndex,
+                    list = response.Select(_ => new
+                    {
+                        id = _.Id,
+                        red = _.Red,
+                        green = _.Green,
+                        blue = _.Blue,
+                        addTime = _.AddTime,
+                        lastUpdateTime = _.LastUpdateTime,
+                        remark = _.Remark
+                    }).ToList()
+                };
+                
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"API Response - ListCount: {result.list.Count}");
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ColorList API Error: {ex.Message}");
+                return Ok(new { 
+                    success = false, 
+                    message = "获取数据失败: " + ex.Message,
+                    totalCount = 0,
+                    pageIndex = pageIndex,
+                    list = new object[0]
+                });
+            }
         }
 
         /// <summary>

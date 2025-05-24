@@ -76,21 +76,26 @@ var app = new Vue({
                 params: {
                     pageIndex: this.page.page,
                     pageSize: this.page.size,
-                    orderField: "Id desc"
+                    orderField: "Id desc",
+                    keyword: ""
                 }
             })
                 .then(res => {
-                    console.log(res)
+                    console.log('API Response:', res)
                     if (res.data && res.data.list) {
                         this.tableData = res.data.list;
                         this.total = res.data.totalCount;
+                    } else {
+                        console.warn('No data found in response:', res.data);
+                        this.tableData = [];
+                        this.total = 0;
                     }
                     this.tableLoading = false
                 })
                 .catch(error => {
                     console.error('获取数据失败:', error);
                     this.tableLoading = false;
-                    this.$message.error('获取数据失败');
+                    this.$message.error('获取数据失败: ' + (error.message || error));
                 });
         },
         addColor() {
