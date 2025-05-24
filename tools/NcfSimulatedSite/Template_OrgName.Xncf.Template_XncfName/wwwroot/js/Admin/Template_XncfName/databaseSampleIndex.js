@@ -8,6 +8,7 @@ var app = new Vue({
             },
             tableLoading: true,
             tableData: [],
+            showDebug: false,
             addFormDialogVisible: false,
             addForm: {
                 red: 128,
@@ -81,15 +82,84 @@ var app = new Vue({
                 }
             })
                 .then(res => {
-                    console.log('API Response:', res)
-                    if (res.data && res.data.list) {
-                        this.tableData = res.data.list;
-                        this.total = res.data.totalCount;
+                    console.log('=== API Response Debug ===');
+                    console.log('Complete Response:', res);
+                    console.log('Response Data:', res.data);
+                    console.log('Response Data Type:', typeof res.data);
+                    console.log('Has res.data.data?:', res.data && res.data.data);
+                    console.log('Has res.data.data.list?:', res.data && res.data.data && res.data.data.list);
+                    console.log('res.data.data.list value:', res.data && res.data.data ? res.data.data.list : 'nested data not found');
+                    console.log('==================');
+                    
+                    // 尝试多种可能的数据结构
+                    let dataList = null;
+                    let totalCount = 0;
+                    let dataSource = '';
+                    
+                    if (res.data && res.data.data && res.data.data.list) {
+                        // NCF框架标准格式: {data: {data: {list, totalCount}}}
+                        dataList = res.data.data.list;
+                        totalCount = res.data.data.totalCount || 0;
+                        dataSource = 'NCF标准格式: res.data.data.list';
+                        console.log('✅ 使用NCF标准格式: res.data.data.list');
+                        console.log('✅ List数据:', dataList);
+                        console.log('✅ TotalCount:', totalCount);
+                    } else if (res.data && res.data.list) {
+                        // 简单格式: {data: {list, totalCount}}
+                        dataList = res.data.list;
+                        totalCount = res.data.totalCount || 0;
+                        dataSource = '简单格式: res.data.list';
+                        console.log('✅ 使用简单格式: res.data.list');
+                    } else if (res.data && Array.isArray(res.data)) {
+                        // 如果data直接是数组
+                        dataList = res.data;
+                        totalCount = res.data.length;
+                        dataSource = '数组格式: res.data (array)';
+                        console.log('✅ 使用数组格式: res.data (array)');
+                    } else if (res && res.list) {
+                        // 如果list在顶层
+                        dataList = res.list;
+                        totalCount = res.totalCount || 0;
+                        dataSource = '顶层格式: res.list';
+                        console.log('✅ 使用顶层格式: res.list');
                     } else {
-                        console.warn('No data found in response:', res.data);
-                        this.tableData = [];
-                        this.total = 0;
+                        console.error('❌ 无法识别的数据格式:', res);
+                        console.log('🔍 尝试的路径:');
+                        console.log('- res.data.data.list:', res.data && res.data.data ? res.data.data.list : 'not found');
+                        console.log('- res.data.list:', res.data ? res.data.list : 'not found');
+                        console.log('- res.data (array):', res.data && Array.isArray(res.data) ? 'is array' : 'not array');
+                        console.log('- res.list:', res.list ? res.list : 'not found');
+                        dataList = [];
+                        totalCount = 0;
+                        dataSource = '无法识别格式';
                     }
+                    
+                    console.log('🎯 Final dataList:', dataList);
+                    console.log('🎯 Final totalCount:', totalCount);
+                    console.log('🎯 Data source:', dataSource);
+                    
+                    // 数据赋值前的状态
+                    console.log('📋 赋值前 tableData:', this.tableData);
+                    console.log('📋 赋值前 total:', this.total);
+                    
+                    this.tableData = dataList || [];
+                    this.total = totalCount;
+                    
+                    // 数据赋值后的状态
+                    console.log('📋 赋值后 tableData:', this.tableData);
+                    console.log('📋 赋值后 tableData.length:', this.tableData.length);
+                    console.log('📋 赋值后 total:', this.total);
+                    
+                    // 强制Vue更新
+                    this.$forceUpdate();
+                    console.log('🔄 Vue已强制更新');
+                    
+                    // 延迟检查数据是否正确绑定
+                    setTimeout(() => {
+                        console.log('⏰ 延迟检查 tableData:', this.tableData);
+                        console.log('⏰ 延迟检查 tableData.length:', this.tableData ? this.tableData.length : 'null');
+                    }, 100);
+                    
                     this.tableLoading = false
                 })
                 .catch(error => {
@@ -183,7 +253,30 @@ var app = new Vue({
             });
         },
         dateformatter(date) {
-            return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+            if (!date) return '';
+            
+            try {
+                // 使用原生JavaScript格式化日期
+                const d = new Date(date);
+                
+                // 检查日期是否有效
+                if (isNaN(d.getTime())) {
+                    return date; // 如果无法解析，返回原始值
+                }
+                
+                // 格式化为 YYYY-MM-DD HH:mm:ss
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                const seconds = String(d.getSeconds()).padStart(2, '0');
+                
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            } catch (error) {
+                console.warn('日期格式化错误:', error, '原始值:', date);
+                return date; // 如果格式化失败，返回原始值
+            }
         },
         editColor(row) {
             this.editForm = {
@@ -250,6 +343,32 @@ var app = new Vue({
             this.editForm.red = Math.floor(Math.random() * 256);
             this.editForm.green = Math.floor(Math.random() * 256);
             this.editForm.blue = Math.floor(Math.random() * 256);
+        },
+        debugInfo() {
+            this.showDebug = !this.showDebug;
+            console.log('=== Vue Component Debug Info ===');
+            console.log('Current tableData:', this.tableData);
+            console.log('tableData length:', this.tableData ? this.tableData.length : 'null/undefined');
+            console.log('Total:', this.total);
+            console.log('Page:', this.page);
+            console.log('Table Loading:', this.tableLoading);
+            console.log('Show Debug:', this.showDebug);
+            console.log('Vue instance $el:', this.$el);
+            console.log('================================');
+            
+            // 测试Vue响应性
+            if (this.tableData && this.tableData.length === 0) {
+                console.log('测试：添加假数据');
+                this.tableData = [
+                    {id: 999, red: 255, green: 0, blue: 0, addTime: new Date().toISOString(), lastUpdateTime: new Date().toISOString(), remark: 'test'}
+                ];
+                this.total = 1;
+                setTimeout(() => {
+                    console.log('2秒后清除假数据');
+                    this.tableData = [];
+                    this.total = 0;
+                }, 2000);
+            }
         }
     }
 }); 

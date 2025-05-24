@@ -19,49 +19,76 @@
     <div class="filter-container">
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addColor">添加颜色</el-button>
         <el-button type="success" icon="el-icon-refresh" size="small" @@click="refreshList">刷新</el-button>
+        <el-button type="info" icon="el-icon-info" size="small" @@click="debugInfo">调试信息</el-button>
+    </div>
+
+    <!-- 调试信息显示 -->
+    <div v-if="showDebug" style="background: #f0f9ff; border: 1px solid #0ea5e9; padding: 10px; margin: 10px 0; border-radius: 4px;">
+        <h4>调试信息：</h4>
+        <p><strong>tableData长度:</strong> {{ tableData ? tableData.length : 'null/undefined' }}</p>
+        <p><strong>total:</strong> {{ total }}</p>
+        <p><strong>tableLoading:</strong> {{ tableLoading }}</p>
+        <p><strong>Vue实例是否正常:</strong> {{ $el ? '是' : '否' }}</p>
+        <div v-if="tableData && tableData.length > 0">
+            <strong>第一条数据:</strong>
+            <pre>{{ JSON.stringify(tableData[0], null, 2) }}</pre>
+        </div>
+        
+        <!-- 简化数据显示测试 -->
+        <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px; margin: 10px 0; border-radius: 4px;">
+            <h5>简化数据显示测试:</h5>
+            <div v-for="(item, index) in tableData" :key="item.id || index" style="border: 1px solid #ccc; margin: 5px 0; padding: 5px;">
+                <strong>ID:</strong> {{item.id}} | 
+                <strong>RGB:</strong> {{item.red}},{{item.green}},{{item.blue}} | 
+                <strong>时间:</strong> {{item.addTime}}
+            </div>
+            <p v-if="!tableData || tableData.length === 0" style="color: red;">
+                <strong>没有数据显示！</strong>
+            </p>
+        </div>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
-        <el-table-column prop="id" label="ID" width="80"></el-table-column>
-        <el-table-column prop="red" label="红色值 (R)" width="120">
+        <el-table-column prop="id" label="ID" width="auto"></el-table-column>
+        <el-table-column prop="red" label="红色值 (R)" width="auto">
             <template slot-scope="scope">
                 <el-tag :style="{backgroundColor: `rgb(${scope.row.red}, 0, 0)`, color: 'white'}">
                     {{scope.row.red}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column prop="green" label="绿色值 (G)" width="120">
+        <el-table-column prop="green" label="绿色值 (G)" width="auto">
             <template slot-scope="scope">
                 <el-tag :style="{backgroundColor: `rgb(0, ${scope.row.green}, 0)`, color: 'white'}">
                     {{scope.row.green}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column prop="blue" label="蓝色值 (B)" width="120">
+        <el-table-column prop="blue" label="蓝色值 (B)" width="auto">
             <template slot-scope="scope">
                 <el-tag :style="{backgroundColor: `rgb(0, 0, ${scope.row.blue})`, color: 'white'}">
                     {{scope.row.blue}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column label="颜色预览" width="150">
+        <el-table-column label="颜色预览" width="auto">
             <template slot-scope="scope">
                 <div class="color-preview" :style="{backgroundColor: `rgb(${scope.row.red}, ${scope.row.green}, ${scope.row.blue})`}">
                     RGB({{scope.row.red}}, {{scope.row.green}}, {{scope.row.blue}})
                 </div>
             </template>
         </el-table-column>
-        <el-table-column prop="addTime" label="创建时间" width="180">
+        <el-table-column prop="addTime" label="创建时间" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="更新时间" width="180">
+        <el-table-column prop="lastUpdateTime" label="更新时间" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.lastUpdateTime) }}
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" width="auto">
             <template slot-scope="scope">
                 <el-button type="primary" size="mini" @@click="editColor(scope.row)">编辑</el-button>
                 <el-button type="warning" size="mini" @@click="randomizeColor(scope.row)">随机</el-button>
