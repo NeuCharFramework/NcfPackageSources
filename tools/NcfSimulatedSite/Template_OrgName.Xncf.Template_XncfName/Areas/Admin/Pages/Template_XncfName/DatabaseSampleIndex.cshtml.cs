@@ -56,6 +56,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         red = _.Red,
                         green = _.Green,
                         blue = _.Blue,
+                        additionNote = _.AdditionNote,
                         addTime = _.AddTime,
                         lastUpdateTime = _.LastUpdateTime,
                         remark = _.Remark
@@ -208,7 +209,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 color.Random();
                 await _colorService.SaveObjectAsync(color);
                 
-                return Ok(new { success = true, message = "颜色随机化成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.LastUpdateTime } });
+                return Ok(new { success = true, message = "颜色随机化成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
@@ -232,7 +233,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     return Ok(new { success = false, message = "颜色不存在" });
                 }
 
-                return Ok(new { success = true, data = new { color.Id, color.Red, color.Green, color.Blue, color.AddTime, color.LastUpdateTime, color.Remark } });
+                return Ok(new { success = true, data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime, color.Remark } });
             }
             catch (Exception ex)
             {
