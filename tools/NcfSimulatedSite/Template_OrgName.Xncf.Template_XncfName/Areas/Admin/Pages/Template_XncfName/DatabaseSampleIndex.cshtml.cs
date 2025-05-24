@@ -48,23 +48,27 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 
                 var result = new
                 {
-                    totalCount = response.TotalCount,
-                    pageIndex = response.PageIndex,
-                    list = response.Select(_ => new
-                    {
-                        id = _.Id,
-                        red = _.Red,
-                        green = _.Green,
-                        blue = _.Blue,
-                        additionNote = _.AdditionNote,
-                        addTime = _.AddTime,
-                        lastUpdateTime = _.LastUpdateTime,
-                        remark = _.Remark
-                    }).ToList()
+                    success = true,
+                    message = "数据获取成功",
+                    data = new {
+                        totalCount = response.TotalCount,
+                        pageIndex = response.PageIndex,
+                        list = response.Select(_ => new
+                        {
+                            id = _.Id,
+                            red = _.Red,
+                            green = _.Green,
+                            blue = _.Blue,
+                            additionNote = _.AdditionNote,
+                            addTime = _.AddTime,
+                            lastUpdateTime = _.LastUpdateTime,
+                            remark = _.Remark
+                        }).ToList()
+                    }
                 };
                 
                 // 调试信息
-                System.Diagnostics.Debug.WriteLine($"API Response - ListCount: {result.list.Count}");
+                System.Diagnostics.Debug.WriteLine($"API Response - ListCount: {result.data.list.Count}");
                 
                 return Ok(result);
             }

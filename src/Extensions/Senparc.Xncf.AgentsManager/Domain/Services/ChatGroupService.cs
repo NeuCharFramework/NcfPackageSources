@@ -342,7 +342,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             List<(int AgentTemplateId, string Uid)> memberCollection = new();
 
-            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId,includes: "AgentTemplate");
+            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId, includes: "AgentTemplate");
             foreach (var member in groupMemebers)
             {
                 if (member.AgentTemplate.Enable is false)
@@ -597,13 +597,25 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
             //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
+            //for (int i = 0; i < agentsMiddlewares.Count; i++)
+            //{
+            //    for (int j = i + 1; j < agentsMiddlewares.Count; j++)
+            //    {
+            //        graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
+            //    }
+            //}
+
+            //使用星型网络
             for (int i = 0; i < agentsMiddlewares.Count; i++)
             {
-                for (int j = i + 1; j < agentsMiddlewares.Count; j++)
+                var agentMiddleware = agentsMiddlewares[i];
+                if (enterAgent == agentMiddleware)
                 {
-                    graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
+                    continue;
                 }
+                graphConnector.ConnectFrom(enterAgent).TwoWay(agentMiddleware);
             }
+
 
             var finishedGraph = graphConnector.Finish();
 
@@ -613,8 +625,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 kernel: iWantToRunAdmin.Kernel,
                 name: "admin",
                 systemMessage: "You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents. You are strictly fobidden to use function-calling, include _tool_use.parallel."
-                        /*adminAgenttemplate.Name*//*,
-                            systemMessage: adminPromptResult.PromptItem.Content*/)
+                            /*adminAgenttemplate.Name*//*,
+                                systemMessage: adminPromptResult.PromptItem.Content*/)
                 .RegisterMessageConnector();
             //.RegisterTextMessageConnector();
 
@@ -628,6 +640,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 // use reflection to get it auto-fixed by LLM
 
                 var responseContent = response.GetContent();
+
+                Console.WriteLine($"\t response from admin: {responseContent}");
+
                 if (responseContent?.StartsWith("From") is false)
                 {
                     // random pick from agents

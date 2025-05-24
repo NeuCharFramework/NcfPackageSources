@@ -98,20 +98,20 @@ var app = new Vue({
                     let totalCount = 0;
                     let dataSource = '';
                     
-                    if (res.data && res.data.data && res.data.data.list) {
-                        // NCF框架标准格式: {data: {data: {list, totalCount}}}
-                        dataList = res.data.data.list;
-                        totalCount = res.data.data.totalCount || 0;
-                        dataSource = 'NCF标准格式: res.data.data.list';
-                        console.log('✅ 使用NCF标准格式: res.data.data.list');
+                    if (res.data && res.data.data && res.data.data.data && res.data.data.data.list) {
+                        // NCF框架标准格式 + 新的API格式: {data: {data: {success, message, data: {list, totalCount}}}}
+                        dataList = res.data.data.data.list;
+                        totalCount = res.data.data.data.totalCount || 0;
+                        dataSource = 'NCF标准格式: res.data.data.data.list';
+                        console.log('✅ 使用NCF标准格式: res.data.data.data.list');
                         console.log('✅ List数据:', dataList);
                         console.log('✅ TotalCount:', totalCount);
-                    } else if (res.data && res.data.list) {
+                    } else if (res.data && res.data.data && res.data.data.list) {
                         // 简单格式: {data: {list, totalCount}}
-                        dataList = res.data.list;
-                        totalCount = res.data.totalCount || 0;
-                        dataSource = '简单格式: res.data.list';
-                        console.log('✅ 使用简单格式: res.data.list');
+                        dataList = res.data.data.list;
+                        totalCount = res.data.data.totalCount || 0;
+                        dataSource = '简单格式: res.data.data.list';
+                        console.log('✅ 使用简单格式: res.data.data.list');
                     } else if (res.data && Array.isArray(res.data)) {
                         // 如果data直接是数组
                         dataList = res.data;
@@ -198,11 +198,13 @@ var app = new Vue({
                     })
                         .then(res => {
                             console.log('📥 创建响应:', res);
+                            // 兼容NCF框架的嵌套响应格式
+                            const responseData = res.data.data || res.data;
                             this.$message({
-                                type: res.data.success ? 'success' : 'error',
-                                message: res.data.message
+                                type: responseData.success ? 'success' : 'error',
+                                message: responseData.message || '操作完成'
                             });
-                            if (res.data.success) {
+                            if (responseData.success) {
                                 this.getDataList()
                                 this.clearAddForm()
                                 this.addFormDialogVisible = false;
@@ -264,11 +266,13 @@ var app = new Vue({
                     })
                         .then(res => {
                             console.log('📥 更新响应:', res);
+                            // 兼容NCF框架的嵌套响应格式
+                            const responseData = res.data.data || res.data;
                             this.$message({
-                                type: res.data.success ? 'success' : 'error',
-                                message: res.data.message
+                                type: responseData.success ? 'success' : 'error',
+                                message: responseData.message || '操作完成'
                             });
-                            if (res.data.success) {
+                            if (responseData.success) {
                                 this.getDataList()
                                 this.clearEditForm()
                                 this.editFormDialogVisible = false;
@@ -336,11 +340,13 @@ var app = new Vue({
                 })
                     .then(res => {
                         console.log('📥 删除响应:', res);
+                        // 兼容NCF框架的嵌套响应格式
+                        const responseData = res.data.data || res.data;
                         this.$message({
-                            type: res.data.success ? 'success' : 'error',
-                            message: res.data.message
+                            type: responseData.success ? 'success' : 'error',
+                            message: responseData.message || '操作完成'
                         });
-                        if (res.data.success) {
+                        if (responseData.success) {
                             this.getDataList();
                         }
                     })
@@ -367,11 +373,13 @@ var app = new Vue({
             })
                 .then(res => {
                     console.log('📥 随机化响应:', res);
+                    // 兼容NCF框架的嵌套响应格式
+                    const responseData = res.data.data || res.data;
                     this.$message({
-                        type: res.data.success ? 'success' : 'error',
-                        message: res.data.message
+                        type: responseData.success ? 'success' : 'error',
+                        message: responseData.message || '操作完成'
                     });
-                    if (res.data.success) {
+                    if (responseData.success) {
                         this.getDataList();
                     }
                 })
