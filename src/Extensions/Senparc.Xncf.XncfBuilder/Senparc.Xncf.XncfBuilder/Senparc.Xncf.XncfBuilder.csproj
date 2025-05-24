@@ -69,6 +69,7 @@
 			[2025-05-20] v0.35.0-preview.1 Update AI powered XNCF Builder
 			[2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
 			[2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
+			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
