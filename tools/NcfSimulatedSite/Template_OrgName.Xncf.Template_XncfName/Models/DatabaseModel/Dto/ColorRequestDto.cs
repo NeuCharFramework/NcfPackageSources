@@ -15,6 +15,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto
         
         [Range(0, 255, ErrorMessage = "蓝色值必须在0-255之间")]
         public int Blue { get; set; }
+        
+        /// <summary>
+        /// 附加备注
+        /// </summary>
+        public string AdditionNote { get; set; }
     }
 
     /// <summary>
@@ -33,6 +38,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto
         
         [Range(0, 255, ErrorMessage = "蓝色值必须在0-255之间")]
         public int Blue { get; set; }
+        
+        /// <summary>
+        /// 附加备注
+        /// </summary>
+        public string AdditionNote { get; set; }
     }
 
     /// <summary>

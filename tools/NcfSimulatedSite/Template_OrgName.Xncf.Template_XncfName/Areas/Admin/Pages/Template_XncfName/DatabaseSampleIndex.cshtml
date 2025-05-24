@@ -127,6 +127,9 @@
                     RGB({{addForm.red}}, {{addForm.green}}, {{addForm.blue}})
                 </div>
             </el-form-item>
+            <el-form-item label="附加备注" prop="additionNote">
+                <el-input v-model="addForm.additionNote" type="textarea" :rows="3" placeholder="请输入颜色的附加备注信息..."></el-input>
+            </el-form-item>
             <el-form-item>
                 <el-button @@click="randomizeForm" type="info">随机颜色</el-button>
             </el-form-item>
@@ -153,6 +156,9 @@
                 <div class="color-preview-large" :style="{backgroundColor: `rgb(${editForm.red}, ${editForm.green}, ${editForm.blue})`}">
                     RGB({{editForm.red}}, {{editForm.green}}, {{editForm.blue}})
                 </div>
+            </el-form-item>
+            <el-form-item label="附加备注" prop="additionNote">
+                <el-input v-model="editForm.additionNote" type="textarea" :rows="3" placeholder="请输入颜色的附加备注信息..."></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button @@click="randomizeEditForm" type="info">随机颜色</el-button>

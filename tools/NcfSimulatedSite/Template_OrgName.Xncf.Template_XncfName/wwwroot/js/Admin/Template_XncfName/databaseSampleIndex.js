@@ -13,14 +13,16 @@ var app = new Vue({
             addForm: {
                 red: 128,
                 green: 128,
-                blue: 128
+                blue: 128,
+                additionNote: ''
             },
             editFormDialogVisible: false,
             editForm: {
                 id: 0,
                 red: 128,
                 green: 128,
-                blue: 128
+                blue: 128,
+                additionNote: ''
             },
             total: 0,
             addRules: {
@@ -180,13 +182,15 @@ var app = new Vue({
                     console.log('📤 发送创建请求:', {
                         red: this.addForm.red,
                         green: this.addForm.green,
-                        blue: this.addForm.blue
+                        blue: this.addForm.blue,
+                        additionNote: this.addForm.additionNote
                     });
                     
                     await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=CreateColor', {
                         red: this.addForm.red,
                         green: this.addForm.green,
-                        blue: this.addForm.blue
+                        blue: this.addForm.blue,
+                        additionNote: this.addForm.additionNote
                     }, {
                         headers: {
                             'Content-Type': 'application/json'
@@ -217,7 +221,8 @@ var app = new Vue({
             this.addForm = {
                 red: 128,
                 green: 128,
-                blue: 128
+                blue: 128,
+                additionNote: ''
             };
             if (this.$refs.addForm) {
                 this.$refs.addForm.resetFields();
@@ -228,7 +233,8 @@ var app = new Vue({
                 id: 0,
                 red: 128,
                 green: 128,
-                blue: 128
+                blue: 128,
+                additionNote: ''
             };
             if (this.$refs.editForm) {
                 this.$refs.editForm.resetFields();
@@ -241,14 +247,16 @@ var app = new Vue({
                         id: this.editForm.id,
                         red: this.editForm.red,
                         green: this.editForm.green,
-                        blue: this.editForm.blue
+                        blue: this.editForm.blue,
+                        additionNote: this.editForm.additionNote
                     });
                     
                     await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=UpdateColor', {
                         id: this.editForm.id,
                         red: this.editForm.red,
                         green: this.editForm.green,
-                        blue: this.editForm.blue
+                        blue: this.editForm.blue,
+                        additionNote: this.editForm.additionNote
                     }, {
                         headers: {
                             'Content-Type': 'application/json'
@@ -306,7 +314,8 @@ var app = new Vue({
                 id: row.id,
                 red: row.red,
                 green: row.green,
-                blue: row.blue
+                blue: row.blue,
+                additionNote: row.additionNote || ''
             };
             this.editFormDialogVisible = true;
         },

@@ -90,17 +90,17 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             try
             {
                 // 调试信息
-                System.Diagnostics.Debug.WriteLine($"CreateColor API Called - Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}");
+                System.Diagnostics.Debug.WriteLine($"CreateColor API Called - Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}");
                 
                 if (request == null)
                 {
                     return Ok(new { success = false, message = "请求参数不能为空" });
                 }
                 
-                var color = new Color(request.Red, request.Green, request.Blue);
+                var color = new Color(request.Red, request.Green, request.Blue, request.AdditionNote);
                 await _colorService.SaveObjectAsync(color);
                 
-                return Ok(new { success = true, message = "颜色创建成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AddTime, color.LastUpdateTime } });
+                return Ok(new { success = true, message = "颜色创建成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
@@ -119,7 +119,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             try
             {
                 // 调试信息
-                System.Diagnostics.Debug.WriteLine($"UpdateColor API Called - Id: {request.Id}, Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}");
+                System.Diagnostics.Debug.WriteLine($"UpdateColor API Called - Id: {request.Id}, Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}");
                 
                 if (request == null)
                 {
@@ -136,10 +136,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 color.Red = request.Red;
                 color.Green = request.Green;
                 color.Blue = request.Blue;
+                color.AdditionNote = request.AdditionNote;
                 
                 await _colorService.SaveObjectAsync(color);
                 
-                return Ok(new { success = true, message = "颜色更新成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.LastUpdateTime } });
+                return Ok(new { success = true, message = "颜色更新成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {

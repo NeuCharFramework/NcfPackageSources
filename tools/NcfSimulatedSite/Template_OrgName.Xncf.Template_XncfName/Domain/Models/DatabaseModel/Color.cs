@@ -46,6 +46,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 Blue = blue;
             }
         }
+        
+        public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
+        {
+            AdditionNote = additionNote;
+        }
 
         public Color(ColorDto colorDto)
         {
