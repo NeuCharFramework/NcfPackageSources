@@ -83,21 +83,28 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 创建新颜色
         /// </summary>
-        /// <param name="red">红色值</param>
-        /// <param name="green">绿色值</param>
-        /// <param name="blue">蓝色值</param>
+        /// <param name="request">创建颜色请求</param>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostCreateColorAsync(int red, int green, int blue)
+        public async Task<IActionResult> OnPostCreateColorAsync([FromBody] CreateColorRequestDto request)
         {
             try
             {
-                var color = new Color(red, green, blue);
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"CreateColor API Called - Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}");
+                
+                if (request == null)
+                {
+                    return Ok(new { success = false, message = "请求参数不能为空" });
+                }
+                
+                var color = new Color(request.Red, request.Green, request.Blue);
                 await _colorService.SaveObjectAsync(color);
                 
                 return Ok(new { success = true, message = "颜色创建成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AddTime, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"CreateColor API Error: {ex.Message}");
                 return Ok(new { success = false, message = "创建失败：" + ex.Message });
             }
         }
@@ -105,25 +112,30 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 更新颜色
         /// </summary>
-        /// <param name="id">颜色ID</param>
-        /// <param name="red">红色值</param>
-        /// <param name="green">绿色值</param>
-        /// <param name="blue">蓝色值</param>
+        /// <param name="request">更新颜色请求</param>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostUpdateColorAsync(int id, int red, int green, int blue)
+        public async Task<IActionResult> OnPostUpdateColorAsync([FromBody] UpdateColorRequestDto request)
         {
             try
             {
-                var color = await _colorService.GetObjectAsync(c => c.Id == id);
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"UpdateColor API Called - Id: {request.Id}, Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}");
+                
+                if (request == null)
+                {
+                    return Ok(new { success = false, message = "请求参数不能为空" });
+                }
+                
+                var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
                     return Ok(new { success = false, message = "颜色不存在" });
                 }
 
                 // 直接修改现有对象的属性值
-                color.Red = red;
-                color.Green = green;
-                color.Blue = blue;
+                color.Red = request.Red;
+                color.Green = request.Green;
+                color.Blue = request.Blue;
                 
                 await _colorService.SaveObjectAsync(color);
                 
@@ -131,6 +143,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"UpdateColor API Error: {ex.Message}");
                 return Ok(new { success = false, message = "更新失败：" + ex.Message });
             }
         }
@@ -138,13 +151,21 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 删除颜色
         /// </summary>
-        /// <param name="id">颜色ID</param>
+        /// <param name="request">删除颜色请求</param>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostDeleteColorAsync(int id)
+        public async Task<IActionResult> OnPostDeleteColorAsync([FromBody] DeleteColorRequestDto request)
         {
             try
             {
-                var color = await _colorService.GetObjectAsync(c => c.Id == id);
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"DeleteColor API Called - Id: {request.Id}");
+                
+                if (request == null)
+                {
+                    return Ok(new { success = false, message = "请求参数不能为空" });
+                }
+                
+                var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
                     return Ok(new { success = false, message = "颜色不存在" });
@@ -155,6 +176,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"DeleteColor API Error: {ex.Message}");
                 return Ok(new { success = false, message = "删除失败：" + ex.Message });
             }
         }
@@ -162,13 +184,21 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 随机化指定颜色
         /// </summary>
-        /// <param name="id">颜色ID</param>
+        /// <param name="request">随机化颜色请求</param>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostRandomizeColorAsync(int id)
+        public async Task<IActionResult> OnPostRandomizeColorAsync([FromBody] RandomizeColorRequestDto request)
         {
             try
             {
-                var color = await _colorService.GetObjectAsync(c => c.Id == id);
+                // 调试信息
+                System.Diagnostics.Debug.WriteLine($"RandomizeColor API Called - Id: {request.Id}");
+                
+                if (request == null)
+                {
+                    return Ok(new { success = false, message = "请求参数不能为空" });
+                }
+                
+                var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
                     return Ok(new { success = false, message = "颜色不存在" });
@@ -181,6 +211,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"RandomizeColor API Error: {ex.Message}");
                 return Ok(new { success = false, message = "随机化失败：" + ex.Message });
             }
         }

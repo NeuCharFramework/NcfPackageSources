@@ -177,12 +177,23 @@ var app = new Vue({
         async addColorSubmit() {
             this.$refs.addForm.validate(async (valid) => {
                 if (valid) {
+                    console.log('📤 发送创建请求:', {
+                        red: this.addForm.red,
+                        green: this.addForm.green,
+                        blue: this.addForm.blue
+                    });
+                    
                     await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=CreateColor', {
                         red: this.addForm.red,
                         green: this.addForm.green,
                         blue: this.addForm.blue
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
                     })
                         .then(res => {
+                            console.log('📥 创建响应:', res);
                             this.$message({
                                 type: res.data.success ? 'success' : 'error',
                                 message: res.data.message
@@ -226,13 +237,25 @@ var app = new Vue({
         async editColorSubmit() {
             this.$refs.editForm.validate(async (valid) => {
                 if (valid) {
+                    console.log('📤 发送更新请求:', {
+                        id: this.editForm.id,
+                        red: this.editForm.red,
+                        green: this.editForm.green,
+                        blue: this.editForm.blue
+                    });
+                    
                     await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=UpdateColor', {
                         id: this.editForm.id,
                         red: this.editForm.red,
                         green: this.editForm.green,
                         blue: this.editForm.blue
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
                     })
                         .then(res => {
+                            console.log('📥 更新响应:', res);
                             this.$message({
                                 type: res.data.success ? 'success' : 'error',
                                 message: res.data.message
@@ -293,10 +316,17 @@ var app = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
+                console.log('📤 发送删除请求:', { id: row.id });
+                
                 await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=DeleteColor', {
                     id: row.id
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
                     .then(res => {
+                        console.log('📥 删除响应:', res);
                         this.$message({
                             type: res.data.success ? 'success' : 'error',
                             message: res.data.message
@@ -317,10 +347,17 @@ var app = new Vue({
             });
         },
         async randomizeColor(row) {
+            console.log('📤 发送随机化请求:', { id: row.id });
+            
             await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=RandomizeColor', {
                 id: row.id
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
                 .then(res => {
+                    console.log('📥 随机化响应:', res);
                     this.$message({
                         type: res.data.success ? 'success' : 'error',
                         message: res.data.message
