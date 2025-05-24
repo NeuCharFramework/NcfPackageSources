@@ -14,6 +14,10 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using System.Reflection;
+using Microsoft.Extensions.FileProviders;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
@@ -84,6 +88,16 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+
+            return base.UseXncfModule(app, registerService);
         }
     }
 }
