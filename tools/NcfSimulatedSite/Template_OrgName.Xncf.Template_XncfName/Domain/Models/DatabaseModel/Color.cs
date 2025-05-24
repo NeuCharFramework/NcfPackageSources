@@ -15,21 +15,21 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Red { get; private set; }
+        public int Red { get; set; }
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Green { get; private set; }
+        public int Green { get; set; }
 
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Blue { get; private set; }
+        public int Blue { get; set; }
 
         /// <summary>
         /// 附加列，测试多次数据库 Migrate
         /// </summary>
-        public string AdditionNote { get; private set; }
+        public string AdditionNote { get; set; }
 
         private Color() { }
 
@@ -45,6 +45,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 Green = green;
                 Blue = blue;
             }
+        }
+        
+        public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
+        {
+            AdditionNote = additionNote;
         }
 
         public Color(ColorDto colorDto)
