@@ -643,8 +643,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             #endregion
 
-            var aiTeam = finishedGraph.CreateAiTeam(admin);
-            //var aiTeam = finishedGraph.CreateAiTeam(admin1);
+            //var aiTeam = finishedGraph.CreateAiTeam(admin);
+            var aiTeam = finishedGraph.CreateAiTeam(admin1);
 
             try
             {

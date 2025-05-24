@@ -111,14 +111,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var pListTemplate = StartNewProcess();
                 logger.Append("dotnet new -l :");
-                pListTemplate.StandardInput.WriteLine("dotnet new -l");
+                await pListTemplate.StandardInput.WriteLineAsync("dotnet new -l").ConfigureAwait(false);
+
+                await Task.Delay(2000);
+
+                await pListTemplate.StandardInput.WriteLineAsync("exit").ConfigureAwait(false);
+
                 // Read output asynchronously while the process is running.
-                var templateOutputTask = ReadOutputAsync(pListTemplate);
+                //var templateOutputTask = ReadOutputAsync(pListTemplate);
 
                 // Await the completion of the output reading task.
 
                 //pListTemplate.StandardInput.WriteLine("exit");
-                var templateOutput = await templateOutputTask; //pListTemplate.StandardOutput.ReadToEnd();
+                var templateOutput = await pListTemplate.StandardOutput.ReadToEndAsync().ConfigureAwait(false);//await templateOutputTask; //pListTemplate.StandardOutput.ReadToEnd();
                 CloseProcess(pListTemplate);
 
                 logger.Append(templateOutput);
@@ -157,8 +162,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 {
                     var pInstallTemplate = StartNewProcess();
                     logger.Append($"执行 XNCF 模板安装命令：" + installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine("exit");
+                    await pInstallTemplate.StandardInput.WriteLineAsync(installPackageCmd).ConfigureAwait(false);
+                    await pInstallTemplate.StandardInput.WriteLineAsync("exit").ConfigureAwait(false);
                     CloseProcess(pInstallTemplate);
                 }
                 #endregion
@@ -426,9 +431,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             };
 
             request.SlnFilePath = request.GetSlnFilePath();
+            request.UseSammple.SelectedValues = new[] { "1" };
+            request.UseModule.SelectedValues = new[] { "database" };
+            request.NewSlnFile.SelectedValues = new[] { "backup" };
+            request.TemplatePackage.SelectedValues = new[] { "no" };
+            request.FrameworkVersion.SelectedValues = new[] { "net8.0" };
 
             Console.WriteLine("XNCF Builder parameters:" + request.ToJson(true));
-
 
             return await this.Build(request);
 
