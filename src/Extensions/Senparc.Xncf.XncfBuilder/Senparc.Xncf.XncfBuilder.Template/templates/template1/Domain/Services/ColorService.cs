@@ -57,7 +57,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         public async Task<ColorDto> Random()
         {
             //TODO:异步方法需要添加排序功能
-            var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);
+            var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Random();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             return base.Mapper.Map<ColorDto>(obj);

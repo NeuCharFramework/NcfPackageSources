@@ -23,7 +23,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// 递归获取树形结构
         /// </summary>
         /// <param name="iteration">当前筛选列表</param>
-        /// <param name="source">完整列表数据</param>
+        /// <param name="source">完整列表数据</par
         private IList<SysMenuTreeItemDto> BuildTreeItems(IEnumerable<SysMenuDto> iteration, IEnumerable<SysMenuDto> source)
         {
             var items = new List<SysMenuTreeItemDto>();
