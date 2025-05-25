@@ -624,9 +624,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var admin = new SemanticKernelAgent(
                 kernel: iWantToRunAdmin.Kernel,
                 name: "admin",
-                systemMessage: "You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents. You are strictly fobidden to use function-calling, include _tool_use.parallel."
-                            /*adminAgenttemplate.Name*//*,
-                                systemMessage: adminPromptResult.PromptItem.Content*/)
+                systemMessage: @$"You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents. You are strictly fobidden to use function-calling, include _tool_use.parallel.
+
+Each message will start with 'From name:', e.g:
+From {enterAgent.Name}:
+//your message//."
+                                /*adminAgenttemplate.Name*//*,
+                                    systemMessage: adminPromptResult.PromptItem.Content*/)
                 .RegisterMessageConnector();
             //.RegisterTextMessageConnector();
 
@@ -659,7 +663,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             #endregion
 
             //var aiTeam = finishedGraph.CreateAiTeam(admin);
-            var aiTeam = finishedGraph.CreateAiTeam(admin1);
+            var myRoleOrc = new MyRolePlayOrchestrator(admin, finishedGraph.Graph);
+            var aiTeam = finishedGraph.CreateAiTeam(admin1, myRoleOrc);
 
             try
             {
