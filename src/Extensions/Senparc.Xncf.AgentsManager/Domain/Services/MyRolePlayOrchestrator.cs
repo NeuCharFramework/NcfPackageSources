@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // RolePlayOrchestrator.cs
 
+using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoGen.Core;
+
+public class MyRolePlayOrchestratorReply
+{
+    public string From { get; set; }
+    public string Message { get; set; }
+}
 
 public class MyRolePlayOrchestrator : IOrchestrator
 {
@@ -66,11 +74,16 @@ public class MyRolePlayOrchestrator : IOrchestrator
         var rolePlayMessage = new TextMessage(Role.User,
             content: $@"You are in a role play game. Carefully read the conversation history and carry on the conversation.
 The available roles are:
-{string.Join(",", agentNames)}
+{agentNames.ToJson()}
 
-Each message will start with 'From name:', e.g:
-From {agentNames.First()}:
-//your message//.");
+Each message will use the strickly JSON format with a '//finish suffix':
+{{From:""<From Agent Name>"", Message:""<Chat Message>""}}//finish
+
+e,g:
+{{From:""{agentNames.First()}"", Message:""Hi, I'm {agentNames.First()}.""}}//finish
+
+Note: parameter From must be strictly equal to the name of the player spokesperson and cannot be modified in any way.
+");
 
         var chatHistoryWithName = this.ProcessConversationsForRolePlay(context.ChatHistory);
         var messages = new IMessage[] { rolePlayMessage }.Concat(chatHistoryWithName);
@@ -80,16 +93,26 @@ From {agentNames.First()}:
             options: new GenerateReplyOptions
             {
                 Temperature = 0,
-                MaxToken = 128,
-                StopSequence = [":"],
+                MaxToken = 256,
+                StopSequence = [":", "//finish"],
                 Functions = null,
             },
             cancellationToken: cancellationToken);
 
-        var name = response.GetContent() ?? throw new ArgumentException("No name is returned.");
+        var responseMessageStr = response.GetContent() ?? throw new ArgumentException("No name is returned.");
 
-        // remove From
-        name = name!.Substring(5);
+        MyRolePlayOrchestratorReply responseMessage = null;
+        try
+        {
+            responseMessage = responseMessageStr.GetObject<MyRolePlayOrchestratorReply>();
+
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+
+        var name = responseMessage.From;
         var candidate = candidates.FirstOrDefault(x => x.Name!.ToLower() == name.ToLower());
 
         if (candidate != null)
@@ -105,10 +128,17 @@ From {agentNames.First()}:
     {
         return messages.Select((x, i) =>
         {
-            var msg = @$"From {x.From}:
-{x.GetContent()}
-<eof_msg>
-round # {i}";
+            //            var msg = @$"From {x.From}:
+            //{x.GetContent()}
+            //<eof_msg>
+            //round # {i}";
+
+            var msg = new
+            {
+                From = x.From,
+                Message = x.GetContent(),
+                Round = $"#{i}"
+            }.ToJson();
 
             return new TextMessage(Role.User, content: msg);
         });
