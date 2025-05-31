@@ -461,10 +461,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                         // 使用 key 和 value 进行操作
 #pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-                        iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcpPlugin{memberInfo.Uid}", tools.Select(z => z.AsKernelFunction()));
+                        iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcp{memberInfo.AgentTemplateId}", tools.Select(z => z.AsKernelFunction()));
 #pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-
-
                     }
                 }
                 #endregion
@@ -624,13 +622,19 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var admin = new SemanticKernelAgent(
                 kernel: iWantToRunAdmin.Kernel,
                 name: "admin",
-                systemMessage: @$"You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents. You are strictly fobidden to use function-calling, include _tool_use.parallel.
+                systemMessage: @$"You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents, but determine witch agent can speek in the next round.
+You are strictly fobidden to use function-calling, include _tool_use.parallel.
 
-Each message will start with 'From name:', e.g:
-From {enterAgent.Name}:
-//your message//."
-                                /*adminAgenttemplate.Name*//*,
-                                    systemMessage: adminPromptResult.PromptItem.Content*/)
+You have to strictly follow the reply format (JSON) as required, each message will use the strickly JSON format with a '//finish suffix':
+{{""Speaker"":""<From Agent Name>"", ""Message"":""<Chat Message>""}}//finish
+
+e,g:
+{{Speaker:""{{agentNames.First()}}"", Message:""Hi, I'm {{agentNames.First()}}.""}}//finish
+
+Note: parameter From must be strictly equal to the name of the player spokesperson and cannot be modified in any way.
+"
+                                    /*adminAgenttemplate.Name*//*,
+                                        systemMessage: adminPromptResult.PromptItem.Content*/)
                 .RegisterMessageConnector();
             //.RegisterTextMessageConnector();
 

@@ -1,6 +1,7 @@
 ﻿using Senparc.CO2NET;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AgentsManager.Domain.Exceptions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
@@ -20,8 +21,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         //[ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task CreateHistory(ChatGroupHistoryDto chatGroupHistoryDto)
         {
-            var chatGroupHistory = new ChatGroupHistory(chatGroupHistoryDto);
-            await base.SaveObjectAsync(chatGroupHistory);
+            try
+            {
+                ChatGroupHistory chatGroupHistory = new ChatGroupHistory(chatGroupHistoryDto);
+                await base.SaveObjectAsync(chatGroupHistory);
+            }
+            catch (Exception ex)
+            {
+                new AgentsManagerException(ex.Message, ex, false);
+                //throw;
+            }
+
         }
 
         /// <summary>
