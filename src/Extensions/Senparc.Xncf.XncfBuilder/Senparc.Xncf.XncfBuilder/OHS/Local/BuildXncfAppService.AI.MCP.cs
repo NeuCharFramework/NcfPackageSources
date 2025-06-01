@@ -13,6 +13,10 @@ using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Senparc.AI.Entities.Keys;
+using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.CO2NET.Trace;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
@@ -30,7 +34,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             if (string.IsNullOrEmpty(modulePath))
             {
-                throw new Exception($"未找到模块 {moduleName} 的目录，请检查模块名称是否完整，必须完全匹配，如：Senparc.Xncf.XncfBuilder。");
+                throw new Exception($"未找到模块 {moduleName} 的目录：{modulePath}，请检查模块名称是否完整，必须完全匹配，如：Senparc.Xncf.XncfBuilder。");
             }
 
             var fullFilePath = Path.Combine(modulePath, filePath);
@@ -1478,7 +1482,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
                 }
 
                 //TODO: 使用 SHA1 验证指纹，把旧文件内容进行缓存或差量备份
-                await File.WriteAllTextAsync(fullFilePath, fileContent);
+                await File.WriteAllTextAsync(fullFilePath, fileContent, encoding: Encoding.UTF8);
                 response.Success = true;
                 response.FileName = Path.GetFileName(fullFilePath);
             }
@@ -1486,9 +1490,75 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             {
                 response.Success = false;
                 response.Message = ex.Message;
+                Senparc.CO2NET.Trace.SenparcTrace.BaseExceptionLog(ex);
             }
             return response;
         }
 
+
+        [McpServerTool, Description("更新 EntityFrameworkCore 数据库迁移")]
+        public async Task<StringAppResponse> UpdateDatabaseMigration(
+          [Description("XNCF 项目的完整名称，如：Senparc.Xncf.XncfBuilder")]
+            string xncfModuleName,
+          [Description("本次迁移的名称，会用做文件名，不能出现空格和个数符号")]
+            string migrationName
+          )
+        {
+            BuildXncf_BuildRequest xncfBUilderRequest = new BuildXncf_BuildRequest();
+            try
+            {
+
+                var slnPath = xncfBUilderRequest.GetSlnFilePath();
+
+                //查找 slnPath 下方的模块路径
+                string modulePath = null;
+                if (Directory.Exists(slnPath))
+                {
+                    modulePath = Directory.GetDirectories(slnPath, "*", SearchOption.AllDirectories).FirstOrDefault(z => z.Contains(xncfModuleName));
+                }
+
+                if (modulePath == null)
+                {
+                    throw new Exception("模块路径不存在：" + xncfModuleName);
+                }
+
+                string databasePlantPath = Directory.GetDirectories(slnPath, "*", SearchOption.AllDirectories).FirstOrDefault(z => z.Contains("Senparc.Web.DatabasePlant"));
+
+                if (databasePlantPath == null)
+                {
+                    throw new Exception("数据库迁移路径不存在：Senparc.Web.DatabasePlant");
+                }
+
+                var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
+                var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
+                var databaseConfigurationName = currentDatabaseConfiguration.GetType().Name;
+                var databaseName = databaseConfigurationName.Replace("DatabaseConfiguration", "");
+
+                var request = new DatabaseMigrations_MigrationRequest()
+                {
+                    CustomProjectPath = modulePath,
+                    ProjectPath = new SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] { new SelectionItem("N/A", "自定义路径", "", true) }),
+                    DatabasePlantPath = databasePlantPath,
+                    DatabaseTypes = new SelectionList(SelectionType.DropDownList, new[]{
+                    new SelectionItem(databaseName, databaseName,"",true),
+                 }),
+                    MigrationName = migrationName,
+                    DbContextName = "[Default]",
+                    OutputVerbose = new SelectionList(SelectionType.CheckBoxList, new[] { new SelectionItem("1", "使用", "", true) })
+                };
+
+                var databaseConfigAppService = base.ServiceProvider.GetService<DatabaseMigrationsAppService>();
+
+                return await databaseConfigAppService.AddMigration(request);
+
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+                return new StringAppResponse() { Success = false, ErrorMessage = ex.Message };
+
+            }
+
+        }
     }
 }
