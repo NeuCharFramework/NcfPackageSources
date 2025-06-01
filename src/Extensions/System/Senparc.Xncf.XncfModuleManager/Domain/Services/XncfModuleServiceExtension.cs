@@ -194,5 +194,26 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
             var newXncfRegisters = XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall && !xncfModules.Exists(m => m.Uid == z.Uid && m.Version == z.Version)).ToList() ?? new List<IXncfRegister>();
             return newXncfRegisters;
         }
+
+        /// <summary>
+        /// 获取未安装的 Xncf
+        /// </summary>
+        /// <returns></returns>
+        public List<IXncfRegister> GetOnlyUnInstallXncfModule(List<XncfModule> xncfModules)
+        {
+            var newXncfRegisters = XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall && !xncfModules.Exists(m => m.Uid == z.Uid)).ToList() ?? new List<IXncfRegister>();
+            return newXncfRegisters;
+        }
+
+        /// <summary>
+        /// 获取版本不同的 Xncf
+        /// </summary>
+        /// <returns></returns>
+        public List<IXncfRegister> GetUpdatedInstallXncfModule(List<XncfModule> xncfModules)
+        {
+
+            var newXncfRegisters = XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall && xncfModules.Exists(m => m.Uid == z.Uid && m.Version != z.Version)).ToList() ?? new List<IXncfRegister>();
+            return newXncfRegisters;
+        }
     }
 }
