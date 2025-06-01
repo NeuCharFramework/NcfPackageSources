@@ -19,9 +19,6 @@ using static Senparc.Xncf.XncfBuilder.Domain.Services.Plugins.FilePlugin;
 using Senparc.CO2NET.Extensions;
 using System.IO;
 using Senparc.AI.Entities;
-using Microsoft.Extensions.VectorData;
-using Senparc.AI.Entities.Keys;
-using static Qdrant.Client.Grpc.MaxOptimizationThreads.Types;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 {
@@ -31,28 +28,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         HtmlContent
     }
 
- 
     public class CrawlPlugin
     {
-        public class Record
-        {
-            [VectorStoreKey]
-            public ulong Id { get; set; }
-
-            [VectorStoreData(IsIndexed = true)]
-            public string Name { get; set; }
-
-            [VectorStoreData(IsFullTextIndexed = true)]
-            public string Description { get; set; }
-
-            [VectorStoreVector(Dimensions: 3072 /*根据模型调整，例如 text-embedding-ada-002 为 1536*/, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
-            public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
-
-            [VectorStoreData(IsIndexed = true)]
-            public string[] Tags { get; set; }
-        }
-
-
         //private readonly IWantToRun _iWantToRun;
         private readonly IServiceProvider _serviceProvider;
 
@@ -88,7 +65,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
             var senMapicResult = senMapicEngine.Build();
 
-            //return senMapicResult.Values.FirstOrDefault()?.MarkDownHtmlContent;
+            return senMapicResult.Values.FirstOrDefault()?.MarkDownHtmlContent;
 
             foreach (var item in senMapicResult)
             {
@@ -121,13 +98,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             var iWantToRunEmbedding = semanticAiHandler
                  .IWantTo()
                  .ConfigModel(ConfigModel.TextEmbedding, "Jeffrey")
-                 .ConfigVectorStore(embeddingAiSetting.VectorDB)
-            .BuildKernel();
-
-            var vectorName = "NCF-Agent-Crawl-Embedding";
-            var modelName = embeddingAiSetting.ModelName.Embedding;
-            var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
-            await vectorCollection.EnsureCollectionExistsAsync();
+                 .BuildKernel();
 
             var i = 0;
             var dt = SystemTime.Now;
@@ -161,19 +132,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             MemoryStore:
                 try
                 {
-                    paragraphs.ForEach(async paragraph =>
+                    paragraphs.ForEach(paragraph =>
                     {
                         var currentI = i++;
 
-                        var record = new Record()
-                        {
-                            Id = (ulong)i,
-                            Name = vectorName + ":" + i,
-                            Description = paragraph,
-                            DescriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(modelName, paragraph),
-                            Tags = new[] { i.ToString() }
-                        };
-                        await vectorCollection.UpsertAsync(record);
+                        iWantToRunEmbedding
+                          .MemorySaveInformation(
+                              modelName: embeddingAiSetting.ModelName.Embedding,
+                              azureDeployName: embeddingAiSetting.DeploymentName,
+                              collection: "EmbeddingAgent",
+                              id: $"paragraph-{Guid.NewGuid().ToString("n")}",
+                              text: paragraph);
                     });
                 }
                 catch (Exception ex)
@@ -221,20 +190,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
             var questionDt = DateTime.Now;
             var limit = 3;
+            var embeddingResult = await iWantToRunEmbedding.MemorySearchAsync(
+                    modelName: embeddingAiSetting.ModelName.Embedding,
+                    azureDeployName: embeddingAiSetting.DeploymentName,
+                    memoryCollectionName: "EmbeddingAgent",
+                    query: question,
+                    limit: limit);
 
-            ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(modelName, question);
-
-            //var r1 = await vectorCollection.GetAsync(1);//OK
-            //Console.WriteLine("r1:" + r1.ToJson(true));
-
-            //vectorCollection = iWantToRun.GetVectorCollection<string, Record>(aiSetting.VectorDB, "senparc-vector-record");
-            var vectorResult = vectorCollection.SearchAsync(searchVector, limit);
-
-            await foreach (var item in vectorResult)
+            await foreach (var item in embeddingResult.MemoryQueryResult)
             {
                 results.AppendLine($@"//////
-{item.Record.Description}
-******{item.Score}");
+{item.Metadata.Text}
+******{item.Relevance}");
             }
 
             SenparcTrace.SendCustomLog("RAG日志", $@"提问：{question}，耗时：{(DateTime.Now - questionDt).TotalMilliseconds}ms
