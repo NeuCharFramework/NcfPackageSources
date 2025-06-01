@@ -48,6 +48,6 @@
     <Compile Remove="NLogExtension.Core.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="3.0.1" />
+    <PackageReference Include="log4net" Version="3.1.0" />
   </ItemGroup>
 </Project>
