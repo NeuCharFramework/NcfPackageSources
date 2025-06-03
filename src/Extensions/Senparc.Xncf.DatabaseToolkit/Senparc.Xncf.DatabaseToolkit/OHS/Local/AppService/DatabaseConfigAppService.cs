@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
-    public partial class DatabaseConfigAppService : AppServiceBase
+    public class DatabaseConfigAppService : AppServiceBase
     {
         public DatabaseConfigAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
