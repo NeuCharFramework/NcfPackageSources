@@ -92,3 +92,4 @@ appsettings.Test.json
 install-finished.txt
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/Database/NCF.DB
 tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML
+/tools/NcfSimulatedSite/Senparc.Web/App_Data/NcfFiles/*
