@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
-    [Table("NcfFiles")]
+    //[Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
+
+    [Table(name: "NcfFiles")]
     public class NcfFile : EntityBase<int>
     {
         [Required]

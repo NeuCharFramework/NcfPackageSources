@@ -26,10 +26,16 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         public NcfFileService(IRepositoryBase<NcfFile> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
-            _baseFilePath = Path.Combine(AppContext.BaseDirectory, "App_Data", "NcfFiles");
-           
-           // 尝试添加目录
-           Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
+            try
+            {
+                _baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
+                // 尝试添加目录
+                Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         /// <summary>
@@ -175,4 +181,4 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
     }
-} 
+}

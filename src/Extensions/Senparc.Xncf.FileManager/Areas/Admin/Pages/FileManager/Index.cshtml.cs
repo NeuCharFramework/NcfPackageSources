@@ -87,7 +87,14 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public async Task<IActionResult> OnGetDownloadAsync(int id)
         {
-            //await _fileService.UpdateFileNoteAsync(id, note);
+            var file = await _fileService.GetObjectAsync(z=>z.Id == id);
+            if (file==null)
+            {
+                return Ok(false,"文件不存在！");
+            }
+
+           
+
             return Ok(true);
         }
     }
