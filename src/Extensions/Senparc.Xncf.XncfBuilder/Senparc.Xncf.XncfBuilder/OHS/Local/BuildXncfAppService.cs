@@ -216,11 +216,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     "--NcfAreaBaseVersion",ncfAreaBaseVersion
                 };
 
-                if (isUseSample) args.Add("--Sample");
-                if (useFunction) args.Add("--Function");
-                if (isUseWeb) args.Add("--Web");
-                if (isUseDatabase) args.Add("--Database");
-                if (useWebApi) args.Add("--UseWebApi");
+                if (isUseSample) args.Add("--Sample true");
+                if (useFunction) args.Add("--Function true");
+                if (isUseWeb) args.Add("--Web true");
+                if (isUseDatabase) args.Add("--Database true");
+                if (useWebApi) args.Add("--UseWebApi true");
 
                 var pDotnet = StartNewProcess("dotnet");
 
