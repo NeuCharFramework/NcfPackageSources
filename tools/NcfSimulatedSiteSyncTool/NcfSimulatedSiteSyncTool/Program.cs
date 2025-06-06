@@ -207,19 +207,46 @@ class Program
         }
 
         bool shouldCopy = true;
+        string sourceContent = null;
+        string processedContent = null;
+
+        // 对 Register.cs 文件进行特殊处理
+        if (Path.GetFileName(sourceFile).Equals("Register.cs", StringComparison.OrdinalIgnoreCase))
+        {
+            sourceContent = await File.ReadAllTextAsync(sourceFile);
+            processedContent = sourceContent
+                .Replace(
+                    @"public override string Uid => ""C5852057-BF1D-492B-A22E-64F3C5F91D38"";",
+                    @"public override string Uid => ""Template_Guid"";"
+                )
+                .Replace(
+                    @"public override string Version => ""1.0.0"";",
+                    @"public override string Version => ""Template_Version"";"
+                );
+        }
 
         if (File.Exists(targetFile))
         {
-            // 比较文件内容
-            var sourceFileInfo = new FileInfo(sourceFile);
-            var targetFileInfo = new FileInfo(targetFile);
             bool contentSame = false;
 
-            if (sourceFileInfo.Length == targetFileInfo.Length)
+            if (processedContent != null)
             {
-                var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
-                var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
-                contentSame = sourceMD5 == targetMD5;
+                // 对于 Register.cs 文件，比较处理后的内容与目标文件内容
+                var targetContent = await File.ReadAllTextAsync(targetFile);
+                contentSame = processedContent == targetContent;
+            }
+            else
+            {
+                // 对于其他文件，比较文件大小和MD5
+                var sourceFileInfo = new FileInfo(sourceFile);
+                var targetFileInfo = new FileInfo(targetFile);
+
+                if (sourceFileInfo.Length == targetFileInfo.Length)
+                {
+                    var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
+                    var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
+                    contentSame = sourceMD5 == targetMD5;
+                }
             }
 
             if (contentSame)
@@ -259,7 +286,17 @@ class Program
         {
             try
             {
-                await FileExtensions.CopyAsync(sourceFile, targetFile, true);
+                if (processedContent != null)
+                {
+                    // 对于 Register.cs 文件，写入处理后的内容
+                    await File.WriteAllTextAsync(targetFile, processedContent);
+                }
+                else
+                {
+                    // 对于其他文件，直接复制
+                    await FileExtensions.CopyAsync(sourceFile, targetFile, true);
+                }
+                
                 File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Template copied: {relativePath}");
