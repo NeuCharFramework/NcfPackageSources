@@ -2,7 +2,7 @@
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.Models;

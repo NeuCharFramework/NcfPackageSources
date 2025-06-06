@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
     /// 创建颜色请求DTO

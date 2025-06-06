@@ -302,7 +302,7 @@ using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -1244,7 +1244,7 @@ File Path: <ModuleRootPath>/Domain/Models/DatabaseModel
 Code:
 ```csharp
 using Senparc.Ncf.Core.Models;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -1319,7 +1319,7 @@ Code:
 ```csharp
 using Senparc.Ncf.Core.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
     public class ColorDto : DtoBase
     {
@@ -1355,7 +1355,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.Threading.Tasks;
 

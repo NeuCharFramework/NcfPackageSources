@@ -16,7 +16,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 #endif
 #if (Sample)
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 #endif
 
 namespace Template_OrgName.Xncf.Template_XncfName
