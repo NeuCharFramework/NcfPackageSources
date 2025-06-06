@@ -202,8 +202,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     //$"-n {projectName} --force --IntegrationToNcf {targetFramework} {useSample} {useFunction} {useWeb} {useDatabase} {useWebApi} {orgName} {xncfName} {guid} {icon} {description} {version} {menuName} {xncfBaseVersion} {ncfAreaBaseVersion}"
                     "-n", projectName,
                     "-o",Path.Combine(_outPutBaseDir,projectName),
-                    "--force",
-                    "--IntegrationToNcf",
+                    "--force","true",
+                    "--IntegrationToNcf","true",
                     "--TargetFramework", frameworkVersion,
                     "--OrgName",request.OrgName,
                     "--XncfName",request.XncfName,

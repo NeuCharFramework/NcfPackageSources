@@ -5,7 +5,7 @@ class Program
     private static readonly ILogger _logger;
     private static readonly string[] IgnoredFolders = new[] 
     { 
-        "bin", "obj", "SenparcTraceLog", "logs", ".git" ,".vs"
+        "bin", "obj", "SenparcTraceLog", "logs", ".git" ,".vs","NcfFiles"
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 

@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>1.0.0</Version>
+    <TargetFramework Condition=" '$(IntegrationToNcf)' != 'true' ">netstandard2.1</TargetFramework>
+    <TargetFramework Condition=" '$(IntegrationToNcf)' == 'true' ">Template_TargetFramework</TargetFramework>
+    <Version Condition=" '$(IntegrationToNcf)' == 'true' ">Template_Version</Version>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -16,9 +17,9 @@
     <Title>Template_MenuName</Title>
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
-    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageIcon Condition=" '$(IntegrationToNcf)' == 'true'">icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v1.0.0 创世
+			vTemplate_Version 创世
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -26,24 +27,26 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
-  <ItemGroup>
-	<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
-	<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+  <ItemGroup Condition=" '$(UseWebApi)' == 'true'">
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(Sample)' == 'true' or '$(Database)' == 'true' ">
     <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.9-preview1" />
   </ItemGroup>
-  <ItemGroup>
-    <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.4-preview1" />
-    <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.20.5-preview1" />-->
-    <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-    <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
-
+  <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
+    <PackageReference Include="Senparc.Ncf.XncfBase" Version="Template_XncfBase_Version" />
+    <PackageReference Include="Senparc.Ncf.AreaBase" Version="Template_NcfAreaBase_Version" />
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(IntegrationToNcf)' != 'true'">
+    <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IntegrationToNcf)' == 'true'">
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
