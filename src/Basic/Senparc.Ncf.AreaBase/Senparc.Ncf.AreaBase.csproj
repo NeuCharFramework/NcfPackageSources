@@ -1,22 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.20.10-preview1</Version>
-		<AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
-		<RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-		<Description>Senparc.Ncf.AreaBase</Description>
-		<Copyright>NeuCharFramework</Copyright>
-		<PackageTags>NeuCharFramework,NCF</PackageTags>
-		<Authors>NeuCharFramework</Authors>
-		<Owners>NeuCharFramework</Owners>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<Title>Senparc.Ncf.AreaBase</Title>
-		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.20.10.1-preview1</Version>
+    <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
+    <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>Senparc.Ncf.AreaBase</Description>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF</PackageTags>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>Senparc.Ncf.AreaBase</Title>
+    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世，从 NCF 模板项目提炼移植
 			[2024-09-10] v0.18.4-preview1 升级缓存基础库
 			[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
@@ -25,38 +25,38 @@
 			[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
 			[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
 			[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.20.10-preview1 Update Installation 
+			[2025-05-18] v0.20.10-preview1 Update Installation
 </PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.AreaBase.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.AreaBase.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-	</ItemGroup>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.AreaBase.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.AreaBase.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
 </Project>

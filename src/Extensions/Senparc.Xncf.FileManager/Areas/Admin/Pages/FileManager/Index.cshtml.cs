@@ -19,7 +19,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         private readonly NcfFileService _fileService;
 
         public string UpFileUrl { get; set; }
-        public string DelFileUrl {  get; set; }
+        public string DelFileUrl { get; set; }
         public string BaseUrl { get; set; }
 
         public Index(Lazy<XncfModuleService> xncfModuleService, NcfFileService fileService)
@@ -49,7 +49,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             public string descriptions { get; set; }
         }
 
-        [ApiBind("FileManager",ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        [ApiBind("FileManager", ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<IActionResult> OnPostUploadAsync([FromForm] FileUploadModel model)
         {
             if (model.files == null || !model.files.Any())
@@ -87,15 +87,14 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public async Task<IActionResult> OnGetDownloadAsync(int id)
         {
-            var file = await _fileService.GetObjectAsync(z=>z.Id == id);
-            if (file==null)
+            var fileInfo = await _fileService.GetFileBytes(id);
+
+            if (fileInfo.FileBytes.Length == 0)
             {
-                return Ok(false,"文件不存在！");
+                return Ok(false, fileInfo.FileName);
             }
 
-           
-
-            return Ok(true);
+            return File(fileInfo.FileBytes, "application/octet-stream", fileInfo.FileName);
         }
     }
 }

@@ -85,13 +85,25 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         /// </summary>
         /// <param name="id">文件ID</param>
         /// <returns>文件字节数组</returns>
-        public async Task<byte[]> GetFileBytes(int id)
+        public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
         {
             var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null) return null;
+            if (file == null)
+            {
+                return (new byte[0], "文件不存在！");
+            }
 
-            var fullPath = Path.Combine(_baseFilePath, file.FilePath, file.StorageFileName + file.FileExtension);
-            return await File.ReadAllBytesAsync(fullPath);
+            var fileName = file.StorageFileName + file.FileExtension;
+
+            var fullPath = Path.Combine(_baseFilePath, file.FilePath, fileName);
+            if (!File.Exists(fullPath))
+            {
+                return (new byte[0], "文件不存在！");
+            }
+
+            var bytes = await File.ReadAllBytesAsync(fullPath);
+
+            return (bytes, fileName);
         }
 
         /// <summary>

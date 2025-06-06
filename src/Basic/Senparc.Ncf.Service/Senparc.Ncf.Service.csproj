@@ -1,22 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.22.9-preview1</Version>
-		<AssemblyName>Senparc.Ncf.Service</AssemblyName>
-		<RootNamespace>Senparc.Ncf.Service</RootNamespace>
-		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-		<Description>Senparc.Ncf.Service</Description>
-		<Copyright>NeuCharFramework</Copyright>
-		<PackageTags>NeuCharFramework,NCF</PackageTags>
-		<Authors>NeuCharFramework</Authors>
-		<Owners>NeuCharFramework</Owners>
-		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<Title>Senparc.Ncf.Service</Title>
-		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.22.9.1-preview1</Version>
+    <AssemblyName>Senparc.Ncf.Service</AssemblyName>
+    <RootNamespace>Senparc.Ncf.Service</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>Senparc.Ncf.Service</Description>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF</PackageTags>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>Senparc.Ncf.Service</Title>
+    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
 			v0.1.0 创世
 			v0.11.7 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
 			v0.14.0 解决模块安装后直接授权菜单问题
@@ -26,45 +26,45 @@
       [2025-01-12] v0.22.4-preview1 为 ServiceBase 提供 ToDto 扩展方法
 			[2025-01-25] v0.22.6-preview1 Update Agents functions, support for function calling
 			[2025-04-29] v0.22.8-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.22.9-preview1 Update Installation 
+			[2025-05-18] v0.22.9-preview1 Update Installation
 </PackageReleaseNotes>
-		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Service.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-		<OutputPath>..\..\BuildOutPut</OutputPath>
-		<DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Service.XML</DocumentationFile>
-		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<ErrorReport>prompt</ErrorReport>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<ItemGroup>
-		<Compile Remove="MultiTenant\**" />
-		<EmbeddedResource Remove="MultiTenant\**" />
-		<None Remove="MultiTenant\**" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Repository\Senparc.Ncf.Repository.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
-		<ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
-	</ItemGroup>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Service.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Ncf.Service.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="MultiTenant\**" />
+    <EmbeddedResource Remove="MultiTenant\**" />
+    <None Remove="MultiTenant\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Repository\Senparc.Ncf.Repository.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
+    <ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />
+  </ItemGroup>
 </Project>
