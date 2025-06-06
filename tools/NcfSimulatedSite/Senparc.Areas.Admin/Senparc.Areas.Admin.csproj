@@ -49,7 +49,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.17.0-preview1" />
+		<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.18.0-preview.1" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />

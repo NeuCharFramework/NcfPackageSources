@@ -140,41 +140,29 @@ var app = new Vue({
     },
     clearAddForm() {
       this.addForm = {
-        "alias": "",
-        "modelId": "",
-        "deploymentName": "",
-        "endpoint": "",
-        "aiPlatform": '4',
-        "configModelType": '1',
-        "organizationId": "",
-        "apiKey": "",
-        "apiVersion": "",
+        alias: "",
+        "vectorId": "",
+        "name": "",
+        "connectionString": "",
+        "vectorDBType": '1',
         "note": "",
-        "maxToken": 0,
       }
     },
     clearEditForm() {
       this.editForm = {
-        "alias": "",
-        "modelId": "",
-        "deploymentName": "",
-        "endpoint": "",
-        "aiPlatform": '4',
-        "configModelType": '1',
-        "organizationId": "",
-        "apiKey": "",
-        "apiVersion": "",
+        alias: "",
+        "vectorId": "",
+        "name": "",
+        "connectionString": "",
+        "vectorDBType": '1',
         "note": "",
-        "maxToken": 0,
         "show": true
       }
     },
     async editModelSubmit() {
       this.$refs.editForm.validate(async (valid) => {
         if (valid) {
-          this.editForm.aiPlatform = parseInt(this.editForm.aiPlatform)
-          this.editForm.configModelType = parseInt(this.editForm.configModelType)
-          this.editForm.maxToken = parseInt(this.editForm.maxToken)
+          this.editForm.vectorDBType = parseInt(this.editForm.vectorDBType)
           // clear empty value  
           for (const key in this.editForm) {
             if (this.editForm.hasOwnProperty(key)) {
@@ -185,7 +173,7 @@ var app = new Vue({
             }
           }
 
-          await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.EditAsync', {
+          await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.EditAsync', {
             ...this.editForm
           }).then(res => {
             this.$message({
@@ -210,8 +198,7 @@ var app = new Vue({
       this.editFormDialogVisible = true;
       this.editForm = {
         ...row,
-        aiPlatform: row.aiPlatform.toString(),
-        configModelType: row.configModelType.toString()
+        vectorDBType: row.vectorDBType.toString()
       };
     },
     deleteModel(row) {

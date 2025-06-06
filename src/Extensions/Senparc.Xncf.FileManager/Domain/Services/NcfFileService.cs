@@ -26,10 +26,16 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         public NcfFileService(IRepositoryBase<NcfFile> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
-            _baseFilePath = Path.Combine(AppContext.BaseDirectory, "App_Data", "NcfFiles");
-           
-           // 尝试添加目录
-           Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
+            try
+            {
+                _baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
+                // 尝试添加目录
+                Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         /// <summary>
@@ -79,13 +85,25 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         /// </summary>
         /// <param name="id">文件ID</param>
         /// <returns>文件字节数组</returns>
-        public async Task<byte[]> GetFileBytes(int id)
+        public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
         {
             var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null) return null;
+            if (file == null)
+            {
+                return (new byte[0], "文件不存在！");
+            }
 
-            var fullPath = Path.Combine(_baseFilePath, file.FilePath, file.StorageFileName + file.FileExtension);
-            return await File.ReadAllBytesAsync(fullPath);
+            var fileName = file.StorageFileName + file.FileExtension;
+
+            var fullPath = Path.Combine(_baseFilePath, file.FilePath, fileName);
+            if (!File.Exists(fullPath))
+            {
+                return (new byte[0], "文件不存在！");
+            }
+
+            var bytes = await File.ReadAllBytesAsync(fullPath);
+
+            return (bytes, fileName);
         }
 
         /// <summary>
@@ -175,4 +193,4 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
     }
-} 
+}
