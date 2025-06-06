@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.12.8-preview.2</PackageVersion>
+    <PackageVersion>0.12.8-preview.3</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -77,12 +77,12 @@
     <None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml.cs" />
+    <!--<Content Remove="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml.cs" />
     <Content Remove="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSampleIndex.cshtml.cs" />
     <Content Remove="templates\template1\Areas\Admin\Pages\Template_XncfName\Index.cshtml.cs" />
     <Content Remove="templates\template1\Domain\Migrations\Dm\20250109084533_Init.cs" />
     <Content Remove="templates\template1\Domain\Migrations\Dm\20250109084533_Init.Designer.cs" />
-    <Content Remove="templates\template1\Domain\Migrations\Dm\Template_XncfNameSenparcEntities_DmModelSnapshot.cs" />
+    <Content Remove="templates\template1\Domain\Migrations\Dm\Template_XncfNameSenparcEntities_DmModelSnapshot.cs" />-->
   </ItemGroup>
   <ItemGroup>
     <!--<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />-->
