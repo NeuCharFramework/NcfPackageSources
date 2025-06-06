@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
 {
@@ -137,11 +137,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     return Ok(new { success = false, message = "颜色不存在" });
                 }
 
-                // 直接修改现有对象的属性值
-                color.Red = request.Red;
-                color.Green = request.Green;
-                color.Blue = request.Blue;
-                color.AdditionNote = request.AdditionNote;
+                // 更新
+                color.Update(request);
                 
                 await _colorService.SaveObjectAsync(color);
                 

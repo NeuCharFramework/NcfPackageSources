@@ -2,6 +2,7 @@
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
@@ -47,6 +48,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
             }
         }
 
+        public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
+        {
+            AdditionNote = additionNote;
+        }
+
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -76,6 +82,14 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Red = Math.Max(0, Red - 10);
             Green = Math.Max(0, Green - 10);
             Blue = Math.Max(0, Blue - 10);
+        }
+
+        public void Update(UpdateColorRequestDto dto)
+        {
+            Red = dto.Red;
+            Green = dto.Green;
+            Blue = dto.Blue;
+            AdditionNote = dto.AdditionNote;
         }
     }
 }
