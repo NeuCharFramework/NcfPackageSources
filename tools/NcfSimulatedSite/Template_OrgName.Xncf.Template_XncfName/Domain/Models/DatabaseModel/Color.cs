@@ -2,6 +2,7 @@
 using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
@@ -15,21 +16,21 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Red { get; set; }
+        public int Red { get; private set; }
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Green { get; set; }
+        public int Green { get; private set; }
 
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Blue { get; set; }
+        public int Blue { get; private set; }
 
         /// <summary>
         /// 附加列，测试多次数据库 Migrate
         /// </summary>
-        public string AdditionNote { get; set; }
+        public string AdditionNote { get; private set; }
 
         private Color() { }
 
@@ -46,7 +47,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 Blue = blue;
             }
         }
-        
+
         public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
         {
             AdditionNote = additionNote;
@@ -81,6 +82,14 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Red = Math.Max(0, Red - 10);
             Green = Math.Max(0, Green - 10);
             Blue = Math.Max(0, Blue - 10);
+        }
+
+        public void Update(UpdateColorRequestDto dto)
+        {
+            Red = dto.Red;
+            Green = dto.Green;
+            Blue = dto.Blue;
+            AdditionNote = dto.AdditionNote;
         }
     }
 }
