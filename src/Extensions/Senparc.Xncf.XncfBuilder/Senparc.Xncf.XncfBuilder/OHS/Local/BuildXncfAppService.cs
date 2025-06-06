@@ -208,10 +208,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     "--OrgName",request.OrgName,
                     "--XncfName",request.XncfName,
                     "--Guid", $"{Guid.NewGuid().ToString().ToUpper()}",
-                    "--Icon",$"\"{request.Icon}\"",
-                    "--Description",$"\"{request.Description}\"",
-                    "--Version",$"\"{request.Version}\"",
-                    "--MenuName",$"\"{request.MenuName}\"",
+                    "--Icon",$"'{request.Icon}'",
+                    "--Description",$"'{request.Description}'",
+                    "--Version",$"'{request.Version}'",
+                    "--MenuName",$"'{request.MenuName}'",
                     "--XncfBaseVersion",xncfBaseVersion,
                     "--NcfAreaBaseVersion",ncfAreaBaseVersion
                 };
