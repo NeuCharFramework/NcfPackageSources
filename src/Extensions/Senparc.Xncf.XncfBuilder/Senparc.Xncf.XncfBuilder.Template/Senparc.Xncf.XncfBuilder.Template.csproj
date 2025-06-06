@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <PackageType>Template</PackageType>
-    <PackageVersion>0.12.8-beta1</PackageVersion>
-    <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
-    <Title>XNCF Template</Title>
-    <Authors>JeffreySu</Authors>
-    <Owners>JeffreySu</Owners>
-    <Description>Templates to use when creating an XNCF module for NCF project.</Description>
-    <PackageTags>NeuCharFramework;NCF;XNCF;template;dotnet-new;templates</PackageTags>
-    <IncludeContentInPack>true</IncludeContentInPack>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <ContentTargetFolders>content</ContentTargetFolders>
-    <!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
-    <NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
-    <!--<NoDefaultExcludes>true</NoDefaultExcludes>-->
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageType>Template</PackageType>
+		<PackageVersion>0.12.9-preview.7</PackageVersion>
+		<PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
+		<Title>XNCF Template</Title>
+		<Authors>JeffreySu</Authors>
+		<Owners>JeffreySu</Owners>
+		<Description>Templates to use when creating an XNCF module for NCF project.</Description>
+		<PackageTags>NeuCharFramework;NCF;XNCF;template;dotnet-new;templates</PackageTags>
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<ContentTargetFolders>content</ContentTargetFolders>
+		<!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
+		<NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
+		<!--<NoDefaultExcludes>true</NoDefaultExcludes>-->
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+		<PackageIcon>icon.jpg</PackageIcon>
+		<PackageReleaseNotes>
 			v0.1.0 创世
 			v0.1.7 删除无用的日志文件
 			v0.2.3 添加 UseWebApi 选项
@@ -31,77 +31,114 @@
 			v0.4.3 优化模板，为 .NET 7.0 CLI 优化
 			v0.4.4 修复模板命名错误
 			v0.4.5 同步更新参数重命名：RootDictionaryPath -&gt; RootDirectoryPath
-		v0.4.6 更新项目文件
-		v0.4.7 更新基础库引用
-		v0.5.0 完善版本号，按照语义化版本规范（semver）进行命名
-		v0.6.0 更新项目引用，支持 .NET 8.0
-		v0.7.0 使用新的多数据库配置版本
-		v0.8.0 支持新版本多数据库模板
-		v0.9.0
-		1、支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件；
-		2、重新更新 SQLite 的 Migration 模板
-		v0.10.0 重新生成数据库 Migration
-		v0.10.1 添加 SenparcEntities 文件中的命名空间引用
-		v0.11.0 AppService 中使用新的 GetResponseAsync() 简化方法（可以只输入一个 data 数据的泛型），并新增 GetStringResponseAsync() 方法
-		v0.12.0 添加达梦（Dm）数据库支持
-		v0.12.1 修正模板代码
-		v0.12.2 更新基础库
-		v0.12.3 更新基础库
-		v0.12.4 更新基础库
-		v0.12.5 更新 Demo
-		v0.12.6 添加项目引用，确保 Areas 页面能被识别
-		v0.12.7 同步最新 Nuget 包版本
-		v0.12.8-beta1 添加达梦数据库迁移（测试）
-</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
-    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <!--<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+			v0.4.6 更新项目文件
+			v0.4.7 更新基础库引用
+			v0.5.0 完善版本号，按照语义化版本规范（semver）进行命名
+			v0.6.0 更新项目引用，支持 .NET 8.0
+			v0.7.0 使用新的多数据库配置版本
+			v0.8.0 支持新版本多数据库模板
+			v0.9.0
+			1、支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件；
+			2、重新更新 SQLite 的 Migration 模板
+			v0.10.0 重新生成数据库 Migration
+			v0.10.1 添加 SenparcEntities 文件中的命名空间引用
+			v0.11.0 AppService 中使用新的 GetResponseAsync() 简化方法（可以只输入一个 data 数据的泛型），并新增 GetStringResponseAsync() 方法
+			v0.12.0 添加达梦（Dm）数据库支持
+			v0.12.1 修正模板代码
+			v0.12.2 更新基础库
+			v0.12.3 更新基础库
+			v0.12.4 更新基础库
+			v0.12.5 更新 Demo
+			v0.12.6 添加项目引用，确保 Areas 页面能被识别
+			v0.12.7 同步最新 Nuget 包版本
+			v0.12.8-beta1 添加达梦数据库迁移（测试）
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+		<!--<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>-->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
-    <OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="**\*" />
-    <Content Remove="**\*" />
-    <Compile Remove="**\*" />
-    <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
-    <Compile Remove="**\*" />
-    <Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-    <None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="templates\template1\Domain\Migrations\Dm\20250109084533_Init.cs" />
-    <Content Remove="templates\template1\Domain\Migrations\Dm\20250109084533_Init.Designer.cs" />
-    <Content Remove="templates\template1\Domain\Migrations\Dm\Template_XncfNameSenparcEntities_DmModelSnapshot.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />-->
-    <Content Include="..\..\..\icon.jpg" Link="icon.jpg" Pack="true" PackagePath="/">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="readme.md" />
-    <None Remove="templates\template1\ACL\readme.md" />
-    <None Remove="templates\template1\Domain\readme.md" />
-    <None Remove="templates\template1\OHS\Local\readme.md" />
-    <None Remove="templates\template1\OHS\readme.md" />
-    <None Remove="templates\template1\OHS\Remote\readme.md" />
-    <None Remove="templates\template1\readme.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="readme.md" Pack="true" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
-    <PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="8.0.403" />
-  </ItemGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
+		<OutputPath Condition=" '$(Configuration)' == 'TemplateRelease'">..\..\..\..\..\NCF\src</OutputPath>
+		<OutputPath Condition=" '$(Configuration)' == 'Release'">..\..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Remove="**\*" />
+		<Content Remove="**\*" />
+		<Compile Remove="**\*" />
+		<Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**;**\App_Data\SenparcTraceLog\**" />
+		<Compile Remove="**\*" />
+		<Compile Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<Content Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<EmbeddedResource Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+		<None Remove="templates\template1\App_Data\SenparcTraceLog\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />-->
+		<Content Include="..\..\..\icon.jpg" Link="icon.jpg" Pack="true" PackagePath="/">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="readme.md" />
+		<None Remove="templates\template1\ACL\readme.md" />
+		<None Remove="templates\template1\Domain\readme.md" />
+		<None Remove="templates\template1\OHS\Local\readme.md" />
+		<None Remove="templates\template1\OHS\readme.md" />
+		<None Remove="templates\template1\OHS\Remote\readme.md" />
+		<None Remove="templates\template1\readme.md" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+		<PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="8.0.403" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Update="templates\template1\Areas\Admin\Pages\Shared\_SideMenu.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Shared\_ViewImports.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Shared\_ViewStart.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSample.cshtml.cs">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSampleIndex.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Template_XncfName\DatabaseSampleIndex.cshtml.cs">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Template_XncfName\Index.cshtml">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\Areas\Admin\Pages\Template_XncfName\Index.cshtml.cs">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="templates\template1\wwwroot\**\*">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 </Project>

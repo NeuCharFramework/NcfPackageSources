@@ -87,8 +87,7 @@ namespace Senparc.Xncf.XncfBuilder
                 };
             })
                     .WithHttpTransport()
-                    .WithToolsFromAssembly(); ;
-
+                    .WithToolsFromAssembly();
 
             return base.AddXncfModule(services, configuration, env);
         }

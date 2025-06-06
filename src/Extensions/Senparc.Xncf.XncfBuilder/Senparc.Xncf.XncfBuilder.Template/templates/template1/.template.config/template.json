@@ -155,6 +155,10 @@
           "exclude": [
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml",
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs",
+            "Domain/Models/DatabaseModel/Dto/ColorDto.cs",
+            "Domain/Models/DatabaseModel/Dto/ColorRequestDto.cs",
             "Services/**"
           ]
         },

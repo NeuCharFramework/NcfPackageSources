@@ -2,7 +2,6 @@
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Models
 {

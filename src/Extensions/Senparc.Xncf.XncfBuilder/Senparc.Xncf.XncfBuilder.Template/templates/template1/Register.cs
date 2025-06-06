@@ -8,16 +8,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-#if (Database || Sample)
 using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
-#endif
-#if (Sample)
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
-#endif
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
+using Microsoft.AspNetCore.Builder;
+using Senparc.CO2NET.RegisterServices;
+using System.Reflection;
+using Microsoft.Extensions.FileProviders;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
@@ -40,7 +41,6 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-#if (Database || Sample)
             //安装或升级版本时更新数据库
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
@@ -49,12 +49,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
             {
                 case InstallOrUpdate.Install:
                     //新安装
-#if (Sample)
-                    #region 初始化数据库数据
+            #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
-                    #endregion
-#endif
+            #endregion
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -62,12 +60,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-#endif
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-#if (Database || Sample)
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -80,22 +76,30 @@ namespace Template_OrgName.Xncf.Template_XncfName
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             #endregion
-#endif
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-#if (Database || Sample)
             services.AddScoped<ColorAppService>();
+            services.AddScoped<ColorService>();
             
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
-#endif
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
+
+            return base.UseXncfModule(app, registerService);
         }
     }
 }

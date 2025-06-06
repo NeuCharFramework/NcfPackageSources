@@ -1,7 +1,7 @@
 ﻿using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto;
+using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
 using System;
 using System.Collections.Generic;

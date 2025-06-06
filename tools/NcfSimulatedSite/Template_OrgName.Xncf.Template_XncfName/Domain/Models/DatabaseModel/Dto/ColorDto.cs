@@ -1,6 +1,6 @@
 ﻿using Senparc.Ncf.Core.Models;
 
-namespace Template_OrgName.Xncf.Template_XncfName.Models.DatabaseModel.Dto
+namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
     public class ColorDto : DtoBase
     {

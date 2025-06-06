@@ -5,7 +5,7 @@ class Program
     private static readonly ILogger _logger;
     private static readonly string[] IgnoredFolders = new[] 
     { 
-        "bin", "obj", "SenparcTraceLog", "logs", ".git" ,".vs","Template_OrgName.Xncf.Template_XncfName"
+        "bin", "obj", "SenparcTraceLog", "logs", ".git" ,".vs","NcfFiles"
     };
     private static readonly string[] IgnoredExtensions = new[] 
     { 
@@ -67,6 +67,27 @@ class Program
                 return;
             }
 
+            // 处理模板目录的特殊同步
+            string templateSourceDir = Path.Combine(sourceDir, "Template_OrgName.Xncf.Template_XncfName");
+            string templateTargetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "src", "Extensions", "Senparc.Xncf.XncfBuilder", "Senparc.Xncf.XncfBuilder.Template", "templates", "template1"));
+            
+            if (Directory.Exists(templateSourceDir))
+            {
+                Console.WriteLine($"\nTemplate source directory: {templateSourceDir}");
+                Console.WriteLine($"Template target directory: {templateTargetDir}");
+                
+                if (!Directory.Exists(templateTargetDir))
+                {
+                    Directory.CreateDirectory(templateTargetDir);
+                    Console.WriteLine("创建模板目标目录");
+                }
+                
+                await SyncTemplateDirectoryAsync(templateSourceDir, templateTargetDir);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Template directory synchronization completed.");
+                Console.ResetColor();
+            }
+
             await SyncDirectoriesAsync(sourceDir, targetDir);
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -126,6 +147,168 @@ class Program
             return true;
 
         return false;
+    }
+
+    // 新增：模板目录的单向同步方法
+    static async Task SyncTemplateDirectoryAsync(string sourceDir, string targetDir)
+    {
+        var sourceFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)
+            .Where(f => !ShouldIgnoreForTemplate(f))
+            .ToList();
+
+        Console.WriteLine($"\n开始同步模板目录 (单向同步: 源 -> 目标)");
+        Console.WriteLine($"找到 {sourceFiles.Count} 个文件需要处理");
+
+        foreach (var sourceFile in sourceFiles)
+        {
+            await SyncTemplateFileAsync(sourceFile, sourceDir, targetDir);
+        }
+    }
+
+    // 新增：模板文件的忽略规则（可能与普通文件不同）
+    static bool ShouldIgnoreForTemplate(string path)
+    {
+        // 获取文件名和扩展名
+        var fileName = Path.GetFileName(path);
+        var extension = Path.GetExtension(path);
+
+        // 对于模板目录，只忽略常见的临时文件和编译输出
+        var templateIgnoredFolders = new[] { "bin", "obj", ".vs" };
+        var templateIgnoredExtensions = new[] { ".user", ".DS_Store" };
+
+        // 检查目录
+        var relativePath = Path.GetDirectoryName(path);
+        if (templateIgnoredFolders.Any(folder => relativePath?.Contains(folder) ?? false))
+            return true;
+
+        // 检查扩展名
+        if (templateIgnoredExtensions.Any(ext => 
+            ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+            fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+            return true;
+
+        // 检查隐藏文件
+        if (fileName.StartsWith("."))
+            return true;
+
+        return false;
+    }
+
+    // 新增：模板文件的单向同步方法
+    static async Task SyncTemplateFileAsync(string sourceFile, string sourceBaseDir, string targetBaseDir)
+    {
+        var relativePath = Path.GetRelativePath(sourceBaseDir, sourceFile);
+        var targetFile = Path.Combine(targetBaseDir, relativePath);
+        var targetDir = Path.GetDirectoryName(targetFile);
+
+        if (!Directory.Exists(targetDir))
+        {
+            Directory.CreateDirectory(targetDir!);
+        }
+
+        bool shouldCopy = true;
+        string sourceContent = null;
+        string processedContent = null;
+
+        // 对 Register.cs 文件进行特殊处理
+        if (Path.GetFileName(sourceFile).Equals("Register.cs", StringComparison.OrdinalIgnoreCase))
+        {
+            sourceContent = await File.ReadAllTextAsync(sourceFile);
+            processedContent = sourceContent
+                .Replace(
+                    @"public override string Uid => ""C5852057-BF1D-492B-A22E-64F3C5F91D38"";",
+                    @"public override string Uid => ""Template_Guid"";"
+                )
+                .Replace(
+                    @"public override string Version => ""1.0.0"";",
+                    @"public override string Version => ""Template_Version"";"
+                );
+        }
+
+        if (File.Exists(targetFile))
+        {
+            bool contentSame = false;
+
+            if (processedContent != null)
+            {
+                // 对于 Register.cs 文件，比较处理后的内容与目标文件内容
+                var targetContent = await File.ReadAllTextAsync(targetFile);
+                contentSame = processedContent == targetContent;
+            }
+            else
+            {
+                // 对于其他文件，比较文件大小和MD5
+                var sourceFileInfo = new FileInfo(sourceFile);
+                var targetFileInfo = new FileInfo(targetFile);
+
+                if (sourceFileInfo.Length == targetFileInfo.Length)
+                {
+                    var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
+                    var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
+                    contentSame = sourceMD5 == targetMD5;
+                }
+            }
+
+            if (contentSame)
+            {
+                // 内容相同，检查时间戳
+                var sourceTime = File.GetLastWriteTime(sourceFile);
+                var targetTime = File.GetLastWriteTime(targetFile);
+
+                if (sourceTime <= targetTime)
+                {
+                    // 源文件没有更新，跳过
+                    shouldCopy = false;
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine($"Template skipped (same): {relativePath}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    // 更新时间戳
+                    File.SetLastWriteTime(targetFile, sourceTime);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Template timestamp updated: {relativePath}");
+                    Console.ResetColor();
+                    shouldCopy = false;
+                }
+            }
+            else
+            {
+                // 内容不同，显示信息但直接覆盖（单向同步）
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"Template content differs, overwriting: {relativePath}");
+                Console.ResetColor();
+            }
+        }
+
+        if (shouldCopy)
+        {
+            try
+            {
+                if (processedContent != null)
+                {
+                    // 对于 Register.cs 文件，写入处理后的内容
+                    await File.WriteAllTextAsync(targetFile, processedContent);
+                }
+                else
+                {
+                    // 对于其他文件，直接复制
+                    await FileExtensions.CopyAsync(sourceFile, targetFile, true);
+                }
+                
+                File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Template copied: {relativePath}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Error copying template {relativePath}: {ex.Message}");
+                Console.ResetColor();
+            }
+        }
     }
 
     // 添加 LCS (Longest Common Subsequence) 算法来找到真正的差异
@@ -241,25 +424,13 @@ class Program
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("文件内容相同，仅修改时间不同");
-            if (_autoUpdateChoice == null)
-            {
-                Console.WriteLine("请选择操作：");
-                Console.WriteLine("U - 更新时间戳");
-                Console.WriteLine("N - 跳过此文件");
-                Console.WriteLine("A - 自动执行后续操作（之后每次都执行相同选择）");
-            }
-            else
-            {
-                Console.WriteLine($"自动执行操作：{(_autoUpdateChoice == ConsoleKey.U ? "更新时间戳" : "跳过")}");
-            }
+            Console.ResetColor();
         }
         else
         {
-            Console.WriteLine("\n文件内容存在差异");
-            Console.WriteLine("请选择操作：");
-            Console.WriteLine("Y - 用源文件覆盖目标文件");
-            Console.WriteLine("R - 用目标文件覆盖源文件（反向更新）");
-            Console.WriteLine("N - 跳过此文件");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"文件内容存在差异: {sourceFile}");
+            Console.ResetColor();
         }
 
         Console.ResetColor();
@@ -392,6 +563,12 @@ class Program
                 Console.ResetColor();
 
                 ShowFileDifference(sourceFile, targetFile, false);
+                
+                Console.WriteLine("请选择操作：");
+                Console.WriteLine("Y - 用源文件覆盖目标文件");
+                Console.WriteLine("R - 用目标文件覆盖源文件（反向更新）");
+                Console.WriteLine("N - 跳过此文件");
+                
                 while (true)
                 {
                     var response = Console.ReadKey();

@@ -202,25 +202,25 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     //$"-n {projectName} --force --IntegrationToNcf {targetFramework} {useSample} {useFunction} {useWeb} {useDatabase} {useWebApi} {orgName} {xncfName} {guid} {icon} {description} {version} {menuName} {xncfBaseVersion} {ncfAreaBaseVersion}"
                     "-n", projectName,
                     "-o",Path.Combine(_outPutBaseDir,projectName),
-                    "--force",
-                    "--IntegrationToNcf",
+                    "--force","true",
+                    "--IntegrationToNcf","true",
                     "--TargetFramework", frameworkVersion,
                     "--OrgName",request.OrgName,
                     "--XncfName",request.XncfName,
                     "--Guid", $"{Guid.NewGuid().ToString().ToUpper()}",
-                    "--Icon",$"\"{request.Icon}\"",
-                    "--Description",$"\"{request.Description}\"",
-                    "--Version",$"\"{request.Version}\"",
-                    "--MenuName",$"\"{request.MenuName}\"",
+                    "--Icon",$"{request.Icon}",
+                    "--Description",$"{request.Description}",
+                    "--Version",$"{request.Version}",
+                    "--MenuName",$"{request.MenuName}",
                     "--XncfBaseVersion",xncfBaseVersion,
                     "--NcfAreaBaseVersion",ncfAreaBaseVersion
                 };
 
-                if (isUseSample) args.Add("--Sample");
-                if (useFunction) args.Add("--Function");
-                if (isUseWeb) args.Add("--Web");
-                if (isUseDatabase) args.Add("--Database");
-                if (useWebApi) args.Add("--UseWebApi");
+                if (isUseSample) args.Add("--Sample true");
+                if (useFunction) args.Add("--Function true");
+                if (isUseWeb) args.Add("--Web true");
+                if (isUseDatabase) args.Add("--Database true");
+                if (useWebApi) args.Add("--UseWebApi true");
 
                 var pDotnet = StartNewProcess("dotnet");
 
