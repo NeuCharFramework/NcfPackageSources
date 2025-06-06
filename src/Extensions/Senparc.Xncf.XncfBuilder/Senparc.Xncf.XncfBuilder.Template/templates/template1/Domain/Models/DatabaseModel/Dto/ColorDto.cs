@@ -7,16 +7,21 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Red { get; private set; }
+        public int Red { get; set; }
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Green { get; private set; }
+        public int Green { get; set; }
         /// <summary>
         /// 颜色码，0-255
         /// </summary>
-        public int Blue { get; private set; }
+        public int Blue { get; set; }
 
-        private ColorDto() { }
+        /// <summary>
+        /// 附加列，测试多次数据库 Migrate
+        /// </summary>
+        public string AdditionNote { get; set; }
+
+        public ColorDto() { }
     }
 }

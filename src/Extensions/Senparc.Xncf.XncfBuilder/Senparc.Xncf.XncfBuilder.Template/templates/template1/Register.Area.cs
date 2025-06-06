@@ -20,11 +20,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-#if (Sample)
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSampleIndex"),"数据列表示例","fa fa-bookmark-o"),
 
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
-#endif
+                          new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSampleIndex"),"数据列表示例","fa fa-bookmark-o"),
+
+                          new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

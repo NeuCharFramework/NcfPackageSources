@@ -1,7 +1,6 @@
 ﻿using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
-using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.Threading.Tasks;
@@ -57,7 +56,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         public async Task<ColorDto> Random()
         {
             //TODO:异步方法需要添加排序功能
-            var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);
+            var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Random();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             return base.Mapper.Map<ColorDto>(obj);

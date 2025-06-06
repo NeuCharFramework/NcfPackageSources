@@ -9,13 +9,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
     {
         [Range(0, 255, ErrorMessage = "红色值必须在0-255之间")]
         public int Red { get; set; }
-        
+
         [Range(0, 255, ErrorMessage = "绿色值必须在0-255之间")]
         public int Green { get; set; }
-        
+
         [Range(0, 255, ErrorMessage = "蓝色值必须在0-255之间")]
         public int Blue { get; set; }
-        
+
         /// <summary>
         /// 附加备注
         /// </summary>
@@ -29,16 +29,16 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
     {
         [Required]
         public int Id { get; set; }
-        
+
         [Range(0, 255, ErrorMessage = "红色值必须在0-255之间")]
         public int Red { get; set; }
-        
+
         [Range(0, 255, ErrorMessage = "绿色值必须在0-255之间")]
         public int Green { get; set; }
-        
+
         [Range(0, 255, ErrorMessage = "蓝色值必须在0-255之间")]
         public int Blue { get; set; }
-        
+
         /// <summary>
         /// 附加备注
         /// </summary>
@@ -62,4 +62,4 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         [Required]
         public int Id { get; set; }
     }
-} 
+}
