@@ -193,7 +193,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var iWantToRun = semanticAiHandler.ChatConfig(parameter,
                   userId: "Jeffrey",
                   maxHistoryStore: 10,
-                  chatSystemMessage: "你是一位智能助手，负责帮我选择最合适的硬件执行",
+                  chatSystemMessage: "你是一位智能助手，负责帮助我完成任务",
                   senparcAiSetting: aiSetting,
                   kernelBuilderAction: kh =>
                   {
