@@ -62,7 +62,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             {
                 var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
-                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
+                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ToString();//.ProductVersion;
                 return $"{libVersion}";
             }
 
@@ -216,11 +216,32 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     "--NcfAreaBaseVersion",ncfAreaBaseVersion
                 };
 
-                if (isUseSample) args.Add("--Sample true");
-                if (useFunction) args.Add("--Function true");
-                if (isUseWeb) args.Add("--Web true");
-                if (isUseDatabase) args.Add("--Database true");
-                if (useWebApi) args.Add("--UseWebApi true");
+                if (isUseSample)
+                {
+                    args.Add("--Sample");
+                    args.Add("1");
+                }
+                if (useFunction)
+                {
+                    args.Add("--Function");
+                    args.Add("1");
+
+                }
+                if (isUseWeb)
+                {
+                    args.Add("--Web");
+                    args.Add("1");
+                }
+                if (isUseDatabase)
+                {
+                    args.Add("--Database");
+                    args.Add("1");
+                }
+                if (useWebApi)
+                {
+                    args.Add("--UseWebApi");
+                    args.Add("1");
+                }
 
                 var pDotnet = StartNewProcess("dotnet");
 
@@ -376,7 +397,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             });
         }
 
-   
+
 
         #endregion
 

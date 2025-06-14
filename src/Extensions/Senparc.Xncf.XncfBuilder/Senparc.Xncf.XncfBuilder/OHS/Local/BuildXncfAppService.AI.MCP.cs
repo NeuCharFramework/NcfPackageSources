@@ -1465,7 +1465,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             var response = new BuildXncf_CreateOrUpdateFileResponse();
 
             string fullFilePath = null;
-            string fileContent = null;
+            string fileContent = fullFileContent;
             try
             {
                 fullFilePath = this.GetFilePath(moduleName, filePath);
