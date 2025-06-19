@@ -52,7 +52,7 @@
         </div>
         <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="训练模型Id" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
+            <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
 
             <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" label="向量数据库Id" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
 
@@ -99,7 +99,7 @@
                     <el-input size="mini" v-model="dialog.data.name" clearable placeholder="请输入名称" />
                 </el-form-item>
 
-                <el-form-item label="选择训练模型">
+                <el-form-item label="选择Embedding模型">
                     <el-cascader v-model="selectDefaultEmbeddingModel"
                                  :options="embeddingModelData"
                                  @@change="selectEmbeddingModel"
@@ -109,8 +109,8 @@
                     </el-cascader>
                 </el-form-item>
 
-                <el-form-item label="训练模型Id" prop="embeddingModelId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入训练模型Id" />
+                <el-form-item label="Embedding模型Id" prop="embeddingModelId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入Embedding模型Id" />
                 </el-form-item>
 
                 <el-form-item label="选择向量数据库">
@@ -119,7 +119,7 @@
                                  @@change="selectVectorDB"
                                  clearable
                                  filterable
-                                 :props="{label:'name',value:'id'}">
+                                 :props="{label:'alias',value:'id'}">
                     </el-cascader>
                 </el-form-item>
 
@@ -159,7 +159,7 @@
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-user"></i>
-                        训练模型Id
+                        Embedding模型Id
                     </template>
                     embeddingModelId
                 </el-descriptions-item>

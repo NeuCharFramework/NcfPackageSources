@@ -45,13 +45,13 @@ new Vue({
         name: []
       },
       colData: [
-        { title: "训练模型Id", istrue: false },
+        { title: "Embedding模型Id", istrue: false },
         { title: "向量数据库Id", istrue: false },
         { title: "对话模型Id", istrue: false },
         { title: "名称", istrue: true }
       ],
       checkBoxGroup: [
-        "训练模型Id", "向量数据库Id", "对话模型Id", "名称"
+        "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称"
       ],
       checkedColumns: [],
 
@@ -197,6 +197,7 @@ new Vue({
       });
     },
     async getEmbeddingModelList() {
+      debugger
       let that = this
       let param = {
         page: that.page.page,
@@ -277,6 +278,7 @@ new Vue({
     },
     // 编辑 // 新增知识库管理 // 增加下一级
     handleEdit(index, row, flag) {
+      debugger
       let that = this
       that.dialog.visible = true;
       //获取分类列表数据
@@ -293,6 +295,15 @@ new Vue({
       that.dialog.data = {
         id, embeddingModelId, vectorDBId, chatModelId, name
       };
+      if (that.dialog.data.embeddingModelId != undefined) {
+        that.selectDefaultEmbeddingModel[0] = parseInt(that.dialog.data.embeddingModelId);
+      }
+      if (that.dialog.data.vectorDBId != undefined) {
+        that.selectDefaultVectorDB[0] = parseInt(that.dialog.data.vectorDBId);
+      }
+      if (that.dialog.data.chatModelId != undefined) {
+        that.selectDefaultChatModel[0] = parseInt(that.dialog.data.chatModelId);
+      }
       //if (cover != '' && cover != undefined)
       //{
       //    that.dialogImageUrl = cover;
@@ -307,8 +318,8 @@ new Vue({
       //}
       // dialog中父级菜单 做递归显示
       //let x = [];
-      //that.recursionFunc(row, this.categoryData, x);
-      //that.dialog.data.categoryId = x;
+      //that.recursionFunc(row, that.chatModelData, x);
+      //that.dialog.data.chatModelId = x;
 
       if (flag === 'edit') {
         that.dialog.title = '编辑知识库管理';
@@ -316,13 +327,13 @@ new Vue({
     },
     // 设置父级菜单默认显示 递归
     recursionFunc(row, source, dest) {
-      if (row.categoryId === null) {
+      if (row.chatModelId === null) {
         return;
       }
       for (let i in source) {
         let ele = source[i];
-        if (row.categoryId === ele.id) {
-          this.recursionFunc(ele, this.categoryData, dest);
+        if (row.chatModelId === ele.id) {
+          this.recursionFunc(ele, this.chatModelData, dest);
           dest.push(ele.id);
         }
         else {
