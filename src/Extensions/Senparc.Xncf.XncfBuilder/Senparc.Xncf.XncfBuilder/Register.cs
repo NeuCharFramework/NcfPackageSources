@@ -41,6 +41,8 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Description => "快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用";
 
+        public override bool EnableMcpServer => true;
+
         //public override IList<Type> Functions => new Type[] {
         //    typeof(BuildXncf),
         //    typeof(AddMigration),
@@ -78,17 +80,6 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<AIModelService>();
             services.AddScoped<AIModelAppService>();
 
-            var mcpServerBuilder = services.AddMcpServer(opt =>
-            {
-                opt.ServerInfo = new Implementation()
-                {
-                    Name = $"ncf-mcp-server-{this.Name.Replace(".", "-")}",
-                    Version = this.Version,
-                };
-            })
-                    .WithHttpTransport()
-                    .WithToolsFromAssembly();
-
             return base.AddXncfModule(services, configuration, env);
         }
 
@@ -96,13 +87,6 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            if (app is IEndpointRouteBuilder endpoints)
-            {
-                Console.WriteLine($"开始启用 MCP 服务（{this.Name}）");
-                var routePattern = "mcp-xncf-xncfbuilder";
-                endpoints.MapMcp(routePattern);
-            }
-
             return base.UseXncfModule(app, registerService);
         }
     }
