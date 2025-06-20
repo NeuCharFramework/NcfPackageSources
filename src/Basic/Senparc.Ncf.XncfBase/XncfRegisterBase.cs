@@ -419,7 +419,7 @@ namespace Senparc.Ncf.XncfBase
         {
             if (app is IEndpointRouteBuilder endpoints)
             {
-                var routePattern = $"mcp-{Name.Replace(".", "-").ToLower()})";
+                var routePattern = $"mcp-{Name.Replace(".", "-").ToLower()}";
                 endpoints.MapMcp(routePattern);
 
                 //注册 MCP 路由信息
