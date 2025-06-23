@@ -119,4 +119,15 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
 	</ItemGroup>
+
+	<!-- 自动生成 -->
+	<ItemGroup>
+		<AdditionalFiles Include="../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" />
+		<AdditionalFiles Include="Request.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Analyzer Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
+	</ItemGroup>
+
 </Project>

@@ -20,6 +20,7 @@ using ModelContextProtocol.Protocol;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.AspNetCore.Routing;
+using Senparc.Xncf.XncfBuilder.OHS.Local;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -79,6 +80,8 @@ namespace Senparc.Xncf.XncfBuilder
             // Senparc.Xncf.AIKernel 模块
             services.AddScoped<AIModelService>();
             services.AddScoped<AIModelAppService>();
+
+            Console.WriteLine(BuildXncfAppService.BackendTemplate);
 
             return base.AddXncfModule(services, configuration, env);
         }
