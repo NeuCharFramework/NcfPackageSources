@@ -122,8 +122,8 @@
 
 	<!-- 自动生成 -->
 	<ItemGroup>
-		<AdditionalFiles Include="../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" />
 		<AdditionalFiles Include="Request.cs" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

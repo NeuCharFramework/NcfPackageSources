@@ -63,7 +63,7 @@ public class RequestCodeGenerator : ISourceGenerator
 
         var source = $@"
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
-{{
+{{ 
 public partial class BuildXncfAppService
 {{
     public const string BackendTemplate = @""{escapedContent}"";
