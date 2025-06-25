@@ -123,11 +123,15 @@
 	<!-- 自动生成 -->
 	<ItemGroup>
 		<AdditionalFiles Include="Request.cs" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs" />
 		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
+		<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
+		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
 	</ItemGroup>
 
 </Project>

@@ -15,28 +15,46 @@ public class RequestCodeGenerator : ISourceGenerator
     {
         try
         {
-            var fileName = "ColorService.cs";
-            // 查找 fileName 文件
-            var requestFile = context.AdditionalFiles
-                .FirstOrDefault(file => file.Path.EndsWith(fileName));
+            string senparcEntitiesContent = GetFileContent(context, "Template_XncfNameSenparcEntities.cs");
+            string colorContent = GetFileContent(context, "Color.cs");
+            string colorDtoContent = GetFileContent(context, "ColorDto.cs");
+            string colorServiceContent = GetFileContent(context, "ColorService.cs");
 
-            if (requestFile == null)
-            {
-                // 如果没有找到 AdditionalFiles 中的 Request.cs，尝试从 SourceTexts 中查找
-                var requestSyntaxTree = context.Compilation.SyntaxTrees
-                    .FirstOrDefault(tree => tree.FilePath.EndsWith(fileName));
+            var template = @$"
+## Database EntityFramework DbContext class sample
+File Name: Template_XncfNameSenparcEntities.cs
+File Path: <ModuleRootPath>/Domain/Models/DatabaseModel
+Code:
+```csharp
+{senparcEntitiesContent}
+```
 
-                if (requestSyntaxTree != null)
-                {
-                    GenerateResponsePartialClass(context, requestSyntaxTree.GetText().ToString());
-                }
-                return;
-            }
+## Database Entity class sample
+File Name: Color.cs
+File Path: <ModuleRootPath>/Domain/Models/DatabaseModel
+Code:
+```csharp
+{colorContent}
+```
 
-            // 读取 Request.cs 的内容
-            var requestContent = requestFile.GetText(context.CancellationToken)?.ToString() ?? "";
+## Database Entity DTO class sample
+File Name: ColorDto.cs
+File Path: <ModuleRootPath>/Domain/Models/DatabaseModel/Dto
+Code:
+```csharp
+{colorDtoContent}
+```
 
-            GenerateResponsePartialClass(context, requestContent);
+## Service class sample
+File Name: Template_XncfNameService.cs
+File Path: <ModuleRootPath>/Domain/Services
+Code:
+```csharp
+{colorServiceContent}
+```
+";
+
+            GenerateResponsePartialClass(context, template);
         }
         catch (System.Exception ex)
         {
@@ -54,6 +72,35 @@ public class RequestCodeGenerator : ISourceGenerator
 
             context.ReportDiagnostic(diagnostic);
         }
+    }
+
+    /// <summary>
+    /// 获取文件内容
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    private string GetFileContent(GeneratorExecutionContext context, string fileName)
+    {
+        // 查找 fileName 文件
+        var requestFile = context.AdditionalFiles
+            .FirstOrDefault(file => file.Path.EndsWith(fileName));
+
+        if (requestFile == null)
+        {
+            // 如果没有找到 AdditionalFiles 中的 Request.cs，尝试从 SourceTexts 中查找
+            var requestSyntaxTree = context.Compilation.SyntaxTrees
+                .FirstOrDefault(tree => tree.FilePath.EndsWith(fileName));
+
+            if (requestSyntaxTree != null)
+            {
+                GenerateResponsePartialClass(context, requestSyntaxTree.GetText().ToString());
+            }
+            return null;
+        }
+
+        // 读取 Request.cs 的内容
+        string requestContent = requestFile.GetText(context.CancellationToken)?.ToString() ?? "";
+        return requestContent;
     }
 
     private void GenerateResponsePartialClass(GeneratorExecutionContext context, string requestContent)
