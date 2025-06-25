@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.35.1-preview.9</Version>
+		<Version>0.35.2-preview.9</Version>
 		<LangVersion>9.0</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -70,9 +70,16 @@
 			[2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
 			[2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
 			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
+			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+
+		<!-- Visual Studio 特定设置 -->
+		<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+		<RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -120,18 +127,43 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
 	</ItemGroup>
 
-	<!-- 自动生成 -->
+	<!-- 代码模板自动生成 -->
 	<ItemGroup>
 		<AdditionalFiles Include="Request.cs" />
+
+		<!--后端模板-->
 		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" />
 		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs" />
 		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs" />
 		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" />
+
+		<!--前端模板-->
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js" />
+		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css" />
+
+
 	</ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
-		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
+		<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
+		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />-->
+
+		<ProjectReference Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.csproj"
+					   OutputItemType="Analyzer"
+					   ReferenceOutputAssembly="false" />
+
 	</ItemGroup>
+
+
+  <!-- 强制 Visual Studio 识别生成的文件 -->
+  <ItemGroup>
+    <Compile Remove="Generated/**/*.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="Generated/**/*.cs" />
+  </ItemGroup>
 
 </Project>

@@ -60,7 +60,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             string getLibVersionParam(string dllName, string paramName)
             {
-                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
                 var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ToString();//.ProductVersion;
                 return $"{libVersion}";

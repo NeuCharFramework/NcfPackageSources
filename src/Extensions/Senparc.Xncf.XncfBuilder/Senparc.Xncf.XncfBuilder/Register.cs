@@ -82,6 +82,8 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<AIModelAppService>();
 
             Console.WriteLine(BuildXncfAppService.BackendTemplate);
+            Console.WriteLine("//////"+SystemTime.Now);
+            Console.WriteLine(BuildXncfAppService.FrontendTemplate);
 
             return base.AddXncfModule(services, configuration, env);
         }

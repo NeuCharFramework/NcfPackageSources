@@ -20,7 +20,9 @@ public class RequestCodeGenerator : ISourceGenerator
             string colorDtoContent = GetFileContent(context, "ColorDto.cs");
             string colorServiceContent = GetFileContent(context, "ColorService.cs");
 
-            var template = @$"
+            #region Backend Template
+
+            var backendTemplate = @$"
 ## Database EntityFramework DbContext class sample
 File Name: Template_XncfNameSenparcEntities.cs
 File Path: <ModuleRootPath>/Domain/Models/DatabaseModel
@@ -53,8 +55,68 @@ Code:
 {colorServiceContent}
 ```
 ";
+            // 转义字符串内容以便在 C# 代码中使用
+            var escapedBackendContent = EscapeStringLiteral(backendTemplate);
+            #endregion
 
-            GenerateResponsePartialClass(context, template);
+            #region Frontend Template
+
+
+            string databaseSampleIndexPageContent = GetFileContent(context, "DatabaseSampleIndex.cshtml");
+            string databaseSampleIndexPageCsContent = GetFileContent(context, "DatabaseSampleIndex.cshtml.cs");
+            string databaseSampleIndexJsContent = GetFileContent(context, "databaseSampleIndex.js");
+            string databaseSampleIndexCssContent = GetFileContent(context, "databaseSampleIndex.css");
+
+            var frontendTemplate = @$"
+## Page UI sample (front-end)
+File Name: DatabaseSampleIndex.cshtml
+File Path: <ModuleRootPath>/Areas/Admin/Pages/Template_XncfName
+Code:
+```razorpage
+{databaseSampleIndexPageContent}
+```
+
+## Page UI sample (back-end)
+File Name: DatabaseSampleIndex.cshtml.cs
+File Path: <ModuleRootPath>/Areas/Admin/Pages/Template_XncfName
+Code:
+```csharp
+{databaseSampleIndexPageCsContent}
+```
+
+## Page JavaScript file sample
+File Name: databaseSampleIndex.js
+File Path: <ModuleRootPath>/wwwroot/js/Admin/Template_XncfName
+Code:
+```javascript
+{databaseSampleIndexJsContent}
+```
+
+## Page CSS file sample
+File Name: databaseSampleIndex.css
+File Path: <ModuleRootPath>/wwwroot/css/Admin/Template_XncfName
+Code:
+```css
+{databaseSampleIndexCssContent}
+```
+";
+
+            var escapedFrontendContent = EscapeStringLiteral(frontendTemplate);
+
+            #endregion
+
+            var source = $@"
+namespace Senparc.Xncf.XncfBuilder.OHS.Local
+{{ 
+    public partial class BuildXncfAppService
+    {{
+        public const string BackendTemplate = @""{escapedBackendContent}"";
+        public const string FrontendTemplate = @""{escapedFrontendContent}"";
+    }}
+}}";
+
+
+            GenerateResponsePartialClass(context, source, "BuildXncfAppService.cs");
         }
         catch (System.Exception ex)
         {
@@ -83,7 +145,7 @@ Code:
     {
         // 查找 fileName 文件
         var requestFile = context.AdditionalFiles
-            .FirstOrDefault(file => file.Path.EndsWith(fileName));
+            .FirstOrDefault(file => file.Path.EndsWith(fileName));//TODO: 需要考虑文件名只部分匹配的问题
 
         if (requestFile == null)
         {
@@ -93,7 +155,7 @@ Code:
 
             if (requestSyntaxTree != null)
             {
-                GenerateResponsePartialClass(context, requestSyntaxTree.GetText().ToString());
+                GenerateResponsePartialClass(context, requestSyntaxTree.GetText().ToString(), fileName);
             }
             return null;
         }
@@ -103,22 +165,10 @@ Code:
         return requestContent;
     }
 
-    private void GenerateResponsePartialClass(GeneratorExecutionContext context, string requestContent)
+    private void GenerateResponsePartialClass(GeneratorExecutionContext context, string source, string fileName)
     {
-        // 转义字符串内容以便在 C# 代码中使用
-        var escapedContent = EscapeStringLiteral(requestContent);
-
-        var source = $@"
-namespace Senparc.Xncf.XncfBuilder.OHS.Local
-{{ 
-public partial class BuildXncfAppService
-{{
-    public const string BackendTemplate = @""{escapedContent}"";
-}}
-}}";
-
         // 将生成的代码添加到编译中
-        context.AddSource("BuildXncfAppService.Generated.cs", SourceText.From(source, Encoding.UTF8));
+        context.AddSource(fileName.Replace(".cs", ".Generated.cs")/*"BuildXncfAppService.Generated.cs"*/, SourceText.From(source, Encoding.UTF8));
     }
 
     private string EscapeStringLiteral(string input)
