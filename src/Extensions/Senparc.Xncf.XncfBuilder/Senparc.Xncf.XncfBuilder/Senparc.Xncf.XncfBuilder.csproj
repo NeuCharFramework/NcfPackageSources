@@ -149,10 +149,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
-		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />-->
+		<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
+		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />-->
 
-		<ProjectReference Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
 	</ItemGroup>
 
