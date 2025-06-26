@@ -1,6 +1,6 @@
 {
-  "outputNamespace": "DynamicTest.Generated",
-  "outputClassName": "NcfTemplateConstants",
+  "outputNamespace": "Senparc.Xncf.XncfBuilder.OHS.Local",
+  "outputClassName": "BuildXncfAppService",
   "files": [
     {
       "path": "Request.cs",

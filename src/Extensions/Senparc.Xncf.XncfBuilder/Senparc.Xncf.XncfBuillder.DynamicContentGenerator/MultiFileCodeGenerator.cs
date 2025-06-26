@@ -202,6 +202,7 @@ Code:
 ```csharp
 {ColorServiceTemplate}
 ```
+"";
 ");
 
 
@@ -237,6 +238,7 @@ Code:
 ```css
 {DatabaseSampleIndexCssTemplate}
 ```
+"";
 ");
 
         // 按类型分组生成常量

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.35.2-preview.9</Version>
-		<LangVersion>9.0</LangVersion>
+		<Version>0.35.3-preview.9</Version>
+		<LangVersion>latest</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -71,6 +71,7 @@
 			[2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
 			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
 			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
+			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -151,13 +152,20 @@
 		<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />
 		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.dll" />-->
 
-		<ProjectReference Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.csproj"
-					   OutputItemType="Analyzer"
-					   ReferenceOutputAssembly="false" />
+		<ProjectReference Include="../Senparc.Xncf.XncfBuillder.DynamicContentGenerator/Senparc.Xncf.XncfBuillder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
 	</ItemGroup>
 
-
+  <!-- 清理生成的文件 -->
+  <Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
+    <ItemGroup>
+      <GeneratedFiles Include="Generated/**/*.*" />
+      <GeneratedFiles Include="obj/**/generated/**/*.*" />
+    </ItemGroup>
+    <Delete Files="@(GeneratedFiles)" />
+    <RemoveDir Directories="Generated" Condition="Exists('Generated')" />
+  </Target>
+	
   <!-- 强制 Visual Studio 识别生成的文件 -->
   <!--<ItemGroup>
     <Compile Remove="Generated/**/*.cs" />
