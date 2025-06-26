@@ -131,7 +131,7 @@ namespace Senparc.Ncf.XncfBase
         /// 添加 MCP 服务器
         /// </summary>
         /// <param name="services"></param>
-        void AddMcpServer(IServiceCollection services);
+        void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister);
         /// <summary>
         /// 使用 MCP 服务器
         /// </summary>

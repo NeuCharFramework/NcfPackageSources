@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Protocol;
+using ModelContextProtocol.Server;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -392,7 +393,7 @@ namespace Senparc.Ncf.XncfBase
             return $"ncf-mcp-server-{this.Name.Replace(".", "-")}";
         }
 
-        public virtual void AddMcpServer(IServiceCollection services)
+        public virtual void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
         {
             var serverName = GetMcpServerName();
 
@@ -405,7 +406,7 @@ namespace Senparc.Ncf.XncfBase
                 };
             })
             .WithHttpTransport()
-            .WithToolsFromAssembly();
+            .WithToolsFromAssembly(xncfRegister.GetType().Assembly);
 
             XncfRegisterManager.McpServerInfoCollection[serverName] = new MCP.McpServerInfo()
             {

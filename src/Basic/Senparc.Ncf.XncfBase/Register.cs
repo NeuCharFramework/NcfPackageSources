@@ -407,7 +407,7 @@ namespace Senparc.Ncf.XncfBase
                     //MCP
                     if (xncfRegister.EnableMcpServer)
                     {
-                        xncfRegister.AddMcpServer(services);
+                        xncfRegister.AddMcpServer(services, xncfRegister);
                     }
                 }
                 catch (Exception ex)
