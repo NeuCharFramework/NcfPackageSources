@@ -10,8 +10,8 @@ using System;
 
 public class FileGenerationConfig
 {
-    public string OutputNamespace { get; set; } = "Generated";
-    public string OutputClassName { get; set; } = "GeneratedConstants";
+    public string OutputNamespace { get; set; } = "Senparc.Xncf.XncfBuilder.OHS.Local";
+    public string OutputClassName { get; set; } = "BuildXncfAppService";
     public FileItem[] Files { get; set; } = Array.Empty<FileItem>();
     public GroupingOptions Grouping { get; set; } = new GroupingOptions();
     public GenerationOptions Options { get; set; } = new GenerationOptions();
@@ -166,8 +166,78 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         sb.AppendLine($"    /// <summary>");
         sb.AppendLine($"    /// 自动生成的NCF模板常量类，包含所有模板文件的内容");
         sb.AppendLine($"    /// </summary>");
-        sb.AppendLine($"    public static class {config.OutputClassName}");
+        sb.AppendLine($"    public partial class {config.OutputClassName}");
         sb.AppendLine("    {");
+
+
+        sb.AppendLine(@"public const string BackendTemplate =  @$""
+## Database EntityFramework DbContext class sample
+File Name: Template_XncfNameSenparcEntities.cs
+File Path: <ModuleRootPath>/Domain/Models/DatabaseModel
+Code:
+```csharp
+{SenparcEntitiesTemplate}
+```
+
+## Database Entity class sample
+File Name: Color.cs
+File Path: <ModuleRootPath>/Domain/Models/DatabaseModel
+Code:
+```csharp
+{ColorModelTemplate}
+```
+
+## Database Entity DTO class sample
+File Name: ColorDto.cs
+File Path: <ModuleRootPath>/Domain/Models/DatabaseModel/Dto
+Code:
+```csharp
+{ColorDtoTemplate}
+```
+
+## Service class sample
+File Name: Template_XncfNameService.cs
+File Path: <ModuleRootPath>/Domain/Services
+Code:
+```csharp
+{ColorServiceTemplate}
+```
+");
+
+
+        sb.AppendLine(@"public const string FrontendTemplate = @$""
+## Page UI sample (front-end)
+File Name: DatabaseSampleIndex.cshtml
+File Path: < ModuleRootPath >/ Areas / Admin / Pages / Template_XncfName
+Code:
+```razorpage
+{DatabaseSampleIndexViewTemplate}
+```
+
+## Page UI sample (back-end)
+File Name: DatabaseSampleIndex.cshtml.cs
+File Path: < ModuleRootPath >/ Areas / Admin / Pages / Template_XncfName
+Code:
+```csharp
+{DatabaseSampleIndexCodeBehindTemplate}
+```
+
+## Page JavaScript file sample
+File Name: databaseSampleIndex.js
+File Path: < ModuleRootPath >/ wwwroot / js / Admin / Template_XncfName
+Code:
+```javascript
+{DatabaseSampleIndexJsTemplate}
+```
+
+## Page CSS file sample
+File Name: databaseSampleIndex.css
+File Path: < ModuleRootPath >/ wwwroot / css / Admin / Template_XncfName
+Code:
+```css
+{DatabaseSampleIndexCssTemplate}
+```
+");
 
         // 按类型分组生成常量
         if (config.Grouping.ByType)
@@ -348,7 +418,7 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         sb.AppendLine("    }");
         sb.AppendLine("}");
 
-        context.AddSource("BuildXncfAppService.Generated.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+        context.AddSource("BuildXncfAppService.Default.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
     }
 
     private string EscapeStringLiteral(string input)

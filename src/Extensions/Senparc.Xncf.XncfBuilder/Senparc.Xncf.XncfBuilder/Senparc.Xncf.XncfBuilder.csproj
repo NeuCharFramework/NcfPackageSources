@@ -130,6 +130,7 @@
 	<!-- 代码模板自动生成 -->
 	<ItemGroup>
 		<AdditionalFiles Include="Request.cs" />
+		<AdditionalFiles Include="generation-config.json" />
 
 		<!--后端模板-->
 		<AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" />
