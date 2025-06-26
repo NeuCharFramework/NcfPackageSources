@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Senparc.Ncf.XncfBase.MCP;
 
 namespace Senparc.Ncf.XncfBase
 {
@@ -25,6 +26,8 @@ namespace Senparc.Ncf.XncfBase
         /// 带有数据库的模块 TODO：可放置到缓存中 / TODO：可移除
         /// </summary>
         public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
+
+        public static McpServerInfoCollection McpServerInfoCollection =new McpServerInfoCollection();
 
         /// <summary>
         /// 判断指定名称的模块是否已注册

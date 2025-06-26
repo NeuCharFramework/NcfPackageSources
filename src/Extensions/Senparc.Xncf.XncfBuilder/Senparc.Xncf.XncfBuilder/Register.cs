@@ -20,6 +20,7 @@ using ModelContextProtocol.Protocol;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.AspNetCore.Routing;
+using Senparc.Xncf.XncfBuilder.OHS.Local;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -33,13 +34,15 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
 
-        public override string Version => "0.10.0";//必须填写版本号
+        public override string Version => "0.10.1";//必须填写版本号
 
         public override string MenuName => "XNCF 模块生成器";
 
         public override string Icon => "fa fa-plus";
 
         public override string Description => "快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用";
+
+        public override bool EnableMcpServer => true;
 
         //public override IList<Type> Functions => new Type[] {
         //    typeof(BuildXncf),
@@ -78,16 +81,9 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<AIModelService>();
             services.AddScoped<AIModelAppService>();
 
-            var mcpServerBuilder = services.AddMcpServer(opt =>
-            {
-                opt.ServerInfo = new Implementation()
-                {
-                    Name = $"ncf-mcp-server-{this.Name.Replace(".", "-")}",
-                    Version = this.Version,
-                };
-            })
-                    .WithHttpTransport()
-                    .WithToolsFromAssembly();
+            //Console.WriteLine(BuildXncfAppService.BackendTemplate);
+            //Console.WriteLine("//////" + SystemTime.Now);
+            //Console.WriteLine(BuildXncfAppService.FrontendTemplate);
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -96,13 +92,6 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            if (app is IEndpointRouteBuilder endpoints)
-            {
-                Console.WriteLine($"开始启用 MCP 服务（{this.Name}）");
-                var routePattern = "mcp-xncf-xncfbuilder";
-                endpoints.MapMcp(routePattern);
-            }
-
             return base.UseXncfModule(app, registerService);
         }
     }

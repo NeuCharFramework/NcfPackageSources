@@ -60,9 +60,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             string getLibVersionParam(string dllName, string paramName)
             {
-                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
-                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ToString();//.ProductVersion;
+                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;//.ToString();//.ProductVersion;
                 return $"{libVersion}";
             }
 
@@ -219,28 +219,28 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 if (isUseSample)
                 {
                     args.Add("--Sample");
-                    args.Add("1");
+                    args.Add("true");
                 }
                 if (useFunction)
                 {
                     args.Add("--Function");
-                    args.Add("1");
+                    args.Add("true");
 
                 }
                 if (isUseWeb)
                 {
                     args.Add("--Web");
-                    args.Add("1");
+                    args.Add("true");
                 }
                 if (isUseDatabase)
                 {
                     args.Add("--Database");
-                    args.Add("1");
+                    args.Add("true");
                 }
                 if (useWebApi)
                 {
                     args.Add("--UseWebApi");
-                    args.Add("1");
+                    args.Add("true");
                 }
 
                 var pDotnet = StartNewProcess("dotnet");
