@@ -53,6 +53,8 @@ namespace Senparc.Xncf.MCP
 
         public override string Description => "Model Context Protocol(MCP) Manager";
 
+        public override bool EnableMcpServer => true;
+
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //安装或升级版本时更新数据库
