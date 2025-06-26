@@ -158,12 +158,12 @@
 
 
   <!-- 强制 Visual Studio 识别生成的文件 -->
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Remove="Generated/**/*.cs" />
   </ItemGroup>
   
   <ItemGroup>
     <Compile Include="Generated/**/*.cs" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>
