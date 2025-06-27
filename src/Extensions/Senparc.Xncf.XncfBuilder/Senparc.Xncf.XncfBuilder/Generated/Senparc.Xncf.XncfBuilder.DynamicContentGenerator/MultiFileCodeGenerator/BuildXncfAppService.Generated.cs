@@ -1493,7 +1493,6 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         public record TemplateFileInfo(string Name, string Description, string Type, string Path, string Content);
 
         #endregion
-
         #region Helper Methods
 
         /// <summary>

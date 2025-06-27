@@ -95,6 +95,8 @@
 		<Compile Remove="ACL\**" />
 		<EmbeddedResource Remove="ACL\**" />
 		<None Remove="ACL\**" />
+		<!-- 排除生成的文件，避免重复编译 -->
+		<Compile Remove="Generated\**\*.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
