@@ -439,6 +439,8 @@ namespace Senparc.Ncf.XncfBase
 
                 mcpServerInfo.McpRoute = routePattern;
 
+                //_logger.LogInformation($"启用 MCP 服务（{this.Name}）：{routePattern}");
+
                 Console.WriteLine($"启用 MCP 服务（{this.Name}）：{routePattern}");
 
             }
