@@ -109,7 +109,31 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
-                var endpoint = request.Endpoint.IsNullOrEmpty()? "http://localhost:5000/mcp/sse" : request.Endpoint;
+                // 根据 MCP 服务器选择来确定端点
+                string endpoint;
+                var selectedMcpServer = request.McpServerSelection.SelectedValues.FirstOrDefault();
+                
+                if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
+                {
+                    // 如果选中了非"手动输入"的 MCP 服务器，使用选中的服务器
+                    if (selectedMcpServer.StartsWith("/"))
+                    {
+                        // 如果是相对路径，构建完整的 URL
+                        endpoint = $"http://localhost:5000{selectedMcpServer}";
+                    }
+                    else
+                    {
+                        // 如果已经是完整的 URL，直接使用
+                        endpoint = selectedMcpServer;
+                    }
+                    Console.WriteLine($"使用选中的 MCP 服务器: {selectedMcpServer}");
+                }
+                else
+                {
+                    // 如果选中了"手动输入"或没有选择，使用手动输入的端点
+                    endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5000/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
+                    Console.WriteLine("使用手动输入的端点");
+                }
 
                 Console.WriteLine("MCP Request Endpoint:" + endpoint);
 
