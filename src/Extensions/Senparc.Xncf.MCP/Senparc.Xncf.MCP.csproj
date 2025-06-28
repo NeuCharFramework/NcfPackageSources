@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.2.2-beta</Version>
+		<Version>0.2.3-preview.1</Version>
 		<AssemblyName>Senparc.Xncf.MCP</AssemblyName>
 		<RootNamespace>Senparc.Xncf.MCP</RootNamespace>
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -22,6 +22,7 @@
 			v0.2.0 Update new ModelContextProtocol library
 			[2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
 			[2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
+			[2025-06-28] v0.2.3-preview.1 Add MCP server selection in MyFunction_MCPCallRequest
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
