@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.35.3-preview.9</Version>
+		<Version>0.35.3-preview.10</Version>
 		<LangVersion>latest</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -72,6 +72,7 @@
 			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
 			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
 			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
+			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
