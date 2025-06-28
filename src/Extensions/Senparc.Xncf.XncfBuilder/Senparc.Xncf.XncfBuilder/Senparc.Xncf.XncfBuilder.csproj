@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.35.3-preview.9</Version>
+		<Version>0.35.3-preview.10</Version>
 		<LangVersion>latest</LangVersion>
 		<AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
 		<RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -72,6 +72,7 @@
 			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
 			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
 			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
+			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -79,8 +80,15 @@
 		<!-- Visual Studio 特定设置 -->
 		<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
 		<RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+		
+		<!-- Source Generator 设置 -->
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+		
+		<!-- Visual Studio Source Generator 兼容性设置 -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -96,7 +104,8 @@
 		<EmbeddedResource Remove="ACL\**" />
 		<None Remove="ACL\**" />
 		<!-- 排除生成的文件，避免重复编译 -->
-		<Compile Remove="Generated\**\*.cs" />
+		<!-- 仅在 dotnet build 中排除物理文件，Visual Studio 中保留以确保兼容性 -->
+		<Compile Remove="Generated\**\*.cs" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -151,10 +160,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
-		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />-->
-
-		<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<!-- Source Generator 引用 - 混合方式确保在所有环境下都工作 -->
+		<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" 
+		                  OutputItemType="Analyzer" 
+		                  ReferenceOutputAssembly="false" 
+		                  Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+		
+		<!-- Visual Studio 使用 DLL 引用确保稳定性 -->
+		<Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Release'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
+		<Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
 
 	</ItemGroup>
 
@@ -167,14 +181,19 @@
     <Delete Files="@(GeneratedFiles)" />
     <RemoveDir Directories="Generated" Condition="Exists('Generated')" />
   </Target>
-	
-  <!-- 强制 Visual Studio 识别生成的文件 -->
-  <!--<ItemGroup>
-    <Compile Remove="Generated/**/*.cs" />
-  </ItemGroup>
+
+  <!-- 确保 Visual Studio 中 Source Generator 项目先被构建 -->
+  <Target Name="EnsureSourceGeneratorBuilt" BeforeTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+    <Message Text="为 Visual Studio 构建 Source Generator 项目..." Importance="normal" />
+    <MSBuild Projects="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" 
+             Targets="Build" 
+             Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+  </Target>
   
-  <ItemGroup>
-    <Compile Include="Generated/**/*.cs" />
-  </ItemGroup>-->
+  <!-- 刷新 Source Generator 触发器 -->
+  <Target Name="RefreshSourceGenerator" BeforeTargets="Build">
+    <Message Text="刷新 Source Generator..." Importance="normal" />
+    <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
+  </Target>
 
 </Project>
