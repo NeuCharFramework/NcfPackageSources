@@ -96,7 +96,7 @@
 		<EmbeddedResource Remove="ACL\**" />
 		<None Remove="ACL\**" />
 		<!-- 排除生成的文件，避免重复编译 -->
-		<Compile Remove="Generated\**\*.cs" />
+		<Compile Remove="Generated\**\*.cs" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
