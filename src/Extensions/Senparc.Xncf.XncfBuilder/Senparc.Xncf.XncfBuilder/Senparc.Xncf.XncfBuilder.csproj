@@ -79,8 +79,15 @@
 		<!-- Visual Studio 特定设置 -->
 		<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
 		<RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+		
+		<!-- Source Generator 设置 -->
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+		
+		<!-- Visual Studio Source Generator 兼容性设置 -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -96,7 +103,8 @@
 		<EmbeddedResource Remove="ACL\**" />
 		<None Remove="ACL\**" />
 		<!-- 排除生成的文件，避免重复编译 -->
-		<Compile Remove="Generated\**\*.cs" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+		<!-- Source Generator 在内存中生成，排除物理文件避免冲突 -->
+		<Compile Remove="Generated\**\*.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -151,10 +159,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
+		<!-- Source Generator 引用 - 简化配置，优先使用项目引用 -->
+		<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" 
+		                  OutputItemType="Analyzer" 
+		                  ReferenceOutputAssembly="false" />
+	<!--<Analyzer Condition=" '$(Configuration)' == 'Release' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
 		<Analyzer Condition=" '$(Configuration)' == 'Debug' " Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/net8.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />-->
-
-		<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
 	</ItemGroup>
 
@@ -167,14 +177,11 @@
     <Delete Files="@(GeneratedFiles)" />
     <RemoveDir Directories="Generated" Condition="Exists('Generated')" />
   </Target>
-	
-  <!-- 强制 Visual Studio 识别生成的文件 -->
-  <!--<ItemGroup>
-    <Compile Remove="Generated/**/*.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Include="Generated/**/*.cs" />
-  </ItemGroup>-->
+
+  <!-- 刷新 Source Generator 触发器 -->
+  <Target Name="RefreshSourceGenerator" BeforeTargets="Build">
+    <Message Text="刷新 Source Generator..." Importance="normal" />
+    <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
+  </Target>
 
 </Project>
