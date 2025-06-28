@@ -115,18 +115,36 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 
                 if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
                 {
-                    // 如果选中了非"手动输入"的 MCP 服务器，使用选中的服务器
-                    if (selectedMcpServer.StartsWith("/"))
+                    // 如果选中了非"手动输入"的 MCP 服务器，从注册列表中获取真实地址
+                    var serverParts = selectedMcpServer.Split('|');
+                    if (serverParts.Length == 2)
                     {
-                        // 如果是相对路径，构建完整的 URL
-                        endpoint = $"http://localhost:5000{selectedMcpServer}";
+                        var xncfName = serverParts[0];
+                        var mcpRoute = serverParts[1];
+                        
+                        // 从 XncfRegisterManager 中查找对应的服务器信息
+                        var mcpServerInfo = Senparc.Ncf.XncfBase.XncfRegisterManager.McpServerInfoCollection.Values
+                            .FirstOrDefault(s => s.XncfName == xncfName && s.McpRoute == mcpRoute);
+                        
+                        if (mcpServerInfo != null)
+                        {
+                            // 构建完整的服务器地址
+                            endpoint = $"http://localhost:5000/{mcpServerInfo.McpRoute}/sse";
+                            Console.WriteLine($"使用选中的 MCP 服务器: {mcpServerInfo.XncfName}，路由: {mcpServerInfo.McpRoute}/sse");
+                        }
+                        else
+                        {
+                            // 如果找不到对应的服务器信息，回退到默认地址
+                            endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                            Console.WriteLine($"警告：找不到选中的 MCP 服务器信息，使用默认端点");
+                        }
                     }
                     else
                     {
-                        // 如果已经是完整的 URL，直接使用
-                        endpoint = selectedMcpServer;
+                        // 如果解析失败，回退到默认地址
+                        endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                        Console.WriteLine($"警告：无法解析选中的 MCP 服务器标识: {selectedMcpServer}，使用默认端点");
                     }
-                    Console.WriteLine($"使用选中的 MCP 服务器: {selectedMcpServer}");
                 }
                 else
                 {

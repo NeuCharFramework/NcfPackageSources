@@ -33,11 +33,12 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
             
             foreach (var mcpServer in mcpServers)
             {
-                var displayText = $"{mcpServer.XncfName}";
+                var displayText = $"{mcpServer.XncfName}（{mcpServer.McpRoute}）";
                 var description = $"服务器：{mcpServer.ServerName}，路由：{mcpServer.McpRoute}";
-                var endpoint = $"/{mcpServer.McpRoute}"; // 构建完整的端点地址
+                // 使用服务器的唯一标识作为 Value，而不是路由
+                var serverKey = $"{mcpServer.XncfName}|{mcpServer.McpRoute}";
                 
-                McpServerSelection.Items.Add(new SelectionItem(endpoint, displayText, description));
+                McpServerSelection.Items.Add(new SelectionItem(serverKey, displayText, description));
             }
 
             await base.LoadData(serviceProvider);
