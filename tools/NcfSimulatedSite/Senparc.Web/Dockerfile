@@ -16,20 +16,23 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # 将项目文件单独复制，便于缓存
-COPY ["Senparc.Web/Senparc.Web.csproj", "Senparc.Web/"]
-COPY ["Senparc.Areas.Admin/Senparc.Areas.Admin.csproj", "Senparc.Areas.Admin/"]
-COPY ["Senparc.Xncf.Accounts/Senparc.Xncf.Accounts.csproj", "Senparc.Xncf.Accounts/"]
-COPY ["Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj", "Senparc.Xncf.Installer/"]
-COPY ["Senparc.Xncf.Installer.Interface/Senparc.Xncf.Installer.Interface.csproj", "Senparc.Xncf.Installer.Interface/"]
-COPY ["Senparc.Aspire.AppHost/Senparc.Aspire.AppHost.csproj", "Senparc.Aspire.AppHost/"]
-COPY ["Senparc.Aspire.ServiceDefaults/Senparc.Aspire.ServiceDefaults.csproj", "Senparc.Aspire.ServiceDefaults/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj", "tools/NcfSimulatedSite/Senparc.Web/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Areas.Admin/Senparc.Areas.Admin.csproj", "tools/NcfSimulatedSite/Senparc.Areas.Admin/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Xncf.Accounts/Senparc.Xncf.Accounts.csproj", "tools/NcfSimulatedSite/Senparc.Xncf.Accounts/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj", "tools/NcfSimulatedSite/Senparc.Xncf.Installer/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Xncf.Installer.Interface/Senparc.Xncf.Installer.Interface.csproj", "tools/NcfSimulatedSite/Senparc.Xncf.Installer.Interface/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Aspire.AppHost/Senparc.Aspire.AppHost.csproj", "tools/NcfSimulatedSite/Senparc.Aspire.AppHost/"]
+COPY ["tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/Senparc.Aspire.ServiceDefaults.csproj", "tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/"]
+
+# 复制所有 src 目录下的项目文件（用于依赖恢复）
+COPY ["src/", "src/"]
 
 # 恢复依赖项
-RUN dotnet restore "Senparc.Web/Senparc.Web.csproj"
+RUN dotnet restore "tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj"
 
 # 复制文件并构建
 COPY . .
-WORKDIR "/src/Senparc.Web"
+WORKDIR "/src/tools/NcfSimulatedSite/Senparc.Web"
 RUN dotnet build "Senparc.Web.csproj" -c Release -o /app/build
 
 # 此阶段用于发布要复制到最终阶段的服务项目
@@ -44,8 +47,8 @@ WORKDIR /app
 RUN mkdir -p /app/App_Data/SenparcTraceLog && \
     chmod -R 755 /app/App_Data/SenparcTraceLog
 
-# 切换到应用程序用户
-USER $APP_UID
+# 切换到应用程序用户（ASP.NET Core 8.0 基础镜像中的默认用户）
+USER app
 
 COPY --from=publish /app/publish .
 
