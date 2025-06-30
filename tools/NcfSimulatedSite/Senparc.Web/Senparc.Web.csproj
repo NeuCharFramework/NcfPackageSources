@@ -76,6 +76,14 @@
 			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
 		</Content>
 	</ItemGroup>
+	
+	<!-- 解决Docker发布时的NETSDK1152文件冲突错误 -->
+	<PropertyGroup>
+		<!-- 禁用重复文件错误，允许覆盖 -->
+		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<PublishSingleFile>false</PublishSingleFile>
+	</PropertyGroup>
 	<!--<ItemGroup>
 	  <None Update="App_Data\ApiDocXML\Senparc.Areas.Admin.XML">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

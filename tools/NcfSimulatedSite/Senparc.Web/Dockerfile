@@ -44,8 +44,8 @@ FROM base AS final
 WORKDIR /app
 
 # 创建所需目录并设置权限
-RUN mkdir -p /app/App_Data/SenparcTraceLog && \
-    chmod -R 755 /app/App_Data/SenparcTraceLog
+RUN mkdir -p /app/App_Data/SenparcTraceLog /app/App_Data/Database && \
+    chmod -R 755 /app/App_Data
 
 # 切换到应用程序用户（ASP.NET Core 8.0 基础镜像中的默认用户）
 USER app
