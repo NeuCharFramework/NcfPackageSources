@@ -14,7 +14,7 @@ class Program
     // 新增忽略的文件名数组
     private static readonly string[] IgnoredFileNames = new[]
     {
-        "launchSettings.json", "NcfSimulatedSite.sln"
+        "launchSettings.json", "NcfSimulatedSite.sln", "Dockerfile", "Dockerfile.original"
     };
     // 新增包含特定字符串的文件过滤规则
     private static readonly string[] IgnoredFilePatterns = new[]
