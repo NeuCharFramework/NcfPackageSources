@@ -7,6 +7,10 @@ new Vue({
     return {
       defaultMSG: null,
       editorData: '',
+      // 显隐 visible
+      visible: {
+        drawerGroup: false, // 组 新增|编辑
+      },
       form:
       {
         content: ''
@@ -113,7 +117,32 @@ new Vue({
         updateLoading: false,
         disabled: false,
         checkStrictly: true // 是否严格的遵守父子节点不互相关联
-      }
+      },
+      // 组 新增|编辑
+      groupForm: {
+        name: '', // 名称
+        members: [], // 成员列表
+        description: '', // 说明
+        adminAgentTemplateId: '', // 群主即agent
+        enterAgentTemplateId: '' // 对接人即agent
+      },
+      groupFormRules: {
+        name: [
+          { required: true, message: '请填写', trigger: 'blur' },
+        ],
+        members: [
+          { required: true, message: '请填写', trigger: 'change' },
+        ],
+        adminAgentTemplateId: [
+          { required: true, message: '请填写', trigger: 'change' },
+        ],
+        enterAgentTemplateId: [
+          { required: true, message: '请选择', trigger: 'change' },
+        ],
+        // description: [
+        //     { required: true, message: '请填写', trigger: 'blur' },
+        // ],
+      },
     }
   },
   created: function () {
@@ -493,6 +522,51 @@ new Vue({
     },
     onSubmit() {
       console.log('submit!');
+    },
+    // Dailog|抽屉 打开 按钮
+    handleElVisibleOpenBtn(btnType) {
+      let visibleKey = btnType
+      if (btnType === 'drawerGroup') {
+        //this.getAgentListData('groupAgent')
+        visibleKey = 'drawerGroup'
+      }
+      this.visible[visibleKey] = true
+    },
+    // Dailog|抽屉 关闭 按钮
+    handleElVisibleClose(btnType) {
+      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          let refName = '', formName = ''
+          // 组
+          if (btnType === 'drawerGroup') {
+            refName = 'groupELForm'
+            formName = 'groupForm'
+            this.visible[btnType] = false
+
+            //// 重置 组获取智能体query
+            //this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+            //this.groupAgentList = []
+          }
+          
+          if (formName) {
+            this.$set(this, `${formName}`, this.$options.data()[formName])
+            // Object.assign(this[formName],this.$options.data()[formName])
+          }
+          if (refName) {
+            this.$refs[refName].resetFields();
+          }
+          this.$nextTick(() => {
+            this.visible[btnType] = false
+          })
+          // 清理 Function Calls 数据
+          if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+            this.functionCallTags = []
+            this.functionCallInputVisible = false
+            this.functionCallInputValue = ''
+          }
+        })
+        .catch(_ => { });
     }
   }
 }); 
