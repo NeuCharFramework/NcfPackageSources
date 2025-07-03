@@ -158,22 +158,22 @@
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
   </ItemGroup>
   <!-- 清理生成的文件 -->
-  <Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
+  <!--<Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
     <ItemGroup>
       <GeneratedFiles Include="Generated/**/*.*" />
       <GeneratedFiles Include="obj/**/generated/**/*.*" />
     </ItemGroup>
     <Delete Files="@(GeneratedFiles)" />
     <RemoveDir Directories="Generated" Condition="Exists('Generated')" />
-  </Target>
+  </Target>-->
   <!-- 确保 Visual Studio 中 Source Generator 项目先被构建 -->
-  <Target Name="EnsureSourceGeneratorBuilt" BeforeTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+  <!--<Target Name="EnsureSourceGeneratorBuilt" BeforeTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <Message Text="为 Visual Studio 构建 Source Generator 项目..." Importance="normal" />
     <MSBuild Projects="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-  </Target>
+  </Target>-->
   <!-- 刷新 Source Generator 触发器 -->
-  <Target Name="RefreshSourceGenerator" BeforeTargets="Build">
+  <!--<Target Name="RefreshSourceGenerator" BeforeTargets="Build">
     <Message Text="刷新 Source Generator..." Importance="normal" />
     <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
-  </Target>
+  </Target>-->
 </Project>
