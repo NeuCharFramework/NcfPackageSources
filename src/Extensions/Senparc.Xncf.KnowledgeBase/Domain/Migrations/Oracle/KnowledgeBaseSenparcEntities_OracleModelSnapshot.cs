@@ -82,6 +82,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                     b.Property<string>("ChatModelId")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("NVARCHAR2(2000)");
 

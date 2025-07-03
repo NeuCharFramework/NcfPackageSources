@@ -1,4 +1,3 @@
-
 new Vue({
   el: "#app",
   data() {
@@ -167,12 +166,9 @@ new Vue({
       that.dialogVisible = true;
     },
     uploadSuccess(res, file, fileList) {
-      let that = this
+      let that = this;
       // 上传成功
       that.fileList = fileList;
-      log('上传成功', fileList.length, 2);
-      log('res', res, 2);
-
       if (res.code == 200) {
         that.$notify({
           title: '成功',
@@ -180,8 +176,7 @@ new Vue({
           type: 'success'
         });
         that.dialog.data.cover = res.data;
-      }
-      else {
+      } else {
         that.$notify.error({
           title: '失败',
           message: '上传失败，请重新上传'
@@ -189,8 +184,7 @@ new Vue({
       }
     },
     uploadError() {
-      let that = this
-      //that.refs.upload.clearFiles();
+      let that = this;
       that.$notify.error({
         title: '失败',
         message: '上传失败，请重新上传'

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.KnowledgeBase.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.KnowledgeBase.Models;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
 {
     [DbContext(typeof(KnowledgeBaseSenparcEntities_Dm))]
-    partial class KnowledgeBaseSenparcEntities_DmModelSnapshot : ModelSnapshot
+    [Migration("20250703141200_add_content")]
+    partial class add_content
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

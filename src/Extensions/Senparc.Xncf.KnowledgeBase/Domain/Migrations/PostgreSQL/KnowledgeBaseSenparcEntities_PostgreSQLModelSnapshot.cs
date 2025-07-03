@@ -82,6 +82,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                     b.Property<string>("ChatModelId")
                         .HasColumnType("text");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("text");
 

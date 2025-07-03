@@ -140,6 +140,22 @@
                 <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
                     <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
                 </el-form-item>
+
+                <el-upload class="upload-demo"
+                           ref="upload"
+                           action="#"
+                           :auto-upload="false"
+                           :multiple="true"
+                           :show-file-list="true"
+                           :on-success="uploadSuccess"
+                           :on-error="uploadError"
+                           @* :on-change="handleFileChange" *@
+                           @* :on-progress="handleProgress" *@
+                           @* :before-upload="beforeUpload" *@
+                           :file-list="fileList">
+                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                    <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
+                </el-upload>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @@click="dialog.visible=false">取消</el-button>

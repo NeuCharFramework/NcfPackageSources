@@ -75,6 +75,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                     b.Property<string>("ChatModelId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("TEXT");
 

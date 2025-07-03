@@ -82,6 +82,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                     b.Property<string>("ChatModelId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("nvarchar(max)");
 
