@@ -27,8 +27,8 @@
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+	<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
+	<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
   </ItemGroup>
@@ -40,6 +40,7 @@
     <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.20.5-preview1" />-->
     <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>
