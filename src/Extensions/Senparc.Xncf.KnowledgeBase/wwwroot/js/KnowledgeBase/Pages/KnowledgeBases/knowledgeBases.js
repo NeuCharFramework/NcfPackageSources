@@ -47,10 +47,11 @@ new Vue({
         { title: "Embedding模型Id", istrue: false },
         { title: "向量数据库Id", istrue: false },
         { title: "对话模型Id", istrue: false },
-        { title: "名称", istrue: true }
+        { title: "名称", istrue: true },
+        { title: "内容", istrue: true },
       ],
       checkBoxGroup: [
-        "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称"
+        "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称", "内容"
       ],
       checkedColumns: [],
 
@@ -81,7 +82,7 @@ new Vue({
         visible: false,
         data:
         {
-          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: ''
+          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
         },
         rules:
         {
@@ -100,7 +101,7 @@ new Vue({
         visible: false,
         data:
         {
-          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: ''
+          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
         },
         rules:
         {
@@ -132,7 +133,7 @@ new Vue({
       // 关闭dialog，清空
       if (!val) {
         this.dialog.data = {
-          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: ''
+          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
         };
         this.dialog.updateLoading = false;
         this.dialog.disabled = false;
@@ -257,6 +258,10 @@ new Vue({
           text: z.name,
           value: z.name
         }));
+        that.filterTableHeader.content = res.data.data.list.map(z => ({
+          text: z.content,
+          value: z.content
+        }));
 
         that.tableData = res.data.data.list;
         that.paginationQuery.total = res.data.data.totalCount;
@@ -285,9 +290,9 @@ new Vue({
         return;
       }
       // 编辑
-      let { id, embeddingModelId, vectorDBId, chatModelId, name } = row;
+      let { id, embeddingModelId, vectorDBId, chatModelId, name,content } = row;
       that.dialog.data = {
-        id, embeddingModelId, vectorDBId, chatModelId, name
+        id, embeddingModelId, vectorDBId, chatModelId, name,content
       };
       if (that.dialog.data.embeddingModelId != undefined) {
         that.selectDefaultEmbeddingModel[0] = parseInt(that.dialog.data.embeddingModelId);
@@ -377,7 +382,8 @@ new Vue({
             EmbeddingModelId: that.dialog.data.embeddingModelId.toString(),
             VectorDBId: that.dialog.data.vectorDBId.toString(),
             ChatModelId: that.dialog.data.chatModelId.toString(),
-            Name: that.dialog.data.name
+            Name: that.dialog.data.name,
+            Content: that.dialog.data.content
           };
           console.log('add-' + JSON.stringify(data));
           service.post("/Admin/KnowledgeBases/Edit?handler=Save", data).then(res => {

@@ -59,7 +59,7 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases
                             _.VectorDBId,
                             _.ChatModelId,
                             _.Name,
-
+                            _.Content,
                             _.AddTime
                         })
                     });

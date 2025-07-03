@@ -82,6 +82,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
                     b.Property<string>("ChatModelId")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("longtext");
 

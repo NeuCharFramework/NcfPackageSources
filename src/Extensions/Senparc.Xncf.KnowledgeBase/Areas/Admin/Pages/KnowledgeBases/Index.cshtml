@@ -60,6 +60,8 @@
 
             <el-table-column v-if="colData[3].istrue" prop="name" align="left" label="名称" sortable :filters="filterTableHeader.name" :filter-method="filterHandler"></el-table-column>
 
+            <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="内容" sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
+
             <el-table-column align="center"
                              label="添加时间" sortable>
                 <template slot-scope="scope">
@@ -138,6 +140,10 @@
                 </el-form-item>
 
                 <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
+                </el-form-item>
+
+                <el-form-item label="内容" prop="chatModelId">
                     <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
                 </el-form-item>
 
