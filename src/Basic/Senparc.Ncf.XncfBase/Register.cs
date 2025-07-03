@@ -403,6 +403,12 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     xncfRegister.AddXncfModule(services, configuration, env);
+
+                    //MCP
+                    if (xncfRegister.EnableMcpServer)
+                    {
+                        xncfRegister.AddMcpServer(services, xncfRegister);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -572,6 +578,13 @@ namespace Senparc.Ncf.XncfBase
 
                     //任意一个 ThreadXncf 已经载入
                     Ncf.Core.Config.SiteConfig.NcfCoreState.AnyThreadXncfLoaded = true;
+                }
+
+
+                //MCP 服务器
+                if (register.EnableMcpServer)
+                {
+                    register.UseMcpServer(app, registerService);
                 }
             }
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.12.3-preview</Version>
+    <Version>0.9.13.2-preview</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -57,6 +57,7 @@
 			[2025-04-29] v0.9.9-preview1 Update CO2NET and AIKernel
 			[2025-05-15] v0.9.10-preview1 Add MCP to AgentsManager module
 					[2025-05-18] v0.9.11-preview1 Update Installation
+			[2025-06-20] v0.9.13-preview Add MCP functions in XncfRegisterBase class
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -109,7 +109,49 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
-                var endpoint = request.Endpoint.IsNullOrEmpty()? "http://localhost:5000/mcp/sse" : request.Endpoint;
+                // 根据 MCP 服务器选择来确定端点
+                string endpoint;
+                var selectedMcpServer = request.McpServerSelection.SelectedValues.FirstOrDefault();
+                
+                if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
+                {
+                    // 如果选中了非"手动输入"的 MCP 服务器，从注册列表中获取真实地址
+                    var serverParts = selectedMcpServer.Split('|');
+                    if (serverParts.Length == 2)
+                    {
+                        var xncfName = serverParts[0];
+                        var mcpRoute = serverParts[1];
+                        
+                        // 从 XncfRegisterManager 中查找对应的服务器信息
+                        var mcpServerInfo = Senparc.Ncf.XncfBase.XncfRegisterManager.McpServerInfoCollection.Values
+                            .FirstOrDefault(s => s.XncfName == xncfName && s.McpRoute == mcpRoute);
+                        
+                        if (mcpServerInfo != null)
+                        {
+                            // 构建完整的服务器地址
+                            endpoint = $"http://localhost:5000/{mcpServerInfo.McpRoute}/sse";
+                            Console.WriteLine($"使用选中的 MCP 服务器: {mcpServerInfo.XncfName}，路由: {mcpServerInfo.McpRoute}/sse");
+                        }
+                        else
+                        {
+                            // 如果找不到对应的服务器信息，回退到默认地址
+                            endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                            Console.WriteLine($"警告：找不到选中的 MCP 服务器信息，使用默认端点");
+                        }
+                    }
+                    else
+                    {
+                        // 如果解析失败，回退到默认地址
+                        endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                        Console.WriteLine($"警告：无法解析选中的 MCP 服务器标识: {selectedMcpServer}，使用默认端点");
+                    }
+                }
+                else
+                {
+                    // 如果选中了"手动输入"或没有选择，使用手动输入的端点
+                    endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5000/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
+                    Console.WriteLine("使用手动输入的端点");
+                }
 
                 Console.WriteLine("MCP Request Endpoint:" + endpoint);
 
@@ -193,7 +235,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var iWantToRun = semanticAiHandler.ChatConfig(parameter,
                   userId: "Jeffrey",
                   maxHistoryStore: 10,
-                  chatSystemMessage: "你是一位智能助手，负责帮我选择最合适的硬件执行",
+                  chatSystemMessage: "你是一位智能助手，负责帮助我完成任务",
                   senparcAiSetting: aiSetting,
                   kernelBuilderAction: kh =>
                   {

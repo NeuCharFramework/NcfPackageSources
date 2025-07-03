@@ -23,7 +23,7 @@ namespace Senparc.Web
         {
             //修复 https://github.com/NeuCharFramework/NCF/issues/13 发现的问题（在非Web环境下无法得到网站根目录路径）
             IRegisterService register = RegisterService.Start(new SenparcSetting());
-            CO2NET.Config.RootDictionaryPath = Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"); //
+            CO2NET.Config.RootDictionaryPath = Path.Combine(AppContext.BaseDirectory, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"); //
 
             var builder = new DbContextOptionsBuilder<SenparcEntities>();
 

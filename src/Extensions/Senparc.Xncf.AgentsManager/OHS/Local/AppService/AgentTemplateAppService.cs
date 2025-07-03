@@ -264,7 +264,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         Name = endpointName
                     });
 
-                    var client = await McpClientFactory.CreateAsync(clientTransport);
+                    await using var client = await McpClientFactory.CreateAsync(clientTransport);
                     var tools = await client.ListToolsAsync();
 
                     mcpToolList = tools.Select(z => new McpTool()
