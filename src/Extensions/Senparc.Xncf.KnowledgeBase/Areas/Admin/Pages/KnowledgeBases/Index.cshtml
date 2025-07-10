@@ -172,47 +172,6 @@
             </div>
         </el-dialog>
 
-        <!-- 详情 -->
-        @* <el-dialog :title="detailDialog.title"
-                   :visible.sync="detailDialog.visible"
-                   :close-on-click-modal="false"
-                   width="700px">
-            <el-descriptions class="margin-top" title="带边框列表" :column="3" :size="size" border>
-                <template slot="extra">
-                    <el-button type="primary" size="small">操作</el-button>
-                </template>
-                <el-descriptions-item>
-                    <template slot="label">
-                        <i class="el-icon-user"></i>
-                        Embedding模型Id
-                    </template>
-                    embeddingModelId
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template slot="label">
-                        <i class="el-icon-user"></i>
-                        向量数据库Id
-                    </template>
-                    vectorDBId
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template slot="label">
-                        <i class="el-icon-user"></i>
-                        对话模型Id
-                    </template>
-                    chatModelId
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template slot="label">
-                        <i class="el-icon-user"></i>
-                        名称
-                    </template>
-                    name
-                </el-descriptions-item>
-
-            </el-descriptions>
-        </el-dialog> *@
-
         @* 抽屉 新增|编辑 知识库关联 *@
         <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
                    :close-on-press-escape="false" size="960px">
@@ -223,30 +182,33 @@
                     <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
                 </div>
                 @* 内容中的主体内容 *@
-                @* <div class="drawerRtl__body">
+                <div class="drawerRtl__body">
                     <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                              :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
-                        <el-form-item label="组名称" prop="name">
-                            <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
+                        <el-form-item label="内容类型">
+                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请输入内容类型">
+                                <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </el-form-item>
-                        <el-form-item label="组成员" prop="members">
+                        <el-form-item label="文件列表" prop="files">
                             <div class="groupFMB">
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
                                         <el-input v-model="groupAgentQueryList.filter" size="small"
-                                                  placeholder="请填写"></el-input>
+                                                  placeholder="请填写" style="width:auto;"></el-input>
                                         <el-button size="small" icon="el-icon-search"
                                                    @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
+                                        <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogFile')">
+                                            新建文件
+                                        </div>
                                     </div>
-                                    <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogGroupAgent')">
-                                        新增智能体
-                                    </div>
+                                    
                                 </div>
                                 <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
                                     <span class="groupFMB_ma_label">已选择:</span>
                                     <div class="groupFMB_ma_list">
                                         <div class="df flex-ac flex-js" style="gap:10px">
-                                            <div v-for="(item,index) in groupForm.members" :key="item.id"
+                                            <div v-for="(item,index) in groupForm.files" :key="item.id"
                                                  class="df-wn flex-ac groupFMB_ma_list_item">
                                                 <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
                                                 <i class="el-icon-close cursorPointer"
@@ -255,13 +217,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="groupAgentList" max-height="447"
+                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="447"
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                                           @@selection-change="handleSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="name" label="智能体名称" width="130"
+                                    <el-table-column prop="fileName" label="文件名" width="130"
                                                      show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="score" label="评分" width="100">
+                                    <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
                                     <el-table-column prop="description" label="描述" min-width="100">
                                     </el-table-column>
@@ -274,22 +236,16 @@
                                 </el-table>
                             </div>
                         </el-form-item>
-                        <el-form-item label="群主" prop="adminAgentTemplateId">
-                            <load-more-select v-model="groupForm.adminAgentTemplateId" service-type='agent' placeholder="请选择" />
-                        </el-form-item>
-                        <el-form-item label="对接人" prop="enterAgentTemplateId">
-                            <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' placeholder="请选择" />
-                        </el-form-item>
-                        <el-form-item label="说明">
-                            <el-input type="textarea" v-model="groupForm.description" :rows="4" placeholder="请填写"></el-input>
+                        <el-form-item label="内容">
+                            <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
                         </el-form-item>
                     </el-form>
-                </div> *@
+                </div>
                 @* 内容中固定的footer *@
-                @* <div class="drawerRtl__footer text-right">
+                <div class="drawerRtl__footer text-right">
                     <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
                     <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
-                </div> *@
+                </div>
             </div>
         </el-drawer>
     </div>

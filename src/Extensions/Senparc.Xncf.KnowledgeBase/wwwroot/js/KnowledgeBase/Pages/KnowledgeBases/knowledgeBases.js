@@ -7,6 +7,7 @@ new Vue({
     return {
       defaultMSG: null,
       editorData: '',
+      elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
       // 显隐 visible
       visible: {
         drawerGroup: false, // 组 新增|编辑
@@ -58,7 +59,11 @@ new Vue({
         "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称", "内容"
       ],
       checkedColumns: [],
-
+      contentTypeData: [
+        { value: 1, label: '输入' },
+        { value: 2, label: '文件' },
+        { value: 3, label: '采集外部数据' }
+      ],
       keyword: '',
       multipleSelection: '',
       radio: '',
@@ -120,11 +125,9 @@ new Vue({
       },
       // 组 新增|编辑
       groupForm: {
-        name: '', // 名称
-        members: [], // 成员列表
-        description: '', // 说明
-        adminAgentTemplateId: '', // 群主即agent
-        enterAgentTemplateId: '' // 对接人即agent
+        contentType: '', // 内容类型
+        files: [], // 文件列表
+        content: '', // 内容
       },
       groupFormRules: {
         name: [
@@ -143,6 +146,28 @@ new Vue({
         //     { required: true, message: '请填写', trigger: 'blur' },
         // ],
       },
+      // 组 新增|编辑 智能体
+      groupAgentQueryList: {
+        pageIndex: 0,
+        pageSize: 0,
+        filter: '', // 筛选文本
+        timeSort: false, // 默认降序
+        proce: false, // 进行中
+        stop: false, // 停用
+        stand: false, // 待命
+      },
+      groupAgentList: [], // 组新增时的智能体列表
+      // 组 新增|编辑 智能体
+      fileQueryList: {
+        pageIndex: 0,
+        pageSize: 0,
+        filter: '', // 筛选文本
+        timeSort: false, // 默认降序
+        proce: false, // 进行中
+        stop: false, // 停用
+        stand: false, // 待命
+      },
+      fileList: [], // 组新增时的智能体列表
     }
   },
   created: function () {
@@ -151,6 +176,9 @@ new Vue({
     that.getEmbeddingModelList();
     that.getVectorDBList();
     that.getChatModelList();
+    debugger
+    // 获取文件数据
+    that.getFileListData('file');
 
     //TODO:初始化设置选中的字段
     that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
@@ -257,6 +285,52 @@ new Vue({
           console.log(res)
           that.chatModelData = res.data.data.data;
       })
+    },
+    // 获取 文件 数据
+    async getFileListData(listType, page = 0) {
+      const queryList = {}
+      if (listType === 'file') {
+        this.fileQueryList.pageIndex = page ?? 1
+        Object.assign(queryList, this.fileQueryList)
+      }
+      // 接口对接
+      await axios.get(`/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
+        .then(res => {
+          debugger
+          const data = res?.data ?? {}
+          if (data.success) {
+            const fileData = data?.data?.list ?? []
+            if (listType === 'file') {
+              this.$set(this, 'fileList', fileData)
+              // 确保更新数据时 不会清空选中
+              this.$nextTick(() => {
+                this.isGetGroupAgent = false
+              })
+              // 组成员table 初始选中
+              if (this.visible.drawerGroup && this.groupForm.files.length > 0) {
+                // this.toggleSelection()
+                this.$nextTick(() => {
+                  // this.groupAgentTotal = agentData.length
+                  const filterList = fileData.filter(i => {
+                    return this.groupForm.files.findIndex(item => item.id === i.id) !== -1
+                  })
+                  this.toggleSelection(filterList)
+                })
+
+              }
+            }
+          } else {
+            app.$message({
+              message: data.errorMessage || data.data || 'Error',
+              type: 'error',
+              duration: 5 * 1000
+            })
+            this.isGetGroupAgent = false
+          }
+        }).catch((err) => {
+          console.log('err', err)
+          this.isGetGroupAgent = false
+        })
     },
     // 获取列表
     async getList() {
@@ -470,6 +544,14 @@ new Vue({
       //}
       that.detailDialog.visible = true;
     },
+    // 筛选输入变化
+    handleFilterChange(value, filterType) {
+      console.log('handleFilterChange', filterType, value)
+      if (filterType === 'groupAgent') {
+        this.groupAgentQueryList.filter = value
+        this.getAgentListData('groupAgent', 1)
+      }
+    },
     getCurrentRow(row) {
       let that = this
       //获取选中数据
@@ -530,6 +612,10 @@ new Vue({
         //this.getAgentListData('groupAgent')
         visibleKey = 'drawerGroup'
       }
+      //新建文件
+      if (btnType === 'dialogFile') {
+        visibleKey = 'dialogFile'
+      }
       this.visible[visibleKey] = true
     },
     // Dailog|抽屉 关闭 按钮
@@ -567,6 +653,148 @@ new Vue({
           }
         })
         .catch(_ => { });
-    }
+    },
+    // Dailog|抽屉 提交 按钮
+    handleElVisibleSubmit(btnType) {
+      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
+      let refName = '', formName = ''
+      // 组
+      if (btnType === 'drawerGroup') {
+        refName = 'groupELForm'
+        formName = 'groupForm'
+      }
+      if (!refName) return
+      this.$refs[refName].validate((valid) => {
+        if (valid) {
+          const submitForm = this[formName] ?? {}
+          //提交数据给后端
+          this.saveSubmitFormData(btnType, submitForm)
+          debugger
+          // this.visible[btnType] = false
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    // 组 新增|编辑 智能体 成员取消选中
+    groupMembersCancel(item, index) {
+      this.groupForm.members.splice(index, 1);
+      const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
+      if (findIndex !== -1) {
+        this.toggleSelection([this.groupAgentList[findIndex]])
+      }
+    },
+    // 编辑 Dailog|抽屉 按钮 
+    async handleEditDrawerOpenBtn(btnType, item) {
+      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
+      //console.log('handleEditDrawerOpenBtn', btnType, item);
+      let formName = ''
+      // 智能体
+      if (['dialogGroupAgent'].includes(btnType)) {
+        formName = 'agentForm'
+      }
+      
+      if (formName) {
+        if (btnType === 'drawerAgent' && item) {
+          console.log('item', item);
+          // 创建一个新的对象来存储表单数据
+          const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
+          console.log('formData', formData);
+
+          // 确保 functionCallNames 被正确初始化
+          this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
+
+          // 将数据赋值给表单
+          Object.assign(this[formName], formData);
+
+          // 打印日志以便调试
+          console.log('Loaded form data:', formData);
+          console.log('functionCallTags:', this.functionCallTags);
+
+        } else if (btnType === 'drawerGroup') {
+          if (item.chatGroupDto) {
+            Object.assign(this[formName], {
+              ...item.chatGroupDto,
+              members: item.agentTemplateDtoList || item.chatGroupMembers || []
+            })
+          } else {
+            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${item.id}`)
+              .then(res => {
+                const data = res?.data ?? {}
+                if (data.success) {
+                  const groupDetail = data?.data ?? {}
+                  Object.assign(this[formName], {
+                    ...groupDetail.chatGroupDto,
+                    members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || []
+                  })
+                }
+              })
+          }
+          // // 获取 全部智能体数据
+          // this.getAgentListData('groupAgent')
+        } else if (btnType === 'drawerTaskStart') {
+          Object.assign(this[formName], {
+            ...item
+            // groupName: item?.name ?? ''
+          })
+        } else {
+          Object.assign(this[formName], item)
+        }
+        // 回显 表单值
+        // this.$set(this, `${formName}`, deepClone(item))
+        // 打开 抽屉
+        this.handleElVisibleOpenBtn(btnType)
+      }
+    },
+    // 组 新增|编辑 智能体table 切换table 选中
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs?.groupAgentTable?.toggleRowSelection(row);
+        });
+      } else {
+        this.$refs?.groupAgentTable?.clearSelection();
+      }
+    },
   }
 }); 
+
+
+
+/**
+* 处理接口 query 参数 转换为 string
+* @param {Object} queryObj // 原地址
+*/
+function getInterfaceQueryStr(queryObj) {
+  if (!queryObj) return ''
+  // 将对象转换为 URL 参数字符串
+  return Object.entries(queryObj)
+    .filter(([key, value]) => {
+      // 过滤掉空值
+      // console.log('value', typeof value)
+      if (typeof value === 'string') {
+        return value !== ''
+      } else if (typeof value === 'object' && value instanceof Array) {
+        return value.length > 0
+      } else if (typeof value === 'number') {
+        return true
+      } else {
+        // if(typeof value === 'undefined')
+        return false
+      }
+    })
+    .map(
+      ([key, value]) => {
+        if (Array.isArray(value)) {
+          let str = ""
+          for (let index in value) {
+            str += `${index > 0 ? '&' : ''}${encodeURIComponent(key)}=${encodeURIComponent(value[index])}`
+          }
+          return str
+        }
+        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+      }
+    )
+    .join('&')
+}
