@@ -49,13 +49,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.18.1-preview.4" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />

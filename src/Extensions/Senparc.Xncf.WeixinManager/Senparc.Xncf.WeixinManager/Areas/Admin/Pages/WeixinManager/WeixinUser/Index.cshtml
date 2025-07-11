@@ -1,0 +1,249 @@
+﻿@page
+@model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.WeixinUser_IndexModel
+@{
+    //var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}的" : "所有";
+    //ViewData["Title"] = $"{namePrefix}用户";
+    Layout = "_Layout_Vue";
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>模块管理</el-breadcrumb-item>
+    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>{{docTitle}}</el-breadcrumb-item>
+}
+
+<div id="app" v-cloak>
+    <div class="admin-role">
+        <div class="filter-container">
+            <template v-if="mpAccountDto">
+                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">追加新增关注</el-button>
+                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> 同步所有关注</el-button>
+                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
+                <span><small>注意：如果用户数量众多，可能会消耗非常长的时间！</small></span>
+            </template>
+        </div>
+        <el-table :data="tableData"
+                  border
+                  @@selection-change="handleSelectionChange"
+                  style="width: 100%">
+            <el-table-column type="selection"
+                             align="center"
+                             width="40">
+            </el-table-column>
+            <el-table-column align="center"
+                             width="45"
+                             label="#">
+                <template slot-scope="scope">
+                    {{ scope.row.id}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="昵称">
+                <template slot-scope="scope">
+                    {{ scope.row.nickName}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             width="65"
+                             label="头像">
+                <template slot-scope="scope">
+                    <el-image style="width: 50px; height: 50px"
+                              :src="scope.row.headImgUrl"></el-image>
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             label="性别">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.sex == 1">男</span>
+                    <span v-if="scope.row.sex == 2">女</span>
+                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">未知</span>
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             label="地区">
+                <template slot-scope="scope">
+                    {{scope.row.country}}&nbsp;
+                    {{scope.row.province}}&nbsp;
+                    {{scope.row.city}}
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             label="分组">
+                <template slot-scope="scope">
+                    {{ scope.row.groupid}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="关注时间">
+                <template slot-scope="scope">
+                    {{ formaTableTime(scope.row.subscribe_Time)}}
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             label="关注状态">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.subscribe == 1">已关注</span>
+                    <span v-if="scope.row.subscribe != 1">未关注</span>
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="关注场景">
+                <template slot-scope="scope">
+                    {{scope.row.subscribe_Scene}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="标签">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.userTags_WeixinUsers.length == 0">
+                        无
+                    </template>
+                    <template v-if="scope.row.userTags_WeixinUsers.length > 0">
+                        <ul>
+                            <li v-for="item in scope.row.userTags_WeixinUsers">
+                                {{item.userTag.name}}
+                            </li>
+                        </ul>
+                    </template>
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="备注">
+                <template slot-scope="scope">
+                    {{scope.row.adminRemark}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="说明">
+                <template slot-scope="scope">
+                    {{scope.row.adminRemark}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             width="145"
+                             label="添加时间">
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            @*<el-table-column label="操作" align="center" width="100"fixed="right">
+                <template slot-scope="scope">
+                    <el-popconfirm placement="top" title="确认删除此用户吗？" @@on-confirm="deleteCheck(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
+                    </el-popconfirm>
+                </template>
+            </el-table-column>*@
+        </el-table>
+        <pagination :total="searchData.total"
+                    :page.sync="searchData.pageIndex"
+                    :limit.sync="searchData.pageSize"
+                    @@pagination="fetchData"></pagination>
+    </div>
+</div>
+
+@section scripts {
+    @*<script src="~/js/Admin/mpaccount.js"></script>*@
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                searchData: {
+                    pageIndex: 1,
+                    pageSize: 10,
+                    total: 0
+                },
+                tableData: [],
+                mpAccountDto: null,
+                uid: '',
+                multipleSelection: [],
+                docTitle: '',
+                isLoading: false,
+                addLoading:false
+            },
+            mounted() {
+            },
+            created() {
+                this.fetchData();
+                this.uid = resizeUrl().uid;
+            },
+            methods: {
+                fetchData: function () {
+                    var mpId = resizeUrl().mpid || null;
+                    return service.get(`@Url.Page("Index")?handler=Ajax&pageIndex=${this.searchData.pageIndex}&pageSize=${this.searchData.pageSize}&mpId=${mpId}`).then(res => {
+                        var responseData = res.data.data;
+                        responseData.weixinUserDtos.list.map(ele => {
+                            ele.selected = false;
+                            //subscribe_Time
+                            ele.subscribeTime = '';
+                        })
+                        this.tableData = responseData.weixinUserDtos.list;
+                        this.mpAccountDto = responseData.mpAccountDto;
+                        this.searchData.total = responseData.weixinUserDtos.count;
+                        this.docTitle = this.mpAccountDto !== null ? this.mpAccountDto.name + '的用户' : '所有用户';
+                        document.title = this.docTitle;
+                    });
+                },
+                deleteCheck: function (index, row) {
+                    //
+                },
+                addUser: function (synctype) {
+                      if (synctype === 'all') {
+                        this.isLoading = true;
+                    } else {
+                        this.addLoading = true;
+                    }
+                    var mpId = resizeUrl().mpid;
+                    return service.get(`@Url.Page("Index")?handler=SyncUser&mpId=${mpId}&synctype=${synctype}`).then(res => {
+                        this.isLoading = false;
+                        this.addLoading = false;
+                        return this.fetchData();
+                    }).catch(e => {
+                        this.isLoading = false;
+                        this.addLoading = false;
+                    });
+                },
+                asyncUser: function () {
+                    this.addUser('all');
+                },
+                handleSelectionChange(val) {
+                    this.multipleSelection = val;
+                },
+                del: function () {
+                    var delIds = this.multipleSelection;
+                    if (delIds.length === 0) {
+                        this.$notify({
+                            title: '警告',
+                            message: '请勾选公众号',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        return;
+                    }
+
+                    var ids = [];
+                    delIds.forEach(ele => {
+                        ids.push(ele.id);
+                    })
+
+                    app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
+                        return service.post('@Url.Page("Index")?handler=Delete', ids);
+                    }).then(res => {
+                        this.$notify({
+                            title: '成功',
+                            message: '已成功删除' + ids.length + '条',
+                            type: 'success',
+                            duration: 2000
+                        });
+                        return this.fetchData();
+                    }).catch(e => {
+                        //
+                    })
+                },
+            }
+        });
+    </script>
+}
