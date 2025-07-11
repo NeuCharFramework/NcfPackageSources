@@ -1,0 +1,343 @@
+﻿@page
+@model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.MpAccount_IndexModel
+@{
+    ViewData["Title"] = "公众号管理";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>模块管理</el-breadcrumb-item>
+    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>公众号管理</el-breadcrumb-item>
+}
+
+<div>
+    <div class="admin-role">
+        <div class="filter-container">
+            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">增加</el-button>
+            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
+        </div>
+        <el-table :data="tableData"
+                  border
+                  @@selection-change="handleSelectionChange"
+                  style="width: 100%">
+            <el-table-column type="selection"
+                             align="center"
+                             width="40">
+            </el-table-column>
+            <el-table-column align="center"
+                             width="45"
+                             label="#">
+                <template slot-scope="scope">
+                    {{ scope.row.id}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="名称">
+                <template slot-scope="scope">
+                    {{ scope.row.name}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="AppId">
+                <template slot-scope="scope">
+                    {{ scope.row.appId}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="AppSecret">
+                <template slot-scope="scope">
+                    <el-popover placement="top-start"
+                                width="180"
+                                trigger="hover"
+                                :content="scope.row.appSecret">
+                        <span slot="reference">
+                            <i class="fa fa-map-marker fa-shield"></i> ****
+                        </span>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="Token">
+                <template slot-scope="scope">
+                    <el-popover placement="top-start"
+                                width="180"
+                                trigger="hover"
+                                :content="scope.row.token">
+                        <span slot="reference">
+                            <i class="fa fa-map-marker fa-shield"></i> ****
+                        </span>
+                    </el-popover>
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             label="EncodingAESKey">
+                <template slot-scope="scope">
+                    <el-popover placement="top-start"
+                                width="180"
+                                trigger="hover"
+                                :content="scope.row.encodingAESKey">
+                        <span slot="reference">
+                            <i class="fa fa-map-marker fa-shield"></i> ****
+                        </span>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="备注">
+                <template slot-scope="scope">
+                    {{ scope.row.adminRemark}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="说明">
+                <template slot-scope="scope">
+                    {{ scope.row.remark}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             width="145"
+                             label="添加时间">
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             width="80"
+                             label="消息URL">
+                <template slot-scope="scope">
+                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" target="_blank" :title="'[你的域名]/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> 打开</a>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="200" fixed="right">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               type="primary"
+                               @@click="edit(scope.$index, scope.row)"><i class="fa fa-edit"> 编辑</i></el-button>
+                    <el-button size="mini"
+                               type="primary" @@click="openUserMan(scope.row.id)">
+                        <i class="fa fa-users">用户管理</i>
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <pagination :total="searchData.total"
+                    :page.sync="searchData.pageIndex"
+                    :limit.sync="searchData.pageSize"
+                    @@pagination="fetchData"></pagination>
+    </div>
+    <!--新增 / 编辑 模态框-->
+    <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="40%" :close-on-click-modal="false">
+        <el-form :model="mpAccountForm" :rules="mpAccountRule" ref="ref_mpAccountForm" label-width="140px" class="demo-ruleForm">
+            <el-form-item label="公众号名称" prop="name">
+                <el-input v-model="mpAccountForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="AppId" prop="appId">
+                <el-input v-model="mpAccountForm.appId"></el-input>
+            </el-form-item>
+            <el-form-item label="AppSecret" prop="appSecret">
+                <el-input v-model="mpAccountForm.appSecret"></el-input>
+            </el-form-item>
+            <el-form-item label="Token" prop="token">
+                <el-input v-model="mpAccountForm.token"></el-input>
+            </el-form-item>
+            <el-form-item label="EncodingAESKey" prop="encodingAESKey">
+                <el-input v-model="mpAccountForm.encodingAESKey"></el-input>
+            </el-form-item>
+            <el-form-item label="PromptRangeCode" prop="promptRangeCode">
+                <el-input v-model="mpAccountForm.promptRangeCode"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="adminRemark">
+                <el-input v-model="mpAccountForm.adminRemark"></el-input>
+            </el-form-item>
+            <el-form-item label="URL">
+                <template>
+                    <p>微信后台配置的服务器地址(URL)</p>
+                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id" target="_blank"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
+                    <p>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应</p>
+                </template>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="dialog.visible = false">取 消</el-button>
+            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">确 认</el-button>
+        </div>
+    </el-dialog>
+</div>
+@section scripts {
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                searchData: {
+                    pageIndex: 1,
+                    pageSize: 10,
+                    total: 0
+                },
+                tableData: [],
+                dialog: {
+                    visible: false,
+                    title: '',
+                    loading: false,
+                    data: {
+                        id: 0
+                    }
+                },
+                mpAccountForm: {
+                    name: '',
+                    appId: '',
+                    appSecret: '',
+                    token: '',
+                    encodingAESKey: '',
+                    promptRangeCode: '',
+                    adminRemark: ''
+                },
+                mpAccountRule: {
+                    name: [
+                        { required: true, message: '请输入公众号名称', trigger: 'blur' },
+                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                    ],
+                    appId: [
+                        { required: true, message: '请输入AppId', trigger: 'blur' },
+                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                    ],
+                    appSecret: [
+                        { required: true, message: '请输入AppSecret', trigger: 'blur' },
+                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                    ],
+                    token: [
+                        { required: true, message: '请输入Token', trigger: 'blur' },
+                        { min: 1, max: 500, message: '长度在 1 至 500 之间', trigger: 'blur' }
+                    ],
+                    encodingAESKey: [
+                        { min: 0, max: 500, message: '长度在 1 至 500 之间', trigger: 'blur' }
+                    ],
+                    promptRangeCode: [
+                        { min: 0, max: 500, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                    ],
+                    adminRemark: [
+                        { min: 0, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                    ]
+                },
+                uid: '',
+                multipleSelection: []
+            },
+            mounted() {
+            },
+            created() {
+                this.fetchData();
+                this.uid = resizeUrl().uid;
+            },
+            methods: {
+                // 打开用户管理
+                openUserMan(id) {
+                    window.location.href='/Admin/WeixinManager/WeixinUser?mpid=' + id + '&uid=' + this.uid
+            },
+                fetchData: function () {
+                    return service.get(`@Url.Page("Index")?handler=Ajax&pageIndex=${this.searchData.pageIndex}&pageSize=${this.searchData.pageSize}`).then(res => {
+                        var responseData = res.data.data;
+                        responseData.list.map(ele => {
+                            ele.selected = false;
+                        })
+                        this.tableData = responseData.list;
+                        this.searchData.total = responseData.count;
+                    });
+                },
+                add: function () {
+                    this.dialog.visible = true;
+                    this.dialog.title = '新增公众号';
+                    this.dialog.data.id = 0;
+                    this.mpAccountForm = {
+                        name: '',
+                        appId: '',
+                        appSecret: '',
+                        token: '',
+                        encodingAESKey: '',
+                        promptRangeCode: '',
+                        adminRemark: ''
+                    }
+                },
+                edit: function (index, row) {
+                    this.dialog.data.id = row.id;
+                    this.dialog.visible = true;
+                    this.dialog.title = '编辑公众号';
+                    service.get('@Url.Page("Edit")?handler=Ajax&id=' + row.id).then(res => {
+                        const responseData = res.data.data;
+                        //debugger
+                        this.mpAccountForm = {
+                            name: responseData.name,
+                            appId: responseData.appId,
+                            appSecret: responseData.appSecret,
+                            token: responseData.token,
+                            encodingAESKey: responseData.encodingAESKey,
+                            promptRangeCode: responseData.promptRangeCode,
+                            adminRemark: responseData.adminRemark
+                        }
+                    });
+                },
+                //users: function (index, row) {
+                //    //
+                //},
+                saveMpAccount: function () {
+                    //保存
+                    var obj = JSON.parse(JSON.stringify(this.mpAccountForm));
+                    obj.id = this.dialog.data.id;
+                    this.$refs.ref_mpAccountForm.validate().then(res => {
+                        return service.post('@Url.Page("Edit")?handler=Ajax', obj);
+                    }).then(res => {
+                        var message = '新增公众号成功';
+                        if (this.dialog.data.id > 0) {
+                            message = '编辑公众号成功';
+                        }
+                        this.$notify({
+                            title: '成功',
+                            message: message,
+                            type: 'success',
+                            duration: 2000
+                        });
+                        this.dialog.visible = false;
+                        return this.fetchData();
+                    }).catch(e => {
+                        console.info(e);
+                    });
+                },
+                del: function () {
+                    var delIds = this.multipleSelection;
+                    if (delIds.length === 0) {
+                        this.$notify({
+                            title: '警告',
+                            message: '请勾选公众号',
+                            type: 'warning',
+                            duration: 2000
+                        });
+                        return;
+                    }
+
+                    var ids = [];
+                    delIds.forEach(ele => {
+                        ids.push(ele.id);
+                    })
+
+                    app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
+                        return service.post('@Url.Page("Index")?handler=Delete', ids);
+                    }).then(res => {
+                        this.$notify({
+                            title: '成功',
+                            message: '已成功删除' + ids.length + '条',
+                            type: 'success',
+                            duration: 2000
+                        });
+                        return this.fetchData();
+                    }).catch(e => {
+                        //
+                    })
+                },
+                handleSelectionChange(val) {
+                    this.multipleSelection = val;
+                }
+            }
+        });
+    </script>
+}
