@@ -88,12 +88,11 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Senparc.AI.Kernel" Version="0.25.1" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
+		<PackageReference Include="Senparc.Weixin.All" Version="2025.7.15" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
-		<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.20.11.2-preview1" />
-		<PackageReference Include="Senparc.Ncf.Core" Version="0.23.14.4-preview" />
-		<PackageReference Include="Senparc.Ncf.Mvc.UI" Version="0.20.9.3-preview1" />
-		<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.13.3-preview" />
+
 		<PackageReference Include="Senparc.Weixin.AspNet" Version="1.4.9" />
 		<PackageReference Include="Senparc.Weixin.MP" Version="16.23.8" />
 		<PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.4.9" />
@@ -101,9 +100,6 @@
 		<PackageReference Include="Senparc.Weixin.TenPay" Version="1.17.8" />
 		<PackageReference Include="Senparc.Weixin.Work" Version="3.27.0" />
 		<PackageReference Include="Senparc.Weixin.WxOpen" Version="3.23.6" />
-		<PackageReference Include="Senparc.Xncf.AIKernel" Version="0.12.20.2-preview" />
-		<PackageReference Include="Senparc.Xncf.DatabaseToolkit" Version="0.24.10.2-preview1" />
-		<PackageReference Include="Senparc.Xncf.PromptRange" Version="0.13.16.2-preview1" />
 		<!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
 		<!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />-->
 		<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />
@@ -140,6 +136,18 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="OHS\Local\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Repository\Senparc.Ncf.Repository.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+	  <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
+	  <ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 	</ItemGroup>
 	<!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="cd E:\Senparc项目\NeuCharFramework\NCF\src\XncfExtensionSample\MyExtensionCode&#xD;&#xA;&#xD;&#xA;dotnet add package $(SolutionName) - - prerelease -s &quot;E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\BuildOutPut&quot;" />
