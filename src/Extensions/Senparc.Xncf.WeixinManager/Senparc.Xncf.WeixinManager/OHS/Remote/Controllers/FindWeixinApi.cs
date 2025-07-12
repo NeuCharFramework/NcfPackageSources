@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET.WebApi;
 using Senparc.NeuChar;
 using System;
@@ -22,6 +23,11 @@ namespace Senparc.Xncf.WeixinManager.OHS.Remote.Controllers
         [HttpGet]
         public FindWeixinApiResult OnGetAsync(PlatformType? platformType, bool? isAsync, string keyword)
         {
+            if (!Request.IsLocal())
+            {
+                return new FindWeixinApiResult("", null, null, new List<ApiItem>());
+            }
+
             var result = _findApiService.FindWeixinApiResult(platformType.ToString(), isAsync, keyword);
             return result;
         }
