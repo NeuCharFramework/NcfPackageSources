@@ -84,10 +84,10 @@
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
 		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />-->
 		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-		</PackageReference>
+		</PackageReference>-->
 		<PackageReference Include="Senparc.AI.Kernel" Version="0.25.1" />
 		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
 		<PackageReference Include="Senparc.Weixin.All" Version="2025.7.15" />
