@@ -11,7 +11,7 @@
 		<AssemblyName>Senparc.Xncf.WeixinManager</AssemblyName>
 		<RootNamespace>Senparc.Xncf.WeixinManager</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='LocalRelease'">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
 		<Description>
 			NCF 模块：盛派官方发布的微信管理后台
 
@@ -60,7 +60,7 @@
 			[2025-07-13] v0.20.1-preview.1 upgrade MpAccount loading progress in UseXncfModule
 		</PackageReleaseNotes>
 		<RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
-		<Configurations>Debug;Release;Test;LocalRelease</Configurations>
+		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
