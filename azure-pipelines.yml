@@ -480,7 +480,7 @@ steps:
   displayName: Senparc.Xncf.XncfBuilder    
   inputs:      
     command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.*.nupkg'      
+    packagesToPush: '**/Senparc.Xncf.XncfBuilder.0.*.nupkg'      
     nuGetFeedType: external      
     publishFeedCredentials: 'nuget-jeffrey-full-key'
     arguments: '-skipDuplicate'    
@@ -944,6 +944,29 @@ steps:
   inputs:      
     command: push      
     packagesToPush: '**/Senparc.Xncf.MCP.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()    
+
+
+- task: NuGetCommand@2    
+  displayName: Senparc.Xncf.WeixinManager    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.WeixinManager.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.WeixinManager - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.WeixinManager.*.snupkg;'      
     nuGetFeedType: external      
     publishFeedCredentials: 'nuget-jeffrey-full-key'      
     arguments: '-skipDuplicate'    
