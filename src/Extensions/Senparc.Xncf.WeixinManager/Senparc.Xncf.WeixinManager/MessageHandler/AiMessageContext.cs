@@ -85,6 +85,7 @@ namespace Senparc.Xncf.WeixinManager
                     var iWantToRun = _semanticAiHandler.ChatConfig(promptConfigParameter,
                                                      userId: openId,
                                                      maxHistoryStore: 20,
+                                                     chatSystemMessage: promptTemplate,
                                                      promptTemplate: promptTemplate,
                                                      senparcAiSetting: senparcAiSetting
                                                                                                           /*, modelName: "gpt-4-32k"*/);
