@@ -82,7 +82,13 @@ namespace Senparc.Ncf.Database
         //    return services.AddDatabase(databaseConfiguration);
         //}
 
+
         #region UseNcfDatabase
+
+        /// <summary>
+        /// UseNcfDatabase() 方法是否已经执行完毕
+        /// </summary>
+        public static bool UseNcfDatabaseSetted = false;
 
         /// <summary>
         /// 使用指定数据库
@@ -119,7 +125,7 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        /// 使用指定数据库
+        /// 使用指定数据库（必须在 UseXncfModule() 方法之后执行）
         /// </summary>
         /// <param name="app"></param>
         /// <param name="databaseConfigurationType"></param>
@@ -169,6 +175,9 @@ namespace Senparc.Ncf.Database
             var databaseConfiguration = (IDatabaseConfiguration)Activator.CreateInstance(databaseConfigurationType);
 
             DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
+
+            UseNcfDatabaseSetted = true;
+
             return app;
         }
 
