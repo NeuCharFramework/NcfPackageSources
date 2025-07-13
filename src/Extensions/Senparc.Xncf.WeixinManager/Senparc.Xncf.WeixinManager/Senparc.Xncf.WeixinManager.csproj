@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<!--<RazorLangVersion>3.0</RazorLangVersion>-->
-		<Version>0.19.0-preview.1</Version>
+		<Version>0.20.0-preview.1</Version>
 		<!--<GenerateProgramFile>false</GenerateProgramFile>-->
 		<!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
 		<OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -56,6 +56,7 @@
 			[2025-05-29] v0.18.0-preview.1 升级基础库
 			[2025-07-12] v0.18.1-preview.3 fix: SqlServerDatabaseConfiguration 命名统一
 			[2025-07-12] v0.19.0-preview.1 migratie Senparc.Xncf.WeixinManager to NcfPackageResource repository
+			[2025-07-13] v0.20.0-preview.1 upgrade MpAccount loading progress in UseXncfModule
 		</PackageReleaseNotes>
 		<RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
 		<Configurations>Debug;Release;Test;LocalRelease</Configurations>
