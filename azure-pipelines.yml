@@ -949,6 +949,29 @@ steps:
     arguments: '-skipDuplicate'    
   continueOnError: true    
   condition: succeededOrFailed()    
+
+
+- task: NuGetCommand@2    
+  displayName: Senparc.Xncf.WeixinManager    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.WeixinManager.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.WeixinManager - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.WeixinManager.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()    
   
 - task: NuGetCommand@2    
   displayName: Senparc.Ncf.UnitTestExtension    
