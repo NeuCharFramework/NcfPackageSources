@@ -104,8 +104,8 @@
 		<PackageReference Include="Senparc.Weixin.WxOpen" Version="3.23.6" />
 		<!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
 		<!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />-->
-		<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />
-		<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.19.8.3-preview1" />
+		<!--<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />
+		<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.19.8.3-preview1" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Update="App_Data\ApiDocXml\Senparc.WebSocket.xml">
@@ -142,6 +142,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Database.PostgreSQL\Senparc.Ncf.Database.PostgreSQL.csproj" />
+	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
 	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Database\Senparc.Ncf.Database.csproj" />
 	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
 	  <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />

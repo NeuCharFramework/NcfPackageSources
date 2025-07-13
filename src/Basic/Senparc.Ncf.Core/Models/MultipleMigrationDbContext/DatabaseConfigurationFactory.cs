@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.Ncf.Core.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
+﻿using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Ncf.Core.Models
 {
