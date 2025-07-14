@@ -10,6 +10,6 @@ namespace Senparc.Xncf.WeixinManager
         WeChat_MiniProgram = 2,
         WeChat_Work = 4,
         WeChat_Open = 8,
-        WeChat_Tenpay,
+        WeChat_Tenpay = 16,
     }
 }

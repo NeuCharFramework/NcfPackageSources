@@ -113,13 +113,13 @@ namespace Senparc.Xncf.WeixinManager
                 //注册微信
                 Senparc.Weixin.WeixinRegister.UseSenparcWeixin(null, null, senparcSetting: null);
                 
+                //等待数据库注册完成后运行
                 while (Ncf.Database.Register.UseNcfDatabaseSetted is false)
                 {
                     await Task.Delay(1000);
                 }
                 
-                //等待数据库注册完成后运行
-
+                //开始查询数据库
                 try
                 {
                     //未安装数据库表的情况下可能会出错，因此需要try
