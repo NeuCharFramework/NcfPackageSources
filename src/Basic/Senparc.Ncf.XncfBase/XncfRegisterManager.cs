@@ -71,7 +71,7 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="xncfRegister"></param>
         /// <returns></returns>
-        public async Task<bool> CheckXncfValiable(IXncfRegister xncfRegister)
+        public async Task<bool> CheckXncfAvailable(IXncfRegister xncfRegister)
         {
             //检查内存中是否存在
             return xncfRegister!=null && IsRegistered(xncfRegister)
@@ -84,7 +84,7 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         /// <param name="xncfName"></param>
         /// <returns></returns>
-        public async Task<bool> CheckXncfValiable(string xncfName)
+        public async Task<bool> CheckXncfAvailable(string xncfName)
         {
             //检查内存中是否存在
             return IsRegistered(xncfName)
