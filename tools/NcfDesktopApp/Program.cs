@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -117,8 +118,37 @@ class Program
             var latestRelease = await GetLatestReleaseAsync();
             if (latestRelease == null)
             {
-                logger.LogError("❌ 无法获取最新版本信息");
-                return 1;
+                logger.LogWarning("⚠️  无法获取最新版本信息，检查是否有现有版本可用...");
+                
+                // 检查是否已经有可用的NCF版本
+                var senparcWebDll = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
+                if (File.Exists(senparcWebDll))
+                {
+                    logger.LogInformation("✅ 找到现有的NCF版本，直接启动...");
+                    await StartNcfSiteAsync();
+                    
+                    // 根据配置决定是否打开浏览器
+                    if (appOptions.AutoOpenBrowser)
+                    {
+                        var portFile = Path.Combine(AppDataPath, "port.txt");
+                        if (File.Exists(portFile))
+                        {
+                            var portText = await File.ReadAllTextAsync(portFile);
+                            if (int.TryParse(portText, out var port))
+                            {
+                                OpenBrowser($"http://localhost:{port}");
+                            }
+                        }
+                    }
+                    
+                    logger.LogInformation("✨ NCF桌面应用启动完成！");
+                    return 0;
+                }
+                else
+                {
+                    logger.LogError("❌ 无法获取最新版本信息且未找到现有版本");
+                    return 1;
+                }
             }
             
             var targetAsset = latestRelease.Assets?.FirstOrDefault(a => 
@@ -455,16 +485,15 @@ class Program
             var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = "Senparc.Web.dll",
+                Arguments = $"Senparc.Web.dll --urls=http://localhost:{availablePort}",
                 WorkingDirectory = NcfRuntimePath,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
+                UseShellExecute = true, // 使用shell启动，更接近手动运行
+                CreateNoWindow = false
             };
             
-            // 设置环境变量指定端口
+            // 设置环境变量指定端口（双重保险）
             startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{availablePort}";
+            startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
             
             var process = Process.Start(startInfo);
             
@@ -473,18 +502,20 @@ class Program
                 throw new InvalidOperationException("无法启动NCF进程");
             }
             
-            // 给一点时间让站点启动
-            await Task.Delay(5000);
+            // 使用shell启动时不能重定向输出，NCF进程会在独立控制台中显示输出
+            logger?.LogInformation("📝 NCF进程在独立控制台中运行，输出将在那里显示");
             
-            // 检查进程是否还在运行
-            if (process.HasExited)
+            // 等待站点完全启动并可用
+            var siteUrl = $"http://localhost:{availablePort}";
+            var isReady = await WaitForSiteReadyAsync(siteUrl, process, logger);
+            
+            if (!isReady)
             {
-                var error = await process.StandardError.ReadToEndAsync();
-                throw new InvalidOperationException($"NCF站点启动失败: {error}");
+                throw new InvalidOperationException("NCF站点启动超时或失败");
             }
             
             logger?.LogInformation("✅ NCF站点启动成功");
-            logger?.LogInformation($"🌐 站点地址: http://localhost:{availablePort}");
+            logger?.LogInformation($"🌐 站点地址: {siteUrl}");
             
             // 保存端口信息供浏览器使用
             await File.WriteAllTextAsync(Path.Combine(AppDataPath, "port.txt"), availablePort.ToString());
@@ -517,6 +548,79 @@ class Program
         }
         
         throw new InvalidOperationException($"无法找到可用端口（范围: {startPort} - {maxPort}）");
+    }
+    
+    private static async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process process, ILogger? logger)
+    {
+        const int maxWaitTimeSeconds = 60; // 最大等待60秒
+        const int checkIntervalMs = 2000; // 每2秒检查一次
+        
+        var httpClient = new HttpClient()
+        {
+            Timeout = TimeSpan.FromSeconds(5) // HTTP请求超时5秒
+        };
+        
+        var stopwatch = Stopwatch.StartNew();
+        int attemptCount = 0;
+        
+        logger?.LogInformation("⏳ 等待NCF站点完全启动...");
+        
+        while (stopwatch.ElapsedMilliseconds < maxWaitTimeSeconds * 1000)
+        {
+            attemptCount++;
+            
+            try
+            {
+                // 检查进程是否还在运行
+                if (process.HasExited)
+                {
+                    logger?.LogError($"❌ NCF进程已退出，退出代码: {process.ExitCode}");
+                    return false;
+                }
+                
+                // 尝试访问站点
+                logger?.LogInformation($"🔍 检查站点状态 (第{attemptCount}次)...");
+                
+                var response = await httpClient.GetAsync(siteUrl);
+                
+                // 检查响应状态
+                if (response.IsSuccessStatusCode)
+                {
+                    logger?.LogInformation($"✅ 站点响应正常 (状态码: {(int)response.StatusCode})");
+                    return true;
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden ||
+                         response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+                {
+                    // 403或503表示服务正在启动中，继续等待
+                    logger?.LogInformation($"⚠️  站点正在初始化中 (状态码: {(int)response.StatusCode})，继续等待...");
+                }
+                else
+                {
+                    logger?.LogWarning($"⚠️  收到意外响应 (状态码: {(int)response.StatusCode})，继续等待...");
+                }
+            }
+            catch (HttpRequestException)
+            {
+                // 连接失败，通常表示服务还没启动
+                logger?.LogInformation("🔄 站点还未准备就绪，继续等待...");
+            }
+            catch (TaskCanceledException)
+            {
+                // 请求超时
+                logger?.LogInformation("⏰ 请求超时，站点可能还在启动中...");
+            }
+            catch (Exception ex)
+            {
+                logger?.LogWarning($"⚠️  健康检查异常: {ex.Message}");
+            }
+            
+            // 等待一段时间后再次检查
+            await Task.Delay(checkIntervalMs);
+        }
+        
+        logger?.LogError($"❌ 等待超时 ({maxWaitTimeSeconds}秒)，站点可能启动失败");
+        return false;
     }
     
     private static void OpenBrowser(string url)
