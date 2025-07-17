@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -178,11 +179,17 @@ class Program
             // 根据配置决定是否打开浏览器
             if (appOptions.AutoOpenBrowser)
             {
-                OpenBrowser("http://localhost:5000");
+                var portFile = Path.Combine(AppDataPath, "port.txt");
+                var port = File.Exists(portFile) ? await File.ReadAllTextAsync(portFile) : "5001";
+                var siteUrl = $"http://localhost:{port.Trim()}";
+                OpenBrowser(siteUrl);
+                logger.LogInformation($"🌏 已打开浏览器: {siteUrl}");
             }
             else
             {
-                logger.LogInformation("🌐 站点地址: http://localhost:5000");
+                var portFile = Path.Combine(AppDataPath, "port.txt");
+                var port = File.Exists(portFile) ? await File.ReadAllTextAsync(portFile) : "5001";
+                logger.LogInformation($"🌐 站点地址: http://localhost:{port.Trim()}");
             }
             
             logger.LogInformation("🎉 NCF桌面应用启动完成！");
@@ -437,7 +444,11 @@ class Program
             throw new FileNotFoundException($"未找到Senparc.Web.dll文件: {senparcWebDll}");
         }
         
+        // 找一个可用的端口
+        var availablePort = await FindAvailablePortAsync(5000);
+        
         logger?.LogInformation("🌐 启动NCF站点...");
+        logger?.LogInformation($"🔌 使用端口: {availablePort}");
         
         try
         {
@@ -452,6 +463,9 @@ class Program
                 CreateNoWindow = true
             };
             
+            // 设置环境变量指定端口
+            startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{availablePort}";
+            
             var process = Process.Start(startInfo);
             
             if (process == null)
@@ -460,7 +474,7 @@ class Program
             }
             
             // 给一点时间让站点启动
-            await Task.Delay(3000);
+            await Task.Delay(5000);
             
             // 检查进程是否还在运行
             if (process.HasExited)
@@ -470,13 +484,39 @@ class Program
             }
             
             logger?.LogInformation("✅ NCF站点启动成功");
-            logger?.LogInformation("🌐 站点地址: http://localhost:5000");
+            logger?.LogInformation($"🌐 站点地址: http://localhost:{availablePort}");
+            
+            // 保存端口信息供浏览器使用
+            await File.WriteAllTextAsync(Path.Combine(AppDataPath, "port.txt"), availablePort.ToString());
         }
         catch (Exception ex)
         {
             logger?.LogError(ex, "❌ 启动NCF站点失败");
             throw;
         }
+    }
+    
+    private static async Task<int> FindAvailablePortAsync(int startPort = 5000)
+    {
+        const int maxPort = 5300;
+        
+        for (int port = startPort; port <= maxPort; port++)
+        {
+            try
+            {
+                using var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, port);
+                listener.Start();
+                listener.Stop();
+                return port;
+            }
+            catch
+            {
+                // 端口被占用，继续尝试下一个
+                continue;
+            }
+        }
+        
+        throw new InvalidOperationException($"无法找到可用端口（范围: {startPort} - {maxPort}）");
     }
     
     private static void OpenBrowser(string url)
