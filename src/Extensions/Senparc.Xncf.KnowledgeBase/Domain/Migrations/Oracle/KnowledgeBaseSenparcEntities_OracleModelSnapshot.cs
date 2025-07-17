@@ -111,6 +111,45 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
                 });
+
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("NVARCHAR2(450)");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("ContentType")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("KnowledgeBasesId")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
+                });
 #pragma warning restore 612, 618
         }
     }

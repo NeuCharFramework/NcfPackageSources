@@ -30,7 +30,6 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// <summary>
         /// 内容类型
         /// </summary>
-        [MaxLength(100)]
         public int ContentType { get; set; }
         /// <summary>
         /// 内容

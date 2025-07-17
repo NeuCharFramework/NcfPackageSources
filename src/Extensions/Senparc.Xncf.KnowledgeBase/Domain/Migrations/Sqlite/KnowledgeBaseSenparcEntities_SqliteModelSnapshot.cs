@@ -104,6 +104,45 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
                 });
+
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ContentType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("KnowledgeBasesId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
+                });
 #pragma warning restore 612, 618
         }
     }

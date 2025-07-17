@@ -20,6 +20,8 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             Id = Guid.NewGuid().ToString();
             AddTime = DateTime.Now;
             this.LastUpdateTime = AddTime;
+            AdminRemark = string.Empty;
+            Remark = string.Empty;
         }
         public KnowledgeBasesDetail(KnowledgeBasesDetailDto knowledgeBasesDetailDto) : this()
         {

@@ -111,6 +111,45 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
                 });
+
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ContentType")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("KnowledgeBasesId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
+                });
 #pragma warning restore 612, 618
         }
     }

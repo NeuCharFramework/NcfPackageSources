@@ -128,6 +128,7 @@ new Vue({
         contentType: '', // 内容类型
         files: [], // 文件列表
         content: '', // 内容
+        knowledgeBasesId: '' //知识库ID
       },
       groupFormRules: {
         name: [
@@ -443,6 +444,42 @@ new Vue({
         }
       }
     },
+    // 保存 submitForm 数据
+    async saveSubmitFormData(saveType, serviceForm = {}) {
+      debugger
+      let serviceURL = ''
+      // 组 新增|编辑
+      if (saveType === 'drawerGroup') {
+        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.SetKnowledgeBaseDetail'
+      }
+      if (!serviceURL) return
+      try {
+        service.post(serviceURL, serviceForm).then(res => {
+          debugger
+          that.$notify({
+            title: "Success",
+            message: "成功",
+            type: "success",
+            duration: 2000
+          });
+          that.visible.drawerGroup = false;
+
+          //if (res.data.success) {
+          //  //that.getList();
+          //  that.$notify({
+          //    title: "Success",
+          //    message: "成功",
+          //    type: "success",
+          //    duration: 2000
+          //  });
+          //  that.visible.drawerGroup = false;
+          //}
+        });
+      } catch (err) {
+        console.error('Request Error:', err);
+        this.isGetGroupAgent = false
+      }
+    },
     selectEmbeddingModel() {
       let that = this
       for (let i = 0; i < that.embeddingModelData.length; i++) {
@@ -605,12 +642,41 @@ new Vue({
     onSubmit() {
       console.log('submit!');
     },
+    handleEmbeddingBtn(btnType, item) {
+      debugger
+      if (btnType === 'embedding') {
+        //开始向量化数据
+        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.EmbeddingKnowledgeBase'
+        let dataTemp = {
+          id:item?.id ?? ''
+        }
+
+        if (!serviceURL) return
+        try {
+          service.post(serviceURL, dataTemp).then(res => {
+            debugger
+            that.$notify({
+              title: "Success",
+              message: "成功",
+              type: "success",
+              duration: 2000
+            });
+            that.visible.drawerGroup = false;
+          });
+        } catch (err) {
+          console.error('Request Error:', err);
+          this.isGetGroupAgent = false
+        }
+      }
+    },
     // Dailog|抽屉 打开 按钮
-    handleElVisibleOpenBtn(btnType) {
+    handleElVisibleOpenBtn(btnType,item) {
       let visibleKey = btnType
       if (btnType === 'drawerGroup') {
         //this.getAgentListData('groupAgent')
         visibleKey = 'drawerGroup'
+        //设置
+        this.groupForm.knowledgeBasesId = item?.id ?? ''
       }
       //新建文件
       if (btnType === 'dialogFile') {
@@ -666,6 +732,7 @@ new Vue({
       if (!refName) return
       this.$refs[refName].validate((valid) => {
         if (valid) {
+          debugger
           const submitForm = this[formName] ?? {}
           //提交数据给后端
           this.saveSubmitFormData(btnType, submitForm)
