@@ -1,0 +1,161 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+             xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NcfDesktopApp.GUI.Views.BrowserView"
+             x:DataType="vm:MainWindowViewModel">
+    
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- 顶部工具栏 -->
+        <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="0,0,0,1" Padding="10">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                
+                <!-- 导航按钮 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                    <Button Name="BackButton" 
+                            Content="←" 
+                            Width="30" Height="30" 
+                            FontSize="16" FontWeight="Bold"
+                            ToolTip.Tip="后退"
+                            Click="BackButton_Click"/>
+                    <Button Name="ForwardButton" 
+                            Content="→" 
+                            Width="30" Height="30" 
+                            FontSize="16" FontWeight="Bold"
+                            ToolTip.Tip="前进"
+                            Click="ForwardButton_Click"/>
+                    <Button Name="RefreshButton" 
+                            Content="↻" 
+                            Width="30" Height="30" 
+                            FontSize="16" FontWeight="Bold"
+                            ToolTip.Tip="刷新"
+                            Click="RefreshButton_Click"/>
+                </StackPanel>
+                
+                <!-- URL显示 -->
+                <Border Grid.Column="1" 
+                        Background="White" 
+                        BorderBrush="#CED4DA" 
+                        BorderThickness="1" 
+                        CornerRadius="4" 
+                        Margin="10,0"
+                        Padding="8,5">
+                    <TextBlock Name="UrlDisplay" 
+                               Text="{Binding SiteUrl}" 
+                               FontFamily="Consolas" 
+                               FontSize="12"
+                               Foreground="#495057"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"/>
+                </Border>
+                
+                <!-- 状态指示器 -->
+                <Border Grid.Column="2" 
+                        Background="{Binding StatusColor}" 
+                        CornerRadius="10" 
+                        Width="20" Height="20" 
+                        Margin="0,0,10,0"
+                        ToolTip.Tip="{Binding CurrentStatus}">
+                    <TextBlock Text="●" 
+                               Foreground="White" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" 
+                               FontSize="12"/>
+                </Border>
+                
+                <!-- 设置按钮 -->
+                <Button Grid.Column="3" 
+                        Content="⚙" 
+                        Width="30" Height="30" 
+                        FontSize="16"
+                        ToolTip.Tip="打开设置"
+                        Command="{Binding SwitchToSettingsCommand}"/>
+            </Grid>
+        </Border>
+        
+        <!-- 浏览器内容区域 -->
+        <Border Grid.Row="1" Background="White">
+            <Grid>
+                <!-- 加载状态覆盖层 -->
+                <Border Name="LoadingOverlay" 
+                        Background="#F8F9FA" 
+                        IsVisible="{Binding !IsBrowserReady}">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Spacing="20">
+                        <TextBlock Text="🌐" 
+                                   FontSize="48" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="正在准备浏览器..." 
+                                   FontSize="16" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#6C757D"/>
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="200" 
+                                     Height="4"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- WebView控件 -->
+                <!-- 暂时使用文本块替代WebView，直到WebViewControl包问题解决 -->
+                <Border Name="Browser"
+                        IsVisible="{Binding IsBrowserReady}"
+                        Background="White"
+                        BorderBrush="#DEE2E6" 
+                        BorderThickness="1">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Spacing="15">
+                        <TextBlock Text="🌐" 
+                                   FontSize="48" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="内置浏览器功能开发中..." 
+                                   FontSize="16" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#6C757D"/>
+                        <TextBlock Text="{Binding SiteUrl}" 
+                                   FontSize="14" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#007ACC"
+                                   FontFamily="Consolas"/>
+                        <Button Content="在外部浏览器中打开" 
+                                Command="{Binding OpenInExternalBrowserCommand}"
+                                Padding="20,8"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- 错误状态显示 -->
+                <Border Name="ErrorOverlay" 
+                        Background="#FFF5F5" 
+                        IsVisible="{Binding HasBrowserError}">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Spacing="15">
+                        <TextBlock Text="⚠️" 
+                                   FontSize="48" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="浏览器加载失败" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#DC3545"/>
+                        <TextBlock Text="{Binding BrowserErrorMessage}" 
+                                   FontSize="14" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#6C757D"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="400"/>
+                        <Button Content="重试" 
+                                Command="{Binding RetryBrowserCommand}"
+                                HorizontalAlignment="Center"
+                                Padding="20,8"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl> 

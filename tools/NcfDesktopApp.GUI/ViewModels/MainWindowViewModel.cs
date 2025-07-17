@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using NcfDesktopApp.GUI.Services;
+using System.Linq;
 
 namespace NcfDesktopApp.GUI.ViewModels;
 
@@ -62,7 +63,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _minimizeToTray = false;
 
     [ObservableProperty]
-    private int _startPort = 5001;
+    private int _startPort = 5000;
 
     [ObservableProperty]
     private int _endPort = 5300;
@@ -72,184 +73,96 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isOperationInProgress = false;
+    
+    // 新增浏览器相关属性
+    [ObservableProperty]
+    private bool _isBrowserReady = false;
+    
+    [ObservableProperty]
+    private bool _hasBrowserError = false;
+    
+    [ObservableProperty]
+    private string _browserErrorMessage = "";
+    
+    [ObservableProperty]
+    private bool _isInitializing = true;
+    
+    [ObservableProperty]
+    private int _currentTabIndex = 0; // 0=设置页面, 1=浏览器页面
+
+    public object? BrowserViewReference { get; set; }
+
+    #endregion
+
+    #region 私有字段
+    
+    private readonly NcfService _ncfService;
+    private readonly StringBuilder _logBuffer;
+    private CancellationTokenSource? _cancellationTokenSource;
+    private Process? _ncfProcess;
+    private bool _isNcfRunning = false;
+
+    #endregion
+
+    #region 构造函数
+
+    public MainWindowViewModel()
+    {
+        _ncfService = new NcfService(new HttpClient());
+        _logBuffer = new StringBuilder();
+        
+        // 初始化应用程序
+        _ = Task.Run(InitializeApplicationAsync);
+    }
 
     #endregion
 
     #region 命令
 
-    public ICommand TestConnectionCommand { get; }
-    public ICommand OpenConfigDirectoryCommand { get; }
-    public ICommand MainActionCommand { get; }
-    public ICommand StopCommand { get; }
-
-    #endregion
-
-    #region 私有字段
-
-    private CancellationTokenSource? _cancellationTokenSource;
-    private Process? _ncfProcess;
-    private readonly StringBuilder _logBuffer = new();
-    private bool _isNcfRunning = false;
-    private readonly NcfService _ncfService;
-    private readonly ILogger<MainWindowViewModel>? _logger;
-
-    #endregion
-
-    public MainWindowViewModel(NcfService? ncfService = null, ILogger<MainWindowViewModel>? logger = null)
-    {
-        _ncfService = ncfService ?? new NcfService(new HttpClient());
-        _logger = logger;
-        
-        TestConnectionCommand = new AsyncRelayCommand(TestConnectionAsync);
-        OpenConfigDirectoryCommand = new RelayCommand(OpenConfigDirectory);
-        MainActionCommand = new AsyncRelayCommand(MainActionAsync);
-        StopCommand = new RelayCommand(StopOperation);
-
-        // 初始化
-        _ = Task.Run(InitializeAsync);
-    }
-
-    #region 初始化
-
-    private async Task InitializeAsync()
+    [RelayCommand]
+    private async Task TestConnection()
     {
         try
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                AddLog("🚀 NCF桌面应用启动中...");
-                CurrentStatus = "初始化中";
-                StatusColor = "#007ACC";
-            });
-
-            // 检查最新版本
-            await CheckLatestVersionAsync();
+            AddLog("🔍 测试网络连接...");
+            var isConnected = await _ncfService.TestConnectionAsync();
             
-            await Dispatcher.UIThread.InvokeAsync(() =>
+            if (isConnected)
             {
-                CurrentStatus = "就绪";
-                StatusColor = "#28A745";
-                AddLog("✅ 初始化完成");
-            });
+                AddLog("✅ 网络连接正常");
+            }
+            else
+            {
+                AddLog("❌ 网络连接失败，请检查网络设置");
+            }
         }
         catch (Exception ex)
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                CurrentStatus = "初始化失败";
-                StatusColor = "#DC3545";
-                AddLog($"❌ 初始化失败: {ex.Message}");
-            });
-        }
-    }
-
-    private async Task CheckLatestVersionAsync()
-    {
-        try
-        {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                AddLog("🔍 检查最新版本...");
-            });
-
-            var release = await _ncfService.GetLatestReleaseAsync();
-            
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (release != null)
-                {
-                    LatestVersion = release.TagName ?? "未知版本";
-                    AddLog($"✅ 获取最新版本成功: {LatestVersion}");
-                }
-                else
-                {
-                    LatestVersion = "获取失败";
-                    AddLog("⚠️ 无法获取版本信息，可能网络连接问题");
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                LatestVersion = "获取失败";
-                AddLog($"⚠️ 获取版本信息失败: {ex.Message}");
-            });
-        }
-    }
-
-    #endregion
-
-    #region 命令实现
-
-    private async Task TestConnectionAsync()
-    {
-        try
-        {
-            IsOperationInProgress = true;
-            CurrentStatus = "测试连接中";
-            StatusColor = "#007ACC";
-            IsProgressIndeterminate = true;
-            ProgressText = "正在测试网络连接...";
-            
-            AddLog("🔗 开始测试连接...");
-
-            // TODO: 实现实际的连接测试
-            await Task.Delay(2000);
-
-            CurrentStatus = "连接正常";
-            StatusColor = "#28A745";
-            ProgressText = "连接测试完成";
-            AddLog("✅ 网络连接测试成功");
-        }
-        catch (Exception ex)
-        {
-            CurrentStatus = "连接失败";
-            StatusColor = "#DC3545";
-            ProgressText = "连接测试失败";
             AddLog($"❌ 连接测试失败: {ex.Message}");
         }
-        finally
-        {
-            IsOperationInProgress = false;
-            IsProgressIndeterminate = false;
-            ProgressValue = 0;
-        }
     }
 
+    [RelayCommand]
     private void OpenConfigDirectory()
     {
         try
         {
-            var appDataPath = GetAppDataPath();
-            Directory.CreateDirectory(appDataPath);
-            
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Process.Start("explorer.exe", appDataPath);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Process.Start("open", appDataPath);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Process.Start("xdg-open", appDataPath);
-            }
-            
-            AddLog($"📁 已打开配置目录: {appDataPath}");
+            var path = GetAppDataPath();
+            OpenBrowser(path);
+            AddLog($"📁 已打开配置目录: {path}");
         }
         catch (Exception ex)
         {
-            AddLog($"❌ 打开配置目录失败: {ex.Message}");
+            AddLog($"❌ 无法打开配置目录: {ex.Message}");
         }
     }
 
-    private async Task MainActionAsync()
+    [RelayCommand(CanExecute = nameof(CanExecuteMainOperation))]
+    private async Task MainOperation()
     {
         if (_isNcfRunning)
         {
-            await StopNcfAsync();
+            StopOperation();
         }
         else
         {
@@ -257,6 +170,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private bool CanExecuteMainOperation() => !IsOperationInProgress;
+
+    [RelayCommand]
     private void StopOperation()
     {
         try
@@ -273,6 +189,127 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             AddLog($"❌ 停止操作失败: {ex.Message}");
+        }
+    }
+    
+    // 新增页面切换命令
+    [RelayCommand(CanExecute = nameof(CanSwitchToBrowser))]
+    private void SwitchToBrowser()
+    {
+        CurrentTabIndex = 1;
+        AddLog("🌐 切换到浏览器页面");
+    }
+    
+    private bool CanSwitchToBrowser() => IsBrowserReady;
+    
+    [RelayCommand]
+    private void SwitchToSettings()
+    {
+        CurrentTabIndex = 0;
+        AddLog("⚙️ 切换到设置页面");
+    }
+    
+    [RelayCommand]
+    private async Task RetryBrowser()
+    {
+        HasBrowserError = false;
+        BrowserErrorMessage = "";
+        await InitializeBrowserAsync();
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanOpenInExternalBrowser))]
+    private void OpenInExternalBrowser()
+    {
+        if (!string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动")
+        {
+            OpenBrowser(SiteUrl);
+        }
+    }
+    
+    private bool CanOpenInExternalBrowser() => !string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动";
+
+    #endregion
+
+    #region 初始化方法
+
+    private async Task InitializeApplicationAsync()
+    {
+        try
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog("🚀 正在初始化 NCF 桌面应用程序...");
+                IsInitializing = true;
+            });
+
+            // 检查最新版本
+            await CheckLatestVersionAsync();
+            
+            // 初始化浏览器
+            await InitializeBrowserAsync();
+            
+            // 完成初始化
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsInitializing = false;
+                AddLog("✅ 应用程序初始化完成");
+            });
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsInitializing = false;
+                AddLog($"❌ 初始化失败: {ex.Message}");
+            });
+        }
+    }
+
+    private async Task InitializeBrowserAsync()
+    {
+        try
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog("🌐 正在初始化内置浏览器...");
+            });
+            
+            // 浏览器初始化会在BrowserView的InitializeWebView方法中完成
+            // 这里只是标记开始初始化
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                OnBrowserError($"浏览器初始化失败: {ex.Message}");
+            });
+        }
+    }
+
+    private async Task CheckLatestVersionAsync()
+    {
+        try
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog("🔍 检查最新版本...");
+            });
+
+            var version = await _ncfService.GetLatestVersionAsync();
+            
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                LatestVersion = version;
+                AddLog($"📋 最新版本: {version}");
+            });
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                LatestVersion = "获取失败";
+                AddLog($"⚠️ 获取版本信息失败: {ex.Message}");
+            });
         }
     }
 
@@ -311,155 +348,87 @@ public partial class MainWindowViewModel : ViewModelBase
             
             AddLog("✅ NCF 启动成功");
 
-            // 自动打开浏览器
+            // 自动在内置浏览器中打开
             if (AutoOpenBrowser && !string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动")
             {
-                OpenBrowser(SiteUrl);
+                await NavigateToBrowserAsync(SiteUrl);
             }
         }
         catch (OperationCanceledException)
         {
-            AddLog("🛑 启动操作已取消");
+            AddLog("🛑 操作已取消");
         }
         catch (Exception ex)
         {
-            CurrentStatus = "启动失败";
-            StatusColor = "#DC3545";
-            ProgressText = "启动失败";
-            AddLog($"❌ 启动失败: {ex.Message}");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                CurrentStatus = "错误";
+                StatusColor = "#DC3545";
+                AddLog($"❌ 启动失败: {ex.Message}");
+            });
         }
         finally
         {
+            IsOperationInProgress = false;
             if (!_isNcfRunning)
             {
-                IsOperationInProgress = false;
-                IsProgressIndeterminate = false;
                 MainButtonText = "启动 NCF";
+                CurrentStatus = "就绪";
+                StatusColor = "#28A745";
             }
-        }
-    }
-
-    private async Task StopNcfAsync()
-    {
-        try
-        {
-            AddLog("🛑 正在停止 NCF...");
-            
-            if (_ncfProcess != null && !_ncfProcess.HasExited)
-            {
-                _ncfProcess.Kill();
-                await _ncfProcess.WaitForExitAsync();
-            }
-
-            _isNcfRunning = false;
-            IsOperationInProgress = false;
-            CurrentStatus = "已停止";
-            StatusColor = "#6C757D";
-            MainButtonText = "启动 NCF";
-            SiteUrl = "未启动";
-            ProgressValue = 0;
-            ProgressText = "已停止";
-            
-            AddLog("✅ NCF 已停止");
-        }
-        catch (Exception ex)
-        {
-            AddLog($"❌ 停止失败: {ex.Message}");
         }
     }
 
     private async Task DownloadNcfAsync(CancellationToken cancellationToken)
     {
-        var release = await _ncfService.GetLatestReleaseAsync(cancellationToken);
-        if (release == null)
+        await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            throw new InvalidOperationException("无法获取最新版本信息");
-        }
+            ProgressText = "检查本地文件...";
+            IsProgressIndeterminate = true;
+        });
 
-        var targetAsset = _ncfService.GetTargetAsset(release);
-        if (targetAsset == null)
+        var progress = new Progress<(string message, double percentage)>(p =>
         {
-            throw new InvalidOperationException("未找到适合当前平台的下载包");
-        }
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                ProgressText = p.message;
+                ProgressValue = p.percentage;
+                IsProgressIndeterminate = p.percentage < 0;
+            });
+        });
 
-        var needsDownload = await _ncfService.CheckIfDownloadNeededAsync(targetAsset.Name!, targetAsset.Size);
-        
-        if (needsDownload)
-        {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                ProgressText = $"正在下载 {targetAsset.Name}...";
-                IsProgressIndeterminate = false;
-                AddLog("📥 开始下载最新版本...");
-            });
-
-            var progress = new Progress<double>(value =>
-            {
-                Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    ProgressValue = value * 0.6; // 下载占60%进度
-                    ProgressText = $"下载中... {value:F1}%";
-                });
-            });
-
-            await _ncfService.DownloadFileAsync(targetAsset.BrowserDownloadUrl!, targetAsset.Name!, progress, cancellationToken);
-            
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                AddLog("✅ 下载完成");
-            });
-        }
-        else
-        {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                ProgressValue = 60;
-                AddLog("✅ 文件已存在，跳过下载");
-            });
-        }
+        await _ncfService.DownloadLatestReleaseAsync(progress, ShowDetailedInfo, cancellationToken);
     }
 
     private async Task ExtractNcfAsync(CancellationToken cancellationToken)
     {
-        var release = await _ncfService.GetLatestReleaseAsync(cancellationToken);
-        if (release == null) return;
-
-        var targetAsset = _ncfService.GetTargetAsset(release);
-        if (targetAsset == null) return;
-
-        var needsExtract = await _ncfService.CheckIfExtractNeededAsync(release.TagName!);
-        
-        if (needsExtract)
+        await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                ProgressText = "正在提取文件...";
-                AddLog("📦 正在提取文件...");
-            });
+            ProgressText = "提取文件...";
+            IsProgressIndeterminate = true;
+        });
 
-            var progress = new Progress<double>(value =>
+        var progress = new Progress<(string message, double percentage)>(p =>
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Dispatcher.UIThread.InvokeAsync(() =>
+                ProgressText = p.message;
+                ProgressValue = p.percentage;
+                IsProgressIndeterminate = p.percentage < 0;
+                
+                if (ShowDetailedInfo)
                 {
-                    ProgressValue = 60 + (value * 0.3); // 提取占30%进度
-                    ProgressText = $"提取中... {value:F1}%";
-                });
+                    AddLog(p.message);
+                }
             });
+        });
 
-            await _ncfService.ExtractZipAsync(targetAsset.Name!, release.TagName!, progress, cancellationToken);
-            
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                AddLog("✅ 文件提取完成");
-            });
-        }
-        else
+        await _ncfService.ExtractFilesAsync(progress, cancellationToken);
+        
+        if (AutoCleanDownloads)
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                ProgressValue = 90;
-                AddLog("✅ 文件已是最新版本，跳过提取");
-            });
+            await _ncfService.CleanupDownloadsAsync();
+            AddLog("🧹 已清理下载文件");
         }
     }
 
@@ -467,31 +436,29 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            ProgressText = "正在启动 NCF 进程...";
-            ProgressValue = 90;
-            AddLog("🌐 正在启动 NCF 站点...");
+            ProgressText = "启动 NCF 进程...";
+            IsProgressIndeterminate = true;
         });
-        
-        // 查找可用端口
-        var port = await _ncfService.FindAvailablePortAsync(StartPort, EndPort);
-        var siteUrl = $"http://localhost:{port}";
+
+        var availablePort = await _ncfService.FindAvailablePortAsync(StartPort, EndPort);
+        var siteUrl = $"http://localhost:{availablePort}";
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             SiteUrl = siteUrl;
-            AddLog($"🔌 使用端口: {port}");
+            AddLog($"🌐 使用端口: {availablePort}");
+            ProgressText = "启动进程...";
         });
 
-        // 启动NCF进程
-        _ncfProcess = await _ncfService.StartNcfProcessAsync(port, cancellationToken);
+        _ncfProcess = await _ncfService.StartNcfProcessAsync(availablePort, cancellationToken);
         
-        // 等待站点就绪
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
+            AddLog($"🚀 NCF 进程已启动 (PID: {_ncfProcess.Id})");
             ProgressText = "等待站点就绪...";
-            AddLog("⏳ 等待NCF站点完全启动...");
         });
 
+        // 等待站点就绪
         var isReady = await _ncfService.WaitForSiteReadyAsync(siteUrl, _ncfProcess, 60, cancellationToken);
         
         if (!isReady)
@@ -503,6 +470,101 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             AddLog($"✅ NCF 站点已启动: {siteUrl}");
         });
+    }
+
+    private async Task StopNcfAsync()
+    {
+        try
+        {
+            if (_ncfProcess != null && !_ncfProcess.HasExited)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("🛑 正在停止 NCF 进程...");
+                });
+
+                _ncfProcess.Kill();
+                await _ncfProcess.WaitForExitAsync();
+                
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("✅ NCF 进程已停止");
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"⚠️ 停止进程时出错: {ex.Message}");
+            });
+        }
+        finally
+        {
+            _isNcfRunning = false;
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                MainButtonText = "启动 NCF";
+                CurrentStatus = "已停止";
+                StatusColor = "#6C757D";
+                SiteUrl = "未启动";
+                ProgressText = "已停止";
+                ProgressValue = 0;
+            });
+        }
+    }
+
+    #endregion
+
+    #region 浏览器控制方法
+
+    public void OnBrowserReady()
+    {
+        IsBrowserReady = true;
+        HasBrowserError = false;
+        AddLog("✅ 内置浏览器已准备就绪");
+    }
+
+    public void OnBrowserError(string errorMessage)
+    {
+        HasBrowserError = true;
+        BrowserErrorMessage = errorMessage;
+        IsBrowserReady = false;
+        AddLog($"❌ 浏览器错误: {errorMessage}");
+    }
+
+    public void OnNavigationStarted(string url)
+    {
+        AddLog($"🌐 开始加载: {url}");
+    }
+
+    public void OnNavigationCompleted(string url)
+    {
+        AddLog($"✅ 加载完成: {url}");
+    }
+
+    private async Task NavigateToBrowserAsync(string url)
+    {
+        try
+        {
+            if (BrowserViewReference is NcfDesktopApp.GUI.Views.BrowserView browserView)
+            {
+                await browserView.NavigateToUrl(url);
+                CurrentTabIndex = 1; // 切换到浏览器标签页
+                AddLog($"🌐 在内置浏览器中打开: {url}");
+            }
+            else
+            {
+                AddLog("⚠️ 浏览器尚未准备就绪，使用外部浏览器");
+                OpenBrowser(url);
+            }
+        }
+        catch (Exception ex)
+        {
+            AddLog($"❌ 浏览器导航失败: {ex.Message}");
+            // 降级使用外部浏览器
+            OpenBrowser(url);
+        }
     }
 
     #endregion
@@ -538,7 +600,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 Process.Start("xdg-open", url);
             }
             
-            AddLog($"🌏 已打开浏览器: {url}");
+            AddLog($"🌏 已在外部浏览器中打开: {url}");
         }
         catch (Exception ex)
         {
@@ -549,20 +611,16 @@ public partial class MainWindowViewModel : ViewModelBase
     private void AddLog(string message)
     {
         var timestamp = DateTime.Now.ToString("HH:mm:ss");
-        var logEntry = $"[{timestamp}] {message}\n";
+        var logEntry = $"[{timestamp}] {message}";
         
-        _logBuffer.Append(logEntry);
+        _logBuffer.AppendLine(logEntry);
         
-        // 保持日志大小合理（最多1000行）
-        if (_logBuffer.Length > 50000)
+        // 限制日志大小，保留最后1000行
+        var lines = _logBuffer.ToString().Split('\n');
+        if (lines.Length > 1000)
         {
-            var text = _logBuffer.ToString();
-            var lines = text.Split('\n');
-            if (lines.Length > 1000)
-            {
-                _logBuffer.Clear();
-                _logBuffer.Append(string.Join('\n', lines[^500..]));
-            }
+            _logBuffer.Clear();
+            _logBuffer.AppendLine(string.Join('\n', lines.Skip(lines.Length - 1000)));
         }
         
         LogText = _logBuffer.ToString();
@@ -570,3 +628,4 @@ public partial class MainWindowViewModel : ViewModelBase
 
     #endregion
 }
+

@@ -243,30 +243,24 @@ public class NcfService
         return process;
     }
     
-    public async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process process, int timeoutSeconds = 60, CancellationToken cancellationToken = default)
+    public async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process? process, int timeoutSeconds, CancellationToken cancellationToken = default)
     {
-        var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
-        var stopwatch = Stopwatch.StartNew();
+        var timeout = TimeSpan.FromSeconds(timeoutSeconds);
+        var startTime = DateTime.UtcNow;
         
-        while (stopwatch.ElapsedMilliseconds < timeoutSeconds * 1000)
+        while (DateTime.UtcNow - startTime < timeout)
         {
             if (cancellationToken.IsCancellationRequested)
                 return false;
-            
-            if (process.HasExited)
-            {
-                _logger?.LogError($"NCF进程已退出，退出代码: {process.ExitCode}");
+                
+            if (process?.HasExited == true)
                 return false;
-            }
             
             try
             {
-                var response = await httpClient.GetAsync(siteUrl, cancellationToken);
+                using var response = await _httpClient.GetAsync(siteUrl, cancellationToken);
                 if (response.IsSuccessStatusCode)
-                {
-                    _logger?.LogInformation("站点响应正常");
                     return true;
-                }
             }
             catch
             {
@@ -277,6 +271,113 @@ public class NcfService
         }
         
         return false;
+    }
+
+    public async Task<bool> TestConnectionAsync()
+    {
+        try
+        {
+            using var response = await _httpClient.GetAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest");
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<string> GetLatestVersionAsync()
+    {
+        try
+        {
+            var release = await GetLatestReleaseAsync();
+            return release?.TagName ?? "获取失败";
+        }
+        catch
+        {
+            return "获取失败";
+        }
+    }
+
+    public async Task DownloadLatestReleaseAsync(IProgress<(string message, double percentage)> progress, bool showDetailedInfo, CancellationToken cancellationToken = default)
+    {
+        var release = await GetLatestReleaseAsync(cancellationToken);
+        if (release == null)
+        {
+            throw new InvalidOperationException("无法获取最新版本信息");
+        }
+
+        var targetAsset = GetTargetAsset(release);
+        if (targetAsset == null)
+        {
+            throw new InvalidOperationException("未找到适合当前平台的下载包");
+        }
+
+        var needsDownload = await CheckIfDownloadNeededAsync(targetAsset.Name!, targetAsset.Size);
+        
+        if (needsDownload)
+        {
+            progress.Report(($"正在下载 {targetAsset.Name}...", -1));
+            
+            var downloadProgress = new Progress<double>(value =>
+            {
+                progress.Report(($"下载中... {value:F1}%", value * 0.6));
+            });
+
+            await DownloadFileAsync(targetAsset.BrowserDownloadUrl!, targetAsset.Name!, downloadProgress, cancellationToken);
+            progress.Report(("✅ 下载完成", 60));
+        }
+        else
+        {
+            progress.Report(("✅ 文件已存在，跳过下载", 60));
+        }
+    }
+
+    public async Task ExtractFilesAsync(IProgress<(string message, double percentage)> progress, CancellationToken cancellationToken = default)
+    {
+        var release = await GetLatestReleaseAsync(cancellationToken);
+        if (release == null) return;
+
+        var targetAsset = GetTargetAsset(release);
+        if (targetAsset == null) return;
+
+        var needsExtract = await CheckIfExtractNeededAsync(release.TagName!);
+        
+        if (needsExtract)
+        {
+            progress.Report(("正在提取文件...", -1));
+
+            var extractProgress = new Progress<double>(value =>
+            {
+                progress.Report(($"提取中... {value:F1}%", 60 + (value * 0.3)));
+            });
+
+            await ExtractZipAsync(targetAsset.Name!, release.TagName!, extractProgress, cancellationToken);
+            progress.Report(("✅ 文件提取完成", 90));
+        }
+        else
+        {
+            progress.Report(("✅ 文件已是最新版本，跳过提取", 90));
+        }
+    }
+
+    public async Task CleanupDownloadsAsync()
+    {
+        try
+        {
+            if (Directory.Exists(DownloadsPath))
+            {
+                var files = Directory.GetFiles(DownloadsPath, "*.zip");
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+        catch
+        {
+            // 忽略清理错误
+        }
     }
     
     #region 私有方法
