@@ -1,0 +1,184 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="NcfDesktopApp.GUI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="NCF 桌面应用程序"
+        Width="800"
+        Height="600"
+        MinWidth="600"
+        MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333333"/>
+        </Style>
+        
+        <Style Selector="TextBlock.subtitle">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="Margin" Value="0,5,0,15"/>
+        </Style>
+        
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        
+        <Style Selector="Button.primary:pointerover">
+            <Setter Property="Background" Value="#005A9E"/>
+        </Style>
+        
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        
+        <Style Selector="ProgressBar">
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Background" Value="#E0E0E0"/>
+            <Setter Property="Foreground" Value="#007ACC"/>
+        </Style>
+        
+        <Style Selector="CheckBox">
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid Background="#F8F9FA">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 头部区域 -->
+        <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="20">
+            <StackPanel>
+                <TextBlock Classes="title" Text="NCF 桌面应用程序"/>
+                <TextBlock Classes="subtitle" Text="自动下载并运行最新的 NeuChar Framework 站点"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 主内容区域 -->
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel Spacing="10">
+                
+                <!-- 状态信息卡片 -->
+                <Border Classes="card">
+                    <StackPanel>
+                        <TextBlock Text="状态信息" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        
+                        <Grid ColumnDefinitions="Auto,*">
+                            <StackPanel Grid.Column="0" Spacing="8">
+                                <TextBlock Text="运行平台:" FontWeight="SemiBold"/>
+                                <TextBlock Text="最新版本:" FontWeight="SemiBold"/>
+                                <TextBlock Text="当前状态:" FontWeight="SemiBold"/>
+                                <TextBlock Text="站点地址:" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            
+                            <StackPanel Grid.Column="1" Margin="20,0,0,0" Spacing="8">
+                                <TextBlock Text="{Binding PlatformInfo}" Foreground="#007ACC"/>
+                                <TextBlock Text="{Binding LatestVersion}" Foreground="#007ACC"/>
+                                <TextBlock Text="{Binding CurrentStatus}" Foreground="{Binding StatusColor}"/>
+                                <TextBlock Text="{Binding SiteUrl}" Foreground="#007ACC" TextDecorations="Underline" Cursor="Hand"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 操作进度卡片 -->
+                <Border Classes="card">
+                    <StackPanel>
+                        <TextBlock Text="操作进度" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        
+                        <TextBlock Text="{Binding ProgressText}" Margin="0,0,0,10"/>
+                        <ProgressBar Value="{Binding ProgressValue}" Maximum="100" IsIndeterminate="{Binding IsProgressIndeterminate}"/>
+                        
+                        <!-- 日志输出 -->
+                        <TextBlock Text="操作日志:" FontWeight="SemiBold" Margin="0,15,0,5"/>
+                        <Border Background="#F5F5F5" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" MaxHeight="200">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBox Text="{Binding LogText}" 
+                                         IsReadOnly="True" 
+                                         Background="Transparent" 
+                                         BorderThickness="0"
+                                         TextWrapping="Wrap"
+                                         FontFamily="Consolas,Monaco,monospace"
+                                         FontSize="12"/>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- 配置选项卡片 -->
+                <Border Classes="card">
+                    <StackPanel>
+                        <TextBlock Text="配置选项" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                        
+                        <StackPanel Spacing="5">
+                            <CheckBox Content="自动打开浏览器" IsChecked="{Binding AutoOpenBrowser}"/>
+                            <CheckBox Content="自动清理下载文件" IsChecked="{Binding AutoCleanDownloads}"/>
+                            <CheckBox Content="检查更新时显示详细信息" IsChecked="{Binding ShowDetailedInfo}"/>
+                            <CheckBox Content="最小化到系统托盘" IsChecked="{Binding MinimizeToTray}"/>
+                        </StackPanel>
+                        
+                        <Separator Margin="0,15"/>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="端口范围:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                            <NumericUpDown Value="{Binding StartPort}" Minimum="1024" Maximum="65535" Width="100"/>
+                            <TextBlock Text="到" VerticalAlignment="Center"/>
+                            <NumericUpDown Value="{Binding EndPort}" Minimum="1024" Maximum="65535" Width="100"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部操作按钮区域 -->
+        <Border Grid.Row="2" Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                <Button Classes="secondary" Content="测试连接" Command="{Binding TestConnectionCommand}" IsEnabled="{Binding !IsOperationInProgress}"/>
+                <Button Classes="secondary" Content="打开配置目录" Command="{Binding OpenConfigDirectoryCommand}"/>
+                <Button Classes="primary" Content="{Binding MainButtonText}" Command="{Binding MainActionCommand}" IsEnabled="{Binding !IsOperationInProgress}"/>
+                <Button Classes="secondary" Content="停止" Command="{Binding StopCommand}" IsVisible="{Binding IsOperationInProgress}"/>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+
+</Window>
