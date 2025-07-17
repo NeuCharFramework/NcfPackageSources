@@ -533,6 +533,13 @@ class Program
         
         for (int port = startPort; port <= maxPort; port++)
         {
+            // 先用lsof检查端口是否被占用
+            if (await IsPortInUseAsync(port))
+            {
+                continue;
+            }
+            
+            // 再用TcpListener确认端口可用
             try
             {
                 using var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, port);
@@ -548,6 +555,33 @@ class Program
         }
         
         throw new InvalidOperationException($"无法找到可用端口（范围: {startPort} - {maxPort}）");
+    }
+    
+    private static async Task<bool> IsPortInUseAsync(int port)
+    {
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "lsof",
+                Arguments = $"-i :{port}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+            
+            using var process = Process.Start(startInfo);
+            await process.WaitForExitAsync();
+            
+            // lsof返回0表示找到了占用该端口的进程
+            return process.ExitCode == 0;
+        }
+        catch
+        {
+            // 如果lsof命令失败，假设端口未被占用
+            return false;
+        }
     }
     
     private static async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process process, ILogger? logger)
