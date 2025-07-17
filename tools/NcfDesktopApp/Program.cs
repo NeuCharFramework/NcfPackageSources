@@ -545,7 +545,7 @@ class Program
         }
     }
     
-    private static async Task<int> FindAvailablePortAsync(int startPort = 5000)
+    private static async Task<int> FindAvailablePortAsync(int startPort = 5001)
     {
         const int maxPort = 5300;
         
