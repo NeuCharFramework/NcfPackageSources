@@ -164,10 +164,22 @@ class Program
             logger.LogInformation($"📝 下载URL: {targetAsset.BrowserDownloadUrl}");
             logger.LogInformation($"📦 文件大小: {targetAsset.Size / 1024 / 1024}MB");
             
-            // 测试模式：只验证API调用和URL解析
+            // 测试模式：验证API调用、URL解析和跨平台兼容性
             if (testMode)
             {
                 logger.LogInformation("🧪 测试模式：API调用和URL解析验证成功！");
+                logger.LogInformation("");
+                
+                // 运行跨平台兼容性测试
+                logger.LogInformation("🚀 开始跨平台兼容性测试...");
+                NcfDesktopApp.Tests.CrossPlatformTest.TestPlatformDetection();
+                Console.WriteLine();
+                NcfDesktopApp.Tests.CrossPlatformTest.TestBrowserLaunch();
+                Console.WriteLine();
+                NcfDesktopApp.Tests.CrossPlatformTest.TestDirectoryPaths();
+                
+                logger.LogInformation("");
+                logger.LogInformation("✅ 所有测试完成！");
                 logger.LogInformation("💡 要实际运行应用程序，请使用: dotnet run");
                 return 0;
             }
@@ -487,13 +499,19 @@ class Program
                 FileName = "dotnet",
                 Arguments = $"Senparc.Web.dll --urls=http://localhost:{availablePort}",
                 WorkingDirectory = NcfRuntimePath,
-                UseShellExecute = true, // 使用shell启动，更接近手动运行
+                UseShellExecute = RuntimeInformation.IsOSPlatform(OSPlatform.Windows), // Windows使用shell，其他平台直接启动
                 CreateNoWindow = false
             };
             
             // 设置环境变量指定端口（双重保险）
             startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{availablePort}";
             startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+            
+            // Linux上可能需要额外的环境变量
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                startInfo.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
+            }
             
             var process = Process.Start(startInfo);
             
@@ -561,25 +579,53 @@ class Program
     {
         try
         {
-            var startInfo = new ProcessStartInfo
+            ProcessStartInfo startInfo;
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                FileName = "lsof",
-                Arguments = $"-i :{port}",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            };
+                // Windows: 使用 netstat 命令
+                startInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c \"netstat -an | findstr :{port}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+            }
+            else
+            {
+                // Unix/Linux/macOS: 使用 lsof 命令
+                startInfo = new ProcessStartInfo
+                {
+                    FileName = "lsof",
+                    Arguments = $"-i :{port}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+            }
             
             using var process = Process.Start(startInfo);
             await process.WaitForExitAsync();
+            var output = await process.StandardOutput.ReadToEndAsync();
             
-            // lsof返回0表示找到了占用该端口的进程
-            return process.ExitCode == 0;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Windows: 检查输出是否包含端口信息
+                return !string.IsNullOrWhiteSpace(output);
+            }
+            else
+            {
+                // Unix/Linux/macOS: lsof返回0表示找到了占用该端口的进程
+                return process.ExitCode == 0;
+            }
         }
         catch
         {
-            // 如果lsof命令失败，假设端口未被占用
+            // 如果命令失败，假设端口未被占用
             return false;
         }
     }
