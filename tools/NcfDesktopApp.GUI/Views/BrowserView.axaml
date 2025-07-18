@@ -113,7 +113,7 @@
                     </StackPanel>
                 </Border>
                 
-                <!-- SimpleWebView控件 -->
+                <!-- 内嵌浏览器控件 -->
                 <controls:SimpleWebView Name="WebViewControl"
                                        Source="{Binding SiteUrl}"
                                        IsVisible="{Binding IsBrowserReady}"/>
