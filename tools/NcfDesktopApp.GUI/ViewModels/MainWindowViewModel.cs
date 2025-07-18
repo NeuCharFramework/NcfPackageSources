@@ -89,6 +89,10 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private int _currentTabIndex = 0; // 0=设置页面, 1=浏览器页面
+    
+    // 控制浏览器标签页的可见性
+    [ObservableProperty]
+    private bool _isBrowserTabVisible = false;
 
     public object? BrowserViewReference { get; set; }
 
@@ -227,6 +231,33 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     private bool CanOpenInExternalBrowser() => !string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动";
+    
+    [RelayCommand(CanExecute = nameof(CanCloseBrowserTab))]
+    private async Task CloseBrowserTab()
+    {
+        try
+        {
+            AddLog("🗙 关闭浏览器标签页...");
+            
+            // 关闭浏览器标签页
+            IsBrowserTabVisible = false;
+            CurrentTabIndex = 0; // 切换回设置页面
+            
+            // 停止NCF进程
+            if (_isNcfRunning)
+            {
+                await StopNcfAsync();
+            }
+            
+            AddLog("✅ 浏览器标签页已关闭");
+        }
+        catch (Exception ex)
+        {
+            AddLog($"❌ 关闭浏览器标签页失败: {ex.Message}");
+        }
+    }
+    
+    private bool CanCloseBrowserTab() => IsBrowserTabVisible;
 
     #endregion
 
@@ -274,8 +305,13 @@ public partial class MainWindowViewModel : ViewModelBase
                 AddLog("🌐 正在初始化内置浏览器...");
             });
             
-            // 浏览器初始化会在BrowserView的InitializeWebView方法中完成
-            // 这里只是标记开始初始化
+            // 模拟浏览器初始化过程
+            await Task.Delay(500);
+            
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                OnBrowserReady();
+            });
         }
         catch (Exception ex)
         {
@@ -347,6 +383,12 @@ public partial class MainWindowViewModel : ViewModelBase
             ProgressValue = 100;
             
             AddLog("✅ NCF 启动成功");
+            
+            // 显示浏览器标签页
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsBrowserTabVisible = true;
+            });
 
             // 自动在内置浏览器中打开
             if (AutoOpenBrowser && !string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动")
@@ -510,6 +552,8 @@ public partial class MainWindowViewModel : ViewModelBase
                 SiteUrl = "未启动";
                 ProgressText = "已停止";
                 ProgressValue = 0;
+                IsBrowserTabVisible = false; // 隐藏浏览器标签页
+                CurrentTabIndex = 0; // 切换回设置页面
             });
         }
     }
@@ -547,23 +591,22 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            // 直接切换到浏览器标签页，内置WebView会自动更新URL
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                CurrentTabIndex = 1; // 切换到浏览器标签页
+                AddLog($"🌐 在内置浏览器中显示: {url}");
+            });
+            
+            // 如果BrowserView可用，尝试导航
             if (BrowserViewReference is NcfDesktopApp.GUI.Views.BrowserView browserView)
             {
                 await browserView.NavigateToUrl(url);
-                CurrentTabIndex = 1; // 切换到浏览器标签页
-                AddLog($"🌐 在内置浏览器中打开: {url}");
-            }
-            else
-            {
-                AddLog("⚠️ 浏览器尚未准备就绪，使用外部浏览器");
-                OpenBrowser(url);
             }
         }
         catch (Exception ex)
         {
             AddLog($"❌ 浏览器导航失败: {ex.Message}");
-            // 降级使用外部浏览器
-            OpenBrowser(url);
         }
     }
 

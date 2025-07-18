@@ -33,6 +33,11 @@
             <Setter Property="Background" Value="#007ACC"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
+
+        <!-- 自定义浏览器标签页样式 -->
+        <Style Selector="TabItem.browser-tab">
+            <Setter Property="Padding" Value="15,8"/>
+        </Style>
     </Window.Styles>
 
     <Grid>
@@ -45,8 +50,11 @@
                 <views:SettingsView DataContext="{Binding}"/>
             </TabItem>
             
-            <!-- 浏览器标签页 -->
-            <TabItem Header="🌐 NCF 应用" Name="BrowserTab" IsEnabled="{Binding IsBrowserReady}">
+            <!-- 浏览器标签页 - 只有在浏览器准备就绪且NCF运行时才显示 -->
+            <TabItem Header="🌐 NCF 应用" 
+                     Name="BrowserTab" 
+                     Classes="browser-tab"
+                     IsVisible="{Binding IsBrowserTabVisible}">
                 <views:BrowserView DataContext="{Binding}"/>
             </TabItem>
             

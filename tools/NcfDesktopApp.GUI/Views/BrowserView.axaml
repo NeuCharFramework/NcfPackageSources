@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
-             xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl"
+             xmlns:controls="using:NcfDesktopApp.GUI.Views.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="NcfDesktopApp.GUI.Views.BrowserView"
              x:DataType="vm:MainWindowViewModel">
@@ -67,8 +67,21 @@
                                FontSize="12"/>
                 </Border>
                 
-                <!-- 设置按钮 -->
+                <!-- 关闭标签按钮 -->
                 <Button Grid.Column="3" 
+                        Content="✕" 
+                        Width="30" Height="30" 
+                        FontSize="14"
+                        FontWeight="Bold"
+                        ToolTip.Tip="关闭标签页"
+                        Background="#DC3545"
+                        Foreground="White"
+                        CornerRadius="4"
+                        Margin="0,0,5,0"
+                        Command="{Binding CloseBrowserTabCommand}"/>
+                
+                <!-- 设置按钮 -->
+                <Button Grid.Column="4" 
                         Content="⚙" 
                         Width="30" Height="30" 
                         FontSize="16"
@@ -100,33 +113,10 @@
                     </StackPanel>
                 </Border>
                 
-                <!-- WebView控件 -->
-                <!-- 暂时使用文本块替代WebView，直到WebViewControl包问题解决 -->
-                <Border Name="Browser"
-                        IsVisible="{Binding IsBrowserReady}"
-                        Background="White"
-                        BorderBrush="#DEE2E6" 
-                        BorderThickness="1">
-                    <StackPanel HorizontalAlignment="Center" 
-                                VerticalAlignment="Center" 
-                                Spacing="15">
-                        <TextBlock Text="🌐" 
-                                   FontSize="48" 
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="内置浏览器功能开发中..." 
-                                   FontSize="16" 
-                                   HorizontalAlignment="Center" 
-                                   Foreground="#6C757D"/>
-                        <TextBlock Text="{Binding SiteUrl}" 
-                                   FontSize="14" 
-                                   HorizontalAlignment="Center" 
-                                   Foreground="#007ACC"
-                                   FontFamily="Consolas"/>
-                        <Button Content="在外部浏览器中打开" 
-                                Command="{Binding OpenInExternalBrowserCommand}"
-                                Padding="20,8"/>
-                    </StackPanel>
-                </Border>
+                <!-- SimpleWebView控件 -->
+                <controls:SimpleWebView Name="WebViewControl"
+                                       Source="{Binding SiteUrl}"
+                                       IsVisible="{Binding IsBrowserReady}"/>
                 
                 <!-- 错误状态显示 -->
                 <Border Name="ErrorOverlay" 
