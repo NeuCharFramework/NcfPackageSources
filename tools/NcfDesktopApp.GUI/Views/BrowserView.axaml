@@ -115,7 +115,7 @@
                 </Border>
                 
                 <!-- 内嵌浏览器控件 -->
-                <controls:CefWebView Name="WebViewControl"
+                <controls:RealWebView Name="WebViewControl"
                                        Source="{Binding SiteUrl}"
                                        IsVisible="{Binding IsBrowserReady}"/>
                 
