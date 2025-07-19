@@ -50,7 +50,8 @@
                                FontSize="12"
                                Foreground="#495057"
                                VerticalAlignment="Center"
-                               TextTrimming="CharacterEllipsis"/>
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip.Tip="{Binding SiteUrl}"/>
                 </Border>
                 
                 <!-- 状态指示器 -->
@@ -114,7 +115,7 @@
                 </Border>
                 
                 <!-- 内嵌浏览器控件 -->
-                <controls:SimpleWebView Name="WebViewControl"
+                <controls:CefWebView Name="WebViewControl"
                                        Source="{Binding SiteUrl}"
                                        IsVisible="{Binding IsBrowserReady}"/>
                 

@@ -17,10 +17,10 @@ using Microsoft.Web.WebView2.WinForms;
 
 namespace NcfDesktopApp.GUI.Views.Controls;
 
-public partial class SimpleWebView : UserControl
+public partial class CefWebView : UserControl
 {
     public static readonly StyledProperty<string> SourceProperty =
-        AvaloniaProperty.Register<SimpleWebView, string>(nameof(Source), "");
+        AvaloniaProperty.Register<CefWebView, string>(nameof(Source), "");
 
     public string Source
     {
@@ -42,7 +42,7 @@ public partial class SimpleWebView : UserControl
     private Button _openExternalButton = null!;
     private bool _isWebViewReady = false;
 
-    public SimpleWebView()
+    public CefWebView()
     {
         InitializeComponent();
         _ = InitializeWebViewAsync();
@@ -162,14 +162,14 @@ public partial class SimpleWebView : UserControl
                 catch (Exception ex)
                 {
                     UpdateStatus($"WebView初始化失败: {ex.Message}", Brushes.Red);
-                    ShowFallbackView();
+                    await InitializeEmbeddedViewAsync();
                 }
             });
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"WebView初始化异常: {ex.Message}");
-            ShowFallbackView();
+            await InitializeEmbeddedViewAsync();
         }
     }
 

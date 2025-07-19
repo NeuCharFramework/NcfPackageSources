@@ -221,7 +221,7 @@ public class NcfService
             FileName = "dotnet",
             Arguments = $"Senparc.Web.dll --urls=http://localhost:{port}",
             WorkingDirectory = NcfRuntimePath,
-            UseShellExecute = RuntimeInformation.IsOSPlatform(OSPlatform.Windows),
+            UseShellExecute = false, // 必须设置为false才能使用环境变量
             CreateNoWindow = false
         };
         

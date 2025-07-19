@@ -10,7 +10,7 @@
     <Grid RowDefinitions="Auto,*">
         
         <!-- 顶部操作栏 -->
-        <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="1" CornerRadius="8" Margin="20,20,20,0" Padding="15">
+        <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="1" CornerRadius="8" Margin="20,20,20,10" Padding="15">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <!-- 标题 -->
                 <TextBlock Grid.Column="0" 
@@ -50,8 +50,8 @@
         </Border>
 
         <!-- 主要内容区域 -->
-        <ScrollViewer Grid.Row="1" Padding="20,10,20,20">
-            <StackPanel Spacing="20" MaxWidth="600">
+        <ScrollViewer Grid.Row="1" Padding="20,10,20,30">
+            <StackPanel Spacing="20" MaxWidth="600" Margin="0,0,0,20">
 
                 <!-- 状态信息卡片 -->
                 <Border Classes="card">
@@ -74,7 +74,7 @@
                             </StackPanel>
                             
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="站点地址:" FontWeight="SemiBold"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SiteUrl}" FontFamily="Consolas"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SiteUrl}" FontFamily="Consolas" TextWrapping="Wrap"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -127,7 +127,7 @@
                         
                         <Separator Margin="0,15"/>
                         
-                        <StackPanel Orientation="Horizontal" Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                             <TextBlock Text="端口范围:" VerticalAlignment="Center" FontWeight="SemiBold"/>
                             <NumericUpDown Value="{Binding StartPort}" Minimum="1024" Maximum="65535" Width="100"/>
                             <TextBlock Text="到" VerticalAlignment="Center"/>

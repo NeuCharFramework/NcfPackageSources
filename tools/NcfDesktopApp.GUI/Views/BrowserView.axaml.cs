@@ -8,7 +8,7 @@ namespace NcfDesktopApp.GUI.Views;
 
 public partial class BrowserView : UserControl
 {
-    private SimpleWebView? WebView => this.FindControl<SimpleWebView>("WebViewControl");
+    private CefWebView? WebView => this.FindControl<CefWebView>("WebViewControl");
 
     public BrowserView()
     {
