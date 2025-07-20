@@ -14,15 +14,21 @@ using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.Services;
+using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
+using Senparc.Ncf.Utility;
+using plRequest = Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
     public class KnowledgeBasesAppService : AppServiceBase
     {
         private readonly KnowledgeBasesService knowledgeBasesService;
-        public KnowledgeBasesAppService(IServiceProvider serviceProvider, KnowledgeBasesService knowledgeBasesService) : base(serviceProvider)
+        private readonly KnowledgeBasesDetailService knowledgeBasesDetailService;
+
+        public KnowledgeBasesAppService(IServiceProvider serviceProvider, KnowledgeBasesService knowledgeBasesService,KnowledgeBasesDetailService knowledgeBasesDetailService) : base(serviceProvider)
         {
             this.knowledgeBasesService = knowledgeBasesService;
+            this.knowledgeBasesDetailService = knowledgeBasesDetailService;
         }
 
         /// <summary>
@@ -48,6 +54,70 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// 创建或设置 KnowledgeBaseDetail
+        /// </summary>
+        /// <param name="chatGroupDto">ChatGroup 信息></param>
+        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<bool>> SetKnowledgeBaseDetail(KnowledgeBasesDetailRequest request)
+        {
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            {
+
+                KnowledgeBasesDetailDto knowledgeBasesDetailDto = new KnowledgeBasesDetailDto()
+                {
+                    KnowledgeBasesId = request.KnowledgeBasesId,
+                    ContentType = request.ContentType,
+                    Content = request.Content
+                };
+
+                //TODO:封装到 Service 中
+                await knowledgeBasesDetailService.CreateOrUpdateAsync(knowledgeBasesDetailDto);
+
+                logger.Append($"KnowledgeBasesDetail 新增成功！");
+
+                logger.Append($"KnowledgeBasesDetail 详情添加成功！");
+
+                return true;
+            });
+        }
+
+        /// <summary>
+        /// 对KnowledgeBase进行Embedding
+        /// </summary>
+        /// <param name="chatGroupDto">ChatGroup 信息></param>
+        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<bool>> EmbeddingKnowledgeBase(plRequest.KnowledgeBasesRequest request)
+        {
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            {
+                //设置查询条件
+                //var seh = new SenparcExpressionHelper<KnowledgeBases>();
+                //seh.ValueCompare.AndAlso(true,x => x.Id.Equals(request.id));
+                //var where = seh.BuildWhereExpression();
+                ////TODO:封装到 Service 中
+                //var lstRecords = await knowledgeBasesService.GetObjectListAsync(1,10,where,"AddTime Desc");
+
+
+                var sehDetail = new SenparcExpressionHelper<KnowledgeBasesDetail>();
+                sehDetail.ValueCompare.AndAlso(true, x => x.KnowledgeBasesId.Equals(request.id));
+                var whereDetail = sehDetail.BuildWhereExpression();
+                var lstDetails = await knowledgeBasesDetailService.GetObjectListAsync(1, 10, whereDetail, "AddTime Desc");
+
+                //Embedding
+
+
+                logger.Append($"KnowledgeBases 新增成功！");
+
+                logger.Append($"KnowledgeBases 详情添加成功！");
+
+                return true;
+            });
+        }
     }
 
 }

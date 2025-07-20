@@ -82,6 +82,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
                     b.Property<string>("ChatModelId")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("longtext");
 
@@ -107,6 +110,45 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ContentType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("KnowledgeBasesId")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
                 });
 #pragma warning restore 612, 618
         }

@@ -27,6 +27,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             VectorDBId = knowledgeBasesDto.VectorDBId;
             ChatModelId = knowledgeBasesDto.ChatModelId;
             Name = knowledgeBasesDto.Name;
+            Content = knowledgeBasesDto.Content;
         }
         public void Update(KnowledgeBasesDto knowledgeBasesDto)
         {
@@ -34,6 +35,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             VectorDBId = knowledgeBasesDto.VectorDBId;
             ChatModelId = knowledgeBasesDto.ChatModelId;
             Name = knowledgeBasesDto.Name;
+            Content = knowledgeBasesDto.Content;
         }
         /// <summary>
         /// 训练模型Id
@@ -51,6 +53,9 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// 名称
         /// </summary>
         public string Name { get; set; }
-
+        /// <summary>
+        /// 内容
+        /// </summary>
+        public string Content { get; set; }
     }
 }

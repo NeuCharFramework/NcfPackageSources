@@ -25,7 +25,8 @@ namespace Senparc.Xncf.KnowledgeBase
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
 new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBases/Index"),"知识库管理new","fa fa-bookmark-o"),
-new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/KnowledgeBase"),"知识库管理","fa fa-bookmark-o"),
+new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBasesDetail/Index"),"知识库管理详情","fa fa-bookmark-o"),
+//new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/KnowledgeBase"),"知识库管理","fa fa-bookmark-o"),
 new AreaPageMenuItem(GetAreaUrl("/Admin/KnowledgeBase/RetrievalTest"),"召回测试","fa fa-bookmark-o"),
 		};
 

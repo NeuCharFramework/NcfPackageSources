@@ -13,13 +13,14 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         {
         }
 
-        public KnowledgeBasesDto(string id,string embeddingModelId,string vectorDBId,string chatModelId,string name)
+        public KnowledgeBasesDto(string id,string embeddingModelId,string vectorDBId,string chatModelId,string name,string content)
         {
             Id = id;
             EmbeddingModelId = embeddingModelId;
             VectorDBId = vectorDBId;
             ChatModelId = chatModelId;
             Name = name;
+            Content = content;
         }
 
         public string Id { get; set; }
@@ -43,6 +44,10 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// </summary>
         [MaxLength(100)]
         public string Name { get; set; }
+        /// <summary>
+        /// 内容
+        /// </summary>
+        public string Content { get; set; }
 
     }
 }
