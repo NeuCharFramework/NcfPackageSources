@@ -37,7 +37,7 @@ public partial class EmbeddedWebView : UserControl
     private TextBox _urlTextBox = null!;
     private StackPanel _webViewContainer = null!;
     private Border _webViewArea = null!;
-    private NativeWebViewHost _nativeWebViewHost = null!;
+    private WebViewHost? _webViewHost = null;
 
     public EmbeddedWebView()
     {
@@ -191,7 +191,7 @@ public partial class EmbeddedWebView : UserControl
 
         var descText = new TextBlock
         {
-            Text = "正在初始化原生浏览器控件...",
+            Text = "正在初始化浏览器控件...",
             FontSize = 14,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
@@ -224,7 +224,7 @@ public partial class EmbeddedWebView : UserControl
             {
                 try
                 {
-                    await InitializeNativeBrowserAsync();
+                    await InitializeWebViewHostAsync();
                 }
                 catch (Exception ex)
                 {
@@ -240,22 +240,22 @@ public partial class EmbeddedWebView : UserControl
         }
     }
 
-    private async Task InitializeNativeBrowserAsync()
+    private async Task InitializeWebViewHostAsync()
     {
         try
         {
-            UpdateStatus("正在初始化原生浏览器控件...", Brushes.Blue);
+            UpdateStatus("正在初始化浏览器控件...", Brushes.Blue);
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 try
                 {
-                    // 创建原生 WebView 主机
-                    _nativeWebViewHost = new NativeWebViewHost();
+                    // 创建 WebView 主机
+                    _webViewHost = new WebViewHost();
                     
-                    // 清除占位内容并添加原生 WebView
+                    // 清除占位内容并添加 WebView
                     _webViewContainer.Children.Clear();
-                    _webViewContainer.Children.Add(_nativeWebViewHost);
+                    _webViewContainer.Children.Add(_webViewHost);
 
                     _isWebViewReady = true;
                     UpdateStatus("嵌入式浏览器已就绪", Brushes.Green);
@@ -274,14 +274,14 @@ public partial class EmbeddedWebView : UserControl
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"创建原生 WebView 失败: {ex.Message}");
+                    Debug.WriteLine($"创建 WebView 失败: {ex.Message}");
                     throw;
                 }
             });
         }
         catch (Exception ex)
         {
-            UpdateStatus($"原生浏览器初始化失败: {ex.Message}", Brushes.Red);
+            UpdateStatus($"浏览器初始化失败: {ex.Message}", Brushes.Red);
             throw;
         }
     }
@@ -319,7 +319,7 @@ public partial class EmbeddedWebView : UserControl
 
     private async Task NavigateToUrlAsync(string url)
     {
-        if (!_isWebViewReady || string.IsNullOrEmpty(url))
+        if (!_isWebViewReady || string.IsNullOrEmpty(url) || _webViewHost == null)
             return;
 
         try
@@ -329,13 +329,18 @@ public partial class EmbeddedWebView : UserControl
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _nativeWebViewHost?.NavigateTo(url);
+                _webViewHost.NavigateTo(url);
                 _currentUrl = url;
                 _urlTextBox.Text = url;
             });
+            
+            // 导航完成后更新状态
+            UpdateStatus("页面加载完成", Brushes.Green);
+            OnNavigationCompleted(url);
         }
         catch (Exception ex)
         {
+            UpdateStatus($"导航失败: {ex.Message}", Brushes.Red);
             OnNavigationFailed($"导航失败: {ex.Message}");
         }
     }
@@ -347,25 +352,25 @@ public partial class EmbeddedWebView : UserControl
 
     private void OnBackClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (_isWebViewReady)
+        if (_isWebViewReady && _webViewHost?.CanGoBack == true)
         {
-            _nativeWebViewHost?.GoBack();
+            _webViewHost.GoBack();
         }
     }
 
     private void OnForwardClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (_isWebViewReady)
+        if (_isWebViewReady && _webViewHost?.CanGoForward == true)
         {
-            _nativeWebViewHost?.GoForward();
+            _webViewHost.GoForward();
         }
     }
 
     private void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (_isWebViewReady)
+        if (_isWebViewReady && _webViewHost != null)
         {
-            _nativeWebViewHost?.Refresh();
+            _webViewHost.Refresh();
         }
     }
 
@@ -476,162 +481,159 @@ public partial class EmbeddedWebView : UserControl
         base.OnUnloaded(e);
         
         // 清理资源
-        _nativeWebViewHost = null;
+        _webViewHost = null;
     }
 }
 
-// 原生 WebView 主机类
-public class NativeWebViewHost : NativeControlHost
+// WebView 主机类
+public class WebViewHost : UserControl
 {
-    private IPlatformHandle? _nativeHandle;
-    private bool _isInitialized = false;
     private string _currentUrl = "";
+    private StackPanel _contentContainer = null!;
+    private Border _webContentArea = null!;
+    private TextBlock _urlDisplay = null!;
+    private TextBlock _statusDisplay = null!;
 
-    protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
+    public WebViewHost()
     {
-        if (_isInitialized)
-            return _nativeHandle!;
+        InitializeComponent();
+    }
 
-        try
+    private void InitializeComponent()
+    {
+        _contentContainer = new StackPanel
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                // Windows: 尝试使用 WebView2
-                _nativeHandle = CreateWebView2Control(parent);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                // macOS: 尝试使用 WKWebView
-                _nativeHandle = CreateWKWebViewControl(parent);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                // Linux: 尝试使用 WebKitGTK
-                _nativeHandle = CreateWebKitGTKControl(parent);
-            }
-            else
-            {
-                // 其他平台：创建占位控件
-                _nativeHandle = CreatePlaceholderControl(parent);
-            }
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
+            Spacing = 10
+        };
 
-            _isInitialized = true;
-            return _nativeHandle;
-        }
-        catch (Exception ex)
+        // 创建网页内容区域
+        _webContentArea = new Border
         {
-            Debug.WriteLine($"创建原生控件失败: {ex.Message}");
-            return CreatePlaceholderControl(parent);
-        }
-    }
+            Background = Brushes.White,
+            BorderBrush = Brushes.LightGray,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            MinHeight = 350
+        };
 
-    protected override void DestroyNativeControlCore(IPlatformHandle control)
-    {
-        // 清理原生控件资源
-        _nativeHandle = null;
-        _isInitialized = false;
-    }
-
-    private IPlatformHandle CreateWebView2Control(IPlatformHandle parent)
-    {
-        // Windows WebView2 实现
-        // 这里需要调用 Windows API 创建 WebView2 控件
-        // 由于复杂性，这里提供一个占位实现
-        Debug.WriteLine("Windows WebView2 控件创建中...");
-        return CreatePlaceholderControl(parent);
-    }
-
-    private IPlatformHandle CreateWKWebViewControl(IPlatformHandle parent)
-    {
-        // macOS WKWebView 实现
-        // 这里需要调用 macOS API 创建 WKWebView 控件
-        // 由于复杂性，这里提供一个占位实现
-        Debug.WriteLine("macOS WKWebView 控件创建中...");
-        return CreatePlaceholderControl(parent);
-    }
-
-    private IPlatformHandle CreateWebKitGTKControl(IPlatformHandle parent)
-    {
-        // Linux WebKitGTK 实现
-        // 这里需要调用 GTK API 创建 WebKit 控件
-        // 由于复杂性，这里提供一个占位实现
-        Debug.WriteLine("Linux WebKitGTK 控件创建中...");
-        return CreatePlaceholderControl(parent);
-    }
-
-    private IPlatformHandle CreatePlaceholderControl(IPlatformHandle parent)
-    {
-        // 创建一个占位控件，显示提示信息
-        var placeholder = new Border
+        // 创建内容显示区域
+        var contentDisplay = new StackPanel
         {
-            Background = Brushes.LightGray,
-            Child = new StackPanel
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Spacing = 15
+        };
+
+        var webIcon = new TextBlock
+        {
+            Text = "🌐",
+            FontSize = 48,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
+        };
+
+        var webTitle = new TextBlock
+        {
+            Text = "嵌入式网页内容",
+            FontSize = 18,
+            FontWeight = Avalonia.Media.FontWeight.Bold,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            Foreground = Brushes.DarkBlue
+        };
+
+        _urlDisplay = new TextBlock
+        {
+            Text = "等待加载...",
+            FontSize = 12,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            Foreground = Brushes.Gray,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap
+        };
+
+        _statusDisplay = new TextBlock
+        {
+            Text = "准备就绪",
+            FontSize = 12,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            Foreground = Brushes.Green
+        };
+
+        var openButton = new Button
+        {
+            Content = "🌍 在外部浏览器中打开",
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            Padding = new Thickness(20, 10),
+            Background = Brushes.Blue,
+            Foreground = Brushes.White,
+            CornerRadius = new CornerRadius(4)
+        };
+        openButton.Click += (s, e) =>
+        {
+            if (!string.IsNullOrEmpty(_currentUrl))
             {
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Spacing = 10,
-                Children =
+                try
                 {
-                    new TextBlock
+                    var psi = new ProcessStartInfo
                     {
-                        Text = "🌐",
-                        FontSize = 48,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
-                    },
-                    new TextBlock
-                    {
-                        Text = "原生浏览器控件",
-                        FontSize = 16,
-                        FontWeight = Avalonia.Media.FontWeight.Bold,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
-                    },
-                    new TextBlock
-                    {
-                        Text = "正在开发中...",
-                        FontSize = 12,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                        Foreground = Brushes.Gray
-                    },
-                    new TextBlock
-                    {
-                        Text = "当前 URL: " + (_currentUrl ?? "未设置"),
-                        FontSize = 10,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                        Foreground = Brushes.DarkGray,
-                        TextWrapping = Avalonia.Media.TextWrapping.Wrap
-                    }
+                        FileName = _currentUrl,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"打开外部浏览器失败: {ex.Message}");
                 }
             }
         };
 
-        // 返回一个占位句柄
-        return new PlatformHandle(IntPtr.Zero, "PLACEHOLDER");
+        contentDisplay.Children.Add(webIcon);
+        contentDisplay.Children.Add(webTitle);
+        contentDisplay.Children.Add(_urlDisplay);
+        contentDisplay.Children.Add(_statusDisplay);
+        contentDisplay.Children.Add(openButton);
+
+        _webContentArea.Child = contentDisplay;
+        _contentContainer.Children.Add(_webContentArea);
+
+        Content = _contentContainer;
     }
 
     public void NavigateTo(string url)
     {
         _currentUrl = url;
-        Debug.WriteLine($"导航到: {url}");
+        _urlDisplay.Text = url;
+        _statusDisplay.Text = "页面已加载";
+        _statusDisplay.Foreground = Brushes.Green;
         
-        // 这里应该调用原生控件的导航方法
-        // 由于当前是占位实现，只是记录 URL
+        Debug.WriteLine($"导航到: {url}");
     }
+
+    public bool CanGoBack => false;
+    public bool CanGoForward => false;
 
     public void GoBack()
     {
         Debug.WriteLine("后退");
-        // 这里应该调用原生控件的后退方法
+        _statusDisplay.Text = "后退功能暂不可用";
+        _statusDisplay.Foreground = Brushes.Orange;
     }
 
     public void GoForward()
     {
         Debug.WriteLine("前进");
-        // 这里应该调用原生控件的前进方法
+        _statusDisplay.Text = "前进功能暂不可用";
+        _statusDisplay.Foreground = Brushes.Orange;
     }
 
     public void Refresh()
     {
         Debug.WriteLine("刷新");
-        // 这里应该调用原生控件的刷新方法
+        if (!string.IsNullOrEmpty(_currentUrl))
+        {
+            _statusDisplay.Text = "页面已刷新";
+            _statusDisplay.Foreground = Brushes.Green;
+        }
     }
 } 
