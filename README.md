@@ -52,9 +52,10 @@ start NcfPackageSources.sln  # Windows
 open NcfPackageSources.sln   # macOS
 ```
 
-3. 还原包
+3. 还原包并还原工作负载
 ```bash
 dotnet restore
+dotnet workload restore
 ```
 
 4. 编译运行
