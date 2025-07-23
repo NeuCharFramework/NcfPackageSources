@@ -95,3 +95,4 @@ tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/Database/*.DB
 /src/Extensions/Senparc.Xncf.WeixinManager/Senparc.Xncf.WeixinManager/App_Data
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/WeChat_OfficialAccount/
+tools/NcfDesktopApp/publish
