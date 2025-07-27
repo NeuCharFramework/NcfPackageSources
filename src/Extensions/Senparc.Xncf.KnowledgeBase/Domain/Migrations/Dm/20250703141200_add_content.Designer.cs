@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.KnowledgeBase.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.KnowledgeBase.Models;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
 {
     [DbContext(typeof(KnowledgeBaseSenparcEntities_Dm))]
-    partial class KnowledgeBaseSenparcEntities_DmModelSnapshot : ModelSnapshot
+    [Migration("20250703141200_add_content")]
+    partial class add_content
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,45 +111,6 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
-                });
-
-            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("NVARCHAR2(450)");
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("NVARCHAR2(32767)");
-
-                    b.Property<int>("ContentType")
-                        .HasColumnType("INT");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
-
-                    b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("NVARCHAR2(32767)");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("INT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
                 });
 #pragma warning restore 612, 618
         }
