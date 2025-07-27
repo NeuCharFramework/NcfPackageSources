@@ -16,6 +16,8 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.NeuChar;
+using Senparc.Weixin.AspNet.RegisterServices;
+using Senparc.Weixin.Entities;
 using Senparc.Weixin.MP.AdvancedAPIs.UserTag;
 using Senparc.Weixin.MP.Containers;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -70,6 +72,9 @@ namespace Senparc.Xncf.WeixinManager
             services.AddAutoMapper(z => z.AddProfile<WeixinManagerProfile>());
             services.AddScoped<MpAccountService>();
             services.AddScoped<PromptItemService>();
+
+            var autoCreateApi = true;//是否自动生成API
+            services.AddSenparcWeixin(configuration, env, autoCreateApi);
 
             return base.AddXncfModule(services, configuration, env);//如果重写此方法，必须调用基类方法
         }
@@ -165,6 +170,8 @@ namespace Senparc.Xncf.WeixinManager
             //    }
 
             //});
+
+            var apiList = Senparc.CO2NET.WebApi.FindApiService.ApiItemList;
 
 
             return base.UseXncfModule(app, registerService);

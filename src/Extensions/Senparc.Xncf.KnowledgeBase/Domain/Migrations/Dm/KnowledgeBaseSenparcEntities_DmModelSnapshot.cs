@@ -80,6 +80,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                     b.Property<string>("ChatModelId")
                         .HasColumnType("NVARCHAR2(32767)");
 
+                    b.Property<string>("Content")
+                        .HasColumnType("NVARCHAR2(32767)");
+
                     b.Property<string>("EmbeddingModelId")
                         .HasColumnType("NVARCHAR2(32767)");
 
@@ -105,6 +108,45 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("NVARCHAR2(450)");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<int>("ContentType")
+                        .HasColumnType("INT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<string>("KnowledgeBasesId")
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
                 });
 #pragma warning restore 612, 618
         }
