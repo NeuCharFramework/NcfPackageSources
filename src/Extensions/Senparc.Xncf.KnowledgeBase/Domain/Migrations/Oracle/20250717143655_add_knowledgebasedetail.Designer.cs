@@ -2,63 +2,68 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.KnowledgeBase.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
+namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
 {
-    [DbContext(typeof(KnowledgeBaseSenparcEntities_Dm))]
-    partial class KnowledgeBaseSenparcEntities_DmModelSnapshot : ModelSnapshot
+    [DbContext(typeof(KnowledgeBaseSenparcEntities_Oracle))]
+    [Migration("20250717143655_add_knowledgebasedetail")]
+    partial class add_knowledgebasedetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Color", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdditionNote")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("Blue")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("Green")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int>("Red")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -71,39 +76,39 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ChatModelId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Content")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("EmbeddingModelId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("VectorDBId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.HasKey("Id");
 
@@ -116,33 +121,33 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Content")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("ContentType")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
