@@ -28,7 +28,9 @@ namespace Senparc.Xncf.WeixinManager.OHS.Remote.Controllers
                 return new FindWeixinApiResult("", null, null, new List<ApiItem>());
             }
 
-            var result = _findApiService.FindWeixinApiResult(platformType.ToString(), isAsync, keyword);
+            var category = platformType == null ? null : platformType.ToString();
+
+            var result = _findApiService.FindWeixinApiResult(category, isAsync, keyword);
             return result;
         }
     }
