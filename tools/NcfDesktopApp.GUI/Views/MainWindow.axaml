@@ -1,0 +1,84 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="using:NcfDesktopApp.GUI.Views"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="800"
+        x:Class="NcfDesktopApp.GUI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="NCF 桌面应用程序 - Hybrid版"
+        Width="900" Height="800"
+        MinWidth="800" MinHeight="650"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/avalonia-logo.ico">
+
+    <Window.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="BoxShadow" Value="0 2 4 0 #1A000000"/>
+        </Style>
+        
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+        </Style>
+        
+        <Style Selector="TabItem:selected">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- 自定义浏览器标签页样式 -->
+        <Style Selector="TabItem.browser-tab">
+            <Setter Property="Padding" Value="15,8"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <!-- 主要内容区域 -->
+        <TabControl x:Name="MainTabControl" 
+                   SelectedIndex="{Binding CurrentTabIndex}">
+            
+            <!-- 设置标签页 -->
+            <TabItem Header="⚙️ 设置中心" Name="SettingsTab">
+                <views:SettingsView DataContext="{Binding}"/>
+            </TabItem>
+            
+            <!-- 浏览器标签页 - 只有在浏览器准备就绪且NCF运行时才显示 -->
+            <TabItem Header="🌐 NCF 应用" 
+                     Name="BrowserTab" 
+                     Classes="browser-tab"
+                     IsVisible="{Binding IsBrowserTabVisible}">
+                <views:BrowserView DataContext="{Binding}"/>
+            </TabItem>
+            
+        </TabControl>
+        
+        <!-- 全局加载遮罩 -->
+        <Border Background="#F0F0F0F0" 
+                IsVisible="{Binding IsInitializing}"
+                ZIndex="1000">
+            <StackPanel HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" 
+                        Spacing="20">
+                <TextBlock Text="🚀" 
+                           FontSize="48" 
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="正在初始化 NCF 桌面应用程序..." 
+                           FontSize="16" 
+                           HorizontalAlignment="Center" 
+                           Foreground="#6C757D"/>
+                <ProgressBar IsIndeterminate="True" 
+                             Width="300" 
+                             Height="4"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+
+</Window>

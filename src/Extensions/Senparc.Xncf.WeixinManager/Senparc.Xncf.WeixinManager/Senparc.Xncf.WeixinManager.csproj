@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.20.1.2-preview</Version>
+    <Version>0.20.2-preview.1</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -58,6 +58,7 @@
 			[2025-07-12] v0.19.0-preview.1 migratie Senparc.Xncf.WeixinManager to NcfPackageResource repository
 			[2025-07-13] v0.20.0-preview.1 upgrade MpAccount loading progress in UseXncfModule
 			[2025-07-13] v0.20.1-preview.1 upgrade MpAccount loading progress in UseXncfModule
+			[2025-07-26] v0.20.2-preview.1 update Weixin(WeChat) API search function
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

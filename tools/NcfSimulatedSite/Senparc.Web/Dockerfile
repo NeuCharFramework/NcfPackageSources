@@ -4,7 +4,7 @@ WORKDIR /app
 EXPOSE 5000
 EXPOSE 5001
 
-# 设置时区和安装证书
+# 设置时区和安装证书，然后清理缓存
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tzdata ca-certificates && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
@@ -25,18 +25,22 @@ COPY ["tools/NcfSimulatedSite/Senparc.Aspire.AppHost/Senparc.Aspire.AppHost.cspr
 COPY ["tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/Senparc.Aspire.ServiceDefaults.csproj", "tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/"]
 
 # 复制所有 src 目录下的项目文件（用于依赖恢复）
+# .dockerignore 文件已配置忽略 bin、obj 等不必要的文件
 COPY ["src/", "src/"]
 
 # 恢复依赖项
 RUN dotnet restore "tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj"
 
-# 复制文件并构建
+# 复制其余文件并构建
+# .dockerignore 文件确保不会复制 bin、obj 等编译生成的文件
 COPY . .
 WORKDIR "/src/tools/NcfSimulatedSite/Senparc.Web"
 RUN dotnet build "Senparc.Web.csproj" -c Release -o /app/build
 
 # 此阶段用于发布要复制到最终阶段的服务项目
 FROM build AS publish
+# 在发布前创建必要的目录结构
+RUN mkdir -p /app/publish/App_Data/Database /app/publish/App_Data/SenparcTraceLog
 RUN dotnet publish "Senparc.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # 最终阶段，准备运行应用
