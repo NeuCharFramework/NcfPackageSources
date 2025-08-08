@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # ====================================
-# NCF 桌面应用多平台发布脚本 (Unix/Linux/macOS)
+# NCF 桌面应用多平台发布脚本 (自包含 Unix/Linux/macOS)
+# 说明：该脚本专用于生成包含 .NET 运行时的自包含版本
+# 输出目录：publish-self-contained
 # ====================================
 
 set -e  # 遇到错误时停止
@@ -16,7 +18,7 @@ NC='\033[0m' # No Color
 # 配置
 PROJECT_NAME="NcfDesktopApp.GUI"
 SOLUTION_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUTPUT_DIR="${SOLUTION_DIR}/publish"
+OUTPUT_DIR="${SOLUTION_DIR}/publish-self-contained"
 BUILD_CONFIG="Release"
 
 # 支持的平台
@@ -29,7 +31,7 @@ PLATFORMS=(
     "linux-arm64"
 )
 
-# 获取平台显示名称的函数
+# 获取平台显示名称
 get_platform_name() {
     case "$1" in
         "win-x64") echo "Windows x64" ;;
@@ -42,30 +44,25 @@ get_platform_name() {
     esac
 }
 
-# 函数：显示帮助信息
+# 显示帮助信息
 show_help() {
     echo -e "${BLUE}用法: $0 [选项]${NC}"
     echo ""
     echo "选项:"
-    echo "  -h, --help              显示此帮助信息"
-    echo "  -c, --clean             发布前清理所有输出目录"
-    echo "  -p, --platform PLATFORM 只发布指定平台 (可用: ${PLATFORMS[*]})"
-    echo "  --self-contained        创建自包含发布 (包含.NET运行时)"
-    echo "  --single-file           创建单文件发布"
-    echo "  --no-restore            跳过包还原"
+    echo "  -h, --help               显示此帮助信息"
+    echo "  -c, --clean              发布前清理所有输出目录"
+    echo "  -p, --platform PLATFORM  只发布指定平台 (可用: ${PLATFORMS[*]})"
+    echo "  --single-file            创建单文件发布"
+    echo "  --no-restore             跳过包还原"
     echo ""
-    echo "示例:"
-    echo "  $0                      # 发布所有平台"
-    echo "  $0 -c                   # 清理并发布所有平台"
-    echo "  $0 -p win-x64           # 只发布Windows x64"
-    echo "  $0 --self-contained     # 创建自包含版本"
+    echo "说明：该脚本始终以自包含模式发布（包含 .NET 运行时）"
 }
 
-# 函数：显示横幅
+# 显示横幅
 show_banner() {
     echo -e "${BLUE}"
     echo "======================================"
-    echo "   NCF 桌面应用多平台发布工具"
+    echo "   NCF 桌面应用多平台发布工具（自包含）"
     echo "======================================"
     echo -e "${NC}"
     echo "项目: $PROJECT_NAME"
@@ -75,7 +72,7 @@ show_banner() {
     echo ""
 }
 
-# 函数：清理输出目录
+# 清理输出目录
 clean_output() {
     echo -e "${YELLOW}🧹 清理输出目录...${NC}"
     if [ -d "$OUTPUT_DIR" ]; then
@@ -87,26 +84,24 @@ clean_output() {
     echo ""
 }
 
-# 函数：检查 .NET SDK
+# 检查 .NET SDK
 check_dotnet() {
     echo -e "${BLUE}🔍 检查 .NET SDK...${NC}"
     if ! command -v dotnet &> /dev/null; then
         echo -e "${RED}❌ 未找到 .NET SDK，请安装 .NET 8.0 或更高版本${NC}"
         exit 1
     fi
-    
     DOTNET_VERSION=$(dotnet --version)
     echo -e "${GREEN}✅ .NET SDK 版本: $DOTNET_VERSION${NC}"
     echo ""
 }
 
-# 函数：还原包
+# 还原包
 restore_packages() {
     if [ "$NO_RESTORE" = true ]; then
         echo -e "${YELLOW}⏭️  跳过包还原${NC}"
         return
     fi
-    
     echo -e "${BLUE}📦 还原 NuGet 包...${NC}"
     cd "$SOLUTION_DIR"
     if dotnet restore; then
@@ -118,50 +113,29 @@ restore_packages() {
     echo ""
 }
 
-# 函数：发布平台
+# 发布平台
 publish_platform() {
     local platform=$1
-    local platform_name="${PLATFORM_NAMES[$platform]}"
+    local platform_name=$(get_platform_name "$platform")
     local platform_dir="$OUTPUT_DIR/$platform"
-    
+
     echo -e "${BLUE}🚀 发布 $platform_name ($platform)...${NC}"
-    
-    # 构建发布命令
+
     local cmd="dotnet publish"
     cmd="$cmd -c $BUILD_CONFIG"
     cmd="$cmd -r $platform"
     cmd="$cmd -o \"$platform_dir\""
-    
-    if [ "$SELF_CONTAINED" = true ]; then
-        cmd="$cmd --self-contained true"
-    else
-        cmd="$cmd --self-contained false"
-    fi
-    
+    cmd="$cmd --self-contained true"
+
     if [ "$SINGLE_FILE" = true ]; then
         cmd="$cmd -p:PublishSingleFile=true"
     fi
-    
-    # 执行发布
+
     cd "$SOLUTION_DIR"
     if eval $cmd; then
-        # 检查发布结果
-        if [ -d "$platform_dir" ] && [ "$(ls -A "$platform_dir")" ]; then
+        if [ -d "$platform_dir" ] && [ "$(ls -A \"$platform_dir\")" ]; then
             local file_count=$(ls -1 "$platform_dir" | wc -l | tr -d ' ')
             echo -e "${GREEN}✅ $platform_name 发布成功 ($file_count 个文件)${NC}"
-            
-            # 显示主程序文件信息
-            local main_exe=""
-            if [[ $platform == win-* ]]; then
-                main_exe="$platform_dir/${PROJECT_NAME}.exe"
-            else
-                main_exe="$platform_dir/${PROJECT_NAME}"
-            fi
-            
-            if [ -f "$main_exe" ]; then
-                local file_size=$(ls -lh "$main_exe" | awk '{print $5}')
-                echo -e "${GREEN}   主程序: ${PROJECT_NAME}$([ "$platform" = "win-"* ] && echo ".exe") ($file_size)${NC}"
-            fi
         else
             echo -e "${RED}❌ $platform_name 发布失败：输出目录为空${NC}"
             return 1
@@ -173,17 +147,15 @@ publish_platform() {
     echo ""
 }
 
-# 函数：显示发布总结
+# 发布总结
 show_summary() {
     echo -e "${BLUE}📊 发布总结${NC}"
     echo "======================================"
-    
     if [ -d "$OUTPUT_DIR" ]; then
         for platform in "${PLATFORMS[@]}"; do
             local platform_dir="$OUTPUT_DIR/$platform"
             local platform_name=$(get_platform_name "$platform")
-            
-            if [ -d "$platform_dir" ] && [ "$(ls -A "$platform_dir")" ]; then
+            if [ -d "$platform_dir" ] && [ "$(ls -A \"$platform_dir\")" ]; then
                 local file_count=$(ls -1 "$platform_dir" | wc -l | tr -d ' ')
                 local dir_size=$(du -sh "$platform_dir" 2>/dev/null | cut -f1)
                 echo -e "${GREEN}✅ $platform_name: $file_count 个文件, $dir_size${NC}"
@@ -191,7 +163,6 @@ show_summary() {
                 echo -e "${RED}❌ $platform_name: 发布失败${NC}"
             fi
         done
-        
         echo ""
         echo -e "${BLUE}📁 发布位置: $OUTPUT_DIR${NC}"
         local total_size=$(du -sh "$OUTPUT_DIR" 2>/dev/null | cut -f1)
@@ -202,48 +173,30 @@ show_summary() {
     echo ""
 }
 
-# 解析命令行参数
+# 解析参数
 CLEAN=false
 SPECIFIC_PLATFORM=""
-SELF_CONTAINED=false
 SINGLE_FILE=false
 NO_RESTORE=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help)
-            show_help
-            exit 0
-            ;;
+            show_help; exit 0 ;;
         -c|--clean)
-            CLEAN=true
-            shift
-            ;;
+            CLEAN=true; shift ;;
         -p|--platform)
-            SPECIFIC_PLATFORM="$2"
-            shift 2
-            ;;
-        --self-contained)
-            SELF_CONTAINED=true
-            shift
-            ;;
+            SPECIFIC_PLATFORM="$2"; shift 2 ;;
         --single-file)
-            SINGLE_FILE=true
-            shift
-            ;;
+            SINGLE_FILE=true; shift ;;
         --no-restore)
-            NO_RESTORE=true
-            shift
-            ;;
+            NO_RESTORE=true; shift ;;
         *)
-            echo -e "${RED}未知选项: $1${NC}"
-            show_help
-            exit 1
-            ;;
+            echo -e "${RED}未知选项: $1${NC}"; show_help; exit 1 ;;
     esac
 done
 
-# 验证特定平台
+# 验证平台
 if [ -n "$SPECIFIC_PLATFORM" ]; then
     if [[ ! " ${PLATFORMS[*]} " =~ " ${SPECIFIC_PLATFORM} " ]]; then
         echo -e "${RED}❌ 不支持的平台: $SPECIFIC_PLATFORM${NC}"
@@ -252,54 +205,35 @@ if [ -n "$SPECIFIC_PLATFORM" ]; then
     fi
 fi
 
-# 主程序开始
+# 主流程
 START_TIME=$(date +%s)
-
 show_banner
 check_dotnet
-
-if [ "$CLEAN" = true ]; then
-    clean_output
-fi
-
-# 创建输出目录
+if [ "$CLEAN" = true ]; then clean_output; fi
 mkdir -p "$OUTPUT_DIR"
-
 restore_packages
 
-# 发布平台
 success_count=0
 total_count=0
 
 if [ -n "$SPECIFIC_PLATFORM" ]; then
-    # 发布特定平台
     total_count=1
-    if publish_platform "$SPECIFIC_PLATFORM"; then
-        success_count=1
-    fi
+    if publish_platform "$SPECIFIC_PLATFORM"; then ((success_count++)); fi
 else
-    # 发布所有平台
     total_count=${#PLATFORMS[@]}
     for platform in "${PLATFORMS[@]}"; do
-        if publish_platform "$platform"; then
-            ((success_count++))
-        fi
+        if publish_platform "$platform"; then ((success_count++)); fi
     done
 fi
 
-# 显示总结
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
-
 show_summary
-
 echo -e "${BLUE}⏱️  总耗时: ${DURATION}秒${NC}"
 echo -e "${BLUE}📈 成功率: $success_count/$total_count${NC}"
 
 if [ $success_count -eq $total_count ]; then
-    echo -e "${GREEN}🎉 所有平台发布成功！${NC}"
-    exit 0
+    echo -e "${GREEN}🎉 所有平台发布成功！（自包含）${NC}"; exit 0
 else
-    echo -e "${YELLOW}⚠️  部分平台发布失败${NC}"
-    exit 1
+    echo -e "${YELLOW}⚠️  部分平台发布失败${NC}"; exit 1
 fi

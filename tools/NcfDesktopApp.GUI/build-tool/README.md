@@ -23,7 +23,35 @@
 
 ## 💻 使用方法
 
-### Unix/Linux/macOS (Bash)
+### 自包含发布脚本系列（推荐在目标机器未安装 .NET 运行时时使用）
+
+- Bash: `build-tool/build-all-platforms-self-contained.sh`
+- PowerShell: `build-tool/build-all-platforms-self-contained.ps1`
+- Batch: `build-tool/build-all-platforms-self-contained.bat`
+
+示例：
+
+```bash
+# Bash（macOS/Linux）
+./build-tool/build-all-platforms-self-contained.sh --clean --single-file
+./build-tool/build-all-platforms-self-contained.sh --platform win-x64
+```
+
+```powershell
+# PowerShell（跨平台）
+./build-tool/build-all-platforms-self-contained.ps1 -Clean -SingleFile
+./build-tool/build-all-platforms-self-contained.ps1 -Platform osx-arm64
+```
+
+```cmd
+REM Windows 批处理
+build-tool\build-all-platforms-self-contained.bat --clean --single-file
+build-tool\build-all-platforms-self-contained.bat --platform linux-x64
+```
+
+说明：上述自包含脚本始终使用 `--self-contained true` 发布，便于在未安装 dotnet-runtime 的设备上运行。
+
+### 普通发布脚本（框架依赖）
 
 ```bash
 # 发布所有平台
@@ -105,23 +133,19 @@ build-tool\build-all-platforms.bat /h
 
 ## 📦 输出结构
 
-发布完成后，所有平台的文件将保存在 `publish` 文件夹中：
+发布完成后，自包含版本文件将保存在 `publish-self-contained` 文件夹中：
 
 ```
-publish/
-├── win-x64/           # Windows x64 版本
-├── win-arm64/         # Windows ARM64 版本
-├── osx-x64/           # macOS Intel 版本
-├── osx-arm64/         # macOS Apple Silicon 版本
-├── linux-x64/         # Linux x64 版本
-└── linux-arm64/       # Linux ARM64 版本
+publish-self-contained/
+├── win-x64/
+├── win-arm64/
+├── osx-x64/
+├── osx-arm64/
+├── linux-x64/
+└── linux-arm64/
 ```
 
-每个平台文件夹包含：
-- 主程序可执行文件
-- 必要的 .NET 库文件
-- 应用程序资源文件
-- 配置文件
+普通（框架依赖）版本仍保存在 `publish` 文件夹。
 
 ## 🔧 系统要求
 
@@ -194,3 +218,5 @@ publish/
 ---
 
 **提示**: 建议在首次使用时先运行单个平台测试，确认环境配置正确后再进行全平台构建。
+
+> 如需执行 Bash 脚本，请先赋予可执行权限：`chmod +x build-tool/build-all-platforms-self-contained.sh`

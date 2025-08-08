@@ -207,40 +207,123 @@ public class NcfService
     
     public async Task<Process> StartNcfProcessAsync(int port, CancellationToken cancellationToken = default)
     {
-        var senparcWebDll = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
-        
-        if (!File.Exists(senparcWebDll))
-        {
-            throw new FileNotFoundException($"未找到Senparc.Web.dll文件: {senparcWebDll}");
-        }
-        
+        // 路径定义
+        var dllPath = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
+        var exePathWin = Path.Combine(NcfRuntimePath, "Senparc.Web.exe");
+        var exePathUnix = Path.Combine(NcfRuntimePath, "Senparc.Web"); // 自包含可执行（无扩展名）
+
         _logger?.LogInformation($"启动NCF站点，端口: {port}");
-        
-        var startInfo = new ProcessStartInfo
+
+        // 优先使用自包含可执行文件
+        ProcessStartInfo startInfo;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && File.Exists(exePathWin))
         {
-            FileName = "dotnet",
-            Arguments = $"Senparc.Web.dll --urls=http://localhost:{port}",
-            WorkingDirectory = NcfRuntimePath,
-            UseShellExecute = false, // 必须设置为false才能使用环境变量
-            CreateNoWindow = false
-        };
-        
+            startInfo = new ProcessStartInfo
+            {
+                FileName = exePathWin,
+                Arguments = $"--urls=http://localhost:{port}",
+                WorkingDirectory = NcfRuntimePath,
+                UseShellExecute = false,
+                CreateNoWindow = false
+            };
+        }
+        else if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && File.Exists(exePathUnix))
+        {
+            // 确保可执行权限
+            TryMakeExecutable(exePathUnix);
+            startInfo = new ProcessStartInfo
+            {
+                FileName = exePathUnix,
+                Arguments = $"--urls=http://localhost:{port}",
+                WorkingDirectory = NcfRuntimePath,
+                UseShellExecute = false,
+                CreateNoWindow = false
+            };
+        }
+        else
+        {
+            // 回退到框架依赖方式：dotnet Senparc.Web.dll
+            if (!File.Exists(dllPath))
+            {
+                throw new FileNotFoundException($"未找到 NCF 启动文件（既没有自包含可执行，也没有 dll）: {NcfRuntimePath}");
+            }
+
+            if (!IsDotnetInstalled())
+            {
+                throw new InvalidOperationException(
+                    "未检测到 .NET Runtime。请改用自包含的 NCF 运行时包（包含 Senparc.Web.exe），或在目标机器上安装 .NET Runtime。");
+            }
+
+            startInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = $"Senparc.Web.dll --urls=http://localhost:{port}",
+                WorkingDirectory = NcfRuntimePath,
+                UseShellExecute = false,
+                CreateNoWindow = false
+            };
+        }
+
+        // 通用环境变量
         startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
         startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
-        
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             startInfo.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
         }
-        
+
         var process = Process.Start(startInfo);
-        
         if (process == null)
         {
             throw new InvalidOperationException("无法启动NCF进程");
         }
-        
         return process;
+    }
+
+    private static bool IsDotnetInstalled()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "--version",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+            using var p = Process.Start(psi);
+            if (p == null) return false;
+            p.WaitForExit(3000);
+            return p.ExitCode == 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void TryMakeExecutable(string path)
+    {
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+            if (!File.Exists(path)) return;
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "/bin/chmod",
+                Arguments = $"+x \"{path}\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            })?.WaitForExit(2000);
+        }
+        catch
+        {
+            // 忽略授予执行权限失败
+        }
     }
     
     public async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process? process, int timeoutSeconds, CancellationToken cancellationToken = default)
