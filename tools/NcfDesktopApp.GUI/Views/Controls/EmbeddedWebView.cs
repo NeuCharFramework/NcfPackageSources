@@ -30,11 +30,6 @@ public partial class EmbeddedWebView : UserControl
     private static readonly HttpClient _httpClient = new();
     
     private TextBlock _statusText = null!;
-    private Button _refreshButton = null!;
-    private Button _openExternalButton = null!;
-    private Button _backButton = null!;
-    private Button _forwardButton = null!;
-    private TextBox _urlTextBox = null!;
     private StackPanel _webViewContainer = null!;
     private Border _webViewArea = null!;
     private WebViewHost? _webViewHost = null;
@@ -47,89 +42,7 @@ public partial class EmbeddedWebView : UserControl
 
     private void InitializeComponent()
     {
-        var content = new StackPanel
-        {
-            Spacing = 10,
-            Margin = new Thickness(10)
-        };
-
-        // 地址栏
-        var urlPanel = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Spacing = 5,
-            Margin = new Thickness(0, 0, 0, 10)
-        };
-
-        _backButton = new Button
-        {
-            Content = "←",
-            Width = 35,
-            Height = 30,
-            FontSize = 14,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Background = Brushes.LightGray,
-            Foreground = Brushes.Black,
-            CornerRadius = new CornerRadius(4),
-            IsEnabled = false
-        };
-        _backButton.Click += OnBackClick;
-
-        _forwardButton = new Button
-        {
-            Content = "→",
-            Width = 35,
-            Height = 30,
-            FontSize = 14,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Background = Brushes.LightGray,
-            Foreground = Brushes.Black,
-            CornerRadius = new CornerRadius(4),
-            IsEnabled = false
-        };
-        _forwardButton.Click += OnForwardClick;
-
-        _refreshButton = new Button
-        {
-            Content = "🔄",
-            Width = 35,
-            Height = 30,
-            FontSize = 14,
-            Background = Brushes.LightBlue,
-            Foreground = Brushes.White,
-            CornerRadius = new CornerRadius(4),
-            IsEnabled = false
-        };
-        _refreshButton.Click += OnRefreshClick;
-
-        _urlTextBox = new TextBox
-        {
-            Height = 30,
-            FontSize = 12,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            IsReadOnly = true
-        };
-
-        _openExternalButton = new Button
-        {
-            Content = "🌍",
-            Width = 35,
-            Height = 30,
-            FontSize = 14,
-            Background = Brushes.Orange,
-            Foreground = Brushes.White,
-            CornerRadius = new CornerRadius(4),
-            IsEnabled = false
-        };
-        _openExternalButton.Click += OnOpenExternalClick;
-
-        urlPanel.Children.Add(_backButton);
-        urlPanel.Children.Add(_forwardButton);
-        urlPanel.Children.Add(_refreshButton);
-        urlPanel.Children.Add(_urlTextBox);
-        urlPanel.Children.Add(_openExternalButton);
-
-        // 状态显示
+        // 状态显示（仅在需要时显示）
         var statusArea = new Border
         {
             Background = Brushes.LightBlue,
@@ -138,7 +51,8 @@ public partial class EmbeddedWebView : UserControl
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(10),
             MinHeight = 40,
-            IsVisible = false
+            IsVisible = false,
+            Margin = new Thickness(10, 10, 10, 0)
         };
 
         _statusText = new TextBlock
@@ -165,6 +79,7 @@ public partial class EmbeddedWebView : UserControl
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(4),
             MinHeight = 400,
+            Margin = new Thickness(10),
             Child = _webViewContainer
         };
 
@@ -203,14 +118,22 @@ public partial class EmbeddedWebView : UserControl
         placeholderContent.Children.Add(descText);
         _webViewContainer.Children.Add(placeholderBorder);
 
-        content.Children.Add(urlPanel);
-        content.Children.Add(statusArea);
-        content.Children.Add(_webViewArea);
+        // 主容器
+        var mainContainer = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,*")
+        };
+
+        mainContainer.Children.Add(statusArea);
+        Grid.SetRow(statusArea, 0);
+        
+        mainContainer.Children.Add(_webViewArea);
+        Grid.SetRow(_webViewArea, 1);
 
         _contentBorder = new Border
         {
             Background = Brushes.White,
-            Child = content
+            Child = mainContainer
         };
 
         Content = _contentBorder;
@@ -259,12 +182,6 @@ public partial class EmbeddedWebView : UserControl
 
                     _isWebViewReady = true;
                     UpdateStatus("嵌入式浏览器已就绪", Brushes.Green);
-                    
-                    // 启用控制按钮
-                    _refreshButton.IsEnabled = true;
-                    _openExternalButton.IsEnabled = true;
-                    _backButton.IsEnabled = true;
-                    _forwardButton.IsEnabled = true;
 
                     // 如果有初始 URL，则导航到它
                     if (!string.IsNullOrEmpty(Source))
@@ -331,7 +248,6 @@ public partial class EmbeddedWebView : UserControl
             {
                 _webViewHost.NavigateTo(url);
                 _currentUrl = url;
-                _urlTextBox.Text = url;
             });
             
             // 导航完成后更新状态
@@ -350,23 +266,8 @@ public partial class EmbeddedWebView : UserControl
         await NavigateToUrlAsync(url);
     }
 
-    private void OnBackClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (_isWebViewReady && _webViewHost?.CanGoBack == true)
-        {
-            _webViewHost.GoBack();
-        }
-    }
-
-    private void OnForwardClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (_isWebViewReady && _webViewHost?.CanGoForward == true)
-        {
-            _webViewHost.GoForward();
-        }
-    }
-
-    private void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    // 刷新功能，供外部调用
+    public void Refresh()
     {
         if (_isWebViewReady && _webViewHost != null)
         {
@@ -374,13 +275,29 @@ public partial class EmbeddedWebView : UserControl
         }
     }
 
-    private void OnOpenExternalClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    // 后退功能，供外部调用
+    public void GoBack()
     {
-        if (!string.IsNullOrEmpty(_currentUrl))
+        if (_isWebViewReady && _webViewHost?.CanGoBack == true)
         {
-            OpenInExternalBrowser(_currentUrl);
+            _webViewHost.GoBack();
         }
     }
+
+    // 前进功能，供外部调用
+    public void GoForward()
+    {
+        if (_isWebViewReady && _webViewHost?.CanGoForward == true)
+        {
+            _webViewHost.GoForward();
+        }
+    }
+
+    // 检查是否可以后退
+    public bool CanGoBack => _isWebViewReady && _webViewHost?.CanGoBack == true;
+
+    // 检查是否可以前进
+    public bool CanGoForward => _isWebViewReady && _webViewHost?.CanGoForward == true;
 
     private void OpenInExternalBrowser(string url)
     {
