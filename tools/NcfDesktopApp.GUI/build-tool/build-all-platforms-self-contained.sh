@@ -129,6 +129,8 @@ publish_platform() {
 
     if [ "$SINGLE_FILE" = true ]; then
         cmd="$cmd -p:PublishSingleFile=true"
+        # Mac 与 Linux 带符号链接的单文件在首次运行时会解压，添加 TrimUnusedDependencies 减少体积
+        cmd="$cmd -p:PublishTrimmed=false"
     fi
 
     cd "$SOLUTION_DIR"

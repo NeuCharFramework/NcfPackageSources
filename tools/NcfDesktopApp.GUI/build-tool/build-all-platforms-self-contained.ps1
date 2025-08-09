@@ -102,7 +102,11 @@ function Publish-Platform { param([string]$PlatformId)
     $platformDir = Join-Path $OutputDir $PlatformId
     Write-ColorText "🚀 发布 $platformName ($PlatformId)..." -Color "Blue"
     $args = @("publish","-c",$BuildConfig,"-r",$PlatformId,"-o","`"$platformDir`"","--self-contained","true")
-    if ($SingleFile) { $args += "-p:PublishSingleFile=true" }
+    if ($SingleFile) {
+        $args += "-p:PublishSingleFile=true"
+        # 与 macOS/Linux 一致的修剪设置（可根据需要启用修剪）
+        $args += "-p:PublishTrimmed=false"
+    }
     Push-Location $SolutionDir
     try {
         if ($Verbose) { Write-Host "执行命令: dotnet $($args -join ' ')" }

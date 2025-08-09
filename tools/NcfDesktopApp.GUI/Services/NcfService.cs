@@ -207,10 +207,13 @@ public class NcfService
     
     public async Task<Process> StartNcfProcessAsync(int port, CancellationToken cancellationToken = default)
     {
-        // 路径定义
-        var dllPath = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
-        var exePathWin = Path.Combine(NcfRuntimePath, "Senparc.Web.exe");
-        var exePathUnix = Path.Combine(NcfRuntimePath, "Senparc.Web"); // 自包含可执行（无扩展名）
+        // 确定 NCF 应用所在目录（兼容压缩包内嵌套目录）
+        var ncfAppDir = FindNcfAppDirectory() ?? NcfRuntimePath;
+
+        // 路径定义（基于实际 NCF 目录）
+        var dllPath = Path.Combine(ncfAppDir, "Senparc.Web.dll");
+        var exePathWin = Path.Combine(ncfAppDir, "Senparc.Web.exe");
+        var exePathUnix = Path.Combine(ncfAppDir, "Senparc.Web"); // 自包含可执行（无扩展名）
 
         _logger?.LogInformation($"启动NCF站点，端口: {port}");
 
@@ -222,7 +225,7 @@ public class NcfService
             {
                 FileName = exePathWin,
                 Arguments = $"--urls=http://localhost:{port}",
-                WorkingDirectory = NcfRuntimePath,
+                WorkingDirectory = ncfAppDir,
                 UseShellExecute = false,
                 CreateNoWindow = false
             };
@@ -235,7 +238,7 @@ public class NcfService
             {
                 FileName = exePathUnix,
                 Arguments = $"--urls=http://localhost:{port}",
-                WorkingDirectory = NcfRuntimePath,
+                WorkingDirectory = ncfAppDir,
                 UseShellExecute = false,
                 CreateNoWindow = false
             };
@@ -248,17 +251,22 @@ public class NcfService
                 throw new FileNotFoundException($"未找到 NCF 启动文件（既没有自包含可执行，也没有 dll）: {NcfRuntimePath}");
             }
 
-            if (!IsDotnetInstalled())
+            string dotnetPath;
+            if (IsDotnetInstalled())
             {
-                throw new InvalidOperationException(
-                    "未检测到 .NET Runtime。请改用自包含的 NCF 运行时包（包含 Senparc.Web.exe），或在目标机器上安装 .NET Runtime。");
+                dotnetPath = "dotnet";
+            }
+            else
+            {
+                // 自动安装用户级 .NET 8 ASP.NET Core 运行时
+                dotnetPath = await EnsureDotnetAvailableAsync(cancellationToken);
             }
 
             startInfo = new ProcessStartInfo
             {
-                FileName = "dotnet",
+                FileName = dotnetPath,
                 Arguments = $"Senparc.Web.dll --urls=http://localhost:{port}",
-                WorkingDirectory = NcfRuntimePath,
+                WorkingDirectory = ncfAppDir,
                 UseShellExecute = false,
                 CreateNoWindow = false
             };
@@ -272,12 +280,86 @@ public class NcfService
             startInfo.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
         }
 
+        // 如果使用本地 dotnet ，补充 DOTNET_ROOT 和 PATH 以保证宿主可定位到运行时
+        var localDotnet = GetLocalDotnetPath();
+        if (File.Exists(localDotnet))
+        {
+            var localRoot = GetLocalDotnetInstallDir();
+            startInfo.Environment["DOTNET_ROOT"] = localRoot;
+            var existingPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+            startInfo.Environment["PATH"] = string.IsNullOrEmpty(existingPath)
+                ? localRoot
+                : localRoot + Path.PathSeparator + existingPath;
+        }
+
+        // 捕获进程输出，便于诊断
+        startInfo.RedirectStandardOutput = true;
+        startInfo.RedirectStandardError = true;
         var process = Process.Start(startInfo);
+        if (process != null)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var so = await process.StandardOutput.ReadToEndAsync();
+                    if (!string.IsNullOrWhiteSpace(so)) _logger?.LogInformation("NCF 输出:\n" + so);
+                }
+                catch { }
+            });
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var se = await process.StandardError.ReadToEndAsync();
+                    if (!string.IsNullOrWhiteSpace(se)) _logger?.LogWarning("NCF 错误:\n" + se);
+                }
+                catch { }
+            });
+        }
         if (process == null)
         {
             throw new InvalidOperationException("无法启动NCF进程");
         }
         return process;
+    }
+
+    private static string? FindNcfAppDirectory()
+    {
+        try
+        {
+            // 优先检查根目录
+            var rootDll = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
+            var rootWinExe = Path.Combine(NcfRuntimePath, "Senparc.Web.exe");
+            var rootUnixExe = Path.Combine(NcfRuntimePath, "Senparc.Web");
+            if (File.Exists(rootDll) || File.Exists(rootWinExe) || File.Exists(rootUnixExe))
+            {
+                return NcfRuntimePath;
+            }
+
+            // 递归查找（只搜索两层以降低成本）
+            foreach (var dir in Directory.GetDirectories(NcfRuntimePath))
+            {
+                if (ContainsNcfApp(dir)) return dir;
+                foreach (var sub in Directory.GetDirectories(dir))
+                {
+                    if (ContainsNcfApp(sub)) return sub;
+                }
+            }
+        }
+        catch
+        {
+            // ignore scanning errors
+        }
+        return null;
+    }
+
+    private static bool ContainsNcfApp(string directory)
+    {
+        var dll = Path.Combine(directory, "Senparc.Web.dll");
+        var winExe = Path.Combine(directory, "Senparc.Web.exe");
+        var unixExe = Path.Combine(directory, "Senparc.Web");
+        return File.Exists(dll) || File.Exists(winExe) || File.Exists(unixExe);
     }
 
     private static bool IsDotnetInstalled()
@@ -325,11 +407,212 @@ public class NcfService
             // 忽略授予执行权限失败
         }
     }
+
+    private static string GetLocalDotnetInstallDir()
+    {
+        // 将用户级 dotnet 安装在运行时目录下，避免需要管理员权限
+        return Path.Combine(NcfRuntimePath, ".dotnet");
+    }
+
+    private static string GetLocalDotnetPath()
+    {
+        var dir = GetLocalDotnetInstallDir();
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Path.Combine(dir, "dotnet.exe")
+            : Path.Combine(dir, "dotnet");
+    }
+
+    private async Task<string> EnsureDotnetAvailableAsync(CancellationToken cancellationToken)
+    {
+        var localDotnet = GetLocalDotnetPath();
+        if (File.Exists(localDotnet))
+        {
+            return localDotnet;
+        }
+
+        await InstallLocalDotnetRuntimeAsync(cancellationToken);
+        // 为 Unix 平台确保可执行权限
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            TryMakeExecutable(localDotnet);
+        }
+
+        if (!File.Exists(localDotnet))
+        {
+            throw new InvalidOperationException("自动安装 .NET Runtime 失败，请手动安装 .NET 8 运行时或使用自包含的 NCF 包。");
+        }
+        return localDotnet;
+    }
+
+    private async Task InstallLocalDotnetRuntimeAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var installDir = GetLocalDotnetInstallDir();
+            Directory.CreateDirectory(installDir);
+
+            var arch = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "arm64" : "x64";
+            _logger?.LogInformation($"准备安装 .NET 运行时到: {installDir} (架构: {arch})");
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // 使用官方 dotnet-install.ps1 安装到用户目录，无需管理员权限
+                var scriptUrl = "https://dot.net/v1/dotnet-install.ps1";
+                var scriptPath = Path.Combine(installDir, "dotnet-install.ps1");
+                var scriptBytes = await _httpClient.GetByteArrayAsync(scriptUrl, cancellationToken);
+                await File.WriteAllBytesAsync(scriptPath, scriptBytes, cancellationToken);
+                _logger?.LogInformation("下载 dotnet-install.ps1 完成，开始安装 .NET Runtime...");
+
+                // 先安装 .NET Runtime（包含 dotnet 主机）
+                var args = $"-NoProfile -ExecutionPolicy Bypass -File \"{scriptPath}\" -Runtime dotnet -Channel 8.0 -Architecture {arch} -InstallDir \"{installDir}\"";
+                var psi = new ProcessStartInfo
+                {
+                    FileName = ResolvePowerShellExecutable(),
+                    Arguments = args,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+                using var p = Process.Start(psi);
+                if (p != null)
+                {
+                    await p.WaitForExitAsync(cancellationToken);
+                    var o = await p.StandardOutput.ReadToEndAsync();
+                    var e = await p.StandardError.ReadToEndAsync();
+                    _logger?.LogInformation("dotnet runtime 安装输出:\n" + o);
+                    if (!string.IsNullOrWhiteSpace(e)) _logger?.LogWarning("dotnet runtime 安装警告/错误:\n" + e);
+                }
+
+                // 再安装 ASP.NET Core Runtime（提供 Microsoft.AspNetCore.App 框架）
+                var argsAsp = $"-NoProfile -ExecutionPolicy Bypass -File \"{scriptPath}\" -Runtime aspnetcore -Channel 8.0 -Architecture {arch} -InstallDir \"{installDir}\"";
+                var psiAsp = new ProcessStartInfo
+                {
+                    FileName = ResolvePowerShellExecutable(),
+                    Arguments = argsAsp,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+                using var pAsp = Process.Start(psiAsp);
+                if (pAsp != null)
+                {
+                    await pAsp.WaitForExitAsync(cancellationToken);
+                    var o2 = await pAsp.StandardOutput.ReadToEndAsync();
+                    var e2 = await pAsp.StandardError.ReadToEndAsync();
+                    _logger?.LogInformation("aspnetcore runtime 安装输出:\n" + o2);
+                    if (!string.IsNullOrWhiteSpace(e2)) _logger?.LogWarning("aspnetcore runtime 安装警告/错误:\n" + e2);
+                }
+            }
+            else
+            {
+                // macOS/Linux 使用 dotnet-install.sh
+                var scriptUrl = "https://dot.net/v1/dotnet-install.sh";
+                var scriptPath = Path.Combine(installDir, "dotnet-install.sh");
+                var scriptBytes = await _httpClient.GetByteArrayAsync(scriptUrl, cancellationToken);
+                await File.WriteAllBytesAsync(scriptPath, scriptBytes, cancellationToken);
+                TryMakeExecutable(scriptPath);
+                _logger?.LogInformation("下载 dotnet-install.sh 完成，开始安装 .NET Runtime...");
+
+                // 先安装 .NET Runtime（包含 dotnet 主机）
+                var args = $"\"{scriptPath}\" --runtime dotnet --channel 8.0 --architecture {arch} --install-dir \"{installDir}\"";
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = args,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+                using var p = Process.Start(psi);
+                if (p != null)
+                {
+                    await p.WaitForExitAsync(cancellationToken);
+                }
+
+                // 再安装 ASP.NET Core Runtime（提供 Microsoft.AspNetCore.App 框架）
+                var argsAsp = $"\"{scriptPath}\" --runtime aspnetcore --channel 8.0 --architecture {arch} --install-dir \"{installDir}\"";
+                var psiAsp = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = argsAsp,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+                using var pAsp = Process.Start(psiAsp);
+                if (pAsp != null)
+                {
+                    await pAsp.WaitForExitAsync(cancellationToken);
+                }
+            }
+
+            // 校验安装是否成功
+            var localDotnet = GetLocalDotnetPath();
+            var checkInfo = new ProcessStartInfo
+            {
+                FileName = localDotnet,
+                Arguments = "--list-runtimes",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+            using var chk = Process.Start(checkInfo);
+            if (chk != null)
+            {
+                await chk.WaitForExitAsync(cancellationToken);
+                var outText = await chk.StandardOutput.ReadToEndAsync();
+                _logger?.LogInformation("已安装的运行时:\n" + outText);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "自动安装 .NET Runtime 失败");
+            throw;
+        }
+    }
+
+    private static string ResolvePowerShellExecutable()
+    {
+        // 优先使用 powershell.exe，回退到 powershell 或 pwsh
+        var candidates = new[] { "powershell.exe", "powershell", "pwsh" };
+        foreach (var c in candidates)
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = c,
+                    Arguments = "-NoProfile -Command \"$PSVersionTable.PSVersion\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+                using var p = Process.Start(psi);
+                if (p == null) continue;
+                p.WaitForExit(2000);
+                if (p.ExitCode == 0) return c;
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+        return "powershell.exe";
+    }
     
     public async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process? process, int timeoutSeconds, CancellationToken cancellationToken = default)
     {
         var timeout = TimeSpan.FromSeconds(timeoutSeconds);
         var startTime = DateTime.UtcNow;
+        var uri = new Uri(siteUrl);
+        var port = uri.Port;
+        var consecutiveOk = 0;
         
         while (DateTime.UtcNow - startTime < timeout)
         {
@@ -339,15 +622,38 @@ public class NcfService
             if (process?.HasExited == true)
                 return false;
             
+            // 先判断端口是否已被占用（监听中）
+            try
+            {
+                if (!await IsPortInUseAsync(port))
+                {
+                    await Task.Delay(1000, cancellationToken);
+                    continue;
+                }
+            }
+            catch { }
+
             try
             {
                 using var response = await _httpClient.GetAsync(siteUrl, cancellationToken);
                 if (response.IsSuccessStatusCode)
-                    return true;
+                {
+                    consecutiveOk++;
+                    if (consecutiveOk >= 2)
+                    {
+                        return true; // 连续两次 2xx 认为就绪，避免偶发 200 假阳性
+                    }
+                }
+                else
+                {
+                    _logger?.LogWarning($"NCF 就绪检查返回状态码: {(int)response.StatusCode}");
+                    consecutiveOk = 0;
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                // 忽略连接错误，继续等待
+                _logger?.LogDebug($"就绪检查失败: {ex.Message}");
+                consecutiveOk = 0;
             }
             
             await Task.Delay(2000, cancellationToken);

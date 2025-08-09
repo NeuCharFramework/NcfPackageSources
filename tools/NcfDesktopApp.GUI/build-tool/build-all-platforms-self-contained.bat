@@ -120,7 +120,11 @@ if "%platform%"=="linux-arm64" set "platform_name=Linux ARM64"
 
 echo [94m🚀 发布 !platform_name! (%platform%)...[0m
 set "cmd=dotnet publish -c %BUILD_CONFIG% -r %platform% -o "%platform_dir%" --self-contained true"
-if "%SINGLE_FILE%"=="true" set "cmd=!cmd! -p:PublishSingleFile=true"
+if "%SINGLE_FILE%"=="true" (
+    set "cmd=!cmd! -p:PublishSingleFile=true"
+    rem Windows 也保持与其他平台一致的设置
+    set "cmd=!cmd! -p:PublishTrimmed=false"
+)
 cd /d "%SOLUTION_DIR%"
 !cmd!
 if errorlevel 1 (
