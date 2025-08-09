@@ -211,6 +211,11 @@ public class NcfService
         var ncfAppDir = FindNcfAppDirectory() ?? NcfRuntimePath;
 
         // 路径定义（基于实际 NCF 目录）
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            // 尝试去除隔离属性，避免 Gatekeeper 阻止启动
+            TryRemoveQuarantine(ncfAppDir);
+        }
         var dllPath = Path.Combine(ncfAppDir, "Senparc.Web.dll");
         var exePathWin = Path.Combine(ncfAppDir, "Senparc.Web.exe");
         var exePathUnix = Path.Combine(ncfAppDir, "Senparc.Web"); // 自包含可执行（无扩展名）
@@ -317,6 +322,87 @@ public class NcfService
                 catch { }
             });
         }
+        // 若自包含可执行在 macOS 被 Gatekeeper 杀死或依赖缺失导致瞬退，尝试回退到 dotnet 方式
+        if ((process == null || process.HasExited) && File.Exists(Path.Combine(ncfAppDir, "Senparc.Web.dll")))
+        {
+            _logger?.LogWarning("检测到自包含启动失败，回退到 dotnet 方式...");
+            string dotnetPath;
+            if (IsDotnetInstalled())
+            {
+                dotnetPath = "dotnet";
+            }
+            else
+            {
+                dotnetPath = await EnsureDotnetAvailableAsync(cancellationToken);
+            }
+
+            var fb = new ProcessStartInfo
+            {
+                FileName = dotnetPath,
+                Arguments = $"Senparc.Web.dll --urls=http://localhost:{port}",
+                WorkingDirectory = ncfAppDir,
+                UseShellExecute = false,
+                CreateNoWindow = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            fb.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
+            fb.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                fb.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
+            }
+            var local2 = GetLocalDotnetPath();
+            if (File.Exists(local2))
+            {
+                var root2 = GetLocalDotnetInstallDir();
+                fb.Environment["DOTNET_ROOT"] = root2;
+                var path2 = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+                fb.Environment["PATH"] = string.IsNullOrEmpty(path2) ? root2 : root2 + Path.PathSeparator + path2;
+            }
+            process = Process.Start(fb);
+        }
+
+        // 若自包含进程在极短时间内崩溃（被 Gatekeeper 杀死），再做一次回退检查
+        if (process != null && !process.HasExited)
+        {
+            try
+            {
+                await Task.Delay(1500, cancellationToken);
+                if (process.HasExited && File.Exists(Path.Combine(ncfAppDir, "Senparc.Web.dll")))
+                {
+                    _logger?.LogWarning("自包含进程瞬退，回退到 dotnet DLL 启动...");
+                    string dotnetPath2 = IsDotnetInstalled() ? "dotnet" : await EnsureDotnetAvailableAsync(cancellationToken);
+                    var fb2 = new ProcessStartInfo
+                    {
+                        FileName = dotnetPath2,
+                        Arguments = $"Senparc.Web.dll --urls=http://localhost:{port}",
+                        WorkingDirectory = ncfAppDir,
+                        UseShellExecute = false,
+                        CreateNoWindow = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+                    fb2.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
+                    fb2.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        fb2.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
+                    }
+                    var local3 = GetLocalDotnetPath();
+                    if (File.Exists(local3))
+                    {
+                        var root3 = GetLocalDotnetInstallDir();
+                        fb2.Environment["DOTNET_ROOT"] = root3;
+                        var path3 = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+                        fb2.Environment["PATH"] = string.IsNullOrEmpty(path3) ? root3 : root3 + Path.PathSeparator + path3;
+                    }
+                    process = Process.Start(fb2);
+                }
+            }
+            catch { }
+        }
+
         if (process == null)
         {
             throw new InvalidOperationException("无法启动NCF进程");
@@ -406,6 +492,25 @@ public class NcfService
         {
             // 忽略授予执行权限失败
         }
+    }
+
+    private static void TryRemoveQuarantine(string directory)
+    {
+        try
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return;
+            if (!Directory.Exists(directory)) return;
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "/usr/bin/xattr",
+                Arguments = $"-dr com.apple.quarantine \"{directory}\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            })?.WaitForExit(2000);
+        }
+        catch { }
     }
 
     private static string GetLocalDotnetInstallDir()
@@ -638,7 +743,19 @@ public class NcfService
                 using var response = await _httpClient.GetAsync(siteUrl, cancellationToken);
                 if (response.IsSuccessStatusCode)
                 {
-                    consecutiveOk++;
+                    var content = await response.Content.ReadAsStringAsync(cancellationToken);
+                    // 内容校验：尽量确认是 NCF 页而不是其它服务
+                    var looksLikeNcf = content.IndexOf("Senparc", StringComparison.OrdinalIgnoreCase) >= 0
+                                        || content.IndexOf("NCF", StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (looksLikeNcf)
+                    {
+                        consecutiveOk++;
+                    }
+                    else
+                    {
+                        consecutiveOk = 0;
+                    }
+
                     if (consecutiveOk >= 2)
                     {
                         return true; // 连续两次 2xx 认为就绪，避免偶发 200 假阳性
