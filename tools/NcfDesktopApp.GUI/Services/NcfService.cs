@@ -174,6 +174,12 @@ public class NcfService
         
         await ExtractZipWithCorrectPathsAsync(zipPath, NcfRuntimePath, progress, cancellationToken);
         
+        // 🎯 新增：macOS 解压后自动处理
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            await PostProcessMacOSExecutablesAsync();
+        }
+        
         // 保存版本信息
         await SaveVersionAsync(version);
         
@@ -867,7 +873,7 @@ public class NcfService
         }
     }
 
-    public async Task CleanupDownloadsAsync()
+    public Task CleanupDownloadsAsync()
     {
         try
         {
@@ -884,6 +890,7 @@ public class NcfService
         {
             // 忽略清理错误
         }
+        return Task.CompletedTask;
     }
     
     #region 私有方法
@@ -938,6 +945,8 @@ public class NcfService
             }
             
             using var process = Process.Start(startInfo);
+            if (process == null) return false;
+            
             await process.WaitForExitAsync();
             var output = await process.StandardOutput.ReadToEndAsync();
             
@@ -991,6 +1000,154 @@ public class NcfService
         }
     }
     
+    /// <summary>
+    /// macOS 解压后处理：自动设置权限、移除隔离属性、执行代码签名
+    /// </summary>
+    private async Task PostProcessMacOSExecutablesAsync()
+    {
+        try
+        {
+            _logger?.LogInformation("🍎 正在处理 macOS 可执行文件...");
+            
+            // 查找所有可能的可执行文件
+            var potentialExecutables = new[]
+            {
+                "Senparc.Web",
+                "NcfDesktopApp.GUI",
+                // 可以添加其他可执行文件
+            };
+            
+            var processedCount = 0;
+            foreach (var execName in potentialExecutables)
+            {
+                var execPath = Path.Combine(NcfRuntimePath, execName);
+                if (File.Exists(execPath))
+                {
+                    await ProcessMacOSExecutableAsync(execPath);
+                    processedCount++;
+                }
+                
+                // 也检查子目录
+                processedCount += await ProcessExecutablesInDirectoryAsync(NcfRuntimePath, execName);
+            }
+            
+            _logger?.LogInformation($"✅ macOS 可执行文件处理完成，共处理 {processedCount} 个文件");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ macOS 可执行文件处理失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 处理单个macOS可执行文件：权限、隔离属性、代码签名
+    /// </summary>
+    private async Task ProcessMacOSExecutableAsync(string executablePath)
+    {
+        try
+        {
+            _logger?.LogInformation($"🔧 处理可执行文件: {Path.GetFileName(executablePath)}");
+            
+            // 1. 设置执行权限
+            await RunMacOSCommandAsync("/bin/chmod", $"+x \"{executablePath}\"", "设置执行权限");
+            
+            // 2. 移除隔离属性
+            await RunMacOSCommandAsync("/usr/bin/xattr", $"-d com.apple.quarantine \"{executablePath}\"", "移除隔离属性");
+            
+            // 3. Ad-hoc 代码签名
+            var signSuccess = await RunMacOSCommandAsync("/usr/bin/codesign", $"--force --sign - \"{executablePath}\"", "Ad-hoc代码签名");
+            
+            // 4. 验证签名（可选）
+            if (signSuccess)
+            {
+                var verifySuccess = await RunMacOSCommandAsync("/usr/bin/codesign", $"--verify \"{executablePath}\"", "验证签名", false);
+                _logger?.LogInformation($"📋 签名验证: {(verifySuccess ? "✅ 成功" : "⚠️ 失败")} - {Path.GetFileName(executablePath)}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ 处理可执行文件失败 {Path.GetFileName(executablePath)}: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 在目录中递归查找并处理可执行文件
+    /// </summary>
+    private async Task<int> ProcessExecutablesInDirectoryAsync(string directory, string executableName)
+    {
+        var processedCount = 0;
+        try
+        {
+            foreach (var subDir in Directory.GetDirectories(directory))
+            {
+                var execPath = Path.Combine(subDir, executableName);
+                if (File.Exists(execPath))
+                {
+                    await ProcessMacOSExecutableAsync(execPath);
+                    processedCount++;
+                }
+                
+                // 递归处理子目录（限制深度避免无限循环）
+                if (subDir.Split(Path.DirectorySeparatorChar).Length < directory.Split(Path.DirectorySeparatorChar).Length + 3)
+                {
+                    processedCount += await ProcessExecutablesInDirectoryAsync(subDir, executableName);
+                }
+            }
+        }
+        catch
+        {
+            // 忽略目录访问错误
+        }
+        return processedCount;
+    }
+
+    /// <summary>
+    /// 运行macOS命令行工具
+    /// </summary>
+    private async Task<bool> RunMacOSCommandAsync(string fileName, string arguments, string description, bool logErrors = true)
+    {
+        try
+        {
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            });
+
+            if (process == null) return false;
+
+            var timeoutTask = Task.Delay(5000); // 5秒超时
+            var processTask = Task.Run(() => process.WaitForExit());
+            
+            var completedTask = await Task.WhenAny(processTask, timeoutTask);
+            
+            if (completedTask == timeoutTask)
+            {
+                process.Kill();
+                if (logErrors) _logger?.LogWarning($"⏱️ {description} 超时");
+                return false;
+            }
+
+            var success = process.ExitCode == 0;
+            if (!success && logErrors)
+            {
+                var error = await process.StandardError.ReadToEndAsync();
+                _logger?.LogWarning($"❌ {description} 失败: {error}");
+            }
+            
+            return success;
+        }
+        catch (Exception ex)
+        {
+            if (logErrors) _logger?.LogWarning($"💥 {description} 执行异常: {ex.Message}");
+            return false;
+        }
+    }
+
     private async Task SaveVersionAsync(string version)
     {
         var versionFile = Path.Combine(NcfRuntimePath, "version.txt");

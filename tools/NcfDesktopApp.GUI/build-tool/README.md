@@ -4,6 +4,22 @@
 
 此工具集提供了为 NCF 桌面应用构建多个平台版本的自动化脚本。支持 Windows、macOS 和 Linux 的 x64 和 ARM64 架构。
 
+### 🍎 macOS 特别支持
+
+**新增功能**：专为 macOS 用户提供双击运行解决方案！
+
+- ✅ **双击运行**：创建标准 `.app` 应用程序包
+- ✅ **DMG 安装包**：生成专业的 macOS 安装包
+- ✅ **自动签名处理**：解决权限和安全提示问题
+- ✅ **通用二进制**：同时支持 Intel 和 Apple Silicon Mac
+
+如果您在 macOS 上遇到：
+- ❌ 无法双击运行可执行文件
+- ❌ "zsh: killed" 或权限错误
+- ❌ 需要创建可分发的安装包
+
+请直接跳转到 [🍎 macOS 专项功能](#-macos-专项功能) 部分！
+
 ## 📁 文件说明
 
 | 文件 | 平台 | 描述 |
@@ -11,6 +27,7 @@
 | `build-all-platforms.sh` | Unix/Linux/macOS | Bash shell 脚本 |
 | `build-all-platforms.bat` | Windows | Windows 批处理文件 |
 | `build-all-platforms.ps1` | 跨平台 | PowerShell 脚本 |
+| `create-macos-app.sh` | macOS | macOS 应用程序包生成工具 |
 
 ## 🎯 支持的平台
 
@@ -22,6 +39,28 @@
 - **Linux ARM64** (`linux-arm64`)
 
 ## 💻 使用方法
+
+### 🍎 macOS 快速开始（双击运行解决方案）
+
+**如果您需要在 macOS 上双击运行应用程序**，请按以下步骤操作：
+
+```bash
+# 步骤 1：构建 macOS 可执行文件
+./build-tool/build-all-platforms-self-contained.sh -p osx-arm64    # Apple Silicon
+./build-tool/build-all-platforms-self-contained.sh -p osx-x64     # Intel Mac
+
+# 步骤 2：创建 .app 应用程序包和 DMG 安装包
+./build-tool/create-macos-app.sh --create-dmg --clean
+
+# 步骤 3：使用生成的文件
+# - 双击 macos-app/NCF Desktop-Universal.app 直接运行
+# - 双击 macos-app/NCF Desktop-1.0.0.dmg 进行安装
+```
+
+**一行命令完成所有操作**：
+```bash
+./build-tool/build-all-platforms-self-contained.sh -p osx-arm64 && ./build-tool/build-all-platforms-self-contained.sh -p osx-x64 && ./build-tool/create-macos-app.sh --create-dmg --clean
+```
 
 ### 自包含发布脚本系列（推荐在目标机器未安装 .NET 运行时时使用）
 
@@ -147,6 +186,23 @@ publish-self-contained/
 
 普通（框架依赖）版本仍保存在 `publish` 文件夹。
 
+### 🍎 macOS 应用程序包输出
+
+使用 `create-macos-app.sh` 生成的 macOS 应用程序包保存在 `macos-app/` 文件夹：
+
+```
+macos-app/
+├── NCF Desktop-osx-arm64.app     # ARM64 专用版本（Apple Silicon）
+├── NCF Desktop-osx-x64.app       # x64 专用版本（Intel Mac）
+├── NCF Desktop-Universal.app     # 通用版本（推荐使用）
+└── NCF Desktop-1.0.0.dmg         # DMG 安装包（用于分发）
+```
+
+**使用建议**：
+- **个人使用**：直接双击 `NCF Desktop-Universal.app` 
+- **分发给他人**：使用 `NCF Desktop-1.0.0.dmg`
+- **特定架构**：使用对应的 ARM64 或 x64 版本
+
 ## 🔧 系统要求
 
 - **.NET 8.0 SDK** 或更高版本
@@ -174,11 +230,39 @@ publish-self-contained/
 3. **权限错误 (Linux/macOS)**
    ```bash
    chmod +x build-tool/build-all-platforms.sh
+   chmod +x build-tool/create-macos-app.sh
    ```
 
 4. **PowerShell 执行策略错误**
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+
+### 🍎 macOS 专项问题解决
+
+5. **macOS 双击无法运行**
+   ```bash
+   # 使用应用程序包生成工具
+   ./build-tool/create-macos-app.sh --create-dmg
+   ```
+
+6. **"zsh: killed" 错误**
+   - 新版本已自动解决此问题
+   - 如仍遇到，请更新到最新代码并重新构建
+
+7. **macOS 安全提示"无法打开，因为来自身份不明的开发者"**
+   - 右键点击应用程序，选择"打开"
+   - 或到"系统偏好设置" > "安全性与隐私" > "通用"中允许
+
+8. **DMG 创建失败**
+   - 确保有足够磁盘空间
+   - 检查是否有其他程序正在使用相关文件
+   - 清理临时文件后重试
+
+9. **应用程序包签名问题**
+   ```bash
+   # 手动重新签名
+   codesign --force --deep --sign - "macos-app/NCF Desktop-Universal.app"
    ```
 
 ### 安全警告
@@ -214,6 +298,128 @@ publish-self-contained/
 2. 确认系统满足最低要求
 3. 验证项目配置是否正确
 4. 查看 .NET 官方文档获取更多帮助
+
+---
+
+## 🍎 macOS 专项功能
+
+### macOS 应用程序包生成工具
+
+针对 macOS 平台的特殊需求，提供了专门的应用程序包生成工具：
+
+**前置条件**：请先运行自包含发布脚本
+```bash
+./build-tool/build-all-platforms-self-contained.sh -p osx-arm64    # Apple Silicon
+./build-tool/build-all-platforms-self-contained.sh -p osx-x64     # Intel Mac
+```
+
+**应用程序包生成**：
+```bash
+# 基本使用：创建 .app 包
+./build-tool/create-macos-app.sh
+
+# 清理并创建应用程序包
+./build-tool/create-macos-app.sh --clean
+
+# 创建 .app 包并生成 DMG 安装包（推荐）
+./build-tool/create-macos-app.sh --create-dmg
+
+# 创建并签名应用程序包
+./build-tool/create-macos-app.sh --sign
+
+# 完整流程：清理、创建、签名、生成DMG
+./build-tool/create-macos-app.sh --clean --sign --create-dmg
+
+# 查看所有选项
+./build-tool/create-macos-app.sh --help
+```
+
+### macOS 应用程序包特性
+
+- ✅ **双击运行**：生成标准的 `.app` 包，支持双击启动
+- ✅ **DMG 安装包**：创建专业的 macOS 安装包
+- ✅ **代码签名**：自动处理 ad-hoc 签名，支持开发者签名
+- ✅ **通用二进制**：自动创建支持 Intel 和 Apple Silicon 的通用包
+- ✅ **权限处理**：自动设置执行权限和移除隔离属性
+- ✅ **图标转换**：自动将 ICO 图标转换为 macOS 格式
+
+### 使用流程
+
+1. **构建可执行文件**：
+   ```bash
+   ./build-tool/build-all-platforms-self-contained.sh -p osx-arm64
+   ./build-tool/build-all-platforms-self-contained.sh -p osx-x64
+   ```
+
+2. **创建应用程序包**：
+   ```bash
+   ./build-tool/create-macos-app.sh --create-dmg
+   ```
+
+3. **安装和使用**：
+   - 双击 `.dmg` 文件打开安装器
+   - 将应用程序拖拽到 Applications 文件夹
+   - 双击应用程序图标运行
+
+### 输出文件说明
+
+生成的文件保存在 `macos-app/` 目录：
+
+```
+macos-app/
+├── NCF Desktop-osx-arm64.app     # ARM64 版本应用程序包
+├── NCF Desktop-osx-x64.app       # Intel 版本应用程序包
+├── NCF Desktop-Universal.app     # 通用二进制版本（推荐）
+└── NCF Desktop-1.0.0.dmg         # DMG 安装包
+```
+
+### 自动化 macOS 处理
+
+从此版本开始，NCF 桌面应用增加了自动 macOS 处理功能：
+
+- 🔧 **自动权限设置**：解压时自动设置可执行权限
+- 🛡️ **隔离属性移除**：避免 Gatekeeper 阻止启动
+- ✍️ **Ad-hoc 签名**：自动执行代码签名避免"已损坏"提示
+- 📋 **签名验证**：确保应用程序可以正常运行
+
+---
+
+## 🎯 完整示例：macOS 应用程序打包
+
+以下是在 macOS 上从源码到可双击运行应用程序的完整流程：
+
+```bash
+# 1. 克隆或下载项目（如果还没有）
+cd /path/to/NcfDesktopApp.GUI
+
+# 2. 赋予脚本执行权限
+chmod +x build-tool/build-all-platforms-self-contained.sh
+chmod +x build-tool/create-macos-app.sh
+
+# 3. 构建 macOS 可执行文件
+./build-tool/build-all-platforms-self-contained.sh -p osx-arm64    # Apple Silicon
+./build-tool/build-all-platforms-self-contained.sh -p osx-x64     # Intel Mac
+
+# 4. 创建应用程序包和 DMG
+./build-tool/create-macos-app.sh --create-dmg --clean
+
+# 5. 查看生成的文件
+ls -la macos-app/
+# 输出：
+# NCF Desktop-osx-arm64.app     # ARM64 版本
+# NCF Desktop-osx-x64.app       # Intel 版本  
+# NCF Desktop-Universal.app     # 通用版本（推荐）
+# NCF Desktop-1.0.0.dmg         # DMG 安装包
+
+# 6. 测试运行（任选其一）
+open "macos-app/NCF Desktop-Universal.app"              # 命令行打开
+# 或直接在 Finder 中双击 "NCF Desktop-Universal.app"
+```
+
+### 分发建议
+
+- **个人使用**：直接使用 `NCF Desktop-Universal.app`
+- **分发给他人**：使用 `NCF Desktop-1.0.0.dmg`，接收者只需双击安装即可
 
 ---
 

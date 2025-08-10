@@ -99,3 +99,4 @@ tools/NcfDesktopApp/publish/
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/*.xml
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/DynamicFiles
 tools/NcfDesktopApp.GUI/publish/*
+tools/NcfDesktopApp.GUI/macos-app/*
