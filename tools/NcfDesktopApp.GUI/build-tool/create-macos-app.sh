@@ -112,6 +112,62 @@ check_prerequisites() {
     echo ""
 }
 
+# 函数：从 PNG/ICO 生成 .icns
+generate_icns_from_source() {
+    local source_image=$1
+    local output_icns=$2
+    local workdir=$(dirname "$output_icns")/._icon_build
+    rm -rf "$workdir" && mkdir -p "$workdir/AppIcon.iconset"
+
+    # 如果 iconutil 存在，按规范生成
+    if command -v iconutil &> /dev/null && command -v sips &> /dev/null; then
+        local iconset="$workdir/AppIcon.iconset"
+        sips -z 16 16     "$source_image" --out "$iconset/icon_16x16.png" &>/dev/null || true
+        sips -z 32 32     "$source_image" --out "$iconset/icon_16x16@2x.png" &>/dev/null || true
+        sips -z 32 32     "$source_image" --out "$iconset/icon_32x32.png" &>/dev/null || true
+        sips -z 64 64     "$source_image" --out "$iconset/icon_32x32@2x.png" &>/dev/null || true
+        sips -z 128 128   "$source_image" --out "$iconset/icon_128x128.png" &>/dev/null || true
+        sips -z 256 256   "$source_image" --out "$iconset/icon_128x128@2x.png" &>/dev/null || true
+        sips -z 256 256   "$source_image" --out "$iconset/icon_256x256.png" &>/dev/null || true
+        sips -z 512 512   "$source_image" --out "$iconset/icon_256x256@2x.png" &>/dev/null || true
+        sips -z 512 512   "$source_image" --out "$iconset/icon_512x512.png" &>/dev/null || true
+        sips -z 1024 1024 "$source_image" --out "$iconset/icon_512x512@2x.png" &>/dev/null || true
+        iconutil -c icns "$iconset" -o "$output_icns" &>/dev/null || true
+    fi
+
+    # 回退方案：尝试使用 sips 直接转换
+    if [ ! -f "$output_icns" ] && command -v sips &> /dev/null; then
+        sips -s format icns "$source_image" --out "$output_icns" &>/dev/null || true
+    fi
+
+    # 再回退：如果仍未生成，拷贝源文件（部分系统会识别 png 作为 icns，但不保证）
+    if [ ! -f "$output_icns" ] && [ -f "$source_image" ]; then
+        cp -f "$source_image" "$output_icns" 2>/dev/null || true
+    fi
+}
+
+# 尝试在未安装 SetFile 的情况下，用 xattr 设置自定义图标标志位
+set_custom_icon_flag() {
+    local target_dir=$1
+    if ! command -v xattr &> /dev/null; then
+        return 1
+    fi
+    # 读取当前 FinderInfo（32 字节，64 个十六进制字符）
+    local finfo_hex=$(xattr -px com.apple.FinderInfo "$target_dir" 2>/dev/null | tr -d ' \n')
+    if [ -z "$finfo_hex" ] || [ ${#finfo_hex} -lt 64 ]; then
+        finfo_hex="0000000000000000000000000000000000000000000000000000000000000000"
+    fi
+    # flags 位于第 9-10 个字节（从 0 开始的字节 8-9），每字节 2 位 hex，因此起始下标 16，长度 4
+    local flags_hex=${finfo_hex:16:4}
+    # 解析为整数并置上 kHasCustomIcon (0x0400)
+    local flags=$((16#${flags_hex}))
+    flags=$((flags | 0x0400))
+    local new_flags_hex=$(printf "%04X" $flags)
+    local new_hex="${finfo_hex:0:16}${new_flags_hex}${finfo_hex:20}"
+    # 写回 FinderInfo（以十六进制形式）
+    xattr -wx com.apple.FinderInfo "$new_hex" "$target_dir" >/dev/null 2>&1 || true
+}
+
 # 函数：创建应用程序包结构
 create_app_bundle() {
     local arch=$1
@@ -202,19 +258,23 @@ EOF
 # 函数：复制应用图标
 copy_app_icon() {
     local app_bundle=$1
-    local icon_source="$SOLUTION_DIR/Assets/avalonia-logo.ico"
+    # Prefer Assets/NCF-logo.png, then project root NCF-logo.png. Fallback to legacy Avalonia icon if missing
+    local icon_source="$SOLUTION_DIR/Assets/NCF-logo.png"
+    if [ ! -f "$icon_source" ]; then
+        icon_source="$SOLUTION_DIR/NCF-logo.png"
+    fi
+    if [ ! -f "$icon_source" ]; then
+        icon_source="$SOLUTION_DIR/Assets/avalonia-logo.ico"
+    fi
     
     if [ -f "$icon_source" ]; then
         echo -e "${YELLOW}  🎨 处理应用图标...${NC}"
-        
-        # 检查是否安装了 sips 工具（macOS 内置）
-        if command -v sips &> /dev/null; then
-            # 将 .ico 转换为 .icns
-            sips -s format icns "$icon_source" --out "$app_bundle/Contents/Resources/AppIcon.icns" &>/dev/null || {
-                echo -e "${YELLOW}  ⚠️  图标转换失败，使用默认图标${NC}"
-            }
+        mkdir -p "$app_bundle/Contents/Resources"
+        generate_icns_from_source "$icon_source" "$app_bundle/Contents/Resources/AppIcon.icns"
+        if [ -f "$app_bundle/Contents/Resources/AppIcon.icns" ]; then
+            echo -e "${GREEN}  ✅ 已生成 AppIcon.icns${NC}"
         else
-            echo -e "${YELLOW}  ⚠️  未找到 sips 工具，跳过图标设置${NC}"
+            echo -e "${YELLOW}  ⚠️  图标转换失败，应用将使用默认图标${NC}"
         fi
     else
         echo -e "${YELLOW}  ⚠️  未找到应用图标文件${NC}"
@@ -338,22 +398,92 @@ create_dmg() {
     
     # 创建应用程序文件夹的符号链接
     ln -s /Applications "$dmg_temp_dir/Applications"
+
+    # 设置卷图标（使 .dmg 文件显示自定义图标）
+    # 优先使用已生成的 VolumeIcon.icns，备用 AppIcon.icns
+    echo -e "${YELLOW}  🎨 设置 DMG 卷图标...${NC}"
+    local volume_icon_source="$SOLUTION_DIR/Assets/VolumeIcon.icns"
+    if [ ! -f "$volume_icon_source" ]; then
+        volume_icon_source="$SOLUTION_DIR/Assets/AppIcon.icns"
+    fi
+    
+    if [ -f "$volume_icon_source" ]; then
+        # 复制图标到临时目录
+        cp -f "$volume_icon_source" "$dmg_temp_dir/.VolumeIcon.icns" 2>/dev/null || true
+        echo -e "${GREEN}  ✅ 已设置卷图标: $(basename "$volume_icon_source")${NC}"
+    else
+        echo -e "${YELLOW}  ⚠️  未找到卷图标文件，DMG 将使用默认图标${NC}"
+    fi
     
     # 创建 .DS_Store 文件以设置窗口布局（可选）
     create_dmg_layout "$dmg_temp_dir"
     
-    # 创建 DMG
+    # 创建 DMG（先创建可写 DMG，设置卷图标，再压缩）
     if command -v hdiutil &> /dev/null; then
         echo -e "${YELLOW}  🔄 生成 DMG 文件...${NC}"
-        
-        # 删除已存在的 DMG
-        [ -f "$dmg_file" ] && rm "$dmg_file"
-        
-        # 创建 DMG
-        hdiutil create -srcfolder "$dmg_temp_dir" -volname "$APP_NAME" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDZO -imagekey zlib-level=9 "$dmg_file"
-        
+        local rw_dmg="$dmg_temp_dir/pack-temp.dmg"
+        [ -f "$rw_dmg" ] && rm -f "$rw_dmg"
+        [ -f "$dmg_file" ] && rm -f "$dmg_file"
+
+        # 先创建可写 DMG
+        hdiutil create -srcfolder "$dmg_temp_dir" -volname "$APP_NAME" -fs HFS+ -format UDRW -ov "$rw_dmg" >/dev/null
+
+        # 挂载设置卷图标
+        local mount_point="$OUTPUT_DIR/_dmg_mount"
+        mkdir -p "$mount_point"
+        if hdiutil attach -readwrite -noverify -noautoopen -mountpoint "$mount_point" "$rw_dmg" >/dev/null; then
+            # 拷贝卷图标到根目录（已命名为 .VolumeIcon.icns）
+            if [ -f "$dmg_temp_dir/.VolumeIcon.icns" ]; then
+                cp -f "$dmg_temp_dir/.VolumeIcon.icns" "$mount_point/.VolumeIcon.icns" 2>/dev/null || true
+            fi
+            # 标记自定义图标
+            if command -v SetFile &> /dev/null; then
+                SetFile -a C "$mount_point" 2>/dev/null || true
+            else
+                set_custom_icon_flag "$mount_point" || echo -e "${YELLOW}  ⚠️  未找到 SetFile，已尝试使用 xattr 设置自定义图标标志${NC}"
+            fi
+            hdiutil detach "$mount_point" -quiet || true
+            rmdir "$mount_point" 2>/dev/null || true
+        fi
+
+        # 转换为压缩 DMG
+        hdiutil convert "$rw_dmg" -format UDZO -imagekey zlib-level=9 -o "$dmg_file" >/dev/null
+        rm -f "$rw_dmg"
+
         # 清理临时目录
         rm -rf "$dmg_temp_dir"
+        
+        # 为 DMG 文件本身设置图标
+        if [ -f "$dmg_file" ] && [ -f "$volume_icon_source" ]; then
+            echo -e "${YELLOW}  🎨 为 DMG 文件设置图标...${NC}"
+            # 使用 Rez（如果可用）或 DeRez/Rez 为 DMG 文件设置图标
+            if command -v sips &> /dev/null && command -v DeRez &> /dev/null && command -v Rez &> /dev/null; then
+                # 方法1：使用 macOS 开发工具
+                local icon_rsrc="$(dirname "$dmg_file")/temp_icon.rsrc"
+                sips -i "$volume_icon_source" >/dev/null 2>&1 || true
+                DeRez -only icns "$volume_icon_source" > "$icon_rsrc" 2>/dev/null || true
+                if [ -f "$icon_rsrc" ]; then
+                    Rez -append "$icon_rsrc" -o "$dmg_file" >/dev/null 2>&1 || true
+                    rm -f "$icon_rsrc"
+                fi
+                # 设置自定义图标标志
+                if command -v SetFile &> /dev/null; then
+                    SetFile -a C "$dmg_file" 2>/dev/null || true
+                fi
+            fi
+            
+            # 方法2：使用 osascript（AppleScript）作为备用方案
+            if [ ! -f "$dmg_file" ] || ! xattr -l "$dmg_file" 2>/dev/null | grep -q "com.apple.FinderInfo"; then
+                osascript - <<EOF >/dev/null 2>&1 || true
+tell application "Finder"
+    set dmgFile to POSIX file "$dmg_file" as alias
+    set iconFile to POSIX file "$volume_icon_source" as alias
+    set icon of dmgFile to (read iconFile as «class icns»)
+end tell
+EOF
+            fi
+            echo -e "${GREEN}  ✅ DMG 文件图标设置完成${NC}"
+        fi
         
         if [ -f "$dmg_file" ]; then
             local dmg_size=$(ls -lh "$dmg_file" | awk '{print $5}')
