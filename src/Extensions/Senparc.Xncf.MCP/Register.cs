@@ -119,6 +119,7 @@ namespace Senparc.Xncf.MCP
             
             var aiFunction = global::Microsoft.Extensions.AI.AIFunctionFactory.Create(methodInfo,
              typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService));
+
             var tool = McpServerTool.Create(aiFunction);
 
             // System.Console.WriteLine("aiFunction: " + aiFunction.JsonSchema);

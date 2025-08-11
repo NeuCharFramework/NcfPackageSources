@@ -6,11 +6,20 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using NcfDesktopApp.GUI.ViewModels;
 using NcfDesktopApp.GUI.Views;
+using AvaloniaWebView;
 
 namespace NcfDesktopApp.GUI;
 
 public partial class App : Application
 {
+    public override void RegisterServices()
+    {
+        base.RegisterServices();
+        // Initialize WebView.Avalonia; if only WebView is needed, this is sufficient
+        AvaloniaWebViewBuilder.Initialize(default);
+        // If in the future BlazorWebView is used, uncomment and configure below
+        // using AvaloniaBlazorWebView; AvaloniaBlazorWebViewBuilder.Initialize(default);
+    }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
