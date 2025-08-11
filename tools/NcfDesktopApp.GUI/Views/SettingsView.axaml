@@ -129,9 +129,9 @@
                         
                         <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                             <TextBlock Text="端口范围:" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                            <NumericUpDown Value="{Binding StartPort}" Minimum="1024" Maximum="65535" Width="100"/>
+                            <NumericUpDown Value="{Binding StartPort}" Minimum="1024" Maximum="65535" Width="140"/>
                             <TextBlock Text="到" VerticalAlignment="Center"/>
-                            <NumericUpDown Value="{Binding EndPort}" Minimum="1024" Maximum="65535" Width="100"/>
+                            <NumericUpDown Value="{Binding EndPort}" Minimum="1024" Maximum="65535" Width="140"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
