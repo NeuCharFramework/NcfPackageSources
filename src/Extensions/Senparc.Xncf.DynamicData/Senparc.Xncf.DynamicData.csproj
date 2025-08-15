@@ -45,7 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Senparc.CO2NET.MagicObject" Version="1.1.0.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\SenparcTraceLog\*" />

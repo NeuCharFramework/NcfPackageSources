@@ -8,8 +8,12 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
+using Senparc.CO2NET.ApiBind;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
+using Senparc.CO2NET.Utilities;
+using Senparc.CO2NET.WebApi;
+using Senparc.CO2NET.WebApi.WebApiEngines;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
@@ -75,6 +79,30 @@ namespace Senparc.Xncf.WeixinManager
 
             var autoCreateApi = true;//是否自动生成API
             services.AddSenparcWeixin(configuration, env, autoCreateApi);
+
+            var assemblies = Microsoft.Extensions.DependencyModel.DependencyContext.Default.RuntimeLibraries;
+
+
+            var builder = services.AddMvcCore();
+
+            WebApiEngineExtensions.WebApiInitFinished = false;
+            //启用 WebApi（可选）
+            services.AddAndInitDynamicApi(builder, options =>
+            {
+                options.DocXmlPath = ServerUtility.ContentRootMapPath("~/App_Data/ApiDocXml");
+                options.BaseApiControllerType = null;
+                options.CopyCustomAttributes = true;
+                options.TaskCount = Environment.ProcessorCount * 4;
+                options.ShowDetailApiLog = true;
+                options.AdditionalAttributeFunc = null;
+                options.ForbiddenExternalAccess = false;
+                options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
+            });
+
+            var apiGroups = ApiBindInfoCollection.Instance.GetGroupedCollection();
+            var apiGouupsCount = apiGroups.Count();
+
+            Senparc.Weixin.AspNet.WeixinRegister.AddMcpRouter(services);
 
             return base.AddXncfModule(services, configuration, env);//如果重写此方法，必须调用基类方法
         }
@@ -173,6 +201,10 @@ namespace Senparc.Xncf.WeixinManager
 
             var apiList = Senparc.CO2NET.WebApi.FindApiService.ApiItemList;
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapMcp("WeChatMcp");
+            });
 
             return base.UseXncfModule(app, registerService);
         }
