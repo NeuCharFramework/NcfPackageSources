@@ -146,9 +146,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await base.SaveObjectAsync(promptResult);
 
             // 有期望结果， 进行自动打分
-            if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            if (promptItem.isAIGrade)
             {
-                await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
+                if (!string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+                {
+                    await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
+                }
             }
 
             return this.Mapper.Map<PromptResultDto>(promptResult);

@@ -81,6 +81,11 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 
+        /// <summary>
+        /// 是否启用“ai评分标准”
+        /// </summary>
+        public bool isAIGrade { get; set; } = false;
+
         #endregion
 
 
