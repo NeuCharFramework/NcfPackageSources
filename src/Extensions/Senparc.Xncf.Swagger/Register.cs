@@ -73,18 +73,22 @@ namespace Senparc.Xncf.Swagger
                 })
                 .AddApiExplorer();
 
-                services.AddAndInitDynamicApi(builder, options =>
+                if (!WebApiEngineExtensions.WebApiInitFinished)
                 {
-                    options.DocXmlPath = docXmlPath;
-                    options.DefaultRequestMethod = ApiRequestMethod.Get;
-                    options.BaseApiControllerType = null;
-                    options.CopyCustomAttributes = true;
-                    options.TaskCount = Environment.ProcessorCount * 4;
-                    options.ShowDetailApiLog = true;
-                    options.AdditionalAttributeFunc = null;
-                    options.ForbiddenExternalAccess = false;
-                    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
-                });
+                    //services.AddAndInitDynamicApi(builder, options =>
+                    //{
+                    //    options.DocXmlPath = docXmlPath;
+                    //    options.DefaultRequestMethod = ApiRequestMethod.Get;
+                    //    options.BaseApiControllerType = null;
+                    //    options.CopyCustomAttributes = true;
+                    //    options.TaskCount = Environment.ProcessorCount * 4;
+                    //    options.ShowDetailApiLog = true;
+                    //    options.AdditionalAttributeFunc = null;
+                    //    options.ForbiddenExternalAccess = false;
+                    //    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
+                    //});
+                }
+         
 
                 #endregion
 

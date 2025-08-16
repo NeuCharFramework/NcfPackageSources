@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using ModelContextProtocol.Protocol;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.CO2NET.ApiBind;
@@ -20,6 +21,7 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.NeuChar;
+using Senparc.Weixin.AspNet.MCP;
 using Senparc.Weixin.AspNet.RegisterServices;
 using Senparc.Weixin.Entities;
 using Senparc.Weixin.MP.AdvancedAPIs.UserTag;
@@ -64,6 +66,7 @@ namespace Senparc.Xncf.WeixinManager
 
         //public override IList<Type> Functions => new Type[] { };
 
+        public override bool EnableMcpServer => true;
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
@@ -79,30 +82,6 @@ namespace Senparc.Xncf.WeixinManager
 
             var autoCreateApi = true;//是否自动生成API
             services.AddSenparcWeixin(configuration, env, autoCreateApi);
-
-            var assemblies = Microsoft.Extensions.DependencyModel.DependencyContext.Default.RuntimeLibraries;
-
-
-            var builder = services.AddMvcCore();
-
-            WebApiEngineExtensions.WebApiInitFinished = false;
-            //启用 WebApi（可选）
-            services.AddAndInitDynamicApi(builder, options =>
-            {
-                options.DocXmlPath = ServerUtility.ContentRootMapPath("~/App_Data/ApiDocXml");
-                options.BaseApiControllerType = null;
-                options.CopyCustomAttributes = true;
-                options.TaskCount = Environment.ProcessorCount * 4;
-                options.ShowDetailApiLog = true;
-                options.AdditionalAttributeFunc = null;
-                options.ForbiddenExternalAccess = false;
-                options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
-            });
-
-            var apiGroups = ApiBindInfoCollection.Instance.GetGroupedCollection();
-            var apiGouupsCount = apiGroups.Count();
-
-            Senparc.Weixin.AspNet.WeixinRegister.AddMcpRouter(services);
 
             return base.AddXncfModule(services, configuration, env);//如果重写此方法，必须调用基类方法
         }
@@ -199,12 +178,12 @@ namespace Senparc.Xncf.WeixinManager
 
             //});
 
-            var apiList = Senparc.CO2NET.WebApi.FindApiService.ApiItemList;
+            //var apiList = Senparc.CO2NET.WebApi.FindApiService.ApiItemList;
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapMcp("WeChatMcp");
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapMcp("WeChatMcp");
+            //});
 
             return base.UseXncfModule(app, registerService);
         }
@@ -278,6 +257,37 @@ namespace Senparc.Xncf.WeixinManager
                 //    context.SchemaRepository.Schemas.Remove(schema.Key);
                 //}
             }
+        }
+
+        public override void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
+        {
+            //base.AddMcpServer(services, xncfRegister);
+
+            var serverName = GetMcpServerName();
+
+            var mcpServerBuilder = services.AddMcpServer(opt =>
+            {
+                opt.ServerInfo = new Implementation()
+                {
+                    Name = serverName,
+                    Version = this.Version,
+                };
+            })
+            .WithHttpTransport()
+            .WithTools(new[] {typeof(WeChatMcpRouter) })
+            .WithToolsFromAssembly(xncfRegister.GetType().Assembly);
+
+            XncfRegisterManager.McpServerInfoCollection[serverName] = new Ncf.XncfBase.MCP.McpServerInfo()
+            {
+                ServerName = serverName,
+                XncfName = Name,
+                XncfUid = Uid
+            };
+        }
+
+        public override void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
+        {
+            base.UseMcpServer(app, registerService);
         }
 
         //public class AuthResponsesOperationFilter : IOperationFilter

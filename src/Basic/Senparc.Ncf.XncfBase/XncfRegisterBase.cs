@@ -388,7 +388,7 @@ namespace Senparc.Ncf.XncfBase
 
         #region MCP
 
-        private string GetMcpServerName()
+        protected string GetMcpServerName()
         {
             return $"ncf-mcp-server-{this.Name.Replace(".", "-")}";
         }
