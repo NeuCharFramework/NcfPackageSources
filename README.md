@@ -40,25 +40,34 @@
 
 ## 快速开始 / Quick Start
 
-1. 克隆仓库
+ 1.克隆仓库
+
 ```bash
 git clone https://github.com/NeuCharFramework/NcfPackageSources.git
 ```
 
-2. 打开解决方案
+2.打开解决方案
+
 ```bash
 cd NcfPackageSources
 start NcfPackageSources.sln  # Windows
 open NcfPackageSources.sln   # macOS
 ```
 
-3. 还原包并还原工作负载
+3.还原包
+
 ```bash
 dotnet restore
+```
+
+4.还原工作负载（可选）
+
+```bash
 dotnet workload restore
 ```
 
-4. 编译运行
+5.编译运行
+
 ```bash
 dotnet build
 dotnet run
