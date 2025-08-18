@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.11.11.3-preview1</Version>
+    <Version>0.11.11.4-preview1</Version>
     <AssemblyName>Senparc.Xncf.AreasBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.AreasBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -44,7 +44,7 @@
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <!--<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />-->
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">

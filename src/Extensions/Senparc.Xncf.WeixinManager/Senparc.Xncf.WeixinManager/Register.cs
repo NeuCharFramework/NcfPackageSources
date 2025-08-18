@@ -6,16 +6,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using ModelContextProtocol.Protocol;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
+using Senparc.CO2NET.ApiBind;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
+using Senparc.CO2NET.Utilities;
+using Senparc.CO2NET.WebApi;
+using Senparc.CO2NET.WebApi.WebApiEngines;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.NeuChar;
+using Senparc.Weixin.AspNet.MCP;
 using Senparc.Weixin.AspNet.RegisterServices;
 using Senparc.Weixin.Entities;
 using Senparc.Weixin.MP.AdvancedAPIs.UserTag;
@@ -60,6 +66,7 @@ namespace Senparc.Xncf.WeixinManager
 
         //public override IList<Type> Functions => new Type[] { };
 
+        public override bool EnableMcpServer => true;
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
@@ -171,8 +178,12 @@ namespace Senparc.Xncf.WeixinManager
 
             //});
 
-            var apiList = Senparc.CO2NET.WebApi.FindApiService.ApiItemList;
+            //var apiList = Senparc.CO2NET.WebApi.FindApiService.ApiItemList;
 
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapMcp("WeChatMcp");
+            //});
 
             return base.UseXncfModule(app, registerService);
         }
@@ -246,6 +257,37 @@ namespace Senparc.Xncf.WeixinManager
                 //    context.SchemaRepository.Schemas.Remove(schema.Key);
                 //}
             }
+        }
+
+        public override void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
+        {
+            //base.AddMcpServer(services, xncfRegister);
+
+            var serverName = GetMcpServerName();
+
+            var mcpServerBuilder = services.AddMcpServer(opt =>
+            {
+                opt.ServerInfo = new Implementation()
+                {
+                    Name = serverName,
+                    Version = this.Version,
+                };
+            })
+            .WithHttpTransport()
+            .WithTools(new[] {typeof(WeChatMcpRouter) })
+            .WithToolsFromAssembly(xncfRegister.GetType().Assembly);
+
+            XncfRegisterManager.McpServerInfoCollection[serverName] = new Ncf.XncfBase.MCP.McpServerInfo()
+            {
+                ServerName = serverName,
+                XncfName = Name,
+                XncfUid = Uid
+            };
+        }
+
+        public override void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
+        {
+            base.UseMcpServer(app, registerService);
         }
 
         //public class AuthResponsesOperationFilter : IOperationFilter

@@ -27,7 +27,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.2.0.1" />
+		<PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.2.0.2" />
 		<PackageReference Include="Senparc.CO2NET.Cache.Redis" Version="5.2.0.1" />
 		<!--<PackageReference Include="Senparc.Ncf.AreaBase" Version="0.18.7-preview1" />
 		<PackageReference Include="Senparc.Ncf.Core" Version="0.21.3.2-preview1" />
