@@ -52,6 +52,7 @@
 			v0.12.6 添加项目引用，确保 Areas 页面能被识别
 			v0.12.7 同步最新 Nuget 包版本
 			v0.12.8-beta1 添加达梦数据库迁移（测试）
+			v0.12.9-preview.7 更新 CO2NET.WebApi、DatabasePlant 等基础库
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
