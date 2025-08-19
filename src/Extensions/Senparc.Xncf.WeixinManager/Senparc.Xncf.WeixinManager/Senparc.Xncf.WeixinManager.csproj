@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.21.0-preview</Version>
+    <Version>0.21.1-preview.1</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -60,7 +60,8 @@
 		[2025-07-13] v0.20.1-preview.1 upgrade MpAccount loading progress in UseXncfModule
 		[2025-07-26] v0.20.2-preview.1 update Weixin(WeChat) API search function
 		[2025-08-18] v0.21.0-preview.1 feat: support for McpRouter of Weixin
-</PackageReleaseNotes>
+		[2025-08-19] v0.21.1-preview.1 fix: Set ApiBind DefaultRequestMethod to GET
+	</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>

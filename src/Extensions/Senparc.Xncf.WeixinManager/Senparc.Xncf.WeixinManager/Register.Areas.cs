@@ -27,10 +27,11 @@ namespace Senparc.Xncf.WeixinManager
         {
 
             var services = builder.Services;
-            WebApiEngineExtensions.WebApiInitFinished = false;
+            //WebApiEngineExtensions.WebApiInitFinished = false;
             //启用 WebApi（可选）
             services.AddAndInitDynamicApi(builder, options =>
             {
+                options.DefaultRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get;
                 options.DocXmlPath = ServerUtility.ContentRootMapPath("~/App_Data/ApiDocXml");
                 options.BaseApiControllerType = null;
                 options.CopyCustomAttributes = true;
