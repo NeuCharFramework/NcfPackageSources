@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.17-preview.1</Version>
+    <Version>0.13.17.3-preview</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -65,7 +65,7 @@
 		[2025-05-18] v0.13.15-preview1 Update Installation
 		[2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
 		[2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
-	</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
