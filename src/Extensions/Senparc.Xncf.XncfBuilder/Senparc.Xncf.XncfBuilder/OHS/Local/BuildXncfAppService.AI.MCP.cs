@@ -40,7 +40,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #region MCP AI 接入（由于官方组件 bug，暂时使用平铺参数方式接入）
 
-        [McpServerTool, Description("生成 XNCF 模块")]
+        //[McpServerTool, Description("生成 XNCF 模块")]
         //[FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
         public async Task<StringAppResponse> Build(
             // [Required,Description("解决方案文件路径")]
@@ -106,7 +106,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #endregion
 
-        [McpServerTool, Description("获取前端代码模板示例")]
+        //[McpServerTool, Description("获取前端代码模板示例")]
         public async Task<string> GetFrontEndCodeTemplate()
         {
             var template = BuildXncfAppService.FrontendTemplate;
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         }
 
-        [McpServerTool, Description("获取后端代码模板示例")]
+        //[McpServerTool, Description("获取后端代码模板示例")]
         public async Task<string> GetBackEndCodeTemplate()
         {
             var template = BuildXncfAppService.BackendTemplate;
@@ -122,7 +122,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return template;
         }
 
-        [McpServerTool, Description("获取文件内容")]
+        //[McpServerTool, Description("获取文件内容")]
         public async Task<BuildXncf_GetFileResponse> GetFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName, [Description("在模块内的路径+文件名")] string filePath)
         {
             var response = new BuildXncf_GetFileResponse();
@@ -154,7 +154,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return response;
         }
 
-        [McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
+        //[McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
         public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName,
            [Description("在模块内的路径+文件名")] string filePath,
            [Description("完整文件内容")] string fullFileContent)

@@ -73,12 +73,6 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     [McpServerToolType]
-    public class MyFuctionAppServiceForCalc
-    {
-
-    }
-
-    [McpServerToolType]
     public class MyFuctionAppService : AppServiceBase
     {
         private ColorService _colorService;

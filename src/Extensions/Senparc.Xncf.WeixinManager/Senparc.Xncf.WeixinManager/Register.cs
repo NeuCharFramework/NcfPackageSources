@@ -80,7 +80,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<MpAccountService>();
             services.AddScoped<PromptItemService>();
 
-            var autoCreateApi = true;//是否自动生成API
+            var autoCreateApi = false;//是否自动生成API
             services.AddSenparcWeixin(configuration, env, autoCreateApi);
 
             return base.AddXncfModule(services, configuration, env);//如果重写此方法，必须调用基类方法
