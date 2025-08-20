@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Senparc.AI.Kernel" Version="0.25.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>
