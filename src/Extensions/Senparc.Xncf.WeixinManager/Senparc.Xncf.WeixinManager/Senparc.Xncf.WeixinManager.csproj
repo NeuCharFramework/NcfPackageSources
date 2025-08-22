@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.21.1.3-preview</Version>
+    <Version>0.21.1.4-preview</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -153,7 +153,7 @@
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
-    <ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
+    <!--<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />-->
   </ItemGroup>
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="cd E:\Senparc项目\NeuCharFramework\NCF\src\XncfExtensionSample\MyExtensionCode&#xD;&#xA;&#xD;&#xA;dotnet add package $(SolutionName) - - prerelease -s &quot;E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\BuildOutPut&quot;" />
