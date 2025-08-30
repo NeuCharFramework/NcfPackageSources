@@ -25,7 +25,8 @@ namespace Senparc.Xncf.AIKernel
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
 new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"),"向量数据库","fa fa-bookmark-o")
+new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"),"向量数据库","fa fa-bookmark-o"),
+new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"),"仪表盘","fa fa-dashboard")
 //new AreaPageMenuItem(GetAreaUrl($"/Admin/AIKernel/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 };
 
