@@ -76,6 +76,7 @@
     <Content Remove="App_Data\Database\SenparcConfig.Development.config" />
     <Content Remove="wwwroot\css\Admin\AIVector\index.css" />
     <Content Remove="wwwroot\js\Admin\AIVector\index.js" />
+    <Content Remove="wwwroot\js\Admin\Dashboard\Index.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />
