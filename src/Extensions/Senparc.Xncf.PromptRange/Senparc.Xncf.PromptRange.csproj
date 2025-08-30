@@ -112,7 +112,6 @@
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\Migrations\" />
     <Folder Include="wwwroot\image\Admin\PromptRange\" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != 'NcfDebugForPromptRange'">
