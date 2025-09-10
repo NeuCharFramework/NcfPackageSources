@@ -451,14 +451,23 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             Name = mcpName
                         });
 
-                        var client = await McpClientFactory.CreateAsync(clientTransport);
-                        var tools = await client.ListToolsAsync();
-                        // Print the list of tools available from the server.
-                        foreach (var tool in tools)
-                        {
-                            Console.WriteLine($"Agent: {memberInfo.AgentTemplateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
-                        }
+                        IList<McpClientTool> tools = new List<McpClientTool>();
 
+                        try
+                        {
+                            var client = await McpClientFactory.CreateAsync(clientTransport);
+                            tools = await client.ListToolsAsync();
+                            // Print the list of tools available from the server.
+                            foreach (var tool in tools)
+                            {
+                                Console.WriteLine($"Agent: {memberInfo.AgentTemplateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            SenparcTrace.BaseExceptionLog(ex);
+                        }
+                      
                         // 使用 key 和 value 进行操作
 #pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
                         iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcp{memberInfo.AgentTemplateId}", tools.Select(z => z.AsKernelFunction()));

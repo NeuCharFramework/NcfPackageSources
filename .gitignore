@@ -103,3 +103,4 @@ tools/NcfDesktopApp.GUI/macos-app/*
 /tools/NcfSimulatedSite/Senparc.Web/.config
 *.lnk
 /tools/NcfSimulatedSiteSyncTool/NcfSimulatedSiteSyncTool.exe - 快捷方式.lnk
+/tools/NcfSimulatedSite/Senparc.Web/App_Data/Database/backup/*
