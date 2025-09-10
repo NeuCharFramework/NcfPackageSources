@@ -465,7 +465,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         }
                         catch (Exception ex)
                         {
-                            SenparcTrace.BaseExceptionLog(ex);  
+                            SenparcTrace.BaseExceptionLog(ex);
                         }
                       
                         // 使用 key 和 value 进行操作
