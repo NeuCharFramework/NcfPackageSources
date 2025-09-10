@@ -328,8 +328,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
         [McpServerTool, Description("计算器工具，负责处理加减乘除计算")]
         public async Task<string> Calculator(
-            //int number1, int number2, int power, [Description("Number1 和 Number2 之间的运算符，可选：+ - × ÷")] string operatorMark
-            RequestType request
+            int number1, int number2, int power, [Description("Number1 和 Number2 之间的运算符，可选：+ - × ÷")] string operatorMark
+            //RequestType request
             )
         {
             /* 页面上点击"执行"后，将调用这里的方法
@@ -341,13 +341,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
               * 如果直接对 response 的属性修改，则最终 return null，
               * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
               */
-            //RequestType request = new RequestType
-            //{
-            //    Power = power,
-            //    Number1 = number1,
-            //    Number2 = number2,
-            //    TheOperator = operatorMark
-            //};
+            RequestType request = new RequestType
+            {
+                Power = power,
+                Number1 = number1,
+                Number2 = number2,
+                TheOperator = operatorMark
+            };
 
             Console.WriteLine("收到 MCP 请求：" + request.ToJson(true));
 
