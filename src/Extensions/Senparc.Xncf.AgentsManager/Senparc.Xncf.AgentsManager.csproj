@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.14.4-preview</Version>
+    <Version>0.9.14.5-preview.1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -59,7 +59,8 @@
 		[2025-05-18] v0.9.11-preview1 Update Installation
 		[2025-06-20] v0.9.13-preview Add MCP functions in XncfRegisterBase class
 		[2025-07-27] v0.9.14-preview.1 update Knowledge Base
-</PackageReleaseNotes>
+		[2025-09-10] v0.9.14.5-preview.1 update MCP tools inject progress
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
