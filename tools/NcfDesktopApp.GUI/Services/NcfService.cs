@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -165,14 +166,16 @@ public class NcfService
         
         _logger?.LogInformation("开始提取文件...");
         
-        // 清理旧文件
-        if (Directory.Exists(NcfRuntimePath))
-        {
-            Directory.Delete(NcfRuntimePath, true);
-        }
-        Directory.CreateDirectory(NcfRuntimePath);
+        // 🎯 新增：保护重要文件和文件夹
+        await PreserveImportantFilesAsync();
+        
+        // 清理旧文件（但保留重要文件）
+        await SafeCleanRuntimeDirectoryAsync();
         
         await ExtractZipWithCorrectPathsAsync(zipPath, NcfRuntimePath, progress, cancellationToken);
+        
+        // 🎯 新增：恢复保护的文件
+        await RestoreImportantFilesAsync();
         
         // 🎯 新增：macOS 解压后自动处理
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -1152,6 +1155,326 @@ public class NcfService
     {
         var versionFile = Path.Combine(NcfRuntimePath, "version.txt");
         await File.WriteAllTextAsync(versionFile, version);
+    }
+
+    /// <summary>
+    /// 保护重要文件和文件夹到临时位置
+    /// </summary>
+    private async Task PreserveImportantFilesAsync()
+    {
+        try
+        {
+            _logger?.LogInformation("🛡️ 开始保护重要文件...");
+            
+            var backupPath = GetBackupPath();
+            
+            // 确保备份目录存在
+            Directory.CreateDirectory(backupPath);
+            
+            // 保护 App_Data 文件夹
+            var appDataPath = Path.Combine(NcfRuntimePath, "App_Data");
+            if (Directory.Exists(appDataPath))
+            {
+                var backupAppDataPath = Path.Combine(backupPath, "App_Data");
+                await CopyDirectoryAsync(appDataPath, backupAppDataPath);
+                _logger?.LogInformation("✅ App_Data 文件夹已备份");
+            }
+            
+            // 备份 appsettings.json 文件
+            await BackupAppSettingsFilesAsync(backupPath);
+            
+            _logger?.LogInformation("✅ 重要文件保护完成");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ 保护重要文件时出错: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 备份所有 appsettings*.json 文件
+    /// </summary>
+    private Task BackupAppSettingsFilesAsync(string backupPath)
+    {
+        try
+        {
+            var settingsBackupPath = Path.Combine(backupPath, "appsettings");
+            Directory.CreateDirectory(settingsBackupPath);
+            
+            // 查找所有 appsettings*.json 文件
+            var settingsFiles = Directory.GetFiles(NcfRuntimePath, "appsettings*.json", SearchOption.AllDirectories);
+            
+            foreach (var settingsFile in settingsFiles)
+            {
+                var fileName = Path.GetFileName(settingsFile);
+                var relativePath = Path.GetRelativePath(NcfRuntimePath, settingsFile);
+                var backupFilePath = Path.Combine(settingsBackupPath, relativePath.Replace(Path.DirectorySeparatorChar, '_'));
+                
+                // 创建备份文件的目录
+                var backupFileDir = Path.GetDirectoryName(backupFilePath);
+                if (!string.IsNullOrEmpty(backupFileDir))
+                {
+                    Directory.CreateDirectory(backupFileDir);
+                }
+                
+                File.Copy(settingsFile, backupFilePath, true);
+                
+                // 添加时间戳到备份文件名
+                var timestampedBackup = Path.Combine(GetBackupPath(), $"{fileName}.{DateTime.Now:yyyyMMdd_HHmmss}.bak");
+                File.Copy(settingsFile, timestampedBackup, true);
+                
+                _logger?.LogInformation($"✅ 已备份配置文件: {fileName}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ 备份配置文件时出错: {ex.Message}");
+        }
+        
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 安全清理 Runtime 目录（保留重要文件）
+    /// </summary>
+    private Task SafeCleanRuntimeDirectoryAsync()
+    {
+        try
+        {
+            _logger?.LogInformation("🧹 开始安全清理 Runtime 目录...");
+            
+            if (!Directory.Exists(NcfRuntimePath))
+            {
+                Directory.CreateDirectory(NcfRuntimePath);
+                return Task.CompletedTask;
+            }
+            
+            // 获取所有文件和文件夹
+            var files = Directory.GetFiles(NcfRuntimePath, "*", SearchOption.AllDirectories);
+            var directories = Directory.GetDirectories(NcfRuntimePath, "*", SearchOption.AllDirectories)
+                .OrderByDescending(d => d.Length); // 先删除深层目录
+            
+            // 删除文件（跳过重要文件）
+            foreach (var file in files)
+            {
+                if (ShouldPreserveFile(file))
+                {
+                    continue; // 跳过重要文件
+                }
+                
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"⚠️ 无法删除文件 {file}: {ex.Message}");
+                }
+            }
+            
+            // 删除目录（跳过重要目录）
+            foreach (var directory in directories)
+            {
+                if (ShouldPreserveDirectory(directory))
+                {
+                    continue; // 跳过重要目录
+                }
+                
+                try
+                {
+                    if (Directory.Exists(directory) && !Directory.EnumerateFileSystemEntries(directory).Any())
+                    {
+                        Directory.Delete(directory);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"⚠️ 无法删除目录 {directory}: {ex.Message}");
+                }
+            }
+            
+            _logger?.LogInformation("✅ Runtime 目录安全清理完成");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ 清理 Runtime 目录时出错: {ex.Message}");
+        }
+        
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 恢复保护的重要文件
+    /// </summary>
+    private async Task RestoreImportantFilesAsync()
+    {
+        try
+        {
+            _logger?.LogInformation("🔄 开始恢复重要文件...");
+            
+            var backupPath = GetBackupPath();
+            
+            if (!Directory.Exists(backupPath))
+            {
+                _logger?.LogInformation("ℹ️ 没有找到备份文件，跳过恢复");
+                return;
+            }
+            
+            // 恢复 App_Data 文件夹
+            var backupAppDataPath = Path.Combine(backupPath, "App_Data");
+            if (Directory.Exists(backupAppDataPath))
+            {
+                var appDataPath = Path.Combine(NcfRuntimePath, "App_Data");
+                await CopyDirectoryAsync(backupAppDataPath, appDataPath);
+                _logger?.LogInformation("✅ App_Data 文件夹已恢复");
+            }
+            
+            // 恢复 appsettings 文件
+            await RestoreAppSettingsFilesAsync(backupPath);
+            
+            // 清理临时备份
+            try
+            {
+                Directory.Delete(backupPath, true);
+                _logger?.LogInformation("🧹 临时备份已清理");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning($"⚠️ 清理临时备份时出错: {ex.Message}");
+            }
+            
+            _logger?.LogInformation("✅ 重要文件恢复完成");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ 恢复重要文件时出错: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 恢复 appsettings 配置文件
+    /// </summary>
+    private Task RestoreAppSettingsFilesAsync(string backupPath)
+    {
+        try
+        {
+            var settingsBackupPath = Path.Combine(backupPath, "appsettings");
+            
+            if (!Directory.Exists(settingsBackupPath))
+            {
+                return Task.CompletedTask;
+            }
+            
+            var backupFiles = Directory.GetFiles(settingsBackupPath, "*", SearchOption.AllDirectories);
+            
+            foreach (var backupFile in backupFiles)
+            {
+                var fileName = Path.GetFileName(backupFile);
+                
+                // 还原文件名（移除路径分隔符替换）
+                var originalFileName = fileName.Replace('_', Path.DirectorySeparatorChar);
+                if (!originalFileName.EndsWith(".json"))
+                {
+                    // 如果不是 .json 结尾，可能是被替换的路径，尝试恢复
+                    var parts = fileName.Split('_');
+                    if (parts.Length > 1 && parts[^1].EndsWith(".json"))
+                    {
+                        originalFileName = parts[^1]; // 取最后一个部分作为文件名
+                    }
+                }
+                
+                var targetPath = Path.Combine(NcfRuntimePath, originalFileName);
+                
+                // 确保目标目录存在
+                var targetDir = Path.GetDirectoryName(targetPath);
+                if (!string.IsNullOrEmpty(targetDir))
+                {
+                    Directory.CreateDirectory(targetDir);
+                }
+                
+                File.Copy(backupFile, targetPath, true);
+                _logger?.LogInformation($"✅ 已恢复配置文件: {originalFileName}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning($"⚠️ 恢复配置文件时出错: {ex.Message}");
+        }
+        
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 递归复制目录
+    /// </summary>
+    private async Task CopyDirectoryAsync(string sourceDir, string targetDir)
+    {
+        Directory.CreateDirectory(targetDir);
+        
+        // 复制文件
+        foreach (var file in Directory.GetFiles(sourceDir))
+        {
+            var fileName = Path.GetFileName(file);
+            var targetFile = Path.Combine(targetDir, fileName);
+            File.Copy(file, targetFile, true);
+        }
+        
+        // 递归复制子目录
+        foreach (var subDir in Directory.GetDirectories(sourceDir))
+        {
+            var dirName = Path.GetFileName(subDir);
+            var targetSubDir = Path.Combine(targetDir, dirName);
+            await CopyDirectoryAsync(subDir, targetSubDir);
+        }
+    }
+
+    /// <summary>
+    /// 判断是否应该保留文件
+    /// </summary>
+    private bool ShouldPreserveFile(string filePath)
+    {
+        var relativePath = Path.GetRelativePath(NcfRuntimePath, filePath);
+        var fileName = Path.GetFileName(filePath);
+        
+        // 保留 App_Data 文件夹中的所有文件
+        if (relativePath.StartsWith("App_Data", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        
+        // 保留 appsettings*.json 文件
+        if (fileName.StartsWith("appsettings", StringComparison.OrdinalIgnoreCase) && 
+            fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /// <summary>
+    /// 判断是否应该保留目录
+    /// </summary>
+    private bool ShouldPreserveDirectory(string directoryPath)
+    {
+        var relativePath = Path.GetRelativePath(NcfRuntimePath, directoryPath);
+        
+        // 保留 App_Data 文件夹
+        if (relativePath.Equals("App_Data", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("App_Data" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /// <summary>
+    /// 获取备份路径
+    /// </summary>
+    private string GetBackupPath()
+    {
+        return Path.Combine(Path.GetDirectoryName(NcfRuntimePath) ?? AppDataPath, "backup");
     }
     
     #endregion
