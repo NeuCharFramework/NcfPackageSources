@@ -104,3 +104,14 @@ tools/NcfDesktopApp.GUI/macos-app/*
 *.lnk
 /tools/NcfSimulatedSiteSyncTool/NcfSimulatedSiteSyncTool.exe - 快捷方式.lnk
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/Database/backup/*
+tools/NcfDesktopApp.GUI/安全性与隐私中允许*
+tools/NcfDesktopApp.GUI/publish-self-contained/linux-arm64/NcfDesktopApp.GUI
+tools/NcfDesktopApp.GUI/publish-self-contained/linux-x64/NcfDesktopApp.GUI
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-arm64/createdump
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-arm64/NcfDesktopApp.GUI
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-arm64/NcfDesktopApp.GUI.deps.json
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-arm64/NcfDesktopApp.GUI.runtimeconfig.json
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-x64/createdump
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-x64/NcfDesktopApp.GUI
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-x64/NcfDesktopApp.GUI.deps.json
+tools/NcfDesktopApp.GUI/publish-self-contained/osx-x64/NcfDesktopApp.GUI.runtimeconfig.json
