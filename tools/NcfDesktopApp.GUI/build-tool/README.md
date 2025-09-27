@@ -4,6 +4,19 @@
 
 此工具集提供了为 NCF 桌面应用构建多个平台版本的自动化脚本。支持 Windows、macOS 和 Linux 的 x64 和 ARM64 架构。
 
+## 常用命令
+
+### 构建所有平台单一文件自包含版本
+
+```bash
+./build-tool/build-all-platforms-self-contained.sh --clean --single-file --ready-to-run
+```
+
+### MacOS 单一文件自包含版本
+```bash
+./build-tool/create-macos-app.sh --create-dmg --clean
+```
+
 ### 🍎 macOS 特别支持
 
 **新增功能**：专为 macOS 用户提供双击运行解决方案！

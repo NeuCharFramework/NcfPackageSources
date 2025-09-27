@@ -171,15 +171,33 @@ publish_platform() {
                 local file_size=$(ls -lh "$main_exe" | awk '{print $5}')
                 echo -e "${GREEN}   主程序: ${PROJECT_NAME}$([ "$platform" = "win-"* ] && echo ".exe") ($file_size)${NC}"
                 
-                # 对于macOS，设置可执行权限
+                # 重命名文件以包含平台架构信息
+                local renamed_exe=""
+                if [[ $platform == win-* ]]; then
+                    # Windows: 重命名为 NcfDesktopApp.GUI-win-x64.exe 格式
+                    renamed_exe="$platform_dir/${PROJECT_NAME}-${platform}.exe"
+                    mv "$main_exe" "$renamed_exe"
+                    echo -e "${GREEN}   🏷️  重命名为: ${PROJECT_NAME}-${platform}.exe${NC}"
+                elif [[ $platform == linux-* ]]; then
+                    # Linux: 重命名为 NcfDesktopApp.GUI-linux-x64 格式
+                    renamed_exe="$platform_dir/${PROJECT_NAME}-${platform}"
+                    mv "$main_exe" "$renamed_exe"
+                    echo -e "${GREEN}   🏷️  重命名为: ${PROJECT_NAME}-${platform}${NC}"
+                elif [[ $platform == osx-* ]]; then
+                    # macOS: 重命名为 NcfDesktopApp.GUI-osx-arm64 格式
+                    renamed_exe="$platform_dir/${PROJECT_NAME}-${platform}"
+                    mv "$main_exe" "$renamed_exe"
+                    echo -e "${GREEN}   🏷️  重命名为: ${PROJECT_NAME}-${platform}${NC}"
+                fi
+                
+                # 设置可执行权限（使用重命名后的文件路径）
                 if [[ $platform == osx-* ]]; then
-                    chmod +x "$main_exe"
+                    chmod +x "$renamed_exe"
                     echo -e "${GREEN}   ✅ 已设置macOS可执行权限${NC}"
                 fi
                 
-                # 对于Linux，设置可执行权限
                 if [[ $platform == linux-* ]]; then
-                    chmod +x "$main_exe"
+                    chmod +x "$renamed_exe"
                     echo -e "${GREEN}   ✅ 已设置Linux可执行权限${NC}"
                 fi
             fi

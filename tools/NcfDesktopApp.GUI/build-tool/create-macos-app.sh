@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 # 配置
 PROJECT_NAME="NcfDesktopApp.GUI"
 SOLUTION_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PUBLISH_DIR="${SOLUTION_DIR}/publish"
+PUBLISH_DIR="${SOLUTION_DIR}/publish-self-contained"
 OUTPUT_DIR="${SOLUTION_DIR}/macos-app"
 BUILD_CONFIG="Release"
 
@@ -258,6 +258,18 @@ EOF
 # 函数：复制应用图标
 copy_app_icon() {
     local app_bundle=$1
+    mkdir -p "$app_bundle/Contents/Resources"
+    
+    # 优先使用已处理的圆角图标 AppIcon.icns
+    local processed_icns="$SOLUTION_DIR/Assets/AppIcon.icns"
+    if [ -f "$processed_icns" ]; then
+        echo -e "${YELLOW}  🎨 使用已处理的圆角图标...${NC}"
+        cp "$processed_icns" "$app_bundle/Contents/Resources/AppIcon.icns"
+        echo -e "${GREEN}  ✅ 已复制圆角 AppIcon.icns${NC}"
+        return
+    fi
+    
+    # 备用方案：使用源文件生成图标
     # Prefer Assets/NCF-logo.png, then project root NCF-logo.png. Fallback to legacy Avalonia icon if missing
     local icon_source="$SOLUTION_DIR/Assets/NCF-logo.png"
     if [ ! -f "$icon_source" ]; then
@@ -268,8 +280,7 @@ copy_app_icon() {
     fi
     
     if [ -f "$icon_source" ]; then
-        echo -e "${YELLOW}  🎨 处理应用图标...${NC}"
-        mkdir -p "$app_bundle/Contents/Resources"
+        echo -e "${YELLOW}  🎨 从源文件生成应用图标...${NC}"
         generate_icns_from_source "$icon_source" "$app_bundle/Contents/Resources/AppIcon.icns"
         if [ -f "$app_bundle/Contents/Resources/AppIcon.icns" ]; then
             echo -e "${GREEN}  ✅ 已生成 AppIcon.icns${NC}"
@@ -637,4 +648,4 @@ echo -e "${BLUE}📝 下一步操作建议:${NC}"
 echo -e "${YELLOW}1. 测试应用程序包: 双击 .app 文件${NC}"
 echo -e "${YELLOW}2. 如需分发: 使用 --create-dmg 选项${NC}"
 echo -e "${YELLOW}3. 如需签名: 使用 --sign 选项${NC}"
-echo -e "${YELLOW}4. 首次运行遇到安全提示时，请到"系统偏好设置 > 安全性与隐私"中允许${NC}"
+echo -e "${YELLOW}4. 首次运行遇到安全提示时，请到\"系统偏好设置 > 安全性与隐私\"中允许${NC}"

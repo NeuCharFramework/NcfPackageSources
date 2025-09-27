@@ -36,7 +36,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.7.0";//必须填写版本号
+        public override string Version => "0.7.1";//必须填写版本号
 
         public override string MenuName => "接口说明文档";
 
