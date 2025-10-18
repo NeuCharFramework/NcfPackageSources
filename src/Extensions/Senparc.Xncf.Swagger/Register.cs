@@ -18,6 +18,7 @@ using Senparc.Xncf.Swagger.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.Swagger
@@ -182,11 +183,22 @@ namespace Senparc.Xncf.Swagger
         {
             appBuilder.Use(async (context, next) =>
             {
-                if (!context.User?.Identity?.IsAuthenticated ?? false)
+                var isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
+                
+                // 检查 Cookie 认证
+                if (!isAuthenticated)
                 {
-                    context.Response.Redirect("/Admin/Login?returnUrl=" + Uri.EscapeDataString(context.Request.Path));
-                    return;
+                    // 检查是否有有效的 JWT Token
+                    var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                    if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                    {
+                        // 既没有 Cookie 认证也没有有效的 JWT，重定向到登录页
+                        var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
+                        context.Response.Redirect($"/Admin/Login?returnUrl={returnUrl}");
+                        return;
+                    }
                 }
+
                 await next();
             });
         });
