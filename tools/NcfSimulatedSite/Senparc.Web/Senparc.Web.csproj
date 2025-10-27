@@ -60,7 +60,6 @@
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
 		<ProjectReference Include="..\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />
