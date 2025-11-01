@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.22.14.7-preview</Version>
+    <Version>0.22.15-preview</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -53,7 +53,9 @@
 			[2025-06-20] v0.22.11-preview1 Add MCP functions in XncfRegisterBase class
 			[2025-06-20] v0.22.12-preview1 Add MCP functions in XncfRegisterBase class
 			[2025-06-27] v0.22.13-preview.1 Add dynamic XNCF Template dynamic generator
-</PackageReleaseNotes>
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

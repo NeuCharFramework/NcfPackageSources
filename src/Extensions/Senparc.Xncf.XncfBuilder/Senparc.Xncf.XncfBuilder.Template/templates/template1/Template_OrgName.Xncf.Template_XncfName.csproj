@@ -19,7 +19,9 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v1.0.0 创世
-</PackageReleaseNotes>
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

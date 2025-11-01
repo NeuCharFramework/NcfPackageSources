@@ -36,7 +36,9 @@
 		[2025-05-18] v0.16.11-preview1 Update Installation
 		[2025-06-20] v0.16.12-preview1 Add MCP functions in XncfRegisterBase class
 		[2025-09-27] v0.17.0-preview.1 Add default sort for Swagger version(module name)
-	</PackageReleaseNotes>
+	
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>

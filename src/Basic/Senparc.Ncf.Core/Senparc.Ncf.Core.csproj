@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <Version>0.23.15.8-preview</Version>
+    <Version>0.23.16-preview</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -48,7 +48,9 @@
 			[2025-01-25] v0.23.10-preview1 Update Agents functions, support for function calling
 			[2025-04-29] v0.23.12-preview1 Update CO2NET and AIKernel
 			[2025-04-29] v0.23.13-preview1 Update CO2NET and AIKernel
-</PackageReleaseNotes>
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

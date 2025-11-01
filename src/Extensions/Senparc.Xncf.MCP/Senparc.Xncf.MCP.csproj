@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.2.4.8-preview.1</Version>
+    <Version>0.2.5-preview.1</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -23,7 +23,9 @@
 			[2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
 			[2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
 			[2025-06-28] v0.2.3-preview.1 Add MCP server selection in MyFunction_MCPCallRequest
-</PackageReleaseNotes>
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
