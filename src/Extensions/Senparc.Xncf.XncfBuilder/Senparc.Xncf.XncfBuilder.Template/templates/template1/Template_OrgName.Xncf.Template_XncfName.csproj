@@ -19,8 +19,6 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v1.0.0 创世
-
-				[2025-11-01] update basic libraries, including Senparc.AI
 		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -35,7 +33,7 @@
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.10.5-preview1" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.12-preview.1" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.4-preview1" />
