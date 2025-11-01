@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.4.12.6-pre-alpha</Version>
+    <Version>0.4.14-pre-alpha</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -36,7 +36,9 @@
 			[2025-04-29] v0.4.10-pre-alpha Update CO2NET and AIKernel
 			[2025-05-18] v0.4.11-pre-alpha Update Installation
 			[2025-06-20] v0.4.12-pre-alpha Add MCP functions in XncfRegisterBase class
-</PackageReleaseNotes>
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -44,8 +46,8 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.MagicObject" Version="1.1.0.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2.1" />
+    <PackageReference Include="Senparc.CO2NET.MagicObject" Version="1.1.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\SenparcTraceLog\*" />

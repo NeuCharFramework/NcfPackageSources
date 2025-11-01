@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Senparc.AI;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.AI.Interfaces;
 
 namespace Senparc.Xncf.AIKernel.Models
 {
@@ -45,7 +46,7 @@ namespace Senparc.Xncf.AIKernel.Models
         /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
         /// </summary>
         [Required]
-        public VectorDBType VectorDBType { get; private set; }
+        public VectorDB.VectorDBType VectorDBType { get; private set; }
 
         /// <summary>
         /// Note（可选）
@@ -66,7 +67,7 @@ namespace Senparc.Xncf.AIKernel.Models
         public bool Show { get; private set; }
 
 
-        public AIVector(string name, string connectionString, VectorDBType vectorDBType, string note, string alias, string vectorId)
+        public AIVector(string name, string connectionString, VectorDB.VectorDBType vectorDBType, string note, string alias, string vectorId)
         {
             Name = name;
             ConnectionString = connectionString;

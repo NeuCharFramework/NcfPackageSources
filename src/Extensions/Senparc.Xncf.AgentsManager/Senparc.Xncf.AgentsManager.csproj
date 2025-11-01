@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.14.5-preview.1</Version>
+    <Version>0.9.16-preview.1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -60,7 +60,9 @@
 		[2025-06-20] v0.9.13-preview Add MCP functions in XncfRegisterBase class
 		[2025-07-27] v0.9.14-preview.1 update Knowledge Base
 		[2025-09-10] v0.9.14.5-preview.1 update MCP tools inject progress
-	</PackageReleaseNotes>
+	
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -69,9 +71,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-    <PackageReference Include="Senparc.AI.Agents" Version="0.5.6.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2.1" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.28.1.1" />
+    <PackageReference Include="Senparc.AI.Agents" Version="0.5.7" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.29.0" />
   </ItemGroup>
   <!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />

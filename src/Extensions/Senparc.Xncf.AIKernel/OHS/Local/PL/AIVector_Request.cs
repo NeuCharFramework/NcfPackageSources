@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Senparc.AI;
 using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.AI.Interfaces;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 {
@@ -26,7 +27,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// <summary>
         /// 向量数据库类型
         /// </summary>
-        public VectorDBType VectorDBType { get; set; }
+        public VectorDB.VectorDBType VectorDBType { get; set; }
 
         /// <summary>
         /// 是否显示
@@ -65,7 +66,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// <summary>
         /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
         /// </summary>
-        public VectorDBType VectorDBType { get; set; }
+        public VectorDB.VectorDBType VectorDBType { get; set; }
 
         /// <summary>
         /// Note（可选）

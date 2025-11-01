@@ -274,7 +274,7 @@ namespace Senparc.Xncf.WeixinManager
                 };
             })
             .WithHttpTransport()
-            .WithTools(new[] {typeof(WeChatMcpRouter) })
+            //.WithTools(new[] {typeof(WeChatMcpRouter) })
             .WithToolsFromAssembly(xncfRegister.GetType().Assembly);
 
             XncfRegisterManager.McpServerInfoCollection[serverName] = new Ncf.XncfBase.MCP.McpServerInfo()

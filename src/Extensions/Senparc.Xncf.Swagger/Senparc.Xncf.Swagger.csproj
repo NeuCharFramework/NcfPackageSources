@@ -36,7 +36,9 @@
 		[2025-05-18] v0.16.11-preview1 Update Installation
 		[2025-06-20] v0.16.12-preview1 Add MCP functions in XncfRegisterBase class
 		[2025-09-27] v0.17.0-preview.1 Add default sort for Swagger version(module name)
-	</PackageReleaseNotes>
+	
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
@@ -64,7 +66,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.128-beta1" />-->
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.9.0" />

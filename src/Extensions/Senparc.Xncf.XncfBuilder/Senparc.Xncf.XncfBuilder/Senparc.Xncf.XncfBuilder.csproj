@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.35.3.16-preview</Version>
+    <Version>0.35.5-preview</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -73,7 +73,9 @@
 			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
 			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
 			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
-</PackageReleaseNotes>
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <!-- Visual Studio 特定设置 -->
@@ -156,6 +158,9 @@
     <!-- Visual Studio 使用 DLL 引用确保稳定性 -->
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Release'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generated\Senparc.Xncf.XncfBuilder.DynamicContentGenerator\MultiFileCodeGenerator\" />
   </ItemGroup>
   <!-- 清理生成的文件 -->
   <!--<Target Name="CleanGeneratedFiles" BeforeTargets="Clean">

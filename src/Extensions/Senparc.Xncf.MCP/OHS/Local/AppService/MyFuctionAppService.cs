@@ -83,7 +83,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender("执行MCP", "执行 MCP", typeof(Register))]
+        [FunctionRender("执行 MCP", "执行 MCP（如选择模块，默认地址为 http://localhost:5000/{Module Name}/sse）", typeof(Register))]
         public async Task<StringAppResponse> GetMcpResult(MyFunction_MCPCallRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
