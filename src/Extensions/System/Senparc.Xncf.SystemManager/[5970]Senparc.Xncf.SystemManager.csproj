@@ -57,8 +57,8 @@
   <ItemGroup>
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2.1" />
-    <PackageReference Include="Senparc.NeuChar.App" Version="1.5.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
+    <PackageReference Include="Senparc.NeuChar.App" Version="1.5.6" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

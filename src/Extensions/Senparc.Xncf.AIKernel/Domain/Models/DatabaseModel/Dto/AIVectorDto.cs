@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Senparc.AI;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AIKernel.Models;
+using Senparc.AI.Interfaces;
 
 namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
 {
@@ -38,7 +39,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// <summary>
         /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
         /// </summary>
-        public VectorDBType VectorDBType { get; set; }
+        public VectorDB.VectorDBType VectorDBType { get; set; }
 
         /// <summary>
         /// Note（可选）

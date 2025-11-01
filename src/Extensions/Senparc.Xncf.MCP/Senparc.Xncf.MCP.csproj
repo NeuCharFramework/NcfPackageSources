@@ -38,7 +38,7 @@
     <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
     <PackageReference Include="ModelContextProtocol-SemanticKernel" Version="0.0.1-preview-15" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.2.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
