@@ -118,6 +118,7 @@ var app = new Vue({
             outputMaxDeci: -1, // 输出列表的最高分
             outputActive: '', // 输出列表选中查看|评分
             outputList: [],  // 输出列表
+            robotScoreLoadingMap: {}, // AI评分加载状态映射 {itemId: true/false}
             chartData: [], // 图表数据
             chartInstance: null, // 图表实例
             // 输出 ---end
@@ -2166,10 +2167,14 @@ var app = new Vue({
                     // 从新获取靶场列表
                     this.getPromptOptData()
                     // 重新获取输出列表
-                    this.getOutputList(item.promptId)
+                    await this.getOutputList(item.promptId)
+                    // 清除AI评分加载状态
+                    this.$set(this.robotScoreLoadingMap, item.id, false)
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
+                    // 清除AI评分加载状态
+                    this.$set(this.robotScoreLoadingMap, item.id, false)
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
                         type: 'error',
@@ -2232,7 +2237,10 @@ var app = new Vue({
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return item
                         })
-                        this.saveManualScore(this.outputList[index])
+                        // 设置AI评分加载状态
+                        const itemId = this.outputList[index].id
+                        this.$set(this.robotScoreLoadingMap, itemId, true)
+                        this.saveManualScore(this.outputList[index], index)
                     } else {
                         this.$message({
                             message: '请设置预期结果！',
@@ -2241,7 +2249,10 @@ var app = new Vue({
                     }
                 } else {
                     // todo 接口对接 重新评分
-                    this.saveManualScore(this.outputList[index])
+                    // 设置AI评分加载状态
+                    const itemId = this.outputList[index].id
+                    this.$set(this.robotScoreLoadingMap, itemId, true)
+                    this.saveManualScore(this.outputList[index], index)
                 }
                 return
             }

@@ -380,7 +380,15 @@
                     <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span :class="checkUseRed(index,item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}</span>
+                            <span :class="checkUseRed(index,item,'robotScore')">
+                                AI评分: 
+                                <template v-if="robotScoreLoadingMap[item.id]">
+                                    <i class="el-icon-loading"></i> AI 评分中...
+                                </template>
+                                <template v-else>
+                                    {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}
+                                </template>
+                            </span>
                         </div>
                         <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
