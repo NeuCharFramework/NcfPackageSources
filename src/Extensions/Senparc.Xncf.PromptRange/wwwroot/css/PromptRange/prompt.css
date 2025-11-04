@@ -840,7 +840,7 @@
             border: 1px solid #DCDFE6;
             background-color: #FFF;
             position:absolute;
-            top:-6px;
+            bottom:10px;
             right:0px;
             z-index:999999;
             width:350px;
