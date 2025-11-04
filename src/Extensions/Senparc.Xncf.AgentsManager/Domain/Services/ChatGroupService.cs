@@ -43,7 +43,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 public class McpEndpoint
 {
-
     public string url { get; set; }
 }
 
