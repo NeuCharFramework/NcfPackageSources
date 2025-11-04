@@ -38,7 +38,7 @@
                             </div>
 
                         </div>
-                        <el-select v-model="promptField" filterable placeholder="请选择靶场" :popper-append-to-body="false" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
+                        <el-select v-model="promptField" filterable placeholder="请选择靶场" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                             <el-option v-for="item in promptFieldOpt"
                                        v-key="item.id"
                                        :label="item.label"
