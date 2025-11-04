@@ -305,11 +305,13 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 15px;
+    gap: 12px;
     position: relative;
     box-sizing: border-box;
     height: calc(100vh - 150px); /* 使用视口高度，减去头部导航高度 */
-    overflow: hidden;
+    min-width: 1200px; /* 确保有最小宽度，小于此宽度会出现横向滚动条 */
+    overflow-x: auto; /* 允许横向滚动，不隐藏内容 */
+    overflow-y: hidden;
     /*min-width: 1240px;
     overflow: auto;
     border-radius: 10px;
@@ -326,6 +328,25 @@
         justify-content: center;
         color: #666;
         font-size: 14px;
+    }
+    
+    /* promptPage 横向滚动条样式 */
+    .promptPage::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .promptPage::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .promptPage::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 4px;
+    }
+
+    .promptPage::-webkit-scrollbar-thumb:hover {
+        background: #888;
     }
     /*tabs*/
     .promptPage .tabsArea {
@@ -445,12 +466,12 @@
     /*左侧模块*/
     .promptPage > .promptPage_leftArea {
         flex-shrink: 0;
-        width: 420px;
-        max-width: 420px;
+        width: 360px;
+        max-width: 360px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
         transition: all 0.3s ease-in-out;
         position: relative;
         overflow: hidden;
@@ -763,12 +784,13 @@
         }
 /*中间模块 - 输入Prompt*/
 .promptPage > .promptPage_centerArea {
-    flex: 1;
-    min-width: 400px;
+    flex: 0 1 380px; /* 弹性收缩，基准宽度380px */
+    min-width: 350px;
+    max-width: 500px;
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     height: 100%;
 }
 
@@ -782,12 +804,12 @@
 
 /*右侧模块 - 输出和分析*/
 .promptPage > .promptPage_rightArea {
-    flex: 1;
-    min-width: 450px;
+    flex: 1 1 auto; /* 优先扩展，占据剩余空间 */
+    min-width: 400px;
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     height: 100%;
     overflow: hidden;
 }
@@ -1008,8 +1030,8 @@
 
 /*右侧模块 分析区域*/
 .promptPage_rightArea > .analysisArea {
-    flex-shrink: 0;
-    height: 280px;
+    flex: 0 0 auto; /* 不伸缩 */
+    height: 260px; /* 减小高度，留更多空间给输出区域 */
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -1019,7 +1041,7 @@
 
     .promptPage_rightArea > .analysisArea > .echartsBox {
         width: 100%;
-        height: 220px;
+        height: 200px; /* 调整图表高度 */
         box-sizing: border-box;
     }
 
