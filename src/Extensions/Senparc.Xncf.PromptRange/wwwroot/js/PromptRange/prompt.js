@@ -3170,6 +3170,76 @@ var app = new Vue({
             if (!timeStr) return '';
             const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
             return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
+        },
+        // 获取最终评分（优先使用手动评分，其次AI评分）
+        getFinalScore(item) {
+            if (!item) return null;
+            // 手动评分优先
+            if (item.humanScore !== undefined && item.humanScore !== null && item.humanScore >= 0) {
+                return item.humanScore;
+            }
+            // AI评分
+            if (item.robotScore !== undefined && item.robotScore !== null && item.robotScore >= 0) {
+                return item.robotScore;
+            }
+            return null;
+        },
+        // 获取评分等级的样式类
+        getScoreBarClass(item) {
+            const score = this.getFinalScore(item);
+            if (score === null) return '';
+            
+            if (score >= 8) return 'score-excellent';      // 8-10分：优秀
+            if (score >= 6) return 'score-good';           // 6-8分：良好
+            if (score >= 4) return 'score-medium';         // 4-6分：中等
+            if (score >= 2) return 'score-low';            // 2-4分：较低
+            return 'score-poor';                           // 0-2分：差
+        },
+        // 获取数据条的宽度样式（Excel风格）
+        getScoreBarStyle(item) {
+            const score = this.getFinalScore(item);
+            if (score === null) return { width: '0%' };
+            
+            // 0-10分映射到0-100%
+            const percentage = Math.min(Math.max((score / 10) * 100, 0), 100);
+            return {
+                width: percentage + '%'
+            };
+        },
+        // 获取缩略图的工具提示文本
+        getThumbnailTooltip(item) {
+            if (!item) return '';
+            
+            let tooltip = item.addTime;
+            const score = this.getFinalScore(item);
+            
+            if (score !== null) {
+                const scoreType = item.humanScore >= 0 ? '手动评分' : 'AI评分';
+                tooltip += `\n${scoreType}: ${score.toFixed(1)}分`;
+            }
+            
+            return tooltip;
+        },
+        // 处理输出区域的鼠标移动事件 - 判断是否在右半侧
+        handleOutputAreaMouseMove(event) {
+            const outputArea = event.currentTarget;
+            const rect = outputArea.getBoundingClientRect();
+            const mouseX = event.clientX;
+            
+            // 计算鼠标相对于输出区域的位置
+            const relativeX = mouseX - rect.left;
+            const halfWidth = rect.width / 2;
+            
+            // 只在右半侧显示滚动条
+            if (relativeX > halfWidth) {
+                this.showScrollbarThumbnails = true;
+            } else {
+                this.showScrollbarThumbnails = false;
+            }
+        },
+        // 处理鼠标离开输出区域
+        handleOutputAreaMouseLeave() {
+            this.showScrollbarThumbnails = false;
         }
     }
 });

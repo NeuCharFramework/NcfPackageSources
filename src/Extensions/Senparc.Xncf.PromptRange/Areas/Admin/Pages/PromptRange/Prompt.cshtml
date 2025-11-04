@@ -331,7 +331,11 @@
     @*右侧 评分|分析*@
     <div class="promptPage_rightArea">
         @*输出*@
-        <div class="boxCard outputArea" :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" v-if="!box1Hidden" @@mouseenter="showScrollbarThumbnails = true" @@mouseleave="showScrollbarThumbnails = false">
+        <div class="boxCard outputArea" 
+             :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 
+             v-if="!box1Hidden"
+             @@mousemove="handleOutputAreaMouseMove"
+             @@mouseleave="handleOutputAreaMouseLeave">
             <div class="promptVersion">
                 <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong>   <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer" @@click="copyInfo"></i>
                     <span style="margin-right:5px;margin-left:20px;">靶场:</span>
@@ -430,16 +434,30 @@
                 </div>
             </div>
             @* 自定义滚动条缩略图 *@
-            <div class="custom-scrollbar-thumbnail" v-if="outputList.length > 0" v-show="showScrollbarThumbnails">
+            <div class="custom-scrollbar-thumbnail" 
+                 v-if="outputList.length > 0" 
+                 v-show="showScrollbarThumbnails">
                 <div class="thumbnail-track">
                     <div v-for="(item,index) in outputList" 
                          :key="'thumb-'+index"
                          class="thumbnail-item"
                          :class="{'thumbnail-item-active': isResultInView(index)}"
                          :style="getThumbnailStyle(index)"
-                         :title="item.addTime"
+                         :title="getThumbnailTooltip(item)"
                          @@click="scrollToResult(index)">
-                        <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
+                        @* Excel风格数据条背景 *@
+                        <div v-if="getFinalScore(item) !== null" 
+                             class="thumbnail-score-bar" 
+                             :class="getScoreBarClass(item)"
+                             :style="getScoreBarStyle(item)">
+                        </div>
+                        @* 内容容器 *@
+                        <div class="thumbnail-content">
+                            <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
+                            <span v-if="getFinalScore(item) !== null" class="thumbnail-score">
+                                {{getFinalScore(item).toFixed(1)}}分
+                            </span>
+                        </div>
                     </div>
                     <div class="thumbnail-viewport" :style="getViewportStyle()"></div>
                 </div>

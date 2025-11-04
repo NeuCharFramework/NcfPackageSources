@@ -880,20 +880,31 @@
             background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
         }
 
+/* 右侧触发区域 - 只在右半侧触发滚动条显示 */
+.scrollbar-trigger-zone {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 50%; /* 右半侧区域 */
+    z-index: 999;
+    pointer-events: auto;
+}
+
 /* VSCode风格的自定义滚动条缩略图 */
 .custom-scrollbar-thumbnail {
     position: absolute;
     right: 8px; /* 与滚动条对齐 */
     top: 0;
     bottom: 0;
-    width: 120px;
-    background: rgba(255, 255, 255, 0.92); /* 稍微透明 */
-    border-left: 1px solid rgba(224, 224, 224, 0.8);
-    z-index: 1000;
+    width: 140px; /* 增加宽度以容纳评分信息 */
+    background: rgba(255, 255, 255, 0.85); /* 增加透明度 */
+    border-left: 1px solid rgba(224, 224, 224, 0.6);
+    z-index: 1001;
     pointer-events: auto;
-    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
     animation: slideInRight 0.2s ease-out;
-    backdrop-filter: blur(4px); /* 毛玻璃效果 */
+    backdrop-filter: blur(6px); /* 增强毛玻璃效果 */
 }
 
 @keyframes slideInRight {
@@ -921,34 +932,46 @@
     right: 4px;
     background: #f0f0f0;
     border: 1px solid #d0d0d0;
-    border-radius: 3px;
-    padding: 4px 6px;
+    border-radius: 4px;
+    padding: 6px 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     justify-content: center;
     box-sizing: border-box;
+    overflow: hidden;
+    gap: 3px;
 }
 
 .thumbnail-item:hover {
     background: #e3f2fd;
     border-color: #42a5f5;
-    transform: scale(1.05);
+    transform: scale(1.03);
     z-index: 2;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .thumbnail-item-active {
     background: #bbdefb !important;
     border: 2px solid #2196F3 !important;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 2px 10px rgba(33, 150, 243, 0.35);
     z-index: 3;
 }
 
+/* 缩略图内容容器 */
+.thumbnail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    z-index: 2;
+}
+
+/* 时间显示 */
 .thumbnail-time {
-    font-size: 10px;
+    font-size: 9px;
     color: #666;
     white-space: nowrap;
     overflow: hidden;
@@ -956,11 +979,102 @@
     max-width: 100%;
     line-height: 1.2;
     text-align: center;
+    font-weight: 500;
 }
 
 .thumbnail-item-active .thumbnail-time {
     color: #1976D2;
     font-weight: 600;
+}
+
+/* 评分显示 */
+.thumbnail-score {
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.thumbnail-item-active .thumbnail-score {
+    color: #1565C0;
+    font-weight: 700;
+}
+
+/* Excel风格数据条背景 */
+.thumbnail-score-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.15) 0%, 
+        rgba(76, 175, 80, 0.25) 100%);
+    border-radius: 3px 0 0 3px;
+    z-index: 1;
+    transition: width 0.3s ease;
+}
+
+/* 根据评分等级调整颜色 */
+.thumbnail-score-bar.score-excellent {
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.2) 0%, 
+        rgba(76, 175, 80, 0.35) 100%); /* 绿色 - 优秀 8-10分 */
+}
+
+.thumbnail-score-bar.score-good {
+    background: linear-gradient(90deg, 
+        rgba(33, 150, 243, 0.2) 0%, 
+        rgba(33, 150, 243, 0.35) 100%); /* 蓝色 - 良好 6-8分 */
+}
+
+.thumbnail-score-bar.score-medium {
+    background: linear-gradient(90deg, 
+        rgba(255, 193, 7, 0.2) 0%, 
+        rgba(255, 193, 7, 0.35) 100%); /* 黄色 - 中等 4-6分 */
+}
+
+.thumbnail-score-bar.score-low {
+    background: linear-gradient(90deg, 
+        rgba(255, 152, 0, 0.2) 0%, 
+        rgba(255, 152, 0, 0.35) 100%); /* 橙色 - 较低 2-4分 */
+}
+
+.thumbnail-score-bar.score-poor {
+    background: linear-gradient(90deg, 
+        rgba(244, 67, 54, 0.2) 0%, 
+        rgba(244, 67, 54, 0.35) 100%); /* 红色 - 差 0-2分 */
+}
+
+/* 激活状态下的数据条颜色更深 */
+.thumbnail-item-active .thumbnail-score-bar.score-excellent {
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.3) 0%, 
+        rgba(76, 175, 80, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-good {
+    background: linear-gradient(90deg, 
+        rgba(33, 150, 243, 0.3) 0%, 
+        rgba(33, 150, 243, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-medium {
+    background: linear-gradient(90deg, 
+        rgba(255, 193, 7, 0.3) 0%, 
+        rgba(255, 193, 7, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-low {
+    background: linear-gradient(90deg, 
+        rgba(255, 152, 0, 0.3) 0%, 
+        rgba(255, 152, 0, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-poor {
+    background: linear-gradient(90deg, 
+        rgba(244, 67, 54, 0.3) 0%, 
+        rgba(244, 67, 54, 0.45) 100%);
 }
 
 /* 可视区域指示器 */
@@ -1046,7 +1160,7 @@
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: flex-start; /* 改为左对齐 */
             gap: 10px;
             color: #0083FF;
             font-size: 14px;
@@ -1076,9 +1190,10 @@
             background-color: #FFF;
             position:absolute;
             bottom:10px;
-            right:0px;
+            left:0px; /* 改为左侧显示 */
             z-index:999999;
             width:350px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* 添加阴影 */
         
         }
 
