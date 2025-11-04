@@ -3171,16 +3171,13 @@ var app = new Vue({
             const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
             return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
         },
-        // 获取最终评分（优先使用手动评分，其次AI评分）
+        // 获取最终评分（使用系统的finalScore字段）
         getFinalScore(item) {
             if (!item) return null;
-            // 手动评分优先
-            if (item.humanScore !== undefined && item.humanScore !== null && item.humanScore >= 0) {
-                return item.humanScore;
-            }
-            // AI评分
-            if (item.robotScore !== undefined && item.robotScore !== null && item.robotScore >= 0) {
-                return item.robotScore;
+            // 直接使用系统的finalScore字段，这是被标记为红色的那个分数
+            if (item.finalScore !== undefined && item.finalScore !== null && 
+                item.finalScore !== -1 && item.finalScore !== '-1') {
+                return item.finalScore;
             }
             return null;
         },
@@ -3214,7 +3211,15 @@ var app = new Vue({
             const score = this.getFinalScore(item);
             
             if (score !== null) {
-                const scoreType = item.humanScore >= 0 ? '手动评分' : 'AI评分';
+                // 判断finalScore等于哪个评分，那个就是最终评分类型
+                let scoreType = '';
+                if (item.finalScore === item.humanScore) {
+                    scoreType = '手动评分';
+                } else if (item.finalScore === item.robotScore) {
+                    scoreType = 'AI评分';
+                } else {
+                    scoreType = '最终评分';
+                }
                 tooltip += `\n${scoreType}: ${score.toFixed(1)}分`;
             }
             
