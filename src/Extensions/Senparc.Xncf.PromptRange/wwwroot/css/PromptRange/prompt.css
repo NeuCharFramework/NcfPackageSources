@@ -619,13 +619,13 @@
 /*输入prompt盒子*/
 .entertarget > .promptContetnPmroparaBox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* 改为纵向布局 */
     flex-wrap: nowrap;
-    /*gap: 10px;*/
     align-items: stretch;
     justify-content: flex-start;
     height: 100%;
     flex: 1;
+    gap: 10px;
 }
 
     .entertarget > .promptContetnPmroparaBox > .leftItemBox {
@@ -633,6 +633,7 @@
         display: flex;
         flex-direction: column;
         min-height: 0;
+        gap: 10px;
     }
 
     .entertarget > .promptContetnPmroparaBox > .leftItemBox > .titleRow {
@@ -646,14 +647,19 @@
         min-height: 0;
     }
 
-    .entertarget > .promptContetnPmroparaBox > .rightItemBox {
-        max-width: 430px;
+    /* 请求参数区域 - 在Prompt输入框下方 */
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .promptParamSection {
+        flex-shrink: 0;
+        max-height: 300px;
         overflow: hidden;
-        transition: max-width 0.3s ease-in-out;
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        opacity: 1;
     }
 
-    .entertarget > .promptContetnPmroparaBox > .rightItemHide {
-        max-width: 0px !important;
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .paramSectionHide {
+        max-height: 0 !important;
+        opacity: 0;
+        overflow: hidden;
     }
     /*输入prompt输入框盒子 内容*/
     .entertarget > .promptContetnPmroparaBox .promptContentBox {
@@ -749,7 +755,7 @@
 
 
     /*输入Prompt请求参数盒子 promptPmroparaBox */
-    .entertarget > .promptContetnPmroparaBox .promptPmroparaBox {
+    .entertarget .promptPmroparaBox {
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -757,9 +763,12 @@
         gap: 10px;
         border-radius: 4px;
         border: 1px solid #DCDFE6;
+        background-color: #f9f9f9;
+        overflow-y: auto;
+        max-height: 260px;
     }
 
-        .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .formItem {
+        .entertarget .promptPmroparaBox .formItem {
             padding-right: 20px;
             display: flex;
             align-items: center;
@@ -770,18 +779,42 @@
         }
 
 
-        .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
+        .entertarget .promptPmroparaBox .addVariableRow {
             margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
         }
 
-        .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .footerBtnRow {
+        .entertarget .promptPmroparaBox .footerBtnRow {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
+    /* 请求参数区域的标题行 */
+    .entertarget .promptParamSection > .titleRow {
+        flex-shrink: 0;
+        margin-bottom: 8px;
+    }
+
+    /* 请求参数盒子的滚动条样式 */
+    .entertarget .promptPmroparaBox::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 3px;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb:hover {
+        background: #888;
+    }
 /*中间模块 - 输入Prompt*/
 .promptPage > .promptPage_centerArea {
     flex: 0 1 380px; /* 弹性收缩，基准宽度380px */
@@ -823,6 +856,7 @@
     gap: 15px;
     overflow: hidden;
     min-height: 0; /* 重要：允许flex收缩 */
+    position: relative; /* 为自定义滚动条定位 */
 }
 /* 定制滚动条样式 */
     .outputArea_contentBox::-webkit-scrollbar,
@@ -845,6 +879,104 @@
         .configurineArea::-webkit-scrollbar-thumb:hover {
             background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
         }
+
+/* VSCode风格的自定义滚动条缩略图 */
+.custom-scrollbar-thumbnail {
+    position: absolute;
+    right: 8px; /* 与滚动条对齐 */
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    background: rgba(255, 255, 255, 0.92); /* 稍微透明 */
+    border-left: 1px solid rgba(224, 224, 224, 0.8);
+    z-index: 1000;
+    pointer-events: auto;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    animation: slideInRight 0.2s ease-out;
+    backdrop-filter: blur(4px); /* 毛玻璃效果 */
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.thumbnail-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 8px 4px;
+    overflow: hidden;
+}
+
+.thumbnail-item {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background: #f0f0f0;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.thumbnail-item:hover {
+    background: #e3f2fd;
+    border-color: #42a5f5;
+    transform: scale(1.05);
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.thumbnail-item-active {
+    background: #bbdefb !important;
+    border: 2px solid #2196F3 !important;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    z-index: 3;
+}
+
+.thumbnail-time {
+    font-size: 10px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.thumbnail-item-active .thumbnail-time {
+    color: #1976D2;
+    font-weight: 600;
+}
+
+/* 可视区域指示器 */
+.thumbnail-viewport {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    background: rgba(33, 150, 243, 0.15);
+    border: 1px solid rgba(33, 150, 243, 0.4);
+    border-radius: 2px;
+    pointer-events: none;
+    transition: all 0.1s ease;
+    min-height: 20px;
+}
+
+/* 不需要调整内容宽度，滚动条悬浮显示 */
 .promptPage_rightArea > .outputArea > .titleRow {
     justify-content: flex-start;
     gap: 30px;

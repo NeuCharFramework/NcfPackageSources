@@ -266,7 +266,14 @@ var app = new Vue({
             box3Hidden: false,
             lastClickedBox: null,
             isBoxVisible: true, // 控制盒子显示和隐藏的状态
-            foldsidebarShow: false
+            foldsidebarShow: false,
+            // 自定义滚动条缩略图
+            showScrollbarThumbnails: false,
+            scrollInfo: {
+                scrollTop: 0,
+                scrollHeight: 0,
+                clientHeight: 0
+            }
         };
     },
     computed: {
@@ -3070,6 +3077,99 @@ var app = new Vue({
             } catch (err) {
                 console.error('Oops, unable to copy', err);
             }  
+        },
+        // 自定义滚动条缩略图相关方法
+        handleResultScroll(event) {
+            const el = event.target;
+            this.scrollInfo = {
+                scrollTop: el.scrollTop,
+                scrollHeight: el.scrollHeight,
+                clientHeight: el.clientHeight
+            };
+        },
+        getThumbnailStyle(index) {
+            const container = document.getElementById('resultBox');
+            if (!container || !this.outputList || this.outputList.length === 0) {
+                return {};
+            }
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || items.length === 0) return {};
+            
+            const totalHeight = container.scrollHeight;
+            const trackHeight = container.clientHeight;
+            
+            // 计算每个item的相对位置
+            let totalItemsHeight = 0;
+            let currentTop = 0;
+            
+            for (let i = 0; i < items.length; i++) {
+                totalItemsHeight += items[i].offsetHeight;
+                if (i < index) {
+                    currentTop += items[i].offsetHeight;
+                }
+            }
+            
+            const currentHeight = items[index] ? items[index].offsetHeight : 30;
+            
+            // 计算在缩略图轨道中的位置（按比例）
+            const top = (currentTop / totalHeight) * trackHeight;
+            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); // 最小20px
+            
+            return {
+                top: top + 'px',
+                height: height + 'px'
+            };
+        },
+        isResultInView(index) {
+            const container = document.getElementById('resultBox');
+            if (!container) return false;
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || !items[index]) return false;
+            
+            const item = items[index];
+            const containerRect = container.getBoundingClientRect();
+            const itemRect = item.getBoundingClientRect();
+            
+            // 判断item是否在可视区域内
+            return itemRect.top >= containerRect.top && 
+                   itemRect.top <= containerRect.bottom;
+        },
+        getViewportStyle() {
+            const container = document.getElementById('resultBox');
+            if (!container) return {};
+            
+            const scrollTop = this.scrollInfo.scrollTop;
+            const scrollHeight = this.scrollInfo.scrollHeight;
+            const clientHeight = this.scrollInfo.clientHeight;
+            
+            if (scrollHeight === 0) return {};
+            
+            const trackHeight = clientHeight;
+            const viewportTop = (scrollTop / scrollHeight) * trackHeight;
+            const viewportHeight = (clientHeight / scrollHeight) * trackHeight;
+            
+            return {
+                top: viewportTop + 'px',
+                height: viewportHeight + 'px'
+            };
+        },
+        scrollToResult(index) {
+            const container = document.getElementById('resultBox');
+            if (!container) return;
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || !items[index]) return;
+            
+            items[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.outputSelectSwitch(index);
+        },
+        formatTime(timeStr) {
+            // 提取时间部分，例如 "2024-01-01 10:30:45" => "10:30"
+            if (!timeStr) return '';
+            const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
+            return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
         }
     }
 });

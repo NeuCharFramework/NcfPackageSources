@@ -247,9 +247,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @* Prompt请求参数 *@
-                    <div class="configurineAreaItem rightItemBox" :class="{'rightItemHide':promptParamVisible}">
+                        @* Prompt请求参数 - 移到leftItemBox内部，作为下方区域 *@
+                        <div class="promptParamSection" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
                                 <div class="titleContent">Prompt请求参数</div>
@@ -322,6 +321,7 @@
                                 @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button> *@
                             </div>
                         </div>
+                        </div>
                     </div>
                 </div>
 
@@ -331,7 +331,7 @@
     @*右侧 评分|分析*@
     <div class="promptPage_rightArea">
         @*输出*@
-        <div class="boxCard outputArea" :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" v-if="!box1Hidden">
+        <div class="boxCard outputArea" :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" v-if="!box1Hidden" @@mouseenter="showScrollbarThumbnails = true" @@mouseleave="showScrollbarThumbnails = false">
             <div class="promptVersion">
                 <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong>   <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer" @@click="copyInfo"></i>
                     <span style="margin-right:5px;margin-left:20px;">靶场:</span>
@@ -360,8 +360,8 @@
                     <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
                 </div>
             </div>
-            <div class="outputArea_contentBox" id="resultBox">
-                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
+            <div class="outputArea_contentBox" id="resultBox" @@scroll="handleResultScroll">
+                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)" :data-result-index="index">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
                             <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
@@ -427,6 +427,21 @@
                 </div>
                 <div v-if="outputList.length===0" class="emptyDataArea">
                     暂无生成结果
+                </div>
+            </div>
+            @* 自定义滚动条缩略图 *@
+            <div class="custom-scrollbar-thumbnail" v-if="outputList.length > 0" v-show="showScrollbarThumbnails">
+                <div class="thumbnail-track">
+                    <div v-for="(item,index) in outputList" 
+                         :key="'thumb-'+index"
+                         class="thumbnail-item"
+                         :class="{'thumbnail-item-active': isResultInView(index)}"
+                         :style="getThumbnailStyle(index)"
+                         :title="item.addTime"
+                         @@click="scrollToResult(index)">
+                        <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
+                    </div>
+                    <div class="thumbnail-viewport" :style="getViewportStyle()"></div>
                 </div>
             </div>
         </div>
