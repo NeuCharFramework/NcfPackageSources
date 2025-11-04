@@ -880,17 +880,6 @@
             background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
         }
 
-/* 右侧触发区域 - 只在右半侧触发滚动条显示 */
-.scrollbar-trigger-zone {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 50%; /* 右半侧区域 */
-    z-index: 999;
-    pointer-events: auto;
-}
-
 /* VSCode风格的自定义滚动条缩略图 */
 .custom-scrollbar-thumbnail {
     position: absolute;

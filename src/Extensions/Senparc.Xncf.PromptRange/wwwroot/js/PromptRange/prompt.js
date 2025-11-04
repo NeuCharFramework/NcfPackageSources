@@ -92,7 +92,7 @@ var app = new Vue({
             dodgersLoading: false, // 连发loading
             // 配置 输入 ---end
             // prompt请求参数 ---start
-            promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
+            promptParamVisible: false,// prompt请求参数 显隐 true是显示 false是默认隐藏
             promptParamFormLoading: false,
             promptParamForm: {
                 prefix: '',
