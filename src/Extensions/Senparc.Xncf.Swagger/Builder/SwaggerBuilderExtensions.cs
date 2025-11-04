@@ -44,7 +44,8 @@ namespace Senparc.Xncf.Swagger.Builder
                 //c.InjectJavascript("/js/tongji.js");
                 c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
 
-                foreach (var co2netApiDocAssembly in WebApiEngine.ApiAssemblyCollection)
+                var sortedAssembly = WebApiEngine.ApiAssemblyCollection.OrderBy(z => z.Key);
+                foreach (var co2netApiDocAssembly in sortedAssembly)
                 {
                     //TODO:真实的动态版本号
                     var verion = WebApiEngine.ApiAssemblyVersions[co2netApiDocAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;

@@ -11,7 +11,7 @@
         Width="900" Height="800"
         MinWidth="800" MinHeight="650"
         WindowStartupLocation="CenterScreen"
-        Icon="/Assets/avalonia-logo.ico">
+        Icon="/Assets/NCF-logo.png">
 
     <Window.Styles>
         <Style Selector="Border.card">

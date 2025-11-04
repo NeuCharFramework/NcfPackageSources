@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using Avalonia.WebView.Desktop;
 
 namespace NcfDesktopApp.GUI;
 
@@ -17,5 +18,6 @@ sealed class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .UseDesktopWebView();
 }

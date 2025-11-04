@@ -98,3 +98,11 @@ tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML
 tools/NcfDesktopApp/publish/
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/*.xml
 /tools/NcfSimulatedSite/Senparc.Web/App_Data/ApiDocXml/DynamicFiles
+tools/NcfDesktopApp.GUI/publish/*
+tools/NcfDesktopApp.GUI/macos-app/*
+/tools/NcfSimulatedSite/Senparc.Web/.config
+*.lnk
+/tools/NcfSimulatedSiteSyncTool/NcfSimulatedSiteSyncTool.exe - 快捷方式.lnk
+/tools/NcfSimulatedSite/Senparc.Web/App_Data/Database/backup/*
+tools/NcfDesktopApp.GUI/安全性与隐私中允许*
+tools/NcfDesktopApp.GUI/publish-self-contained/*

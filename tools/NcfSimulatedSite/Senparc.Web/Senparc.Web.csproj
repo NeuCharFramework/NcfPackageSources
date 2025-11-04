@@ -18,8 +18,8 @@
 		<!--<PackageReference Include="Dapr.AspNetCore" Version="1.12.0" />
 		<PackageReference Include="Dapr.Client" Version="1.12.0" />-->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.0.1" />
-		<PackageReference Include="Senparc.CO2NET" Version="3.1.3" />
+		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.1" />
+		<PackageReference Include="Senparc.CO2NET" Version="3.1.5" />
 		<!--<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.18.7.4-preview1" />
 		<PackageReference Include="Senparc.Ncf.Database.SqlServer" Version="0.18.6-preview1" />-->
 		<!--<PackageReference Include="Senparc.Xncf.AreasBase" Version="0.9.9.2-preview1" />
@@ -52,6 +52,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
@@ -60,7 +61,6 @@
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
 		<ProjectReference Include="..\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />

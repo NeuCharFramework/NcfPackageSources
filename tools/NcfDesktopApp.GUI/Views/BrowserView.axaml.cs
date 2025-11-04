@@ -34,6 +34,9 @@ public partial class BrowserView : UserControl
             WebView.NavigationCompleted += OnNavigationCompleted;
             WebView.NavigationFailed += OnNavigationFailed;
         }
+        
+        // 初始化按钮状态
+        UpdateNavigationButtons();
     }
 
     public async Task NavigateToUrl(string url)
@@ -46,25 +49,19 @@ public partial class BrowserView : UserControl
 
     private void BackButton_Click(object? sender, RoutedEventArgs e)
     {
-        // 暂时不实现历史记录功能
-        // 可以在后续版本中添加
+        WebView?.GoBack();
     }
 
     private void ForwardButton_Click(object? sender, RoutedEventArgs e)
     {
-        // 暂时不实现历史记录功能
-        // 可以在后续版本中添加
+        WebView?.GoForward();
     }
 
     private void RefreshButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (WebView != null && DataContext is ViewModels.MainWindowViewModel viewModel)
+        if (WebView != null)
         {
-            var url = viewModel.SiteUrl;
-            if (!string.IsNullOrEmpty(url) && url != "未启动")
-            {
-                _ = WebView.NavigateTo(url);
-            }
+            WebView.Refresh();
         }
     }
 
@@ -82,6 +79,7 @@ public partial class BrowserView : UserControl
         {
             viewModel.OnNavigationCompleted(url);
         }
+        UpdateNavigationButtons();
     }
 
     private void OnNavigationFailed(object? sender, string error)
@@ -89,6 +87,23 @@ public partial class BrowserView : UserControl
         if (DataContext is ViewModels.MainWindowViewModel viewModel)
         {
             viewModel.OnBrowserError(error);
+        }
+        UpdateNavigationButtons();
+    }
+
+    private void UpdateNavigationButtons()
+    {
+        var backButton = this.FindControl<Button>("BackButton");
+        var forwardButton = this.FindControl<Button>("ForwardButton");
+        
+        if (backButton != null && WebView != null)
+        {
+            backButton.IsEnabled = WebView.CanGoBack;
+        }
+        
+        if (forwardButton != null && WebView != null)
+        {
+            forwardButton.IsEnabled = WebView.CanGoForward;
         }
     }
 } 

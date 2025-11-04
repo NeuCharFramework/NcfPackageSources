@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.20.2-preview.1</Version>
+    <Version>0.21.3-preview</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -29,37 +29,41 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-			v0.1 创世
-			v0.2 完成公众号管理、用户管理等功能
-			v0.3 优化UI，匹配新版本NCF
-			v0.4.1 移植WeixinFace
-			v0.6.100 支持 .NET 5
-			v0.6.300 添加 Swagger Api
-			v0.6.359 添加 FindWeixinApi 接口
-			v0.6.400 更新基础接口，优化 WebApi
-			v0.6.500 使用新的 FunctionRender 版本
-			v0.7.0 支持 PostgreSQL
-			v0.8.0 中间件添加 MpAccountDto 参数
-			v0.9.0 优化多租户机制，解决添加新帐号后需要重启才能使用中间件的问题
-			v0.9.2 优化多租户机制，解决中间件启动问题
-			v0.9.3 解决中间件访问问题
-			v0.11.0 支持微信 MessageHandler 自定义上下文（MessageContext）
-			v0.12.0 支持 PromptRange
-			v0.13.0 支持最新 Senparc.AI
-			v0.15.0 支持最新 Senparc.AI
-			v0.16.1 支持基础新架构
-			v0.16.2 更新基础库
-			[2024-09-13] v0.16.4-preview1 升级基础库
-			[2024-10-09] v0.16.5-preview1 升级基础库
-			[2024-12-07] v0.16.6-preview1 更新基础库
-			[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
-			[2025-05-29] v0.18.0-preview.1 升级基础库
-			[2025-07-12] v0.18.1-preview.3 fix: SqlServerDatabaseConfiguration 命名统一
-			[2025-07-12] v0.19.0-preview.1 migratie Senparc.Xncf.WeixinManager to NcfPackageResource repository
-			[2025-07-13] v0.20.0-preview.1 upgrade MpAccount loading progress in UseXncfModule
-			[2025-07-13] v0.20.1-preview.1 upgrade MpAccount loading progress in UseXncfModule
-			[2025-07-26] v0.20.2-preview.1 update Weixin(WeChat) API search function
-</PackageReleaseNotes>
+		v0.1 创世
+		v0.2 完成公众号管理、用户管理等功能
+		v0.3 优化UI，匹配新版本NCF
+		v0.4.1 移植WeixinFace
+		v0.6.100 支持 .NET 5
+		v0.6.300 添加 Swagger Api
+		v0.6.359 添加 FindWeixinApi 接口
+		v0.6.400 更新基础接口，优化 WebApi
+		v0.6.500 使用新的 FunctionRender 版本
+		v0.7.0 支持 PostgreSQL
+		v0.8.0 中间件添加 MpAccountDto 参数
+		v0.9.0 优化多租户机制，解决添加新帐号后需要重启才能使用中间件的问题
+		v0.9.2 优化多租户机制，解决中间件启动问题
+		v0.9.3 解决中间件访问问题
+		v0.11.0 支持微信 MessageHandler 自定义上下文（MessageContext）
+		v0.12.0 支持 PromptRange
+		v0.13.0 支持最新 Senparc.AI
+		v0.15.0 支持最新 Senparc.AI
+		v0.16.1 支持基础新架构
+		v0.16.2 更新基础库
+		[2024-09-13] v0.16.4-preview1 升级基础库
+		[2024-10-09] v0.16.5-preview1 升级基础库
+		[2024-12-07] v0.16.6-preview1 更新基础库
+		[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
+		[2025-05-29] v0.18.0-preview.1 升级基础库
+		[2025-07-12] v0.18.1-preview.3 fix: SqlServerDatabaseConfiguration 命名统一
+		[2025-07-12] v0.19.0-preview.1 migratie Senparc.Xncf.WeixinManager to NcfPackageResource repository
+		[2025-07-13] v0.20.0-preview.1 upgrade MpAccount loading progress in UseXncfModule
+		[2025-07-13] v0.20.1-preview.1 upgrade MpAccount loading progress in UseXncfModule
+		[2025-07-26] v0.20.2-preview.1 update Weixin(WeChat) API search function
+		[2025-08-18] v0.21.0-preview.1 feat: support for McpRouter of Weixin
+		[2025-08-19] v0.21.1-preview.1 fix: Set ApiBind DefaultRequestMethod to GET
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -91,17 +95,17 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>-->
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.25.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
-    <PackageReference Include="Senparc.Weixin.All" Version="2025.7.15" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.25.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
+    <PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
-    <PackageReference Include="Senparc.Weixin.AspNet" Version="1.4.9" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.23.8" />
-    <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.4.9" />
-    <PackageReference Include="Senparc.Weixin.Open" Version="4.22.1" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.17.8" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.27.0" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.23.6" />
+    <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.0-preview.10" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.23.10" />
+    <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.4.11" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.22.3" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.17.10" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.29.0" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.23.9" />
     <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
     <!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />-->
     <!--<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />
@@ -151,7 +155,7 @@
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
-    <ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
+    <!--<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />-->
   </ItemGroup>
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="cd E:\Senparc项目\NeuCharFramework\NCF\src\XncfExtensionSample\MyExtensionCode&#xD;&#xA;&#xD;&#xA;dotnet add package $(SolutionName) - - prerelease -s &quot;E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\BuildOutPut&quot;" />

@@ -1766,15 +1766,15 @@ var app = new Vue({
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
-                            console.log(333)
+                            //console.log(333)
                         })
                     }).catch(() => {
-                        console.log(222)
+                        //console.log(222)
                         this.resetPageData()
                     });
                     return
                 }
-                console.log(111)
+                //console.log(111)
                 // 重置页面数据
                 this.resetPageData()
             } else if (itemKey === 'promptid') {
