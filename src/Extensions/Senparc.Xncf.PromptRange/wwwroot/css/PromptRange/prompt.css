@@ -825,6 +825,14 @@
     flex-direction: column;
     gap: 12px;
     height: 100%;
+    transition: all 0.3s ease;
+}
+
+/* 中间区域最大化状态 */
+.promptPage > .promptPage_centerAreaMaximized {
+    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    max-width: none !important; /* 取消最大宽度限制 */
+    min-width: 350px;
 }
 
     .promptPage_centerArea > .entertarget {
@@ -845,6 +853,13 @@
     gap: 12px;
     height: 100%;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* 右侧区域最大化状态 */
+.promptPage > .promptPage_rightAreaMaximized {
+    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    min-width: 400px;
 }
 /*右侧模块 输出区域*/
 .promptPage_rightArea > .outputArea {

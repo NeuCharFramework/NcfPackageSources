@@ -172,7 +172,7 @@
        
     </div>
     @*中间 输入Prompt*@
-    <div class="promptPage_centerArea">
+    <div class="promptPage_centerArea" v-if="!box2Hidden" :class="{'promptPage_centerAreaMaximized': centerAreaMaximized}">
         <div class="boxCard entertarget" >
                 @* 请新建或选择靶场 mask *@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
@@ -329,7 +329,7 @@
             </div>
     </div>
     @*右侧 评分|分析*@
-    <div class="promptPage_rightArea">
+    <div class="promptPage_rightArea" :class="{'promptPage_rightAreaMaximized': rightAreaMaximized}">
         @*输出*@
         <div class="boxCard outputArea" 
              :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 

@@ -267,6 +267,8 @@ var app = new Vue({
             box2Hidden: false,
             box3Hidden: false,
             lastClickedBox: null,
+            centerAreaMaximized: false, // 中间区域是否最大化
+            rightAreaMaximized: false,  // 右侧区域是否最大化
             isBoxVisible: true, // 控制盒子显示和隐藏的状态
             foldsidebarShow: false,
             // 自定义滚动条缩略图
@@ -414,24 +416,40 @@ var app = new Vue({
         //放大输入区域
        
         Amplification(boxClicked) {
-        
             if (this.lastClickedBox === boxClicked) {
+                // 再次点击同一个区域，恢复所有区域
                 this.box1Hidden = false;
                 this.box2Hidden = false;
                 this.box3Hidden = false;
+                this.centerAreaMaximized = false;
+                this.rightAreaMaximized = false;
                 this.lastClickedBox = null;
-                this.getScoringTrendData()
+                this.getScoringTrendData();
             } else {
-                // 隐藏其他两个盒子
-                this.box1Hidden = boxClicked !== 'box1';
-                this.box2Hidden = boxClicked !== 'box2';
-                this.box3Hidden = boxClicked !== 'box3';
+                // 点击不同区域，实现最大化
+                if (boxClicked === 'box1') {
+                    // 右侧输出区域最大化：隐藏中间区域，隐藏分析图表，扩展右侧区域
+                    this.box1Hidden = false;
+                    this.box2Hidden = true;  // 隐藏中间Prompt区域
+                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.centerAreaMaximized = false;
+                    this.rightAreaMaximized = true;
+                } else if (boxClicked === 'box2') {
+                    // 中间Prompt区域最大化：隐藏右侧所有内容，扩展中间区域
+                    this.box1Hidden = true;  // 隐藏右侧输出区域
+                    this.box2Hidden = false;
+                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.centerAreaMaximized = true;
+                    this.rightAreaMaximized = false;
+                } else if (boxClicked === 'box3') {
+                    // 保留原有逻辑
+                    this.box1Hidden = false;
+                    this.box2Hidden = false;
+                    this.box3Hidden = false;
+                }
                 this.lastClickedBox = boxClicked;
             }
-            // 更新上次点击的盒子
-           
-
-            },
+        },
         style(val) {
             const length = 10,
                 progress = val - 0,
