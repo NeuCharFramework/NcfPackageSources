@@ -899,7 +899,7 @@
 .custom-scrollbar-thumbnail {
     position: absolute;
     right: 8px; /* 与滚动条对齐 */
-    top: 0;
+    top: 115px; /* 从内容区域开始，避免覆盖标题栏和最大化按钮 (boxCard padding 10px + promptVersion ~40px + gap 15px + titleRow 35px + gap 15px) */
     bottom: 0;
     width: 140px; /* 增加宽度以容纳评分信息 */
     background: rgba(255, 255, 255, 0.85); /* 增加透明度 */

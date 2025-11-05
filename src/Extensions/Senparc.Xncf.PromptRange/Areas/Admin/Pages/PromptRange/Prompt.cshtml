@@ -19,7 +19,7 @@
 
 <div class="promptPage">
     @*左侧 输入测试 *@
-    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow}" >
+    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow || centerAreaMaximized}" >
         @*配置*@
         <div class="boxCard configurineArea" v-if="isBoxVisible">
             @*选择靶场*@
