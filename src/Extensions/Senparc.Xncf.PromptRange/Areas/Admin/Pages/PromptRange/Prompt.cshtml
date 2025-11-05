@@ -19,7 +19,7 @@
 
 <div class="promptPage">
     @*左侧 输入测试 *@
-    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow || centerAreaMaximized}" >
+    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow}" >
         @*配置*@
         <div class="boxCard configurineArea" v-if="isBoxVisible">
             @*选择靶场*@
@@ -329,7 +329,7 @@
             </div>
     </div>
     @*右侧 评分|分析*@
-    <div class="promptPage_rightArea" :class="{'promptPage_rightAreaMaximized': rightAreaMaximized}">
+    <div class="promptPage_rightArea" :class="{'promptPage_rightAreaMaximized': rightAreaMaximized, 'promptPage_rightAreaHidden': box1Hidden && box3Hidden}">
         @*输出*@
         <div class="boxCard outputArea" 
              :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 
