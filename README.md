@@ -60,7 +60,7 @@ open NcfPackageSources.sln   # macOS
 dotnet restore
 ```
 
-4.还原工作负载（可选）
+4. 还原工作负载（可选）
 
 ```bash
 dotnet workload restore
