@@ -20,11 +20,69 @@
 }
 }
 
+/* 导出plugin操作按钮区域 */
+.plugin-export-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: #f5f7fa;
+    border-radius: 6px;
+    border: 1px solid #e4e7ed;
+}
+
+.plugin-export-actions .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.plugin-export-actions .action-buttons .el-button {
+    margin: 0 !important;
+}
+
+.plugin-export-actions .el-divider--vertical {
+    height: 20px;
+    margin: 0 4px;
+}
+
+.plugin-export-actions .selection-count {
+    display: flex;
+    align-items: center;
+}
+
+.plugin-export-actions .selection-count strong {
+    color: #409eff;
+    font-size: 16px;
+    margin: 0 2px;
+}
+
+/* 导出plugin树形选择器 */
 .expectedPluginTreeBox {
     width: 100%;
     max-height: 60vh;
     overflow: hidden;
     overflow-y: auto;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.expectedPluginTreeBox .el-tree {
+    background-color: transparent;
+}
+
+/* 树节点悬停效果 */
+.expectedPluginTreeBox .el-tree-node:hover > .el-tree-node__content {
+    background-color: #f5f7fa;
+}
+
+/* 树节点选中效果 */
+.expectedPluginTreeBox .el-tree-node.is-current > .el-tree-node__content {
+    background-color: #e6f7ff;
 }
 
 .tacticalFormBox .el-radio-group {
@@ -305,7 +363,7 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 12px;
+    gap: 0px; /* 移除gap，因为已经有8px的分隔条 */
     position: relative;
     box-sizing: border-box;
     height: calc(100vh - 150px); /* 使用视口高度，减去头部导航高度 */
@@ -466,13 +524,15 @@
     /*左侧模块*/
     .promptPage > .promptPage_leftArea {
         flex-shrink: 0;
-        width: 360px;
-        max-width: 360px;
+        flex-grow: 0;
+        width: 360px; /* 默认宽度，会被Vue的style覆盖 */
+        max-width: 600px; /* 允许用户拖动到更宽 */
+        min-width: 280px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
         gap: 12px;
-        transition: all 0.3s ease-in-out;
+        transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
         position: relative;
         overflow: hidden;
     }
@@ -817,14 +877,24 @@
     }
 /*中间模块 - 输入Prompt*/
 .promptPage > .promptPage_centerArea {
-    flex: 0 1 380px; /* 弹性收缩，基准宽度380px */
-    min-width: 350px;
-    max-width: 500px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 380px; /* 默认宽度，会被Vue的style覆盖 */
+    min-width: 320px;
+    max-width: 800px; /* 允许用户拖动到更宽 */
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
     gap: 12px;
     height: 100%;
+    transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
+}
+
+/* 中间区域最大化状态 */
+.promptPage > .promptPage_centerAreaMaximized {
+    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    max-width: none !important; /* 取消最大宽度限制 */
+    min-width: 350px;
 }
 
     .promptPage_centerArea > .entertarget {
@@ -845,6 +915,25 @@
     gap: 12px;
     height: 100%;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* 右侧区域最大化状态 */
+.promptPage > .promptPage_rightAreaMaximized {
+    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    min-width: 400px;
+}
+
+/* 右侧区域隐藏状态（中间区域最大化时） */
+.promptPage > .promptPage_rightAreaHidden {
+    flex: 0 0 0 !important; /* 不占用任何空间 */
+    min-width: 0 !important;
+    max-width: 0 !important;
+    width: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    gap: 0;
 }
 /*右侧模块 输出区域*/
 .promptPage_rightArea > .outputArea {
@@ -884,7 +973,7 @@
 .custom-scrollbar-thumbnail {
     position: absolute;
     right: 8px; /* 与滚动条对齐 */
-    top: 0;
+    top: 115px; /* 从内容区域开始，避免覆盖标题栏和最大化按钮 (boxCard padding 10px + promptVersion ~40px + gap 15px + titleRow 35px + gap 15px) */
     bottom: 0;
     width: 140px; /* 增加宽度以容纳评分信息 */
     background: rgba(255, 255, 255, 0.85); /* 增加透明度 */
@@ -1472,6 +1561,77 @@
     justify-content:space-between;
 }
 
+/* 可拖动分隔条样式 */
+.resize-handle {
+    width: 8px;
+    flex-shrink: 0;
+    cursor: col-resize;
+    position: relative;
+    background: transparent;
+    transition: background-color 0.2s ease;
+    z-index: 100;
+    user-select: none; /* 防止双击选中文本 */
+}
+
+/* 使用伪元素扩展可点击区域，不影响布局 */
+.resize-handle::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+}
+
+.resize-handle:hover {
+    background-color: rgba(64, 158, 255, 0.2);
+}
+
+.resize-handle:active {
+    background-color: rgba(64, 158, 255, 0.4);
+}
+
+/* 分隔条中间的指示线 */
+.resize-handle::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 60px;
+    background-color: #dcdfe6;
+    border-radius: 1px;
+    transition: all 0.2s ease;
+}
+
+.resize-handle:hover::before {
+    background-color: #409eff;
+    height: 80px;
+    width: 3px;
+}
+
+.resize-handle:active::before {
+    background-color: #409eff;
+    height: 100px;
+    width: 4px;
+}
+
+/* 双击还原时的闪烁动画 */
+@keyframes resetFlash {
+    0%, 100% {
+        background-color: rgba(64, 158, 255, 0.2);
+    }
+    50% {
+        background-color: rgba(67, 207, 124, 0.6);
+    }
+}
+
+.resize-handle.reset-animation {
+    animation: resetFlash 0.6s ease;
+}
+
 /* 推理过程样式 */
 think {
     display: block;
@@ -1492,4 +1652,344 @@ think::before {
     font-size: 12px;
     color: #666;
     border-radius: 4px;
+}
+
+/* ========== Prompt 对比对话框样式（Git Diff 风格） ========== */
+
+/* 对话框主体 */
+.prompt-compare-dialog .el-dialog__body {
+    padding: 15px 20px;
+    max-height: 78vh;
+    overflow-y: auto;
+}
+
+/* 选择器区域 - 紧凑横向布局 */
+.compare-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.compare-selector .el-select {
+    flex: 1;
+    max-width: 45%;
+}
+
+.compare-selector .el-button {
+    flex-shrink: 0;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.compare-selector .el-button:hover {
+    transform: scale(1.05);
+    color: #409eff;
+    background-color: #ecf5ff;
+}
+
+/* 对比内容区域 */
+.compare-content {
+    margin-top: 0;
+}
+
+/* 紧凑型信息表格 */
+.compare-info-table {
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.compare-info-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.compare-info-table thead {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.compare-info-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #303133;
+    border-bottom: 2px solid #409eff;
+    font-size: 14px;
+}
+
+.compare-info-table .version-tag {
+    font-size: 12px;
+    color: #606266;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+    border: 1px solid #dcdfe6;
+}
+
+.compare-info-table tbody tr {
+    border-bottom: 1px solid #ebeef5;
+    transition: background-color 0.2s ease;
+}
+
+.compare-info-table tbody tr:hover {
+    background-color: #f5f7fa;
+}
+
+.compare-info-table tbody tr.has-diff {
+    background-color: #fff7e6;
+}
+
+.compare-info-table tbody tr.has-diff:hover {
+    background-color: #fff3d9;
+}
+
+.compare-info-table td {
+    padding: 10px 15px;
+    color: #606266;
+    font-size: 13px;
+    position: relative;
+}
+
+.compare-info-table td.field-name {
+    font-weight: 600;
+    color: #909399;
+    background: #fafbfc;
+}
+
+.compare-info-table .diff-mark {
+    color: #ff9800;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+/* Diff 区块样式 */
+.compare-diff-section {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.diff-title {
+    margin: 0;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    border-bottom: 2px solid #dcdfe6;
+    font-size: 14px;
+    font-weight: 600;
+    color: #303133;
+}
+
+/* Diff 容器（支持同步滚动） */
+.compare-diff-container {
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.compare-columns {
+    display: flex;
+    width: 100%;
+    min-width: 100%;
+}
+
+.compare-diff-column {
+    flex: 1;
+    min-width: 50%;
+    border-right: 2px solid #e4e7ed;
+}
+
+.compare-diff-column:last-child {
+    border-right: none;
+}
+
+/* Diff 列头部 */
+.diff-column-header {
+    padding: 10px 15px;
+    background: #f5f7fa;
+    border-bottom: 1px solid #dcdfe6;
+    font-weight: 600;
+    font-size: 13px;
+    color: #606266;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.diff-badge {
+    font-size: 11px;
+    background: #fff7e6;
+    color: #ff9800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid #ffb74d;
+    font-weight: normal;
+}
+
+/* Diff 代码块 */
+.diff-code-block {
+    padding: 15px;
+    background: #fafbfc;
+    min-height: 200px;
+}
+
+.diff-code-block.has-content-diff {
+    background: #fff7e6;
+    border-left: 4px solid #ff9800;
+}
+
+.diff-code-block pre {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    word-wrap: break-word;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #2c3e50;
+}
+
+/* Git风格差异高亮 */
+.diff-line {
+    display: block;
+    padding: 2px 8px;
+    margin: 0 0 1px 0;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+    line-height: 1.6;
+}
+
+.diff-line:hover {
+    opacity: 0.9;
+}
+
+/* 新增的内容（绿色） */
+.diff-added {
+    background-color: #e6ffec;
+    color: #22863a;
+    border-left: 3px solid #34d058;
+}
+
+/* 删除的内容（红色） */
+.diff-removed {
+    background-color: #ffeef0;
+    color: #d73a49;
+    border-left: 3px solid #d73a49;
+}
+
+/* 修改的内容（黄色边框，用于行内差异） */
+.diff-modified {
+    background-color: #fff8e1;
+    color: #2c3e50;
+    border-left: 3px solid #ffa726;
+}
+
+/* 未修改的内容（灰色） */
+.diff-unchanged {
+    color: #6a737d;
+    background-color: transparent;
+}
+
+/* 行内单词级别差异高亮 */
+.diff-word-removed {
+    background-color: #fdb8c0;
+    color: #b31d28;
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: line-through;
+}
+
+.diff-word-added {
+    background-color: #acf2bd;
+    color: #176f2c;
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+/* 空内容提示 */
+.diff-empty {
+    color: #909399;
+    font-style: italic;
+}
+
+/* Diff容器滚动条 */
+.compare-diff-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.compare-diff-container::-webkit-scrollbar-track {
+    background: #f5f7fa;
+}
+
+.compare-diff-container::-webkit-scrollbar-thumb {
+    background: #c0c4cc;
+    border-radius: 4px;
+}
+
+.compare-diff-container::-webkit-scrollbar-thumb:hover {
+    background: #909399;
+}
+
+
+/* 空状态 */
+.compare-empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: #909399;
+}
+
+.compare-empty-state i {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.compare-empty-state p {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* 对话框底部按钮 */
+.prompt-compare-dialog .dialog-footer {
+    text-align: center;
+    padding: 15px 0 0 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 1400px) {
+    .compare-columns {
+        gap: 20px;
+    }
+    
+    .compare-column {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .compare-selector {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .compare-selector .el-select {
+        width: 100%;
+        max-width: 100%;
+    }
 }

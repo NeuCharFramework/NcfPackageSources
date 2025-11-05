@@ -17,12 +17,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.LlModel", b =>
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,77 +99,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.ToTable("Senparc_PromptRange_LlModel");
                 });
 
-            modelBuilder.Entity("Senparc.Xncf.PromptRange.Models.PromptResult", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<double>("CostTime")
-                        .HasColumnType("float");
-
-                    b.Property<decimal>("FinalScore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("HumanScore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LlmModelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PromptCostToken")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PromptItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PromptItemVersion")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("ResultCostToken")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ResultString")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("RobotScore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalCostToken")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Senparc_PromptRange_PromptResult");
-                });
-
-            modelBuilder.Entity("Senparc.Xncf.PromptRange.PromptItem", b =>
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -212,6 +142,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsAIGrade")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDraft")
                         .HasColumnType("bit");
@@ -288,7 +221,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.ToTable("Senparc_PromptRange_PromptItem");
                 });
 
-            modelBuilder.Entity("Senparc.Xncf.PromptRange.PromptRange", b =>
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -328,6 +261,76 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptRange");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<double>("CostTime")
+                        .HasColumnType("float");
+
+                    b.Property<decimal>("FinalScore")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("HumanScore")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LlmModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromptCostToken")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromptItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PromptItemVersion")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("ResultCostToken")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ResultString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("RobotScore")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TestType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalCostToken")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_PromptRange_PromptResult");
                 });
 #pragma warning restore 612, 618
         }

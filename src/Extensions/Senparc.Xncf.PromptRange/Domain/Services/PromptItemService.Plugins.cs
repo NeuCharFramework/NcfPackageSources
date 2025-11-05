@@ -46,14 +46,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         private string FindCommonParentPath(IEnumerable<string> paths)
         {
-            var splitPaths = paths.Select(p => p.Split(Path.DirectorySeparatorChar)).ToList();
+            var pathList = paths.ToList();
+            if (pathList.Count == 0)
+            {
+                throw new NcfExceptionBase("没有找到需要导出的路径");
+            }
+            
+            if (pathList.Count == 1)
+            {
+                // 只有一个路径，返回其父目录
+                return Directory.GetParent(pathList[0])?.FullName ?? pathList[0];
+            }
+            
+            // 标准化路径分隔符（兼容Windows和Unix）
+            var normalizedPaths = pathList.Select(p => 
+                p.Replace('\\', Path.DirectorySeparatorChar)
+                 .Replace('/', Path.DirectorySeparatorChar)
+            ).ToList();
+            
+            var splitPaths = normalizedPaths.Select(p => 
+                p.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+            ).ToList();
+            
             var minLen = splitPaths.Min(sp => sp.Length);
 
             var commonPath = new List<string>();
-            for (var i = 0; i < minLen; i++)
+            for (var i = 0; i < minLen - 1; i++) // minLen - 1 确保不包含最后的文件夹名
             {
                 var dir = splitPaths[0][i];
-                if (splitPaths.All(sp => sp[i] == dir))
+                // 大小写不敏感比较（兼容Windows和Unix）
+                if (splitPaths.All(sp => string.Equals(sp[i], dir, StringComparison.OrdinalIgnoreCase)))
                 {
                     commonPath.Add(dir);
                 }
@@ -63,7 +85,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
-            return Path.Combine(commonPath.ToArray());
+            // Unix系统需要保留根路径的 /
+            var result = Path.Combine(commonPath.ToArray());
+            if (normalizedPaths[0].StartsWith(Path.DirectorySeparatorChar.ToString()) && 
+                !result.StartsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                result = Path.DirectorySeparatorChar + result;
+            }
+            
+            return result;
         }
 
         /// <summary>

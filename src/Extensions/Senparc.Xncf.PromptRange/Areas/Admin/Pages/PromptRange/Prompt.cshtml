@@ -19,7 +19,9 @@
 
 <div class="promptPage">
     @*左侧 输入测试 *@
-    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow}" >
+    <div class="promptPage_leftArea" 
+         :class="{'promptPage_leftAreaHide':promptLeftShow}"
+         :style="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized ? {width: leftAreaWidth + 'px'} : {}">
         @*配置*@
         <div class="boxCard configurineArea" v-if="isBoxVisible">
             @*选择靶场*@
@@ -72,8 +74,8 @@
                                        :disabled="item.disabled">
                                 <div class="d-flex justify-content-between align-center" style="gap:20px">
                                     <span>{{ item.label }}</span>
-                                    <div>
-
+                                    <div style="display: flex; gap: 5px;">
+                                        <el-button type="success" size="mini" icon="el-icon-s-data" @@click="openCompareDialog($event, item)">对比</el-button>
                                         <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
                                         <el-button type="primary" size="mini" @@click="promptNameRest($event,item.id)">重置名称</el-button>
                                         <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">删除</el-button>
@@ -160,9 +162,9 @@
                 </div>
                 @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
                 <div style="padding-left: 15px; margin-top:25px;">
-                    <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+                    <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="开" inactive-text="关"></el-switch>
                 </div>
-
             </div>
         </div>
         <div class="trapezoid" @@click="foldsidebar">
@@ -171,8 +173,19 @@
 
        
     </div>
+    
+    @* 左侧和中间区域之间的拖动分隔条 *@
+    <div class="resize-handle resize-handle-left" 
+         v-if="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized"
+         @@mousedown="startResizeLeft"
+         @@dblclick="resetAreaWidths"
+         title="拖动调整宽度 | 双击还原默认"></div>
+    
     @*中间 输入Prompt*@
-    <div class="promptPage_centerArea">
+    <div class="promptPage_centerArea" 
+         v-if="!box2Hidden" 
+         :class="{'promptPage_centerAreaMaximized': centerAreaMaximized}"
+         :style="!centerAreaMaximized && !rightAreaMaximized ? {width: centerAreaWidth + 'px'} : {}">
         <div class="boxCard entertarget" >
                 @* 请新建或选择靶场 mask *@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
@@ -328,8 +341,17 @@
 
             </div>
     </div>
+    
+    @* 中间和右侧区域之间的拖动分隔条 *@
+    <div class="resize-handle resize-handle-right" 
+         v-if="!box2Hidden && !centerAreaMaximized && !rightAreaMaximized"
+         @@mousedown="startResizeRight"
+         @@dblclick="resetAreaWidths"
+         title="拖动调整宽度 | 双击还原默认"></div>
+    
     @*右侧 评分|分析*@
-    <div class="promptPage_rightArea">
+    <div class="promptPage_rightArea" 
+         :class="{'promptPage_rightAreaMaximized': rightAreaMaximized, 'promptPage_rightAreaHidden': box1Hidden && box3Hidden}">
         @*输出*@
         <div class="boxCard outputArea" 
              :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 
@@ -715,23 +737,32 @@
             </el-select>
             </el-form-item> *@
             <el-form-item label="靶场和靶道" prop="checkList" label-width="130px">
-                @* <el-select v-model="expectedPluginFoem.promptIdList" :disabled="!expectedPluginFoem.rangeId"
-                multiple
-                collapse-tags
-                placeholder="请选择靶道" class="selectRow" @@change="handleCheckedChange">
-                <el-option v-for="item in expectedPluginFieldList"
-                v-key="item.id"
-                :label="item.label"
-                :value="item.value"
-                :disabled="item.disabled">
-                </el-option>
-                </el-select>
-                <div>
-                全选： <el-checkbox :disabled="!expectedPluginFoem.rangeId" :indeterminate="isIndeterminate" v-model="checkAll" @@change="handleCheckAllChange">全选</el-checkbox>
-                </div> *@
-                @* 默认展开 :default-expanded-keys="[2, 3]" *@
+                @* 操作按钮组 *@
+                <div class="plugin-export-actions">
+                    <div class="action-buttons">
+                        <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">全选</el-button>
+                        <el-button size="mini" icon="el-icon-refresh-left" @@click="exportPluginInvertSelection">反选</el-button>
+                        <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">清空</el-button>
+                        <el-divider direction="vertical"></el-divider>
+                        <el-button size="mini" :icon="exportPluginExpandAll ? 'el-icon-folder-opened' : 'el-icon-folder'" @@click="exportPluginToggleExpand">
+                            {{exportPluginExpandAll ? '收起全部' : '展开全部'}}
+                        </el-button>
+                    </div>
+                    <div class="selection-count">
+                        <el-tag size="small" type="info">
+                            已选择: <strong>{{exportPluginSelectedCount}}</strong> 个靶道
+                        </el-tag>
+                    </div>
+                </div>
+                @* 树形选择器 *@
                 <div class="expectedPluginTreeBox">
-                    <el-tree ref="expectedPluginTree" :data="expectedPluginFieldList" show-checkbox node-key="idkey" :props="defaultProps" @@check-change="treeCheckChange">
+                    <el-tree ref="expectedPluginTree" 
+                             :data="expectedPluginFieldList" 
+                             show-checkbox 
+                             node-key="idkey" 
+                             :props="defaultProps" 
+                             :default-expand-all="exportPluginExpandAll"
+                             @@check-change="treeCheckChange">
                     </el-tree>
                 </div>
             </el-form-item>
@@ -764,6 +795,202 @@
             <el-button type="primary" @@click="confirmtargetlaneName">确 定</el-button>
         </span>
     </el-dialog>
+    
+    @* Prompt 对比对话框 *@
+    <el-dialog title="对比 Prompt" 
+               :visible.sync="compareDialogVisible" 
+               width="90%" 
+               top="5vh"
+               class="prompt-compare-dialog"
+               :close-on-click-modal="false">
+        @* 选择对比的Prompt *@
+        <div class="compare-selector">
+            <el-select v-model="comparePromptAId" 
+                       filterable 
+                       placeholder="选择 Prompt A" 
+                       @@change="loadComparePromptA"
+                       style="width: 40%;">
+                <el-option v-for="item in promptOpt"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
+            
+            <el-button type="text" 
+                       icon="el-icon-sort" 
+                       @@click="swapComparePrompts"
+                       style="margin: 0 20px;">
+                交换
+            </el-button>
+            
+            <el-select v-model="comparePromptBId" 
+                       filterable 
+                       placeholder="选择 Prompt B" 
+                       @@change="loadComparePromptB"
+                       style="width: 40%;">
+                <el-option v-for="item in promptOpt"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
+        
+        @* 对比内容区域 *@
+        <div class="compare-content" v-if="comparePromptA && comparePromptB">
+            @* 基本信息对比（紧凑型表格） *@
+            <div class="compare-info-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">字段</th>
+                            <th>📝 Prompt A <span class="version-tag">{{comparePromptA.fullVersion}}</span></th>
+                            <th>📝 Prompt B <span class="version-tag">{{comparePromptB.fullVersion}}</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName}">
+                            <td class="field-name">靶场</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.targetRangeName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.targetRangeName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName}">
+                            <td class="field-name">靶道</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.targetLaneName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.targetLaneName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName}">
+                            <td class="field-name">战术</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.tacticalName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.tacticalName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
+                            <td class="field-name">别名</td>
+                            <td>{{comparePromptA.nickName || '--'}}</td>
+                            <td>
+                                {{comparePromptB.nickName || '--'}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName}">
+                            <td class="field-name">模型</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.modelName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.modelName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)}">
+                            <td class="field-name">Temperature</td>
+                            <td>{{comparePromptA.temperature}}</td>
+                            <td>
+                                {{comparePromptB.temperature}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.maxTokens, comparePromptB.maxTokens)}">
+                            <td class="field-name">Max Tokens</td>
+                            <td>{{comparePromptA.maxTokens}}</td>
+                            <td>
+                                {{comparePromptB.maxTokens}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.maxTokens, comparePromptB.maxTokens)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.topP, comparePromptB.topP)}">
+                            <td class="field-name">Top P</td>
+                            <td>{{comparePromptA.topP}}</td>
+                            <td>
+                                {{comparePromptB.topP}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.topP, comparePromptB.topP)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.presencePenalty, comparePromptB.presencePenalty)}">
+                            <td class="field-name">Presence Penalty</td>
+                            <td>{{comparePromptA.presencePenalty}}</td>
+                            <td>
+                                {{comparePromptB.presencePenalty}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.presencePenalty, comparePromptB.presencePenalty)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.frequencyPenalty, comparePromptB.frequencyPenalty)}">
+                            <td class="field-name">Frequency Penalty</td>
+                            <td>{{comparePromptA.frequencyPenalty}}</td>
+                            <td>
+                                {{comparePromptB.frequencyPenalty}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.frequencyPenalty, comparePromptB.frequencyPenalty)">●</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            @* Prompt内容对比（左右同步滚动，Git风格差异显示） *@
+            <div class="compare-diff-section">
+                <h4 class="diff-title">📄 Prompt 内容对比</h4>
+                <div class="compare-diff-container" ref="compareScrollContainer">
+                    <div class="compare-columns">
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt A</div>
+                            <div class="diff-code-block">
+                                <pre v-html="getContentDiffHtml('A')"></pre>
+                            </div>
+                        </div>
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt B  
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">有差异</span>
+                            </div>
+                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)}">
+                                <pre v-html="getContentDiffHtml('B')"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            @* 变量配置对比（Git风格差异显示） *@
+            <div class="compare-diff-section" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
+                <h4 class="diff-title">🎯 变量配置对比</h4>
+                <div class="compare-diff-container">
+                    <div class="compare-columns">
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt A</div>
+                            <div class="diff-code-block">
+                                <pre v-html="getVariablesDiffHtml('A')"></pre>
+                            </div>
+                        </div>
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt B
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)">有差异</span>
+                            </div>
+                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
+                                <pre v-html="getVariablesDiffHtml('B')"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        @* 空状态提示 *@
+        <div v-else class="compare-empty-state">
+            <i class="el-icon-document-copy" style="font-size: 60px; color: #dcdfe6;"></i>
+            <p>请选择两个 Prompt 进行对比</p>
+        </div>
+        
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="compareDialogVisible = false">关闭</el-button>
+        </div>
+    </el-dialog>
 </div>
 
 
@@ -781,6 +1008,7 @@
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>
