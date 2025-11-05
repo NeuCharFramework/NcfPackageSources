@@ -1663,28 +1663,30 @@ think::before {
     overflow-y: auto;
 }
 
-/* 选择器区域 */
+/* 选择器区域 - 紧凑横向布局 */
 .compare-selector {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
-    padding: 15px 20px;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 15px;
     background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .compare-selector .el-select {
     flex: 1;
-    max-width: 400px;
+    max-width: 45%;
 }
 
 .compare-selector .el-button {
-    font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 8px;
+    flex-shrink: 0;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 6px;
     transition: all 0.3s ease;
 }
 

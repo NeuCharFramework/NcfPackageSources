@@ -803,45 +803,38 @@
                top="5vh"
                class="prompt-compare-dialog"
                :close-on-click-modal="false">
-        @* 选择对比的Prompt（横向布局） *@
-        <div class="compare-selector-horizontal">
-            <div class="selector-column">
-                <div class="selector-label">📝 Prompt A</div>
-                <el-select v-model="comparePromptAId" 
-                           filterable 
-                           placeholder="选择 Prompt A" 
-                           @@change="loadComparePromptA"
-                           style="width: 100%;">
-                    <el-option v-for="item in promptOpt"
-                               :key="item.value"
-                               :label="item.label"
-                               :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
+        @* 选择对比的Prompt *@
+        <div class="compare-selector">
+            <el-select v-model="comparePromptAId" 
+                       filterable 
+                       placeholder="选择 Prompt A" 
+                       @@change="loadComparePromptA"
+                       style="width: 40%;">
+                <el-option v-for="item in promptOpt"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
             
-            <div class="selector-swap">
-                <el-button type="text" 
-                           icon="el-icon-sort" 
-                           @@click="swapComparePrompts"
-                           title="交换">
-                </el-button>
-            </div>
+            <el-button type="text" 
+                       icon="el-icon-sort" 
+                       @@click="swapComparePrompts"
+                       style="margin: 0 20px;">
+                交换
+            </el-button>
             
-            <div class="selector-column">
-                <div class="selector-label">📝 Prompt B</div>
-                <el-select v-model="comparePromptBId" 
-                           filterable 
-                           placeholder="选择 Prompt B" 
-                           @@change="loadComparePromptB"
-                           style="width: 100%;">
-                    <el-option v-for="item in promptOpt"
-                               :key="item.value"
-                               :label="item.label"
-                               :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
+            <el-select v-model="comparePromptBId" 
+                       filterable 
+                       placeholder="选择 Prompt B" 
+                       @@change="loadComparePromptB"
+                       style="width: 40%;">
+                <el-option v-for="item in promptOpt"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
         </div>
         
         @* 对比内容区域 *@
