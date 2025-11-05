@@ -92,7 +92,7 @@ var app = new Vue({
             dodgersLoading: false, // 连发loading
             // 配置 输入 ---end
             // prompt请求参数 ---start
-            promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
+            promptParamVisible: false,// prompt请求参数 显隐 true是显示 false是默认隐藏
             promptParamFormLoading: false,
             promptParamForm: {
                 prefix: '',
@@ -118,6 +118,7 @@ var app = new Vue({
             outputMaxDeci: -1, // 输出列表的最高分
             outputActive: '', // 输出列表选中查看|评分
             outputList: [],  // 输出列表
+            robotScoreLoadingMap: {}, // AI评分加载状态映射 {itemId: true/false}
             chartData: [], // 图表数据
             chartInstance: null, // 图表实例
             // 输出 ---end
@@ -266,7 +267,14 @@ var app = new Vue({
             box3Hidden: false,
             lastClickedBox: null,
             isBoxVisible: true, // 控制盒子显示和隐藏的状态
-            foldsidebarShow: false
+            foldsidebarShow: false,
+            // 自定义滚动条缩略图
+            showScrollbarThumbnails: false,
+            scrollInfo: {
+                scrollTop: 0,
+                scrollHeight: 0,
+                clientHeight: 0
+            }
         };
     },
     computed: {
@@ -2159,10 +2167,14 @@ var app = new Vue({
                     // 从新获取靶场列表
                     this.getPromptOptData()
                     // 重新获取输出列表
-                    this.getOutputList(item.promptId)
+                    await this.getOutputList(item.promptId)
+                    // 清除AI评分加载状态
+                    this.$set(this.robotScoreLoadingMap, item.id, false)
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
+                    // 清除AI评分加载状态
+                    this.$set(this.robotScoreLoadingMap, item.id, false)
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
                         type: 'error',
@@ -2225,7 +2237,10 @@ var app = new Vue({
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return item
                         })
-                        this.saveManualScore(this.outputList[index])
+                        // 设置AI评分加载状态
+                        const itemId = this.outputList[index].id
+                        this.$set(this.robotScoreLoadingMap, itemId, true)
+                        this.saveManualScore(this.outputList[index], index)
                     } else {
                         this.$message({
                             message: '请设置预期结果！',
@@ -2234,7 +2249,10 @@ var app = new Vue({
                     }
                 } else {
                     // todo 接口对接 重新评分
-                    this.saveManualScore(this.outputList[index])
+                    // 设置AI评分加载状态
+                    const itemId = this.outputList[index].id
+                    this.$set(this.robotScoreLoadingMap, itemId, true)
+                    this.saveManualScore(this.outputList[index], index)
                 }
                 return
             }
@@ -3070,6 +3088,174 @@ var app = new Vue({
             } catch (err) {
                 console.error('Oops, unable to copy', err);
             }  
+        },
+        // 自定义滚动条缩略图相关方法
+        handleResultScroll(event) {
+            const el = event.target;
+            this.scrollInfo = {
+                scrollTop: el.scrollTop,
+                scrollHeight: el.scrollHeight,
+                clientHeight: el.clientHeight
+            };
+        },
+        getThumbnailStyle(index) {
+            const container = document.getElementById('resultBox');
+            if (!container || !this.outputList || this.outputList.length === 0) {
+                return {};
+            }
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || items.length === 0) return {};
+            
+            const totalHeight = container.scrollHeight;
+            const trackHeight = container.clientHeight;
+            
+            // 计算每个item的相对位置
+            let totalItemsHeight = 0;
+            let currentTop = 0;
+            
+            for (let i = 0; i < items.length; i++) {
+                totalItemsHeight += items[i].offsetHeight;
+                if (i < index) {
+                    currentTop += items[i].offsetHeight;
+                }
+            }
+            
+            const currentHeight = items[index] ? items[index].offsetHeight : 30;
+            
+            // 计算在缩略图轨道中的位置（按比例）
+            const top = (currentTop / totalHeight) * trackHeight;
+            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); // 最小20px
+            
+            return {
+                top: top + 'px',
+                height: height + 'px'
+            };
+        },
+        isResultInView(index) {
+            const container = document.getElementById('resultBox');
+            if (!container) return false;
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || !items[index]) return false;
+            
+            const item = items[index];
+            const containerRect = container.getBoundingClientRect();
+            const itemRect = item.getBoundingClientRect();
+            
+            // 判断item是否在可视区域内
+            return itemRect.top >= containerRect.top && 
+                   itemRect.top <= containerRect.bottom;
+        },
+        getViewportStyle() {
+            const container = document.getElementById('resultBox');
+            if (!container) return {};
+            
+            const scrollTop = this.scrollInfo.scrollTop;
+            const scrollHeight = this.scrollInfo.scrollHeight;
+            const clientHeight = this.scrollInfo.clientHeight;
+            
+            if (scrollHeight === 0) return {};
+            
+            const trackHeight = clientHeight;
+            const viewportTop = (scrollTop / scrollHeight) * trackHeight;
+            const viewportHeight = (clientHeight / scrollHeight) * trackHeight;
+            
+            return {
+                top: viewportTop + 'px',
+                height: viewportHeight + 'px'
+            };
+        },
+        scrollToResult(index) {
+            const container = document.getElementById('resultBox');
+            if (!container) return;
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || !items[index]) return;
+            
+            items[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.outputSelectSwitch(index);
+        },
+        formatTime(timeStr) {
+            // 提取时间部分，例如 "2024-01-01 10:30:45" => "10:30"
+            if (!timeStr) return '';
+            const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
+            return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
+        },
+        // 获取最终评分（使用系统的finalScore字段）
+        getFinalScore(item) {
+            if (!item) return null;
+            // 直接使用系统的finalScore字段，这是被标记为红色的那个分数
+            if (item.finalScore !== undefined && item.finalScore !== null && 
+                item.finalScore !== -1 && item.finalScore !== '-1') {
+                return item.finalScore;
+            }
+            return null;
+        },
+        // 获取评分等级的样式类
+        getScoreBarClass(item) {
+            const score = this.getFinalScore(item);
+            if (score === null) return '';
+            
+            if (score >= 8) return 'score-excellent';      // 8-10分：优秀
+            if (score >= 6) return 'score-good';           // 6-8分：良好
+            if (score >= 4) return 'score-medium';         // 4-6分：中等
+            if (score >= 2) return 'score-low';            // 2-4分：较低
+            return 'score-poor';                           // 0-2分：差
+        },
+        // 获取数据条的宽度样式（Excel风格）
+        getScoreBarStyle(item) {
+            const score = this.getFinalScore(item);
+            if (score === null) return { width: '0%' };
+            
+            // 0-10分映射到0-100%
+            const percentage = Math.min(Math.max((score / 10) * 100, 0), 100);
+            return {
+                width: percentage + '%'
+            };
+        },
+        // 获取缩略图的工具提示文本
+        getThumbnailTooltip(item) {
+            if (!item) return '';
+            
+            let tooltip = item.addTime;
+            const score = this.getFinalScore(item);
+            
+            if (score !== null) {
+                // 判断finalScore等于哪个评分，那个就是最终评分类型
+                let scoreType = '';
+                if (item.finalScore === item.humanScore) {
+                    scoreType = '手动评分';
+                } else if (item.finalScore === item.robotScore) {
+                    scoreType = 'AI评分';
+                } else {
+                    scoreType = '最终评分';
+                }
+                tooltip += `\n${scoreType}: ${score.toFixed(1)}分`;
+            }
+            
+            return tooltip;
+        },
+        // 处理输出区域的鼠标移动事件 - 判断是否在右半侧
+        handleOutputAreaMouseMove(event) {
+            const outputArea = event.currentTarget;
+            const rect = outputArea.getBoundingClientRect();
+            const mouseX = event.clientX;
+            
+            // 计算鼠标相对于输出区域的位置
+            const relativeX = mouseX - rect.left;
+            const halfWidth = rect.width / 2;
+            
+            // 只在右半侧显示滚动条
+            if (relativeX > halfWidth) {
+                this.showScrollbarThumbnails = true;
+            } else {
+                this.showScrollbarThumbnails = false;
+            }
+        },
+        // 处理鼠标离开输出区域
+        handleOutputAreaMouseLeave() {
+            this.showScrollbarThumbnails = false;
         }
     }
 });

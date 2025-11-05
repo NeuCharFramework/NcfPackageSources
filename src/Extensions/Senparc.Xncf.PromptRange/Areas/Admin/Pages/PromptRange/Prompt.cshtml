@@ -19,7 +19,7 @@
 
 <div class="promptPage">
     @*左侧 输入测试 *@
-    <div class="promptPage_leftArea" class="{'promptPage_leftAreaHide':promptLeftShow}" >
+    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow}" >
         @*配置*@
         <div class="boxCard configurineArea" v-if="isBoxVisible">
             @*选择靶场*@
@@ -38,7 +38,7 @@
                             </div>
 
                         </div>
-                        <el-select v-model="promptField" filterable placeholder="请选择靶场" :popper-append-to-body="false" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
+                        <el-select v-model="promptField" filterable placeholder="请选择靶场" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                             <el-option v-for="item in promptFieldOpt"
                                        v-key="item.id"
                                        :label="item.label"
@@ -171,111 +171,9 @@
 
        
     </div>
-    @*右侧 评分|分析*@
-    <div class="promptPage_rightArea">
-        @*输出*@
-        <div class="boxCard outputArea" :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" v-if="!box1Hidden">
-            <div class="promptVersion">
-                <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong>   <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer" @@click="copyInfo"></i>
-                    <span style="margin-right:5px;margin-left:20px;">靶场:</span>
-                    <span>{{promptDetail.promptFieldStr||'--'}}</span>
-                    <span style="margin-right:5px;margin-left:20px;">靶道:</span>
-                    <span>{{promptDetail.promptStr||'--'}}</span>
-                    <span style="margin-right:5px;margin-left:20px;">瞄准:</span>
-                    <span>{{promptDetail.tacticsStr||'--'}}</span>
-                </span>
-
-
-                <span><i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box1')"></i></span>
-            </div>
-          
-            <div class="titleRow">
-                <div class="titleRow_leftBox">
-                    <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
-                    <div class="titleContent">输出</div>
-                </div>
-                <div class="titleRow_scoreBox">
-                    <span>平均分:</span>
-                    <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
-                </div>
-                <div class="titleRow_scoreBox">
-                    <span>最高分:</span>
-                    <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
-                </div>
-            </div>
-            <div class="outputArea_contentBox" id="resultBox">
-                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)">
-                    <div class="promptResult_Item_Title">
-                        <div class="promptReultTimeArea">
-                            <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
-                        </div>
-                        <div class="copyButtonArea">
-                            <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
-                            <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
-                        </div>
-                    </div>
-                    <div class="contentRow" v-html="item.resultStringHtml">
-                    </div>
-                    <div class="operateRow" v-if="item.resultString.length>0">
-                        <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
-                            <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span :class="checkUseRed(item,'robotScore')">AI评分: {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}</span>
-                        </div>
-                        <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
-                            <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
-                        </div>
-                    </div>
-                    <div v-if="item.isScoreView" class="scoreRow">
-                        <div class="tabsArea">
-                            @* @@click="app.alBtnScoring(index)" *@
-                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">AI评分</div>
-                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">手动评分</div>
-                        </div>
-                        <div v-if="item.scoreType === '1'" class="alScoreArea">
-                            <div v-for="(elItem,elindex) in item.alResultList" v-key="elindex" class="valFormItem">
-                                <span class="label">{{elItem.label}}</span>
-                                <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
-                            </div>
-                            <div class="aiOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">开始打分</el-button>
-                                <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
-                            </div>
-                        </div>
-                        <div v-if="item.scoreType === '2'" class="manualScoreArea">
-                            <div class="sliderTextRow">
-                                <span>0.0</span>
-                                <span>10.0</span>
-                            </div>
-                            <div class="my-slider">
-                                <div class="my-slider__tooltip" :style="style(item.scoreVal)">
-                                    <el-tag class="my-slider__tooltip-wrapper"
-                                            size="mini"
-                                            effect="plain"
-                                            type="info">
-                                        {{ formatTooltip(item.scoreVal) }}
-                                    </el-tag>
-                                </div>
-                                <el-slider v-model="item.scoreVal"
-                                           :show-tooltip="false"
-                                           :min="0" :max="10" :step="0.1"></el-slider>
-                            </div>
-                            @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
-                            <div class="manualOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
-                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">取消</el-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="outputList.length===0" class="emptyDataArea">
-                    暂无生成结果
-                </div>
-            </div>
-        </div>
-        @*分数趋势图*@
-        <div class="enterbox" v-if="!box2Hidden">
-            <div class="boxCard entertarget" >
+    @*中间 输入Prompt*@
+    <div class="promptPage_centerArea">
+        <div class="boxCard entertarget" >
                 @* 请新建或选择靶场 mask *@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
@@ -349,9 +247,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @* Prompt请求参数 *@
-                    <div class="configurineAreaItem rightItemBox" :class="{'rightItemHide':promptParamVisible}">
+                        @* Prompt请求参数 - 移到leftItemBox内部，作为下方区域 *@
+                        <div class="promptParamSection" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
                                 <div class="titleContent">Prompt请求参数</div>
@@ -424,12 +321,158 @@
                                 @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">确 定</el-button> *@
                             </div>
                         </div>
+                        </div>
                     </div>
                 </div>
 
 
             </div>
-            <div class="boxCard analysisArea" v-if="!box3Hidden">
+    </div>
+    @*右侧 评分|分析*@
+    <div class="promptPage_rightArea">
+        @*输出*@
+        <div class="boxCard outputArea" 
+             :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 
+             v-if="!box1Hidden"
+             @@mousemove="handleOutputAreaMouseMove"
+             @@mouseleave="handleOutputAreaMouseLeave">
+            <div class="promptVersion">
+                <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong>   <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer" @@click="copyInfo"></i>
+                    <span style="margin-right:5px;margin-left:20px;">靶场:</span>
+                    <span>{{promptDetail.promptFieldStr||'--'}}</span>
+                    <span style="margin-right:5px;margin-left:20px;">靶道:</span>
+                    <span>{{promptDetail.promptStr||'--'}}</span>
+                    <span style="margin-right:5px;margin-left:20px;">瞄准:</span>
+                    <span>{{promptDetail.tacticsStr||'--'}}</span>
+                </span>
+
+
+                <span><i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box1')"></i></span>
+            </div>
+          
+            <div class="titleRow">
+                <div class="titleRow_leftBox">
+                    <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
+                    <div class="titleContent">输出</div>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>平均分:</span>
+                    <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
+                </div>
+                <div class="titleRow_scoreBox">
+                    <span>最高分:</span>
+                    <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
+                </div>
+            </div>
+            <div class="outputArea_contentBox" id="resultBox" @@scroll="handleResultScroll">
+                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)" :data-result-index="index">
+                    <div class="promptResult_Item_Title">
+                        <div class="promptReultTimeArea">
+                            <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
+                        </div>
+                        <div class="copyButtonArea">
+                            <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
+                            <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
+                        </div>
+                    </div>
+                    <div class="contentRow" v-html="item.resultStringHtml">
+                    </div>
+                    <div class="operateRow" v-if="item.resultString.length>0">
+                        <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
+                            <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span :class="checkUseRed(index,item,'robotScore')">
+                                AI评分: 
+                                <template v-if="robotScoreLoadingMap[item.id]">
+                                    <i class="el-icon-loading"></i> AI 评分中...
+                                </template>
+                                <template v-else>
+                                    {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}
+                                </template>
+                            </span>
+                        </div>
+                        <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
+                            <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
+                            <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
+                        </div>
+                    </div>
+                    <div v-if="item.isScoreView" class="scoreRow">
+                        <div class="tabsArea">
+                            @* @@click="app.alBtnScoring(index)" *@
+                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">AI评分</div>
+                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">手动评分</div>
+                        </div>
+                        <div v-if="item.scoreType === '1'" class="alScoreArea">
+                            <div v-for="(elItem,elindex) in item.alResultList" v-key="elindex" class="valFormItem">
+                                <span class="label">{{elItem.label}}</span>
+                                <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
+                            </div>
+                            <div class="aiOperation">
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">开始打分</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
+                            </div>
+                        </div>
+                        <div v-if="item.scoreType === '2'" class="manualScoreArea">
+                            <div class="sliderTextRow">
+                                <span>0.0</span>
+                                <span>10.0</span>
+                            </div>
+                            <div class="my-slider">
+                                <div class="my-slider__tooltip" :style="style(item.scoreVal)">
+                                    <el-tag class="my-slider__tooltip-wrapper"
+                                            size="mini"
+                                            effect="plain"
+                                            type="info">
+                                        {{ formatTooltip(item.scoreVal) }}
+                                    </el-tag>
+                                </div>
+                                <el-slider v-model="item.scoreVal"
+                                           :show-tooltip="false"
+                                           :min="0" :max="10" :step="0.1"></el-slider>
+                            </div>
+                            @*<el-input v-model="manualScorVal" clearable placeholder="请输入" class="input"></el-input>*@
+                            <div class="manualOperation">
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
+                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">取消</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="outputList.length===0" class="emptyDataArea">
+                    暂无生成结果
+                </div>
+            </div>
+            @* 自定义滚动条缩略图 *@
+            <div class="custom-scrollbar-thumbnail" 
+                 v-if="outputList.length > 0" 
+                 v-show="showScrollbarThumbnails">
+                <div class="thumbnail-track">
+                    <div v-for="(item,index) in outputList" 
+                         :key="'thumb-'+index"
+                         class="thumbnail-item"
+                         :class="{'thumbnail-item-active': isResultInView(index)}"
+                         :style="getThumbnailStyle(index)"
+                         :title="getThumbnailTooltip(item)"
+                         @@click="scrollToResult(index)">
+                        @* Excel风格数据条背景 *@
+                        <div v-if="getFinalScore(item) !== null" 
+                             class="thumbnail-score-bar" 
+                             :class="getScoreBarClass(item)"
+                             :style="getScoreBarStyle(item)">
+                        </div>
+                        @* 内容容器 *@
+                        <div class="thumbnail-content">
+                            <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
+                            <span v-if="getFinalScore(item) !== null" class="thumbnail-score">
+                                {{getFinalScore(item).toFixed(1)}}分
+                            </span>
+                        </div>
+                    </div>
+                    <div class="thumbnail-viewport" :style="getViewportStyle()"></div>
+                </div>
+            </div>
+        </div>
+        @*分数趋势图*@
+        <div class="boxCard analysisArea" v-if="!box3Hidden">
                 
                 <div class="titleRow">
                     <div class="titleRow_leftBox">
@@ -453,7 +496,6 @@
 
 
             </div>
-        </div>
         
     </div>
     @*版本记录-抽屉 drawer*@
