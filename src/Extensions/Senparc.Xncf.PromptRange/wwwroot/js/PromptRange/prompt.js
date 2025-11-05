@@ -3819,40 +3819,97 @@ var app = new Vue({
             return this.escapeHtml(side === 'A' ? formattedA : formattedB);
         },
         
-        // 渲染差异HTML（Git风格）
+        // 渲染差异HTML（Git风格，支持行内单词高亮）
         renderDiffHtml(diff, side) {
             let html = '';
+            let i = 0;
             
-            diff.forEach(part => {
+            while (i < diff.length) {
+                const part = diff[i];
                 const lines = part.value.split('\n');
                 // 移除最后的空行
                 if (lines[lines.length - 1] === '') {
                     lines.pop();
                 }
                 
-                lines.forEach(line => {
-                    const escapedLine = this.escapeHtml(line);
+                // 检查是否是相邻的删除和新增（可以做行内diff）
+                const nextPart = i + 1 < diff.length ? diff[i + 1] : null;
+                const isInlineDiffCandidate = 
+                    part.removed && 
+                    nextPart && 
+                    nextPart.added && 
+                    lines.length === 1 && 
+                    nextPart.value.split('\n').filter(l => l).length === 1;
+                
+                if (isInlineDiffCandidate) {
+                    // 行内单词级别差异
+                    const oldLine = lines[0];
+                    const newLine = nextPart.value.split('\n').filter(l => l)[0];
                     
-                    if (part.added) {
-                        // 新增的内容（绿色背景）- 仅在B侧显示
-                        if (side === 'B') {
-                            html += `<span class="diff-line diff-added">+ ${escapedLine}</span>\n`;
-                        }
-                        // A侧不显示新增内容
-                    } else if (part.removed) {
-                        // 删除的内容（红色背景）- 仅在A侧显示
-                        if (side === 'A') {
-                            html += `<span class="diff-line diff-removed">- ${escapedLine}</span>\n`;
-                        }
-                        // B侧不显示删除内容
+                    if (side === 'A') {
+                        html += `<span class="diff-line diff-modified">- ${this.renderInlineDiff(oldLine, newLine, 'removed')}</span>`;
                     } else {
-                        // 未修改的内容（灰色）
-                        html += `<span class="diff-line diff-unchanged">  ${escapedLine}</span>\n`;
+                        html += `<span class="diff-line diff-modified">+ ${this.renderInlineDiff(oldLine, newLine, 'added')}</span>`;
                     }
-                });
-            });
+                    
+                    i += 2; // 跳过下一个part（因为已经处理了）
+                } else {
+                    // 常规的整行差异
+                    lines.forEach((line, lineIndex) => {
+                        if (part.added) {
+                            // 新增的内容（绿色背景）- 仅在B侧显示
+                            if (side === 'B') {
+                                html += `<span class="diff-line diff-added">+ ${this.escapeHtml(line)}</span>`;
+                            }
+                            // A侧不显示新增内容
+                        } else if (part.removed) {
+                            // 删除的内容（红色背景）- 仅在A侧显示
+                            if (side === 'A') {
+                                html += `<span class="diff-line diff-removed">- ${this.escapeHtml(line)}</span>`;
+                            }
+                            // B侧不显示删除内容
+                        } else {
+                            // 未修改的内容（灰色）
+                            html += `<span class="diff-line diff-unchanged">  ${this.escapeHtml(line)}</span>`;
+                        }
+                    });
+                    i++;
+                }
+            }
             
             return html || '<span class="diff-empty">暂无内容</span>';
+        },
+        
+        // 渲染行内单词级别差异
+        renderInlineDiff(oldText, newText, mode) {
+            if (typeof Diff === 'undefined' || !Diff.diffWords) {
+                return this.escapeHtml(mode === 'removed' ? oldText : newText);
+            }
+            
+            const wordDiff = Diff.diffWords(oldText, newText);
+            let html = '';
+            
+            wordDiff.forEach(part => {
+                const escapedText = this.escapeHtml(part.value);
+                
+                if (mode === 'removed') {
+                    // A侧：高亮删除的单词
+                    if (part.removed) {
+                        html += `<mark class="diff-word-removed">${escapedText}</mark>`;
+                    } else if (!part.added) {
+                        html += escapedText;
+                    }
+                } else {
+                    // B侧：高亮新增的单词
+                    if (part.added) {
+                        html += `<mark class="diff-word-added">${escapedText}</mark>`;
+                    } else if (!part.removed) {
+                        html += escapedText;
+                    }
+                }
+            });
+            
+            return html;
         },
         
         // HTML转义工具函数

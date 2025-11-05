@@ -1855,11 +1855,11 @@ think::before {
 .diff-code-block pre {
     margin: 0;
     padding: 0;
-    white-space: pre-wrap;
+    white-space: pre;
     word-wrap: break-word;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 13px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #2c3e50;
 }
 
@@ -1867,9 +1867,10 @@ think::before {
 .diff-line {
     display: block;
     padding: 2px 8px;
-    margin: 0;
+    margin: 0 0 1px 0;
     border-radius: 3px;
     transition: background-color 0.2s ease;
+    line-height: 1.6;
 }
 
 .diff-line:hover {
@@ -1890,10 +1891,35 @@ think::before {
     border-left: 3px solid #d73a49;
 }
 
+/* 修改的内容（黄色边框，用于行内差异） */
+.diff-modified {
+    background-color: #fff8e1;
+    color: #2c3e50;
+    border-left: 3px solid #ffa726;
+}
+
 /* 未修改的内容（灰色） */
 .diff-unchanged {
     color: #6a737d;
     background-color: transparent;
+}
+
+/* 行内单词级别差异高亮 */
+.diff-word-removed {
+    background-color: #fdb8c0;
+    color: #b31d28;
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: line-through;
+}
+
+.diff-word-added {
+    background-color: #acf2bd;
+    color: #176f2c;
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
 }
 
 /* 空内容提示 */
