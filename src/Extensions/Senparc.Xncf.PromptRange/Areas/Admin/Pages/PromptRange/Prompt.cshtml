@@ -19,7 +19,9 @@
 
 <div class="promptPage">
     @*左侧 输入测试 *@
-    <div class="promptPage_leftArea" :class="{'promptPage_leftAreaHide':promptLeftShow}" >
+    <div class="promptPage_leftArea" 
+         :class="{'promptPage_leftAreaHide':promptLeftShow}"
+         :style="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized ? {width: leftAreaWidth + 'px'} : {}">
         @*配置*@
         <div class="boxCard configurineArea" v-if="isBoxVisible">
             @*选择靶场*@
@@ -171,8 +173,17 @@
 
        
     </div>
+    
+    @* 左侧和中间区域之间的拖动分隔条 *@
+    <div class="resize-handle resize-handle-left" 
+         v-if="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized"
+         @@mousedown="startResizeLeft"></div>
+    
     @*中间 输入Prompt*@
-    <div class="promptPage_centerArea" v-if="!box2Hidden" :class="{'promptPage_centerAreaMaximized': centerAreaMaximized}">
+    <div class="promptPage_centerArea" 
+         v-if="!box2Hidden" 
+         :class="{'promptPage_centerAreaMaximized': centerAreaMaximized}"
+         :style="!centerAreaMaximized && !rightAreaMaximized ? {width: centerAreaWidth + 'px'} : {}">
         <div class="boxCard entertarget" >
                 @* 请新建或选择靶场 mask *@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
@@ -328,8 +339,15 @@
 
             </div>
     </div>
+    
+    @* 中间和右侧区域之间的拖动分隔条 *@
+    <div class="resize-handle resize-handle-right" 
+         v-if="!box2Hidden && !centerAreaMaximized && !rightAreaMaximized"
+         @@mousedown="startResizeRight"></div>
+    
     @*右侧 评分|分析*@
-    <div class="promptPage_rightArea" :class="{'promptPage_rightAreaMaximized': rightAreaMaximized, 'promptPage_rightAreaHidden': box1Hidden && box3Hidden}">
+    <div class="promptPage_rightArea" 
+         :class="{'promptPage_rightAreaMaximized': rightAreaMaximized, 'promptPage_rightAreaHidden': box1Hidden && box3Hidden}">
         @*输出*@
         <div class="boxCard outputArea" 
              :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 

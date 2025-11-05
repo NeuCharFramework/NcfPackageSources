@@ -305,7 +305,7 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 12px;
+    gap: 0px; /* 移除gap，因为已经有8px的分隔条 */
     position: relative;
     box-sizing: border-box;
     height: calc(100vh - 150px); /* 使用视口高度，减去头部导航高度 */
@@ -466,13 +466,15 @@
     /*左侧模块*/
     .promptPage > .promptPage_leftArea {
         flex-shrink: 0;
-        width: 360px;
-        max-width: 360px;
+        flex-grow: 0;
+        width: 360px; /* 默认宽度，会被Vue的style覆盖 */
+        max-width: 600px; /* 允许用户拖动到更宽 */
+        min-width: 280px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
         gap: 12px;
-        transition: all 0.3s ease-in-out;
+        transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
         position: relative;
         overflow: hidden;
     }
@@ -817,15 +819,17 @@
     }
 /*中间模块 - 输入Prompt*/
 .promptPage > .promptPage_centerArea {
-    flex: 0 1 380px; /* 弹性收缩，基准宽度380px */
-    min-width: 350px;
-    max-width: 500px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 380px; /* 默认宽度，会被Vue的style覆盖 */
+    min-width: 320px;
+    max-width: 800px; /* 允许用户拖动到更宽 */
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
     gap: 12px;
     height: 100%;
-    transition: all 0.3s ease;
+    transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
 }
 
 /* 中间区域最大化状态 */
@@ -1497,6 +1501,51 @@
 .promptVersion{
     display:flex;
     justify-content:space-between;
+}
+
+/* 可拖动分隔条样式 */
+.resize-handle {
+    width: 8px;
+    flex-shrink: 0;
+    cursor: col-resize;
+    position: relative;
+    background: transparent;
+    transition: background-color 0.2s ease;
+    z-index: 100;
+}
+
+.resize-handle:hover {
+    background-color: rgba(64, 158, 255, 0.2);
+}
+
+.resize-handle:active {
+    background-color: rgba(64, 158, 255, 0.4);
+}
+
+/* 分隔条中间的指示线 */
+.resize-handle::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 60px;
+    background-color: #dcdfe6;
+    border-radius: 1px;
+    transition: all 0.2s ease;
+}
+
+.resize-handle:hover::before {
+    background-color: #409eff;
+    height: 80px;
+    width: 3px;
+}
+
+.resize-handle:active::before {
+    background-color: #409eff;
+    height: 100px;
+    width: 4px;
 }
 
 /* 推理过程样式 */

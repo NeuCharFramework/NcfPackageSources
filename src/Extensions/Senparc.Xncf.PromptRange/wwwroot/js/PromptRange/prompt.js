@@ -271,6 +271,14 @@ var app = new Vue({
             rightAreaMaximized: false,  // 右侧区域是否最大化
             isBoxVisible: true, // 控制盒子显示和隐藏的状态
             foldsidebarShow: false,
+            // 区域宽度控制
+            leftAreaWidth: 360,    // 左侧区域宽度（默认360px）
+            centerAreaWidth: 380,  // 中间区域宽度（默认380px）
+            isResizing: false,     // 是否正在拖动
+            resizeType: null,      // 拖动类型：'left' 或 'right'
+            resizeStartX: 0,       // 拖动开始的X坐标
+            resizeStartLeftWidth: 0,   // 拖动开始时左侧区域的宽度
+            resizeStartCenterWidth: 0, // 拖动开始时中间区域的宽度
             // 自定义滚动条缩略图
             showScrollbarThumbnails: false,
             scrollInfo: {
@@ -3278,7 +3286,122 @@ var app = new Vue({
         // 处理鼠标离开输出区域
         handleOutputAreaMouseLeave() {
             this.showScrollbarThumbnails = false;
+        },
+        
+        // ========== 区域宽度拖动调整功能 ==========
+        
+        // 从localStorage加载保存的宽度设置
+        loadAreaWidthsFromStorage() {
+            try {
+                const savedLeftWidth = localStorage.getItem('promptPage_leftAreaWidth');
+                const savedCenterWidth = localStorage.getItem('promptPage_centerAreaWidth');
+                
+                if (savedLeftWidth) {
+                    const width = parseInt(savedLeftWidth);
+                    if (width >= 280 && width <= 600) {
+                        this.leftAreaWidth = width;
+                    }
+                }
+                
+                if (savedCenterWidth) {
+                    const width = parseInt(savedCenterWidth);
+                    if (width >= 320 && width <= 800) {
+                        this.centerAreaWidth = width;
+                    }
+                }
+            } catch (e) {
+                console.error('加载区域宽度设置失败:', e);
+            }
+        },
+        
+        // 保存宽度设置到localStorage
+        saveAreaWidthsToStorage() {
+            try {
+                localStorage.setItem('promptPage_leftAreaWidth', this.leftAreaWidth);
+                localStorage.setItem('promptPage_centerAreaWidth', this.centerAreaWidth);
+            } catch (e) {
+                console.error('保存区域宽度设置失败:', e);
+            }
+        },
+        
+        // 开始拖动左侧分隔条
+        startResizeLeft(event) {
+            this.isResizing = true;
+            this.resizeType = 'left';
+            this.resizeStartX = event.clientX;
+            this.resizeStartLeftWidth = this.leftAreaWidth;
+            
+            document.addEventListener('mousemove', this.handleResize);
+            document.addEventListener('mouseup', this.stopResize);
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            
+            event.preventDefault();
+        },
+        
+        // 开始拖动右侧分隔条
+        startResizeRight(event) {
+            this.isResizing = true;
+            this.resizeType = 'right';
+            this.resizeStartX = event.clientX;
+            this.resizeStartCenterWidth = this.centerAreaWidth;
+            
+            document.addEventListener('mousemove', this.handleResize);
+            document.addEventListener('mouseup', this.stopResize);
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            
+            event.preventDefault();
+        },
+        
+        // 处理拖动
+        handleResize(event) {
+            if (!this.isResizing) return;
+            
+            const deltaX = event.clientX - this.resizeStartX;
+            
+            if (this.resizeType === 'left') {
+                // 调整左侧区域宽度
+                let newWidth = this.resizeStartLeftWidth + deltaX;
+                newWidth = Math.max(280, Math.min(600, newWidth)); // 限制在280-600px之间
+                this.leftAreaWidth = newWidth;
+            } else if (this.resizeType === 'right') {
+                // 调整中间区域宽度
+                let newWidth = this.resizeStartCenterWidth + deltaX;
+                newWidth = Math.max(320, Math.min(800, newWidth)); // 限制在320-800px之间
+                this.centerAreaWidth = newWidth;
+            }
+            
+            event.preventDefault();
+        },
+        
+        // 停止拖动
+        stopResize() {
+            if (this.isResizing) {
+                this.isResizing = false;
+                this.resizeType = null;
+                
+                document.removeEventListener('mousemove', this.handleResize);
+                document.removeEventListener('mouseup', this.stopResize);
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                
+                // 保存当前宽度设置
+                this.saveAreaWidthsToStorage();
+            }
         }
+    },
+    
+    // Vue生命周期钩子
+    created() {
+        // 页面创建时加载保存的宽度设置
+        this.loadAreaWidthsFromStorage();
+    },
+    
+    beforeDestroy() {
+        // 组件销毁前移除事件监听器
+        document.removeEventListener('mousemove', this.handleResize);
+        document.removeEventListener('mouseup', this.stopResize);
     }
 });
 
