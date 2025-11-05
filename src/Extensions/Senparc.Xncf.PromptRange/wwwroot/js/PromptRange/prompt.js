@@ -1261,45 +1261,45 @@ var app = new Vue({
             this.$nextTick(() => {
                 // 设置默认选中
                 this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
+                
+                // 确保 checkList 只包含叶子节点
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
+                    }
+                });
+                
+                this.expectedPluginFoem.checkList = leafNodeKeys;
+                
                 // 更新已选择数量
                 this.updateExportPluginSelectedCount()
             })
         },
         // 导出 plugins dialog tree 选中变化
         treeCheckChange(data, currentCheck, childrenCheck) {
-            //console.log('treeCheckChange', data, currentCheck, childrenCheck)
-            if (currentCheck) {
-                // 选中 判断是否有值有的话就不添加
-                if (this.expectedPluginFoem.checkList.indexOf(data.idkey) === -1) {
-                    this.expectedPluginFoem.checkList.push(data.idkey)
-                    // 判断是否有子节点 有的话就添加
-                    if (data.children.length > 0) {
-                        data.children.forEach(item => {
-                            if (this.expectedPluginFoem.checkList.indexOf(item.idkey) === -1) {
-                                this.expectedPluginFoem.checkList.push(item.idkey)
-                            }
-                        })
-                    }
-                }
-            } else {
-                // 取消选中
-                let _index = this.expectedPluginFoem.checkList.indexOf(data.idkey)
-                if (_index > -1) {
-                    this.expectedPluginFoem.checkList.splice(_index, 1)
-                }
-                // 判断是否有子节点 有的话就删除
-                if (data.children.length > 0) {
-                    data.children.forEach(item => {
-                        let _index = this.expectedPluginFoem.checkList.indexOf(item.idkey)
-                        if (_index > -1) {
-                            this.expectedPluginFoem.checkList.splice(_index, 1)
-                        }
-                    })
-                }
-            }
-            
             // 更新已选择数量（使用 $nextTick 确保 Tree 状态已更新）
             this.$nextTick(() => {
+                // 使用 Tree API 重新获取所有选中的节点（只获取叶子节点）
+                if (!this.$refs.expectedPluginTree) return;
+                
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
+                    }
+                });
+                
+                // 更新 checkList，只包含叶子节点
+                this.expectedPluginFoem.checkList = leafNodeKeys;
+                
+                // 更新计数
                 this.updateExportPluginSelectedCount();
             });
         },
@@ -1337,7 +1337,7 @@ var app = new Vue({
         exportPluginSelectAll() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 获取所有节点的key
+            // 获取所有节点的key（包括父节点和子节点）
             const allKeys = [];
             const collectKeys = (nodes) => {
                 nodes.forEach(node => {
@@ -1351,10 +1351,20 @@ var app = new Vue({
             
             // 设置选中
             this.$refs.expectedPluginTree.setCheckedKeys(allKeys);
-            this.expectedPluginFoem.checkList = [...allKeys];
             
-            // 等待 DOM 更新后再统计
+            // 等待 DOM 更新后，只记录叶子节点
             this.$nextTick(() => {
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
+                    }
+                });
+                
+                this.expectedPluginFoem.checkList = leafNodeKeys;
                 this.updateExportPluginSelectedCount();
             });
             
@@ -1365,7 +1375,7 @@ var app = new Vue({
         exportPluginInvertSelection() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 获取所有节点的key
+            // 获取所有节点的key（包括父节点和子节点）
             const allKeys = [];
             const collectKeys = (nodes) => {
                 nodes.forEach(node => {
@@ -1377,7 +1387,7 @@ var app = new Vue({
             };
             collectKeys(this.expectedPluginFieldList);
             
-            // 获取当前选中的key
+            // 获取当前选中的key（包括父节点和子节点）
             const currentCheckedKeys = this.$refs.expectedPluginTree.getCheckedKeys();
             
             // 反选：所有key - 当前选中的key
@@ -1385,10 +1395,20 @@ var app = new Vue({
             
             // 设置反选后的结果
             this.$refs.expectedPluginTree.setCheckedKeys(invertedKeys);
-            this.expectedPluginFoem.checkList = [...invertedKeys];
             
-            // 等待 DOM 更新后再统计
+            // 等待 DOM 更新后，只记录叶子节点
             this.$nextTick(() => {
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
+                    }
+                });
+                
+                this.expectedPluginFoem.checkList = leafNodeKeys;
                 this.updateExportPluginSelectedCount();
             });
             
@@ -1474,9 +1494,26 @@ var app = new Vue({
                         a.click(); // 触发点击事件开始下载
                         // 下载完成后删除 <a> 标签
                         URL.revokeObjectURL(url); // 释放 URL 对象
-                        a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
-                    }).catch(() => {
+                        a.parentNode && a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
+                        
+                        this.$message.success('导出成功！');
+                    }).catch((error) => {
                         this.isPageLoading = false
+                        console.error('导出失败:', error);
+                        
+                        let errorMessage = '导出 plugins 失败';
+                        if (error.response) {
+                            // 服务器返回错误响应
+                            if (error.response.status === 500) {
+                                errorMessage = '服务器错误：' + (error.response.data?.message || '导出过程中发生错误');
+                            } else if (error.response.data && error.response.data.message) {
+                                errorMessage = error.response.data.message;
+                            }
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                        
+                        this.$message.error(errorMessage);
                     })
                 } else {
                     return false;
