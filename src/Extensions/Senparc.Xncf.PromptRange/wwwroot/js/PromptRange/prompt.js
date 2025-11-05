@@ -1242,6 +1242,8 @@ var app = new Vue({
                 checkList: []
             }
             this.expectedPluginFieldList = [] // tree数据列表
+            this.exportPluginSelectedCount = 0 // 重置已选择数量
+            this.exportPluginExpandAll = false // 重置展开状态
             this.$refs.expectedPluginFoem.resetFields();
         },
         // 导出 plugins dialog open
@@ -1255,10 +1257,13 @@ var app = new Vue({
             }
             this.expectedPluginVisible = true
             await Promise.all(promises)
-            // 设置默认选中
-            this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
-            // 更新已选择数量
-            this.updateExportPluginSelectedCount()
+            // 等待 DOM 更新后再设置选中和更新计数
+            this.$nextTick(() => {
+                // 设置默认选中
+                this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
+                // 更新已选择数量
+                this.updateExportPluginSelectedCount()
+            })
         },
         // 导出 plugins dialog tree 选中变化
         treeCheckChange(data, currentCheck, childrenCheck) {
@@ -1293,16 +1298,39 @@ var app = new Vue({
                 }
             }
             
-            // 更新已选择数量
-            this.updateExportPluginSelectedCount();
+            // 更新已选择数量（使用 $nextTick 确保 Tree 状态已更新）
+            this.$nextTick(() => {
+                this.updateExportPluginSelectedCount();
+            });
         },
         
         // 更新已选择的靶道数量
         updateExportPluginSelectedCount() {
-            // 统计选中的靶道数量（带下划线的是靶道）
-            this.exportPluginSelectedCount = this.expectedPluginFoem.checkList.filter(item => 
-                item.indexOf('_') > -1
-            ).length;
+            if (!this.$refs.expectedPluginTree) {
+                this.exportPluginSelectedCount = 0;
+                return;
+            }
+            
+            // 使用 Tree 组件的 API 获取所有选中的节点（包括半选状态的父节点的子节点）
+            const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+            const halfCheckedNodes = this.$refs.expectedPluginTree.getHalfCheckedNodes();
+            
+            // 统计所有选中的子节点（靶道）
+            // 靶道的特征：有 idkey 且包含下划线，或者没有 children
+            let count = 0;
+            
+            // 统计完全选中的节点中的靶道
+            checkedNodes.forEach(node => {
+                // 如果是叶子节点（靶道），统计
+                if (!node.children || node.children.length === 0) {
+                    count++;
+                }
+            });
+            
+            // 对于半选状态的父节点，需要统计其已选中的子节点
+            // Element UI Tree 的 getCheckedNodes() 已经包含了所有选中的子节点，所以不需要额外处理
+            
+            this.exportPluginSelectedCount = count;
         },
         
         // 导出plugin - 全选
@@ -1324,7 +1352,11 @@ var app = new Vue({
             // 设置选中
             this.$refs.expectedPluginTree.setCheckedKeys(allKeys);
             this.expectedPluginFoem.checkList = [...allKeys];
-            this.updateExportPluginSelectedCount();
+            
+            // 等待 DOM 更新后再统计
+            this.$nextTick(() => {
+                this.updateExportPluginSelectedCount();
+            });
             
             this.$message.success('已全选所有靶道');
         },
@@ -1354,7 +1386,11 @@ var app = new Vue({
             // 设置反选后的结果
             this.$refs.expectedPluginTree.setCheckedKeys(invertedKeys);
             this.expectedPluginFoem.checkList = [...invertedKeys];
-            this.updateExportPluginSelectedCount();
+            
+            // 等待 DOM 更新后再统计
+            this.$nextTick(() => {
+                this.updateExportPluginSelectedCount();
+            });
             
             this.$message.success('已反选');
         },
@@ -1365,7 +1401,11 @@ var app = new Vue({
             
             this.$refs.expectedPluginTree.setCheckedKeys([]);
             this.expectedPluginFoem.checkList = [];
-            this.exportPluginSelectedCount = 0;
+            
+            // 等待 DOM 更新后再统计
+            this.$nextTick(() => {
+                this.updateExportPluginSelectedCount();
+            });
             
             this.$message.info('已清空所有选择');
         },
