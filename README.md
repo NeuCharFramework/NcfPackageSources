@@ -40,7 +40,7 @@
 
 ## 快速开始 / Quick Start
 
- 1.克隆仓库
+ 1. 克隆仓库
 
 ```bash
 git clone https://github.com/NeuCharFramework/NcfPackageSources.git
