@@ -255,6 +255,8 @@ var app = new Vue({
                 checkList: [], // 选择的数据 tree 
             },
             expectedPluginFieldList: [],
+            exportPluginExpandAll: false, // 是否展开所有节点
+            exportPluginSelectedCount: 0, // 已选择的靶道数量
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -1255,6 +1257,8 @@ var app = new Vue({
             await Promise.all(promises)
             // 设置默认选中
             this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
+            // 更新已选择数量
+            this.updateExportPluginSelectedCount()
         },
         // 导出 plugins dialog tree 选中变化
         treeCheckChange(data, currentCheck, childrenCheck) {
@@ -1288,7 +1292,100 @@ var app = new Vue({
                     })
                 }
             }
-
+            
+            // 更新已选择数量
+            this.updateExportPluginSelectedCount();
+        },
+        
+        // 更新已选择的靶道数量
+        updateExportPluginSelectedCount() {
+            // 统计选中的靶道数量（带下划线的是靶道）
+            this.exportPluginSelectedCount = this.expectedPluginFoem.checkList.filter(item => 
+                item.indexOf('_') > -1
+            ).length;
+        },
+        
+        // 导出plugin - 全选
+        exportPluginSelectAll() {
+            if (!this.$refs.expectedPluginTree) return;
+            
+            // 获取所有节点的key
+            const allKeys = [];
+            const collectKeys = (nodes) => {
+                nodes.forEach(node => {
+                    allKeys.push(node.idkey);
+                    if (node.children && node.children.length > 0) {
+                        collectKeys(node.children);
+                    }
+                });
+            };
+            collectKeys(this.expectedPluginFieldList);
+            
+            // 设置选中
+            this.$refs.expectedPluginTree.setCheckedKeys(allKeys);
+            this.expectedPluginFoem.checkList = [...allKeys];
+            this.updateExportPluginSelectedCount();
+            
+            this.$message.success('已全选所有靶道');
+        },
+        
+        // 导出plugin - 反选
+        exportPluginInvertSelection() {
+            if (!this.$refs.expectedPluginTree) return;
+            
+            // 获取所有节点的key
+            const allKeys = [];
+            const collectKeys = (nodes) => {
+                nodes.forEach(node => {
+                    allKeys.push(node.idkey);
+                    if (node.children && node.children.length > 0) {
+                        collectKeys(node.children);
+                    }
+                });
+            };
+            collectKeys(this.expectedPluginFieldList);
+            
+            // 获取当前选中的key
+            const currentCheckedKeys = this.$refs.expectedPluginTree.getCheckedKeys();
+            
+            // 反选：所有key - 当前选中的key
+            const invertedKeys = allKeys.filter(key => !currentCheckedKeys.includes(key));
+            
+            // 设置反选后的结果
+            this.$refs.expectedPluginTree.setCheckedKeys(invertedKeys);
+            this.expectedPluginFoem.checkList = [...invertedKeys];
+            this.updateExportPluginSelectedCount();
+            
+            this.$message.success('已反选');
+        },
+        
+        // 导出plugin - 清空选择
+        exportPluginClearAll() {
+            if (!this.$refs.expectedPluginTree) return;
+            
+            this.$refs.expectedPluginTree.setCheckedKeys([]);
+            this.expectedPluginFoem.checkList = [];
+            this.exportPluginSelectedCount = 0;
+            
+            this.$message.info('已清空所有选择');
+        },
+        
+        // 导出plugin - 切换展开/收起
+        exportPluginToggleExpand() {
+            this.exportPluginExpandAll = !this.exportPluginExpandAll;
+            
+            // 需要重新渲染树来应用展开状态
+            if (!this.$refs.expectedPluginTree) return;
+            
+            const tree = this.$refs.expectedPluginTree;
+            const allNodes = tree.store.nodesMap;
+            
+            for (let key in allNodes) {
+                const node = allNodes[key];
+                if (node.childNodes && node.childNodes.length > 0) {
+                    node.expanded = this.exportPluginExpandAll;
+                }
+            }
         },
         // 导出 plugins 确认
         btnExpectedPlugins() {
@@ -2273,7 +2370,7 @@ var app = new Vue({
                         this.saveManualScore(this.outputList[index], index)
                     } else {
                         this.$message({
-                            message: '请设置预期结果！',
+                            message: '请设置预 AI 评分标准',
                             type: 'warning'
                         })
                     }

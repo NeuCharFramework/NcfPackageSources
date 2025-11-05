@@ -20,11 +20,69 @@
 }
 }
 
+/* 导出plugin操作按钮区域 */
+.plugin-export-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: #f5f7fa;
+    border-radius: 6px;
+    border: 1px solid #e4e7ed;
+}
+
+.plugin-export-actions .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.plugin-export-actions .action-buttons .el-button {
+    margin: 0 !important;
+}
+
+.plugin-export-actions .el-divider--vertical {
+    height: 20px;
+    margin: 0 4px;
+}
+
+.plugin-export-actions .selection-count {
+    display: flex;
+    align-items: center;
+}
+
+.plugin-export-actions .selection-count strong {
+    color: #409eff;
+    font-size: 16px;
+    margin: 0 2px;
+}
+
+/* 导出plugin树形选择器 */
 .expectedPluginTreeBox {
     width: 100%;
     max-height: 60vh;
     overflow: hidden;
     overflow-y: auto;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.expectedPluginTreeBox .el-tree {
+    background-color: transparent;
+}
+
+/* 树节点悬停效果 */
+.expectedPluginTreeBox .el-tree-node:hover > .el-tree-node__content {
+    background-color: #f5f7fa;
+}
+
+/* 树节点选中效果 */
+.expectedPluginTreeBox .el-tree-node.is-current > .el-tree-node__content {
+    background-color: #e6f7ff;
 }
 
 .tacticalFormBox .el-radio-group {

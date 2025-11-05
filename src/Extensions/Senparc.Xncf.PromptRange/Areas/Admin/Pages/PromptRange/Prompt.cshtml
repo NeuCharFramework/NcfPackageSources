@@ -737,23 +737,32 @@
             </el-select>
             </el-form-item> *@
             <el-form-item label="靶场和靶道" prop="checkList" label-width="130px">
-                @* <el-select v-model="expectedPluginFoem.promptIdList" :disabled="!expectedPluginFoem.rangeId"
-                multiple
-                collapse-tags
-                placeholder="请选择靶道" class="selectRow" @@change="handleCheckedChange">
-                <el-option v-for="item in expectedPluginFieldList"
-                v-key="item.id"
-                :label="item.label"
-                :value="item.value"
-                :disabled="item.disabled">
-                </el-option>
-                </el-select>
-                <div>
-                全选： <el-checkbox :disabled="!expectedPluginFoem.rangeId" :indeterminate="isIndeterminate" v-model="checkAll" @@change="handleCheckAllChange">全选</el-checkbox>
-                </div> *@
-                @* 默认展开 :default-expanded-keys="[2, 3]" *@
+                @* 操作按钮组 *@
+                <div class="plugin-export-actions">
+                    <div class="action-buttons">
+                        <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">全选</el-button>
+                        <el-button size="mini" icon="el-icon-refresh-left" @@click="exportPluginInvertSelection">反选</el-button>
+                        <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">清空</el-button>
+                        <el-divider direction="vertical"></el-divider>
+                        <el-button size="mini" :icon="exportPluginExpandAll ? 'el-icon-folder-opened' : 'el-icon-folder'" @@click="exportPluginToggleExpand">
+                            {{exportPluginExpandAll ? '收起全部' : '展开全部'}}
+                        </el-button>
+                    </div>
+                    <div class="selection-count">
+                        <el-tag size="small" type="info">
+                            已选择: <strong>{{exportPluginSelectedCount}}</strong> 个靶道
+                        </el-tag>
+                    </div>
+                </div>
+                @* 树形选择器 *@
                 <div class="expectedPluginTreeBox">
-                    <el-tree ref="expectedPluginTree" :data="expectedPluginFieldList" show-checkbox node-key="idkey" :props="defaultProps" @@check-change="treeCheckChange">
+                    <el-tree ref="expectedPluginTree" 
+                             :data="expectedPluginFieldList" 
+                             show-checkbox 
+                             node-key="idkey" 
+                             :props="defaultProps" 
+                             :default-expand-all="exportPluginExpandAll"
+                             @@check-change="treeCheckChange">
                     </el-tree>
                 </div>
             </el-form-item>
