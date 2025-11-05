@@ -46,7 +46,7 @@
 git clone https://github.com/NeuCharFramework/NcfPackageSources.git
 ```
 
-2.打开解决方案
+2. 打开解决方案
 
 ```bash
 cd NcfPackageSources
