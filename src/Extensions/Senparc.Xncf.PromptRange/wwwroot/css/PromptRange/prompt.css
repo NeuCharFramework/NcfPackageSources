@@ -305,10 +305,13 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 20px;
+    gap: 12px;
     position: relative;
     box-sizing: border-box;
-    height:820px;
+    height: calc(100vh - 150px); /* 使用视口高度，减去头部导航高度 */
+    min-width: 1200px; /* 确保有最小宽度，小于此宽度会出现横向滚动条 */
+    overflow-x: auto; /* 允许横向滚动，不隐藏内容 */
+    overflow-y: hidden;
     /*min-width: 1240px;
     overflow: auto;
     border-radius: 10px;
@@ -325,6 +328,25 @@
         justify-content: center;
         color: #666;
         font-size: 14px;
+    }
+    
+    /* promptPage 横向滚动条样式 */
+    .promptPage::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .promptPage::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .promptPage::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 4px;
+    }
+
+    .promptPage::-webkit-scrollbar-thumb:hover {
+        background: #888;
     }
     /*tabs*/
     .promptPage .tabsArea {
@@ -443,29 +465,35 @@
 
     /*左侧模块*/
     .promptPage > .promptPage_leftArea {
-        flex: 0;
-     
-        max-height: 9999999px;
+        flex-shrink: 0;
+        width: 360px;
+        max-width: 360px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
-        gap: 15px;
-        transition: max-height 0.3s ease-in-out;
-        position:relative;
-       
+        gap: 12px;
+        transition: all 0.3s ease-in-out;
+        position: relative;
+        overflow: hidden;
     }
 
     .promptPage > .promptPage_leftAreaHide {
-        max-height: 0px !important;
+        width: 0px !important;
+        max-width: 0px !important;
+        min-width: 0px !important;
+        opacity: 0;
+        gap: 0px;
     }
 /*左侧模块 配置区域\输入prompt区域*/
 .promptPage_leftArea > .configurineArea, .promptPage_leftArea > .inputPromptArea {
     display: flex;
     flex-direction: column;
-    min-width: 500px; /*632px*/
+    width: 100%;
     flex: 1;
     flex-wrap: nowrap;
     gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 /*左侧模块 配置 行 区域*/
 .promptPage_leftArea .configurineAreaItem {
@@ -474,6 +502,18 @@
     flex-wrap: nowrap;
     /*gap: 10px;*/
 }
+
+    /* 左侧按钮组紧凑布局 */
+    .promptPage_leftArea .configurineAreaItem .d-flex > div > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+    }
+
+    .promptPage_leftArea .configurineAreaItem .el-button--mini {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
     /*左侧模块 配置 下拉选择 区域*/
     .promptPage_leftArea .configurineAreaItem > .selectRow {
         width: 100%;
@@ -577,53 +617,95 @@
                 margin: 0;
             }
 /*输入prompt盒子*/
-.enterbox > .entertarget > .promptContetnPmroparaBox {
+.entertarget > .promptContetnPmroparaBox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* 改为纵向布局 */
     flex-wrap: nowrap;
-    /*gap: 10px;*/
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-start;
+    height: 100%;
+    flex: 1;
+    gap: 10px;
 }
 
-    .enterbox > .entertarget > .promptContetnPmroparaBox > .leftItemBox {
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        gap: 10px;
     }
 
-    .enterbox > .entertarget > .promptContetnPmroparaBox > .rightItemBox {
-        max-width: 430px;
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .titleRow {
+        flex-shrink: 0;
+    }
+
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .promptContentBox {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    /* 请求参数区域 - 在Prompt输入框下方 */
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .promptParamSection {
+        flex-shrink: 0;
+        max-height: 300px;
         overflow: hidden;
-        transition: max-width 0.3s ease-in-out;
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        opacity: 1;
     }
 
-    .enterbox > .entertarget > .promptContetnPmroparaBox > .rightItemHide {
-        max-width: 0px !important;
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .paramSectionHide {
+        max-height: 0 !important;
+        opacity: 0;
+        overflow: hidden;
     }
     /*输入prompt输入框盒子 内容*/
-    .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox {
+    .entertarget > .promptContetnPmroparaBox .promptContentBox {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         gap: 10px;
+        flex: 1;
+        min-height: 0;
     }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
             color: #333;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
+            flex: 1;
+            min-height: 300px;
+            height: 100%;
+            resize: none;
         }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
             align-items: flex-end;
             gap: 10px;
+            flex-shrink: 0;
         }
 
-            .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
+            .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
@@ -631,7 +713,7 @@
                 gap: 5px;
             }
 
-                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
                     white-space: nowrap;
                     padding: 7px 10px;
                     background: #FFF;
@@ -641,17 +723,17 @@
                     cursor: pointer;
                 }
 
-                    .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
+                    .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
                         display: inline-block;
                         width: 20px;
                         text-align: left;
                     }
 
-            .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
+            .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
                 position: relative;
             }
 
-                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
                     padding: 5px 15px 5px 55px;
                     color: #333;
                     font-size: 14px;
@@ -660,7 +742,7 @@
                     line-height: normal;
                 }
 
-                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
                     content: '备注:';
                     position: absolute;
                     left: 15px;
@@ -673,7 +755,7 @@
 
 
     /*输入Prompt请求参数盒子 promptPmroparaBox */
-    .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox {
+    .entertarget .promptPmroparaBox {
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -681,9 +763,12 @@
         gap: 10px;
         border-radius: 4px;
         border: 1px solid #DCDFE6;
+        background-color: #f9f9f9;
+        overflow-y: auto;
+        max-height: 260px;
     }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .formItem {
+        .entertarget .promptPmroparaBox .formItem {
             padding-right: 20px;
             display: flex;
             align-items: center;
@@ -694,26 +779,72 @@
         }
 
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
+        .entertarget .promptPmroparaBox .addVariableRow {
             margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
         }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .footerBtnRow {
+        .entertarget .promptPmroparaBox .footerBtnRow {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-/*右侧模块*/
-.promptPage > .promptPage_rightArea {
-    flex: 1;
-    min-width: 409.5px; /*622px*/
+
+    /* 请求参数区域的标题行 */
+    .entertarget .promptParamSection > .titleRow {
+        flex-shrink: 0;
+        margin-bottom: 8px;
+    }
+
+    /* 请求参数盒子的滚动条样式 */
+    .entertarget .promptPmroparaBox::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 3px;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb:hover {
+        background: #888;
+    }
+/*中间模块 - 输入Prompt*/
+.promptPage > .promptPage_centerArea {
+    flex: 0 1 380px; /* 弹性收缩，基准宽度380px */
+    min-width: 350px;
+    max-width: 500px;
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    height: 100%;
+}
+
+    .promptPage_centerArea > .entertarget {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        height: 100%;
+    }
+
+/*右侧模块 - 输出和分析*/
+.promptPage > .promptPage_rightArea {
+    flex: 1 1 auto; /* 优先扩展，占据剩余空间 */
+    min-width: 400px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    overflow: hidden;
 }
 /*右侧模块 输出区域*/
 .promptPage_rightArea > .outputArea {
@@ -723,26 +854,232 @@
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 15px;
-    overflow: auto;
-    height: 100%;
+    overflow: hidden;
+    min-height: 0; /* 重要：允许flex收缩 */
+    position: relative; /* 为自定义滚动条定位 */
 }
 /* 定制滚动条样式 */
-    .outputArea::-webkit-scrollbar {
-        width: 10px; /* 滚动条的宽度 */
+    .outputArea_contentBox::-webkit-scrollbar,
+    .configurineArea::-webkit-scrollbar {
+        width: 8px; /* 滚动条的宽度 */
     }
 
-    .outputArea::-webkit-scrollbar-track {
+    .outputArea_contentBox::-webkit-scrollbar-track,
+    .configurineArea::-webkit-scrollbar-track {
         background: transparent; /* 滚动条轨道的背景色 */
     }
 
-    .outputArea::-webkit-scrollbar-thumb {
+    .outputArea_contentBox::-webkit-scrollbar-thumb,
+    .configurineArea::-webkit-scrollbar-thumb {
         background: #DCDFE6; /* 滚动条滑块的背景色 */
-        border-radius: 5px; /* 滚动条滑块的圆角 */
+        border-radius: 4px; /* 滚动条滑块的圆角 */
     }
 
-        .outputArea::-webkit-scrollbar-thumb:hover {
+        .outputArea_contentBox::-webkit-scrollbar-thumb:hover,
+        .configurineArea::-webkit-scrollbar-thumb:hover {
             background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
         }
+
+/* VSCode风格的自定义滚动条缩略图 */
+.custom-scrollbar-thumbnail {
+    position: absolute;
+    right: 8px; /* 与滚动条对齐 */
+    top: 0;
+    bottom: 0;
+    width: 140px; /* 增加宽度以容纳评分信息 */
+    background: rgba(255, 255, 255, 0.85); /* 增加透明度 */
+    border-left: 1px solid rgba(224, 224, 224, 0.6);
+    z-index: 1001;
+    pointer-events: auto;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
+    animation: slideInRight 0.2s ease-out;
+    backdrop-filter: blur(6px); /* 增强毛玻璃效果 */
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.thumbnail-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 8px 4px;
+    overflow: hidden;
+}
+
+.thumbnail-item {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background: #f0f0f0;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    gap: 3px;
+}
+
+.thumbnail-item:hover {
+    background: #e3f2fd;
+    border-color: #42a5f5;
+    transform: scale(1.03);
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.thumbnail-item-active {
+    background: #bbdefb !important;
+    border: 2px solid #2196F3 !important;
+    box-shadow: 0 2px 10px rgba(33, 150, 243, 0.35);
+    z-index: 3;
+}
+
+/* 缩略图内容容器 */
+.thumbnail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    z-index: 2;
+}
+
+/* 时间显示 */
+.thumbnail-time {
+    font-size: 9px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
+    text-align: center;
+    font-weight: 500;
+}
+
+.thumbnail-item-active .thumbnail-time {
+    color: #1976D2;
+    font-weight: 600;
+}
+
+/* 评分显示 */
+.thumbnail-score {
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.thumbnail-item-active .thumbnail-score {
+    color: #1565C0;
+    font-weight: 700;
+}
+
+/* Excel风格数据条背景 */
+.thumbnail-score-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.15) 0%, 
+        rgba(76, 175, 80, 0.25) 100%);
+    border-radius: 3px 0 0 3px;
+    z-index: 1;
+    transition: width 0.3s ease;
+}
+
+/* 根据评分等级调整颜色 */
+.thumbnail-score-bar.score-excellent {
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.2) 0%, 
+        rgba(76, 175, 80, 0.35) 100%); /* 绿色 - 优秀 8-10分 */
+}
+
+.thumbnail-score-bar.score-good {
+    background: linear-gradient(90deg, 
+        rgba(33, 150, 243, 0.2) 0%, 
+        rgba(33, 150, 243, 0.35) 100%); /* 蓝色 - 良好 6-8分 */
+}
+
+.thumbnail-score-bar.score-medium {
+    background: linear-gradient(90deg, 
+        rgba(255, 193, 7, 0.2) 0%, 
+        rgba(255, 193, 7, 0.35) 100%); /* 黄色 - 中等 4-6分 */
+}
+
+.thumbnail-score-bar.score-low {
+    background: linear-gradient(90deg, 
+        rgba(255, 152, 0, 0.2) 0%, 
+        rgba(255, 152, 0, 0.35) 100%); /* 橙色 - 较低 2-4分 */
+}
+
+.thumbnail-score-bar.score-poor {
+    background: linear-gradient(90deg, 
+        rgba(244, 67, 54, 0.2) 0%, 
+        rgba(244, 67, 54, 0.35) 100%); /* 红色 - 差 0-2分 */
+}
+
+/* 激活状态下的数据条颜色更深 */
+.thumbnail-item-active .thumbnail-score-bar.score-excellent {
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.3) 0%, 
+        rgba(76, 175, 80, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-good {
+    background: linear-gradient(90deg, 
+        rgba(33, 150, 243, 0.3) 0%, 
+        rgba(33, 150, 243, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-medium {
+    background: linear-gradient(90deg, 
+        rgba(255, 193, 7, 0.3) 0%, 
+        rgba(255, 193, 7, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-low {
+    background: linear-gradient(90deg, 
+        rgba(255, 152, 0, 0.3) 0%, 
+        rgba(255, 152, 0, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-poor {
+    background: linear-gradient(90deg, 
+        rgba(244, 67, 54, 0.3) 0%, 
+        rgba(244, 67, 54, 0.45) 100%);
+}
+
+/* 可视区域指示器 */
+.thumbnail-viewport {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    background: rgba(33, 150, 243, 0.15);
+    border: 1px solid rgba(33, 150, 243, 0.4);
+    border-radius: 2px;
+    pointer-events: none;
+    transition: all 0.1s ease;
+    min-height: 20px;
+}
+
+/* 不需要调整内容宽度，滚动条悬浮显示 */
 .promptPage_rightArea > .outputArea > .titleRow {
     justify-content: flex-start;
     gap: 30px;
@@ -767,8 +1104,9 @@
         flex-wrap: nowrap;
         gap: 10px;
         box-sizing: border-box;
-        min-height: 290px !important;
-        max-height: 46Vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 0; /* 重要：允许flex收缩 */
     }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
@@ -808,10 +1146,11 @@
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
+            margin-right: 160px; /* 为右侧滚动条预留空间 */
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap; /* 允许换行，避免空间不足 */
             align-items: center;
-            justify-content: flex-end;
+            justify-content: flex-start; /* 左对齐 */
             gap: 10px;
             color: #0083FF;
             font-size: 14px;
@@ -826,6 +1165,13 @@
                 gap: 3px;
                 cursor: pointer;
             }
+            
+                /* AI评分加载状态 */
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item .el-icon-loading {
+                    color: #409EFF;
+                    font-size: 14px;
+                    margin-right: 2px;
+                }
 
                 .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item > .imgIcon {
                     flex-shrink: 0;
@@ -840,10 +1186,11 @@
             border: 1px solid #DCDFE6;
             background-color: #FFF;
             position:absolute;
-            top:-6px;
-            right:0px;
+            bottom:10px;
+            left:0px; /* 改为左侧显示 */
             z-index:999999;
             width:350px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* 添加阴影 */
         
         }
 
@@ -924,34 +1271,22 @@
                justify-content:center;
                align-items:end;
             }
+
 /*右侧模块 分析区域*/
-.enterbox {
-    display: flex;
-    flex: 1;
-    gap: 15px;
-}
-.entertarget {
-   width:70%;
-   flex:1;
-}
-.promptPage_rightArea > .enterbox > .analysisArea {
-    width: 30%;
+.promptPage_rightArea > .analysisArea {
+    flex: 0 0 auto; /* 不伸缩 */
+    height: 260px; /* 减小高度，留更多空间给输出区域 */
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    gap: 3px;
+    gap: 5px;
     box-sizing: border-box;
-    display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center;
 }
 
-    .promptPage_rightArea > .enterbox > .analysisArea > .echartsBox {
+    .promptPage_rightArea > .analysisArea > .echartsBox {
         width: 100%;
-        min-width: 379.5px; /*598px*/
-        height: 200px;
+        height: 200px; /* 调整图表高度 */
         box-sizing: border-box;
-        
     }
 
 /*版本记录 btn*/
@@ -1079,26 +1414,31 @@
     align-items: flex-start;
     justify-content: space-between;
     line-height: 20px;
+    margin-right: 160px; /* 为右侧滚动条预留空间 */
 }
 
     .promptResult_Item_Title .promptReultTimeArea {
         color: #6f6f6f;
         font-size: 12px;
+        flex-shrink: 0;
     }
 
 .copyButtonArea {
     text-align: right;
-    clear: both;
     font-size: 11px;
-    float: right;
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
     .copyButtonArea a {
         border: 1px solid #aaa;
         border-radius: 5px;
-        padding: 2px 4px;
+        padding: 0px 8px;
         display: inline-block;
-        padding: 0px 5px;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        line-height: 20px;
     }
 
         .copyButtonArea a:hover {
@@ -1106,7 +1446,7 @@
             color: #fff;
             border-color: rgb(38 169 233);
             box-shadow: 0 0 5px rgb(38 169 233 / 87%);
-            padding: 0px 5px;
+            transform: translateY(-1px);
         }
 
 .sidebarbtn{
