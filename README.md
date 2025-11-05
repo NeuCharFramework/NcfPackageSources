@@ -54,7 +54,7 @@ start NcfPackageSources.sln  # Windows
 open NcfPackageSources.sln   # macOS
 ```
 
-3.还原包
+3. 还原包
 
 ```bash
 dotnet restore
