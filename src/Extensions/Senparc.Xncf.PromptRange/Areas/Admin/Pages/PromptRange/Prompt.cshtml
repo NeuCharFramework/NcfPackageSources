@@ -901,7 +901,8 @@
                     <div class="compare-section">
                         <div class="section-title">📄 Prompt 内容</div>
                         <div class="compare-content-box">
-                            <pre>{{comparePromptA.content}}</pre>
+                            <pre v-if="comparePromptA.content">{{comparePromptA.content}}</pre>
+                            <div v-else style="color: #909399; text-align: center; padding: 20px;">暂无内容</div>
                         </div>
                     </div>
                     
@@ -909,7 +910,8 @@
                     <div class="compare-section">
                         <div class="section-title">🎯 变量配置</div>
                         <div class="compare-content-box">
-                            <pre>{{comparePromptA.variablesJson || '{}'}}</pre>
+                            <pre v-if="comparePromptA.variablesJson">{{comparePromptA.variablesJson}}</pre>
+                            <div v-else style="color: #909399; text-align: center; padding: 20px;">无变量配置</div>
                         </div>
                     </div>
                 </div>
@@ -984,16 +986,20 @@
                     @* Prompt 内容 *@
                     <div class="compare-section">
                         <div class="section-title">📄 Prompt 内容</div>
-                        <div class="compare-content-box" :class="{'has-diff': comparePromptA.content !== comparePromptB.content}">
-                            <pre>{{comparePromptB.content}}</pre>
+                        <div class="compare-content-box" :class="{'has-diff': hasFieldDiff(comparePromptA.content, comparePromptB.content)}">
+                            <pre v-if="comparePromptB.content">{{comparePromptB.content}}</pre>
+                            <div v-else style="color: #909399; text-align: center; padding: 20px;">暂无内容</div>
+                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.content, comparePromptB.content)" style="position: absolute; top: 10px; right: 10px;">🔶</span>
                         </div>
                     </div>
                     
                     @* 变量配置 *@
                     <div class="compare-section">
                         <div class="section-title">🎯 变量配置</div>
-                        <div class="compare-content-box" :class="{'has-diff': comparePromptA.variablesJson !== comparePromptB.variablesJson}">
-                            <pre>{{comparePromptB.variablesJson || '{}'}}</pre>
+                        <div class="compare-content-box" :class="{'has-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
+                            <pre v-if="comparePromptB.variablesJson">{{comparePromptB.variablesJson}}</pre>
+                            <div v-else style="color: #909399; text-align: center; padding: 20px;">无变量配置</div>
+                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)" style="position: absolute; top: 10px; right: 10px;">🔶</span>
                         </div>
                     </div>
                 </div>
