@@ -1510,14 +1510,24 @@
     cursor: col-resize;
     position: relative;
     background: transparent;
-    transition: background-color 0.2s ease, width 0.2s ease;
+    transition: background-color 0.2s ease;
     z-index: 100;
     user-select: none; /* 防止双击选中文本 */
 }
 
+/* 使用伪元素扩展可点击区域，不影响布局 */
+.resize-handle::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+}
+
 .resize-handle:hover {
     background-color: rgba(64, 158, 255, 0.2);
-    width: 10px; /* 悬停时稍微变宽，更容易操作 */
 }
 
 .resize-handle:active {
