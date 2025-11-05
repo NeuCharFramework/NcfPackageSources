@@ -311,10 +311,13 @@ var app = new Vue({
         comparePromptAInfo() {
             if (!this.comparePromptA) return null;
             
+            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            const versionParts = this.comparePromptA.fullVersion ? this.comparePromptA.fullVersion.split('-') : [];
+            
             return {
-                targetRangeName: this.getTargetRangeName(this.comparePromptA.targetRangeId),
-                targetLaneName: this.getTargetLaneName(this.comparePromptA.targetLaneId),
-                tacticalName: this.getTacticalName(this.comparePromptA.tacticalId),
+                targetRangeName: versionParts[0] || '未知靶场',
+                targetLaneName: versionParts[1] || '未知靶道',
+                tacticalName: versionParts[2] || '未知战术',
                 modelName: this.getModelName(this.comparePromptA.modelId)
             };
         },
@@ -323,10 +326,13 @@ var app = new Vue({
         comparePromptBInfo() {
             if (!this.comparePromptB) return null;
             
+            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            const versionParts = this.comparePromptB.fullVersion ? this.comparePromptB.fullVersion.split('-') : [];
+            
             return {
-                targetRangeName: this.getTargetRangeName(this.comparePromptB.targetRangeId),
-                targetLaneName: this.getTargetLaneName(this.comparePromptB.targetLaneId),
-                tacticalName: this.getTacticalName(this.comparePromptB.tacticalId),
+                targetRangeName: versionParts[0] || '未知靶场',
+                targetLaneName: versionParts[1] || '未知靶道',
+                tacticalName: versionParts[2] || '未知战术',
                 modelName: this.getModelName(this.comparePromptB.modelId)
             };
         }
@@ -3748,22 +3754,26 @@ var app = new Vue({
         
         // 辅助方法：根据ID获取名称
         getTargetRangeName(id) {
-            const range = this.targetRangeOpt.find(item => item.value === id);
+            if (!this.promptFieldOpt || !id) return '未知靶场';
+            const range = this.promptFieldOpt.find(item => item.value === id);
             return range ? range.label : '未知靶场';
         },
         
         getTargetLaneName(id) {
+            if (!this.promptOpt || !id) return '未知靶道';
             // 从promptOpt中查找对应的靶道
             const lane = this.promptOpt.find(item => item.idkey === id);
             return lane ? (lane.nickName || lane.label) : '未知靶道';
         },
         
         getTacticalName(id) {
+            if (!this.tacticalOpt || !id) return '未知战术';
             const tactical = this.tacticalOpt.find(item => item.value === id);
             return tactical ? tactical.label : '未知战术';
         },
         
         getModelName(id) {
+            if (!this.modelOpt || !id) return '未知模型';
             const model = this.modelOpt.find(item => item.value === id);
             return model ? model.label : '未知模型';
         }

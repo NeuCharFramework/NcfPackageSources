@@ -924,20 +924,20 @@
                     @* 基本信息 *@
                     <div class="compare-section">
                         <div class="section-title">基本信息</div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.targetRangeId, comparePromptB.targetRangeId)}">
+                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName}">
                             <span class="field-label">靶场:</span>
                             <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.targetRangeName : '--'}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.targetRangeId, comparePromptB.targetRangeId)">🔶</span>
+                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName">🔶</span>
                         </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.targetLaneId, comparePromptB.targetLaneId)}">
+                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName}">
                             <span class="field-label">靶道:</span>
                             <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.targetLaneName : '--'}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.targetLaneId, comparePromptB.targetLaneId)">🔶</span>
+                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName">🔶</span>
                         </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.tacticalId, comparePromptB.tacticalId)}">
+                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName}">
                             <span class="field-label">战术:</span>
                             <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.tacticalName : '--'}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.tacticalId, comparePromptB.tacticalId)">🔶</span>
+                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName">🔶</span>
                         </div>
                         <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
                             <span class="field-label">别名:</span>
@@ -949,10 +949,10 @@
                     @* 模型配置 *@
                     <div class="compare-section">
                         <div class="section-title">📊 模型配置</div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.modelId, comparePromptB.modelId)}">
+                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName}">
                             <span class="field-label">模型:</span>
                             <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.modelName : '--'}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.modelId, comparePromptB.modelId)">🔶</span>
+                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName">🔶</span>
                         </div>
                         <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)}">
                             <span class="field-label">Temperature:</span>
