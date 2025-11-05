@@ -934,7 +934,7 @@
                 </table>
             </div>
             
-            @* Prompt内容对比（左右同步滚动） *@
+            @* Prompt内容对比（左右同步滚动，Git风格差异显示） *@
             <div class="compare-diff-section">
                 <h4 class="diff-title">📄 Prompt 内容对比</h4>
                 <div class="compare-diff-container" ref="compareScrollContainer">
@@ -942,7 +942,7 @@
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt A</div>
                             <div class="diff-code-block">
-                                <pre>{{comparePromptA.promptContent || '暂无内容'}}</pre>
+                                <pre v-html="getContentDiffHtml('A')"></pre>
                             </div>
                         </div>
                         <div class="compare-diff-column">
@@ -950,14 +950,14 @@
                                 <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">有差异</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)}">
-                                <pre>{{comparePromptB.promptContent || '暂无内容'}}</pre>
+                                <pre v-html="getContentDiffHtml('B')"></pre>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            @* 变量配置对比 *@
+            @* 变量配置对比（Git风格差异显示） *@
             <div class="compare-diff-section" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
                 <h4 class="diff-title">🎯 变量配置对比</h4>
                 <div class="compare-diff-container">
@@ -965,7 +965,7 @@
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt A</div>
                             <div class="diff-code-block">
-                                <pre>{{comparePromptA.variablesJson || '{}'}}</pre>
+                                <pre v-html="getVariablesDiffHtml('A')"></pre>
                             </div>
                         </div>
                         <div class="compare-diff-column">
@@ -973,7 +973,7 @@
                                 <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)">有差异</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
-                                <pre>{{comparePromptB.variablesJson || '{}'}}</pre>
+                                <pre v-html="getVariablesDiffHtml('B')"></pre>
                             </div>
                         </div>
                     </div>
@@ -1008,6 +1008,7 @@
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>

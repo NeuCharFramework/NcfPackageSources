@@ -3752,6 +3752,116 @@ var app = new Vue({
             }
         },
         
+        // 生成Git风格的Prompt内容差异HTML
+        getContentDiffHtml(side) {
+            const contentA = this.comparePromptA?.promptContent || '';
+            const contentB = this.comparePromptB?.promptContent || '';
+            
+            // 如果都为空
+            if (!contentA && !contentB) {
+                return '<span class="diff-empty">暂无内容</span>';
+            }
+            
+            // 如果只有一个为空
+            if (!contentA && side === 'A') {
+                return '<span class="diff-empty">暂无内容</span>';
+            }
+            if (!contentB && side === 'B') {
+                return '<span class="diff-empty">暂无内容</span>';
+            }
+            
+            // 如果内容相同
+            if (contentA === contentB) {
+                return this.escapeHtml(side === 'A' ? contentA : contentB);
+            }
+            
+            // 使用jsdiff库进行差异对比
+            if (typeof Diff !== 'undefined') {
+                const diff = Diff.diffLines(contentA, contentB);
+                return this.renderDiffHtml(diff, side);
+            }
+            
+            // 如果diff库未加载，返回原始内容
+            return this.escapeHtml(side === 'A' ? contentA : contentB);
+        },
+        
+        // 生成Git风格的变量配置差异HTML
+        getVariablesDiffHtml(side) {
+            const varsA = this.comparePromptA?.variablesJson || '{}';
+            const varsB = this.comparePromptB?.variablesJson || '{}';
+            
+            // 格式化JSON以便对比
+            let formattedA = varsA;
+            let formattedB = varsB;
+            try {
+                formattedA = JSON.stringify(JSON.parse(varsA), null, 2);
+            } catch (e) {
+                // 保持原样
+            }
+            try {
+                formattedB = JSON.stringify(JSON.parse(varsB), null, 2);
+            } catch (e) {
+                // 保持原样
+            }
+            
+            // 如果内容相同
+            if (formattedA === formattedB) {
+                return this.escapeHtml(side === 'A' ? formattedA : formattedB);
+            }
+            
+            // 使用jsdiff库进行差异对比
+            if (typeof Diff !== 'undefined') {
+                const diff = Diff.diffLines(formattedA, formattedB);
+                return this.renderDiffHtml(diff, side);
+            }
+            
+            // 如果diff库未加载，返回原始内容
+            return this.escapeHtml(side === 'A' ? formattedA : formattedB);
+        },
+        
+        // 渲染差异HTML（Git风格）
+        renderDiffHtml(diff, side) {
+            let html = '';
+            
+            diff.forEach(part => {
+                const lines = part.value.split('\n');
+                // 移除最后的空行
+                if (lines[lines.length - 1] === '') {
+                    lines.pop();
+                }
+                
+                lines.forEach(line => {
+                    const escapedLine = this.escapeHtml(line);
+                    
+                    if (part.added) {
+                        // 新增的内容（绿色背景）- 仅在B侧显示
+                        if (side === 'B') {
+                            html += `<span class="diff-line diff-added">+ ${escapedLine}</span>\n`;
+                        }
+                        // A侧不显示新增内容
+                    } else if (part.removed) {
+                        // 删除的内容（红色背景）- 仅在A侧显示
+                        if (side === 'A') {
+                            html += `<span class="diff-line diff-removed">- ${escapedLine}</span>\n`;
+                        }
+                        // B侧不显示删除内容
+                    } else {
+                        // 未修改的内容（灰色）
+                        html += `<span class="diff-line diff-unchanged">  ${escapedLine}</span>\n`;
+                    }
+                });
+            });
+            
+            return html || '<span class="diff-empty">暂无内容</span>';
+        },
+        
+        // HTML转义工具函数
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        },
+        
         // 辅助方法：根据ID获取名称
         getTargetRangeName(id) {
             if (!this.promptFieldOpt || !id) return '未知靶场';

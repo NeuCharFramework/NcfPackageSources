@@ -1863,6 +1863,45 @@ think::before {
     color: #2c3e50;
 }
 
+/* Git风格差异高亮 */
+.diff-line {
+    display: block;
+    padding: 2px 8px;
+    margin: 0;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.diff-line:hover {
+    opacity: 0.9;
+}
+
+/* 新增的内容（绿色） */
+.diff-added {
+    background-color: #e6ffec;
+    color: #22863a;
+    border-left: 3px solid #34d058;
+}
+
+/* 删除的内容（红色） */
+.diff-removed {
+    background-color: #ffeef0;
+    color: #d73a49;
+    border-left: 3px solid #d73a49;
+}
+
+/* 未修改的内容（灰色） */
+.diff-unchanged {
+    color: #6a737d;
+    background-color: transparent;
+}
+
+/* 空内容提示 */
+.diff-empty {
+    color: #909399;
+    font-style: italic;
+}
+
 /* Diff容器滚动条 */
 .compare-diff-container::-webkit-scrollbar {
     width: 8px;
