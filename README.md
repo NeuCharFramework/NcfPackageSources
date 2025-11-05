@@ -66,7 +66,7 @@ dotnet restore
 dotnet workload restore
 ```
 
-5.编译运行
+5. 编译运行
 
 ```bash
 dotnet build
