@@ -1510,12 +1510,14 @@
     cursor: col-resize;
     position: relative;
     background: transparent;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, width 0.2s ease;
     z-index: 100;
+    user-select: none; /* 防止双击选中文本 */
 }
 
 .resize-handle:hover {
     background-color: rgba(64, 158, 255, 0.2);
+    width: 10px; /* 悬停时稍微变宽，更容易操作 */
 }
 
 .resize-handle:active {
@@ -1546,6 +1548,20 @@
     background-color: #409eff;
     height: 100px;
     width: 4px;
+}
+
+/* 双击还原时的闪烁动画 */
+@keyframes resetFlash {
+    0%, 100% {
+        background-color: rgba(64, 158, 255, 0.2);
+    }
+    50% {
+        background-color: rgba(67, 207, 124, 0.6);
+    }
+}
+
+.resize-handle.reset-animation {
+    animation: resetFlash 0.6s ease;
 }
 
 /* 推理过程样式 */

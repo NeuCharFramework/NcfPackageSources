@@ -177,7 +177,9 @@
     @* 左侧和中间区域之间的拖动分隔条 *@
     <div class="resize-handle resize-handle-left" 
          v-if="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized"
-         @@mousedown="startResizeLeft"></div>
+         @@mousedown="startResizeLeft"
+         @@dblclick="resetAreaWidths"
+         title="拖动调整宽度 | 双击还原默认"></div>
     
     @*中间 输入Prompt*@
     <div class="promptPage_centerArea" 
@@ -343,7 +345,9 @@
     @* 中间和右侧区域之间的拖动分隔条 *@
     <div class="resize-handle resize-handle-right" 
          v-if="!box2Hidden && !centerAreaMaximized && !rightAreaMaximized"
-         @@mousedown="startResizeRight"></div>
+         @@mousedown="startResizeRight"
+         @@dblclick="resetAreaWidths"
+         title="拖动调整宽度 | 双击还原默认"></div>
     
     @*右侧 评分|分析*@
     <div class="promptPage_rightArea" 

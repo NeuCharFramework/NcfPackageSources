@@ -3389,6 +3389,36 @@ var app = new Vue({
                 // 保存当前宽度设置
                 this.saveAreaWidthsToStorage();
             }
+        },
+        
+        // 双击分隔条还原默认宽度
+        resetAreaWidths(event) {
+            // 恢复默认宽度
+            this.leftAreaWidth = 360;
+            this.centerAreaWidth = 380;
+            
+            // 清除localStorage中保存的设置
+            try {
+                localStorage.removeItem('promptPage_leftAreaWidth');
+                localStorage.removeItem('promptPage_centerAreaWidth');
+            } catch (e) {
+                console.error('清除区域宽度设置失败:', e);
+            }
+            
+            // 添加视觉反馈动画
+            if (event && event.target) {
+                event.target.classList.add('reset-animation');
+                setTimeout(() => {
+                    event.target.classList.remove('reset-animation');
+                }, 600);
+            }
+            
+            // 显示提示消息
+            this.$message({
+                message: '已还原为默认布局宽度',
+                type: 'success',
+                duration: 2000
+            });
         }
     },
     
