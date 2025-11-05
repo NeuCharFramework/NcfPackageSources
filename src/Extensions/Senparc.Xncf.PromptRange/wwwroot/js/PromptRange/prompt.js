@@ -281,6 +281,12 @@ var app = new Vue({
             resizeStartX: 0,       // 拖动开始的X坐标
             resizeStartLeftWidth: 0,   // 拖动开始时左侧区域的宽度
             resizeStartCenterWidth: 0, // 拖动开始时中间区域的宽度
+            // Prompt 对比功能
+            compareDialogVisible: false,  // 对比对话框显示状态
+            comparePromptAId: null,       // 对比的Prompt A的ID
+            comparePromptBId: null,       // 对比的Prompt B的ID
+            comparePromptA: null,         // 对比的Prompt A的完整数据
+            comparePromptB: null,         // 对比的Prompt B的完整数据
             // 自定义滚动条缩略图
             showScrollbarThumbnails: false,
             scrollInfo: {
@@ -295,6 +301,35 @@ var app = new Vue({
             let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading || this.dodgersLoading
             return result
         },
+        
+        // 获取可选择的Prompt列表（用于对比对话框）
+        availablePrompts() {
+            return this.promptOpt || [];
+        },
+        
+        // 获取Prompt A的显示信息
+        comparePromptAInfo() {
+            if (!this.comparePromptA) return null;
+            
+            return {
+                targetRangeName: this.getTargetRangeName(this.comparePromptA.targetRangeId),
+                targetLaneName: this.getTargetLaneName(this.comparePromptA.targetLaneId),
+                tacticalName: this.getTacticalName(this.comparePromptA.tacticalId),
+                modelName: this.getModelName(this.comparePromptA.modelId)
+            };
+        },
+        
+        // 获取Prompt B的显示信息
+        comparePromptBInfo() {
+            if (!this.comparePromptB) return null;
+            
+            return {
+                targetRangeName: this.getTargetRangeName(this.comparePromptB.targetRangeId),
+                targetLaneName: this.getTargetLaneName(this.comparePromptB.targetLaneId),
+                tacticalName: this.getTacticalName(this.comparePromptB.tacticalId),
+                modelName: this.getModelName(this.comparePromptB.modelId)
+            };
+        }
     },
     watch: {
         //'isExtend': {
@@ -311,6 +346,9 @@ var app = new Vue({
         // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
         // 添加 beforeunload 事件监听器
         window.addEventListener('beforeunload', this.beforeunloadHandler);
+        
+        // 页面创建时加载保存的宽度设置
+        this.loadAreaWidthsFromStorage();
     },
     mounted() {
         // 获取靶道列表
@@ -340,10 +378,18 @@ var app = new Vue({
     beforeDestroy() {
         // 销毁之前移除事件监听器
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
+        
+        // 组件销毁前移除拖动相关的事件监听器
+        document.removeEventListener('mousemove', this.handleResize);
+        document.removeEventListener('mouseup', this.stopResize);
     },
     methods: {
         //获取路径id 页面数据回显
         getTargetRangeIdFromUrl() {
+             // 添加安全检查，防止 $route 未定义
+             if (!this.$route || !this.$route.query) {
+                 return;
+             }
              const targetrangeId = this.$route.query.targetrangeId;
            
            
@@ -1375,40 +1421,33 @@ var app = new Vue({
         exportPluginInvertSelection() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 获取所有节点的key（包括父节点和子节点）
-            const allKeys = [];
-            const collectKeys = (nodes) => {
+            // 收集所有叶子节点（靶道）的key
+            const allLeafKeys = [];
+            const collectLeafKeys = (nodes) => {
                 nodes.forEach(node => {
-                    allKeys.push(node.idkey);
-                    if (node.children && node.children.length > 0) {
-                        collectKeys(node.children);
+                    if (!node.children || node.children.length === 0) {
+                        // 这是叶子节点（靶道）
+                        allLeafKeys.push(node.idkey);
+                    } else {
+                        // 这是父节点（靶场），继续递归
+                        collectLeafKeys(node.children);
                     }
                 });
             };
-            collectKeys(this.expectedPluginFieldList);
+            collectLeafKeys(this.expectedPluginFieldList);
             
-            // 获取当前选中的key（包括父节点和子节点）
-            const currentCheckedKeys = this.$refs.expectedPluginTree.getCheckedKeys();
+            // 获取当前选中的叶子节点key（使用 leafOnly=true 参数）
+            const currentCheckedLeafKeys = this.$refs.expectedPluginTree.getCheckedKeys(true);
             
-            // 反选：所有key - 当前选中的key
-            const invertedKeys = allKeys.filter(key => !currentCheckedKeys.includes(key));
+            // 反选：所有叶子节点 - 当前选中的叶子节点
+            const invertedLeafKeys = allLeafKeys.filter(key => !currentCheckedLeafKeys.includes(key));
             
-            // 设置反选后的结果
-            this.$refs.expectedPluginTree.setCheckedKeys(invertedKeys);
+            // 设置反选后的结果（只设置叶子节点）
+            this.$refs.expectedPluginTree.setCheckedKeys(invertedLeafKeys);
             
-            // 等待 DOM 更新后，只记录叶子节点
+            // 等待 DOM 更新后更新状态
             this.$nextTick(() => {
-                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
-                const leafNodeKeys = [];
-                
-                checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
-                    if (!node.children || node.children.length === 0) {
-                        leafNodeKeys.push(node.idkey);
-                    }
-                });
-                
-                this.expectedPluginFoem.checkList = leafNodeKeys;
+                this.expectedPluginFoem.checkList = invertedLeafKeys;
                 this.updateExportPluginSelectedCount();
             });
             
@@ -3593,19 +3632,141 @@ var app = new Vue({
                 type: 'success',
                 duration: 2000
             });
+        },
+        
+        // ========== Prompt 对比功能 ==========
+        
+        // 打开对比对话框（可选预设Prompt A）
+        openCompareDialog(event, item) {
+            // 阻止事件冒泡，防止触发el-select的下拉
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            // 如果传入了item，则将其设置为Prompt A
+            // item.value 是 el-option 的值，对应 Prompt 的 ID
+            if (item && item.value) {
+                this.comparePromptAId = item.value;
+                this.loadComparePromptA(item.value);
+            }
+            
+            // 打开对话框
+            this.compareDialogVisible = true;
+        },
+        
+        // 加载对比Prompt A的数据
+        async loadComparePromptA(id) {
+            if (!id) {
+                this.comparePromptA = null;
+                return;
+            }
+            
+            try {
+                const data = await this.getPromptDetail(id);
+                this.comparePromptA = data;
+            } catch (error) {
+                console.error('加载Prompt A失败:', error);
+                this.$message({
+                    message: '加载Prompt A数据失败',
+                    type: 'error',
+                    duration: 3000
+                });
+                this.comparePromptA = null;
+            }
+        },
+        
+        // 加载对比Prompt B的数据
+        async loadComparePromptB(id) {
+            if (!id) {
+                this.comparePromptB = null;
+                return;
+            }
+            
+            try {
+                const data = await this.getPromptDetail(id);
+                this.comparePromptB = data;
+            } catch (error) {
+                console.error('加载Prompt B失败:', error);
+                this.$message({
+                    message: '加载Prompt B数据失败',
+                    type: 'error',
+                    duration: 3000
+                });
+                this.comparePromptB = null;
+            }
+        },
+        
+        // 获取单个Prompt的详细信息
+        async getPromptDetail(id) {
+            const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`);
+            
+            if (res.data.success) {
+                return res.data.data;
+            } else {
+                throw new Error(res.data.errorMessage || '获取Prompt详情失败');
+            }
+        },
+        
+        // 交换Prompt A和B
+        swapComparePrompts() {
+            // 交换ID
+            const tempId = this.comparePromptAId;
+            this.comparePromptAId = this.comparePromptBId;
+            this.comparePromptBId = tempId;
+            
+            // 交换数据
+            const tempData = this.comparePromptA;
+            this.comparePromptA = this.comparePromptB;
+            this.comparePromptB = tempData;
+        },
+        
+        // 检查字段是否有差异
+        hasFieldDiff(fieldA, fieldB) {
+            // 处理null/undefined情况
+            if (fieldA === fieldB) return false;
+            if ((fieldA === null || fieldA === undefined) && (fieldB === null || fieldB === undefined)) return false;
+            
+            // 如果是对象或数组，进行深度比较
+            if (typeof fieldA === 'object' && typeof fieldB === 'object') {
+                return JSON.stringify(fieldA) !== JSON.stringify(fieldB);
+            }
+            
+            return fieldA !== fieldB;
+        },
+        
+        // 格式化变量配置（从JSON字符串转为可读格式）
+        formatVariables(variablesJson) {
+            if (!variablesJson) return '无';
+            try {
+                const vars = JSON.parse(variablesJson);
+                if (Object.keys(vars).length === 0) return '无';
+                return Object.entries(vars).map(([key, value]) => `${key}: ${value}`).join('\n');
+            } catch (e) {
+                return variablesJson;
+            }
+        },
+        
+        // 辅助方法：根据ID获取名称
+        getTargetRangeName(id) {
+            const range = this.targetRangeOpt.find(item => item.value === id);
+            return range ? range.label : '未知靶场';
+        },
+        
+        getTargetLaneName(id) {
+            // 从promptOpt中查找对应的靶道
+            const lane = this.promptOpt.find(item => item.idkey === id);
+            return lane ? (lane.nickName || lane.label) : '未知靶道';
+        },
+        
+        getTacticalName(id) {
+            const tactical = this.tacticalOpt.find(item => item.value === id);
+            return tactical ? tactical.label : '未知战术';
+        },
+        
+        getModelName(id) {
+            const model = this.modelOpt.find(item => item.value === id);
+            return model ? model.label : '未知模型';
         }
-    },
-    
-    // Vue生命周期钩子
-    created() {
-        // 页面创建时加载保存的宽度设置
-        this.loadAreaWidthsFromStorage();
-    },
-    
-    beforeDestroy() {
-        // 组件销毁前移除事件监听器
-        document.removeEventListener('mousemove', this.handleResize);
-        document.removeEventListener('mouseup', this.stopResize);
     }
 });
 
