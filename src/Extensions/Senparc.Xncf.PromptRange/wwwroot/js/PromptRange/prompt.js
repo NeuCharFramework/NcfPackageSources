@@ -2,6 +2,7 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
+            isAIGrade: true,
             devHost: 'http://pr-felixj.frp.senparc.com',
             pageChange: false, // 页面是否有变化
             isAvg: true, // 是否平均分 默认false 不平均
@@ -628,14 +629,15 @@ var app = new Vue({
                         prefix: this.promptParamForm.prefix
                     }
                     // ai评分标准
+                    _postData.isAIGrade = this.isAIGrade
                     if (this.aiScoreForm.resultList.length > 0) {
                         let _list = this.aiScoreForm.resultList.map(item => item.value)
                         _list = _list.filter(item => item)
                         if (_list.length > 0) {
                             _postData.expectedResultsJson = JSON.stringify(_list)
                         }
-
                     }
+                    
                     if (this.promptParamForm.variableList.length > 0) {
                         _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
                     }
@@ -810,6 +812,7 @@ var app = new Vue({
 
             }
             // ai评分标准
+            _postData.isAIGrade = this.isAIGrade
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
                 _list = _list.filter(item => item)
@@ -817,6 +820,7 @@ var app = new Vue({
                     _postData.expectedResultsJson = JSON.stringify(_list)
                 }
             }
+            
             // 请求参数
             if (this.promptParamForm.variableList.length > 0) {
                 _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)

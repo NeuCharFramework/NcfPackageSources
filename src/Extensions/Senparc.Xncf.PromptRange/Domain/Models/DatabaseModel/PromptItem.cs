@@ -98,6 +98,9 @@ public class PromptItem : EntityBase<int>
     /// </summary>
     public string ExpectedResultsJson { get; private set; }
 
+    public bool IsAIGrade { get; private set; } = false;
+
+
     #endregion
 
     #region Full Version
@@ -318,7 +321,7 @@ public class PromptItem : EntityBase<int>
 
     public PromptItem(PromptItemDto dto) : this(dto.RangeId, dto.Content, dto.ModelId, dto.TopP, dto.Temperature, dto.MaxToken,
         dto.FrequencyPenalty, dto.PresencePenalty, dto.StopSequences, dto.RangeName, dto.Tactic, dto.Aiming, dto.ParentTac, dto.Note,
-        dto.IsDraft, dto.ExpectedResultsJson,
+        dto.IsDraft, dto.ExpectedResultsJson, dto.isAIGrade,
         dto.Prefix, dto.Suffix, dto.VariableDictJson)
     {
         Id = dto.Id;
@@ -332,7 +335,7 @@ public class PromptItem : EntityBase<int>
     public PromptItem(int rangeId, string content,
         int modelId, float topP, float temperature, int maxToken, float frequencyPenalty, float presencePenalty, string stopSequences,
         string rangeName, string tactic, int aiming, string parentTac,
-        string note, bool isDraft, string expectedResultsJson,
+        string note, bool isDraft, string expectedResultsJson, bool isAIGrade,
         string prefix, string suffix, string variableDictJson)
     {
         RangeId = rangeId;
@@ -351,6 +354,7 @@ public class PromptItem : EntityBase<int>
         Note = note;
         IsDraft = isDraft;
         ExpectedResultsJson = expectedResultsJson;
+        IsAIGrade = isAIGrade;
         Prefix = prefix;
         Suffix = suffix;
         VariableDictJson = variableDictJson;
@@ -361,7 +365,7 @@ public class PromptItem : EntityBase<int>
     public PromptItem(int rangeId, string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :
         this(rangeId, request.Content, request.ModelId, request.TopP, request.Temperature, request.MaxToken, request.FrequencyPenalty,
             request.PresencePenalty, request.StopSequences, rangeName, tactic, aiming, parentTac, request.Note, request.IsDraft,
-            request.ExpectedResultsJson,
+            request.ExpectedResultsJson, request.isAIGrade,
             request.Prefix, request.Suffix, request.VariableDictJson)
     {
     }
@@ -484,6 +488,7 @@ public class PromptItem : EntityBase<int>
         Note = dto.Note;
 
         ExpectedResultsJson = dto.ExpectedResultsJson;
+        IsAIGrade = dto.isAIGrade;
 
         Prefix = dto.Prefix;
         Suffix = dto.Suffix;

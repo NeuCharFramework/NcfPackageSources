@@ -160,9 +160,9 @@
                 </div>
                 @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
                 <div style="padding-left: 15px; margin-top:25px;">
-                    <el-button type="primary" size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+                    <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
+                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="开" inactive-text="关"></el-switch>
                 </div>
-
             </div>
         </div>
         <div class="trapezoid" @@click="foldsidebar">

@@ -64,6 +64,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public string Note { get; set; }
 
         public string ExpectedResultsJson { get; set; }
+        /// <summary>
+        /// 是否启用“ai评分标准”
+        /// </summary>
+        public bool isAIGrade { get; set; } = false;
 
         public string Prefix { get; set; }
         public string Suffix { get; set; }
