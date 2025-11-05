@@ -803,203 +803,185 @@
                top="5vh"
                class="prompt-compare-dialog"
                :close-on-click-modal="false">
-        @* 选择对比的Prompt *@
-        <div class="compare-selector">
-            <el-select v-model="comparePromptAId" 
-                       filterable 
-                       placeholder="选择 Prompt A" 
-                       @@change="loadComparePromptA"
-                       style="width: 40%;">
-                <el-option v-for="item in promptOpt"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-            </el-select>
+        @* 选择对比的Prompt（横向布局） *@
+        <div class="compare-selector-horizontal">
+            <div class="selector-column">
+                <div class="selector-label">📝 Prompt A</div>
+                <el-select v-model="comparePromptAId" 
+                           filterable 
+                           placeholder="选择 Prompt A" 
+                           @@change="loadComparePromptA"
+                           style="width: 100%;">
+                    <el-option v-for="item in promptOpt"
+                               :key="item.value"
+                               :label="item.label"
+                               :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
             
-            <el-button type="text" 
-                       icon="el-icon-sort" 
-                       @@click="swapComparePrompts"
-                       style="margin: 0 20px;">
-                交换
-            </el-button>
+            <div class="selector-swap">
+                <el-button type="text" 
+                           icon="el-icon-sort" 
+                           @@click="swapComparePrompts"
+                           title="交换">
+                </el-button>
+            </div>
             
-            <el-select v-model="comparePromptBId" 
-                       filterable 
-                       placeholder="选择 Prompt B" 
-                       @@change="loadComparePromptB"
-                       style="width: 40%;">
-                <el-option v-for="item in promptOpt"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-            </el-select>
+            <div class="selector-column">
+                <div class="selector-label">📝 Prompt B</div>
+                <el-select v-model="comparePromptBId" 
+                           filterable 
+                           placeholder="选择 Prompt B" 
+                           @@change="loadComparePromptB"
+                           style="width: 100%;">
+                    <el-option v-for="item in promptOpt"
+                               :key="item.value"
+                               :label="item.label"
+                               :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
         </div>
         
         @* 对比内容区域 *@
         <div class="compare-content" v-if="comparePromptA && comparePromptB">
-            <div class="compare-columns">
-                @* 左侧 Prompt A *@
-                <div class="compare-column">
-                    <div class="compare-column-header">
-                        <h3>📝 Prompt A</h3>
-                        <div class="prompt-version">版本: {{comparePromptA.fullVersion}}</div>
-                    </div>
-                    
-                    @* 基本信息 *@
-                    <div class="compare-section">
-                        <div class="section-title">基本信息</div>
-                        <div class="compare-field-row">
-                            <span class="field-label">靶场:</span>
-                            <span class="field-value">{{comparePromptAInfo ? comparePromptAInfo.targetRangeName : '--'}}</span>
+            @* 基本信息对比（紧凑型表格） *@
+            <div class="compare-info-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">字段</th>
+                            <th>📝 Prompt A <span class="version-tag">{{comparePromptA.fullVersion}}</span></th>
+                            <th>📝 Prompt B <span class="version-tag">{{comparePromptB.fullVersion}}</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName}">
+                            <td class="field-name">靶场</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.targetRangeName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.targetRangeName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName}">
+                            <td class="field-name">靶道</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.targetLaneName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.targetLaneName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName}">
+                            <td class="field-name">战术</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.tacticalName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.tacticalName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
+                            <td class="field-name">别名</td>
+                            <td>{{comparePromptA.nickName || '--'}}</td>
+                            <td>
+                                {{comparePromptB.nickName || '--'}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName}">
+                            <td class="field-name">模型</td>
+                            <td>{{comparePromptAInfo ? comparePromptAInfo.modelName : '--'}}</td>
+                            <td>
+                                {{comparePromptBInfo ? comparePromptBInfo.modelName : '--'}}
+                                <span class="diff-mark" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)}">
+                            <td class="field-name">Temperature</td>
+                            <td>{{comparePromptA.temperature}}</td>
+                            <td>
+                                {{comparePromptB.temperature}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.maxTokens, comparePromptB.maxTokens)}">
+                            <td class="field-name">Max Tokens</td>
+                            <td>{{comparePromptA.maxTokens}}</td>
+                            <td>
+                                {{comparePromptB.maxTokens}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.maxTokens, comparePromptB.maxTokens)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.topP, comparePromptB.topP)}">
+                            <td class="field-name">Top P</td>
+                            <td>{{comparePromptA.topP}}</td>
+                            <td>
+                                {{comparePromptB.topP}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.topP, comparePromptB.topP)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.presencePenalty, comparePromptB.presencePenalty)}">
+                            <td class="field-name">Presence Penalty</td>
+                            <td>{{comparePromptA.presencePenalty}}</td>
+                            <td>
+                                {{comparePromptB.presencePenalty}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.presencePenalty, comparePromptB.presencePenalty)">●</span>
+                            </td>
+                        </tr>
+                        <tr :class="{'has-diff': hasFieldDiff(comparePromptA.frequencyPenalty, comparePromptB.frequencyPenalty)}">
+                            <td class="field-name">Frequency Penalty</td>
+                            <td>{{comparePromptA.frequencyPenalty}}</td>
+                            <td>
+                                {{comparePromptB.frequencyPenalty}}
+                                <span class="diff-mark" v-if="hasFieldDiff(comparePromptA.frequencyPenalty, comparePromptB.frequencyPenalty)">●</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            @* Prompt内容对比（左右同步滚动） *@
+            <div class="compare-diff-section">
+                <h4 class="diff-title">📄 Prompt 内容对比</h4>
+                <div class="compare-diff-container" ref="compareScrollContainer">
+                    <div class="compare-columns">
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt A</div>
+                            <div class="diff-code-block">
+                                <pre>{{comparePromptA.promptContent || '暂无内容'}}</pre>
+                            </div>
                         </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">靶道:</span>
-                            <span class="field-value">{{comparePromptAInfo ? comparePromptAInfo.targetLaneName : '--'}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">战术:</span>
-                            <span class="field-value">{{comparePromptAInfo ? comparePromptAInfo.tacticalName : '--'}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">别名:</span>
-                            <span class="field-value">{{comparePromptA.nickName || '--'}}</span>
-                        </div>
-                    </div>
-                    
-                    @* 模型配置 *@
-                    <div class="compare-section">
-                        <div class="section-title">📊 模型配置</div>
-                        <div class="compare-field-row">
-                            <span class="field-label">模型:</span>
-                            <span class="field-value">{{comparePromptAInfo ? comparePromptAInfo.modelName : '--'}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">Temperature:</span>
-                            <span class="field-value">{{comparePromptA.temperature}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">Max Tokens:</span>
-                            <span class="field-value">{{comparePromptA.maxTokens}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">Top P:</span>
-                            <span class="field-value">{{comparePromptA.topP}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">Presence Penalty:</span>
-                            <span class="field-value">{{comparePromptA.presencePenalty}}</span>
-                        </div>
-                        <div class="compare-field-row">
-                            <span class="field-label">Frequency Penalty:</span>
-                            <span class="field-value">{{comparePromptA.frequencyPenalty}}</span>
-                        </div>
-                    </div>
-                    
-                    @* Prompt 内容 *@
-                    <div class="compare-section">
-                        <div class="section-title">📄 Prompt 内容</div>
-                        <div class="compare-content-box">
-                            <pre v-if="comparePromptA.content">{{comparePromptA.content}}</pre>
-                            <div v-else style="color: #909399; text-align: center; padding: 20px;">暂无内容</div>
-                        </div>
-                    </div>
-                    
-                    @* 变量配置 *@
-                    <div class="compare-section">
-                        <div class="section-title">🎯 变量配置</div>
-                        <div class="compare-content-box">
-                            <pre v-if="comparePromptA.variablesJson">{{comparePromptA.variablesJson}}</pre>
-                            <div v-else style="color: #909399; text-align: center; padding: 20px;">无变量配置</div>
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt B  
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">有差异</span>
+                            </div>
+                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)}">
+                                <pre>{{comparePromptB.promptContent || '暂无内容'}}</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                @* 右侧 Prompt B *@
-                <div class="compare-column">
-                    <div class="compare-column-header">
-                        <h3>📝 Prompt B</h3>
-                        <div class="prompt-version">版本: {{comparePromptB.fullVersion}}</div>
-                    </div>
-                    
-                    @* 基本信息 *@
-                    <div class="compare-section">
-                        <div class="section-title">基本信息</div>
-                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName}">
-                            <span class="field-label">靶场:</span>
-                            <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.targetRangeName : '--'}}</span>
-                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName">🔶</span>
+            </div>
+            
+            @* 变量配置对比 *@
+            <div class="compare-diff-section" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
+                <h4 class="diff-title">🎯 变量配置对比</h4>
+                <div class="compare-diff-container">
+                    <div class="compare-columns">
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt A</div>
+                            <div class="diff-code-block">
+                                <pre>{{comparePromptA.variablesJson || '{}'}}</pre>
+                            </div>
                         </div>
-                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName}">
-                            <span class="field-label">靶道:</span>
-                            <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.targetLaneName : '--'}}</span>
-                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName}">
-                            <span class="field-label">战术:</span>
-                            <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.tacticalName : '--'}}</span>
-                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
-                            <span class="field-label">别名:</span>
-                            <span class="field-value">{{comparePromptB.nickName || '--'}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)">🔶</span>
-                        </div>
-                    </div>
-                    
-                    @* 模型配置 *@
-                    <div class="compare-section">
-                        <div class="section-title">📊 模型配置</div>
-                        <div class="compare-field-row" :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName}">
-                            <span class="field-label">模型:</span>
-                            <span class="field-value">{{comparePromptBInfo ? comparePromptBInfo.modelName : '--'}}</span>
-                            <span class="diff-indicator" v-if="comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)}">
-                            <span class="field-label">Temperature:</span>
-                            <span class="field-value">{{comparePromptB.temperature}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.temperature, comparePromptB.temperature)">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.maxTokens, comparePromptB.maxTokens)}">
-                            <span class="field-label">Max Tokens:</span>
-                            <span class="field-value">{{comparePromptB.maxTokens}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.maxTokens, comparePromptB.maxTokens)">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.topP, comparePromptB.topP)}">
-                            <span class="field-label">Top P:</span>
-                            <span class="field-value">{{comparePromptB.topP}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.topP, comparePromptB.topP)">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.presencePenalty, comparePromptB.presencePenalty)}">
-                            <span class="field-label">Presence Penalty:</span>
-                            <span class="field-value">{{comparePromptB.presencePenalty}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.presencePenalty, comparePromptB.presencePenalty)">🔶</span>
-                        </div>
-                        <div class="compare-field-row" :class="{'has-diff': hasFieldDiff(comparePromptA.frequencyPenalty, comparePromptB.frequencyPenalty)}">
-                            <span class="field-label">Frequency Penalty:</span>
-                            <span class="field-value">{{comparePromptB.frequencyPenalty}}</span>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.frequencyPenalty, comparePromptB.frequencyPenalty)">🔶</span>
-                        </div>
-                    </div>
-                    
-                    @* Prompt 内容 *@
-                    <div class="compare-section">
-                        <div class="section-title">📄 Prompt 内容</div>
-                        <div class="compare-content-box" :class="{'has-diff': hasFieldDiff(comparePromptA.content, comparePromptB.content)}">
-                            <pre v-if="comparePromptB.content">{{comparePromptB.content}}</pre>
-                            <div v-else style="color: #909399; text-align: center; padding: 20px;">暂无内容</div>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.content, comparePromptB.content)" style="position: absolute; top: 10px; right: 10px;">🔶</span>
-                        </div>
-                    </div>
-                    
-                    @* 变量配置 *@
-                    <div class="compare-section">
-                        <div class="section-title">🎯 变量配置</div>
-                        <div class="compare-content-box" :class="{'has-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
-                            <pre v-if="comparePromptB.variablesJson">{{comparePromptB.variablesJson}}</pre>
-                            <div v-else style="color: #909399; text-align: center; padding: 20px;">无变量配置</div>
-                            <span class="diff-indicator" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)" style="position: absolute; top: 10px; right: 10px;">🔶</span>
+                        <div class="compare-diff-column">
+                            <div class="diff-column-header">Prompt B
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)">有差异</span>
+                            </div>
+                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
+                                <pre>{{comparePromptB.variablesJson || '{}'}}</pre>
+                            </div>
                         </div>
                     </div>
                 </div>

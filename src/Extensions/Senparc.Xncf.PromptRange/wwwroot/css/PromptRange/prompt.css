@@ -1654,12 +1654,12 @@ think::before {
     border-radius: 4px;
 }
 
-/* ========== Prompt 对比对话框样式 ========== */
+/* ========== Prompt 对比对话框样式（Git Diff 风格） ========== */
 
 /* 对话框主体 */
 .prompt-compare-dialog .el-dialog__body {
-    padding: 20px 30px;
-    max-height: 75vh;
+    padding: 15px 20px;
+    max-height: 78vh;
     overflow-y: auto;
 }
 
@@ -1668,12 +1668,12 @@ think::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 15px;
+    padding: 15px 20px;
     background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .compare-selector .el-select {
@@ -1696,171 +1696,161 @@ think::before {
 
 /* 对比内容区域 */
 .compare-content {
-    margin-top: 20px;
+    margin-top: 0;
+}
+
+/* 紧凑型信息表格 */
+.compare-info-table {
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.compare-info-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.compare-info-table thead {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.compare-info-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #303133;
+    border-bottom: 2px solid #409eff;
+    font-size: 14px;
+}
+
+.compare-info-table .version-tag {
+    font-size: 12px;
+    color: #606266;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+    border: 1px solid #dcdfe6;
+}
+
+.compare-info-table tbody tr {
+    border-bottom: 1px solid #ebeef5;
+    transition: background-color 0.2s ease;
+}
+
+.compare-info-table tbody tr:hover {
+    background-color: #f5f7fa;
+}
+
+.compare-info-table tbody tr.has-diff {
+    background-color: #fff7e6;
+}
+
+.compare-info-table tbody tr.has-diff:hover {
+    background-color: #fff3d9;
+}
+
+.compare-info-table td {
+    padding: 10px 15px;
+    color: #606266;
+    font-size: 13px;
+    position: relative;
+}
+
+.compare-info-table td.field-name {
+    font-weight: 600;
+    color: #909399;
+    background: #fafbfc;
+}
+
+.compare-info-table .diff-mark {
+    color: #ff9800;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+/* Diff 区块样式 */
+.compare-diff-section {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.diff-title {
+    margin: 0;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    border-bottom: 2px solid #dcdfe6;
+    font-size: 14px;
+    font-weight: 600;
+    color: #303133;
+}
+
+/* Diff 容器（支持同步滚动） */
+.compare-diff-container {
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 500px;
 }
 
 .compare-columns {
     display: flex;
-    gap: 30px;
+    width: 100%;
+    min-width: 100%;
 }
 
-/* 单列样式 */
-.compare-column {
+.compare-diff-column {
     flex: 1;
-    background: #fff;
-    border: 2px solid #e4e7ed;
-    border-radius: 12px;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: 60vh;
+    min-width: 50%;
+    border-right: 2px solid #e4e7ed;
 }
 
-/* 自定义滚动条 */
-.compare-column::-webkit-scrollbar {
-    width: 8px;
+.compare-diff-column:last-child {
+    border-right: none;
 }
 
-.compare-column::-webkit-scrollbar-track {
+/* Diff 列头部 */
+.diff-column-header {
+    padding: 10px 15px;
     background: #f5f7fa;
-    border-radius: 4px;
-}
-
-.compare-column::-webkit-scrollbar-thumb {
-    background: #c0c4cc;
-    border-radius: 4px;
-}
-
-.compare-column::-webkit-scrollbar-thumb:hover {
-    background: #909399;
-}
-
-/* 列头部 */
-.compare-column-header {
-    border-bottom: 3px solid #409eff;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    padding: 15px;
-    border-radius: 8px;
-}
-
-.compare-column-header h3 {
-    margin: 0 0 8px 0;
-    font-size: 20px;
-    color: #303133;
+    border-bottom: 1px solid #dcdfe6;
     font-weight: 600;
-}
-
-.prompt-version {
     font-size: 13px;
     color: #606266;
-    background: #fff;
-    padding: 6px 12px;
-    border-radius: 6px;
-    display: inline-block;
-    border: 1px solid #dcdfe6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* 对比区块 */
-.compare-section {
-    margin-bottom: 25px;
+.diff-badge {
+    font-size: 11px;
+    background: #fff7e6;
+    color: #ff9800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid #ffb74d;
+    font-weight: normal;
+}
+
+/* Diff 代码块 */
+.diff-code-block {
     padding: 15px;
     background: #fafbfc;
-    border-radius: 8px;
-    border: 1px solid #e4e7ed;
+    min-height: 200px;
 }
 
-.compare-section:last-child {
-    margin-bottom: 0;
-}
-
-.section-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #606266;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #e4e7ed;
-}
-
-/* 字段行 */
-.compare-field-row {
-    display: flex;
-    align-items: flex-start;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 6px;
-    background: #fff;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.compare-field-row:hover {
-    background: #f5f7fa;
-}
-
-.field-label {
-    min-width: 140px;
-    font-weight: 500;
-    color: #909399;
-    font-size: 13px;
-    padding-right: 10px;
-}
-
-.field-value {
-    flex: 1;
-    color: #303133;
-    word-break: break-word;
-    font-size: 14px;
-}
-
-/* 差异高亮 */
-.has-diff {
-    background: #fff7e6 !important;
-    border-left: 4px solid #ff9800;
-    padding-left: 8px;
-}
-
-.has-diff:hover {
-    background: #fff3d9 !important;
-}
-
-.diff-indicator {
-    margin-left: 8px;
-    font-size: 16px;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.8;
-    }
-}
-
-/* 内容框 */
-.compare-content-box {
-    background: #ffffff;
-    border: 1px solid #dcdfe6;
-    border-radius: 6px;
-    padding: 15px;
-    margin-top: 10px;
-    max-height: 400px;
-    overflow-y: auto;
-    position: relative;
-}
-
-.compare-content-box.has-diff {
+.diff-code-block.has-content-diff {
     background: #fff7e6;
-    border-color: #ff9800;
-    border-width: 2px;
+    border-left: 4px solid #ff9800;
 }
 
-.compare-content-box pre {
+.diff-code-block pre {
     margin: 0;
     padding: 0;
     white-space: pre-wrap;
@@ -1869,28 +1859,27 @@ think::before {
     font-size: 13px;
     line-height: 1.6;
     color: #2c3e50;
-    background: transparent;
 }
 
-/* 滚动条 for content-box */
-.compare-content-box::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+/* Diff容器滚动条 */
+.compare-diff-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-.compare-content-box::-webkit-scrollbar-track {
+.compare-diff-container::-webkit-scrollbar-track {
     background: #f5f7fa;
-    border-radius: 3px;
 }
 
-.compare-content-box::-webkit-scrollbar-thumb {
+.compare-diff-container::-webkit-scrollbar-thumb {
     background: #c0c4cc;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
-.compare-content-box::-webkit-scrollbar-thumb:hover {
+.compare-diff-container::-webkit-scrollbar-thumb:hover {
     background: #909399;
 }
+
 
 /* 空状态 */
 .compare-empty-state {
