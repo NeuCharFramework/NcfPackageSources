@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.14.0-preview.1</Version>
+    <Version>0.14.1-preview.1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -66,8 +66,9 @@
 		[2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
 		[2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
 				[2025-11-01] update basic libraries, including Senparc.AI
-        [2025-11-06] v0.14.0-preview.1 add AI score standard setting
-        [2025-11-06] v0.15.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and provide a scalable layout
+        [2025-11-06] v0.13.19-preview.1 add AI score standard setting
+        [2025-11-06] v0.14.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and provide a scalable layout
+        [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison 
 		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
