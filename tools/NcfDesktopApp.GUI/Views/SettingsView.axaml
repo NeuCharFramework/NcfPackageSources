@@ -10,7 +10,7 @@
     <Grid RowDefinitions="Auto,*">
         
         <!-- 顶部操作栏 -->
-        <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="1" CornerRadius="8" Margin="20,20,20,10" Padding="15">
+        <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="20,20,20,10" Padding="15">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <!-- 标题 -->
                 <TextBlock Grid.Column="0" 
@@ -95,8 +95,8 @@
                         <Separator Margin="0,15"/>
                         
                         <TextBlock Text="操作日志:" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                        <Border Background="#F8F9FA" 
-                                BorderBrush="#DEE2E6" 
+                        <Border Background="{DynamicResource LogBackgroundBrush}" 
+                                BorderBrush="{DynamicResource CardBorderBrush}" 
                                 BorderThickness="1" 
                                 CornerRadius="4" 
                                 Height="150">
@@ -107,6 +107,7 @@
                                            FontFamily="Consolas" 
                                            FontSize="11" 
                                            TextWrapping="Wrap" 
+                                           Foreground="{DynamicResource InputTextBrush}"
                                            Background="Transparent"/>
                             </ScrollViewer>
                         </Border>
@@ -142,8 +143,8 @@
 
     <UserControl.Styles>
         <Style Selector="Border.card">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="20"/>
