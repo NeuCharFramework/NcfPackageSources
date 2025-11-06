@@ -1696,6 +1696,95 @@ think::before {
     background-color: #ecf5ff;
 }
 
+/* 评分统计对比卡片 */
+.compare-score-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.score-card {
+    flex: 1;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e4e7ed;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.score-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.score-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+    color: white;
+}
+
+.score-card-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.score-card-header .el-button {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.score-card-header .el-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+}
+
+.score-card-body {
+    display: flex;
+    padding: 15px;
+    gap: 20px;
+}
+
+.score-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background: #f5f7fa;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.score-item:hover {
+    background: #ecf5ff;
+}
+
+.score-label {
+    font-size: 12px;
+    color: #909399;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.score-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #409eff;
+    font-family: 'Arial', sans-serif;
+}
+
+.score-value.score-empty {
+    color: #c0c4cc;
+    font-size: 20px;
+}
+
 /* 对比内容区域 */
 .compare-content {
     margin-top: 0;
@@ -1991,5 +2080,24 @@ think::before {
     .compare-selector .el-select {
         width: 100%;
         max-width: 100%;
+    }
+    
+    .compare-score-cards {
+        flex-direction: column;
+    }
+    
+    .score-card-body {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 768px) {
+    .score-card-body {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .score-value {
+        font-size: 20px;
     }
 }

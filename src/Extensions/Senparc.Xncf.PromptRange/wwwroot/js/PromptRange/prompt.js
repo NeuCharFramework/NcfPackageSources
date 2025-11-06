@@ -3726,6 +3726,48 @@ var app = new Vue({
             this.comparePromptB = tempData;
         },
         
+        // 检查评分是否存在
+        hasScore(score) {
+            return score !== null && score !== undefined && score > -1;
+        },
+        
+        // 跳转到指定的Prompt
+        async switchToPrompt(promptId) {
+            if (!promptId) {
+                this.$message({
+                    message: '无效的Prompt ID',
+                    type: 'warning',
+                    duration: 2000
+                });
+                return;
+            }
+            
+            try {
+                // 关闭对比对话框
+                this.compareDialogVisible = false;
+                
+                // 切换到对应的Prompt（触发promptChangeHandel）
+                this.promptid = promptId;
+                
+                // 显示成功提示
+                this.$message({
+                    message: '已切换到选中的 Prompt',
+                    type: 'success',
+                    duration: 2000
+                });
+                
+                // 触发数据加载
+                await this.promptChangeHandel(promptId, 'promptid');
+            } catch (error) {
+                console.error('切换Prompt失败:', error);
+                this.$message({
+                    message: '切换Prompt失败，请重试',
+                    type: 'error',
+                    duration: 3000
+                });
+            }
+        },
+        
         // 检查字段是否有差异
         hasFieldDiff(fieldA, fieldB) {
             // 处理null/undefined情况
