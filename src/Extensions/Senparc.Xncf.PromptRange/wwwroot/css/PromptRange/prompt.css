@@ -2143,7 +2143,7 @@ think::before {
 /* ========== 模型选择器自定义显示 ========== */
 .model-select .el-select-dropdown__item {
     height: auto !important;
-    padding: 8px 20px !important;
+    padding: 10px 20px !important;
     line-height: normal !important;
 }
 
@@ -2153,11 +2153,30 @@ think::before {
     gap: 2px;
 }
 
+.model-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .model-name {
     font-size: 14px;
     color: #303133;
     font-weight: 500;
     line-height: 1.4;
+}
+
+.model-version {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 6px;
+    background: linear-gradient(135deg, #e8f4ff 0%, #d4e9ff 100%);
+    color: #409eff;
+    border-radius: 3px;
+    font-weight: 600;
+    border: 1px solid #b3d8ff;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 .model-deployment {
@@ -2173,6 +2192,12 @@ think::before {
     font-weight: 600;
 }
 
+.model-select .el-select-dropdown__item.selected .model-version {
+    background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+    color: white;
+    border-color: #409eff;
+}
+
 .model-select .el-select-dropdown__item.selected .model-deployment {
     color: #66b1ff;
 }
@@ -2180,6 +2205,11 @@ think::before {
 /* 悬停状态 */
 .model-select .el-select-dropdown__item:hover .model-name {
     color: #409eff;
+}
+
+.model-select .el-select-dropdown__item:hover .model-version {
+    background: linear-gradient(135deg, #d4e9ff 0%, #c0dfff 100%);
+    border-color: #409eff;
 }
 
 .model-select .el-select-dropdown__item:hover .model-deployment {

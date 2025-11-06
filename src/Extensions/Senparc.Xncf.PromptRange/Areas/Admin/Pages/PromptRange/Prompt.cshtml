@@ -106,7 +106,10 @@
                                    :value="item.value"
                                    :disabled="item.disabled">
                             <div class="model-option-content">
-                                <div class="model-name">{{ item.alias || '未命名模型' }}</div>
+                                <div class="model-name-row">
+                                    <span class="model-name">{{ item.alias || '未命名模型' }}</span>
+                                    <span class="model-version" v-if="item.apiVersion">v{{ item.apiVersion }}</span>
+                                </div>
                                 <div class="model-deployment" v-if="item.deploymentName">（{{ item.deploymentName }}）</div>
                             </div>
                         </el-option>
