@@ -12,4 +12,38 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <!-- 亮色主题资源 -->
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#E9ECEF"/>
+                    <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="#F8F9FA"/>
+                    <SolidColorBrush x:Key="ToolbarBorderBrush" Color="#DEE2E6"/>
+                    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="InputBorderBrush" Color="#CED4DA"/>
+                    <SolidColorBrush x:Key="InputTextBrush" Color="#495057"/>
+                    <SolidColorBrush x:Key="LogBackgroundBrush" Color="#F8F9FA"/>
+                    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#6C757D"/>
+                    <SolidColorBrush x:Key="ContentBackgroundBrush" Color="#FFFFFF"/>
+                </ResourceDictionary>
+                
+                <!-- 暗色主题资源 -->
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2B2B2B"/>
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#3C3C3C"/>
+                    <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="#252526"/>
+                    <SolidColorBrush x:Key="ToolbarBorderBrush" Color="#3C3C3C"/>
+                    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#3C3C3C"/>
+                    <SolidColorBrush x:Key="InputBorderBrush" Color="#555555"/>
+                    <SolidColorBrush x:Key="InputTextBrush" Color="#CCCCCC"/>
+                    <SolidColorBrush x:Key="LogBackgroundBrush" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#9D9D9D"/>
+                    <SolidColorBrush x:Key="ContentBackgroundBrush" Color="#1E1E1E"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
