@@ -3796,25 +3796,61 @@ var app = new Vue({
             }
             
             try {
-                // 关闭对比对话框
+                // 1. 先获取完整的Prompt数据
+                const promptData = await this.getPromptDetail(promptId);
+                
+                if (!promptData) {
+                    throw new Error('无法获取Prompt详细信息');
+                }
+                
+                // 2. 从fullVersion解析靶场名称（格式: 靶场-靶道-战术）
+                const versionParts = promptData.fullVersion ? promptData.fullVersion.split('-') : [];
+                const targetRangeName = versionParts[0];
+                
+                // 3. 查找对应的靶场ID
+                const targetRange = this.promptFieldOpt.find(item => 
+                    item.label === targetRangeName || item.rangeName === targetRangeName
+                );
+                
+                if (!targetRange) {
+                    throw new Error(`未找到对应的靶场: ${targetRangeName}`);
+                }
+                
+                // 4. 先切换靶场（这会触发promptOpt的更新）
+                this.promptField = targetRange.value;
+                await this.promptChangeHandel(targetRange.value, 'promptField');
+                
+                // 5. 等待promptOpt更新完成
+                await this.$nextTick();
+                
+                // 6. 在promptOpt中查找对应的Prompt
+                // 注意：promptOpt中的item.value才是正确的promptid
+                const targetPrompt = this.promptOpt.find(item => 
+                    item.id === promptId || item.value === promptId || item.idkey === promptId
+                );
+                
+                if (!targetPrompt) {
+                    throw new Error('在当前靶场中未找到对应的Prompt');
+                }
+                
+                // 7. 设置正确的promptid并触发数据加载
+                this.promptid = targetPrompt.value || targetPrompt.id;
+                await this.promptChangeHandel(this.promptid, 'promptid');
+                
+                // 8. 关闭对比对话框
                 this.compareDialogVisible = false;
                 
-                // 切换到对应的Prompt（触发promptChangeHandel）
-                this.promptid = promptId;
-                
-                // 显示成功提示
+                // 9. 显示成功提示
                 this.$message({
-                    message: '已切换到选中的 Prompt',
+                    message: `已切换到 Prompt: ${promptData.fullVersion}`,
                     type: 'success',
                     duration: 2000
                 });
                 
-                // 触发数据加载
-                await this.promptChangeHandel(promptId, 'promptid');
             } catch (error) {
                 console.error('切换Prompt失败:', error);
                 this.$message({
-                    message: '切换Prompt失败，请重试',
+                    message: error.message || '切换Prompt失败，请重试',
                     type: 'error',
                     duration: 3000
                 });
