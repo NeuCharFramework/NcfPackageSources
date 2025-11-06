@@ -335,6 +335,15 @@ var app = new Vue({
                 tacticalName: versionParts[2] || '未知战术',
                 modelName: this.getModelName(this.comparePromptB.modelId)
             };
+        },
+        
+        // 检查是否是同一个Prompt
+        isSamePrompt() {
+            if (!this.comparePromptA || !this.comparePromptB) return false;
+            if (!this.comparePromptAId || !this.comparePromptBId) return false;
+            
+            // 通过ID判断是否为同一个Prompt
+            return this.comparePromptAId === this.comparePromptBId;
         }
     },
     watch: {
@@ -511,7 +520,7 @@ var app = new Vue({
                 }
                 this.lastClickedBox = boxClicked;
             }
-        },
+            },
         style(val) {
             const length = 10,
                 progress = val - 0,
@@ -1311,8 +1320,8 @@ var app = new Vue({
             await Promise.all(promises)
             // 等待 DOM 更新后再设置选中和更新计数
             this.$nextTick(() => {
-                // 设置默认选中
-                this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
+            // 设置默认选中
+            this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
                 
                 // 确保 checkList 只包含叶子节点
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
@@ -3670,6 +3679,15 @@ var app = new Vue({
             try {
                 const data = await this.getPromptDetail(id);
                 this.comparePromptA = data;
+                
+                // 检查是否选择了同一个Prompt
+                if (this.comparePromptBId && id === this.comparePromptBId) {
+                    this.$message({
+                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        type: 'warning',
+                        duration: 3000
+                    });
+                }
             } catch (error) {
                 console.error('加载Prompt A失败:', error);
                 this.$message({
@@ -3691,6 +3709,15 @@ var app = new Vue({
             try {
                 const data = await this.getPromptDetail(id);
                 this.comparePromptB = data;
+                
+                // 检查是否选择了同一个Prompt
+                if (this.comparePromptAId && id === this.comparePromptAId) {
+                    this.$message({
+                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        type: 'warning',
+                        duration: 3000
+                    });
+                }
             } catch (error) {
                 console.error('加载Prompt B失败:', error);
                 this.$message({
@@ -3729,6 +3756,32 @@ var app = new Vue({
         // 检查评分是否存在
         hasScore(score) {
             return score !== null && score !== undefined && score > -1;
+        },
+        
+        // 获取前缀（从variablesJson解析或返回空）
+        getPromptPrefix(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.variablesJson) return '';
+            
+            try {
+                const vars = JSON.parse(prompt.variablesJson);
+                return vars.prefix || '';
+            } catch (e) {
+                return '';
+            }
+        },
+        
+        // 获取后缀（从variablesJson解析或返回空）
+        getPromptSuffix(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.variablesJson) return '';
+            
+            try {
+                const vars = JSON.parse(prompt.variablesJson);
+                return vars.suffix || '';
+            } catch (e) {
+                return '';
+            }
         },
         
         // 跳转到指定的Prompt

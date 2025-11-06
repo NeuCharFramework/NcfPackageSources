@@ -837,6 +837,19 @@
             </el-select>
         </div>
         
+        @* 同一Prompt警告 *@
+        <el-alert v-if="isSamePrompt" 
+                  title="警告：您正在对比同一个 Prompt！" 
+                  type="warning" 
+                  :closable="false"
+                  show-icon
+                  style="margin-bottom: 15px;">
+            <template slot>
+                <p style="margin: 5px 0;">当前选择的两个 Prompt 是同一个（版本号: <strong>{{comparePromptA ? comparePromptA.fullVersion : ''}}</strong>）。</p>
+                <p style="margin: 5px 0;">建议选择不同的 Prompt 进行对比以查看差异。</p>
+            </template>
+        </el-alert>
+        
         @* 评分统计对比卡片 *@
         <div class="compare-score-cards" v-if="comparePromptA && comparePromptB">
             <div class="score-card">
@@ -1012,19 +1025,56 @@
                 </div>
             </div>
             
-            @* 变量配置对比（Git风格差异显示） *@
-            <div class="compare-diff-section" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
-                <h4 class="diff-title">🎯 变量配置对比</h4>
-                <div class="compare-diff-container">
+            @* 请求参数对比（前缀、后缀、变量配置） *@
+            <div class="compare-diff-section">
+                <h4 class="diff-title">🎯 请求参数对比</h4>
+                
+                @* 前缀和后缀对比（表格形式） *@
+                <div class="compare-params-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">参数</th>
+                                <th>Prompt A</th>
+                                <th>Prompt B</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr :class="{'has-diff': hasFieldDiff(getPromptPrefix('A'), getPromptPrefix('B'))}">
+                                <td class="field-name">前缀</td>
+                                <td>
+                                    <code>{{getPromptPrefix('A') || '(未设置)'}}</code>
+                                </td>
+                                <td>
+                                    <code>{{getPromptPrefix('B') || '(未设置)'}}</code>
+                                    <span class="diff-mark" v-if="hasFieldDiff(getPromptPrefix('A'), getPromptPrefix('B'))">●</span>
+                                </td>
+                            </tr>
+                            <tr :class="{'has-diff': hasFieldDiff(getPromptSuffix('A'), getPromptSuffix('B'))}">
+                                <td class="field-name">后缀</td>
+                                <td>
+                                    <code>{{getPromptSuffix('A') || '(未设置)'}}</code>
+                                </td>
+                                <td>
+                                    <code>{{getPromptSuffix('B') || '(未设置)'}}</code>
+                                    <span class="diff-mark" v-if="hasFieldDiff(getPromptSuffix('A'), getPromptSuffix('B'))">●</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                @* 变量列表对比（Git diff风格） *@
+                <div class="compare-diff-container" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
-                            <div class="diff-column-header">Prompt A</div>
+                            <div class="diff-column-header">Prompt A - 变量配置</div>
                             <div class="diff-code-block">
                                 <pre v-html="getVariablesDiffHtml('A')"></pre>
                             </div>
                         </div>
                         <div class="compare-diff-column">
-                            <div class="diff-column-header">Prompt B
+                            <div class="diff-column-header">Prompt B - 变量配置
                                 <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)">有差异</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
@@ -1032,6 +1082,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div v-else class="compare-empty-params">
+                    <i class="el-icon-info"></i>
+                    <span>两个Prompt都未配置变量</span>
                 </div>
             </div>
         </div>
