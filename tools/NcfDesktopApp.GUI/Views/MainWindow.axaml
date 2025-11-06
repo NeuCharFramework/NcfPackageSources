@@ -14,21 +14,24 @@
         Icon="/Assets/NCF-logo.png">
 
     <Window.Styles>
+        <!-- 卡片样式 - 支持主题切换 -->
         <Style Selector="Border.card">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="20"/>
             <Setter Property="BoxShadow" Value="0 2 4 0 #1A000000"/>
         </Style>
         
+        <!-- TabItem 基础样式 -->
         <Style Selector="TabItem">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="20,12"/>
         </Style>
         
+        <!-- TabItem 选中状态 -->
         <Style Selector="TabItem:selected">
             <Setter Property="Background" Value="#007ACC"/>
             <Setter Property="Foreground" Value="White"/>
@@ -61,7 +64,8 @@
         </TabControl>
         
         <!-- 全局加载遮罩 -->
-        <Border Background="#F0F0F0F0" 
+        <Border Background="{DynamicResource ContentBackgroundBrush}" 
+                Opacity="0.95"
                 IsVisible="{Binding IsInitializing}"
                 ZIndex="1000">
             <StackPanel HorizontalAlignment="Center" 
@@ -73,7 +77,7 @@
                 <TextBlock Text="正在初始化 NCF 桌面应用程序..." 
                            FontSize="16" 
                            HorizontalAlignment="Center" 
-                           Foreground="#6C757D"/>
+                           Foreground="{DynamicResource SecondaryTextBrush}"/>
                 <ProgressBar IsIndeterminate="True" 
                              Width="300" 
                              Height="4"/>

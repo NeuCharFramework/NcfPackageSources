@@ -11,7 +11,7 @@
     <Grid RowDefinitions="Auto,*">
         
         <!-- 顶部工具栏 -->
-        <Border Grid.Row="0" Background="#F8F9FA" BorderBrush="#DEE2E6" BorderThickness="0,0,0,1" Padding="10">
+        <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="0,0,0,1" Padding="10">
             <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                 
                 <!-- 导航按钮 -->
@@ -38,8 +38,8 @@
                 
                 <!-- URL显示 -->
                 <Border Grid.Column="1" 
-                        Background="White" 
-                        BorderBrush="#CED4DA" 
+                        Background="{DynamicResource InputBackgroundBrush}" 
+                        BorderBrush="{DynamicResource InputBorderBrush}" 
                         BorderThickness="1" 
                         CornerRadius="4" 
                         Margin="10,0"
@@ -48,7 +48,7 @@
                                Text="{Binding SiteUrl}" 
                                FontFamily="Consolas" 
                                FontSize="12"
-                               Foreground="#495057"
+                               Foreground="{DynamicResource InputTextBrush}"
                                VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis"
                                ToolTip.Tip="{Binding SiteUrl}"/>
@@ -92,11 +92,11 @@
         </Border>
         
         <!-- 浏览器内容区域 -->
-        <Border Grid.Row="1" Background="White">
+        <Border Grid.Row="1" Background="{DynamicResource ContentBackgroundBrush}">
             <Grid>
                 <!-- 加载状态覆盖层 -->
                 <Border Name="LoadingOverlay" 
-                        Background="#F8F9FA" 
+                        Background="{DynamicResource ContentBackgroundBrush}" 
                         IsVisible="{Binding !IsBrowserReady}">
                     <StackPanel HorizontalAlignment="Center" 
                                 VerticalAlignment="Center" 
@@ -107,7 +107,7 @@
                         <TextBlock Text="正在准备浏览器..." 
                                    FontSize="16" 
                                    HorizontalAlignment="Center" 
-                                   Foreground="#6C757D"/>
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
                         <ProgressBar IsIndeterminate="True" 
                                      Width="200" 
                                      Height="4"/>
@@ -121,7 +121,7 @@
                 
                 <!-- 错误状态显示 -->
                 <Border Name="ErrorOverlay" 
-                        Background="#FFF5F5" 
+                        Background="{DynamicResource ContentBackgroundBrush}" 
                         IsVisible="{Binding HasBrowserError}">
                     <StackPanel HorizontalAlignment="Center" 
                                 VerticalAlignment="Center" 
@@ -137,7 +137,7 @@
                         <TextBlock Text="{Binding BrowserErrorMessage}" 
                                    FontSize="14" 
                                    HorizontalAlignment="Center" 
-                                   Foreground="#6C757D"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
                                    TextWrapping="Wrap"
                                    MaxWidth="400"/>
                         <Button Content="重试" 

@@ -335,6 +335,15 @@ var app = new Vue({
                 tacticalName: versionParts[2] || '未知战术',
                 modelName: this.getModelName(this.comparePromptB.modelId)
             };
+        },
+        
+        // 检查是否是同一个Prompt
+        isSamePrompt() {
+            if (!this.comparePromptA || !this.comparePromptB) return false;
+            if (!this.comparePromptAId || !this.comparePromptBId) return false;
+            
+            // 通过ID判断是否为同一个Prompt
+            return this.comparePromptAId === this.comparePromptBId;
         }
     },
     watch: {
@@ -511,7 +520,7 @@ var app = new Vue({
                 }
                 this.lastClickedBox = boxClicked;
             }
-        },
+            },
         style(val) {
             const length = 10,
                 progress = val - 0,
@@ -1311,8 +1320,8 @@ var app = new Vue({
             await Promise.all(promises)
             // 等待 DOM 更新后再设置选中和更新计数
             this.$nextTick(() => {
-                // 设置默认选中
-                this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
+            // 设置默认选中
+            this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
                 
                 // 确保 checkList 只包含叶子节点
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
@@ -2819,9 +2828,21 @@ var app = new Vue({
                 //console.log('getModelOptData:', res.data)
                 let _optList = res.data.data || []
                 this.modelOpt = _optList.map(item => {
+                    // 构建label：模型名称 + 版本号（如果有）+ 部署名称（如果有）
+                    let label = item.alias || '未命名模型';
+                    if (item.apiVersion && item.apiVersion.trim()) {
+                        label += ` v${item.apiVersion}`;
+                    }
+                    if (item.deploymentName && item.deploymentName.trim()) {
+                        label += `\n(${item.deploymentName})`;
+                    }
+                    
                     return {
                         ...item,
-                        label: item.alias,
+                        label: label,
+                        displayName: item.alias,  // 保留原始名称用于其他地方显示
+                        deploymentDisplay: item.deploymentName, // 保留部署名称
+                        apiVersion: item.apiVersion, // 保留版本号
                         value: item.id,
                         disabled: false
                     }
@@ -3649,11 +3670,18 @@ var app = new Vue({
                 event.stopPropagation();
             }
             
-            // 如果传入了item，则将其设置为Prompt A
+            // Prompt A 应该是当前已经选中显示的 Prompt
+            // Prompt B 是点击"对比"按钮的对应 Prompt
+            if (this.promptid) {
+                this.comparePromptAId = this.promptid;
+                this.loadComparePromptA(this.promptid);
+            }
+            
+            // 如果传入了item，则将其设置为Prompt B
             // item.value 是 el-option 的值，对应 Prompt 的 ID
             if (item && item.value) {
-                this.comparePromptAId = item.value;
-                this.loadComparePromptA(item.value);
+                this.comparePromptBId = item.value;
+                this.loadComparePromptB(item.value);
             }
             
             // 打开对话框
@@ -3670,6 +3698,15 @@ var app = new Vue({
             try {
                 const data = await this.getPromptDetail(id);
                 this.comparePromptA = data;
+                
+                // 检查是否选择了同一个Prompt
+                if (this.comparePromptBId && id === this.comparePromptBId) {
+                    this.$message({
+                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        type: 'warning',
+                        duration: 3000
+                    });
+                }
             } catch (error) {
                 console.error('加载Prompt A失败:', error);
                 this.$message({
@@ -3691,6 +3728,15 @@ var app = new Vue({
             try {
                 const data = await this.getPromptDetail(id);
                 this.comparePromptB = data;
+                
+                // 检查是否选择了同一个Prompt
+                if (this.comparePromptAId && id === this.comparePromptAId) {
+                    this.$message({
+                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        type: 'warning',
+                        duration: 3000
+                    });
+                }
             } catch (error) {
                 console.error('加载Prompt B失败:', error);
                 this.$message({
@@ -3724,6 +3770,126 @@ var app = new Vue({
             const tempData = this.comparePromptA;
             this.comparePromptA = this.comparePromptB;
             this.comparePromptB = tempData;
+        },
+        
+        // 检查评分是否存在
+        hasScore(score) {
+            return score !== null && score !== undefined && score > -1;
+        },
+        
+        // 获取前缀（从variablesJson解析或返回空）
+        getPromptPrefix(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.variablesJson) return '';
+            
+            try {
+                const vars = JSON.parse(prompt.variablesJson);
+                return vars.prefix || '';
+            } catch (e) {
+                return '';
+            }
+        },
+        
+        // 获取后缀（从variablesJson解析或返回空）
+        getPromptSuffix(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.variablesJson) return '';
+            
+            try {
+                const vars = JSON.parse(prompt.variablesJson);
+                return vars.suffix || '';
+            } catch (e) {
+                return '';
+            }
+        },
+        
+        // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
+        async switchToPrompt(promptId) {
+            if (!promptId) {
+                this.$message({
+                    message: '无效的Prompt ID',
+                    type: 'warning',
+                    duration: 2000
+                });
+                return;
+            }
+            
+            try {
+                // 1. 先获取完整的Prompt数据
+                const promptData = await this.getPromptDetail(promptId);
+                
+                if (!promptData) {
+                    throw new Error('无法获取Prompt详细信息');
+                }
+                
+                // 2. 从fullVersion解析靶场名称（格式: 靶场-靶道-战术）
+                const versionParts = promptData.fullVersion ? promptData.fullVersion.split('-') : [];
+                const targetRangeName = versionParts[0];
+                
+                // 3. 查找对应的靶场ID
+                const targetRange = this.promptFieldOpt.find(item => 
+                    item.label === targetRangeName || item.rangeName === targetRangeName
+                );
+                
+                if (!targetRange) {
+                    throw new Error(`未找到对应的靶场: ${targetRangeName}`);
+                }
+                
+                // 4. 关闭对比对话框（先关闭，避免干扰后续操作）
+                this.compareDialogVisible = false;
+                
+                // 5. 重置 pageChange 标记，避免触发"是否保存草稿"的确认对话框
+                this.pageChange = false;
+                
+                // 6. 检查是否需要切换靶场
+                const needSwitchRange = this.promptField !== targetRange.value;
+                
+                if (needSwitchRange) {
+                    // 切换靶场（这会触发promptOpt的更新）
+                    this.promptField = targetRange.value;
+                    await this.promptChangeHandel(targetRange.value, 'promptField');
+                    
+                    // 等待promptOpt更新完成
+                    await this.$nextTick();
+                }
+                
+                // 7. 在promptOpt中查找对应的Prompt
+                // 注意：promptOpt中的item.value才是正确的promptid
+                const targetPrompt = this.promptOpt.find(item => 
+                    item.id === promptId || item.value === promptId || item.idkey === promptId
+                );
+                
+                if (!targetPrompt) {
+                    throw new Error('在当前靶场中未找到对应的Prompt');
+                }
+                
+                // 8. 设置正确的promptid（这会触发el-select的v-model更新）
+                // 重要：再次确保 pageChange = false，因为切换靶场可能会触发它
+                this.pageChange = false;
+                this.promptid = targetPrompt.value || targetPrompt.id;
+                
+                // 9. 手动触发 promptChangeHandel，完全模拟用户点击靶道下拉选择
+                // 这会：
+                //   - 更新 sendBtns（根据是否是草稿）
+                //   - 清空 AI 评分标准
+                //   - 调用 getPromptetail 获取完整详情（包括输出列表、评分、图表等）
+                await this.promptChangeHandel(this.promptid, 'promptid');
+                
+                // 10. 显示成功提示
+                this.$message({
+                    message: `已切换到 Prompt: ${promptData.fullVersion}`,
+                    type: 'success',
+                    duration: 2000
+                });
+                
+            } catch (error) {
+                console.error('切换Prompt失败:', error);
+                this.$message({
+                    message: error.message || '切换Prompt失败，请重试',
+                    type: 'error',
+                    duration: 3000
+                });
+            }
         },
         
         // 检查字段是否有差异
