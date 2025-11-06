@@ -3658,11 +3658,18 @@ var app = new Vue({
                 event.stopPropagation();
             }
             
-            // 如果传入了item，则将其设置为Prompt A
+            // Prompt A 应该是当前已经选中显示的 Prompt
+            // Prompt B 是点击"对比"按钮的对应 Prompt
+            if (this.promptid) {
+                this.comparePromptAId = this.promptid;
+                this.loadComparePromptA(this.promptid);
+            }
+            
+            // 如果传入了item，则将其设置为Prompt B
             // item.value 是 el-option 的值，对应 Prompt 的 ID
             if (item && item.value) {
-                this.comparePromptAId = item.value;
-                this.loadComparePromptA(item.value);
+                this.comparePromptBId = item.value;
+                this.loadComparePromptB(item.value);
             }
             
             // 打开对话框
@@ -3784,7 +3791,7 @@ var app = new Vue({
             }
         },
         
-        // 跳转到指定的Prompt
+        // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
         async switchToPrompt(promptId) {
             if (!promptId) {
                 this.$message({
@@ -3816,14 +3823,25 @@ var app = new Vue({
                     throw new Error(`未找到对应的靶场: ${targetRangeName}`);
                 }
                 
-                // 4. 先切换靶场（这会触发promptOpt的更新）
-                this.promptField = targetRange.value;
-                await this.promptChangeHandel(targetRange.value, 'promptField');
+                // 4. 关闭对比对话框（先关闭，避免干扰后续操作）
+                this.compareDialogVisible = false;
                 
-                // 5. 等待promptOpt更新完成
-                await this.$nextTick();
+                // 5. 重置 pageChange 标记，避免触发"是否保存草稿"的确认对话框
+                this.pageChange = false;
                 
-                // 6. 在promptOpt中查找对应的Prompt
+                // 6. 检查是否需要切换靶场
+                const needSwitchRange = this.promptField !== targetRange.value;
+                
+                if (needSwitchRange) {
+                    // 切换靶场（这会触发promptOpt的更新）
+                    this.promptField = targetRange.value;
+                    await this.promptChangeHandel(targetRange.value, 'promptField');
+                    
+                    // 等待promptOpt更新完成
+                    await this.$nextTick();
+                }
+                
+                // 7. 在promptOpt中查找对应的Prompt
                 // 注意：promptOpt中的item.value才是正确的promptid
                 const targetPrompt = this.promptOpt.find(item => 
                     item.id === promptId || item.value === promptId || item.idkey === promptId
@@ -3833,14 +3851,19 @@ var app = new Vue({
                     throw new Error('在当前靶场中未找到对应的Prompt');
                 }
                 
-                // 7. 设置正确的promptid并触发数据加载
+                // 8. 设置正确的promptid（这会触发el-select的v-model更新）
+                // 重要：再次确保 pageChange = false，因为切换靶场可能会触发它
+                this.pageChange = false;
                 this.promptid = targetPrompt.value || targetPrompt.id;
+                
+                // 9. 手动触发 promptChangeHandel，完全模拟用户点击靶道下拉选择
+                // 这会：
+                //   - 更新 sendBtns（根据是否是草稿）
+                //   - 清空 AI 评分标准
+                //   - 调用 getPromptetail 获取完整详情（包括输出列表、评分、图表等）
                 await this.promptChangeHandel(this.promptid, 'promptid');
                 
-                // 8. 关闭对比对话框
-                this.compareDialogVisible = false;
-                
-                // 9. 显示成功提示
+                // 10. 显示成功提示
                 this.$message({
                     message: `已切换到 Prompt: ${promptData.fullVersion}`,
                     type: 'success',
