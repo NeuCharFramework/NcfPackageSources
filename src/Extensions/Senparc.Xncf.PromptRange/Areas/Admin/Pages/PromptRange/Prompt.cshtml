@@ -99,13 +99,16 @@
                     </div>
                 </div>
                 <div>
-                    <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow" @@change="promptChangeHandel($event,'modelid',modelid)">
+                    <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
                         <el-option v-for="item in modelOpt"
                                    v-key="item.id"
-                                   :label="item.label"
+                                   :label="item.displayName || item.alias"
                                    :value="item.value"
                                    :disabled="item.disabled">
-                            <span>{{ item.label }}</span>
+                            <div class="model-option-content">
+                                <div class="model-name">{{ item.alias || '未命名模型' }}</div>
+                                <div class="model-deployment" v-if="item.deploymentName">（{{ item.deploymentName }}）</div>
+                            </div>
                         </el-option>
                     </el-select>
                 </div>

@@ -2828,9 +2828,17 @@ var app = new Vue({
                 //console.log('getModelOptData:', res.data)
                 let _optList = res.data.data || []
                 this.modelOpt = _optList.map(item => {
+                    // 构建label：模型名称 + 部署名称（如果有）
+                    let label = item.alias || '未命名模型';
+                    if (item.deploymentName && item.deploymentName.trim()) {
+                        label += `\n(${item.deploymentName})`;
+                    }
+                    
                     return {
                         ...item,
-                        label: item.alias,
+                        label: label,
+                        displayName: item.alias,  // 保留原始名称用于其他地方显示
+                        deploymentDisplay: item.deploymentName, // 保留部署名称
                         value: item.id,
                         disabled: false
                     }

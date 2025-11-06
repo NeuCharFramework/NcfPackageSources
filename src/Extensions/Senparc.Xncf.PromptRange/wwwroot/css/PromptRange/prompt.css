@@ -2139,3 +2139,49 @@ think::before {
         font-size: 20px;
     }
 }
+
+/* ========== 模型选择器自定义显示 ========== */
+.model-select .el-select-dropdown__item {
+    height: auto !important;
+    padding: 8px 20px !important;
+    line-height: normal !important;
+}
+
+.model-option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.model-name {
+    font-size: 14px;
+    color: #303133;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.model-deployment {
+    font-size: 12px;
+    color: #909399;
+    line-height: 1.3;
+    font-style: italic;
+}
+
+/* 选中状态 */
+.model-select .el-select-dropdown__item.selected .model-name {
+    color: #409eff;
+    font-weight: 600;
+}
+
+.model-select .el-select-dropdown__item.selected .model-deployment {
+    color: #66b1ff;
+}
+
+/* 悬停状态 */
+.model-select .el-select-dropdown__item:hover .model-name {
+    color: #409eff;
+}
+
+.model-select .el-select-dropdown__item:hover .model-deployment {
+    color: #66b1ff;
+}
