@@ -224,22 +224,15 @@
                             </div>
                         </div>
                         <div class="promptContentBox">
-                            @* Prompt输入框包装器 - 提供定位上下文 *@
-                            <div class="prompt-input-wrapper">
-                                @* 保持原有的promptInput结构 *@
-                                <el-input v-model="content" type="textarea"
-                                          :rows="contentTextareaRows"
-                                          resize="vertical"
-                                          placeholder="请输入内容"
-                                          class="promptInput prompt-editor-input" 
-                                          @@change="promptChangeHandel($event,'content')"
-                                          @@input="updateHighlight"
-                                          @@scroll.native="syncPromptScroll">
-                                </el-input>
-                                @* 高亮镜像层 - 绝对定位覆盖在textarea上 *@
-                                <div class="prompt-highlight-backdrop" 
-                                     ref="promptHighlightBackdrop"
-                                     v-html="highlightedPromptContent"></div>
+                            @* 使用contenteditable div替代textarea，支持直接高亮 *@
+                            <div class="promptInput prompt-editor-editable"
+                                 contenteditable="true"
+                                 ref="promptEditor"
+                                 @@input="handlePromptInput"
+                                 @@blur="handlePromptBlur"
+                                 @@paste="handlePromptPaste"
+                                 v-html="highlightedPromptContent"
+                                 :data-placeholder="content ? '' : '请输入内容'">
                             </div>
                             <div class="remarkRow">
                                 <el-input v-model="remarks" type="textarea"

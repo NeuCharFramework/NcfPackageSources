@@ -731,16 +731,7 @@
         min-height: 0;
     }
 
-        /* Prompt输入包装器 - 继承原promptInput的flex属性 */
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-input-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            position: relative; /* 为高亮层提供定位上下文 */
-        }
-
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-input-wrapper > .promptInput {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -763,6 +754,35 @@
             min-height: 300px;
             height: 100%;
             resize: none;
+        }
+
+        /* contenteditable编辑器样式 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-editor-editable {
+            flex: 1;
+            min-height: 300px;
+            padding: 5px 15px;
+            border: 1px solid #DCDFE6;
+            border-radius: 4px;
+            background: #FFF;
+            color: #333;
+            font-size: 14px;
+            font-family: inherit;
+            line-height: 1.5;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            outline: none;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-editor-editable:focus {
+            border-color: #409eff;
+        }
+
+        /* placeholder效果 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-editor-editable:empty:before {
+            content: attr(data-placeholder);
+            color: #C0C4CC;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
@@ -2272,72 +2292,21 @@ think::before {
 }
 
 /* ========== Prompt 编辑器高亮显示 ========== */
-/* 高亮背景层 - 绝对定位，覆盖在textarea后面 */
-.prompt-highlight-backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 5px 15px;
-    margin: 0;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: normal;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    color: #606266;
-    pointer-events: none;
-    overflow: auto;
-    border: 1px solid transparent;
-    box-sizing: border-box;
-    z-index: 1;
-    background: transparent;
-}
-
-/* 隐藏背景层的滚动条 */
-.prompt-highlight-backdrop::-webkit-scrollbar {
-    display: none;
-}
-
-.prompt-highlight-backdrop {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* 让textarea文字颜色透明，但保留光标 */
-.prompt-editor-input .el-textarea__inner {
-    color: transparent !important;
-    caret-color: #409eff !important;
-    position: relative;
-    z-index: 2;
-    background: transparent !important;
-}
-
-/* placeholder仍然可见 */
-.prompt-editor-input .el-textarea__inner::placeholder {
-    color: #C0C4CC !important;
-    opacity: 1;
-}
-
-/* 高亮变量样式 */
+/* contenteditable中的高亮变量样式 */
 .prompt-variable {
-    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
-    color: #856404;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: 600;
-    border: 1px solid #ffc107;
+    background: rgba(255, 235, 59, 0.35);
+    color: inherit; /* 继承正常文字颜色 */
+    border-radius: 2px;
+    padding: 1px 2px;
+    font-weight: 500;
 }
 
 .prompt-variable.valid {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    color: #155724;
-    border-color: #28a745;
+    background: rgba(76, 175, 80, 0.25);
+    color: #2e7d32;
 }
 
 .prompt-variable.invalid {
-    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-    color: #721c24;
-    border-color: #dc3545;
+    background: rgba(244, 67, 54, 0.25);
+    color: #c62828;
 }
