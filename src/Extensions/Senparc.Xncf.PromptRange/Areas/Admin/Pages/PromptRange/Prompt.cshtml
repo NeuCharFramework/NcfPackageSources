@@ -224,15 +224,32 @@
                             </div>
                         </div>
                         <div class="promptContentBox">
-                            @* 使用contenteditable div替代textarea，支持直接高亮 *@
-                            <div class="promptInput prompt-editor-editable"
-                                 contenteditable="true"
-                                 ref="promptEditor"
-                                 @@input="handlePromptInput"
-                                 @@blur="handlePromptBlur"
-                                 @@paste="handlePromptPaste"
-                                 v-html="highlightedPromptContent"
-                                 :data-placeholder="content ? '' : '请输入内容'">
+                            @* 原生textarea，保持最佳输入体验 *@
+                            <el-input v-model="content" type="textarea"
+                                      :rows="contentTextareaRows"
+                                      resize="vertical"
+                                      placeholder="请输入内容"
+                                      class="promptInput" 
+                                      @@change="promptChangeHandel($event,'content')">
+                            </el-input>
+                            
+                            @* 变量提示卡片 - 显示在textarea下方 *@
+                            <div class="prompt-variables-hint" v-if="detectedVariables.length > 0">
+                                <div class="hint-title">
+                                    <i class="el-icon-info"></i>
+                                    检测到的变量:
+                                </div>
+                                <div class="variables-list">
+                                    <el-tag v-for="varItem in detectedVariables" 
+                                            :key="varItem.name"
+                                            :type="varItem.isDefined ? 'success' : 'danger'"
+                                            size="small"
+                                            class="variable-tag">
+                                        {{ varItem.fullMatch }}
+                                        <i v-if="varItem.isDefined" class="el-icon-check" title="已定义"></i>
+                                        <i v-else class="el-icon-warning" title="未定义"></i>
+                                    </el-tag>
+                                </div>
                             </div>
                             <div class="remarkRow">
                                 <el-input v-model="remarks" type="textarea"

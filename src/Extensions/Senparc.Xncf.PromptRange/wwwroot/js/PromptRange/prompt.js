@@ -346,18 +346,16 @@ var app = new Vue({
             return this.comparePromptAId === this.comparePromptBId;
         },
         
-        // 生成带高亮的Prompt内容
-        highlightedPromptContent() {
-            if (!this.content) return '';
+        // 检测Prompt中的变量
+        detectedVariables() {
+            if (!this.content) return [];
             
             const prefix = this.promptParamForm.prefix || '';
             const suffix = this.promptParamForm.suffix || '';
             const variableList = this.promptParamForm.variableList || [];
             
-            // 如果没有设置前缀和后缀，直接返回原内容（转义HTML，保留换行）
-            if (!prefix || !suffix) {
-                return this.escapeHtml(this.content).replace(/\n/g, '<br>');
-            }
+            // 如果没有设置前缀和后缀，返回空数组
+            if (!prefix || !suffix) return [];
             
             // 转义前缀和后缀用于正则表达式
             const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -369,23 +367,27 @@ var app = new Vue({
             // 获取所有已定义的变量名
             const definedVarNames = variableList.map(v => v.name).filter(n => n);
             
-            // 先转义HTML
-            let highlightedContent = this.escapeHtml(this.content);
+            // 找出所有匹配的变量
+            const variables = [];
+            const seen = new Set();
+            let match;
             
-            // 替换并高亮变量（只高亮变量本身，不是整行）
-            highlightedContent = highlightedContent.replace(regex, (match, varName) => {
-                // 判断变量是否已定义
-                const isDefined = definedVarNames.includes(varName);
-                const className = isDefined ? 'prompt-variable valid' : 'prompt-variable invalid';
-                const title = isDefined ? `变量已定义: ${varName}` : `变量未定义: ${varName}`;
+            while ((match = regex.exec(this.content)) !== null) {
+                const fullMatch = match[0];
+                const varName = match[1];
                 
-                return `<span class="${className}" title="${title}">${this.escapeHtml(match)}</span>`;
-            });
+                // 避免重复
+                if (!seen.has(fullMatch)) {
+                    seen.add(fullMatch);
+                    variables.push({
+                        fullMatch: fullMatch,
+                        name: varName,
+                        isDefined: definedVarNames.includes(varName)
+                    });
+                }
+            }
             
-            // 将换行符转换为<br>标签
-            highlightedContent = highlightedContent.replace(/\n/g, '<br>');
-            
-            return highlightedContent;
+            return variables;
         }
     },
     watch: {
@@ -397,26 +399,6 @@ var app = new Vue({
         //}
         versionSearchVal(val) {
             this.$refs.versionTree.filter(val);
-        },
-        
-        // 监听content外部变化（如加载新数据），更新编辑器
-        content(newVal, oldVal) {
-            // 只在外部数据变化时更新（不是用户输入导致的）
-            if (newVal !== oldVal && this.$refs.promptEditor) {
-                this.$nextTick(() => {
-                    const editor = this.$refs.promptEditor;
-                    if (!editor) return;
-                    
-                    const currentText = this.getEditorTextContent(editor);
-                    
-                    // 如果编辑器内容与content不一致（说明是外部赋值），更新编辑器
-                    if (currentText !== newVal) {
-                        const cursorOffset = this.getCursorPosition(editor);
-                        editor.innerHTML = this.highlightedPromptContent;
-                        this.restoreCursorPosition(editor, cursorOffset);
-                    }
-                });
-            }
         }
     },
     created() {
@@ -450,14 +432,6 @@ var app = new Vue({
         setTimeout(() => {
           this.getTargetRangeIdFromUrl();
       }, 200)
-      
-        // 初始化Prompt编辑器内容
-        this.$nextTick(() => {
-            const editor = this.$refs.promptEditor;
-            if (editor && this.content) {
-                editor.innerHTML = this.highlightedPromptContent;
-            }
-        });
       
     },
     beforeDestroy() {
@@ -4172,129 +4146,6 @@ var app = new Vue({
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        },
-        
-        // 处理contenteditable输入
-        handlePromptInput(event) {
-            const editor = event.target;
-            
-            // 提取纯文本内容（使用textContent而不是innerText，保持换行）
-            const newContent = this.getEditorTextContent(editor);
-            
-            // 只有当内容真正改变时才更新
-            if (newContent !== this.content) {
-                // 保存光标位置
-                const cursorOffset = this.getCursorPosition(editor);
-                
-                // 更新content
-                this.content = newContent;
-                
-                // 防抖更新高亮
-                clearTimeout(this._highlightTimer);
-                this._highlightTimer = setTimeout(() => {
-                    this.$nextTick(() => {
-                        // 重新渲染高亮HTML
-                        editor.innerHTML = this.highlightedPromptContent;
-                        // 恢复光标位置
-                        this.restoreCursorPosition(editor, cursorOffset);
-                    });
-                }, 100); // 100ms防抖，减少重绘
-            }
-        },
-        
-        // 获取编辑器纯文本内容
-        getEditorTextContent(editor) {
-            let text = '';
-            const traverse = (node) => {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    text += node.textContent;
-                } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    if (node.nodeName === 'BR') {
-                        text += '\n';
-                    } else if (node.nodeName === 'DIV' && text.length > 0 && !text.endsWith('\n')) {
-                        text += '\n';
-                    }
-                    for (let child of node.childNodes) {
-                        traverse(child);
-                    }
-                    if (node.nodeName === 'DIV' && text.length > 0 && !text.endsWith('\n')) {
-                        text += '\n';
-                    }
-                }
-            };
-            traverse(editor);
-            return text;
-        },
-        
-        // 处理失焦事件
-        handlePromptBlur() {
-            this.promptChangeHandel(this.content, 'content');
-        },
-        
-        // 处理粘贴事件（只粘贴纯文本）
-        handlePromptPaste(event) {
-            event.preventDefault();
-            const text = (event.clipboardData || window.clipboardData).getData('text/plain');
-            document.execCommand('insertText', false, text);
-        },
-        
-        // 获取当前光标位置
-        getCursorPosition(editor) {
-            const selection = window.getSelection();
-            if (selection.rangeCount === 0) return 0;
-            
-            const range = selection.getRangeAt(0);
-            const preRange = range.cloneRange();
-            preRange.selectNodeContents(editor);
-            preRange.setEnd(range.endContainer, range.endOffset);
-            
-            return preRange.toString().length;
-        },
-        
-        // 恢复光标位置
-        restoreCursorPosition(editor, offset) {
-            try {
-                const selection = window.getSelection();
-                const range = document.createRange();
-                
-                let charCount = 0;
-                let found = false;
-                
-                const searchNode = (node) => {
-                    if (found) return;
-                    
-                    if (node.nodeType === Node.TEXT_NODE) {
-                        const nextCharCount = charCount + node.length;
-                        if (offset >= charCount && offset <= nextCharCount) {
-                            range.setStart(node, offset - charCount);
-                            range.collapse(true);
-                            found = true;
-                            return;
-                        }
-                        charCount = nextCharCount;
-                    } else {
-                        for (let i = 0; i < node.childNodes.length; i++) {
-                            searchNode(node.childNodes[i]);
-                            if (found) return;
-                        }
-                    }
-                };
-                
-                searchNode(editor);
-                
-                if (found) {
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                } else {
-                    // 如果找不到精确位置，放到最后
-                    range.selectNodeContents(editor);
-                    range.collapse(false);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-            } catch (e) {
-                console.error('Failed to restore cursor position:', e);
-            }
         },
         
         // 辅助方法：根据ID获取名称
