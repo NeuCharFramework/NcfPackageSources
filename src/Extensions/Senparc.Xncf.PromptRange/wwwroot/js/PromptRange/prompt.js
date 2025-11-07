@@ -1645,16 +1645,34 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
-        copyInfo() {
-            // 找到promptOpt里面的promptid
-            if (!this.promptid) {
-                this.$message.info('请选择靶道后再复制信息！')
-                return
+        copyInfo(source) {
+            let fullVersion = '';
+            let label = '';
+            
+            // 如果传入了参数，则复制对比窗口中的版本号
+            if (source === 'A' || source === 'B') {
+                const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
+                if (!prompt || !prompt.fullVersion) {
+                    this.$message.warning('无法获取版本号');
+                    return;
+                }
+                fullVersion = prompt.fullVersion;
+                label = `Prompt ${source} 版本号`;
+            } else {
+                // 否则复制当前选中的 Prompt
+                if (!this.promptid) {
+                    this.$message.info('请选择靶道后再复制信息！')
+                    return
+                }
+                const promptItem = this.promptOpt.find(item => item.id === this.promptid)
+                if (!promptItem) {
+                    this.$message.warning('无法获取当前 Prompt 信息');
+                    return;
+                }
+                fullVersion = promptItem.fullVersion;
+                label = '';
             }
-
-            const promptItem = this.promptOpt.find(item => item.id === this.promptid)
-
-            const fullVersion = promptItem.fullVersion
+            
             // 把结果复制到剪切板
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
@@ -1664,29 +1682,8 @@ var app = new Vue({
             input.setSelectionRange(0, 9999)
             if (document.execCommand('copy')) {
                 document.execCommand('copy')
-                this.$message.success(`复制【${fullVersion}】成功`)
-            }
-            input.style.display = 'none';
-        },
-        // 复制对比窗口中的 Prompt 版本号
-        copyCompareVersion(side) {
-            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
-            if (!prompt || !prompt.fullVersion) {
-                this.$message.warning('无法获取版本号');
-                return;
-            }
-            
-            const fullVersion = prompt.fullVersion;
-            // 把结果复制到剪切板
-            const input = document.createElement('input');
-            input.setAttribute('readonly', 'readonly');
-            input.setAttribute('value', fullVersion);
-            document.body.appendChild(input);
-            input.select();
-            input.setSelectionRange(0, 9999);
-            if (document.execCommand('copy')) {
-                document.execCommand('copy');
-                this.$message.success(`复制 Prompt ${side} 版本号【${fullVersion}】成功`);
+                const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
+                this.$message.success(message)
             }
             document.body.removeChild(input);
         },
