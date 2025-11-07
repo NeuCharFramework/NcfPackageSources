@@ -344,6 +344,43 @@ var app = new Vue({
             
             // 通过ID判断是否为同一个Prompt
             return this.comparePromptAId === this.comparePromptBId;
+        },
+        
+        // 生成带高亮的Prompt内容
+        highlightedPromptContent() {
+            if (!this.content) return '';
+            
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
+            const variableList = this.promptParamForm.variableList || [];
+            
+            // 如果没有设置前缀和后缀，直接返回原内容（转义HTML）
+            if (!prefix || !suffix) {
+                return this.escapeHtml(this.content);
+            }
+            
+            // 转义前缀和后缀用于正则表达式
+            const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            // 构建正则表达式：匹配 prefix + 变量名 + suffix
+            const regex = new RegExp(`(${escapedPrefix})(\\w+)(${escapedSuffix})`, 'g');
+            
+            // 获取所有已定义的变量名
+            const definedVarNames = variableList.map(v => v.name).filter(n => n);
+            
+            // 替换并高亮变量
+            let highlightedContent = this.escapeHtml(this.content);
+            highlightedContent = highlightedContent.replace(regex, (match, pre, varName, suf) => {
+                // 判断变量是否已定义
+                const isDefined = definedVarNames.includes(varName);
+                const className = isDefined ? 'prompt-variable valid' : 'prompt-variable invalid';
+                const title = isDefined ? `变量已定义: ${varName}` : `变量未定义: ${varName}`;
+                
+                return `<span class="${className}" title="${title}">${this.escapeHtml(match)}</span>`;
+            });
+            
+            return highlightedContent;
         }
     },
     watch: {
@@ -1660,11 +1697,11 @@ var app = new Vue({
                 label = `Prompt ${source} 版本号`;
             } else {
                 // 否则复制当前选中的 Prompt
-                if (!this.promptid) {
-                    this.$message.info('请选择靶道后再复制信息！')
-                    return
-                }
-                const promptItem = this.promptOpt.find(item => item.id === this.promptid)
+            if (!this.promptid) {
+                this.$message.info('请选择靶道后再复制信息！')
+                return
+            }
+            const promptItem = this.promptOpt.find(item => item.id === this.promptid)
                 if (!promptItem) {
                     this.$message.warning('无法获取当前 Prompt 信息');
                     return;
@@ -4102,6 +4139,32 @@ var app = new Vue({
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        },
+        
+        // 同步Prompt编辑器的滚动
+        syncPromptScroll(event) {
+            const textarea = event.target;
+            const highlightBackdrop = this.$refs.promptHighlightBackdrop;
+            
+            if (highlightBackdrop) {
+                highlightBackdrop.scrollTop = textarea.scrollTop;
+                highlightBackdrop.scrollLeft = textarea.scrollLeft;
+            }
+        },
+        
+        // 更新高亮（在input事件触发时）
+        updateHighlight() {
+            // computed属性会自动重新计算，这里只是确保触发更新
+            this.$nextTick(() => {
+                const textarea = this.$el.querySelector('.prompt-editor-input textarea');
+                const highlightBackdrop = this.$refs.promptHighlightBackdrop;
+                
+                if (textarea && highlightBackdrop) {
+                    // 同步滚动位置
+                    highlightBackdrop.scrollTop = textarea.scrollTop;
+                    highlightBackdrop.scrollLeft = textarea.scrollLeft;
+                }
+            });
         },
         
         // 辅助方法：根据ID获取名称

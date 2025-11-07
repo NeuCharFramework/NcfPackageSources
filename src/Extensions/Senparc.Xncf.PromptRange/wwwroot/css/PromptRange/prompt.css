@@ -731,20 +731,29 @@
         min-height: 0;
     }
 
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput {
+        /* Prompt输入包装器 - 继承原promptInput的flex属性 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-input-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative; /* 为高亮层提供定位上下文 */
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-input-wrapper > .promptInput {
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
         }
 
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox .promptInput .el-textarea {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
 
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox .promptInput .el-textarea__inner {
             color: #333;
             font-size: 14px;
             font-style: normal;
@@ -2260,4 +2269,75 @@ think::before {
 
 .copy-version-icon:active {
     transform: scale(0.95);
+}
+
+/* ========== Prompt 编辑器高亮显示 ========== */
+/* 高亮背景层 - 绝对定位，覆盖在textarea后面 */
+.prompt-highlight-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 5px 15px;
+    margin: 0;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: normal;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #606266;
+    pointer-events: none;
+    overflow: auto;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    z-index: 1;
+    background: transparent;
+}
+
+/* 隐藏背景层的滚动条 */
+.prompt-highlight-backdrop::-webkit-scrollbar {
+    display: none;
+}
+
+.prompt-highlight-backdrop {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 让textarea文字颜色透明，但保留光标 */
+.prompt-editor-input .el-textarea__inner {
+    color: transparent !important;
+    caret-color: #409eff !important;
+    position: relative;
+    z-index: 2;
+    background: transparent !important;
+}
+
+/* placeholder仍然可见 */
+.prompt-editor-input .el-textarea__inner::placeholder {
+    color: #C0C4CC !important;
+    opacity: 1;
+}
+
+/* 高亮变量样式 */
+.prompt-variable {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    color: #856404;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+    border: 1px solid #ffc107;
+}
+
+.prompt-variable.valid {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border-color: #28a745;
+}
+
+.prompt-variable.invalid {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border-color: #dc3545;
 }
