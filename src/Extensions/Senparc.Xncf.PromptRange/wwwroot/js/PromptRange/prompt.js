@@ -1668,6 +1668,28 @@ var app = new Vue({
             }
             input.style.display = 'none';
         },
+        // 复制对比窗口中的 Prompt 版本号
+        copyCompareVersion(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.fullVersion) {
+                this.$message.warning('无法获取版本号');
+                return;
+            }
+            
+            const fullVersion = prompt.fullVersion;
+            // 把结果复制到剪切板
+            const input = document.createElement('input');
+            input.setAttribute('readonly', 'readonly');
+            input.setAttribute('value', fullVersion);
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, 9999);
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
+                this.$message.success(`复制 Prompt ${side} 版本号【${fullVersion}】成功`);
+            }
+            document.body.removeChild(input);
+        },
         // 格式化时间
         formatDate(d) {
             var date = new Date(d);

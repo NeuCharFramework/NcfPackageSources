@@ -2224,3 +2224,22 @@ think::before {
 .model-select .el-select-dropdown__item:hover .model-deployment {
     color: #66b1ff;
 }
+
+/* ========== 对比窗口版本号复制按钮 ========== */
+.copy-version-icon {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #909399;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+}
+
+.copy-version-icon:hover {
+    color: #409eff;
+    transform: scale(1.1);
+}
+
+.copy-version-icon:active {
+    transform: scale(0.95);
+}

@@ -919,8 +919,20 @@
                     <thead>
                         <tr>
                             <th style="width: 120px;">字段</th>
-                            <th>📝 Prompt A <span class="version-tag">{{comparePromptA.fullVersion}}</span></th>
-                            <th>📝 Prompt B <span class="version-tag">{{comparePromptB.fullVersion}}</span></th>
+                            <th>
+                                📝 Prompt A 
+                                <span class="version-tag">{{comparePromptA.fullVersion}}</span>
+                                <i class="el-icon-document-copy copy-version-icon" 
+                                   @@click="copyCompareVersion('A')"
+                                   title="复制版本号"></i>
+                            </th>
+                            <th>
+                                📝 Prompt B 
+                                <span class="version-tag">{{comparePromptB.fullVersion}}</span>
+                                <i class="el-icon-document-copy copy-version-icon" 
+                                   @@click="copyCompareVersion('B')"
+                                   title="复制版本号"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
