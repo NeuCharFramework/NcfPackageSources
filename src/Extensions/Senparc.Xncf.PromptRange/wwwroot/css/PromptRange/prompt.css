@@ -1559,6 +1559,24 @@
 .promptVersion{
     display:flex;
     justify-content:space-between;
+    align-items: flex-start;
+}
+
+.promptVersion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.promptVersion-row {
+    display: flex;
+    align-items: center;
+}
+
+.promptVersion-info {
+    font-size: 13px;
+    color: #606266;
 }
 
 /* 可拖动分隔条样式 */

@@ -365,16 +365,20 @@
              @@mousemove="handleOutputAreaMouseMove"
              @@mouseleave="handleOutputAreaMouseLeave">
             <div class="promptVersion">
-                <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong>   <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer" @@click="copyInfo"></i>
-                    <span style="margin-right:5px;margin-left:20px;">靶场:</span>
-                    <span>{{promptDetail.promptFieldStr||'--'}}</span>
-                    <span style="margin-right:5px;margin-left:20px;">靶道:</span>
-                    <span>{{promptDetail.promptStr||'--'}}</span>
-                    <span style="margin-right:5px;margin-left:20px;">瞄准:</span>
-                    <span>{{promptDetail.tacticsStr||'--'}}</span>
-                </span>
-
-
+                <div class="promptVersion-content">
+                    <div class="promptVersion-row">
+                        <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong></span>
+                        <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer;margin-left: 8px;" @@click="copyInfo"></i>
+                    </div>
+                    <div class="promptVersion-row promptVersion-info">
+                        <span style="margin-right:5px;">靶场:</span>
+                        <span style="margin-right:15px;">{{promptDetail.promptFieldStr||'--'}}</span>
+                        <span style="margin-right:5px;">靶道:</span>
+                        <span style="margin-right:15px;">{{promptDetail.promptStr||'--'}}</span>
+                        <span style="margin-right:5px;">瞄准:</span>
+                        <span>{{promptDetail.tacticsStr||'--'}}</span>
+                    </div>
+                </div>
                 <span><i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box1')"></i></span>
             </div>
           
