@@ -787,9 +787,13 @@
 
         /* 高亮变量样式 */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight {
+            display: inline !important;
             background: rgba(255, 235, 59, 0.3);
             border-radius: 2px;
-            padding: 1px 0;
+            padding: 0 2px;
+            margin: 0;
+            line-height: inherit;
+            white-space: nowrap;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {
@@ -802,6 +806,14 @@
             background: rgba(244, 67, 54, 0.25);
             color: #c62828;
             font-weight: 500;
+        }
+        
+        /* 确保编辑器内的br正常工作 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor br {
+            display: block;
+            content: "";
+            margin: 0;
+            padding: 0;
         }
 
         /* 变量提示卡片 */

@@ -17,6 +17,7 @@ var app = new Vue({
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
             isComposing: false, // 是否正在使用输入法（IME composition）
+            isUserEditing: false, // 是否正在编辑（避免watch content时重新渲染）
             numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
             numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
             // 参数设置 视图配置列表
@@ -414,21 +415,25 @@ var app = new Vue({
             // 获取所有已定义的变量名
             const definedVarNames = variableList.map(v => v.name).filter(n => n);
             
-            // 转义HTML
-            let html = this.escapeHtml(this.content);
-            
-            // 高亮变量
-            html = html.replace(regex, (match, varName) => {
-                const isDefined = definedVarNames.includes(varName);
-                const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
-                const title = isDefined ? `已定义: ${varName}` : `未定义: ${varName}`;
-                return `<span class="${className}" title="${title}">${this.escapeHtml(match)}</span>`;
+            // 逐行处理，避免跨行匹配问题
+            const lines = this.content.split('\n');
+            const htmlLines = lines.map(line => {
+                // 转义HTML
+                let html = this.escapeHtml(line);
+                
+                // 高亮变量
+                html = html.replace(regex, (match, varName) => {
+                    const isDefined = definedVarNames.includes(varName);
+                    const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
+                    const title = isDefined ? `已定义: ${varName}` : `未定义: ${varName}`;
+                    return `<span class="${className}" title="${title}">${match}</span>`;
+                });
+                
+                return html;
             });
             
-            // 换行符转换为<br>
-            html = html.replace(/\n/g, '<br>');
-            
-            return html;
+            // 用<br>连接各行
+            return htmlLines.join('<br>');
         }
     },
     watch: {
@@ -444,7 +449,14 @@ var app = new Vue({
         
         // 监听content外部变化（如加载数据）
         content(newVal, oldVal) {
-            if (newVal !== oldVal && this.$refs.promptEditor) {
+            // 只处理外部赋值（比如加载数据），不处理用户编辑
+            if (this.isUserEditing) {
+                // 用户正在编辑，不重新渲染HTML
+                return;
+            }
+            
+            // 外部赋值，更新编辑器
+            if (newVal !== oldVal && this.$refs.promptEditor && !this.isComposing) {
                 this.$nextTick(() => {
                     const editor = this.$refs.promptEditor;
                     if (!editor) return;
@@ -4221,17 +4233,52 @@ var app = new Vue({
             // 如果正在使用输入法，不处理
             if (this.isComposing) return;
             
-            this.updateContentFromEditor();
+            // 只更新content，不重新渲染HTML（让浏览器保持原生行为）
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            this.isUserEditing = true;
+            this.content = this.getPlainText(editor);
         },
         
         // 输入法结束事件
         onCompositionEnd(e) {
             this.isComposing = false;
-            this.updateContentFromEditor();
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            this.isUserEditing = true;
+            this.content = this.getPlainText(editor);
         },
         
         // 编辑器失焦事件
         onEditorBlur() {
+            // 失焦时更新高亮并保存
+            this.isUserEditing = false;
+            const editor = this.$refs.promptEditor;
+            if (editor) {
+                this.content = this.getPlainText(editor);
+                
+                // 保存光标位置
+                const sel = window.getSelection();
+                let charOffset = 0;
+                if (sel.rangeCount > 0) {
+                    const range = sel.getRangeAt(0);
+                    const preCaretRange = range.cloneRange();
+                    preCaretRange.selectNodeContents(editor);
+                    preCaretRange.setEnd(range.endContainer, range.endOffset);
+                    charOffset = preCaretRange.toString().length;
+                }
+                
+                // 重新渲染高亮HTML
+                editor.innerHTML = this.highlightedHTML;
+                
+                // 恢复光标（虽然已经失焦，但为下次聚焦准备）
+                this.$nextTick(() => {
+                    this.restoreCaret(editor, charOffset);
+                });
+            }
+            
             this.promptChangeHandel(this.content, 'content');
         },
         
@@ -4242,44 +4289,25 @@ var app = new Vue({
             document.execCommand('insertText', false, text);
         },
         
-        // 从编辑器更新content，并重新渲染高亮
-        updateContentFromEditor() {
-            const editor = this.$refs.promptEditor;
-            if (!editor) return;
-            
-            // 保存光标位置
-            const sel = window.getSelection();
-            let charOffset = 0;
-            if (sel.rangeCount > 0) {
-                const range = sel.getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(editor);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                charOffset = preCaretRange.toString().length;
-            }
-            
-            // 提取纯文本内容
-            this.content = this.getPlainText(editor);
-            
-            // 延迟更新高亮，避免与输入冲突
-            this.$nextTick(() => {
-                // 重新渲染高亮HTML
-                editor.innerHTML = this.highlightedHTML;
-                
-                // 恢复光标位置
-                this.restoreCaret(editor, charOffset);
-            });
-        },
-        
         // 从contenteditable元素提取纯文本
         getPlainText(element) {
             let text = '';
-            for (let node of element.childNodes) {
+            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+            
+            for (let i = 0; i < element.childNodes.length; i++) {
+                const node = element.childNodes[i];
+                
                 if (node.nodeType === Node.TEXT_NODE) {
                     text += node.textContent;
                 } else if (node.nodeName === 'BR') {
                     text += '\n';
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 块级元素前面（如果不是第一个元素）添加换行
+                    if (blockElements.includes(node.nodeName) && i > 0) {
+                        text += '\n';
+                    }
+                    
+                    // 递归处理子节点
                     text += this.getPlainText(node);
                 }
             }
@@ -4292,28 +4320,53 @@ var app = new Vue({
             const sel = window.getSelection();
             let currentOffset = 0;
             let found = false;
+            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
             
-            function findTextNode(node) {
+            const findPosition = (node, parentIndex = 0) => {
                 if (found) return;
                 
-                if (node.nodeType === Node.TEXT_NODE) {
-                    const nextOffset = currentOffset + node.length;
-                    if (charOffset >= currentOffset && charOffset <= nextOffset) {
-                        range.setStart(node, charOffset - currentOffset);
-                        range.collapse(true);
-                        found = true;
-                        return;
-                    }
-                    currentOffset = nextOffset;
-                } else {
-                    for (let child of node.childNodes) {
-                        findTextNode(child);
-                        if (found) return;
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    if (found) return;
+                    
+                    const child = node.childNodes[i];
+                    
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        const nextOffset = currentOffset + child.length;
+                        if (charOffset >= currentOffset && charOffset <= nextOffset) {
+                            range.setStart(child, charOffset - currentOffset);
+                            range.collapse(true);
+                            found = true;
+                            return;
+                        }
+                        currentOffset = nextOffset;
+                    } else if (child.nodeName === 'BR') {
+                        // BR算作一个换行符
+                        if (charOffset === currentOffset) {
+                            range.setStartBefore(child);
+                            range.collapse(true);
+                            found = true;
+                            return;
+                        }
+                        currentOffset += 1;
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        // 块级元素算作换行（如果不是第一个元素）
+                        if (blockElements.includes(child.nodeName) && i > 0) {
+                            if (charOffset === currentOffset) {
+                                range.setStartBefore(child);
+                                range.collapse(true);
+                                found = true;
+                                return;
+                            }
+                            currentOffset += 1;
+                        }
+                        
+                        // 递归处理子节点
+                        findPosition(child, i);
                     }
                 }
-            }
+            };
             
-            findTextNode(element);
+            findPosition(element);
             
             if (found) {
                 sel.removeAllRanges();

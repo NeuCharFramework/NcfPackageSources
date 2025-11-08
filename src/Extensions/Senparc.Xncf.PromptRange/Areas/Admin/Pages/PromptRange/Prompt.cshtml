@@ -224,17 +224,18 @@
                             </div>
                         </div>
                         <div class="promptContentBox">
-                            @* contenteditable编辑器，支持内联高亮 *@
-                            <div class="promptInput prompt-rich-editor"
-                                 contenteditable="true"
-                                 ref="promptEditor"
-                                 @@input="onEditorInput"
-                                 @@compositionstart="isComposing = true"
-                                 @@compositionend="onCompositionEnd"
-                                 @@blur="onEditorBlur"
-                                 @@paste="onEditorPaste"
-                                 :data-placeholder="content ? '' : '请输入内容'">
-                            </div>
+                        @* contenteditable编辑器，支持内联高亮 *@
+                        <div class="promptInput prompt-rich-editor"
+                             contenteditable="true"
+                             ref="promptEditor"
+                             @@focus="isUserEditing = true"
+                             @@input="onEditorInput"
+                             @@compositionstart="isComposing = true"
+                             @@compositionend="onCompositionEnd"
+                             @@blur="onEditorBlur"
+                             @@paste="onEditorPaste"
+                             :data-placeholder="content ? '' : '请输入内容'">
+                        </div>
                             
                             @* 变量提示卡片 *@
                             <div class="prompt-variables-hint" v-if="detectedVariables.length > 0">
