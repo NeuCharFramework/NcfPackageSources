@@ -1,0 +1,259 @@
+@page
+@model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases.IndexModel
+@{
+    ViewData["Title"] = "知识库管理列表页面";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/KnowledgeBase/KnowledgeBases/KnowledgeBases.css" rel="stylesheet" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理管理</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理列表</el-breadcrumb-item>
+}
+
+<div>
+    <div class="admin-role">
+        <el-row class="filter-condition" :gutter="8">
+            <el-col :span="2"></el-col>
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="2" class="operator_button">
+                <el-button type="primary" size="mini" @@click="handleSearch()">查询</el-button>
+                <el-button type="primary" size="mini" @@click="resetCondition()">重置</el-button>
+            </el-col>
+        </el-row>
+        <div class="filter-container">
+            <el-row type="flex" class="row-bg" justify="end">
+                <el-col :span="23">
+                    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">新增</el-button>
+                </el-col>
+                <el-col :span="1">
+                    <!-- 筛选按钮 -->
+                    <el-popover placement="bottom" title="筛选列" trigger="click" width="40">
+                        <el-checkbox-group v-model="checkedColumns" size="mini">
+                            <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
+                        </el-checkbox-group>
+                        <div title="筛选列" class="filter-table-col" slot="reference">
+                            <i class="el-icon-s-operation"></i>
+                        </div>
+                    </el-popover>
+                </el-col>
+            </el-row>
+        </div>
+        <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" label="向量数据库Id" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" label="对话模型Id" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[3].istrue" prop="name" align="left" label="名称" sortable :filters="filterTableHeader.name" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="内容" sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column align="center"
+                             label="添加时间" sortable>
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" fixed="right" width="350">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               type="primary"
+                               @@click="handleElVisibleOpenBtn('drawerGroup',scope.row)">配置</el-button>
+                    <el-button size="mini"
+                               type="primary"
+                               @@click="handleEmbeddingBtn('embedding',scope.row)">向量化</el-button>
+                    <el-button size="mini"
+                               type="primary"
+                               @@click="handleEdit(scope.$index, scope.row,'edit')">编辑</el-button>
+                    <el-popconfirm placement="top" title="确认删除此知识库管理吗？" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
+                    </el-popconfirm>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <pagination :total="paginationQuery.total"
+                    :page.sync="listQuery.pageIndex"
+                    :limit.sync="listQuery.pageSize"
+                    @@pagination="getList"></pagination>
+        <!--编辑、新增-->
+        <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="600px">
+            <el-form ref="dataForm"
+                     :rules="dialog.rules"
+                     :model="dialog.data"
+                     :disabled="dialog.disabled"
+                     size="mini"
+                     label-position="left"
+                     label-width="150px"
+                     style="max-width: 600px; margin-left:50px;">
+                <el-form-item label="名称" prop="name">
+                    <el-input size="mini" v-model="dialog.data.name" clearable placeholder="请输入名称" />
+                </el-form-item>
+
+                <el-form-item label="选择Embedding模型">
+                    <el-cascader v-model="selectDefaultEmbeddingModel"
+                                 :options="embeddingModelData"
+                                 @@change="selectEmbeddingModel"
+                                 clearable
+                                 filterable
+                                 :props="{label:'alias',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="Embedding模型Id" prop="embeddingModelId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入Embedding模型Id" />
+                </el-form-item>
+
+                <el-form-item label="选择向量数据库">
+                    <el-cascader v-model="selectDefaultVectorDB"
+                                 :options="vectorDBData"
+                                 @@change="selectVectorDB"
+                                 clearable
+                                 filterable
+                                 :props="{label:'alias',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.vectorDBId" clearable placeholder="请输入向量数据库Id" />
+                </el-form-item>
+
+                <el-form-item label="选择对话模型">
+                    <el-cascader v-model="selectDefaultChatModel"
+                                 :options="chatModelData"
+                                 @@change="selectChatModel"
+                                 clearable
+                                 filterable
+                                 :props="{label:'alias',value:'id'}">
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
+                    <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
+                </el-form-item>
+
+                <el-form-item label="内容" prop="content">
+                    <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容" />
+                </el-form-item>
+
+                <el-upload class="upload-demo"
+                           ref="upload"
+                           action="#"
+                           :auto-upload="false"
+                           :multiple="true"
+                           :show-file-list="true"
+                           :on-success="uploadSuccess"
+                           :on-error="uploadError"
+                           @* :on-change="handleFileChange" *@
+                           @* :on-progress="handleProgress" *@
+                           @* :before-upload="beforeUpload" *@
+                           :file-list="fileList">
+                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                    <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
+                </el-upload>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
+                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
+            </div>
+        </el-dialog>
+
+        @* 抽屉 新增|编辑 知识库关联 *@
+        <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
+                   :close-on-press-escape="false" size="960px">
+            <div class="drawerRtl">
+                @* 内容中的头（包括标题和关闭图标） *@
+                <div class="drawerRtl__header">
+                    <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑知识库关联' : '新增知识库关联' }} </div>
+                    <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
+                </div>
+                @* 内容中的主体内容 *@
+                <div class="drawerRtl__body">
+                    <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
+                             :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
+                        <el-form-item label="内容类型">
+                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请输入内容类型">
+                                <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="文件列表" prop="files">
+                            <div class="groupFMB">
+                                <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
+                                    <div class="df-wn flex-ac" style="gap: 10px;">
+                                        <el-input v-model="groupAgentQueryList.filter" size="small"
+                                                  placeholder="请填写" style="width:auto;"></el-input>
+                                        <el-button size="small" icon="el-icon-search"
+                                                   @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
+                                        <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogFile')">
+                                            新建文件
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
+                                    <span class="groupFMB_ma_label">已选择:</span>
+                                    <div class="groupFMB_ma_list">
+                                        <div class="df flex-ac flex-js" style="gap:10px">
+                                            <div v-for="(item,index) in groupForm.files" :key="item.id"
+                                                 class="df-wn flex-ac groupFMB_ma_list_item">
+                                                <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
+                                                <i class="el-icon-close cursorPointer"
+                                                   @@click="groupMembersCancel(item,index)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="447"
+                                          style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
+                                          @@selection-change="handleSelectionChange">
+                                    <el-table-column type="selection" width="30"></el-table-column>
+                                    <el-table-column prop="fileName" label="文件名" width="130"
+                                                     show-overflow-tooltip></el-table-column>
+                                    <el-table-column prop="fileSize" label="文件大小" width="100">
+                                    </el-table-column>
+                                    <el-table-column prop="description" label="描述" min-width="100">
+                                    </el-table-column>
+                                    <el-table-column fixed="right" label="操作" width="100">
+                                        <template slot-scope="{ row }">
+                                            <el-button type="primary" size="small"
+                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="内容">
+                            <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                @* 内容中固定的footer *@
+                <div class="drawerRtl__footer text-right">
+                    <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
+                    <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
+                </div>
+            </div>
+        </el-drawer>
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/js/KnowledgeBase/Pages/KnowledgeBases/knowledgeBases.js"></script>
+}

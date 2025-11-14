@@ -12,6 +12,11 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     public interface ISenparcEntitiesDbContext : IDisposable /*, IInfrastructure<IServiceProvider>,*/ /*IDbContextDependencies,*/ /*IDbSetCache*/ /*IDbQueryCache, *//*,IDbContextPoolable*/
     {
+        /// <summary>
+        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        /// </summary>
+        MultiTenant.RequestTenantInfo TenantInfo { get; set; }
+
         void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase;
 
         /// <summary>

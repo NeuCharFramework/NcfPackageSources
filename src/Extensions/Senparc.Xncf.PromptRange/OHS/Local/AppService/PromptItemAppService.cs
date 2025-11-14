@@ -382,31 +382,91 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
         private static async Task<FileContentResult> BuildZipStreamAsync(string dirPath)
         {
-            // rangePath
-            var filePath = Path.Combine(
-                Directory.GetParent(dirPath)!.FullName,
-                $"{DateTimeOffset.Now.ToLocalTime():yyyyMMddHHmmss}_ExportedPlugins.zip");
-
-            ZipFile.CreateFromDirectory(
-                dirPath,
-                filePath);
-
-            byte[] buffer;
-            await using var fileStream = new FileStream(filePath, FileMode.Open);
+            try
             {
-                buffer = new byte[fileStream.Length];
-                var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
+                // 验证目录是否存在
+                if (!Directory.Exists(dirPath))
+                {
+                    throw new NcfExceptionBase($"导出目录不存在: {dirPath}");
+                }
+
+                // 验证目录中是否有文件
+                var files = Directory.GetFiles(dirPath, "*", SearchOption.AllDirectories);
+                if (files.Length == 0)
+                {
+                    throw new NcfExceptionBase($"导出目录中没有找到任何文件: {dirPath}");
+                }
+
+                // rangePath
+                var parentDir = Directory.GetParent(dirPath);
+                if (parentDir == null)
+                {
+                    throw new NcfExceptionBase($"无法获取父目录: {dirPath}");
+                }
+
+                var filePath = Path.Combine(
+                    parentDir.FullName,
+                    $"{DateTimeOffset.Now.ToLocalTime():yyyyMMddHHmmss}_ExportedPlugins.zip");
+
+                // 创建压缩文件
+                ZipFile.CreateFromDirectory(
+                    dirPath,
+                    filePath,
+                    CompressionLevel.Fastest,
+                    false);
+
+                byte[] buffer;
+                await using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    buffer = new byte[fileStream.Length];
+                    var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
+                }
+
+                // 清理临时文件
+                try
+                {
+                    // 删除 zip 文件
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                    
+                    // 清理临时文件夹
+                    if (Directory.Exists(dirPath))
+                    {
+                        Directory.Delete(dirPath, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 清理失败不影响返回结果，只记录日志
+                    Console.WriteLine($"清理临时文件失败: {ex.Message}");
+                }
+
+                var res = new FileContentResult(buffer, "application/octet-stream")
+                {
+                    FileDownloadName = "plugins.zip"
+                };
+
+                return res;
             }
-
-            // 清理临时文件夹
-            Directory.Delete(dirPath, true);
-
-            var res = new FileContentResult(buffer, "application/octet-stream")
+            catch (Exception ex)
             {
-                FileDownloadName = "plugins.zip"
-            };
+                // 确保在出错时也清理临时文件
+                try
+                {
+                    if (Directory.Exists(dirPath))
+                    {
+                        Directory.Delete(dirPath, true);
+                    }
+                }
+                catch
+                {
+                    // 忽略清理错误
+                }
 
-            return res;
+                throw new NcfExceptionBase($"导出 plugins 失败: {ex.Message}", ex);
+            }
         }
     }
 }

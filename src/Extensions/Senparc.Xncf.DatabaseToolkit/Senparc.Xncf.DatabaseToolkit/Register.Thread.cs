@@ -39,7 +39,7 @@ namespace Senparc.Xncf.DatabaseToolkit
 
                             //检测当前模块是否可用
                             XncfRegisterManager xncfRegisterManager = new XncfRegisterManager(serviceProvider);
-                            var xncfIsValiable = await xncfRegisterManager.CheckXncfValiable(this);
+                            var xncfIsValiable = await xncfRegisterManager.CheckXncfAvailable(this);
                             if (!xncfIsValiable)
                             {
                                 //同一时间内只提示一次

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.34.5.2-preview1</Version>
-    <LangVersion>9.0</LangVersion>
+    <Version>0.35.5-preview</Version>
+    <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -49,7 +49,7 @@
 			[2024-09-07] v0.30.4.3-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
 			[2024-09-07] v0.30.4.4-preview1 更新 XNCF AI 代码生成逻辑
 			[2024-09-07] v0.30.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-					[2024-09-07] v0.30.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
+			[2024-09-07] v0.30.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
 			[2024-09-08] v0.30.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
 			[2024-09-10] v0.30.6-preview1 升级缓存基础库
 			[2024-10-09] v0.30.8-preview1 升级基础库
@@ -64,9 +64,30 @@
 			[2025-01-25] v0.34.3-preview1 Update Agents functions, support for function calling
 			[2025-01-28] v0.34.4-preview1 update Senparc.AI
 			[2025-02-06] v0.34.5-preview1 update NeuCharAI model update
-</PackageReleaseNotes>
+			[2025-04-29] v0.34.7-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.34.8-preview1 Update Installation
+			[2025-05-20] v0.35.0-preview.1 Update AI powered XNCF Builder
+			[2025-05-21] v0.35.0-preview.2 Fix XNCF Builder Function display problem
+			[2025-05-22] v0.35.0-preview.3 XNCF Builder improve CMD command progress
+			[2025-05-22] v0.35.0-preview.3.1 XNCF Builder improve AI code generation
+			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
+			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
+			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <!-- Visual Studio 特定设置 -->
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <!-- Source Generator 设置 -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+    <!-- Visual Studio Source Generator 兼容性设置 -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -81,6 +102,9 @@
     <Compile Remove="ACL\**" />
     <EmbeddedResource Remove="ACL\**" />
     <None Remove="ACL\**" />
+    <!-- 排除生成的文件，避免重复编译 -->
+    <!-- 仅在 dotnet build 中排除物理文件，Visual Studio 中保留以确保兼容性 -->
+    <Compile Remove="Generated\**\*.cs" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -98,6 +122,7 @@
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
+    <ProjectReference Include="..\..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
     <ProjectReference Include="..\..\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
@@ -112,4 +137,48 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
   </ItemGroup>
+  <!-- 代码模板自动生成 -->
+  <ItemGroup>
+    <AdditionalFiles Include="Request.cs" />
+    <AdditionalFiles Include="generation-config.json" />
+    <!--后端模板-->
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs" />
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs" />
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs" />
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs" />
+    <!--前端模板-->
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml" />
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs" />
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js" />
+    <AdditionalFiles Include="../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Source Generator 引用 - 混合方式确保在所有环境下都工作 -->
+    <ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <!-- Visual Studio 使用 DLL 引用确保稳定性 -->
+    <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Release'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
+    <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generated\Senparc.Xncf.XncfBuilder.DynamicContentGenerator\MultiFileCodeGenerator\" />
+  </ItemGroup>
+  <!-- 清理生成的文件 -->
+  <!--<Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
+    <ItemGroup>
+      <GeneratedFiles Include="Generated/**/*.*" />
+      <GeneratedFiles Include="obj/**/generated/**/*.*" />
+    </ItemGroup>
+    <Delete Files="@(GeneratedFiles)" />
+    <RemoveDir Directories="Generated" Condition="Exists('Generated')" />
+  </Target>-->
+  <!-- 确保 Visual Studio 中 Source Generator 项目先被构建 -->
+  <!--<Target Name="EnsureSourceGeneratorBuilt" BeforeTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+    <Message Text="为 Visual Studio 构建 Source Generator 项目..." Importance="normal" />
+    <MSBuild Projects="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+  </Target>-->
+  <!-- 刷新 Source Generator 触发器 -->
+  <!--<Target Name="RefreshSourceGenerator" BeforeTargets="Build">
+    <Message Text="刷新 Source Generator..." Importance="normal" />
+    <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
+  </Target>-->
 </Project>

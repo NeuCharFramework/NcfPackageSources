@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ModelContextProtocol.Protocol;
+using ModelContextProtocol.Server;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -31,6 +34,8 @@ namespace Senparc.Ncf.XncfBase
         /// 是否忽略安装（但不影响执行注册代码），默认为 false
         /// </summary>
         public virtual bool IgnoreInstall { get; }
+
+        public virtual bool EnableMcpServer => false;
 
         /// <summary>
         /// 模块名称，要求全局唯一
@@ -380,6 +385,68 @@ namespace Senparc.Ncf.XncfBase
         {
             //在 Register.StartEngine() 中调用，早于 AddXncfModule() 方法
         }
+
+        #region MCP
+
+        protected string GetMcpServerName()
+        {
+            return $"ncf-mcp-server-{this.Name.Replace(".", "-")}";
+        }
+
+        public virtual void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
+        {
+            var serverName = GetMcpServerName();
+
+            var mcpServerBuilder = services.AddMcpServer(opt =>
+            {
+                opt.ServerInfo = new Implementation()
+                {
+                    Name = serverName,
+                    Version = this.Version,
+                };
+            })
+            .WithHttpTransport()
+            .WithToolsFromAssembly(xncfRegister.GetType().Assembly);
+
+            XncfRegisterManager.McpServerInfoCollection[serverName] = new MCP.McpServerInfo()
+            {
+                ServerName = serverName,
+                XncfName = Name,
+                XncfUid = Uid
+            };
+        }
+
+        public virtual void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
+        {
+            if (app is IEndpointRouteBuilder endpoints)
+            {
+                var routePattern = $"mcp-{Name.Replace(".", "-").ToLower()}";
+                endpoints.MapMcp(routePattern);
+
+                //注册 MCP 路由信息
+                var mcpServerInfo = XncfRegisterManager.McpServerInfoCollection.Values.LastOrDefault(z => z.XncfUid == Uid);
+                if (mcpServerInfo == null)
+                {
+                    var serverName = GetMcpServerName();
+                    mcpServerInfo = new MCP.McpServerInfo()
+                    {
+                        ServerName = serverName,
+                        XncfName = Name,
+                        XncfUid = Uid
+                    };
+                    XncfRegisterManager.McpServerInfoCollection[serverName] = mcpServerInfo;
+                }
+
+                mcpServerInfo.McpRoute = routePattern;
+
+                //_logger.LogInformation($"启用 MCP 服务（{this.Name}）：{routePattern}");
+
+                Console.WriteLine($"启用 MCP 服务（{this.Name}）：{routePattern}");
+
+            }
+        }
+
+        #endregion
 
 
         ///// <summary>

@@ -81,10 +81,10 @@ namespace Senparc.Areas.Admin.Pages
 
                 //TODO:去获取模块下的所有的菜单信息
                 IXncfRegister xncfRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == data.Uid);
-                if (xncfRegister == null)
-                {
-                    throw new Exception($"模块丢失或未加载（{XncfRegisterManager.RegisterList.Count}）！");
-                }
+                // if (xncfRegister == null)
+                // {
+                //     throw new Exception($"模块丢失或未加载（{XncfRegisterManager.RegisterList.Count}）！");
+                // }
                 data.Menus = (xncfRegister as Ncf.Core.Areas.IAreaRegister)?.AreaPageMenuItems ?? new List<Ncf.Core.Areas.AreaPageMenuItem>();
 
 
@@ -118,7 +118,7 @@ namespace Senparc.Areas.Admin.Pages
         /// </summary>
         /// <param name="sysPermissionService"></param>
         /// <returns></returns>
-        public async Task<IActionResult> OnGetMenuTreeAsync([FromServices] SysPermissionService sysPermissionService)
+        public async Task<IActionResult> OnGetMenuTreeAsync([FromServices] SysRolePermissionService sysPermissionService)
         {
             IEnumerable<SysMenuDto> sysMenus = await sysPermissionService.GetCurrentUserMenuDtoAsync();
             var results = await GetSysMenuTreesMainRecursiveAsync(sysMenus);
@@ -130,7 +130,7 @@ namespace Senparc.Areas.Admin.Pages
         /// </summary>
         /// <param name="sysPermissionService"></param>
         /// <returns></returns>
-        public async Task<IActionResult> OnGetMenuResourceAsync([FromServices] SysPermissionService sysPermissionService)
+        public async Task<IActionResult> OnGetMenuResourceAsync([FromServices] SysRolePermissionService sysPermissionService)
         {
             IEnumerable<SysMenuDto> sysMenus = await sysPermissionService.GetCurrentUserMenuDtoAsync();
             var results = await GetSysMenuTreesMainRecursiveAsync(sysMenus);
@@ -217,8 +217,8 @@ namespace Senparc.Areas.Admin.Pages
                     }
                     else
                     {
-                        var checkXncfValiable = await xncfRegisterManager.CheckXncfValiable(xncfRegister);
-                        if (!checkXncfValiable)
+                        var CheckXncfAvailable = await xncfRegisterManager.CheckXncfAvailable(xncfRegister);
+                        if (!CheckXncfAvailable)
                         {
                             if (hideModuleManager)
                             {

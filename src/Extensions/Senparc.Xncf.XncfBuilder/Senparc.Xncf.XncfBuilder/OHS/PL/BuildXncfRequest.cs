@@ -135,20 +135,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 {
                     #region 自动查找当前项目的解决方案路径
 
-                    //当前程序目录
-                    var currentDir = AppDomain.CurrentDomain.BaseDirectory;
-
-                    //向上查找，直到找到
-                    while (!IsSlnDir(currentDir) && currentDir != null)
-                    {
-                        currentDir = Directory.GetParent(currentDir).FullName;
-                    }
-
-                    if (currentDir != null)
-                    {
-                        var fileNames = Directory.GetFiles(currentDir, "*.sln").OrderBy(z => z.Length).ThenBy(z => z);
-                        SlnFilePath = Path.Combine(currentDir, fileNames.FirstOrDefault());
-                    }
+                    SlnFilePath = this.GetSlnFilePath();
 
                     #endregion
                 }
@@ -168,6 +155,30 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         private bool IsSlnDir(string path)
         {
             return Directory.GetFiles(path, "*.sln").Length > 0;
+        }
+
+        /// <summary>
+        /// 获取当前解决方案文件路径
+        /// </summary>
+        /// <returns></returns>
+        public string GetSlnFilePath()
+        {
+            var slnFilePath = string.Empty;
+            //当前程序目录
+            var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+
+            //向上查找，直到找到
+            while (!IsSlnDir(currentDir) && currentDir != null)
+            {
+                currentDir = Directory.GetParent(currentDir).FullName;
+            }
+
+            if (currentDir != null)
+            {
+                var fileNames = Directory.GetFiles(currentDir, "*.sln").OrderBy(z => z.Length).ThenBy(z => z);
+                slnFilePath = Path.Combine(currentDir, fileNames.FirstOrDefault());
+            }
+            return slnFilePath;
         }
 
     }

@@ -150,5 +150,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// 消息平台参数
         /// </summary>
         public string HookParameter { get; set; }
+
+        /// <summary>
+        /// 最大对话轮数
+        /// </summary>
+        public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
     }
 }

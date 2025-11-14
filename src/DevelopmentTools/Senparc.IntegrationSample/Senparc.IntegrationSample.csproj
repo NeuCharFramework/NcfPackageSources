@@ -6,11 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.17.0-preview1" />
-	</ItemGroup>
-
+	
 	<ItemGroup>
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
 		<ProjectReference Include="..\..\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
@@ -25,6 +21,7 @@
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />
+		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
 		<ProjectReference Include="..\..\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
 		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
 		<ProjectReference Include="..\..\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />

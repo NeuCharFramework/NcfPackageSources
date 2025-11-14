@@ -24,6 +24,11 @@ namespace Senparc.Ncf.XncfBase
         bool IgnoreInstall { get; }
 
         /// <summary>
+        /// 是否启用 MCP 服务器（MCP Server）
+        /// </summary>
+        bool EnableMcpServer { get; }
+
+        /// <summary>
         /// 模块名称，要求全局唯一
         /// </summary>
         string Name { get; }
@@ -119,5 +124,21 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <returns></returns>
         IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService);
+
+        #region MCP Server
+
+        /// <summary>
+        /// 添加 MCP 服务器
+        /// </summary>
+        /// <param name="services"></param>
+        void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister);
+        /// <summary>
+        /// 使用 MCP 服务器
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="registerService"></param>
+        void UseMcpServer(IApplicationBuilder app, IRegisterService registerService);
+
+        #endregion
     }
 }

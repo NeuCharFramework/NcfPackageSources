@@ -2,6 +2,7 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
+            isAIGrade: true,
             devHost: 'http://pr-felixj.frp.senparc.com',
             pageChange: false, // 页面是否有变化
             isAvg: true, // 是否平均分 默认false 不平均
@@ -15,6 +16,8 @@ var app = new Vue({
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
+            isComposing: false, // 是否正在使用输入法（IME composition）
+            isUserEditing: false, // 是否正在编辑（避免watch content时重新渲染）
             numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
             numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
             // 参数设置 视图配置列表
@@ -92,7 +95,7 @@ var app = new Vue({
             dodgersLoading: false, // 连发loading
             // 配置 输入 ---end
             // prompt请求参数 ---start
-            promptParamVisible: true,// prompt请求参数 显隐 false是显示 trun是默认隐藏
+            promptParamVisible: false,// prompt请求参数 显隐 true是显示 false是默认隐藏
             promptParamFormLoading: false,
             promptParamForm: {
                 prefix: '',
@@ -118,6 +121,7 @@ var app = new Vue({
             outputMaxDeci: -1, // 输出列表的最高分
             outputActive: '', // 输出列表选中查看|评分
             outputList: [],  // 输出列表
+            robotScoreLoadingMap: {}, // AI评分加载状态映射 {itemId: true/false}
             chartData: [], // 图表数据
             chartInstance: null, // 图表实例
             // 输出 ---end
@@ -253,6 +257,8 @@ var app = new Vue({
                 checkList: [], // 选择的数据 tree 
             },
             expectedPluginFieldList: [],
+            exportPluginExpandAll: false, // 是否展开所有节点
+            exportPluginSelectedCount: 0, // 已选择的靶道数量
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -265,8 +271,31 @@ var app = new Vue({
             box2Hidden: false,
             box3Hidden: false,
             lastClickedBox: null,
+            centerAreaMaximized: false, // 中间区域是否最大化
+            rightAreaMaximized: false,  // 右侧区域是否最大化
             isBoxVisible: true, // 控制盒子显示和隐藏的状态
-            foldsidebarShow: false
+            foldsidebarShow: false,
+            // 区域宽度控制
+            leftAreaWidth: 360,    // 左侧区域宽度（默认360px）
+            centerAreaWidth: 380,  // 中间区域宽度（默认380px）
+            isResizing: false,     // 是否正在拖动
+            resizeType: null,      // 拖动类型：'left' 或 'right'
+            resizeStartX: 0,       // 拖动开始的X坐标
+            resizeStartLeftWidth: 0,   // 拖动开始时左侧区域的宽度
+            resizeStartCenterWidth: 0, // 拖动开始时中间区域的宽度
+            // Prompt 对比功能
+            compareDialogVisible: false,  // 对比对话框显示状态
+            comparePromptAId: null,       // 对比的Prompt A的ID
+            comparePromptBId: null,       // 对比的Prompt B的ID
+            comparePromptA: null,         // 对比的Prompt A的完整数据
+            comparePromptB: null,         // 对比的Prompt B的完整数据
+            // 自定义滚动条缩略图
+            showScrollbarThumbnails: false,
+            scrollInfo: {
+                scrollTop: 0,
+                scrollHeight: 0,
+                clientHeight: 0
+            }
         };
     },
     computed: {
@@ -274,6 +303,168 @@ var app = new Vue({
             let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading || this.dodgersLoading
             return result
         },
+        
+        // 获取可选择的Prompt列表（用于对比对话框）
+        availablePrompts() {
+            return this.promptOpt || [];
+        },
+        
+        // 获取Prompt A的显示信息
+        comparePromptAInfo() {
+            if (!this.comparePromptA) return null;
+            
+            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            const versionParts = this.comparePromptA.fullVersion ? this.comparePromptA.fullVersion.split('-') : [];
+            
+            return {
+                targetRangeName: versionParts[0] || '未知靶场',
+                targetLaneName: versionParts[1] || '未知靶道',
+                tacticalName: versionParts[2] || '未知战术',
+                modelName: this.getModelName(this.comparePromptA.modelId)
+            };
+        },
+        
+        // 获取Prompt B的显示信息
+        comparePromptBInfo() {
+            if (!this.comparePromptB) return null;
+            
+            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            const versionParts = this.comparePromptB.fullVersion ? this.comparePromptB.fullVersion.split('-') : [];
+            
+            return {
+                targetRangeName: versionParts[0] || '未知靶场',
+                targetLaneName: versionParts[1] || '未知靶道',
+                tacticalName: versionParts[2] || '未知战术',
+                modelName: this.getModelName(this.comparePromptB.modelId)
+            };
+        },
+        
+        // 检查是否是同一个Prompt
+        isSamePrompt() {
+            if (!this.comparePromptA || !this.comparePromptB) return false;
+            if (!this.comparePromptAId || !this.comparePromptBId) return false;
+            
+            // 通过ID判断是否为同一个Prompt
+            return this.comparePromptAId === this.comparePromptBId;
+        },
+        
+        // 检测Prompt中的变量
+        detectedVariables() {
+            if (!this.content) return [];
+            
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
+            const variableList = this.promptParamForm.variableList || [];
+            
+            // 如果没有设置前缀和后缀，返回空数组
+            if (!prefix || !suffix) return [];
+            
+            // 转义前缀和后缀用于正则表达式
+            const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            // 构建正则表达式：匹配 prefix + 变量名 + suffix
+            const regex = new RegExp(`${escapedPrefix}(\\w+)${escapedSuffix}`, 'g');
+            
+            // 获取所有已定义的变量名
+            const definedVarNames = variableList.map(v => v.name).filter(n => n);
+            
+            // 找出所有匹配的变量
+            const variables = [];
+            const seen = new Set();
+            let match;
+            
+            while ((match = regex.exec(this.content)) !== null) {
+                const fullMatch = match[0];
+                const varName = match[1];
+                
+                // 避免重复
+                if (!seen.has(fullMatch)) {
+                    seen.add(fullMatch);
+                    variables.push({
+                        fullMatch: fullMatch,
+                        name: varName,
+                        isDefined: definedVarNames.includes(varName)
+                    });
+                }
+            }
+            
+            return variables;
+        },
+        
+        // 生成带高亮的HTML内容
+        highlightedHTML() {
+            if (!this.content) return '';
+            
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
+            const variableList = this.promptParamForm.variableList || [];
+            
+            // 如果没有设置前缀和后缀，直接返回纯文本（转义HTML，保留换行）
+            if (!prefix || !suffix) {
+                return this.escapeHtml(this.content).replace(/\n/g, '<br>');
+            }
+            
+            // 转义前缀和后缀用于正则表达式
+            const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            // 构建正则表达式，使用全局标志
+            const regex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
+            
+            // 获取所有已定义的变量名
+            const definedVarNames = variableList.map(v => v.name).filter(n => n);
+            
+            // 逐行处理内容
+            const lines = this.content.split('\n');
+            const processedLines = lines.map(line => {
+                // 先转义整行HTML
+                let escapedLine = this.escapeHtml(line);
+                
+                // 创建一个数组来存储处理后的片段
+                let lastIndex = 0;
+                let result = '';
+                let match;
+                
+                // 重新创建正则（因为有g标志，需要重置lastIndex）
+                const lineRegex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
+                
+                // 在转义后的文本中查找匹配
+                while ((match = lineRegex.exec(escapedLine)) !== null) {
+                    // 添加匹配前的文本
+                    result += escapedLine.substring(lastIndex, match.index);
+                    
+                    // 提取变量名（去掉前缀和后缀）
+                    const fullMatch = match[1];
+                    const varName = fullMatch.substring(prefix.length, fullMatch.length - suffix.length);
+                    
+                    // 判断是否已定义
+                    const isDefined = definedVarNames.includes(varName);
+                    const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
+                    const title = isDefined ? `已定义: ${varName}` : `未定义: ${varName}`;
+                    
+                    // 添加高亮的span（使用内联样式确保不换行）
+                    result += `<span class="${className}" title="${title}" style="display:inline;">${fullMatch}</span>`;
+                    
+                    lastIndex = lineRegex.lastIndex;
+                }
+                
+                // 添加剩余的文本
+                result += escapedLine.substring(lastIndex);
+                
+                return result;
+            });
+            
+            // 用<br>连接各行
+            const finalHTML = processedLines.join('<br>');
+            
+            // 调试：打印生成的HTML（仅在开发环境）
+            if (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1')) {
+                console.log('[highlightedHTML] Generated HTML:', finalHTML.substring(0, 300));
+            }
+            
+            return finalHTML;
+        }
     },
     watch: {
         //'isExtend': {
@@ -284,12 +475,39 @@ var app = new Vue({
         //}
         versionSearchVal(val) {
             this.$refs.versionTree.filter(val);
+        },
+        
+        // 监听content外部变化（如加载数据）
+        content(newVal, oldVal) {
+            // 只处理外部赋值（比如加载数据），不处理用户编辑
+            if (this.isUserEditing) {
+                // 用户正在编辑，不重新渲染HTML
+                return;
+            }
+            
+            // 外部赋值，更新编辑器
+            if (newVal !== oldVal && this.$refs.promptEditor && !this.isComposing) {
+                this.$nextTick(() => {
+                    const editor = this.$refs.promptEditor;
+                    if (!editor) return;
+                    
+                    const currentText = this.getPlainText(editor);
+                    
+                    // 如果编辑器内容与content不一致（外部赋值），更新编辑器
+                    if (currentText !== newVal) {
+                        editor.innerHTML = this.highlightedHTML;
+                    }
+                });
+            }
         }
     },
     created() {
         // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
         // 添加 beforeunload 事件监听器
         window.addEventListener('beforeunload', this.beforeunloadHandler);
+        
+        // 页面创建时加载保存的宽度设置
+        this.loadAreaWidthsFromStorage();
     },
     mounted() {
         // 获取靶道列表
@@ -315,14 +533,30 @@ var app = new Vue({
           this.getTargetRangeIdFromUrl();
       }, 200)
       
+        // 初始化contenteditable编辑器
+        this.$nextTick(() => {
+            const editor = this.$refs.promptEditor;
+            if (editor && this.content) {
+                editor.innerHTML = this.highlightedHTML;
+            }
+        });
+      
     },
     beforeDestroy() {
         // 销毁之前移除事件监听器
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
+        
+        // 组件销毁前移除拖动相关的事件监听器
+        document.removeEventListener('mousemove', this.handleResize);
+        document.removeEventListener('mouseup', this.stopResize);
     },
     methods: {
         //获取路径id 页面数据回显
         getTargetRangeIdFromUrl() {
+             // 添加安全检查，防止 $route 未定义
+             if (!this.$route || !this.$route.query) {
+                 return;
+             }
              const targetrangeId = this.$route.query.targetrangeId;
            
            
@@ -405,23 +639,39 @@ var app = new Vue({
         //放大输入区域
        
         Amplification(boxClicked) {
-        
             if (this.lastClickedBox === boxClicked) {
+                // 再次点击同一个区域，恢复所有区域
                 this.box1Hidden = false;
                 this.box2Hidden = false;
                 this.box3Hidden = false;
+                this.centerAreaMaximized = false;
+                this.rightAreaMaximized = false;
                 this.lastClickedBox = null;
-                this.getScoringTrendData()
+                this.getScoringTrendData();
             } else {
-                // 隐藏其他两个盒子
-                this.box1Hidden = boxClicked !== 'box1';
-                this.box2Hidden = boxClicked !== 'box2';
-                this.box3Hidden = boxClicked !== 'box3';
+                // 点击不同区域，实现最大化
+                if (boxClicked === 'box1') {
+                    // 右侧输出区域最大化：隐藏中间区域，隐藏分析图表，扩展右侧区域
+                    this.box1Hidden = false;
+                    this.box2Hidden = true;  // 隐藏中间Prompt区域
+                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.centerAreaMaximized = false;
+                    this.rightAreaMaximized = true;
+                } else if (boxClicked === 'box2') {
+                    // 中间Prompt区域最大化：隐藏右侧所有内容，扩展中间区域
+                    this.box1Hidden = true;  // 隐藏右侧输出区域
+                    this.box2Hidden = false;
+                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.centerAreaMaximized = true;
+                    this.rightAreaMaximized = false;
+                } else if (boxClicked === 'box3') {
+                    // 保留原有逻辑
+                    this.box1Hidden = false;
+                    this.box2Hidden = false;
+                    this.box3Hidden = false;
+                }
                 this.lastClickedBox = boxClicked;
             }
-            // 更新上次点击的盒子
-           
-
             },
         style(val) {
             const length = 10,
@@ -620,14 +870,15 @@ var app = new Vue({
                         prefix: this.promptParamForm.prefix
                     }
                     // ai评分标准
+                    _postData.isAIGrade = this.isAIGrade
                     if (this.aiScoreForm.resultList.length > 0) {
                         let _list = this.aiScoreForm.resultList.map(item => item.value)
                         _list = _list.filter(item => item)
                         if (_list.length > 0) {
                             _postData.expectedResultsJson = JSON.stringify(_list)
                         }
-
                     }
+                    
                     if (this.promptParamForm.variableList.length > 0) {
                         _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
                     }
@@ -802,6 +1053,7 @@ var app = new Vue({
 
             }
             // ai评分标准
+            _postData.isAIGrade = this.isAIGrade
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
                 _list = _list.filter(item => item)
@@ -809,6 +1061,7 @@ var app = new Vue({
                     _postData.expectedResultsJson = JSON.stringify(_list)
                 }
             }
+            
             // 请求参数
             if (this.promptParamForm.variableList.length > 0) {
                 _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
@@ -1202,6 +1455,8 @@ var app = new Vue({
                 checkList: []
             }
             this.expectedPluginFieldList = [] // tree数据列表
+            this.exportPluginSelectedCount = 0 // 重置已选择数量
+            this.exportPluginExpandAll = false // 重置展开状态
             this.$refs.expectedPluginFoem.resetFields();
         },
         // 导出 plugins dialog open
@@ -1215,42 +1470,188 @@ var app = new Vue({
             }
             this.expectedPluginVisible = true
             await Promise.all(promises)
+            // 等待 DOM 更新后再设置选中和更新计数
+            this.$nextTick(() => {
             // 设置默认选中
             this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
+                
+                // 确保 checkList 只包含叶子节点
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
+                    }
+                });
+                
+                this.expectedPluginFoem.checkList = leafNodeKeys;
+                
+                // 更新已选择数量
+                this.updateExportPluginSelectedCount()
+            })
         },
         // 导出 plugins dialog tree 选中变化
         treeCheckChange(data, currentCheck, childrenCheck) {
-            //console.log('treeCheckChange', data, currentCheck, childrenCheck)
-            if (currentCheck) {
-                // 选中 判断是否有值有的话就不添加
-                if (this.expectedPluginFoem.checkList.indexOf(data.idkey) === -1) {
-                    this.expectedPluginFoem.checkList.push(data.idkey)
-                    // 判断是否有子节点 有的话就添加
-                    if (data.children.length > 0) {
-                        data.children.forEach(item => {
-                            if (this.expectedPluginFoem.checkList.indexOf(item.idkey) === -1) {
-                                this.expectedPluginFoem.checkList.push(item.idkey)
-                            }
-                        })
+            // 更新已选择数量（使用 $nextTick 确保 Tree 状态已更新）
+            this.$nextTick(() => {
+                // 使用 Tree API 重新获取所有选中的节点（只获取叶子节点）
+                if (!this.$refs.expectedPluginTree) return;
+                
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
                     }
+                });
+                
+                // 更新 checkList，只包含叶子节点
+                this.expectedPluginFoem.checkList = leafNodeKeys;
+                
+                // 更新计数
+                this.updateExportPluginSelectedCount();
+            });
+        },
+        
+        // 更新已选择的靶道数量
+        updateExportPluginSelectedCount() {
+            if (!this.$refs.expectedPluginTree) {
+                this.exportPluginSelectedCount = 0;
+                return;
+            }
+            
+            // 使用 Tree 组件的 API 获取所有选中的节点（包括半选状态的父节点的子节点）
+            const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+            const halfCheckedNodes = this.$refs.expectedPluginTree.getHalfCheckedNodes();
+            
+            // 统计所有选中的子节点（靶道）
+            // 靶道的特征：有 idkey 且包含下划线，或者没有 children
+            let count = 0;
+            
+            // 统计完全选中的节点中的靶道
+            checkedNodes.forEach(node => {
+                // 如果是叶子节点（靶道），统计
+                if (!node.children || node.children.length === 0) {
+                    count++;
                 }
-            } else {
-                // 取消选中
-                let _index = this.expectedPluginFoem.checkList.indexOf(data.idkey)
-                if (_index > -1) {
-                    this.expectedPluginFoem.checkList.splice(_index, 1)
-                }
-                // 判断是否有子节点 有的话就删除
-                if (data.children.length > 0) {
-                    data.children.forEach(item => {
-                        let _index = this.expectedPluginFoem.checkList.indexOf(item.idkey)
-                        if (_index > -1) {
-                            this.expectedPluginFoem.checkList.splice(_index, 1)
-                        }
-                    })
+            });
+            
+            // 对于半选状态的父节点，需要统计其已选中的子节点
+            // Element UI Tree 的 getCheckedNodes() 已经包含了所有选中的子节点，所以不需要额外处理
+            
+            this.exportPluginSelectedCount = count;
+        },
+        
+        // 导出plugin - 全选
+        exportPluginSelectAll() {
+            if (!this.$refs.expectedPluginTree) return;
+            
+            // 获取所有节点的key（包括父节点和子节点）
+            const allKeys = [];
+            const collectKeys = (nodes) => {
+                nodes.forEach(node => {
+                    allKeys.push(node.idkey);
+                    if (node.children && node.children.length > 0) {
+                        collectKeys(node.children);
+                    }
+                });
+            };
+            collectKeys(this.expectedPluginFieldList);
+            
+            // 设置选中
+            this.$refs.expectedPluginTree.setCheckedKeys(allKeys);
+            
+            // 等待 DOM 更新后，只记录叶子节点
+            this.$nextTick(() => {
+                const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
+                const leafNodeKeys = [];
+                
+                checkedNodes.forEach(node => {
+                    // 只记录叶子节点（靶道）
+                    if (!node.children || node.children.length === 0) {
+                        leafNodeKeys.push(node.idkey);
+                    }
+                });
+                
+                this.expectedPluginFoem.checkList = leafNodeKeys;
+                this.updateExportPluginSelectedCount();
+            });
+            
+            this.$message.success('已全选所有靶道');
+        },
+        
+        // 导出plugin - 反选
+        exportPluginInvertSelection() {
+            if (!this.$refs.expectedPluginTree) return;
+            
+            // 收集所有叶子节点（靶道）的key
+            const allLeafKeys = [];
+            const collectLeafKeys = (nodes) => {
+                nodes.forEach(node => {
+                    if (!node.children || node.children.length === 0) {
+                        // 这是叶子节点（靶道）
+                        allLeafKeys.push(node.idkey);
+                    } else {
+                        // 这是父节点（靶场），继续递归
+                        collectLeafKeys(node.children);
+                    }
+                });
+            };
+            collectLeafKeys(this.expectedPluginFieldList);
+            
+            // 获取当前选中的叶子节点key（使用 leafOnly=true 参数）
+            const currentCheckedLeafKeys = this.$refs.expectedPluginTree.getCheckedKeys(true);
+            
+            // 反选：所有叶子节点 - 当前选中的叶子节点
+            const invertedLeafKeys = allLeafKeys.filter(key => !currentCheckedLeafKeys.includes(key));
+            
+            // 设置反选后的结果（只设置叶子节点）
+            this.$refs.expectedPluginTree.setCheckedKeys(invertedLeafKeys);
+            
+            // 等待 DOM 更新后更新状态
+            this.$nextTick(() => {
+                this.expectedPluginFoem.checkList = invertedLeafKeys;
+                this.updateExportPluginSelectedCount();
+            });
+            
+            this.$message.success('已反选');
+        },
+        
+        // 导出plugin - 清空选择
+        exportPluginClearAll() {
+            if (!this.$refs.expectedPluginTree) return;
+            
+            this.$refs.expectedPluginTree.setCheckedKeys([]);
+            this.expectedPluginFoem.checkList = [];
+            
+            // 等待 DOM 更新后再统计
+            this.$nextTick(() => {
+                this.updateExportPluginSelectedCount();
+            });
+            
+            this.$message.info('已清空所有选择');
+        },
+        
+        // 导出plugin - 切换展开/收起
+        exportPluginToggleExpand() {
+            this.exportPluginExpandAll = !this.exportPluginExpandAll;
+            
+            // 需要重新渲染树来应用展开状态
+            if (!this.$refs.expectedPluginTree) return;
+            
+            const tree = this.$refs.expectedPluginTree;
+            const allNodes = tree.store.nodesMap;
+            
+            for (let key in allNodes) {
+                const node = allNodes[key];
+                if (node.childNodes && node.childNodes.length > 0) {
+                    node.expanded = this.exportPluginExpandAll;
                 }
             }
-
         },
         // 导出 plugins 确认
         btnExpectedPlugins() {
@@ -1299,9 +1700,26 @@ var app = new Vue({
                         a.click(); // 触发点击事件开始下载
                         // 下载完成后删除 <a> 标签
                         URL.revokeObjectURL(url); // 释放 URL 对象
-                        a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
-                    }).catch(() => {
+                        a.parentNode && a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
+                        
+                        this.$message.success('导出成功！');
+                    }).catch((error) => {
                         this.isPageLoading = false
+                        console.error('导出失败:', error);
+                        
+                        let errorMessage = '导出 plugins 失败';
+                        if (error.response) {
+                            // 服务器返回错误响应
+                            if (error.response.status === 500) {
+                                errorMessage = '服务器错误：' + (error.response.data?.message || '导出过程中发生错误');
+                            } else if (error.response.data && error.response.data.message) {
+                                errorMessage = error.response.data.message;
+                            }
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                        
+                        this.$message.error(errorMessage);
                     })
                 } else {
                     return false;
@@ -1379,16 +1797,34 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
-        copyInfo() {
-            // 找到promptOpt里面的promptid
+        copyInfo(source) {
+            let fullVersion = '';
+            let label = '';
+            
+            // 如果传入了参数，则复制对比窗口中的版本号
+            if (source === 'A' || source === 'B') {
+                const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
+                if (!prompt || !prompt.fullVersion) {
+                    this.$message.warning('无法获取版本号');
+                    return;
+                }
+                fullVersion = prompt.fullVersion;
+                label = `Prompt ${source} 版本号`;
+            } else {
+                // 否则复制当前选中的 Prompt
             if (!this.promptid) {
                 this.$message.info('请选择靶道后再复制信息！')
                 return
             }
-
             const promptItem = this.promptOpt.find(item => item.id === this.promptid)
-
-            const fullVersion = promptItem.fullVersion
+                if (!promptItem) {
+                    this.$message.warning('无法获取当前 Prompt 信息');
+                    return;
+                }
+                fullVersion = promptItem.fullVersion;
+                label = '';
+            }
+            
             // 把结果复制到剪切板
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
@@ -1398,9 +1834,10 @@ var app = new Vue({
             input.setSelectionRange(0, 9999)
             if (document.execCommand('copy')) {
                 document.execCommand('copy')
-                this.$message.success(`复制【${fullVersion}】成功`)
+                const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
+                this.$message.success(message)
             }
-            input.style.display = 'none';
+            document.body.removeChild(input);
         },
         // 格式化时间
         formatDate(d) {
@@ -1762,15 +2199,15 @@ var app = new Vue({
                         // 保存草稿
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
-                            console.log(333)
+                            //console.log(333)
                         })
                     }).catch(() => {
-                        console.log(222)
+                        //console.log(222)
                         this.resetPageData()
                     });
                     return
                 }
-                console.log(111)
+                //console.log(111)
                 // 重置页面数据
                 this.resetPageData()
             } else if (itemKey === 'promptid') {
@@ -2159,10 +2596,14 @@ var app = new Vue({
                     // 从新获取靶场列表
                     this.getPromptOptData()
                     // 重新获取输出列表
-                    this.getOutputList(item.promptId)
+                    await this.getOutputList(item.promptId)
+                    // 清除AI评分加载状态
+                    this.$set(this.robotScoreLoadingMap, item.id, false)
                     // 重新获取图表
                     this.getScoringTrendData()
                 } else {
+                    // 清除AI评分加载状态
+                    this.$set(this.robotScoreLoadingMap, item.id, false)
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
                         type: 'error',
@@ -2225,16 +2666,22 @@ var app = new Vue({
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return item
                         })
-                        this.saveManualScore(this.outputList[index])
+                        // 设置AI评分加载状态
+                        const itemId = this.outputList[index].id
+                        this.$set(this.robotScoreLoadingMap, itemId, true)
+                        this.saveManualScore(this.outputList[index], index)
                     } else {
                         this.$message({
-                            message: '请设置预期结果！',
+                            message: '请设置预 AI 评分标准',
                             type: 'warning'
                         })
                     }
                 } else {
                     // todo 接口对接 重新评分
-                    this.saveManualScore(this.outputList[index])
+                    // 设置AI评分加载状态
+                    const itemId = this.outputList[index].id
+                    this.$set(this.robotScoreLoadingMap, itemId, true)
+                    this.saveManualScore(this.outputList[index], index)
                 }
                 return
             }
@@ -2552,9 +2999,21 @@ var app = new Vue({
                 //console.log('getModelOptData:', res.data)
                 let _optList = res.data.data || []
                 this.modelOpt = _optList.map(item => {
+                    // 构建label：模型名称 + 版本号（如果有）+ 部署名称（如果有）
+                    let label = item.alias || '未命名模型';
+                    if (item.apiVersion && item.apiVersion.trim()) {
+                        label += ` v${item.apiVersion}`;
+                    }
+                    if (item.deploymentName && item.deploymentName.trim()) {
+                        label += `\n(${item.deploymentName})`;
+                    }
+                    
                     return {
                         ...item,
-                        label: item.alias,
+                        label: label,
+                        displayName: item.alias,  // 保留原始名称用于其他地方显示
+                        deploymentDisplay: item.deploymentName, // 保留部署名称
+                        apiVersion: item.apiVersion, // 保留版本号
                         value: item.id,
                         disabled: false
                     }
@@ -3070,6 +3529,949 @@ var app = new Vue({
             } catch (err) {
                 console.error('Oops, unable to copy', err);
             }  
+        },
+        // 自定义滚动条缩略图相关方法
+        handleResultScroll(event) {
+            const el = event.target;
+            this.scrollInfo = {
+                scrollTop: el.scrollTop,
+                scrollHeight: el.scrollHeight,
+                clientHeight: el.clientHeight
+            };
+        },
+        getThumbnailStyle(index) {
+            const container = document.getElementById('resultBox');
+            if (!container || !this.outputList || this.outputList.length === 0) {
+                return {};
+            }
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || items.length === 0) return {};
+            
+            const totalHeight = container.scrollHeight;
+            const trackHeight = container.clientHeight;
+            
+            // 计算每个item的相对位置
+            let totalItemsHeight = 0;
+            let currentTop = 0;
+            
+            for (let i = 0; i < items.length; i++) {
+                totalItemsHeight += items[i].offsetHeight;
+                if (i < index) {
+                    currentTop += items[i].offsetHeight;
+                }
+            }
+            
+            const currentHeight = items[index] ? items[index].offsetHeight : 30;
+            
+            // 计算在缩略图轨道中的位置（按比例）
+            const top = (currentTop / totalHeight) * trackHeight;
+            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); // 最小20px
+            
+            return {
+                top: top + 'px',
+                height: height + 'px'
+            };
+        },
+        isResultInView(index) {
+            const container = document.getElementById('resultBox');
+            if (!container) return false;
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || !items[index]) return false;
+            
+            const item = items[index];
+            const containerRect = container.getBoundingClientRect();
+            const itemRect = item.getBoundingClientRect();
+            
+            // 判断item是否在可视区域内
+            return itemRect.top >= containerRect.top && 
+                   itemRect.top <= containerRect.bottom;
+        },
+        getViewportStyle() {
+            const container = document.getElementById('resultBox');
+            if (!container) return {};
+            
+            const scrollTop = this.scrollInfo.scrollTop;
+            const scrollHeight = this.scrollInfo.scrollHeight;
+            const clientHeight = this.scrollInfo.clientHeight;
+            
+            if (scrollHeight === 0) return {};
+            
+            const trackHeight = clientHeight;
+            const viewportTop = (scrollTop / scrollHeight) * trackHeight;
+            const viewportHeight = (clientHeight / scrollHeight) * trackHeight;
+            
+            return {
+                top: viewportTop + 'px',
+                height: viewportHeight + 'px'
+            };
+        },
+        scrollToResult(index) {
+            const container = document.getElementById('resultBox');
+            if (!container) return;
+            
+            const items = container.querySelectorAll('.contentBoxItem');
+            if (!items || !items[index]) return;
+            
+            items[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.outputSelectSwitch(index);
+        },
+        formatTime(timeStr) {
+            // 提取时间部分，例如 "2024-01-01 10:30:45" => "10:30"
+            if (!timeStr) return '';
+            const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
+            return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
+        },
+        // 获取最终评分（使用系统的finalScore字段）
+        getFinalScore(item) {
+            if (!item) return null;
+            // 直接使用系统的finalScore字段，这是被标记为红色的那个分数
+            if (item.finalScore !== undefined && item.finalScore !== null && 
+                item.finalScore !== -1 && item.finalScore !== '-1') {
+                return item.finalScore;
+            }
+            return null;
+        },
+        // 获取评分等级的样式类
+        getScoreBarClass(item) {
+            const score = this.getFinalScore(item);
+            if (score === null) return '';
+            
+            if (score >= 8) return 'score-excellent';      // 8-10分：优秀
+            if (score >= 6) return 'score-good';           // 6-8分：良好
+            if (score >= 4) return 'score-medium';         // 4-6分：中等
+            if (score >= 2) return 'score-low';            // 2-4分：较低
+            return 'score-poor';                           // 0-2分：差
+        },
+        // 获取数据条的宽度样式（Excel风格）
+        getScoreBarStyle(item) {
+            const score = this.getFinalScore(item);
+            if (score === null) return { width: '0%' };
+            
+            // 0-10分映射到0-100%
+            const percentage = Math.min(Math.max((score / 10) * 100, 0), 100);
+            return {
+                width: percentage + '%'
+            };
+        },
+        // 获取缩略图的工具提示文本
+        getThumbnailTooltip(item) {
+            if (!item) return '';
+            
+            let tooltip = item.addTime;
+            const score = this.getFinalScore(item);
+            
+            if (score !== null) {
+                // 判断finalScore等于哪个评分，那个就是最终评分类型
+                let scoreType = '';
+                if (item.finalScore === item.humanScore) {
+                    scoreType = '手动评分';
+                } else if (item.finalScore === item.robotScore) {
+                    scoreType = 'AI评分';
+                } else {
+                    scoreType = '最终评分';
+                }
+                tooltip += `\n${scoreType}: ${score.toFixed(1)}分`;
+            }
+            
+            return tooltip;
+        },
+        // 处理输出区域的鼠标移动事件 - 判断是否在右半侧
+        handleOutputAreaMouseMove(event) {
+            const outputArea = event.currentTarget;
+            const rect = outputArea.getBoundingClientRect();
+            const mouseX = event.clientX;
+            
+            // 计算鼠标相对于输出区域的位置
+            const relativeX = mouseX - rect.left;
+            const halfWidth = rect.width / 2;
+            
+            // 只在右半侧显示滚动条
+            if (relativeX > halfWidth) {
+                this.showScrollbarThumbnails = true;
+            } else {
+                this.showScrollbarThumbnails = false;
+            }
+        },
+        // 处理鼠标离开输出区域
+        handleOutputAreaMouseLeave() {
+            this.showScrollbarThumbnails = false;
+        },
+        
+        // ========== 区域宽度拖动调整功能 ==========
+        
+        // 从localStorage加载保存的宽度设置
+        loadAreaWidthsFromStorage() {
+            try {
+                const savedLeftWidth = localStorage.getItem('promptPage_leftAreaWidth');
+                const savedCenterWidth = localStorage.getItem('promptPage_centerAreaWidth');
+                
+                if (savedLeftWidth) {
+                    const width = parseInt(savedLeftWidth);
+                    if (width >= 280 && width <= 600) {
+                        this.leftAreaWidth = width;
+                    }
+                }
+                
+                if (savedCenterWidth) {
+                    const width = parseInt(savedCenterWidth);
+                    if (width >= 320 && width <= 800) {
+                        this.centerAreaWidth = width;
+                    }
+                }
+            } catch (e) {
+                console.error('加载区域宽度设置失败:', e);
+            }
+        },
+        
+        // 保存宽度设置到localStorage
+        saveAreaWidthsToStorage() {
+            try {
+                localStorage.setItem('promptPage_leftAreaWidth', this.leftAreaWidth);
+                localStorage.setItem('promptPage_centerAreaWidth', this.centerAreaWidth);
+            } catch (e) {
+                console.error('保存区域宽度设置失败:', e);
+            }
+        },
+        
+        // 开始拖动左侧分隔条
+        startResizeLeft(event) {
+            this.isResizing = true;
+            this.resizeType = 'left';
+            this.resizeStartX = event.clientX;
+            this.resizeStartLeftWidth = this.leftAreaWidth;
+            
+            document.addEventListener('mousemove', this.handleResize);
+            document.addEventListener('mouseup', this.stopResize);
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            
+            event.preventDefault();
+        },
+        
+        // 开始拖动右侧分隔条
+        startResizeRight(event) {
+            this.isResizing = true;
+            this.resizeType = 'right';
+            this.resizeStartX = event.clientX;
+            this.resizeStartCenterWidth = this.centerAreaWidth;
+            
+            document.addEventListener('mousemove', this.handleResize);
+            document.addEventListener('mouseup', this.stopResize);
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            
+            event.preventDefault();
+        },
+        
+        // 处理拖动
+        handleResize(event) {
+            if (!this.isResizing) return;
+            
+            const deltaX = event.clientX - this.resizeStartX;
+            
+            if (this.resizeType === 'left') {
+                // 调整左侧区域宽度
+                let newWidth = this.resizeStartLeftWidth + deltaX;
+                newWidth = Math.max(280, Math.min(600, newWidth)); // 限制在280-600px之间
+                this.leftAreaWidth = newWidth;
+            } else if (this.resizeType === 'right') {
+                // 调整中间区域宽度
+                let newWidth = this.resizeStartCenterWidth + deltaX;
+                newWidth = Math.max(320, Math.min(800, newWidth)); // 限制在320-800px之间
+                this.centerAreaWidth = newWidth;
+            }
+            
+            event.preventDefault();
+        },
+        
+        // 停止拖动
+        stopResize() {
+            if (this.isResizing) {
+                this.isResizing = false;
+                this.resizeType = null;
+                
+                document.removeEventListener('mousemove', this.handleResize);
+                document.removeEventListener('mouseup', this.stopResize);
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                
+                // 保存当前宽度设置
+                this.saveAreaWidthsToStorage();
+            }
+        },
+        
+        // 双击分隔条还原默认宽度
+        resetAreaWidths(event) {
+            // 恢复默认宽度
+            this.leftAreaWidth = 360;
+            this.centerAreaWidth = 380;
+            
+            // 清除localStorage中保存的设置
+            try {
+                localStorage.removeItem('promptPage_leftAreaWidth');
+                localStorage.removeItem('promptPage_centerAreaWidth');
+            } catch (e) {
+                console.error('清除区域宽度设置失败:', e);
+            }
+            
+            // 添加视觉反馈动画
+            if (event && event.target) {
+                event.target.classList.add('reset-animation');
+                setTimeout(() => {
+                    event.target.classList.remove('reset-animation');
+                }, 600);
+            }
+            
+            // 显示提示消息
+            this.$message({
+                message: '已还原为默认布局宽度',
+                type: 'success',
+                duration: 2000
+            });
+        },
+        
+        // ========== Prompt 对比功能 ==========
+        
+        // 打开对比对话框（可选预设Prompt A）
+        openCompareDialog(event, item) {
+            // 阻止事件冒泡，防止触发el-select的下拉
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            // Prompt A 应该是当前已经选中显示的 Prompt
+            // Prompt B 是点击"对比"按钮的对应 Prompt
+            if (this.promptid) {
+                this.comparePromptAId = this.promptid;
+                this.loadComparePromptA(this.promptid);
+            }
+            
+            // 如果传入了item，则将其设置为Prompt B
+            // item.value 是 el-option 的值，对应 Prompt 的 ID
+            if (item && item.value) {
+                this.comparePromptBId = item.value;
+                this.loadComparePromptB(item.value);
+            }
+            
+            // 打开对话框
+            this.compareDialogVisible = true;
+        },
+        
+        // 加载对比Prompt A的数据
+        async loadComparePromptA(id) {
+            if (!id) {
+                this.comparePromptA = null;
+                return;
+            }
+            
+            try {
+                const data = await this.getPromptDetail(id);
+                this.comparePromptA = data;
+                
+                // 检查是否选择了同一个Prompt
+                if (this.comparePromptBId && id === this.comparePromptBId) {
+                    this.$message({
+                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        type: 'warning',
+                        duration: 3000
+                    });
+                }
+            } catch (error) {
+                console.error('加载Prompt A失败:', error);
+                this.$message({
+                    message: '加载Prompt A数据失败',
+                    type: 'error',
+                    duration: 3000
+                });
+                this.comparePromptA = null;
+            }
+        },
+        
+        // 加载对比Prompt B的数据
+        async loadComparePromptB(id) {
+            if (!id) {
+                this.comparePromptB = null;
+                return;
+            }
+            
+            try {
+                const data = await this.getPromptDetail(id);
+                this.comparePromptB = data;
+                
+                // 检查是否选择了同一个Prompt
+                if (this.comparePromptAId && id === this.comparePromptAId) {
+                    this.$message({
+                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        type: 'warning',
+                        duration: 3000
+                    });
+                }
+            } catch (error) {
+                console.error('加载Prompt B失败:', error);
+                this.$message({
+                    message: '加载Prompt B数据失败',
+                    type: 'error',
+                    duration: 3000
+                });
+                this.comparePromptB = null;
+            }
+        },
+        
+        // 获取单个Prompt的详细信息
+        async getPromptDetail(id) {
+            const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`);
+            
+            if (res.data.success) {
+                return res.data.data;
+            } else {
+                throw new Error(res.data.errorMessage || '获取Prompt详情失败');
+            }
+        },
+        
+        // 交换Prompt A和B
+        swapComparePrompts() {
+            // 交换ID
+            const tempId = this.comparePromptAId;
+            this.comparePromptAId = this.comparePromptBId;
+            this.comparePromptBId = tempId;
+            
+            // 交换数据
+            const tempData = this.comparePromptA;
+            this.comparePromptA = this.comparePromptB;
+            this.comparePromptB = tempData;
+        },
+        
+        // 检查评分是否存在
+        hasScore(score) {
+            return score !== null && score !== undefined && score > -1;
+        },
+        
+        // 获取前缀（从variablesJson解析或返回空）
+        getPromptPrefix(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.variablesJson) return '';
+            
+            try {
+                const vars = JSON.parse(prompt.variablesJson);
+                return vars.prefix || '';
+            } catch (e) {
+                return '';
+            }
+        },
+        
+        // 获取后缀（从variablesJson解析或返回空）
+        getPromptSuffix(side) {
+            const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
+            if (!prompt || !prompt.variablesJson) return '';
+            
+            try {
+                const vars = JSON.parse(prompt.variablesJson);
+                return vars.suffix || '';
+            } catch (e) {
+                return '';
+            }
+        },
+        
+        // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
+        async switchToPrompt(promptId) {
+            if (!promptId) {
+                this.$message({
+                    message: '无效的Prompt ID',
+                    type: 'warning',
+                    duration: 2000
+                });
+                return;
+            }
+            
+            try {
+                // 1. 先获取完整的Prompt数据
+                const promptData = await this.getPromptDetail(promptId);
+                
+                if (!promptData) {
+                    throw new Error('无法获取Prompt详细信息');
+                }
+                
+                // 2. 从fullVersion解析靶场名称（格式: 靶场-靶道-战术）
+                const versionParts = promptData.fullVersion ? promptData.fullVersion.split('-') : [];
+                const targetRangeName = versionParts[0];
+                
+                // 3. 查找对应的靶场ID
+                const targetRange = this.promptFieldOpt.find(item => 
+                    item.label === targetRangeName || item.rangeName === targetRangeName
+                );
+                
+                if (!targetRange) {
+                    throw new Error(`未找到对应的靶场: ${targetRangeName}`);
+                }
+                
+                // 4. 关闭对比对话框（先关闭，避免干扰后续操作）
+                this.compareDialogVisible = false;
+                
+                // 5. 重置 pageChange 标记，避免触发"是否保存草稿"的确认对话框
+                this.pageChange = false;
+                
+                // 6. 检查是否需要切换靶场
+                const needSwitchRange = this.promptField !== targetRange.value;
+                
+                if (needSwitchRange) {
+                    // 切换靶场（这会触发promptOpt的更新）
+                    this.promptField = targetRange.value;
+                    await this.promptChangeHandel(targetRange.value, 'promptField');
+                    
+                    // 等待promptOpt更新完成
+                    await this.$nextTick();
+                }
+                
+                // 7. 在promptOpt中查找对应的Prompt
+                // 注意：promptOpt中的item.value才是正确的promptid
+                const targetPrompt = this.promptOpt.find(item => 
+                    item.id === promptId || item.value === promptId || item.idkey === promptId
+                );
+                
+                if (!targetPrompt) {
+                    throw new Error('在当前靶场中未找到对应的Prompt');
+                }
+                
+                // 8. 设置正确的promptid（这会触发el-select的v-model更新）
+                // 重要：再次确保 pageChange = false，因为切换靶场可能会触发它
+                this.pageChange = false;
+                this.promptid = targetPrompt.value || targetPrompt.id;
+                
+                // 9. 手动触发 promptChangeHandel，完全模拟用户点击靶道下拉选择
+                // 这会：
+                //   - 更新 sendBtns（根据是否是草稿）
+                //   - 清空 AI 评分标准
+                //   - 调用 getPromptetail 获取完整详情（包括输出列表、评分、图表等）
+                await this.promptChangeHandel(this.promptid, 'promptid');
+                
+                // 10. 显示成功提示
+                this.$message({
+                    message: `已切换到 Prompt: ${promptData.fullVersion}`,
+                    type: 'success',
+                    duration: 2000
+                });
+                
+            } catch (error) {
+                console.error('切换Prompt失败:', error);
+                this.$message({
+                    message: error.message || '切换Prompt失败，请重试',
+                    type: 'error',
+                    duration: 3000
+                });
+            }
+        },
+        
+        // 检查字段是否有差异
+        hasFieldDiff(fieldA, fieldB) {
+            // 处理null/undefined情况
+            if (fieldA === fieldB) return false;
+            if ((fieldA === null || fieldA === undefined) && (fieldB === null || fieldB === undefined)) return false;
+            
+            // 如果是对象或数组，进行深度比较
+            if (typeof fieldA === 'object' && typeof fieldB === 'object') {
+                return JSON.stringify(fieldA) !== JSON.stringify(fieldB);
+            }
+            
+            return fieldA !== fieldB;
+        },
+        
+        // 格式化变量配置（从JSON字符串转为可读格式）
+        formatVariables(variablesJson) {
+            if (!variablesJson) return '无';
+            try {
+                const vars = JSON.parse(variablesJson);
+                if (Object.keys(vars).length === 0) return '无';
+                return Object.entries(vars).map(([key, value]) => `${key}: ${value}`).join('\n');
+            } catch (e) {
+                return variablesJson;
+            }
+        },
+        
+        // 生成Git风格的Prompt内容差异HTML
+        getContentDiffHtml(side) {
+            const contentA = this.comparePromptA?.promptContent || '';
+            const contentB = this.comparePromptB?.promptContent || '';
+            
+            // 如果都为空
+            if (!contentA && !contentB) {
+                return '<span class="diff-empty">暂无内容</span>';
+            }
+            
+            // 如果只有一个为空
+            if (!contentA && side === 'A') {
+                return '<span class="diff-empty">暂无内容</span>';
+            }
+            if (!contentB && side === 'B') {
+                return '<span class="diff-empty">暂无内容</span>';
+            }
+            
+            // 如果内容相同
+            if (contentA === contentB) {
+                return this.escapeHtml(side === 'A' ? contentA : contentB);
+            }
+            
+            // 使用jsdiff库进行差异对比
+            if (typeof Diff !== 'undefined') {
+                const diff = Diff.diffLines(contentA, contentB);
+                return this.renderDiffHtml(diff, side);
+            }
+            
+            // 如果diff库未加载，返回原始内容
+            return this.escapeHtml(side === 'A' ? contentA : contentB);
+        },
+        
+        // 生成Git风格的变量配置差异HTML
+        getVariablesDiffHtml(side) {
+            const varsA = this.comparePromptA?.variablesJson || '{}';
+            const varsB = this.comparePromptB?.variablesJson || '{}';
+            
+            // 格式化JSON以便对比
+            let formattedA = varsA;
+            let formattedB = varsB;
+            try {
+                formattedA = JSON.stringify(JSON.parse(varsA), null, 2);
+            } catch (e) {
+                // 保持原样
+            }
+            try {
+                formattedB = JSON.stringify(JSON.parse(varsB), null, 2);
+            } catch (e) {
+                // 保持原样
+            }
+            
+            // 如果内容相同
+            if (formattedA === formattedB) {
+                return this.escapeHtml(side === 'A' ? formattedA : formattedB);
+            }
+            
+            // 使用jsdiff库进行差异对比
+            if (typeof Diff !== 'undefined') {
+                const diff = Diff.diffLines(formattedA, formattedB);
+                return this.renderDiffHtml(diff, side);
+            }
+            
+            // 如果diff库未加载，返回原始内容
+            return this.escapeHtml(side === 'A' ? formattedA : formattedB);
+        },
+        
+        // 渲染差异HTML（Git风格，支持行内单词高亮）
+        renderDiffHtml(diff, side) {
+            let html = '';
+            let i = 0;
+            
+            while (i < diff.length) {
+                const part = diff[i];
+                const lines = part.value.split('\n');
+                // 移除最后的空行
+                if (lines[lines.length - 1] === '') {
+                    lines.pop();
+                }
+                
+                // 检查是否是相邻的删除和新增（可以做行内diff）
+                const nextPart = i + 1 < diff.length ? diff[i + 1] : null;
+                const isInlineDiffCandidate = 
+                    part.removed && 
+                    nextPart && 
+                    nextPart.added && 
+                    lines.length === 1 && 
+                    nextPart.value.split('\n').filter(l => l).length === 1;
+                
+                if (isInlineDiffCandidate) {
+                    // 行内单词级别差异
+                    const oldLine = lines[0];
+                    const newLine = nextPart.value.split('\n').filter(l => l)[0];
+                    
+                    if (side === 'A') {
+                        html += `<span class="diff-line diff-modified">- ${this.renderInlineDiff(oldLine, newLine, 'removed')}</span>`;
+                    } else {
+                        html += `<span class="diff-line diff-modified">+ ${this.renderInlineDiff(oldLine, newLine, 'added')}</span>`;
+                    }
+                    
+                    i += 2; // 跳过下一个part（因为已经处理了）
+                } else {
+                    // 常规的整行差异
+                    lines.forEach((line, lineIndex) => {
+                        if (part.added) {
+                            // 新增的内容（绿色背景）- 仅在B侧显示
+                            if (side === 'B') {
+                                html += `<span class="diff-line diff-added">+ ${this.escapeHtml(line)}</span>`;
+                            }
+                            // A侧不显示新增内容
+                        } else if (part.removed) {
+                            // 删除的内容（红色背景）- 仅在A侧显示
+                            if (side === 'A') {
+                                html += `<span class="diff-line diff-removed">- ${this.escapeHtml(line)}</span>`;
+                            }
+                            // B侧不显示删除内容
+                        } else {
+                            // 未修改的内容（灰色）
+                            html += `<span class="diff-line diff-unchanged">  ${this.escapeHtml(line)}</span>`;
+                        }
+                    });
+                    i++;
+                }
+            }
+            
+            return html || '<span class="diff-empty">暂无内容</span>';
+        },
+        
+        // 渲染行内单词级别差异
+        renderInlineDiff(oldText, newText, mode) {
+            if (typeof Diff === 'undefined' || !Diff.diffWords) {
+                return this.escapeHtml(mode === 'removed' ? oldText : newText);
+            }
+            
+            const wordDiff = Diff.diffWords(oldText, newText);
+            let html = '';
+            
+            wordDiff.forEach(part => {
+                const escapedText = this.escapeHtml(part.value);
+                
+                if (mode === 'removed') {
+                    // A侧：高亮删除的单词
+                    if (part.removed) {
+                        html += `<mark class="diff-word-removed">${escapedText}</mark>`;
+                    } else if (!part.added) {
+                        html += escapedText;
+                    }
+                } else {
+                    // B侧：高亮新增的单词
+                    if (part.added) {
+                        html += `<mark class="diff-word-added">${escapedText}</mark>`;
+                    } else if (!part.removed) {
+                        html += escapedText;
+                    }
+                }
+            });
+            
+            return html;
+        },
+        
+        // HTML转义工具函数
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        },
+        
+        // ========== contenteditable编辑器方法 ==========
+        
+        // 编辑器聚焦事件
+        onEditorFocus() {
+            this.isUserEditing = true;
+        },
+        
+        // 编辑器输入事件
+        onEditorInput(e) {
+            // 如果正在使用输入法，不处理
+            if (this.isComposing) return;
+            
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            this.isUserEditing = true;
+            this.content = this.getPlainText(editor);
+            
+            // 使用防抖延迟更新高亮（避免打断输入）
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 1500);  // 延长到1.5秒
+        },
+        
+        // 编辑器按键松开事件
+        onEditorKeyup(e) {
+            // 如果正在使用输入法，不处理
+            if (this.isComposing) return;
+            
+            // 使用防抖延迟高亮更新（1秒后更新，避免打断输入）
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 1000);
+        },
+        
+        // 输入法结束事件
+        onCompositionEnd(e) {
+            this.isComposing = false;
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            this.isUserEditing = true;
+            this.content = this.getPlainText(editor);
+            
+            // 输入法结束后延迟更新高亮
+            setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 100);
+        },
+        
+        // 编辑器失焦事件
+        onEditorBlur() {
+            // 清除定时器
+            if (this._highlightTimer) {
+                clearTimeout(this._highlightTimer);
+                this._highlightTimer = null;
+            }
+            
+            this.isUserEditing = false;
+            const editor = this.$refs.promptEditor;
+            if (editor) {
+                this.content = this.getPlainText(editor);
+                // 失焦时更新高亮
+                this.updateHighlightWithCaret();
+            }
+            
+            this.promptChangeHandel(this.content, 'content');
+        },
+        
+        // 更新高亮并保存/恢复光标位置
+        updateHighlightWithCaret() {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 保存光标位置
+            const sel = window.getSelection();
+            let charOffset = 0;
+            if (sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(editor);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                charOffset = preCaretRange.toString().length;
+            }
+            
+            // 重新渲染高亮HTML
+            editor.innerHTML = this.highlightedHTML;
+            
+            // 恢复光标位置
+            this.$nextTick(() => {
+                this.restoreCaret(editor, charOffset);
+                // 重新聚焦编辑器（如果之前有焦点）
+                if (this.isUserEditing && document.activeElement !== editor) {
+                    editor.focus();
+                }
+            });
+        },
+        
+        // 编辑器粘贴事件（只粘贴纯文本）
+        onEditorPaste(e) {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            document.execCommand('insertText', false, text);
+        },
+        
+        // 从contenteditable元素提取纯文本
+        getPlainText(element) {
+            let text = '';
+            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+            
+            for (let i = 0; i < element.childNodes.length; i++) {
+                const node = element.childNodes[i];
+                
+                if (node.nodeType === Node.TEXT_NODE) {
+                    text += node.textContent;
+                } else if (node.nodeName === 'BR') {
+                    text += '\n';
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 块级元素前面（如果不是第一个元素）添加换行
+                    if (blockElements.includes(node.nodeName) && i > 0) {
+                        text += '\n';
+                    }
+                    
+                    // 递归处理子节点
+                    text += this.getPlainText(node);
+                }
+            }
+            return text;
+        },
+        
+        // 恢复光标位置
+        restoreCaret(element, charOffset) {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            let currentOffset = 0;
+            let found = false;
+            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+            
+            const findPosition = (node, parentIndex = 0) => {
+                if (found) return;
+                
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    if (found) return;
+                    
+                    const child = node.childNodes[i];
+                    
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        const nextOffset = currentOffset + child.length;
+                        if (charOffset >= currentOffset && charOffset <= nextOffset) {
+                            range.setStart(child, charOffset - currentOffset);
+                            range.collapse(true);
+                            found = true;
+                            return;
+                        }
+                        currentOffset = nextOffset;
+                    } else if (child.nodeName === 'BR') {
+                        // BR算作一个换行符
+                        if (charOffset === currentOffset) {
+                            range.setStartBefore(child);
+                            range.collapse(true);
+                            found = true;
+                            return;
+                        }
+                        currentOffset += 1;
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        // 块级元素算作换行（如果不是第一个元素）
+                        if (blockElements.includes(child.nodeName) && i > 0) {
+                            if (charOffset === currentOffset) {
+                                range.setStartBefore(child);
+                                range.collapse(true);
+                                found = true;
+                                return;
+                            }
+                            currentOffset += 1;
+                        }
+                        
+                        // 递归处理子节点
+                        findPosition(child, i);
+                    }
+                }
+            };
+            
+            findPosition(element);
+            
+            if (found) {
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        },
+        
+        // 辅助方法：根据ID获取名称
+        getTargetRangeName(id) {
+            if (!this.promptFieldOpt || !id) return '未知靶场';
+            const range = this.promptFieldOpt.find(item => item.value === id);
+            return range ? range.label : '未知靶场';
+        },
+        
+        getTargetLaneName(id) {
+            if (!this.promptOpt || !id) return '未知靶道';
+            // 从promptOpt中查找对应的靶道
+            const lane = this.promptOpt.find(item => item.idkey === id);
+            return lane ? (lane.nickName || lane.label) : '未知靶道';
+        },
+        
+        getTacticalName(id) {
+            if (!this.tacticalOpt || !id) return '未知战术';
+            const tactical = this.tacticalOpt.find(item => item.value === id);
+            return tactical ? tactical.label : '未知战术';
+        },
+        
+        getModelName(id) {
+            if (!this.modelOpt || !id) return '未知模型';
+            const model = this.modelOpt.find(item => item.value === id);
+            return model ? model.label : '未知模型';
         }
     }
 });

@@ -1,0 +1,171 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+             xmlns:controls="using:NcfDesktopApp.GUI.Views.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NcfDesktopApp.GUI.Views.BrowserView"
+             x:DataType="vm:MainWindowViewModel">
+    
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- 顶部工具栏 -->
+        <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="0,0,0,1" Padding="10">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                
+                <!-- 导航按钮 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                    <Button Name="BackButton" 
+                            Content="←" 
+                            Width="30" Height="30" 
+                            FontSize="16" FontWeight="Bold"
+                            ToolTip.Tip="后退"
+                            Click="BackButton_Click"/>
+                    <Button Name="ForwardButton" 
+                            Content="→" 
+                            Width="30" Height="30" 
+                            FontSize="16" FontWeight="Bold"
+                            ToolTip.Tip="前进"
+                            Click="ForwardButton_Click"/>
+                    <Button Name="RefreshButton" 
+                            Content="↻" 
+                            Width="30" Height="30" 
+                            FontSize="16" FontWeight="Bold"
+                            ToolTip.Tip="刷新"
+                            Click="RefreshButton_Click"/>
+                </StackPanel>
+                
+                <!-- URL输入框和打开按钮 -->
+                <Border Grid.Column="1" 
+                        Background="{DynamicResource InputBackgroundBrush}" 
+                        BorderBrush="{DynamicResource InputBorderBrush}" 
+                        BorderThickness="1" 
+                        CornerRadius="4" 
+                        Margin="10,0">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Name="UrlTextBox" 
+                                 Grid.Column="0"
+                                 Text="{Binding SiteUrl, Mode=OneWay}" 
+                                 FontFamily="Consolas" 
+                                 FontSize="12"
+                                 Foreground="{DynamicResource InputTextBrush}"
+                                 VerticalAlignment="Center"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Padding="8,5"
+                                 Watermark="输入 URL 地址..."
+                                 KeyDown="UrlTextBox_KeyDown"
+                                 ToolTip.Tip="输入 URL 并按 Enter 导航"/>
+                        <Button Name="GoButton"
+                                Grid.Column="1"
+                                Content="→"
+                                Width="30"
+                                Height="26"
+                                Margin="0,2,2,2"
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Background="#007BFF"
+                                Foreground="White"
+                                CornerRadius="3"
+                                ToolTip.Tip="打开"
+                                Click="GoButton_Click"/>
+                    </Grid>
+                </Border>
+                
+                <!-- 状态指示器 -->
+                <Border Grid.Column="2" 
+                        Background="{Binding StatusColor}" 
+                        CornerRadius="10" 
+                        Width="20" Height="20" 
+                        Margin="0,0,10,0"
+                        ToolTip.Tip="{Binding CurrentStatus}">
+                    <TextBlock Text="●" 
+                               Foreground="White" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" 
+                               FontSize="12"/>
+                </Border>
+                
+                <!-- 关闭标签按钮 -->
+                <Button Grid.Column="3" 
+                        Content="✕" 
+                        Width="30" Height="30" 
+                        FontSize="14"
+                        FontWeight="Bold"
+                        ToolTip.Tip="关闭标签页"
+                        Background="#DC3545"
+                        Foreground="White"
+                        CornerRadius="4"
+                        Margin="0,0,5,0"
+                        Command="{Binding CloseBrowserTabCommand}"/>
+                
+                <!-- 设置按钮 -->
+                <Button Grid.Column="4" 
+                        Content="⚙" 
+                        Width="30" Height="30" 
+                        FontSize="16"
+                        ToolTip.Tip="打开设置"
+                        Command="{Binding SwitchToSettingsCommand}"/>
+            </Grid>
+        </Border>
+        
+        <!-- 浏览器内容区域 -->
+        <Border Grid.Row="1" Background="{DynamicResource ContentBackgroundBrush}">
+            <Grid>
+                <!-- 加载状态覆盖层 -->
+                <Border Name="LoadingOverlay" 
+                        Background="{DynamicResource ContentBackgroundBrush}" 
+                        IsVisible="{Binding !IsBrowserReady}">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Spacing="20">
+                        <TextBlock Text="🌐" 
+                                   FontSize="48" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="正在准备浏览器..." 
+                                   FontSize="16" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="200" 
+                                     Height="4"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- 内嵌浏览器控件 -->
+                <controls:EmbeddedWebView Name="WebViewControl"
+                                       Source="{Binding SiteUrl}"
+                                       IsVisible="{Binding IsBrowserReady}"/>
+                
+                <!-- 错误状态显示 -->
+                <Border Name="ErrorOverlay" 
+                        Background="{DynamicResource ContentBackgroundBrush}" 
+                        IsVisible="{Binding HasBrowserError}">
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Spacing="15">
+                        <TextBlock Text="⚠️" 
+                                   FontSize="48" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="浏览器加载失败" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#DC3545"/>
+                        <TextBlock Text="{Binding BrowserErrorMessage}" 
+                                   FontSize="14" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="400"/>
+                        <Button Content="重试" 
+                                Command="{Binding RetryBrowserCommand}"
+                                HorizontalAlignment="Center"
+                                Padding="20,8"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl> 

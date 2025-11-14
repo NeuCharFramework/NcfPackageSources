@@ -100,7 +100,7 @@ namespace Senparc.Xncf.SystemCore
             //SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
 
             BasePoolEntities basePoolEntities = serviceProvider.GetService<BasePoolEntities>();
-
+            var currentInstallState = SiteConfig.IsInstalling;
             try
             {
                 SiteConfig.IsInstalling = true;
@@ -131,7 +131,7 @@ namespace Senparc.Xncf.SystemCore
             }
             finally
             {
-                SiteConfig.IsInstalling = false;
+                SiteConfig.IsInstalling = currentInstallState;
             }
 
             return (success, msg);

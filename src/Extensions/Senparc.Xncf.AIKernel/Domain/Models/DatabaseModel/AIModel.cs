@@ -36,7 +36,6 @@ namespace Senparc.Xncf.AIKernel.Models
         [MaxLength(150)]
         public string DeploymentName { get; private set; }
 
-
         /// <summary>
         /// Endpoint（可选）
         /// </summary>
@@ -115,39 +114,28 @@ namespace Senparc.Xncf.AIKernel.Models
             ModelId = modelId;
             ConfigModelType = configModelType;
         }
-
-        // public AIModel(AIModelDto llmModelDto)
-        // {
-        //     Alias = llmModelDto.Alias;
-        //     DeploymentName = llmModelDto.DeploymentName;
-        //     Endpoint = llmModelDto.Endpoint;
-        //     AiPlatform = llmModelDto.AiPlatform;
-        //     OrganizationId = llmModelDto.OrganizationId;
-        //     ApiKey = llmModelDto.ApiKey;
-        //     ApiVersion = llmModelDto.ApiVersion;
-        //     Note = llmModelDto.Note;
-        //     MaxToken = llmModelDto.MaxToken;
-        //
-        //     Show = true;
-        //     IsShared = false;
-        //
-        //     // TextCompletionModelName = llmModelDto.TextCompletionModelName;
-        //     // TextEmbeddingModelName = llmModelDto.TextEmbeddingModelName;
-        //     // OtherModelName = llmModelDto.OtherModelName;
-        // }
-
         public AIModel(AIModel_CreateOrEditRequest orEditRequest) : this(orEditRequest.DeploymentName, orEditRequest.Endpoint,
             orEditRequest.AiPlatform, orEditRequest.OrganizationId, orEditRequest.ApiKey, orEditRequest.ApiVersion, orEditRequest.Note,
             orEditRequest.MaxToken, orEditRequest.Alias, orEditRequest.ModelId,orEditRequest.ConfigModelType)
         {
         }
 
+        /// <summary>
+        /// 切换模型可见状态
+        /// </summary>
+        /// <param name="show"></param>
+        /// <returns></returns>
         public AIModel SwitchShow(bool show)
         {
             Show = show;
             return this;
         }
 
+        /// <summary>
+        /// 更新模型
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public AIModel Update(AIModel_CreateOrEditRequest request)
         {
             ModelId = request.ModelId;
@@ -165,15 +153,5 @@ namespace Senparc.Xncf.AIKernel.Models
             SwitchShow(request.Show);
             return this;
         }
-
-        //public string GetModelId()
-        //{
-        //    if (string.IsNullOrWhiteSpace(this.DeploymentName))
-        //    {
-        //        return "text-davinci-003";
-        //    }
-
-        //    return this.DeploymentName.Contains("azure") ? this.DeploymentName.Substring("azure-".Length) : this.DeploymentName;
-        //}
     }
 }

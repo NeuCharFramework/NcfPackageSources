@@ -136,6 +136,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("McpEndpoints")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");

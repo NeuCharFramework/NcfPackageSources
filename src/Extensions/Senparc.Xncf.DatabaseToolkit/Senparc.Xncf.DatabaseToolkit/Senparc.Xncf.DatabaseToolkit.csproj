@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.24.6.2-preview1</Version>
+    <Version>0.24.12-preview.1</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -38,7 +38,12 @@
 			[2024-11-08] v0.23.11-preview1 升级 Senparc.AI
 			[2024-12-27] v0.24.2-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.24.6-preview1 Update Agents functions, support for function calling
-</PackageReleaseNotes>
+			[2025-04-29] v0.24.8-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.24.9-preview1 Update Installation
+			[2025-06-20] v0.24.10-preview1 Add MCP functions in XncfRegisterBase class
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -75,7 +80,7 @@
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.0.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.4" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>

@@ -20,9 +20,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using ModelContextProtocol.Server;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
+    [McpServerToolType]
     public partial class BuildXncfAppService : AppServiceBase
     {
 
@@ -44,7 +48,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// 执行模板生成
         /// </summary>
         /// <returns></returns>
-        private string BuildSample(BuildXncf_BuildRequest request, AppServiceLogger logger)
+        private async Task<string> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
             var oldOutputEncoding = Console.OutputEncoding;
             var oldInputEncoding = Console.InputEncoding;
@@ -56,9 +60,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             string getLibVersionParam(string dllName, string paramName)
             {
-                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                var dllPath = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().Location).LocalPath);
                 var xncfBaseVersionPath = Path.Combine(dllPath, dllName);
-                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;
+                var libVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.LoadFrom(xncfBaseVersionPath).Location).ProductVersion;//.ToString();//.ProductVersion;
                 return $"{libVersion}";
             }
 
@@ -89,6 +93,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.Close();
             }
 
+            async Task<string> ReadOutputAsync(Process process)
+            {
+                var output = new StringBuilder();
+                while (!process.StandardOutput.EndOfStream)
+                {
+                    var line = await process.StandardOutput.ReadLineAsync();
+                    output.AppendLine(line);
+                }
+                return output.ToString();
+            }
+
             string output;
             try
             {
@@ -96,9 +111,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var pListTemplate = StartNewProcess();
                 logger.Append("dotnet new -l :");
-                pListTemplate.StandardInput.WriteLine("dotnet new -l");
+                await pListTemplate.StandardInput.WriteLineAsync("dotnet new -l").ConfigureAwait(false);
+
+                await Task.Delay(2000);
+
+                await pListTemplate.StandardInput.WriteLineAsync("exit").ConfigureAwait(false);
+
+                // Read output asynchronously while the process is running.
+                //var templateOutputTask = ReadOutputAsync(pListTemplate);
+
+                // Await the completion of the output reading task.
+
                 //pListTemplate.StandardInput.WriteLine("exit");
-                var templateOutput = pListTemplate.StandardOutput.ReadToEnd();
+                var templateOutput = await pListTemplate.StandardOutput.ReadToEndAsync().ConfigureAwait(false);//await templateOutputTask; //pListTemplate.StandardOutput.ReadToEnd();
                 CloseProcess(pListTemplate);
 
                 logger.Append(templateOutput);
@@ -111,7 +136,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         installPackageCmd = $"dotnet new -i Senparc.Xncf.XncfBuilder.Template";
                         break;
                     case "local":
-                        var slnDir = Directory.GetParent(request.SlnFilePath).FullName;
+                        string slnDir = Directory.GetParent(request.SlnFilePath).FullName;
                         var packageFile = Directory.GetFiles(slnDir, "Senparc.Xncf.XncfBuilder.Template.*.nupkg").LastOrDefault();
                         if (string.IsNullOrEmpty(packageFile))
                         {
@@ -137,8 +162,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 {
                     var pInstallTemplate = StartNewProcess();
                     logger.Append($"执行 XNCF 模板安装命令：" + installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine(installPackageCmd);
-                    pInstallTemplate.StandardInput.WriteLine("exit");
+                    await pInstallTemplate.StandardInput.WriteLineAsync(installPackageCmd).ConfigureAwait(false);
+                    await pInstallTemplate.StandardInput.WriteLineAsync("exit").ConfigureAwait(false);
                     CloseProcess(pInstallTemplate);
                 }
                 #endregion
@@ -177,25 +202,46 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     //$"-n {projectName} --force --IntegrationToNcf {targetFramework} {useSample} {useFunction} {useWeb} {useDatabase} {useWebApi} {orgName} {xncfName} {guid} {icon} {description} {version} {menuName} {xncfBaseVersion} {ncfAreaBaseVersion}"
                     "-n", projectName,
                     "-o",Path.Combine(_outPutBaseDir,projectName),
-                    "--force",
-                    "--IntegrationToNcf",
+                    "--force","true",
+                    "--IntegrationToNcf","true",
                     "--TargetFramework", frameworkVersion,
                     "--OrgName",request.OrgName,
                     "--XncfName",request.XncfName,
                     "--Guid", $"{Guid.NewGuid().ToString().ToUpper()}",
-                    "--Icon",$"\"{request.Icon}\"",
-                    "--Description",$"\"{request.Description}\"",
-                    "--Version",$"\"{request.Version}\"",
-                    "--MenuName",$"\"{request.MenuName}\"",
+                    "--Icon",$"{request.Icon}",
+                    "--Description",$"{request.Description}",
+                    "--Version",$"{request.Version}",
+                    "--MenuName",$"{request.MenuName}",
                     "--XncfBaseVersion",xncfBaseVersion,
                     "--NcfAreaBaseVersion",ncfAreaBaseVersion
                 };
 
-                if (isUseSample) args.Add("--Sample");
-                if (useFunction) args.Add("--Function");
-                if (isUseWeb) args.Add("--Web");
-                if (isUseDatabase) args.Add("--Database");
-                if (useWebApi) args.Add("--UseWebApi");
+                if (isUseSample)
+                {
+                    args.Add("--Sample");
+                    args.Add("true");
+                }
+                if (useFunction)
+                {
+                    args.Add("--Function");
+                    args.Add("true");
+
+                }
+                if (isUseWeb)
+                {
+                    args.Add("--Web");
+                    args.Add("true");
+                }
+                if (isUseDatabase)
+                {
+                    args.Add("--Database");
+                    args.Add("true");
+                }
+                if (useWebApi)
+                {
+                    args.Add("--UseWebApi");
+                    args.Add("true");
+                }
 
                 var pDotnet = StartNewProcess("dotnet");
 
@@ -286,7 +332,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var outputStr = BuildSample(request, logger); //执行模板生成
+                var outputStr = await BuildSampleAsync(request, logger); //执行模板生成
                 var projectFilePath = $"{request.OrgName}.Xncf.{request.XncfName}\\{request.OrgName}.Xncf.{request.XncfName}.csproj";
 
                 #region 生成 .sln
@@ -350,6 +396,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return null;
             });
         }
+
+
 
         #endregion
 

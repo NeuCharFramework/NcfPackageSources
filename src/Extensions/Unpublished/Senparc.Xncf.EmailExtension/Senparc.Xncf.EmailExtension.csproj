@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.11.5.2-preview1</Version>
+    <Version>0.11.11-preview.1</Version>
     <AssemblyName>Senparc.Xncf.EmailExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.EmailExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -19,7 +19,12 @@
 			v0.1 创世
 			[2024-09-10] v0.10.4-preview1 升级缓存基础库
 			[2025-01-25] v0.11.5-preview1 Update Agents functions, support for function calling
-</PackageReleaseNotes>
+			[2025-04-29] v0.11.7-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.11.8-preview1 Update Installation
+			[2025-06-20] v0.11.9-preview1 Add MCP functions in XncfRegisterBase class
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

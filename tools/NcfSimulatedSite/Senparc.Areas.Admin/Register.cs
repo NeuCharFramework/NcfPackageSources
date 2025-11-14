@@ -21,6 +21,7 @@ using Senparc.Areas.Admin.Domain;
 using Senparc.Areas.Admin.Domain.Dto;
 //using Senparc.Areas.Admin.Authorization;
 using Senparc.Areas.Admin.Domain.Models;
+using Senparc.Areas.Admin.Domain.Services;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.AreaBase.Admin.Filters;
@@ -84,8 +85,7 @@ namespace Senparc.Areas.Admin
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：应该提供一个 BeforeUninstall 方法，阻止卸载。
-
+            //TODO：可以提供一个 BeforeUninstall 方法，阻止卸载。
 
             #region 删除数据库（演示）
 
@@ -132,6 +132,7 @@ namespace Senparc.Areas.Admin
             AddJwtAuthentication(services, configuration);
 
             services.AddScoped<IAdminUserInfoRepository, AdminUserInfoRepository>();
+            services.AddScoped<InstallerService>();
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -177,9 +178,6 @@ namespace Senparc.Areas.Admin
             ;
 
         }
-
-
-
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions

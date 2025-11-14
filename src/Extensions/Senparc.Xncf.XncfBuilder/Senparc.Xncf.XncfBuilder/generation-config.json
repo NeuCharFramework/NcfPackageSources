@@ -1,0 +1,69 @@
+{
+  "outputNamespace": "Senparc.Xncf.XncfBuilder.OHS.Local",
+  "outputClassName": "BuildXncfAppService",
+  "files": [
+    {
+      "path": "Request.cs",
+      "constantName": "RequestCode",
+      "description": "请求类代码",
+      "type": "code"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs",
+      "constantName": "SenparcEntitiesTemplate",
+      "description": "Senparc实体类模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs",
+      "constantName": "ColorModelTemplate",
+      "description": "颜色模型模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs",
+      "constantName": "ColorDtoTemplate",
+      "description": "颜色DTO模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs",
+      "constantName": "ColorServiceTemplate",
+      "description": "颜色服务模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml",
+      "constantName": "DatabaseSampleIndexViewTemplate",
+      "description": "数据库示例索引页面视图模板",
+      "type": "frontend_template"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs",
+      "constantName": "DatabaseSampleIndexCodeBehindTemplate",
+      "description": "数据库示例索引页面代码后置模板",
+      "type": "frontend_template"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js",
+      "constantName": "DatabaseSampleIndexJsTemplate",
+      "description": "数据库示例索引页面JavaScript模板",
+      "type": "frontend_script"
+    },
+    {
+      "path": "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css",
+      "constantName": "DatabaseSampleIndexCssTemplate",
+      "description": "数据库示例索引页面CSS模板",
+      "type": "frontend_style"
+    }
+  ],
+  "grouping": {
+    "byType": true,
+    "generateTypeConstants": true
+  },
+  "options": {
+    "includeFileInfo": true,
+    "includeMetadata": true,
+    "generateHelperMethods": true
+  }
+}

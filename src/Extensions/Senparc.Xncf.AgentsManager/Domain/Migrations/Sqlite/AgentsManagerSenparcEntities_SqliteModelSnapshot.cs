@@ -127,6 +127,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("McpEndpoints")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");

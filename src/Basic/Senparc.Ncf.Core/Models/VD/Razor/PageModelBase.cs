@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
+using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Ncf.Core.Models.VD
 {
@@ -77,8 +78,17 @@ namespace Senparc.Ncf.Core.Models.VD
             //获取缓存系统信息
             try
             {
-                var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
-                FullSystemConfig = fullSystemConfigCache.Data;
+                if (SiteConfig.IsInstalling)
+                {
+                    FullSystemConfig = null;
+                    throw new NcfUninstallException("系统进入安装状态", false);
+                }
+                else
+                {
+                    var fullSystemConfigCache = context.HttpContext.RequestServices.GetService<FullSystemConfigCache>();
+                    FullSystemConfig = fullSystemConfigCache.Data;
+                }
+
             }
             catch (/*SqlException*/ DbException)
             {

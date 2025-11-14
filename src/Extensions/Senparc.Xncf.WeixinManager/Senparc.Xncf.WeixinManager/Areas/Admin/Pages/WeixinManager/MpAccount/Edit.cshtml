@@ -1,0 +1,95 @@
+﻿@page
+@model Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager.MpAccount_EditModel
+@{
+    ViewData["Title"] = (Model.IsEdit ? "编辑" : "新增 ") + "公众号";
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_content">
+                <form class="form-horizontal form-label-left" novalidate method="post">
+                    @Html.HiddenFor(z => z.MpAccountDto.Id)
+                    <input type="hidden" name="Uid" value="@Model.Uid" />
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.Name, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.Name, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.Name)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.AppId, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.AppId, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.AppId)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.AppSecret, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.AppSecret, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.AppSecret)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.Token, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.Token, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.Token)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.EncodingAESKey, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.EncodingAESKey, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.EncodingAESKey)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.PromptRangeCode, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.PromptRangeCode, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.PromptRangeCode)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        @Html.LabelFor(z => z.MpAccountDto.AdminRemark, "备注", new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(z => z.MpAccountDto.AdminRemark, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
+                            @Html.ValidationMessageFor(z => z.MpAccountDto.AdminRemark)
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            微信后台配置的服务器地址(URL)
+
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @if (Model.IsEdit)
+                            {
+                                <p><a href="/WeixinMp/@Model.MpAccountDto.Id" target="_blank"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/@Model.MpAccountDto.Id</a></p>
+                            }
+                            <p>注意：新添加的账号需要重启系统后生效</p>
+                        </div>
+                    </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <a asp-page="./Index" asp-route-uid="@Model.XncfModuleDto.Uid" class="btn btn-primary">取消</a>
+                            <button id="send" type="submit" class="btn btn-success">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

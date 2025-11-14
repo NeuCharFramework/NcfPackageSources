@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Query;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Ncf.Service
 {
@@ -21,10 +22,10 @@ namespace Senparc.Ncf.Service
         public IMapper Mapper { get; set; } //TODO: add in to Wapper
 
         public IRepositoryBase<T> RepositoryBase { get; set; }
-        protected IServiceProvider _serviceProvider=> base.ServiceProvider;
+        protected IServiceProvider _serviceProvider => base.ServiceProvider;
 
         public ServiceBase(IRepositoryBase<T> repo, IServiceProvider serviceProvider)
-            : base(repo,serviceProvider)
+            : base(repo, serviceProvider)
         {
             //_serviceProvider = serviceProvider;
             RepositoryBase = repo;
@@ -587,6 +588,26 @@ namespace Senparc.Ncf.Service
             var dtoList = pagedList.Select(Mapper.Map<TDto>).ToList();
             return new PagedList<TDto>(dtoList, pagedList.PageIndex, pagedList.PageCount, pagedList.TotalCount, pagedList.SkipCount);
         }
+
+        #endregion
+
+        #region Tenant
+
+        /// <summary>
+        /// 强制设置租户信息
+        /// </summary>
+        /// <param name="requestTenantInfo"></param>
+        /// <returns></returns>
+        public bool SetTenantInfo(RequestTenantInfo requestTenantInfo)
+        {
+            if (this.BaseData.BaseDB.BaseDataContext is ISenparcEntitiesDbContext senparcDB)
+            {
+                senparcDB.TenantInfo = requestTenantInfo;
+                return true;
+            }
+            return false;
+        }
+
 
         #endregion
     }

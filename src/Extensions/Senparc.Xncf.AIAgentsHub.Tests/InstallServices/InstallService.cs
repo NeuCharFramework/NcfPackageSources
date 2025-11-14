@@ -25,6 +25,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly InstallOptionsService _installOptionsService;
+        private readonly XncfModuleServiceExtension _xncfModuleServiceExtension;
 
         /// <summary>
         /// 新创建的 RequestTenantInfo
@@ -36,7 +37,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         /// 初始化安装系统
         /// </summary>
         /// <returns></returns>
-        private async Task InitSystemAsync(string systemName, IServiceProvider serviceProvider)
+        private async Task InitSystemAsync(string systemName, int adminUserInfoId, IServiceProvider serviceProvider)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
 
@@ -75,7 +76,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 {
                     SysMenuService _sysMenuService = serviceProvider.GetService<SysMenuService>();
 
-                    _sysMenuService.Init();
+                    _sysMenuService.Init(null, adminUserInfoId);
                 }
                 catch (Exception ex)
                 {
@@ -116,7 +117,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             //TODO:选择性安装用户自定义模块
 
             {
-                var _xncfModuleService = serviceProvider.GetService<XncfModuleServiceExtension>();
+                var _xncfModuleService = _xncfModuleServiceExtension;
 
                 //开始安装并启用系统模块（Admin）
                 //Senparc.Areas.Admin.Register adminRegister = new Senparc.Areas.Admin.Register();
@@ -182,7 +183,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             //安装模块
             if (installNow)
             {
-                var _xncfModuleService = serviceProvider.GetService<XncfModuleServiceExtension>();
+                var _xncfModuleService = _xncfModuleServiceExtension;// serviceProvider.GetService<XncfModuleServiceExtension>();
 
                 xncfModule = _xncfModuleService.GetObject(z => z.Uid == register.Uid);
                 if (xncfModule == null)
@@ -240,10 +241,11 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
 
-        public InstallerService(IServiceProvider serviceProvider, InstallOptionsService installOptionsService)
+        public InstallerService(IServiceProvider serviceProvider, InstallOptionsService installOptionsService, XncfModuleServiceExtension xncfModuleServiceExtension)
         {
             this._serviceProvider = serviceProvider;
             this._installOptionsService = installOptionsService;
+            this._xncfModuleServiceExtension = xncfModuleServiceExtension;
         }
 
         public GetDefaultInstallOptionsResponseDto GetDefaultInstallOptions()

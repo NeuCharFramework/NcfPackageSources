@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.5.2-preview1</Version>
+    <Version>0.9.9-preview.1</Version>
     <AssemblyName>Senparc.Xncf.Tenant.Interface</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant.Interface</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -20,7 +20,10 @@
 			v0.1.0 创世
 			[2024-09-10] v0.8.4-preview1 升级缓存基础库
 			[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
-</PackageReleaseNotes>
+			[2025-04-29] v0.9.7-preview1 Update CO2NET and AIKernel
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

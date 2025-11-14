@@ -1,0 +1,248 @@
+﻿@page
+@model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.IndexModel
+@{
+    ViewData["Title"] = "公众号控制中心";
+    Layout = "_Layout_Vue";
+}
+@section HeaderContent{
+    <style>
+        .wxmanager-item {
+            position: relative;
+            display: block;
+            margin-bottom: 12px;
+            border: 1px solid #E4E4E4;
+            overflow: hidden;
+            padding-bottom: 5px;
+            border-radius: 5px;
+            background-clip: padding-box;
+            background: #FFF;
+            transition: all 300ms ease-in-out;
+            padding-left: 10px;
+        }
+
+            .wxmanager-item .icon {
+                font-size: 60px;
+                color: #BAB8B8;
+                position: absolute;
+                right: 20px;
+                top: -5px;
+            }
+
+            .wxmanager-item .count {
+                font-size: 38px;
+                font-weight: bold;
+                line-height: 1.65857;
+            }
+
+            .wxmanager-item .tit {
+                color: #BAB8B8;
+                font-size: 24px;
+            }
+
+            .wxmanager-item p {
+                margin-bottom: 5px;
+            }
+
+        .chart-title {
+            font-size: 20px;
+        }
+
+        .chart-li {
+            padding-top: 20px;
+        }
+
+            .chart-li li {
+                line-height: 2;
+            }
+
+            .chart-li .fa {
+                margin-right: 5px;
+            }
+    </style>
+
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>公众号控制中心</el-breadcrumb-item>
+}
+<div>
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">公众号控制中心</span></span>
+        </el-header>
+        <el-main>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <div class="grid-content wxmanager-item">
+                        <span class="count">{{count.mpAccountDtos.length}}</span>
+                        <div class="icon">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <p class="tit">公众号数量</p>
+                        <p class="des">已经录入系统的公众号</p>
+                    </div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="grid-content bg-purple wxmanager-item">
+                        <span class="count">{{count.accessTokenBags.length}}</span>
+                        <div class="icon">
+                            <i class="fa fa-tachometer"></i>
+                        </div>
+                        <p class="tit">运行账号数量</p>
+                        <p class="des">已经生效并连接微信服务器的账号数量</p>
+                    </div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="grid-content bg-purple wxmanager-item">
+                        <span class="count">{{count.weixinUserCount}}</span>
+                        <div class="icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <p class="tit">总微信用户数</p>
+                        <p class="des">在当前平台交互过或自动拉取关注的用户数</p>
+                    </div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="grid-content bg-purple wxmanager-item">
+                        <span class="count">{{count.todayWeixinUserCount}}</span>
+                        <div class="icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <p class="tit">今日新增用户数</p>
+                        <p class="des">当天已经同步或添加到平台的用户数量</p>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-collapse v-model="activeNames">
+                    <el-collapse-item v-for="(item,index) in count.mpAccountDtos" :name="index+''">
+                        <template slot="title">
+                            <span class="chart-title">
+                                {{item.name}}
+                            </span>
+                            @*<i class="header-icon el-icon-info"></i>*@
+                        </template>
+                        <div>
+                            <el-row :gutter="10">
+                                <el-col :span="8" :offset="1">
+                                    <div class="chart-li">
+                                        <ul class="quick-list">
+                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">查看用户</a></li>
+                                            <li><i class="fa fa-thumbs-up"></i><a href="#">查看分组</a></li>
+                                            <li><i class="fa fa-calendar-o"></i><a href="#">查看标签</a></li>
+                                            <li><i class="fa fa-area-chart"></i><a href="#">对话</a></li>
+                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">编辑</a></li>
+                                        </ul>
+                                    </div>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div class="chart-li">
+                                        <h4>AccessToken 凭证有效期</h4>
+                                        <div :id="'chart_mpaccount_'+item.id" style="width: 400px;height:300px;"></div>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </el-collapse-item>
+                </el-collapse>
+        </el-main>
+    </el-container>
+</div>
+
+@section scripts{
+    <script src="~/lib/Chart.js/dist/Chart.min.js"></script>
+    <script src="~/lib/echarts/dist/echarts.min.js"></script>
+    <script src="~/lib/echarts/map/js/world.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    uid: '',
+                    count: {
+                        mpAccountDtos: [],
+                        accessTokenBags: [],
+                        weixinUserCount: 0,
+                        todayWeixinUserCount: 0
+                    },
+                    chartBuilt: false,
+                    chartOptions: {},
+                    activeNames: [] //默认打开折叠面板
+                };
+            },
+            mounted() {
+                this.uid = resizeUrl().uid;
+                this.getDetail();
+            },
+            methods: {
+                // 获取数据
+                async getDetail() {
+                    const res = await service.get('/Admin/WeixinManager/Index?handler=Ajax');
+                    this.count = {
+                        mpAccountDtos: res.data.data.mpAccountDtos,
+                        accessTokenBags: res.data.data.accessTokenBags,
+                        weixinUserCount: res.data.data.weixinUserCount,
+                        todayWeixinUserCount: res.data.data.todayWeixinUserCount
+                    };
+                    for (var i = 0; i < this.count.mpAccountDtos.length; i++) {
+                        this.activeNames.push(i + '');
+                    }
+                    this.getCharData();
+                },
+                // 获取图表数据
+                async getCharData() {
+                    let ids = [];
+                    this.count.mpAccountDtos.map(res => {
+                        ids.push(res.id);
+                    });
+                    const res = await service.post('/Admin/WeixinManager/Index?handler=AccessTokenStatus', ids);
+                    this.bildMpAccountChart(res.data.data);
+                    this.chartBuilt = true;
+                    setTimeout(function () {
+                        app.getCharData();
+                    }, 5000);
+                },
+                // 生成图表
+                bildMpAccountChart(dataArr) {
+                    for (var i = 0; i < dataArr.length; i++) {
+                        var data = dataArr[i];
+                        var status = data.status;
+                        var leftTimePercent = data.leftPercent;
+
+                        if (this.chartBuilt) {
+                            this.chartOptions[data.id + ''].options.series[0].data[0].value = leftTimePercent;
+                            this.chartOptions[data.id + ''].options.series[0].data[0].name = status;
+                        } else {
+                            var id = 'chart_mpaccount_' + data.id;
+                            // 指定图表的配置项和数据
+                            this.chartOptions[data.id + ''] = {
+                                chartObj: echarts.init(document.getElementById(id)),
+                                options: {
+                                    tooltip: {
+                                        formatter: '{a} <br/>{b} : {c}%'
+                                    },
+                                    toolbox: {
+                                        feature: {
+                                            restore: {},
+                                            saveAsImage: {}
+                                        }
+                                    },
+                                    series: [
+                                        {
+                                            name: 'AccessToken 凭证状态',
+                                            type: 'gauge',
+                                            detail: { formatter: '{value}%' },
+                                            data: [{ value: leftTimePercent, name: status }]
+                                        }
+                                    ]
+                                }
+                            };
+                        }
+                        this.chartOptions[data.id + ''].chartObj.setOption(this.chartOptions[data.id + ''].options, true);
+                    }
+                }
+            }
+        });
+    </script>
+}

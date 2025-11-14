@@ -1,0 +1,203 @@
+@page
+@model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBasesDetail.IndexModel
+@{
+    ViewData["Title"] = "知识库管理详情列表页面";
+    Layout = "_Layout_Vue";}
+
+@section Style{
+    <link href="~/css/KnowledgeBase/KnowledgeBasesDetail/KnowledgeBasesDetail.css" rel="stylesheet" />
+}
+
+@section breadcrumbs {
+<el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理详情管理</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理详情列表</el-breadcrumb-item>
+}
+
+<div>
+    <div class="admin-role">
+        <el-row class="filter-condition" :gutter="8">
+            <el-col :span="2"></el-col>
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
+
+            <el-col :span="2" class="operator_button">
+                <el-button type="primary" size="mini" @@click="handleSearch()">查询</el-button>
+                <el-button type="primary" size="mini" @@click="resetCondition()">重置</el-button>
+            </el-col>
+        </el-row>
+        <div class="filter-container">
+            <el-row type="flex" class="row-bg" justify="end">
+                <el-col :span="23">
+                    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">新增</el-button>
+                    <el-dropdown split-button size="mini" @@click="handleClick">
+                        启用
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>启用</el-dropdown-item>
+                            <el-dropdown-item>停用</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-button-group>
+                        <el-button size="mini">分配组织</el-button>
+                        <el-button size="mini">取消分配</el-button>
+                    </el-button-group>
+                    <el-dropdown split-button size="mini" @@click="handleClick">
+                        打印
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>打印预览</el-dropdown-item>
+                            <el-dropdown-item>直接打印</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown split-button size="mini" @@click="handleClick">
+                        导入
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>新增导入</el-dropdown-item>
+                            <el-dropdown-item>下载新增模板</el-dropdown-item>
+                            <el-dropdown-item>更新导入</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown split-button size="mini" @@click="handleClick">
+                        导出
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>按列表导出</el-dropdown-item>
+                            <el-dropdown-item>导出</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown split-button size="mini" @@click="handleClick">
+                        更多
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>删除</el-dropdown-item>
+                            <el-dropdown-item>UI模板</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+
+                </el-col>
+                <el-col :span="1">
+                    <!-- 筛选按钮 -->
+                    <el-popover placement="bottom" title="筛选列" trigger="click" width="40">
+                        <el-checkbox-group v-model="checkedColumns" size="mini">
+                            <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
+                        </el-checkbox-group>
+                        <div title="筛选列" class="filter-table-col" slot="reference">
+                            <i class="el-icon-s-operation"></i>
+                        </div>
+                    </el-popover>
+                </el-col>
+            </el-row>
+        </div>
+        <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column v-if="colData[0].istrue" prop="knowledgeBasesId" align="left" label="知识库Id" sortable :filters="filterTableHeader.knowledgeBasesId" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column prop="contentType" align="left" label="内容类型" :formatter="setContentTypeFormat"></el-table-column>
+
+            <el-table-column v-if="colData[2].istrue" prop="content" align="left" label="内容" sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
+
+            <el-table-column align = "center"
+                             label="添加时间" sortable>
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" fixed="right" width="150">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                        type="primary"
+                        @@click="handleEdit(scope.$index, scope.row,'edit')">编辑</el-button>
+                    <el-popconfirm placement="top" title="确认删除此知识库管理详情吗？" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
+                    </el-popconfirm>
+                </template>
+            </el-table-column>
+        </el-table>
+              
+        <pagination :total="paginationQuery.total"
+                :page.sync="listQuery.pageIndex"
+                :limit.sync="listQuery.pageSize"
+                @@pagination="getList"></pagination>
+        <!--编辑、新增-->
+         <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="90%">
+            <el-form ref="dataForm"
+                     :rules="dialog.rules"
+                     :model="dialog.data"
+                     :disabled="dialog.disabled"
+                     size="mini"
+                     label-position="left"
+                     label-width="150px"
+                     style="max-width: 1800px; margin-left:50px;">
+                <el-row :gutter="8">
+                    <el-col :span="6">
+                    <el-form-item label="知识库Id" prop="knowledgeBasesId">
+                        <el-input size="mini" v-model="dialog.data.knowledgeBasesId" clearable placeholder="请输入知识库Id"/>
+                    </el-form-item>
+
+                    </el-col>
+                    <el-col :span="6">
+                    <el-form-item label="内容类型">
+                        <el-select size="mini" v-model="dialog.data.contentType" placeholder="请输入内容类型">
+                            <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+
+                    </el-col>
+                    <el-col :span="6">
+                    <el-form-item label="内容" prop="content">
+                        <el-input size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容"/>
+                    </el-form-item>
+
+                    </el-col>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
+                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
+            </div>
+        </el-dialog>
+
+        <!-- 详情 -->
+        <el-dialog :title="detailDialog.title"
+                   :visible.sync="detailDialog.visible"
+                   :close-on-click-modal="false"
+                   width="700px">
+            <el-descriptions class="margin-top" title="带边框列表" :column="3" :size="size" border>
+                <template slot="extra">
+                    <el-button type="primary" size="small">操作</el-button>
+                </template>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        知识库Id
+                    </template>
+                    knowledgeBasesId
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        内容类型
+                    </template>
+                    contentType
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        内容
+                    </template>
+                    content
+                </el-descriptions-item>
+            
+            </el-descriptions>
+        </el-dialog>
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/js/Basic/ml.js"></script>
+    <script src="~/js/KnowledgeBase/Pages/KnowledgeBasesDetail/knowledgeBasesDetail.js"></script>
+}

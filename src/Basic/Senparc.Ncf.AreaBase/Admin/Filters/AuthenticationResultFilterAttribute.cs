@@ -72,7 +72,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                     url = string.Concat("/", url); // /Admin/AdminUserInfo/Index
                 }
                 System.Diagnostics.Debug.WriteLine("url:{0}", url);
-                canAccessResource = await serviceProvider.GetService<SysPermissionService>().HasPermissionAsync(resourceCodes, url, isAjax);// await Task.FromResult(true);//TODO...
+                canAccessResource = await serviceProvider.GetService<SysRolePermissionService>().HasPermissionAsync(resourceCodes, url, isAjax);// await Task.FromResult(true);//TODO...
                 if (canAccessResource)
                 {
                     await next();

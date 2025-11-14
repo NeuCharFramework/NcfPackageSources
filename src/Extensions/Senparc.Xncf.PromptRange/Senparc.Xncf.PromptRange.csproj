@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.12-preview1</Version>
+    <Version>0.14.1-preview.1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -61,7 +61,15 @@
 		[2025-02-06] v0.13.10-preview1 update NeuCharAI model update
 		[2025-02-22] v0.13.11-preview1 add DeepSeek-R1 &lt;think&gt; tag style
 		[2025-03-21] v0.13.12-preview1 PromptRange's 3D charts are accurate to 1 decimal place
-</PackageReleaseNotes>
+		[2025-04-29] v0.13.14-preview1 Update CO2NET and AIKernel
+		[2025-05-18] v0.13.15-preview1 Update Installation
+		[2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
+		[2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
+				[2025-11-01] update basic libraries, including Senparc.AI
+        [2025-11-06] v0.13.19-preview.1 add AI score standard setting
+        [2025-11-06] v0.14.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and provide a scalable layout
+        [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison 
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
@@ -105,8 +113,6 @@
     <Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
-    <!--<PackageReference Include="Senparc.AI.Kernel" Version="0.6.4-rc3" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />-->
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
     <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>

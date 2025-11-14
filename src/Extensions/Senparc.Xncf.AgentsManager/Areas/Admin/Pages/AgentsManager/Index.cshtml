@@ -1131,13 +1131,17 @@
                         direction="vertical" placeholder="请选择" />
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-                    <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+                    <el-input  
+                       type="textarea"  
+                       v-model="agentForm.systemMessage"  
+                       @@change="handleIdentify"  
+                       placeholder="请填写"  
+                       :rows="4">  
+                    </el-input>
+                    
                 </el-form-item>
                 <el-form-item label="是否启用" prop="enable">
                     <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
-                </el-form-item>
-                <el-form-item label="说明" prop="description">
-                    <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
                 </el-form-item>
                 <el-form-item label="外接平台" prop="hookRobotType">
                     <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
@@ -1200,6 +1204,89 @@
                             </div>
                         </div>
                     </div>
+                </el-form-item>
+                
+                <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
+                    <div class="mcp-endpoints-container">
+                        <div class="mcp-endpoints-list">
+                            <div v-for="(endpoint, name) in parsedMcpEndpoints" :key="name" class="mcp-endpoint-item">
+                                <div class="mcp-endpoint-info">
+                                    <span class="mcp-endpoint-name">{{name}}</span>
+                                    <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                                    <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                        <div class="test-status success">连接成功</div>
+                                        <el-button size="mini" type="primary" plain @@click="showMcpToolsDialog(endpoint)">
+                                            查看工具列表 ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
+                                        </el-button>
+                                    </div>
+                                    <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                        <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                                    </div>
+                                </div>
+                                <div class="mcp-endpoint-actions">
+                                    <el-button 
+                                        size="mini" 
+                                        type="success" 
+                                        icon="el-icon-connection" 
+                                        circle 
+                                        @@click="testMcpEndpoint(name, endpoint)"
+                                        :loading="endpoint.testing"
+                                        style="margin-right: 5px;"
+                                        title="测试连接">
+                                    </el-button>
+                                    <el-button 
+                                        size="mini" 
+                                        type="primary" 
+                                        icon="el-icon-edit" 
+                                        circle 
+                                        @@click="handleMcpEndpointEdit(name, endpoint)"
+                                        style="margin-right: 5px;">
+                                    </el-button>
+                                    <el-button 
+                                        size="mini" 
+                                        type="danger" 
+                                        icon="el-icon-delete" 
+                                        circle 
+                                        @@click="handleMcpEndpointRemove(name)">
+                                    </el-button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
+                            <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                        </div>
+                        
+                        <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
+                            <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? '编辑 MCP Endpoint' : '添加 MCP Endpoint' }}</div>
+                            <el-input
+                                ref="mcpEndpointNameInput"
+                                v-model="mcpEndpointNameValue"
+                                class="input-endpoint-name"
+                                size="small"
+                                placeholder="Endpoint 名称 (例如: mcp-server-NCF-7)"
+                                style="margin-bottom: 10px; width: 100%">
+                            </el-input>
+                            
+                            <el-input
+                                ref="mcpEndpointUrlInput"
+                                v-model="mcpEndpointUrlValue"
+                                class="input-endpoint-url"
+                                size="small"
+                                placeholder="Endpoint URL (例如: http://localhost:5000/mcp/sse)"
+                                style="margin-bottom: 10px; width: 100%">
+                            </el-input>
+                            
+                            <div class="endpoint-input-actions">
+                                <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">确认</el-button>
+                                <el-button size="small" @@click="cancelMcpEndpointInput">取消</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </el-form-item>
+                
+                <el-form-item label="备注" prop="description">
+                    <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写(仅管理员可见)"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -1430,6 +1517,85 @@
                 </div>
             </div>
         </el-form-item>
+        
+        <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
+            <div class="mcp-endpoints-container">
+                <div class="mcp-endpoints-list">
+                    <div v-for="(endpoint, name) in parsedMcpEndpoints" :key="name" class="mcp-endpoint-item">
+                        <div class="mcp-endpoint-info">
+                            <span class="mcp-endpoint-name">{{name}}</span>
+                            <span class="mcp-endpoint-url">{{endpoint.url}}</span>
+                            <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                <div class="test-status success">连接成功</div>
+                                <el-button size="mini" type="primary" plain @@click="showMcpToolsDialog(endpoint)">
+                                    查看工具列表 ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
+                                </el-button>
+                            </div>
+                            <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
+                                <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                            </div>
+                        </div>
+                        <div class="mcp-endpoint-actions">
+                            <el-button 
+                                size="mini" 
+                                type="success" 
+                                icon="el-icon-connection" 
+                                circle 
+                                @@click="testMcpEndpoint(name, endpoint)"
+                                :loading="endpoint.testing"
+                                style="margin-right: 5px;"
+                                title="测试连接">
+                            </el-button>
+                            <el-button 
+                                size="mini" 
+                                type="primary" 
+                                icon="el-icon-edit" 
+                                circle 
+                                @@click="handleMcpEndpointEdit(name, endpoint)"
+                                style="margin-right: 5px;">
+                            </el-button>
+                            <el-button 
+                                size="mini" 
+                                type="danger" 
+                                icon="el-icon-delete" 
+                                circle 
+                                @@click="handleMcpEndpointRemove(name)">
+                            </el-button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
+                    <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                </div>
+                
+                <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
+                    <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? '编辑 MCP Endpoint' : '添加 MCP Endpoint' }}</div>
+                    <el-input
+                        ref="mcpEndpointNameInput"
+                        v-model="mcpEndpointNameValue"
+                        class="input-endpoint-name"
+                        size="small"
+                        placeholder="Endpoint 名称 (例如: mcp-server-NCF-7)"
+                        style="margin-bottom: 10px; width: 100%">
+                    </el-input>
+                    
+                    <el-input
+                        ref="mcpEndpointUrlInput"
+                        v-model="mcpEndpointUrlValue"
+                        class="input-endpoint-url"
+                        size="small"
+                        placeholder="Endpoint URL (例如: http://localhost:5000/mcp/sse)"
+                        style="margin-bottom: 10px; width: 100%">
+                    </el-input>
+                    
+                    <div class="endpoint-input-actions">
+                        <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">确认</el-button>
+                        <el-button size="small" @@click="cancelMcpEndpointInput">取消</el-button>
+                    </div>
+                </div>
+            </div>
+        </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
         <el-button @@click="handleElVisibleClose('dialogGroupAgent')">取 消</el-button>
@@ -1592,6 +1758,31 @@
     <div slot="footer" class="dialog-footer">
         <el-button type="primary" @@click="handleElVisibleSubmit('dialogTaskEvaluation')">确 定</el-button>
         <el-button @@click="handleElVisibleClose('dialogTaskEvaluation')">取 消</el-button>
+    </div>
+</el-dialog>
+@* Dialog MCP工具列表 *@
+<el-dialog title="MCP 工具列表" :visible.sync="visible.dialogMcpTools" :append-to-body="true" width="80%" :show-close="true" :destroy-on-close="false" center>
+    <div v-if="currentMcpTools && currentMcpTools.length > 0">
+        <el-table :data="currentMcpTools" style="width: 100%">
+            <el-table-column prop="name" label="工具名称" width="180"></el-table-column>
+            <el-table-column prop="description" label="描述"></el-table-column>
+            <el-table-column label="参数" width="300">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.parameters && scope.row.parameters.length > 0">
+                        <div v-for="param in scope.row.parameters" :key="param.name" class="param-item-table">
+                            <strong>{{param.name}}</strong>: {{param.description}}
+                        </div>
+                    </div>
+                    <span v-else>无参数</span>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <div v-else class="empty-tools">
+        <div class="empty-text">没有可用的工具</div>
+    </div>
+    <div class="dialog-footer" slot="footer">
+        <el-button type="primary" @@click="visible.dialogMcpTools = false">关闭</el-button>
     </div>
 </el-dialog>
 @section scripts {

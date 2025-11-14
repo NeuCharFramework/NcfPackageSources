@@ -15,7 +15,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel", b =>
                 {
@@ -133,6 +133,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsAIGrade")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDraft")
                         .HasColumnType("INTEGER");

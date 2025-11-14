@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
@@ -14,6 +16,7 @@ using Senparc.Xncf.Tenant.Domain.Cache;
 using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,6 +42,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             var requestTenantInfo = _serviceProvider.GetRequiredService<RequestTenantInfo>();
             httpContext = httpContext ?? _httpContextAccessor.Value.HttpContext;
             string tenantKey = null;
+            //string[] tanantCookieInfo = null;
             switch (SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
@@ -54,6 +58,23 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                         tenantKey = headerTenantKey[0].ToUpper();
                     }
                     break;
+                case TenantRule.LoginInput:
+                    {
+                        // 检查是否存在 TenantKey
+                        var tenantKeyClaim = httpContext.User?.Claims.FirstOrDefault(c => c.Type == "TenantKey");
+
+                        if (tenantKeyClaim == null)
+                        {
+                            tenantKey = null;
+                            break;
+                        }
+                        else
+                        {
+                            // 读取 TenantKey 的值
+                            tenantKey = tenantKeyClaim.Value;
+                        }
+                    }
+                    break;
                 default:
                     throw new Exception("未处理的 TenantRule 类型");
             }
@@ -64,17 +85,20 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             Dictionary<string, TenantInfoDto> tenantInfoCollection;
             try
             {
-                tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();
+                tenantInfoCollection = await fullTenantInfoCache.GetDataAsync();//
             }
             catch (Exception ex)
             {
                 if (!Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 {
-                    //数据库读取失败，且多租户未启用
+                    //数据库读取失败，且未登录任何租户
+                    //tenantKey = null;
                     throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
                 }
 
                 //数据库错误，通常为系统未安装
+                //tenantKey = null;
+
                 throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
             }
 
@@ -92,7 +116,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             {
                 //Console.WriteLine($"\t\t 未匹配到 tenantKey：{tenantKey}");
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
-                requestTenantInfo.TryMatch(false);
+                requestTenantInfo.TryMatch(tenantKey == null || false);
             }
 
             return requestTenantInfo;
@@ -184,5 +208,34 @@ namespace Senparc.Xncf.Tenant.Domain.Services
 
             await base.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 获取 RequestTenantInfo
+        /// </summary>
+        /// <param name="tenantInfo"></param>
+        /// <returns></returns>
+        public RequestTenantInfo GetRequestTenantInfo(TenantInfo tenantInfo)
+        {
+            var requestTenantInfo = new RequestTenantInfo()
+            {
+                Id = tenantInfo.Id,
+                Name = tenantInfo.Name,
+                TenantKey = tenantInfo.TenantKey
+            };
+            requestTenantInfo.TryMatch(true);
+            return requestTenantInfo;
+        }
+
+        /// <summary>
+        /// 强制设置租户信息
+        /// </summary>
+        /// <param name="requestTenantInfo"></param>
+        /// <returns></returns>
+        public bool SetTenantInfo(TenantInfo tenantInfo)
+        {
+            var requestTenantInfo = this.GetRequestTenantInfo(tenantInfo);
+            return base.SetTenantInfo(requestTenantInfo);
+        }
+
     }
 }

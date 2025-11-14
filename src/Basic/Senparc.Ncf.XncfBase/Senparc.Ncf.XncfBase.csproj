@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.22.6.3-preview1</Version>
+    <Version>0.22.15-preview</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -47,7 +47,15 @@
 			[2024-11-15] v0.21.13-preview1 优化启动时的日志记录，把所有"监测到 ApplyAllAutoConfigurationMapping 执行"记录到一条日志
 			[2024-12-27] v0.22.2-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.22.6-preview1 Update Agents functions, support for function calling
-</PackageReleaseNotes>
+			[2025-04-29] v0.22.8-preview1 Update CO2NET and AIKernel
+			[2025-04-29] v0.22.9-preview1 Update CO2NET and AIKernel
+			[2025-05-18] v0.22.10-preview1 Update Installation
+			[2025-06-20] v0.22.11-preview1 Add MCP functions in XncfRegisterBase class
+			[2025-06-20] v0.22.12-preview1 Add MCP functions in XncfRegisterBase class
+			[2025-06-27] v0.22.13-preview.1 Add dynamic XNCF Template dynamic generator
+
+				[2025-11-01] update basic libraries, including Senparc.AI
+		</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -73,7 +81,9 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="3.1.2" />
+    <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
+    <PackageReference Include="Senparc.CO2NET" Version="3.1.5" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>

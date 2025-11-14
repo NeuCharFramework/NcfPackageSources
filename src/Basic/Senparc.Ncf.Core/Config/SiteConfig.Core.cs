@@ -8,6 +8,8 @@ using Senparc.Ncf.Utility;
 using System.Collections.Generic;
 using System.Threading;
 using System;
+using Senparc.Ncf.Core.Utility;
+using System.IO;
 
 namespace Senparc.Ncf.Core.Config
 {
@@ -127,10 +129,48 @@ namespace Senparc.Ncf.Core.Config
         ///// </summary>
         //public static readonly AIPlugins AIPlugins = new AIPlugins();
 
+        private static bool _isInstalling = false;
+
         /// <summary>
         /// 是否正在进行安装，如果是，则不抛出监测安装的异常
         /// </summary>
-        public static bool IsInstalling { get; set; } = false;
+        public static bool IsInstalling
+        {
+            get
+            {
+                return _isInstalling || !CheckInstallFinishedFileExisted();
+            }
+            set
+            {
+                _isInstalling = false;
+            }
+        }
+
+        /// <summary>
+        /// 检查安装完成状态文件是否存在
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckInstallFinishedFileExisted()
+        {
+            var fileExist = File.Exists(Server.GetMapPath("~/App_Data/install-finished.txt"));
+            return fileExist;
+        }
+
+        /// <summary>
+        /// 手动设置安装状态-结束
+        /// </summary>
+        public static async void SetInstallFinished()
+        {
+            _isInstalling = false;
+            var filePath = Server.GetMapPath("~/App_Data/install-finished.txt");
+            if (!CheckInstallFinishedFileExisted())
+            {
+                var text = @$"After this file is successfully installed by the system, it should only be modified or removed when you need to reinstall the entire system! Please operate with caution!!
+
+此文件由系统成功安装后，仅在您需要全部重新安装系统时将其修改或移除！请谨慎操作！！";
+                await File.WriteAllTextAsync(filePath, text);
+            }
+        }
 
         public static int PageViewCount { get; set; } //网站启动后前台页面浏览量
 

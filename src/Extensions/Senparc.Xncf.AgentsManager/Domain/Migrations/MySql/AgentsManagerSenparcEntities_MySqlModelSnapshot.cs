@@ -136,6 +136,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("McpEndpoints")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");

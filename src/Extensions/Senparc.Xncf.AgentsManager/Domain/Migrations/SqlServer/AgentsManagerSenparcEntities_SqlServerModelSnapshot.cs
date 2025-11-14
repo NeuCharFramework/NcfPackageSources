@@ -136,6 +136,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("McpEndpoints")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

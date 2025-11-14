@@ -5,6 +5,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.SenMapic.OHS.Local.PL
 {
+     public class MyFunction_SenMapicRequest: FunctionAppRequestBase
+{
+    [Required]
+    [Description("网址||请输入要爬取的网址")]
+public string Url { get; set; }
+
+[Required]
+[Description("深度||请输入最大要爬取的深度")]
+public int Deepth { get; set; }
+
+[Required]
+[Description("网页数量||请输入要爬取的最大数量")]
+public int PageNumber { get; set; }
+
+}
     public class MyFunction_CaculateRequest: FunctionAppRequestBase
     {
         [Required]

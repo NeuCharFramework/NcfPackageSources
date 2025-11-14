@@ -20,11 +20,69 @@
 }
 }
 
+/* 导出plugin操作按钮区域 */
+.plugin-export-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: #f5f7fa;
+    border-radius: 6px;
+    border: 1px solid #e4e7ed;
+}
+
+.plugin-export-actions .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.plugin-export-actions .action-buttons .el-button {
+    margin: 0 !important;
+}
+
+.plugin-export-actions .el-divider--vertical {
+    height: 20px;
+    margin: 0 4px;
+}
+
+.plugin-export-actions .selection-count {
+    display: flex;
+    align-items: center;
+}
+
+.plugin-export-actions .selection-count strong {
+    color: #409eff;
+    font-size: 16px;
+    margin: 0 2px;
+}
+
+/* 导出plugin树形选择器 */
 .expectedPluginTreeBox {
     width: 100%;
     max-height: 60vh;
     overflow: hidden;
     overflow-y: auto;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.expectedPluginTreeBox .el-tree {
+    background-color: transparent;
+}
+
+/* 树节点悬停效果 */
+.expectedPluginTreeBox .el-tree-node:hover > .el-tree-node__content {
+    background-color: #f5f7fa;
+}
+
+/* 树节点选中效果 */
+.expectedPluginTreeBox .el-tree-node.is-current > .el-tree-node__content {
+    background-color: #e6f7ff;
 }
 
 .tacticalFormBox .el-radio-group {
@@ -305,10 +363,13 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 22px;
+    gap: 0px; /* 移除gap，因为已经有8px的分隔条 */
     position: relative;
     box-sizing: border-box;
-    height:940px;
+    height: calc(100vh - 150px); /* 使用视口高度，减去头部导航高度 */
+    min-width: 1200px; /* 确保有最小宽度，小于此宽度会出现横向滚动条 */
+    overflow-x: auto; /* 允许横向滚动，不隐藏内容 */
+    overflow-y: hidden;
     /*min-width: 1240px;
     overflow: auto;
     border-radius: 10px;
@@ -325,6 +386,25 @@
         justify-content: center;
         color: #666;
         font-size: 14px;
+    }
+    
+    /* promptPage 横向滚动条样式 */
+    .promptPage::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .promptPage::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .promptPage::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 4px;
+    }
+
+    .promptPage::-webkit-scrollbar-thumb:hover {
+        background: #888;
     }
     /*tabs*/
     .promptPage .tabsArea {
@@ -368,11 +448,11 @@
 
     /*卡片*/
     .promptPage .boxCard {
-        padding: 15px;
+        padding: 10px;
         overflow: hidden;
         position: relative;
         box-sizing: border-box;
-        border-radius: 8px;
+        border-radius: 3px;
         background-color: #FFF;
     }
 
@@ -443,29 +523,37 @@
 
     /*左侧模块*/
     .promptPage > .promptPage_leftArea {
-        flex: 0;
-     
-        max-height: 9999999px;
+        flex-shrink: 0;
+        flex-grow: 0;
+        width: 360px; /* 默认宽度，会被Vue的style覆盖 */
+        max-width: 600px; /* 允许用户拖动到更宽 */
+        min-width: 280px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
-        gap: 15px;
-        transition: max-height 0.3s ease-in-out;
-        position:relative;
-       
+        gap: 12px;
+        transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
+        position: relative;
+        overflow: hidden;
     }
 
     .promptPage > .promptPage_leftAreaHide {
-        max-height: 0px !important;
+        width: 0px !important;
+        max-width: 0px !important;
+        min-width: 0px !important;
+        opacity: 0;
+        gap: 0px;
     }
 /*左侧模块 配置区域\输入prompt区域*/
 .promptPage_leftArea > .configurineArea, .promptPage_leftArea > .inputPromptArea {
     display: flex;
     flex-direction: column;
-    min-width: 500px; /*632px*/
+    width: 100%;
     flex: 1;
     flex-wrap: nowrap;
     gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 /*左侧模块 配置 行 区域*/
 .promptPage_leftArea .configurineAreaItem {
@@ -474,6 +562,18 @@
     flex-wrap: nowrap;
     /*gap: 10px;*/
 }
+
+    /* 左侧按钮组紧凑布局 */
+    .promptPage_leftArea .configurineAreaItem .d-flex > div > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+    }
+
+    .promptPage_leftArea .configurineAreaItem .el-button--mini {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
     /*左侧模块 配置 下拉选择 区域*/
     .promptPage_leftArea .configurineAreaItem > .selectRow {
         width: 100%;
@@ -577,53 +677,194 @@
                 margin: 0;
             }
 /*输入prompt盒子*/
-.enterbox > .entertarget > .promptContetnPmroparaBox {
+.entertarget > .promptContetnPmroparaBox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* 改为纵向布局 */
     flex-wrap: nowrap;
-    gap: 10px;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-start;
+    height: 100%;
+    flex: 1;
+    gap: 10px;
 }
 
-    .enterbox > .entertarget > .promptContetnPmroparaBox > .leftItemBox {
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        gap: 10px;
     }
 
-    .enterbox > .entertarget > .promptContetnPmroparaBox > .rightItemBox {
-        max-width: 430px;
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .titleRow {
+        flex-shrink: 0;
+    }
+
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .promptContentBox {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    /* 请求参数区域 - 在Prompt输入框下方 */
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .promptParamSection {
+        flex-shrink: 0;
+        max-height: 300px;
         overflow: hidden;
-        transition: max-width 0.3s ease-in-out;
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        opacity: 1;
     }
 
-    .enterbox > .entertarget > .promptContetnPmroparaBox > .rightItemHide {
-        max-width: 0px !important;
+    .entertarget > .promptContetnPmroparaBox > .leftItemBox > .paramSectionHide {
+        max-height: 0 !important;
+        opacity: 0;
+        overflow: hidden;
     }
     /*输入prompt输入框盒子 内容*/
-    .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox {
+    .entertarget > .promptContetnPmroparaBox .promptContentBox {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         gap: 10px;
+        flex: 1;
+        min-height: 0;
     }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox .promptInput .el-textarea {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox .promptInput .el-textarea__inner {
             color: #333;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
+            flex: 1;
+            min-height: 300px;
+            height: 100%;
+            resize: none;
         }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
+        /* contenteditable富文本编辑器 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor {
+            flex: 1;
+            min-height: 300px;
+            padding: 5px 15px;
+            border: 1px solid #DCDFE6;
+            border-radius: 4px;
+            background: #FFF;
+            color: #333;
+            font-size: 14px;
+            font-family: inherit;
+            line-height: 1.5;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            outline: none;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor:focus {
+            border-color: #409eff;
+        }
+
+        /* placeholder效果 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor:empty:before {
+            content: attr(data-placeholder);
+            color: #C0C4CC;
+        }
+
+        /* 高亮变量样式 - 确保绝对内联 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight {
+            display: inline !important;
+            background: rgba(255, 235, 59, 0.3);
+            border-radius: 2px;
+            padding: 1px 3px !important;
+            margin: 0 !important;
+            border: none !important;
+            line-height: inherit !important;
+            white-space: nowrap !important;
+            vertical-align: baseline !important;
+            float: none !important;
+            clear: none !important;
+            position: static !important;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {
+            background: rgba(76, 175, 80, 0.2) !important;
+            color: inherit !important;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.undefined {
+            background: rgba(255, 152, 0, 0.2) !important;
+            color: inherit !important;
+        }
+        
+        /* 确保编辑器内的br正常工作 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor br {
+            display: block;
+            content: "";
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 变量提示卡片 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint {
+            flex-shrink: 0;
+            padding: 8px 12px;
+            background: #f5f7fa;
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-top: -5px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .hint-title {
+            color: #606266;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .hint-title i {
+            margin-right: 4px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .variables-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .variable-tag {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .variable-tag i {
+            margin-left: 4px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
             align-items: flex-end;
             gap: 10px;
+            flex-shrink: 0;
         }
 
-            .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
+            .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox {
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
@@ -631,7 +872,7 @@
                 gap: 5px;
             }
 
-                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox {
                     white-space: nowrap;
                     padding: 7px 10px;
                     background: #FFF;
@@ -641,17 +882,17 @@
                     cursor: pointer;
                 }
 
-                    .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
+                    .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .operationBox .numsOfResultsBox .numVal {
                         display: inline-block;
                         width: 20px;
                         text-align: left;
                     }
 
-            .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
+            .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox {
                 position: relative;
             }
 
-                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox .el-textarea__inner {
                     padding: 5px 15px 5px 55px;
                     color: #333;
                     font-size: 14px;
@@ -660,7 +901,7 @@
                     line-height: normal;
                 }
 
-                .enterbox > .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
                     content: '备注:';
                     position: absolute;
                     left: 15px;
@@ -673,7 +914,7 @@
 
 
     /*输入Prompt请求参数盒子 promptPmroparaBox */
-    .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox {
+    .entertarget .promptPmroparaBox {
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -681,9 +922,12 @@
         gap: 10px;
         border-radius: 4px;
         border: 1px solid #DCDFE6;
+        background-color: #f9f9f9;
+        overflow-y: auto;
+        max-height: 260px;
     }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .formItem {
+        .entertarget .promptPmroparaBox .formItem {
             padding-right: 20px;
             display: flex;
             align-items: center;
@@ -694,26 +938,101 @@
         }
 
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .addVariableRow {
+        .entertarget .promptPmroparaBox .addVariableRow {
             margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
         }
 
-        .enterbox > .entertarget > .promptContetnPmroparaBox .promptPmroparaBox .footerBtnRow {
+        .entertarget .promptPmroparaBox .footerBtnRow {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-/*右侧模块*/
-.promptPage > .promptPage_rightArea {
-    flex: 1;
-    min-width: 409.5px; /*622px*/
+
+    /* 请求参数区域的标题行 */
+    .entertarget .promptParamSection > .titleRow {
+        flex-shrink: 0;
+        margin-bottom: 8px;
+    }
+
+    /* 请求参数盒子的滚动条样式 */
+    .entertarget .promptPmroparaBox::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb {
+        background: #DCDFE6;
+        border-radius: 3px;
+    }
+
+    .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb:hover {
+        background: #888;
+    }
+/*中间模块 - 输入Prompt*/
+.promptPage > .promptPage_centerArea {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 380px; /* 默认宽度，会被Vue的style覆盖 */
+    min-width: 320px;
+    max-width: 800px; /* 允许用户拖动到更宽 */
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    height: 100%;
+    transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
+}
+
+/* 中间区域最大化状态 */
+.promptPage > .promptPage_centerAreaMaximized {
+    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    max-width: none !important; /* 取消最大宽度限制 */
+    min-width: 350px;
+}
+
+    .promptPage_centerArea > .entertarget {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        height: 100%;
+    }
+
+/*右侧模块 - 输出和分析*/
+.promptPage > .promptPage_rightArea {
+    flex: 1 1 auto; /* 优先扩展，占据剩余空间 */
+    min-width: 400px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* 右侧区域最大化状态 */
+.promptPage > .promptPage_rightAreaMaximized {
+    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    min-width: 400px;
+}
+
+/* 右侧区域隐藏状态（中间区域最大化时） */
+.promptPage > .promptPage_rightAreaHidden {
+    flex: 0 0 0 !important; /* 不占用任何空间 */
+    min-width: 0 !important;
+    max-width: 0 !important;
+    width: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    gap: 0;
 }
 /*右侧模块 输出区域*/
 .promptPage_rightArea > .outputArea {
@@ -723,26 +1042,232 @@
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 15px;
-    overflow: auto;
-    height: 100%;
+    overflow: hidden;
+    min-height: 0; /* 重要：允许flex收缩 */
+    position: relative; /* 为自定义滚动条定位 */
 }
 /* 定制滚动条样式 */
-    .outputArea::-webkit-scrollbar {
-        width: 10px; /* 滚动条的宽度 */
+    .outputArea_contentBox::-webkit-scrollbar,
+    .configurineArea::-webkit-scrollbar {
+        width: 8px; /* 滚动条的宽度 */
     }
 
-    .outputArea::-webkit-scrollbar-track {
+    .outputArea_contentBox::-webkit-scrollbar-track,
+    .configurineArea::-webkit-scrollbar-track {
         background: transparent; /* 滚动条轨道的背景色 */
     }
 
-    .outputArea::-webkit-scrollbar-thumb {
+    .outputArea_contentBox::-webkit-scrollbar-thumb,
+    .configurineArea::-webkit-scrollbar-thumb {
         background: #DCDFE6; /* 滚动条滑块的背景色 */
-        border-radius: 5px; /* 滚动条滑块的圆角 */
+        border-radius: 4px; /* 滚动条滑块的圆角 */
     }
 
-        .outputArea::-webkit-scrollbar-thumb:hover {
+        .outputArea_contentBox::-webkit-scrollbar-thumb:hover,
+        .configurineArea::-webkit-scrollbar-thumb:hover {
             background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
         }
+
+/* VSCode风格的自定义滚动条缩略图 */
+.custom-scrollbar-thumbnail {
+    position: absolute;
+    right: 8px; /* 与滚动条对齐 */
+    top: 115px; /* 从内容区域开始，避免覆盖标题栏和最大化按钮 (boxCard padding 10px + promptVersion ~40px + gap 15px + titleRow 35px + gap 15px) */
+    bottom: 0;
+    width: 140px; /* 增加宽度以容纳评分信息 */
+    background: rgba(255, 255, 255, 0.85); /* 增加透明度 */
+    border-left: 1px solid rgba(224, 224, 224, 0.6);
+    z-index: 1001;
+    pointer-events: auto;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
+    animation: slideInRight 0.2s ease-out;
+    backdrop-filter: blur(6px); /* 增强毛玻璃效果 */
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.thumbnail-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 8px 4px;
+    overflow: hidden;
+}
+
+.thumbnail-item {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background: #f0f0f0;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    gap: 3px;
+}
+
+.thumbnail-item:hover {
+    background: #e3f2fd;
+    border-color: #42a5f5;
+    transform: scale(1.03);
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.thumbnail-item-active {
+    background: #bbdefb !important;
+    border: 2px solid #2196F3 !important;
+    box-shadow: 0 2px 10px rgba(33, 150, 243, 0.35);
+    z-index: 3;
+}
+
+/* 缩略图内容容器 */
+.thumbnail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    z-index: 2;
+}
+
+/* 时间显示 */
+.thumbnail-time {
+    font-size: 9px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
+    text-align: center;
+    font-weight: 500;
+}
+
+.thumbnail-item-active .thumbnail-time {
+    color: #1976D2;
+    font-weight: 600;
+}
+
+/* 评分显示 */
+.thumbnail-score {
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.thumbnail-item-active .thumbnail-score {
+    color: #1565C0;
+    font-weight: 700;
+}
+
+/* Excel风格数据条背景 */
+.thumbnail-score-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.15) 0%, 
+        rgba(76, 175, 80, 0.25) 100%);
+    border-radius: 3px 0 0 3px;
+    z-index: 1;
+    transition: width 0.3s ease;
+}
+
+/* 根据评分等级调整颜色 */
+.thumbnail-score-bar.score-excellent {
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.2) 0%, 
+        rgba(76, 175, 80, 0.35) 100%); /* 绿色 - 优秀 8-10分 */
+}
+
+.thumbnail-score-bar.score-good {
+    background: linear-gradient(90deg, 
+        rgba(33, 150, 243, 0.2) 0%, 
+        rgba(33, 150, 243, 0.35) 100%); /* 蓝色 - 良好 6-8分 */
+}
+
+.thumbnail-score-bar.score-medium {
+    background: linear-gradient(90deg, 
+        rgba(255, 193, 7, 0.2) 0%, 
+        rgba(255, 193, 7, 0.35) 100%); /* 黄色 - 中等 4-6分 */
+}
+
+.thumbnail-score-bar.score-low {
+    background: linear-gradient(90deg, 
+        rgba(255, 152, 0, 0.2) 0%, 
+        rgba(255, 152, 0, 0.35) 100%); /* 橙色 - 较低 2-4分 */
+}
+
+.thumbnail-score-bar.score-poor {
+    background: linear-gradient(90deg, 
+        rgba(244, 67, 54, 0.2) 0%, 
+        rgba(244, 67, 54, 0.35) 100%); /* 红色 - 差 0-2分 */
+}
+
+/* 激活状态下的数据条颜色更深 */
+.thumbnail-item-active .thumbnail-score-bar.score-excellent {
+    background: linear-gradient(90deg, 
+        rgba(76, 175, 80, 0.3) 0%, 
+        rgba(76, 175, 80, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-good {
+    background: linear-gradient(90deg, 
+        rgba(33, 150, 243, 0.3) 0%, 
+        rgba(33, 150, 243, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-medium {
+    background: linear-gradient(90deg, 
+        rgba(255, 193, 7, 0.3) 0%, 
+        rgba(255, 193, 7, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-low {
+    background: linear-gradient(90deg, 
+        rgba(255, 152, 0, 0.3) 0%, 
+        rgba(255, 152, 0, 0.45) 100%);
+}
+
+.thumbnail-item-active .thumbnail-score-bar.score-poor {
+    background: linear-gradient(90deg, 
+        rgba(244, 67, 54, 0.3) 0%, 
+        rgba(244, 67, 54, 0.45) 100%);
+}
+
+/* 可视区域指示器 */
+.thumbnail-viewport {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    background: rgba(33, 150, 243, 0.15);
+    border: 1px solid rgba(33, 150, 243, 0.4);
+    border-radius: 2px;
+    pointer-events: none;
+    transition: all 0.1s ease;
+    min-height: 20px;
+}
+
+/* 不需要调整内容宽度，滚动条悬浮显示 */
 .promptPage_rightArea > .outputArea > .titleRow {
     justify-content: flex-start;
     gap: 30px;
@@ -767,8 +1292,9 @@
         flex-wrap: nowrap;
         gap: 10px;
         box-sizing: border-box;
-        min-height: 416px !important;
-        max-height: 46Vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 0; /* 重要：允许flex收缩 */
     }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
@@ -808,10 +1334,11 @@
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
+            margin-right: 160px; /* 为右侧滚动条预留空间 */
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap; /* 允许换行，避免空间不足 */
             align-items: center;
-            justify-content: flex-end;
+            justify-content: flex-start; /* 左对齐 */
             gap: 10px;
             color: #0083FF;
             font-size: 14px;
@@ -826,6 +1353,13 @@
                 gap: 3px;
                 cursor: pointer;
             }
+            
+                /* AI评分加载状态 */
+                .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item .el-icon-loading {
+                    color: #409EFF;
+                    font-size: 14px;
+                    margin-right: 2px;
+                }
 
                 .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item > .imgIcon {
                     flex-shrink: 0;
@@ -840,10 +1374,11 @@
             border: 1px solid #DCDFE6;
             background-color: #FFF;
             position:absolute;
-            top:-6px;
-            right:0px;
+            bottom:10px;
+            left:0px; /* 改为左侧显示 */
             z-index:999999;
             width:350px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* 添加阴影 */
         
         }
 
@@ -924,34 +1459,22 @@
                justify-content:center;
                align-items:end;
             }
+
 /*右侧模块 分析区域*/
-.enterbox {
-    display: flex;
-    flex: 1;
-    gap: 15px;
-}
-.entertarget {
-   width:70%;
-   flex:1;
-}
-.promptPage_rightArea > .enterbox > .analysisArea {
-    width: 30%;
+.promptPage_rightArea > .analysisArea {
+    flex: 0 0 auto; /* 不伸缩 */
+    height: 260px; /* 减小高度，留更多空间给输出区域 */
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    gap: 3px;
+    gap: 5px;
     box-sizing: border-box;
-    display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center;
 }
 
-    .promptPage_rightArea > .enterbox > .analysisArea > .echartsBox {
+    .promptPage_rightArea > .analysisArea > .echartsBox {
         width: 100%;
-        min-width: 379.5px; /*598px*/
-        height: 200px;
+        height: 200px; /* 调整图表高度 */
         box-sizing: border-box;
-        
     }
 
 /*版本记录 btn*/
@@ -1079,26 +1602,31 @@
     align-items: flex-start;
     justify-content: space-between;
     line-height: 20px;
+    margin-right: 160px; /* 为右侧滚动条预留空间 */
 }
 
     .promptResult_Item_Title .promptReultTimeArea {
         color: #6f6f6f;
         font-size: 12px;
+        flex-shrink: 0;
     }
 
 .copyButtonArea {
     text-align: right;
-    clear: both;
     font-size: 11px;
-    float: right;
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
     .copyButtonArea a {
         border: 1px solid #aaa;
         border-radius: 5px;
-        padding: 2px 4px;
+        padding: 0px 8px;
         display: inline-block;
-        padding: 0px 5px;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        line-height: 20px;
     }
 
         .copyButtonArea a:hover {
@@ -1106,7 +1634,7 @@
             color: #fff;
             border-color: rgb(38 169 233);
             box-shadow: 0 0 5px rgb(38 169 233 / 87%);
-            padding: 0px 5px;
+            transform: translateY(-1px);
         }
 
 .sidebarbtn{
@@ -1130,6 +1658,95 @@
 .promptVersion{
     display:flex;
     justify-content:space-between;
+    align-items: flex-start;
+}
+
+.promptVersion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.promptVersion-row {
+    display: flex;
+    align-items: center;
+}
+
+.promptVersion-info {
+    font-size: 13px;
+    color: #606266;
+}
+
+/* 可拖动分隔条样式 */
+.resize-handle {
+    width: 8px;
+    flex-shrink: 0;
+    cursor: col-resize;
+    position: relative;
+    background: transparent;
+    transition: background-color 0.2s ease;
+    z-index: 100;
+    user-select: none; /* 防止双击选中文本 */
+}
+
+/* 使用伪元素扩展可点击区域，不影响布局 */
+.resize-handle::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+}
+
+.resize-handle:hover {
+    background-color: rgba(64, 158, 255, 0.2);
+}
+
+.resize-handle:active {
+    background-color: rgba(64, 158, 255, 0.4);
+}
+
+/* 分隔条中间的指示线 */
+.resize-handle::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 60px;
+    background-color: #dcdfe6;
+    border-radius: 1px;
+    transition: all 0.2s ease;
+}
+
+.resize-handle:hover::before {
+    background-color: #409eff;
+    height: 80px;
+    width: 3px;
+}
+
+.resize-handle:active::before {
+    background-color: #409eff;
+    height: 100px;
+    width: 4px;
+}
+
+/* 双击还原时的闪烁动画 */
+@keyframes resetFlash {
+    0%, 100% {
+        background-color: rgba(64, 158, 255, 0.2);
+    }
+    50% {
+        background-color: rgba(67, 207, 124, 0.6);
+    }
+}
+
+.resize-handle.reset-animation {
+    animation: resetFlash 0.6s ease;
 }
 
 /* 推理过程样式 */
@@ -1153,3 +1770,594 @@ think::before {
     color: #666;
     border-radius: 4px;
 }
+
+/* ========== Prompt 对比对话框样式（Git Diff 风格） ========== */
+
+/* 对话框主体 */
+.prompt-compare-dialog .el-dialog__body {
+    padding: 15px 20px;
+    max-height: 78vh;
+    overflow-y: auto;
+}
+
+/* 选择器区域 - 紧凑横向布局 */
+.compare-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.compare-selector .el-select {
+    flex: 1;
+    max-width: 45%;
+}
+
+.compare-selector .el-button {
+    flex-shrink: 0;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.compare-selector .el-button:hover {
+    transform: scale(1.05);
+    color: #409eff;
+    background-color: #ecf5ff;
+}
+
+/* 评分统计对比卡片 */
+.compare-score-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.score-card {
+    flex: 1;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e4e7ed;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.score-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.score-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+    color: white;
+}
+
+.score-card-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.score-card-header .el-button {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.score-card-header .el-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+}
+
+.score-card-body {
+    display: flex;
+    padding: 15px;
+    gap: 20px;
+}
+
+.score-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background: #f5f7fa;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.score-item:hover {
+    background: #ecf5ff;
+}
+
+.score-label {
+    font-size: 12px;
+    color: #909399;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.score-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #409eff;
+    font-family: 'Arial', sans-serif;
+}
+
+.score-value.score-empty {
+    color: #c0c4cc;
+    font-size: 20px;
+}
+
+/* 对比内容区域 */
+.compare-content {
+    margin-top: 0;
+}
+
+/* 紧凑型信息表格 */
+.compare-info-table,
+.compare-params-table {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.compare-info-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.compare-info-table thead {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.compare-info-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #303133;
+    border-bottom: 2px solid #409eff;
+    font-size: 14px;
+}
+
+.compare-info-table .version-tag {
+    font-size: 12px;
+    color: #606266;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+    border: 1px solid #dcdfe6;
+}
+
+.compare-info-table tbody tr {
+    border-bottom: 1px solid #ebeef5;
+    transition: background-color 0.2s ease;
+}
+
+.compare-info-table tbody tr:hover {
+    background-color: #f5f7fa;
+}
+
+.compare-info-table tbody tr.has-diff {
+    background-color: #fff7e6;
+}
+
+.compare-info-table tbody tr.has-diff:hover {
+    background-color: #fff3d9;
+}
+
+.compare-info-table td {
+    padding: 10px 15px;
+    color: #606266;
+    font-size: 13px;
+    position: relative;
+}
+
+.compare-info-table td.field-name {
+    font-weight: 600;
+    color: #909399;
+    background: #fafbfc;
+}
+
+.compare-info-table .diff-mark {
+    color: #ff9800;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+/* Diff 区块样式 */
+.compare-diff-section {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.diff-title {
+    margin: 0;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    border-bottom: 2px solid #dcdfe6;
+    font-size: 14px;
+    font-weight: 600;
+    color: #303133;
+}
+
+/* Diff 容器（支持同步滚动） */
+.compare-diff-container {
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.compare-columns {
+    display: flex;
+    width: 100%;
+    min-width: 100%;
+}
+
+.compare-diff-column {
+    flex: 1;
+    min-width: 50%;
+    border-right: 2px solid #e4e7ed;
+}
+
+.compare-diff-column:last-child {
+    border-right: none;
+}
+
+/* Diff 列头部 */
+.diff-column-header {
+    padding: 10px 15px;
+    background: #f5f7fa;
+    border-bottom: 1px solid #dcdfe6;
+    font-weight: 600;
+    font-size: 13px;
+    color: #606266;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.diff-badge {
+    font-size: 11px;
+    background: #fff7e6;
+    color: #ff9800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid #ffb74d;
+    font-weight: normal;
+}
+
+/* Diff 代码块 */
+.diff-code-block {
+    padding: 15px;
+    background: #fafbfc;
+    min-height: 200px;
+}
+
+.diff-code-block.has-content-diff {
+    background: #fff7e6;
+    border-left: 4px solid #ff9800;
+}
+
+.diff-code-block pre {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    word-wrap: break-word;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #2c3e50;
+}
+
+/* Git风格差异高亮 */
+.diff-line {
+    display: block;
+    padding: 2px 8px;
+    margin: 0 0 1px 0;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+    line-height: 1.6;
+}
+
+.diff-line:hover {
+    opacity: 0.9;
+}
+
+/* 新增的内容（绿色） */
+.diff-added {
+    background-color: #e6ffec;
+    color: #22863a;
+    border-left: 3px solid #34d058;
+}
+
+/* 删除的内容（红色） */
+.diff-removed {
+    background-color: #ffeef0;
+    color: #d73a49;
+    border-left: 3px solid #d73a49;
+}
+
+/* 修改的内容（黄色边框，用于行内差异） */
+.diff-modified {
+    background-color: #fff8e1;
+    color: #2c3e50;
+    border-left: 3px solid #ffa726;
+}
+
+/* 未修改的内容（灰色） */
+.diff-unchanged {
+    color: #6a737d;
+    background-color: transparent;
+}
+
+/* 行内单词级别差异高亮 */
+.diff-word-removed {
+    background-color: #fdb8c0;
+    color: #b31d28;
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: line-through;
+}
+
+.diff-word-added {
+    background-color: #acf2bd;
+    color: #176f2c;
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+/* 空内容提示 */
+.diff-empty {
+    color: #909399;
+    font-style: italic;
+}
+
+/* Diff容器滚动条 */
+.compare-diff-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.compare-diff-container::-webkit-scrollbar-track {
+    background: #f5f7fa;
+}
+
+.compare-diff-container::-webkit-scrollbar-thumb {
+    background: #c0c4cc;
+    border-radius: 4px;
+}
+
+.compare-diff-container::-webkit-scrollbar-thumb:hover {
+    background: #909399;
+}
+
+
+/* 请求参数表格特殊样式 */
+.compare-params-table code {
+    background: #f5f7fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    color: #e96900;
+}
+
+.compare-params-table td code {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+}
+
+/* 空状态 */
+.compare-empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: #909399;
+}
+
+.compare-empty-state i {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.compare-empty-state p {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* 空参数提示 */
+.compare-empty-params {
+    text-align: center;
+    padding: 30px 20px;
+    color: #909399;
+    background: #fafbfc;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.compare-empty-params i {
+    font-size: 24px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.compare-empty-params span {
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* 对话框底部按钮 */
+.prompt-compare-dialog .dialog-footer {
+    text-align: center;
+    padding: 15px 0 0 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 1400px) {
+    .compare-columns {
+        gap: 20px;
+    }
+    
+    .compare-column {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .compare-selector {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .compare-selector .el-select {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .compare-score-cards {
+        flex-direction: column;
+    }
+    
+    .score-card-body {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 768px) {
+    .score-card-body {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .score-value {
+        font-size: 20px;
+    }
+}
+
+/* ========== 模型选择器自定义显示 ========== */
+.model-select .el-select-dropdown__item {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    padding: 8px 20px !important;
+    line-height: normal !important;
+    overflow: visible !important;
+    white-space: normal !important;
+}
+
+.model-option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    width: 100%;
+    min-height: fit-content;
+}
+
+.model-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.model-name {
+    font-size: 14px;
+    color: #303133;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.model-version {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 6px;
+    background: linear-gradient(135deg, #e8f4ff 0%, #d4e9ff 100%);
+    color: #409eff;
+    border-radius: 3px;
+    font-weight: 600;
+    border: 1px solid #b3d8ff;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.model-deployment {
+    font-size: 11px;
+    color: #909399;
+    line-height: 1.3;
+    font-style: italic;
+    display: block;
+    word-wrap: break-word;
+}
+
+/* 选中状态 */
+.model-select .el-select-dropdown__item.selected .model-name {
+    color: #409eff;
+    font-weight: 600;
+}
+
+.model-select .el-select-dropdown__item.selected .model-version {
+    background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+    color: white;
+    border-color: #409eff;
+}
+
+.model-select .el-select-dropdown__item.selected .model-deployment {
+    color: #66b1ff;
+}
+
+/* 悬停状态 */
+.model-select .el-select-dropdown__item:hover .model-name {
+    color: #409eff;
+}
+
+.model-select .el-select-dropdown__item:hover .model-version {
+    background: linear-gradient(135deg, #d4e9ff 0%, #c0dfff 100%);
+    border-color: #409eff;
+}
+
+.model-select .el-select-dropdown__item:hover .model-deployment {
+    color: #66b1ff;
+}
+
+/* ========== 对比窗口版本号复制按钮 ========== */
+.copy-version-icon {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #909399;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+}
+
+.copy-version-icon:hover {
+    color: #409eff;
+    transform: scale(1.1);
+}
+
+.copy-version-icon:active {
+    transform: scale(0.95);
+}
+

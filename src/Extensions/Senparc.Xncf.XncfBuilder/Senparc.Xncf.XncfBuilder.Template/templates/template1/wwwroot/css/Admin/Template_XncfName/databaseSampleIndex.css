@@ -1,0 +1,219 @@
+/* 通用样式 */
+.d-flex{
+    display: flex;
+}
+.justify-content-between{
+    justify-content: space-between;
+}
+.align-items-center{
+    align-items: center;
+}
+
+/* 过滤器容器样式 */
+.filter-container {
+    margin-bottom: 20px;
+    padding: 10px 0;
+}
+
+.filter-container .el-button {
+    margin-right: 10px;
+}
+
+/* 颜色预览样式 */
+.color-preview {
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.color-preview-large {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid #dcdfe6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    margin: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.color-preview-large:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* 分页容器样式 */
+.pagination-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* 表格样式增强 */
+.el-table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+}
+
+.el-table th {
+    background-color: #fafafa;
+    color: #333;
+    font-weight: 600;
+}
+
+/* 颜色标签样式 */
+.el-tag {
+    min-width: 50px;
+    text-align: center;
+    font-weight: bold;
+    border: none !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 对话框样式 */
+.el-dialog {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.el-dialog__header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 20px 0 20px;
+}
+
+.el-dialog__title {
+    color: white;
+    font-weight: 600;
+}
+
+.el-dialog__body {
+    padding: 30px 20px;
+}
+
+/* 滑块样式 */
+.el-slider {
+    margin: 20px 0;
+}
+
+.el-slider__runway {
+    height: 6px;
+    background-color: #e4e7ed;
+    border-radius: 3px;
+}
+
+.el-slider__button {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #409eff;
+}
+
+/* 按钮样式增强 */
+.el-button--mini {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.el-button--primary {
+    background: linear-gradient(135deg, #409eff 0%, #3a8ee6 100%);
+    border: none;
+}
+
+.el-button--success {
+    background: linear-gradient(135deg, #67c23a 0%, #5daf34 100%);
+    border: none;
+}
+
+.el-button--warning {
+    background: linear-gradient(135deg, #e6a23c 0%, #cf9236 100%);
+    border: none;
+}
+
+.el-button--danger {
+    background: linear-gradient(135deg, #f56c6c 0%, #f25c5c 100%);
+    border: none;
+}
+
+.el-button--info {
+    background: linear-gradient(135deg, #909399 0%, #82848a 100%);
+    border: none;
+}
+
+/* 表单项样式 */
+.el-form-item {
+    margin-bottom: 22px;
+}
+
+.el-form-item__label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* 加载动画样式 */
+.el-loading-mask {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .filter-container {
+        text-align: center;
+    }
+    
+    .filter-container .el-button {
+        margin: 5px;
+        width: auto;
+    }
+    
+    .color-preview {
+        height: 30px;
+        font-size: 10px;
+    }
+    
+    .color-preview-large {
+        height: 60px;
+        font-size: 14px;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.el-table tbody tr {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 鼠标悬停效果 */
+.el-table tbody tr:hover {
+    background-color: #f5f7fa !important;
+    transition: background-color 0.3s ease;
+}
+
+.el-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+} 

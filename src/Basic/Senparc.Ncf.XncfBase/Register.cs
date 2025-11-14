@@ -357,7 +357,14 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
             //多租户
-            services.AddScoped<RequestTenantInfo>();
+            services.AddScoped<RequestTenantInfo>();//TODO:需要动态识别，当前请求缓存中读取并转换
+
+            //注册 Senarc.Ncf.Service 中的服务
+            services.AddScoped<SysButtonService>();
+            services.AddScoped<SysMenuService>();
+            services.AddScoped<SysRoleAdminUserInfoService>();
+            services.AddScoped<SysRolePermissionService>();
+            services.AddScoped<SysRoleService>();
 
             services.ScanAssamblesForAutoDI();
             //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
@@ -396,6 +403,12 @@ namespace Senparc.Ncf.XncfBase
                 try
                 {
                     xncfRegister.AddXncfModule(services, configuration, env);
+
+                    //MCP
+                    if (xncfRegister.EnableMcpServer)
+                    {
+                        xncfRegister.AddMcpServer(services, xncfRegister);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -565,6 +578,13 @@ namespace Senparc.Ncf.XncfBase
 
                     //任意一个 ThreadXncf 已经载入
                     Ncf.Core.Config.SiteConfig.NcfCoreState.AnyThreadXncfLoaded = true;
+                }
+
+
+                //MCP 服务器
+                if (register.EnableMcpServer)
+                {
+                    register.UseMcpServer(app, registerService);
                 }
             }
 

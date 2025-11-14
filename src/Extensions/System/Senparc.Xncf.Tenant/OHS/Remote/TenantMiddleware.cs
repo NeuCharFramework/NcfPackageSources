@@ -16,10 +16,16 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
     {
         private readonly RequestDelegate _next;
         private static bool AlertedTenantState = false;
+        public static bool FirstRunAndInstalling = false;
+
+        static TenantMiddleware()
+        {
+            FirstRunAndInstalling = !SiteConfig.CheckInstallFinishedFileExisted();
+        }
 
         private string SetLog(string msg)
         {
-            return  $"[{SystemTime.Now}] {msg}";
+            return $"[{SystemTime.Now}] {msg}";
         }
 
         public TenantMiddleware(RequestDelegate next)
@@ -48,7 +54,8 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                 }
 
                 //判断是否启用了租户
-                if (enableMultiTenant)
+                var urlPath = context.Request.Path.ToString();
+                if (!FirstRunAndInstalling && enableMultiTenant)
                 {
                     var serviceProvider = context.RequestServices;
                     var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
