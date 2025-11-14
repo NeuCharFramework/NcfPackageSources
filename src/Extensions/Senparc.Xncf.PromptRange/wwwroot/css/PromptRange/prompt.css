@@ -785,27 +785,30 @@
             color: #C0C4CC;
         }
 
-        /* 高亮变量样式 */
+        /* 高亮变量样式 - 确保绝对内联 */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight {
             display: inline !important;
             background: rgba(255, 235, 59, 0.3);
             border-radius: 2px;
-            padding: 0 2px;
-            margin: 0;
-            line-height: inherit;
-            white-space: nowrap;
+            padding: 1px 3px !important;
+            margin: 0 !important;
+            border: none !important;
+            line-height: inherit !important;
+            white-space: nowrap !important;
+            vertical-align: baseline !important;
+            float: none !important;
+            clear: none !important;
+            position: static !important;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {
-            background: rgba(76, 175, 80, 0.25);
-            color: #2e7d32;
-            font-weight: 500;
+            background: rgba(76, 175, 80, 0.2) !important;
+            color: inherit !important;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.undefined {
-            background: rgba(244, 67, 54, 0.25);
-            color: #c62828;
-            font-weight: 500;
+            background: rgba(255, 152, 0, 0.2) !important;
+            color: inherit !important;
         }
         
         /* 确保编辑器内的br正常工作 */

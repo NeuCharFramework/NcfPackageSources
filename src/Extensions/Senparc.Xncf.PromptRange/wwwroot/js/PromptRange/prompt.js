@@ -409,31 +409,61 @@ var app = new Vue({
             const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             
-            // 构建正则表达式
-            const regex = new RegExp(`${escapedPrefix}(\\w+)${escapedSuffix}`, 'g');
+            // 构建正则表达式，使用全局标志
+            const regex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
             
             // 获取所有已定义的变量名
             const definedVarNames = variableList.map(v => v.name).filter(n => n);
             
-            // 逐行处理，避免跨行匹配问题
+            // 逐行处理内容
             const lines = this.content.split('\n');
-            const htmlLines = lines.map(line => {
-                // 转义HTML
-                let html = this.escapeHtml(line);
+            const processedLines = lines.map(line => {
+                // 先转义整行HTML
+                let escapedLine = this.escapeHtml(line);
                 
-                // 高亮变量
-                html = html.replace(regex, (match, varName) => {
+                // 创建一个数组来存储处理后的片段
+                let lastIndex = 0;
+                let result = '';
+                let match;
+                
+                // 重新创建正则（因为有g标志，需要重置lastIndex）
+                const lineRegex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
+                
+                // 在转义后的文本中查找匹配
+                while ((match = lineRegex.exec(escapedLine)) !== null) {
+                    // 添加匹配前的文本
+                    result += escapedLine.substring(lastIndex, match.index);
+                    
+                    // 提取变量名（去掉前缀和后缀）
+                    const fullMatch = match[1];
+                    const varName = fullMatch.substring(prefix.length, fullMatch.length - suffix.length);
+                    
+                    // 判断是否已定义
                     const isDefined = definedVarNames.includes(varName);
                     const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
                     const title = isDefined ? `已定义: ${varName}` : `未定义: ${varName}`;
-                    return `<span class="${className}" title="${title}">${match}</span>`;
-                });
+                    
+                    // 添加高亮的span（使用内联样式确保不换行）
+                    result += `<span class="${className}" title="${title}" style="display:inline;">${fullMatch}</span>`;
+                    
+                    lastIndex = lineRegex.lastIndex;
+                }
                 
-                return html;
+                // 添加剩余的文本
+                result += escapedLine.substring(lastIndex);
+                
+                return result;
             });
             
             // 用<br>连接各行
-            return htmlLines.join('<br>');
+            const finalHTML = processedLines.join('<br>');
+            
+            // 调试：打印生成的HTML（仅在开发环境）
+            if (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1')) {
+                console.log('[highlightedHTML] Generated HTML:', finalHTML.substring(0, 300));
+            }
+            
+            return finalHTML;
         }
     },
     watch: {
@@ -4228,17 +4258,39 @@ var app = new Vue({
         
         // ========== contenteditable编辑器方法 ==========
         
+        // 编辑器聚焦事件
+        onEditorFocus() {
+            this.isUserEditing = true;
+        },
+        
         // 编辑器输入事件
         onEditorInput(e) {
             // 如果正在使用输入法，不处理
             if (this.isComposing) return;
             
-            // 只更新content，不重新渲染HTML（让浏览器保持原生行为）
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
             this.isUserEditing = true;
             this.content = this.getPlainText(editor);
+            
+            // 使用防抖延迟更新高亮（避免打断输入）
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 1500);  // 延长到1.5秒
+        },
+        
+        // 编辑器按键松开事件
+        onEditorKeyup(e) {
+            // 如果正在使用输入法，不处理
+            if (this.isComposing) return;
+            
+            // 使用防抖延迟高亮更新（1秒后更新，避免打断输入）
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 1000);
         },
         
         // 输入法结束事件
@@ -4249,37 +4301,59 @@ var app = new Vue({
             
             this.isUserEditing = true;
             this.content = this.getPlainText(editor);
+            
+            // 输入法结束后延迟更新高亮
+            setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 100);
         },
         
         // 编辑器失焦事件
         onEditorBlur() {
-            // 失焦时更新高亮并保存
+            // 清除定时器
+            if (this._highlightTimer) {
+                clearTimeout(this._highlightTimer);
+                this._highlightTimer = null;
+            }
+            
             this.isUserEditing = false;
             const editor = this.$refs.promptEditor;
             if (editor) {
                 this.content = this.getPlainText(editor);
-                
-                // 保存光标位置
-                const sel = window.getSelection();
-                let charOffset = 0;
-                if (sel.rangeCount > 0) {
-                    const range = sel.getRangeAt(0);
-                    const preCaretRange = range.cloneRange();
-                    preCaretRange.selectNodeContents(editor);
-                    preCaretRange.setEnd(range.endContainer, range.endOffset);
-                    charOffset = preCaretRange.toString().length;
-                }
-                
-                // 重新渲染高亮HTML
-                editor.innerHTML = this.highlightedHTML;
-                
-                // 恢复光标（虽然已经失焦，但为下次聚焦准备）
-                this.$nextTick(() => {
-                    this.restoreCaret(editor, charOffset);
-                });
+                // 失焦时更新高亮
+                this.updateHighlightWithCaret();
             }
             
             this.promptChangeHandel(this.content, 'content');
+        },
+        
+        // 更新高亮并保存/恢复光标位置
+        updateHighlightWithCaret() {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 保存光标位置
+            const sel = window.getSelection();
+            let charOffset = 0;
+            if (sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(editor);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                charOffset = preCaretRange.toString().length;
+            }
+            
+            // 重新渲染高亮HTML
+            editor.innerHTML = this.highlightedHTML;
+            
+            // 恢复光标位置
+            this.$nextTick(() => {
+                this.restoreCaret(editor, charOffset);
+                // 重新聚焦编辑器（如果之前有焦点）
+                if (this.isUserEditing && document.activeElement !== editor) {
+                    editor.focus();
+                }
+            });
         },
         
         // 编辑器粘贴事件（只粘贴纯文本）
