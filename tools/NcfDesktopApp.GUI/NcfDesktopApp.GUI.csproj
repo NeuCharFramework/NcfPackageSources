@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <!-- 临时改为 Exe 以显示控制台输出用于调试 -->
+    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Nullable>enable</Nullable>
@@ -9,6 +10,11 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <!-- 应用程序图标（Windows 可执行文件图标） -->
     <ApplicationIcon>Assets\app-icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  
+  <!-- 条件编译符号：在 Windows 上定义 WINDOWS 符号 -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,5 +43,7 @@
     <!-- WebView.Avalonia cross-platform packages -->
     <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
     <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />
+    <!-- Microsoft WebView2 for Windows (免费开源) -->
+    <PackageReference Include="Microsoft.Web.WebView2.Wpf" Version="1.0.2739.15" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </ItemGroup>
 </Project>

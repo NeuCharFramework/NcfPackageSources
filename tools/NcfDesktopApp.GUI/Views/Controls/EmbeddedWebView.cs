@@ -234,8 +234,54 @@ public partial class EmbeddedWebView : UserControl
     private Control? TryCreateNativeWebView(out Type? controlType)
     {
         controlType = null;
+        
+        // 🔥 Windows 平台：优先使用原生 WebView2 控件
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            try
+            {
+                Debug.WriteLine("🪟 检测到 Windows 平台，尝试使用 WindowsWebView2Control");
+                
+                var webView2Control = new WindowsWebView2Control();
+                controlType = typeof(WindowsWebView2Control);
+                
+                // 订阅导航事件
+                webView2Control.NavigationStarted += (s, url) =>
+                {
+                    Debug.WriteLine($"🚢 [WindowsWebView2] 导航开始: {url}");
+                    OnNavigationStarted(url);
+                };
+                
+                webView2Control.NavigationCompleted += (s, url) =>
+                {
+                    Debug.WriteLine($"✅ [WindowsWebView2] 导航完成: {url}");
+                    OnNavigationCompleted(url);
+                };
+                
+                webView2Control.NavigationFailed += (s, error) =>
+                {
+                    Debug.WriteLine($"❌ [WindowsWebView2] 导航失败: {error}");
+                    OnNavigationFailed(error);
+                };
+                
+                Debug.WriteLine("✅ WindowsWebView2Control 创建成功");
+                return webView2Control;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"⚠️ WindowsWebView2Control 创建失败: {ex.Message}");
+                Debug.WriteLine($"   异常类型: {ex.GetType().Name}");
+                Debug.WriteLine($"   堆栈跟踪: {ex.StackTrace}");
+                Debug.WriteLine("   将回退到 WebView.Avalonia");
+                // 继续尝试 WebView.Avalonia
+            }
+        }
+        
+        // 回退方案：尝试使用 WebView.Avalonia (跨平台)
         try
         {
+            Debug.WriteLine("🔍 尝试查找 WebView.Avalonia 控件");
+            
             // 优先匹配包名包含 "Avalonia.WebView" 的程序集中的类型名 "WebView"
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var candidateTypes = assemblies
@@ -266,17 +312,18 @@ public partial class EmbeddedWebView : UserControl
             var type = candidateTypes.FirstOrDefault();
             if (type == null)
             {
-                Debug.WriteLine("未找到 WebView.Avalonia 控件类型，使用占位实现");
+                Debug.WriteLine("❌ 未找到 WebView.Avalonia 控件类型，使用占位实现");
                 return null;
             }
 
             controlType = type;
             var instance = Activator.CreateInstance(type) as Control;
+            Debug.WriteLine($"✅ 创建了 WebView.Avalonia 控件: {type.FullName}");
             return instance;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"创建原生 WebView 控件失败: {ex.Message}");
+            Debug.WriteLine($"❌ 创建原生 WebView 控件失败: {ex.Message}");
             controlType = null;
             return null;
         }
@@ -323,48 +370,58 @@ public partial class EmbeddedWebView : UserControl
             OnNavigationStarted(url);
             UpdateStatus("正在导航到页面...", Brushes.Blue);
             
-            await Dispatcher.UIThread.InvokeAsync(() =>
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 if (_nativeWebView != null && _nativeWebViewType != null)
                 {
-                    // 优先设置 Source 属性
-                    var sourceProp = _nativeWebViewType.GetProperty("Source", BindingFlags.Public | BindingFlags.Instance);
-                    if (sourceProp != null && sourceProp.CanWrite)
+                    // 🔥 优先处理 WindowsWebView2Control
+                    if (_nativeWebView is WindowsWebView2Control webView2)
                     {
-                        try
-                        {
-                            if (sourceProp.PropertyType == typeof(string))
-                            {
-                                sourceProp.SetValue(_nativeWebView, url);
-                            }
-                            else if (sourceProp.PropertyType == typeof(Uri))
-                            {
-                                sourceProp.SetValue(_nativeWebView, new Uri(url));
-                            }
-                            else
-                            {
-                                // 其他类型，尝试直接赋值
-                                sourceProp.SetValue(_nativeWebView, url);
-                            }
-                        }
-                        catch (Exception setEx)
-                        {
-                            Debug.WriteLine($"设置 WebView.Source 失败: {setEx.Message}");
-                        }
+                        Debug.WriteLine($"🚀 使用 WindowsWebView2Control 导航到: {url}");
+                        await webView2.NavigateAsync(url);
                     }
                     else
                     {
-                        // 尝试调用 Navigate 方法
-                        var navigateMethod = _nativeWebViewType.GetMethod("Navigate", BindingFlags.Public | BindingFlags.Instance);
-                        if (navigateMethod != null)
+                        // WebView.Avalonia 或其他控件
+                        // 优先设置 Source 属性
+                        var sourceProp = _nativeWebViewType.GetProperty("Source", BindingFlags.Public | BindingFlags.Instance);
+                        if (sourceProp != null && sourceProp.CanWrite)
                         {
                             try
                             {
-                                navigateMethod.Invoke(_nativeWebView, new object?[] { url });
+                                if (sourceProp.PropertyType == typeof(string))
+                                {
+                                    sourceProp.SetValue(_nativeWebView, url);
+                                }
+                                else if (sourceProp.PropertyType == typeof(Uri))
+                                {
+                                    sourceProp.SetValue(_nativeWebView, new Uri(url));
+                                }
+                                else
+                                {
+                                    // 其他类型，尝试直接赋值
+                                    sourceProp.SetValue(_nativeWebView, url);
+                                }
                             }
-                            catch (Exception navEx)
+                            catch (Exception setEx)
                             {
-                                Debug.WriteLine($"调用 WebView.Navigate 失败: {navEx.Message}");
+                                Debug.WriteLine($"设置 WebView.Source 失败: {setEx.Message}");
+                            }
+                        }
+                        else
+                        {
+                            // 尝试调用 Navigate 方法
+                            var navigateMethod = _nativeWebViewType.GetMethod("Navigate", BindingFlags.Public | BindingFlags.Instance);
+                            if (navigateMethod != null)
+                            {
+                                try
+                                {
+                                    navigateMethod.Invoke(_nativeWebView, new object?[] { url });
+                                }
+                                catch (Exception navEx)
+                                {
+                                    Debug.WriteLine($"调用 WebView.Navigate 失败: {navEx.Message}");
+                                }
                             }
                         }
                     }
@@ -378,7 +435,6 @@ public partial class EmbeddedWebView : UserControl
             
             // 导航完成后更新状态
             UpdateStatus("页面加载完成", Brushes.Green);
-            OnNavigationCompleted(url);
         }
         catch (Exception ex)
         {
@@ -398,7 +454,11 @@ public partial class EmbeddedWebView : UserControl
         if (!_isWebViewReady) return;
         try
         {
-            if (_nativeWebView != null && _nativeWebViewType != null)
+            if (_nativeWebView is WindowsWebView2Control webView2)
+            {
+                webView2.Refresh();
+            }
+            else if (_nativeWebView != null && _nativeWebViewType != null)
             {
                 var method = _nativeWebViewType.GetMethod("Reload", BindingFlags.Public | BindingFlags.Instance)
                              ?? _nativeWebViewType.GetMethod("Refresh", BindingFlags.Public | BindingFlags.Instance);
@@ -418,7 +478,11 @@ public partial class EmbeddedWebView : UserControl
         if (!_isWebViewReady) return;
         try
         {
-            if (_nativeWebView != null && _nativeWebViewType != null)
+            if (_nativeWebView is WindowsWebView2Control webView2)
+            {
+                webView2.GoBack();
+            }
+            else if (_nativeWebView != null && _nativeWebViewType != null)
             {
                 var canGoBackProp = _nativeWebViewType.GetProperty("CanGoBack", BindingFlags.Public | BindingFlags.Instance);
                 var goBackMethod = _nativeWebViewType.GetMethod("GoBack", BindingFlags.Public | BindingFlags.Instance);
@@ -442,7 +506,11 @@ public partial class EmbeddedWebView : UserControl
         if (!_isWebViewReady) return;
         try
         {
-            if (_nativeWebView != null && _nativeWebViewType != null)
+            if (_nativeWebView is WindowsWebView2Control webView2)
+            {
+                webView2.GoForward();
+            }
+            else if (_nativeWebView != null && _nativeWebViewType != null)
             {
                 var canGoForwardProp = _nativeWebViewType.GetProperty("CanGoForward", BindingFlags.Public | BindingFlags.Instance);
                 var goForwardMethod = _nativeWebViewType.GetMethod("GoForward", BindingFlags.Public | BindingFlags.Instance);
@@ -463,14 +531,16 @@ public partial class EmbeddedWebView : UserControl
     // 检查是否可以后退
     public bool CanGoBack
         => _isWebViewReady && (
-            (_nativeWebView != null && _nativeWebViewType?.GetProperty("CanGoBack")?.GetValue(_nativeWebView) as bool? == true)
+            (_nativeWebView is WindowsWebView2Control webView2 && webView2.CanGoBack)
+            || (_nativeWebView != null && _nativeWebViewType?.GetProperty("CanGoBack")?.GetValue(_nativeWebView) as bool? == true)
             || (_webViewHost?.CanGoBack == true)
         );
 
     // 检查是否可以前进
     public bool CanGoForward
         => _isWebViewReady && (
-            (_nativeWebView != null && _nativeWebViewType?.GetProperty("CanGoForward")?.GetValue(_nativeWebView) as bool? == true)
+            (_nativeWebView is WindowsWebView2Control webView2 && webView2.CanGoForward)
+            || (_nativeWebView != null && _nativeWebViewType?.GetProperty("CanGoForward")?.GetValue(_nativeWebView) as bool? == true)
             || (_webViewHost?.CanGoForward == true)
         );
 
