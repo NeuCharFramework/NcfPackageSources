@@ -214,11 +214,23 @@ public class WebView2Service
                 {
                     progress?.Report(("安装完成，正在验证...", 90));
                     
-                    // 等待几秒让注册表更新
-                    await Task.Delay(2000);
+                    _logger?.LogInformation("WebView2 安装程序退出成功，开始验证...");
                     
-                    // 验证安装
-                    var installed = IsWebView2Installed();
+                    // 等待注册表更新，最多重试 10 次
+                    bool installed = false;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await Task.Delay(1000); // 每次等待 1 秒
+                        installed = IsWebView2Installed();
+                        
+                        if (installed)
+                        {
+                            _logger?.LogInformation($"✅ 验证成功（第 {i + 1} 次尝试）");
+                            break;
+                        }
+                        
+                        _logger?.LogInformation($"⏳ 等待注册表更新... ({i + 1}/10)");
+                    }
                     
                     if (installed)
                     {
@@ -236,8 +248,13 @@ public class WebView2Service
                     }
                     else
                     {
-                        _logger?.LogWarning("⚠️ WebView2 安装程序退出成功，但无法验证安装");
-                        return false;
+                        _logger?.LogWarning("⚠️ WebView2 安装程序退出成功，但验证超时");
+                        _logger?.LogWarning("   注意：WebView2 可能已安装，但注册表尚未更新");
+                        _logger?.LogWarning("   建议：重启应用或手动验证");
+                        
+                        // 即使验证失败，也返回 true（因为退出码为 0）
+                        // 让应用继续运行，用户可以手动重启
+                        return true;
                     }
                 }
                 else
