@@ -9,7 +9,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -237,6 +241,20 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            // 显示确认对话框
+            var result = await ShowConfirmDialogAsync(
+                "确认关闭",
+                "关闭标签页将停止 NCF 应用程序，\n是否继续？",
+                "关闭",
+                "取消"
+            );
+            
+            if (!result)
+            {
+                AddLog("ℹ️ 取消关闭标签页");
+                return;
+            }
+            
             AddLog("🗙 关闭浏览器标签页...");
             
             // 关闭浏览器标签页
@@ -255,6 +273,81 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             AddLog($"❌ 关闭浏览器标签页失败: {ex.Message}");
         }
+    }
+    
+    /// <summary>
+    /// 显示确认对话框
+    /// </summary>
+    private async Task<bool> ShowConfirmDialogAsync(string title, string message, string okButtonText = "确定", string cancelButtonText = "取消")
+    {
+        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = desktop.MainWindow;
+            if (mainWindow != null)
+            {
+                var okButton = new Button
+                {
+                    Content = okButtonText,
+                    Width = 100,
+                    Height = 35,
+                    Background = Brushes.Red,
+                    Foreground = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    HorizontalContentAlignment = HorizontalAlignment.Center
+                };
+                
+                var cancelButton = new Button
+                {
+                    Content = cancelButtonText,
+                    Width = 100,
+                    Height = 35,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    HorizontalContentAlignment = HorizontalAlignment.Center
+                };
+                
+                var dialog = new Window
+                {
+                    Title = title,
+                    Width = 400,
+                    Height = 200,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    CanResize = false,
+                    ShowInTaskbar = false,
+                    Content = new StackPanel
+                    {
+                        Margin = new Thickness(20),
+                        Spacing = 20,
+                        Children =
+                        {
+                            new TextBlock
+                            {
+                                Text = message,
+                                FontSize = 14,
+                                TextWrapping = TextWrapping.Wrap,
+                                TextAlignment = TextAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Center
+                            },
+                            new StackPanel
+                            {
+                                Orientation = Orientation.Horizontal,
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                Spacing = 10,
+                                Children = { okButton, cancelButton }
+                            }
+                        }
+                    }
+                };
+                
+                okButton.Click += (s, e) => dialog.Close(true);
+                cancelButton.Click += (s, e) => dialog.Close(false);
+                
+                var result = await dialog.ShowDialog<bool>(mainWindow);
+                return result;
+            }
+        }
+        
+        // 如果无法显示对话框，默认返回 false（不关闭）
+        return false;
     }
     
     private bool CanCloseBrowserTab() => IsBrowserTabVisible;
@@ -525,13 +618,64 @@ public partial class MainWindowViewModel : ViewModelBase
                     AddLog("🛑 正在停止 NCF 进程...");
                 });
 
-                _ncfProcess.Kill();
-                await _ncfProcess.WaitForExitAsync();
-                
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                // 在 Windows 上，使用 taskkill 杀死整个进程树
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    AddLog("✅ NCF 进程已停止");
-                });
+                    try
+                    {
+                        var killProcess = Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "taskkill",
+                            Arguments = $"/PID {_ncfProcess.Id} /T /F",
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true
+                        });
+                        
+                        if (killProcess != null)
+                        {
+                            await killProcess.WaitForExitAsync();
+                            await Dispatcher.UIThread.InvokeAsync(() =>
+                            {
+                                AddLog($"🔪 已使用 taskkill 终止进程树 (PID: {_ncfProcess.Id})");
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                        {
+                            AddLog($"⚠️ taskkill 失败，尝试常规 Kill: {ex.Message}");
+                        });
+                        _ncfProcess.Kill();
+                    }
+                }
+                else
+                {
+                    // macOS/Linux 使用常规 Kill
+                    _ncfProcess.Kill(entireProcessTree: true);
+                }
+                
+                // 等待进程退出，最多等待 5 秒
+                var exitTask = _ncfProcess.WaitForExitAsync();
+                var timeoutTask = Task.Delay(5000);
+                var completedTask = await Task.WhenAny(exitTask, timeoutTask);
+                
+                if (completedTask == timeoutTask)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog("⚠️ 进程未在 5 秒内退出，强制终止");
+                    });
+                }
+                else
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog("✅ NCF 进程已停止");
+                    });
+                }
             }
         }
         catch (Exception ex)
@@ -543,6 +687,8 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         finally
         {
+            _ncfProcess?.Dispose();
+            _ncfProcess = null;
             _isNcfRunning = false;
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
