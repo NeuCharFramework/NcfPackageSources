@@ -29,6 +29,11 @@ public partial class EmbeddedWebView : UserControl
     private Grid _webViewContainer = null!;
     private Border _webViewArea = null!;
     private WebView? _webView = null;
+    
+    /// <summary>
+    /// 获取 WebView 是否已初始化完成
+    /// </summary>
+    public bool IsWebViewReady => _isWebViewReady;
 
     public EmbeddedWebView()
     {

@@ -36,22 +36,25 @@
                             Click="RefreshButton_Click"/>
                 </StackPanel>
                 
-                <!-- URL显示 -->
+                <!-- URL输入框 -->
                 <Border Grid.Column="1" 
                         Background="{DynamicResource InputBackgroundBrush}" 
                         BorderBrush="{DynamicResource InputBorderBrush}" 
                         BorderThickness="1" 
                         CornerRadius="4" 
-                        Margin="10,0"
-                        Padding="8,5">
-                    <TextBlock Name="UrlDisplay" 
-                               Text="{Binding SiteUrl}" 
-                               FontFamily="Consolas" 
-                               FontSize="12"
-                               Foreground="{DynamicResource InputTextBrush}"
-                               VerticalAlignment="Center"
-                               TextTrimming="CharacterEllipsis"
-                               ToolTip.Tip="{Binding SiteUrl}"/>
+                        Margin="10,0">
+                    <TextBox Name="UrlTextBox" 
+                             Text="{Binding SiteUrl, Mode=TwoWay}" 
+                             FontFamily="Consolas" 
+                             FontSize="12"
+                             Foreground="{DynamicResource InputTextBrush}"
+                             VerticalAlignment="Center"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Padding="8,5"
+                             Watermark="输入 URL 地址..."
+                             KeyDown="UrlTextBox_KeyDown"
+                             ToolTip.Tip="输入 URL 并按 Enter 导航"/>
                 </Border>
                 
                 <!-- 状态指示器 -->
