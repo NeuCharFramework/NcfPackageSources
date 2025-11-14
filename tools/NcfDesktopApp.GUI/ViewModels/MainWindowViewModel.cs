@@ -105,6 +105,7 @@ public partial class MainWindowViewModel : ViewModelBase
     #region 私有字段
     
     private readonly NcfService _ncfService;
+    private readonly WebView2Service _webView2Service;
     private readonly StringBuilder _logBuffer;
     private CancellationTokenSource? _cancellationTokenSource;
     private Process? _ncfProcess;
@@ -116,7 +117,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        _ncfService = new NcfService(new HttpClient());
+        var httpClient = new HttpClient();
+        _ncfService = new NcfService(httpClient);
+        _webView2Service = new WebView2Service(httpClient);
         _logBuffer = new StringBuilder();
         
         // 初始化应用程序
@@ -398,7 +401,73 @@ public partial class MainWindowViewModel : ViewModelBase
                 AddLog("🌐 正在初始化内置浏览器...");
             });
             
-            // 模拟浏览器初始化过程
+            // 仅在 Windows 上检查和安装 WebView2
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("🔍 检查 WebView2 Runtime...");
+                });
+                
+                // 检查并安装 WebView2
+                var progress = new Progress<(string message, double percentage)>(update =>
+                {
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog($"   {update.message}");
+                        if (update.percentage >= 0)
+                        {
+                            ProgressValue = update.percentage;
+                            IsProgressIndeterminate = false;
+                        }
+                        else
+                        {
+                            IsProgressIndeterminate = true;
+                        }
+                    });
+                });
+                
+                var installed = await _webView2Service.EnsureWebView2InstalledAsync(progress);
+                
+                if (!installed)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog("⚠️ WebView2 Runtime 安装失败");
+                        AddLog("   内置浏览器可能无法正常工作");
+                        AddLog("   请访问 https://go.microsoft.com/fwlink/p/?LinkId=2124703 手动下载安装");
+                        HasBrowserError = true;
+                        BrowserErrorMessage = "WebView2 Runtime 安装失败\n\n" +
+                                             "内置浏览器需要 Microsoft Edge WebView2 Runtime 才能运行。\n" +
+                                             "您可以手动下载并安装：\n" +
+                                             "https://go.microsoft.com/fwlink/p/?LinkId=2124703\n\n" +
+                                             "或者使用外部浏览器打开 NCF 应用。";
+                    });
+                    
+                    // 即使失败也标记为就绪，让用户可以使用外部浏览器
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        OnBrowserReady();
+                    });
+                    return;
+                }
+                
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("✅ WebView2 Runtime 已就绪");
+                    ProgressValue = 0;
+                    IsProgressIndeterminate = false;
+                });
+            }
+            else
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("ℹ️ 非 Windows 平台，使用系统 WebView");
+                });
+            }
+            
+            // 等待浏览器组件初始化
             await Task.Delay(500);
             
             await Dispatcher.UIThread.InvokeAsync(() =>

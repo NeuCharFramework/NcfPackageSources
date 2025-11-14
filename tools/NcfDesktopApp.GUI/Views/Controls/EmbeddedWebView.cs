@@ -353,42 +353,86 @@ public partial class EmbeddedWebView : UserControl
         
         var fallbackContent = new StackPanel
         {
-            Spacing = 15
+            Spacing = 15,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
         };
 
         var fallbackBorder = new Border
         {
-            Padding = new Thickness(20),
-            Child = fallbackContent
+            Padding = new Thickness(40),
+            Child = fallbackContent,
+            MaxWidth = 600
         };
 
         var errorText = new TextBlock
         {
-            Text = "❌ 嵌入式浏览器初始化失败",
-            FontSize = 18,
+            Text = "❌ 内置浏览器初始化失败",
+            FontSize = 20,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Foreground = Brushes.Red
+            Foreground = Brushes.Red,
+            Margin = new Thickness(0, 0, 0, 10)
         };
 
         var descText = new TextBlock
         {
-            Text = "无法加载嵌入式浏览器组件。\n请使用外部浏览器打开 NCF 应用。",
+            Text = "无法加载内置浏览器组件。这可能是因为：",
             FontSize = 14,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Foreground = Brushes.Gray,
-            Margin = new Thickness(0, 0, 0, 20)
+            Margin = new Thickness(0, 0, 0, 10)
         };
 
+        // 原因列表
+        var reasonsList = new StackPanel
+        {
+            Spacing = 8,
+            Margin = new Thickness(20, 0, 20, 20)
+        };
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            reasonsList.Children.Add(CreateReasonItem("• WebView2 Runtime 未安装或安装失败"));
+            reasonsList.Children.Add(CreateReasonItem("• 系统权限不足"));
+        }
+        else
+        {
+            reasonsList.Children.Add(CreateReasonItem("• 系统 WebView 组件不可用"));
+        }
+        reasonsList.Children.Add(CreateReasonItem("• 组件版本不兼容"));
+
+        // 解决方案文本
+        var solutionText = new TextBlock
+        {
+            Text = "您可以尝试以下解决方案：",
+            FontSize = 14,
+            FontWeight = Avalonia.Media.FontWeight.SemiBold,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 15)
+        };
+
+        // 按钮容器
+        var buttonPanel = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Spacing = 10,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
+        };
+
+        // 在外部浏览器中打开按钮
         var openExternalButton = new Button
         {
             Content = "🌍 在外部浏览器中打开",
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Padding = new Thickness(20, 10),
-            Background = Brushes.Orange,
+            Padding = new Thickness(25, 12),
+            Background = Brushes.DodgerBlue,
             Foreground = Brushes.White,
-            CornerRadius = new CornerRadius(4)
+            CornerRadius = new CornerRadius(6),
+            FontSize = 14,
+            FontWeight = Avalonia.Media.FontWeight.SemiBold,
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
         };
         openExternalButton.Click += (s, e) =>
         {
@@ -398,11 +442,62 @@ public partial class EmbeddedWebView : UserControl
             }
         };
 
+        buttonPanel.Children.Add(openExternalButton);
+
+        // 仅在 Windows 上显示下载 WebView2 的按钮
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            var downloadWebView2Button = new Button
+            {
+                Content = "⬇️ 下载 WebView2 Runtime",
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                Padding = new Thickness(25, 12),
+                Background = Brushes.Orange,
+                Foreground = Brushes.White,
+                CornerRadius = new CornerRadius(6),
+                FontSize = 14,
+                FontWeight = Avalonia.Media.FontWeight.SemiBold,
+                Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+            };
+            downloadWebView2Button.Click += (s, e) =>
+            {
+                OpenInExternalBrowser("https://go.microsoft.com/fwlink/p/?LinkId=2124703");
+            };
+
+            buttonPanel.Children.Add(downloadWebView2Button);
+
+            // 添加提示文本
+            var hintText = new TextBlock
+            {
+                Text = "💡 下载并安装 WebView2 后，重启应用即可使用内置浏览器",
+                FontSize = 12,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                Foreground = Brushes.Gray,
+                Margin = new Thickness(0, 15, 0, 0),
+                MaxWidth = 500
+            };
+            buttonPanel.Children.Add(hintText);
+        }
+
         fallbackContent.Children.Add(errorText);
         fallbackContent.Children.Add(descText);
-        fallbackContent.Children.Add(openExternalButton);
+        fallbackContent.Children.Add(reasonsList);
+        fallbackContent.Children.Add(solutionText);
+        fallbackContent.Children.Add(buttonPanel);
         
         _webViewContainer.Children.Add(fallbackBorder);
+    }
+
+    private TextBlock CreateReasonItem(string text)
+    {
+        return new TextBlock
+        {
+            Text = text,
+            FontSize = 13,
+            Foreground = Brushes.DarkGray,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap
+        };
     }
 
     public event EventHandler<string>? NavigationStarted;
