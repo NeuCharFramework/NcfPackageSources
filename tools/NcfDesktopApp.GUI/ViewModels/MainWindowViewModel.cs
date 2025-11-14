@@ -372,13 +372,18 @@ public partial class MainWindowViewModel : ViewModelBase
             // 检查最新版本
             await CheckLatestVersionAsync();
             
+            // 立即关闭初始化遮罩，让用户看到 WebView2 安装日志
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsInitializing = false;
+            });
+            
             // 初始化浏览器
             await InitializeBrowserAsync();
             
             // 完成初始化
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                IsInitializing = false;
                 AddLog("✅ 应用程序初始化完成");
             });
         }
