@@ -18,22 +18,6 @@ sealed class Program
             Console.WriteLine($"OS: {RuntimeInformation.OSDescription}");
             Console.WriteLine($"Architecture: {RuntimeInformation.ProcessArchitecture}");
             Console.WriteLine($".NET Version: {RuntimeInformation.FrameworkDescription}");
-            
-            // 检查 WebView2 Runtime (仅 Windows)
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Console.WriteLine("\n🔍 Checking WebView2 Runtime...");
-                try
-                {
-                    var version = Microsoft.Web.WebView2.Core.CoreWebView2Environment.GetAvailableBrowserVersionString();
-                    Console.WriteLine($"✅ WebView2 Runtime: {version}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"⚠️ WebView2 Runtime check failed: {ex.Message}");
-                }
-            }
-            
             Console.WriteLine("\n🏗️ Building Avalonia App...");
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }

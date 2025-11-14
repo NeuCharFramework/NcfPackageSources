@@ -11,11 +11,6 @@
     <!-- 应用程序图标（Windows 可执行文件图标） -->
     <ApplicationIcon>Assets\app-icon.ico</ApplicationIcon>
   </PropertyGroup>
-  
-  <!-- 条件编译符号：在 Windows 上定义 WINDOWS 符号 -->
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
-  </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
@@ -40,10 +35,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-    <!-- WebView.Avalonia cross-platform packages -->
+    <!-- WebView.Avalonia cross-platform packages (在 Windows 上自动使用 WebView2) -->
     <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
     <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />
-    <!-- Microsoft WebView2 for Windows (免费开源) -->
-    <PackageReference Include="Microsoft.Web.WebView2.Wpf" Version="1.0.2739.15" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </ItemGroup>
 </Project>
