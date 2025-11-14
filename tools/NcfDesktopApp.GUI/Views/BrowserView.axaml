@@ -36,25 +36,41 @@
                             Click="RefreshButton_Click"/>
                 </StackPanel>
                 
-                <!-- URL输入框 -->
+                <!-- URL输入框和打开按钮 -->
                 <Border Grid.Column="1" 
                         Background="{DynamicResource InputBackgroundBrush}" 
                         BorderBrush="{DynamicResource InputBorderBrush}" 
                         BorderThickness="1" 
                         CornerRadius="4" 
                         Margin="10,0">
-                    <TextBox Name="UrlTextBox" 
-                             Text="{Binding SiteUrl, Mode=TwoWay}" 
-                             FontFamily="Consolas" 
-                             FontSize="12"
-                             Foreground="{DynamicResource InputTextBrush}"
-                             VerticalAlignment="Center"
-                             BorderThickness="0"
-                             Background="Transparent"
-                             Padding="8,5"
-                             Watermark="输入 URL 地址..."
-                             KeyDown="UrlTextBox_KeyDown"
-                             ToolTip.Tip="输入 URL 并按 Enter 导航"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Name="UrlTextBox" 
+                                 Grid.Column="0"
+                                 Text="{Binding SiteUrl, Mode=OneWay}" 
+                                 FontFamily="Consolas" 
+                                 FontSize="12"
+                                 Foreground="{DynamicResource InputTextBrush}"
+                                 VerticalAlignment="Center"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Padding="8,5"
+                                 Watermark="输入 URL 地址..."
+                                 KeyDown="UrlTextBox_KeyDown"
+                                 ToolTip.Tip="输入 URL 并按 Enter 导航"/>
+                        <Button Name="GoButton"
+                                Grid.Column="1"
+                                Content="→"
+                                Width="30"
+                                Height="26"
+                                Margin="0,2,2,2"
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Background="#007BFF"
+                                Foreground="White"
+                                CornerRadius="3"
+                                ToolTip.Tip="打开"
+                                Click="GoButton_Click"/>
+                    </Grid>
                 </Border>
                 
                 <!-- 状态指示器 -->

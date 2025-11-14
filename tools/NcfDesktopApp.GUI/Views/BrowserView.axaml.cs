@@ -81,28 +81,36 @@ public partial class BrowserView : UserControl
     {
         if (e.Key == Key.Enter)
         {
-            if (sender is TextBox textBox && !string.IsNullOrWhiteSpace(textBox.Text))
+            await NavigateToUrlFromTextBox();
+        }
+    }
+
+    private async void GoButton_Click(object? sender, RoutedEventArgs e)
+    {
+        await NavigateToUrlFromTextBox();
+    }
+
+    private async Task NavigateToUrlFromTextBox()
+    {
+        var textBox = this.FindControl<TextBox>("UrlTextBox");
+        if (textBox != null && !string.IsNullOrWhiteSpace(textBox.Text))
+        {
+            var url = textBox.Text.Trim();
+            
+            // 如果 URL 不包含协议，自动添加 http://
+            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
             {
-                var url = textBox.Text.Trim();
-                
-                // 如果 URL 不包含协议，自动添加 http://
-                if (!url.StartsWith("http://") && !url.StartsWith("https://"))
-                {
-                    url = "http://" + url;
-                }
-                
-                // 更新 ViewModel 中的 URL
-                if (DataContext is ViewModels.MainWindowViewModel viewModel)
-                {
-                    viewModel.SiteUrl = url;
-                }
-                
-                // 导航到新 URL
-                await NavigateToUrl(url);
-                
-                // 取消焦点，让用户看到页面内容
-                textBox.Focus();
+                url = "http://" + url;
             }
+            
+            // 更新 ViewModel 中的 URL
+            if (DataContext is ViewModels.MainWindowViewModel viewModel)
+            {
+                viewModel.SiteUrl = url;
+            }
+            
+            // 导航到新 URL
+            await NavigateToUrl(url);
         }
     }
 
@@ -119,7 +127,17 @@ public partial class BrowserView : UserControl
         if (DataContext is ViewModels.MainWindowViewModel viewModel)
         {
             viewModel.OnNavigationCompleted(url);
+            // 同步更新地址栏显示
+            viewModel.SiteUrl = url;
         }
+        
+        // 同步更新地址栏 TextBox（因为使用了 OneWay 绑定，需要手动更新）
+        var textBox = this.FindControl<TextBox>("UrlTextBox");
+        if (textBox != null)
+        {
+            textBox.Text = url;
+        }
+        
         UpdateNavigationButtons();
     }
 
