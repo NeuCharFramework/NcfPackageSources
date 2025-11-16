@@ -295,3 +295,12 @@ catch
 **版本**: v1.1.0  
 **影响范围**: SettingsView, MainWindowViewModel
 
+---
+
+## 📝 修复记录
+
+### Hotfix 1: SelectableTextBlock 属性错误
+**问题**: `SelectableTextBlock` 没有 `IsReadOnly` 属性，导致编译失败。  
+**修复**: 移除 `IsReadOnly="True"` 属性（`SelectableTextBlock` 本身就是只读的）。  
+**文件**: Views/SettingsView.axaml, line 229
+

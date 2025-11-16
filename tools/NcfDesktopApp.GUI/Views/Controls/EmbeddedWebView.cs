@@ -519,6 +519,18 @@ public partial class EmbeddedWebView : UserControl
         NavigationFailed?.Invoke(this, error);
     }
 
+    protected override void OnLoaded(Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        
+        // 如果 WebView 已被清理（例如控件之前被隐藏），重新初始化
+        if (!_isWebViewReady)
+        {
+            Debug.WriteLine("🔄 检测到 WebView 需要重新初始化...");
+            _ = InitializeWebViewAsync();
+        }
+    }
+    
     protected override void OnUnloaded(Avalonia.Interactivity.RoutedEventArgs e)
     {
         base.OnUnloaded(e);
