@@ -10,6 +10,7 @@ param(
     [switch]$SingleFile,
     [switch]$NoRestore,
     [switch]$ReadyToRun,
+    [switch]$CreateApp,
     [switch]$Verbose
 )
 
@@ -75,6 +76,7 @@ function Show-Help {
     Write-Host "  -SingleFile             创建单文件发布"
     Write-Host "  -NoRestore              跳过包还原"
     Write-Host "  -ReadyToRun             启用 ReadyToRun 优化"
+    Write-Host "  -CreateApp              自动为 macOS 创建 .app 包（仅限 macOS 平台）"
     Write-Host "  -Verbose                显示详细输出"
     Write-Host ""
     Write-ColorText "支持的平台: $($Platforms -join ', ')" -Color "Yellow"
@@ -388,6 +390,53 @@ function Main {
                 $successCount++
             }
         }
+    }
+    
+    # 🆕 如果发布了 macOS 平台且启用了 -CreateApp，自动创建 .app 包
+    if ($CreateApp) {
+        Write-ColorText "📦 检测到 -CreateApp 参数，准备创建 macOS .app 包..." -Color "Blue"
+        
+        # 检查是否发布了 macOS 平台
+        $macosPublished = $false
+        if ($Platform) {
+            if ($Platform.StartsWith("osx-")) {
+                $macosPublished = $true
+            }
+        } else {
+            # 检查是否有任何 macOS 平台被发布
+            foreach ($plat in $Platforms) {
+                if ($plat.StartsWith("osx-")) {
+                    $platformDir = Join-Path $OutputDir $plat
+                    if ((Test-Path $platformDir) -and (Get-ChildItem $platformDir).Count -gt 0) {
+                        $macosPublished = $true
+                        break
+                    }
+                }
+            }
+        }
+        
+        if ($macosPublished) {
+            Write-ColorText "🍎 正在创建 macOS .app 包..." -Color "Blue"
+            
+            # 检查是否在 macOS 上运行
+            if ($IsMacOS) {
+                # 调用 create-macos-app.sh
+                $createAppScript = Join-Path $PSScriptRoot "create-macos-app.sh"
+                if (Test-Path $createAppScript) {
+                    & bash $createAppScript
+                    Write-ColorText "✅ macOS .app 包创建完成" -Color "Green"
+                } else {
+                    Write-ColorText "❌ 未找到 create-macos-app.sh 脚本" -Color "Red"
+                }
+            } else {
+                Write-ColorText "⚠️  当前系统不是 macOS，无法创建 .app 包" -Color "Yellow"
+                Write-ColorText "   请在 macOS 系统上运行以下命令创建 .app 包:" -Color "Yellow"
+                Write-ColorText "   ./build-tool/create-macos-app.sh" -Color "Yellow"
+            }
+        } else {
+            Write-ColorText "⚠️  未发布 macOS 平台，跳过 .app 包创建" -Color "Yellow"
+        }
+        Write-Host ""
     }
     
     # 显示总结
