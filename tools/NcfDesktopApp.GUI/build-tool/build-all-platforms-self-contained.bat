@@ -176,7 +176,7 @@ REM 构建发布命令
 set "cmd=dotnet publish -c %BUILD_CONFIG% -r %platform% -o "%platform_dir%" --self-contained true"
 
 if "%SINGLE_FILE%"=="true" (
-    set "cmd=!cmd! -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true"
+    set "cmd=!cmd! -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true"
 )
 
 if "%READY_TO_RUN%"=="true" (

@@ -140,6 +140,7 @@ publish_platform() {
     if [ "$SINGLE_FILE" = true ]; then
         cmd="$cmd -p:PublishSingleFile=true"
         cmd="$cmd -p:IncludeNativeLibrariesForSelfExtract=true"
+        cmd="$cmd -p:IncludeAllContentForSelfExtract=true"
     fi
     
     if [ "$READY_TO_RUN" = true ]; then

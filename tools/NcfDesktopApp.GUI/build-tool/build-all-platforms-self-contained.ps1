@@ -192,6 +192,7 @@ function Publish-Platform {
     if ($SingleFile) {
         $publishArgs += "-p:PublishSingleFile=true"
         $publishArgs += "-p:IncludeNativeLibrariesForSelfExtract=true"
+        $publishArgs += "-p:IncludeAllContentForSelfExtract=true"
     }
     
     if ($ReadyToRun) {
