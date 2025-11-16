@@ -141,6 +141,38 @@ public class NcfService
         _logger?.LogInformation($"下载完成: {fileName}");
     }
     
+    /// <summary>
+    /// 获取当前已安装的 NeuCharFramework 版本
+    /// </summary>
+    /// <returns>当前版本号，如果未安装则返回 null</returns>
+    public async Task<string?> GetInstalledVersionAsync()
+    {
+        var versionFile = Path.Combine(NcfRuntimePath, "version.txt");
+        var senparcWebDll = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
+        
+        // 检查是否已安装（至少存在主程序文件）
+        if (!File.Exists(senparcWebDll))
+        {
+            return null;
+        }
+        
+        // 检查版本文件
+        if (!File.Exists(versionFile))
+        {
+            return null;
+        }
+        
+        try
+        {
+            var version = await File.ReadAllTextAsync(versionFile);
+            return version.Trim();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+    
     public async Task<bool> CheckIfExtractNeededAsync(string version)
     {
         var versionFile = Path.Combine(NcfRuntimePath, "version.txt");

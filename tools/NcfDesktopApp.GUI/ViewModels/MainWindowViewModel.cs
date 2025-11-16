@@ -498,12 +498,32 @@ public partial class MainWindowViewModel : ViewModelBase
                 AddLog("🔍 检查最新版本...");
             });
 
-            var version = await _ncfService.GetLatestVersionAsync();
+            var latestVersion = await _ncfService.GetLatestVersionAsync();
+            var installedVersion = await _ncfService.GetInstalledVersionAsync();
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                LatestVersion = version;
-                AddLog($"📋 最新版本: {version}");
+                LatestVersion = latestVersion;
+                AddLog($"📋 最新版本: {latestVersion}");
+                
+                if (!string.IsNullOrEmpty(installedVersion))
+                {
+                    AddLog($"💾 当前已安装版本: {installedVersion}");
+                    
+                    // 比较版本
+                    if (installedVersion != latestVersion)
+                    {
+                        AddLog($"🆕 发现新版本可用！");
+                    }
+                    else
+                    {
+                        AddLog($"✅ 当前已是最新版本");
+                    }
+                }
+                else
+                {
+                    AddLog($"ℹ️ 未检测到已安装的 NeuCharFramework");
+                }
             });
         }
         catch (Exception ex)
@@ -534,11 +554,35 @@ public partial class MainWindowViewModel : ViewModelBase
             
             AddLog("🚀 开始启动 NCF...");
 
-            // 1. 检查/下载文件
-            await DownloadNcfAsync(cancellationToken);
-            
-            // 2. 提取文件
-            await ExtractNcfAsync(cancellationToken);
+            // 检查版本更新
+            var (shouldContinue, shouldUpdate) = await CheckAndConfirmUpdateAsync();
+            if (!shouldContinue)
+            {
+                // 用户取消启动，恢复状态
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    IsOperationInProgress = false;
+                    CurrentStatus = "已取消";
+                    StatusColor = "#6C757D";
+                    MainButtonText = "启动 NCF";
+                    AddLog("ℹ️ 用户取消了启动操作");
+                });
+                return;
+            }
+
+            // 1-2. 如果需要更新，则下载和提取文件
+            if (shouldUpdate)
+            {
+                // 1. 检查/下载文件
+                await DownloadNcfAsync(cancellationToken);
+                
+                // 2. 提取文件
+                await ExtractNcfAsync(cancellationToken);
+            }
+            else
+            {
+                AddLog("⏭️ 跳过下载和提取，使用现有版本");
+            }
             
             // 3. 启动NCF进程
             await StartNcfProcessAsync(cancellationToken);
@@ -871,6 +915,92 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 检查版本更新并确认
+    /// </summary>
+    /// <returns>(shouldContinue, shouldUpdate): shouldContinue=是否继续启动, shouldUpdate=是否需要更新</returns>
+    private async Task<(bool shouldContinue, bool shouldUpdate)> CheckAndConfirmUpdateAsync()
+    {
+        try
+        {
+            // 获取当前已安装版本
+            var installedVersion = await _ncfService.GetInstalledVersionAsync();
+            
+            // 如果没有安装过，直接继续（首次安装）
+            if (string.IsNullOrEmpty(installedVersion))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("ℹ️ 首次安装，将下载最新版本");
+                });
+                return (true, true); // 继续且需要下载
+            }
+            
+            // 获取最新版本
+            var latestVersion = await _ncfService.GetLatestVersionAsync();
+            
+            // 如果版本相同，直接继续
+            if (installedVersion == latestVersion)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog($"✅ 当前版本 {installedVersion} 已是最新版本");
+                });
+                return (true, false); // 继续但不需要下载
+            }
+            
+            // 发现新版本，显示确认对话框
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"🆕 发现新版本可用");
+                AddLog($"   当前版本: {installedVersion}");
+                AddLog($"   最新版本: {latestVersion}");
+            });
+            
+            var message = $"检测到 NeuCharFramework 有新版本可用：\n\n" +
+                         $"当前版本: {installedVersion}\n" +
+                         $"最新版本: {latestVersion}\n\n" +
+                         $"是否更新到最新版本？\n\n" +
+                         $"注意：\n" +
+                         $"• 更新将保留您的数据库和配置文件\n" +
+                         $"• 选择\"继续使用当前版本\"将跳过更新";
+            
+            var result = await ShowConfirmDialogAsync(
+                "版本更新提示",
+                message,
+                "更新",
+                "继续使用当前版本"
+            );
+            
+            if (result)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("✅ 用户选择更新到最新版本");
+                });
+                return (true, true); // 继续且需要下载
+            }
+            else
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("ℹ️ 用户选择继续使用当前版本");
+                });
+                return (true, false); // 继续但不下载
+            }
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"⚠️ 版本检查失败: {ex.Message}");
+                AddLog($"   将继续使用当前版本");
+            });
+            // 出错时继续，但不下载
+            return (true, false);
+        }
+    }
+    
     private void AddLog(string message)
     {
         var timestamp = DateTime.Now.ToString("HH:mm:ss");

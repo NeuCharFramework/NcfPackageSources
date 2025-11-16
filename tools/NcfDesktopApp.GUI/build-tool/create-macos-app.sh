@@ -185,8 +185,22 @@ create_app_bundle() {
     echo -e "${YELLOW}  📋 复制应用程序文件...${NC}"
     cp -R "$source_dir"/* "$app_bundle/Contents/MacOS/"
     
-    # 重命名主可执行文件为应用名称
-    mv "$app_bundle/Contents/MacOS/$PROJECT_NAME" "$app_bundle/Contents/MacOS/$APP_NAME"
+    # 查找并重命名主可执行文件
+    # 发布脚本会将文件重命名为 PROJECT_NAME-ARCH 格式
+    local original_exe="$app_bundle/Contents/MacOS/$PROJECT_NAME-$arch"
+    local fallback_exe="$app_bundle/Contents/MacOS/$PROJECT_NAME"
+    
+    if [ -f "$original_exe" ]; then
+        # 使用重命名后的可执行文件
+        mv "$original_exe" "$app_bundle/Contents/MacOS/$APP_NAME"
+    elif [ -f "$fallback_exe" ]; then
+        # 使用原始名称的可执行文件（备用方案）
+        mv "$fallback_exe" "$app_bundle/Contents/MacOS/$APP_NAME"
+    else
+        echo -e "${RED}❌ 未找到可执行文件${NC}"
+        ls -la "$app_bundle/Contents/MacOS/"
+        exit 1
+    fi
     
     # 创建 Info.plist
     create_info_plist "$app_bundle" "$arch"
