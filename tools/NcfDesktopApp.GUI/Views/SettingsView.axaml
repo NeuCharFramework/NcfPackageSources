@@ -180,7 +180,7 @@
                                     <NumericUpDown Value="{Binding StartPort}" 
                                                   Minimum="1024" 
                                                   Maximum="65535" 
-                                                  Width="100"
+                                                  Width="140"
                                                   FontSize="12"/>
                                     <TextBlock Text="到" 
                                               VerticalAlignment="Center"
@@ -188,7 +188,7 @@
                                     <NumericUpDown Value="{Binding EndPort}" 
                                                   Minimum="1024" 
                                                   Maximum="65535" 
-                                                  Width="100"
+                                                  Width="140"
                                                   FontSize="12"/>
                                 </StackPanel>
                             </StackPanel>

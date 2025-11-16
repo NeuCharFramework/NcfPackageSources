@@ -714,6 +714,12 @@ public partial class MainWindowViewModel : ViewModelBase
             ProgressText = "启动进程...";
         });
 
+        // 注册 CLI 输出回调
+        _ncfService.OnProcessOutput = (output, isError) =>
+        {
+            AddCliLog(output, isError);
+        };
+
         _ncfProcess = await _ncfService.StartNcfProcessAsync(availablePort, cancellationToken);
         
         await Dispatcher.UIThread.InvokeAsync(() =>
@@ -740,6 +746,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            // 清理 CLI 输出回调
+            if (_ncfService != null)
+            {
+                _ncfService.OnProcessOutput = null;
+            }
+            
             if (_ncfProcess != null && !_ncfProcess.HasExited)
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
@@ -1063,6 +1075,35 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         var timestamp = DateTime.Now.ToString("HH:mm:ss");
         var logEntry = $"[{timestamp}] {message}";
+        
+        _logBuffer.AppendLine(logEntry);
+        
+        // 限制日志大小，保留最后1000行
+        var lines = _logBuffer.ToString().Split('\n');
+        if (lines.Length > 1000)
+        {
+            _logBuffer.Clear();
+            _logBuffer.AppendLine(string.Join('\n', lines.Skip(lines.Length - 1000)));
+        }
+        
+        LogText = _logBuffer.ToString();
+    }
+
+    /// <summary>
+    /// 添加 CLI 进程输出到日志
+    /// </summary>
+    private void AddCliLog(string message, bool isError)
+    {
+        // 必须在 UI 线程上更新
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => AddCliLog(message, isError));
+            return;
+        }
+        
+        var timestamp = DateTime.Now.ToString("HH:mm:ss");
+        var prefix = isError ? "[CLI:ERROR]" : "[CLI]";
+        var logEntry = $"[{timestamp}] {prefix} {message}";
         
         _logBuffer.AppendLine(logEntry);
         

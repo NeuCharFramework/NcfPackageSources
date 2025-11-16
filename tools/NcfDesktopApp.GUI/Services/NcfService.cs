@@ -13,6 +13,13 @@ using Microsoft.Extensions.Logging;
 
 namespace NcfDesktopApp.GUI.Services;
 
+/// <summary>
+/// CLI 进程输出处理委托
+/// </summary>
+/// <param name="output">输出内容</param>
+/// <param name="isError">是否为错误输出</param>
+public delegate void ProcessOutputHandler(string output, bool isError);
+
 public class NcfService
 {
     private readonly HttpClient _httpClient;
@@ -27,6 +34,11 @@ public class NcfService
     // 参数: fileName, oldContent, newContent
     // 返回: true=使用新文件（覆盖），false=保留旧文件
     public Func<string, string, string, Task<bool>>? OnAppSettingsConflict { get; set; }
+    
+    /// <summary>
+    /// CLI 进程输出回调（参数：输出内容, 是否为错误输出）
+    /// </summary>
+    public ProcessOutputHandler? OnProcessOutput { get; set; }
     
     static NcfService()
     {
@@ -346,28 +358,13 @@ public class NcfService
         // 捕获进程输出，便于诊断
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
+        startInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+        startInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
+        
         var process = Process.Start(startInfo);
-        if (process != null)
-        {
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var so = await process.StandardOutput.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(so)) _logger?.LogInformation("NCF 输出:\n" + so);
-                }
-                catch { }
-            });
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var se = await process.StandardError.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(se)) _logger?.LogWarning("NCF 错误:\n" + se);
-                }
-                catch { }
-            });
-        }
+        
+        // 附加输出捕获事件处理
+        AttachProcessOutputHandlers(process);
         // 若自包含可执行在 macOS 被 Gatekeeper 杀死或依赖缺失导致瞬退，尝试回退到 dotnet 方式
         if ((process == null || process.HasExited) && File.Exists(Path.Combine(ncfAppDir, "Senparc.Web.dll")))
         {
@@ -390,7 +387,9 @@ public class NcfService
                 UseShellExecute = false,
                 CreateNoWindow = false,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                StandardOutputEncoding = System.Text.Encoding.UTF8,
+                StandardErrorEncoding = System.Text.Encoding.UTF8
             };
             fb.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
             fb.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
@@ -407,6 +406,7 @@ public class NcfService
                 fb.Environment["PATH"] = string.IsNullOrEmpty(path2) ? root2 : root2 + Path.PathSeparator + path2;
             }
             process = Process.Start(fb);
+            AttachProcessOutputHandlers(process);
         }
 
         // 若自包含进程在极短时间内崩溃（被 Gatekeeper 杀死），再做一次回退检查
@@ -427,7 +427,9 @@ public class NcfService
                         UseShellExecute = false,
                         CreateNoWindow = false,
                         RedirectStandardOutput = true,
-                        RedirectStandardError = true
+                        RedirectStandardError = true,
+                        StandardOutputEncoding = System.Text.Encoding.UTF8,
+                        StandardErrorEncoding = System.Text.Encoding.UTF8
                     };
                     fb2.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
                     fb2.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
@@ -444,6 +446,7 @@ public class NcfService
                         fb2.Environment["PATH"] = string.IsNullOrEmpty(path3) ? root3 : root3 + Path.PathSeparator + path3;
                     }
                     process = Process.Start(fb2);
+                    AttachProcessOutputHandlers(process);
                 }
             }
             catch { }
@@ -934,6 +937,61 @@ public class NcfService
     }
     
     #region 私有方法
+    
+    /// <summary>
+    /// 为进程附加输出捕获事件处理
+    /// </summary>
+    private void AttachProcessOutputHandlers(Process? process)
+    {
+        if (process == null) return;
+        
+        // 捕获标准输出
+        process.OutputDataReceived += (sender, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                try
+                {
+                    OnProcessOutput?.Invoke(args.Data, false);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"处理进程输出时出错: {ex.Message}");
+                }
+            }
+        };
+        
+        // 捕获错误输出
+        process.ErrorDataReceived += (sender, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                try
+                {
+                    OnProcessOutput?.Invoke(args.Data, true);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"处理进程错误输出时出错: {ex.Message}");
+                }
+            }
+        };
+        
+        // 开始异步读取
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        
+        // 注册进程退出事件
+        process.EnableRaisingEvents = true;
+        process.Exited += (sender, args) =>
+        {
+            try
+            {
+                OnProcessOutput?.Invoke("--- 进程已退出 ---", false);
+            }
+            catch { }
+        };
+    }
     
     private static string GetCurrentPlatform()
     {

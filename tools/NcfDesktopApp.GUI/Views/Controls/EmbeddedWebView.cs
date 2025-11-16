@@ -524,6 +524,53 @@ public partial class EmbeddedWebView : UserControl
         base.OnUnloaded(e);
         
         // 清理资源
-        _webView = null;
+        CleanupWebView();
+    }
+    
+    /// <summary>
+    /// 清理 WebView 资源（修复 Windows ARM64 重新初始化问题）
+    /// </summary>
+    private void CleanupWebView()
+    {
+        try
+        {
+            Debug.WriteLine("🧹 开始清理 WebView 资源...");
+            
+            if (_webView != null)
+            {
+                try
+                {
+                    // 1. 导航到空白页，释放网页资源
+                    try
+                    {
+                        _webView.Url = new Uri("about:blank");
+                        Debug.WriteLine("   ✓ WebView 已导航到空白页");
+                    }
+                    catch { /* 忽略导航失败 */ }
+                    
+                    // 2. 从容器中移除
+                    _webViewContainer?.Children.Remove(_webView);
+                    Debug.WriteLine("   ✓ WebView 已从容器移除");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"   ⚠️ WebView 清理警告: {ex.Message}");
+                }
+                finally
+                {
+                    _webView = null;
+                }
+            }
+            
+            // 3. 重置初始化标志（关键！）
+            _isWebViewReady = false;
+            _currentUrl = "";
+            
+            Debug.WriteLine("✅ WebView 资源清理完成");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"❌ WebView 清理失败: {ex.Message}");
+        }
     }
 } 
