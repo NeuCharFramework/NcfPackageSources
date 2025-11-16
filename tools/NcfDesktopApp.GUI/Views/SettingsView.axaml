@@ -3,14 +3,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="NcfDesktopApp.GUI.Views.SettingsView"
              x:DataType="vm:MainWindowViewModel">
 
     <Grid RowDefinitions="Auto,*">
         
         <!-- 顶部操作栏 -->
-        <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="1" CornerRadius="8" Margin="20,20,20,10" Padding="15">
+        <Border Grid.Row="0" 
+                Background="{DynamicResource ToolbarBackgroundBrush}" 
+                BorderBrush="{DynamicResource ToolbarBorderBrush}" 
+                BorderThickness="0,0,0,1" 
+                Padding="20,15">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <!-- 标题 -->
                 <TextBlock Grid.Column="0" 
@@ -49,106 +53,213 @@
             </Grid>
         </Border>
 
-        <!-- 主要内容区域 -->
-        <ScrollViewer Grid.Row="1" Padding="20,10,20,30">
-            <StackPanel Spacing="20" MaxWidth="600" Margin="0,0,0,20">
+        <!-- 🆕 主要内容区域 - 左右分栏布局 -->
+        <Grid Grid.Row="1" ColumnDefinitions="420,*">
+            
+            <!-- 左侧：控制面板 -->
+            <ScrollViewer Grid.Column="0" 
+                         Padding="20,15,10,20"
+                         VerticalScrollBarVisibility="Auto">
 
-                <!-- 状态信息卡片 -->
-                <Border Classes="card">
-                    <StackPanel>
-                        <TextBlock Text="状态信息" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
-                        
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="120,*" 
-                              VerticalAlignment="Top">
+                <StackPanel Spacing="15">
+                    
+                    <!-- 状态信息卡片 -->
+                    <Border Classes="card-compact">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="📊 状态信息" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
                             
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="运行平台:" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PlatformInfo}" Margin="0,0,0,8"/>
-                            
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="最新版本:" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LatestVersion}" Margin="0,0,0,8"/>
-                            
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="当前状态:" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
-                                <Border Background="{Binding StatusColor}" CornerRadius="8" Width="16" Height="16"/>
-                                <TextBlock Text="{Binding CurrentStatus}" VerticalAlignment="Center"/>
-                            </StackPanel>
-                            
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="站点地址:" FontWeight="SemiBold"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SiteUrl}" FontFamily="Consolas" TextWrapping="Wrap"/>
-                        </Grid>
-                    </StackPanel>
-                </Border>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                                  ColumnDefinitions="100,*">
+                                
+                                <TextBlock Grid.Row="0" Grid.Column="0" 
+                                          Text="运行平台:" 
+                                          FontWeight="SemiBold" 
+                                          FontSize="12"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"
+                                          Margin="0,0,0,8"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" 
+                                          Text="{Binding PlatformInfo}" 
+                                          FontSize="12"
+                                          Margin="0,0,0,8"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" 
+                                          Text="最新版本:" 
+                                          FontWeight="SemiBold" 
+                                          FontSize="12"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"
+                                          Margin="0,0,0,8"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" 
+                                          Text="{Binding LatestVersion}" 
+                                          FontSize="12"
+                                          Margin="0,0,0,8"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" 
+                                          Text="当前状态:" 
+                                          FontWeight="SemiBold" 
+                                          FontSize="12"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"
+                                          Margin="0,0,0,8"/>
+                                <StackPanel Grid.Row="2" Grid.Column="1" 
+                                           Orientation="Horizontal" 
+                                           Spacing="8" 
+                                           Margin="0,0,0,8">
+                                    <Border Background="{Binding StatusColor}" 
+                                           CornerRadius="8" 
+                                           Width="12" 
+                                           Height="12"
+                                           VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CurrentStatus}" 
+                                              FontSize="12"
+                                              VerticalAlignment="Center"/>
+                                </StackPanel>
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="0" 
+                                          Text="站点地址:" 
+                                          FontWeight="SemiBold" 
+                                          FontSize="12"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" 
+                                          Text="{Binding SiteUrl}" 
+                                          FontFamily="Consolas" 
+                                          FontSize="11"
+                                          TextWrapping="Wrap"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
 
-                <!-- 操作进度卡片 -->
-                <Border Classes="card">
-                    <StackPanel>
-                        <TextBlock Text="操作进度" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
-                        
+                    <!-- 操作进度卡片 -->
+                    <Border Classes="card-compact">
                         <StackPanel Spacing="10">
-                            <TextBlock Text="{Binding ProgressText}" FontWeight="SemiBold"/>
+                            <TextBlock Text="⚡ 操作进度" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
+                            
+                            <TextBlock Text="{Binding ProgressText}" 
+                                      FontWeight="SemiBold"
+                                      FontSize="12"/>
                             <ProgressBar Value="{Binding ProgressValue}" 
                                          IsIndeterminate="{Binding IsProgressIndeterminate}" 
-                                         Height="8" 
-                                         CornerRadius="4"/>
+                                         Height="6" 
+                                         CornerRadius="3"/>
                         </StackPanel>
-                        
-                        <Separator Margin="0,15"/>
-                        
-                        <TextBlock Text="操作日志:" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                        <Border Background="{DynamicResource LogBackgroundBrush}" 
-                                BorderBrush="{DynamicResource CardBorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="4" 
-                                Height="150">
-                            <ScrollViewer Name="LogScrollViewer" 
-                                          Padding="10" 
-                                          VerticalScrollBarVisibility="Auto">
-                                <TextBlock Text="{Binding LogText}" 
-                                           FontFamily="Consolas" 
-                                           FontSize="11" 
-                                           TextWrapping="Wrap" 
-                                           Foreground="{DynamicResource InputTextBrush}"
-                                           Background="Transparent"/>
-                            </ScrollViewer>
-                        </Border>
-                    </StackPanel>
-                </Border>
+                    </Border>
 
-                <!-- 配置选项卡片 -->
-                <Border Classes="card">
-                    <StackPanel>
-                        <TextBlock Text="配置选项" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
-                        
-                        <StackPanel Spacing="5">
-                            <CheckBox Content="自动在内置浏览器中打开" IsChecked="{Binding AutoOpenBrowser}"/>
-                            <CheckBox Content="自动清理下载文件" IsChecked="{Binding AutoCleanDownloads}"/>
-                            <CheckBox Content="检查更新时显示详细信息" IsChecked="{Binding ShowDetailedInfo}"/>
-                            <CheckBox Content="最小化到系统托盘" IsChecked="{Binding MinimizeToTray}"/>
+                    <!-- 配置选项卡片 -->
+                    <Border Classes="card-compact">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="⚙️ 配置选项" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
+                            
+                            <StackPanel Spacing="8">
+                                <CheckBox Content="自动在内置浏览器中打开" 
+                                         IsChecked="{Binding AutoOpenBrowser}"
+                                         FontSize="12"/>
+                                <CheckBox Content="自动清理下载文件" 
+                                         IsChecked="{Binding AutoCleanDownloads}"
+                                         FontSize="12"/>
+                                <CheckBox Content="检查更新时显示详细信息" 
+                                         IsChecked="{Binding ShowDetailedInfo}"
+                                         FontSize="12"/>
+                                <CheckBox Content="最小化到系统托盘" 
+                                         IsChecked="{Binding MinimizeToTray}"
+                                         FontSize="12"/>
+                            </StackPanel>
+                            
+                            <Separator Margin="0,8"/>
+                            
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="端口范围:" 
+                                          FontWeight="SemiBold"
+                                          FontSize="12"/>
+                                <StackPanel Orientation="Horizontal" 
+                                           Spacing="8" 
+                                           VerticalAlignment="Center">
+                                    <NumericUpDown Value="{Binding StartPort}" 
+                                                  Minimum="1024" 
+                                                  Maximum="65535" 
+                                                  Width="140"
+                                                  FontSize="12"/>
+                                    <TextBlock Text="到" 
+                                              VerticalAlignment="Center"
+                                              FontSize="12"/>
+                                    <NumericUpDown Value="{Binding EndPort}" 
+                                                  Minimum="1024" 
+                                                  Maximum="65535" 
+                                                  Width="140"
+                                                  FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
                         </StackPanel>
-                        
-                        <Separator Margin="0,15"/>
-                        
-                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                            <TextBlock Text="端口范围:" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                            <NumericUpDown Value="{Binding StartPort}" Minimum="1024" Maximum="65535" Width="140"/>
-                            <TextBlock Text="到" VerticalAlignment="Center"/>
-                            <NumericUpDown Value="{Binding EndPort}" Minimum="1024" Maximum="65535" Width="140"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
+                    </Border>
 
-            </StackPanel>
-        </ScrollViewer>
+                </StackPanel>
+            </ScrollViewer>
+            
+            <!-- 🆕 右侧：日志面板 -->
+            <Border Grid.Column="1" 
+                    Classes="log-panel"
+                    Margin="10,15,20,20">
+                <Grid RowDefinitions="Auto,*">
+                    <!-- 日志标题栏 -->
+                    <Border Grid.Row="0" 
+                            Background="{DynamicResource ToolbarBackgroundBrush}"
+                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            BorderThickness="0,0,0,1"
+                            Padding="15,10">
+                        <TextBlock Text="📝 操作日志" 
+                                  FontSize="16" 
+                                  FontWeight="SemiBold"
+                                  VerticalAlignment="Center"/>
+                    </Border>
+                    
+                    <!-- 日志内容区域 -->
+                    <Border Grid.Row="1"
+                            Background="{DynamicResource LogBackgroundBrush}" 
+                            BorderBrush="{DynamicResource CardBorderBrush}" 
+                            BorderThickness="1"
+                            CornerRadius="0,0,8,8">
+                        <ScrollViewer Name="LogScrollViewer" 
+                                     Padding="15,10"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     ScrollChanged="LogScrollViewer_OnScrollChanged">
+                            <SelectableTextBlock Text="{Binding LogText}" 
+                                                FontFamily="Consolas,Menlo,Monaco,Courier New" 
+                                                FontSize="11" 
+                                                TextWrapping="Wrap" 
+                                                Foreground="{DynamicResource InputTextBrush}"
+                                                LineHeight="16"
+                                                Background="Transparent"
+                                                SelectionBrush="{DynamicResource SystemAccentColor}"/>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </Border>
+            
+        </Grid>
     </Grid>
 
     <UserControl.Styles>
-        <Style Selector="Border.card">
+        <!-- 紧凑卡片样式 -->
+        <Style Selector="Border.card-compact">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="BoxShadow" Value="0 1 3 0 #0D000000"/>
+        </Style>
+        
+        <!-- 日志面板样式 -->
+        <Style Selector="Border.log-panel">
             <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Padding" Value="20"/>
-            <Setter Property="BoxShadow" Value="0 2 4 0 #1A000000"/>
+            <Setter Property="BoxShadow" Value="0 2 8 0 #14000000"/>
         </Style>
         
         <Style Selector="Button">
@@ -158,6 +269,17 @@
         
         <Style Selector="Button:pointerover">
             <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+        
+        <!-- CheckBox 样式优化 -->
+        <Style Selector="CheckBox">
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        
+        <!-- 滚动条样式优化 -->
+        <Style Selector="ScrollViewer">
+            <Setter Property="AllowAutoHide" Value="True"/>
         </Style>
     </UserControl.Styles>
 </UserControl> 

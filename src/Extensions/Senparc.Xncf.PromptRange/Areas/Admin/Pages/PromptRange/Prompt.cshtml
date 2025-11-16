@@ -224,12 +224,38 @@
                             </div>
                         </div>
                         <div class="promptContentBox">
-                            <el-input v-model="content" type="textarea"
-                                      :rows="contentTextareaRows"
-                                      resize="vertical"
-                                      placeholder="请输入内容"
-                                      class="promptInput" @@change="promptChangeHandel($event,'content')">
-                            </el-input>
+                        @* contenteditable编辑器，支持内联高亮 *@
+                        <div class="promptInput prompt-rich-editor"
+                             contenteditable="true"
+                             ref="promptEditor"
+                             @@focus="onEditorFocus"
+                             @@input="onEditorInput"
+                             @@keyup="onEditorKeyup"
+                             @@compositionstart="isComposing = true"
+                             @@compositionend="onCompositionEnd"
+                             @@blur="onEditorBlur"
+                             @@paste="onEditorPaste"
+                             :data-placeholder="content ? '' : '请输入内容'">
+                        </div>
+                            
+                            @* 变量提示卡片 *@
+                            <div class="prompt-variables-hint" v-if="detectedVariables.length > 0">
+                                <div class="hint-title">
+                                    <i class="el-icon-info"></i>
+                                    检测到 {{ detectedVariables.length }} 个变量
+                                </div>
+                                <div class="variables-list">
+                                    <el-tag v-for="varItem in detectedVariables" 
+                                            :key="varItem.name"
+                                            :type="varItem.isDefined ? 'success' : 'danger'"
+                                            size="small"
+                                            class="variable-tag">
+                                        {{ varItem.fullMatch }}
+                                        <i v-if="varItem.isDefined" class="el-icon-check" title="已定义"></i>
+                                        <i v-else class="el-icon-warning" title="未定义"></i>
+                                    </el-tag>
+                                </div>
+                            </div>
                             <div class="remarkRow">
                                 <el-input v-model="remarks" type="textarea"
                                           :rows="4"
@@ -365,16 +391,20 @@
              @@mousemove="handleOutputAreaMouseMove"
              @@mouseleave="handleOutputAreaMouseLeave">
             <div class="promptVersion">
-                <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong>   <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer" @@click="copyInfo"></i>
-                    <span style="margin-right:5px;margin-left:20px;">靶场:</span>
-                    <span>{{promptDetail.promptFieldStr||'--'}}</span>
-                    <span style="margin-right:5px;margin-left:20px;">靶道:</span>
-                    <span>{{promptDetail.promptStr||'--'}}</span>
-                    <span style="margin-right:5px;margin-left:20px;">瞄准:</span>
-                    <span>{{promptDetail.tacticsStr||'--'}}</span>
-                </span>
-
-
+                <div class="promptVersion-content">
+                    <div class="promptVersion-row">
+                        <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong></span>
+                        <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer;margin-left: 8px;" @@click="copyInfo"></i>
+                    </div>
+                    <div class="promptVersion-row promptVersion-info">
+                        <span style="margin-right:5px;">靶场:</span>
+                        <span style="margin-right:15px;">{{promptDetail.promptFieldStr||'--'}}</span>
+                        <span style="margin-right:5px;">靶道:</span>
+                        <span style="margin-right:15px;">{{promptDetail.promptStr||'--'}}</span>
+                        <span style="margin-right:5px;">瞄准:</span>
+                        <span>{{promptDetail.tacticsStr||'--'}}</span>
+                    </div>
+                </div>
                 <span><i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box1')"></i></span>
             </div>
           
@@ -919,8 +949,20 @@
                     <thead>
                         <tr>
                             <th style="width: 120px;">字段</th>
-                            <th>📝 Prompt A <span class="version-tag">{{comparePromptA.fullVersion}}</span></th>
-                            <th>📝 Prompt B <span class="version-tag">{{comparePromptB.fullVersion}}</span></th>
+                            <th>
+                                📝 Prompt A 
+                                <span class="version-tag">{{comparePromptA.fullVersion}}</span>
+                                <i class="el-icon-document-copy copy-version-icon" 
+                                   @@click="copyInfo('A')"
+                                   title="复制版本号"></i>
+                            </th>
+                            <th>
+                                📝 Prompt B 
+                                <span class="version-tag">{{comparePromptB.fullVersion}}</span>
+                                <i class="el-icon-document-copy copy-version-icon" 
+                                   @@click="copyInfo('B')"
+                                   title="复制版本号"></i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

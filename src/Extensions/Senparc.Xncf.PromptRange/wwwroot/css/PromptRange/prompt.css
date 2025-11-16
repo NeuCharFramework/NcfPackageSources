@@ -738,13 +738,13 @@
             min-height: 0;
         }
 
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox .promptInput .el-textarea {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
 
-        .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput .el-textarea__inner {
+        .entertarget > .promptContetnPmroparaBox .promptContentBox .promptInput .el-textarea__inner {
             color: #333;
             font-size: 14px;
             font-style: normal;
@@ -754,6 +754,105 @@
             min-height: 300px;
             height: 100%;
             resize: none;
+        }
+
+        /* contenteditable富文本编辑器 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor {
+            flex: 1;
+            min-height: 300px;
+            padding: 5px 15px;
+            border: 1px solid #DCDFE6;
+            border-radius: 4px;
+            background: #FFF;
+            color: #333;
+            font-size: 14px;
+            font-family: inherit;
+            line-height: 1.5;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            outline: none;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor:focus {
+            border-color: #409eff;
+        }
+
+        /* placeholder效果 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor:empty:before {
+            content: attr(data-placeholder);
+            color: #C0C4CC;
+        }
+
+        /* 高亮变量样式 - 确保绝对内联 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight {
+            display: inline !important;
+            background: rgba(255, 235, 59, 0.3);
+            border-radius: 2px;
+            padding: 1px 3px !important;
+            margin: 0 !important;
+            border: none !important;
+            line-height: inherit !important;
+            white-space: nowrap !important;
+            vertical-align: baseline !important;
+            float: none !important;
+            clear: none !important;
+            position: static !important;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {
+            background: rgba(76, 175, 80, 0.2) !important;
+            color: inherit !important;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.undefined {
+            background: rgba(255, 152, 0, 0.2) !important;
+            color: inherit !important;
+        }
+        
+        /* 确保编辑器内的br正常工作 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor br {
+            display: block;
+            content: "";
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 变量提示卡片 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint {
+            flex-shrink: 0;
+            padding: 8px 12px;
+            background: #f5f7fa;
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-top: -5px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .hint-title {
+            color: #606266;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .hint-title i {
+            margin-right: 4px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .variables-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .variable-tag {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint .variable-tag i {
+            margin-left: 4px;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow {
@@ -1559,6 +1658,24 @@
 .promptVersion{
     display:flex;
     justify-content:space-between;
+    align-items: flex-start;
+}
+
+.promptVersion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.promptVersion-row {
+    display: flex;
+    align-items: center;
+}
+
+.promptVersion-info {
+    font-size: 13px;
+    color: #606266;
 }
 
 /* 可拖动分隔条样式 */
@@ -2224,3 +2341,23 @@ think::before {
 .model-select .el-select-dropdown__item:hover .model-deployment {
     color: #66b1ff;
 }
+
+/* ========== 对比窗口版本号复制按钮 ========== */
+.copy-version-icon {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #909399;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+}
+
+.copy-version-icon:hover {
+    color: #409eff;
+    transform: scale(1.1);
+}
+
+.copy-version-icon:active {
+    transform: scale(0.95);
+}
+

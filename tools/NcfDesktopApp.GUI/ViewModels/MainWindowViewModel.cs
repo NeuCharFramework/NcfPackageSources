@@ -9,12 +9,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using NcfDesktopApp.GUI.Services;
+using NcfDesktopApp.GUI.Views;
 using System.Linq;
 
 namespace NcfDesktopApp.GUI.ViewModels;
@@ -101,6 +106,7 @@ public partial class MainWindowViewModel : ViewModelBase
     #region 私有字段
     
     private readonly NcfService _ncfService;
+    private readonly WebView2Service _webView2Service;
     private readonly StringBuilder _logBuffer;
     private CancellationTokenSource? _cancellationTokenSource;
     private Process? _ncfProcess;
@@ -112,8 +118,13 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        _ncfService = new NcfService(new HttpClient());
+        var httpClient = new HttpClient();
+        _ncfService = new NcfService(httpClient);
+        _webView2Service = new WebView2Service(httpClient);
         _logBuffer = new StringBuilder();
+        
+        // 🆕 注册配置文件冲突处理回调
+        _ncfService.OnAppSettingsConflict = HandleAppSettingsConflictAsync;
         
         // 初始化应用程序
         _ = Task.Run(InitializeApplicationAsync);
@@ -237,6 +248,20 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            // 显示确认对话框
+            var result = await ShowConfirmDialogAsync(
+                "确认关闭",
+                "关闭标签页将停止 NCF 应用程序，\n是否继续？",
+                "关闭",
+                "取消"
+            );
+            
+            if (!result)
+            {
+                AddLog("ℹ️ 取消关闭标签页");
+                return;
+            }
+            
             AddLog("🗙 关闭浏览器标签页...");
             
             // 关闭浏览器标签页
@@ -255,6 +280,89 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             AddLog($"❌ 关闭浏览器标签页失败: {ex.Message}");
         }
+    }
+    
+    /// <summary>
+    /// 显示确认对话框
+    /// </summary>
+    private async Task<bool> ShowConfirmDialogAsync(string title, string message, string okButtonText = "确定", string cancelButtonText = "取消")
+    {
+        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = desktop.MainWindow;
+            if (mainWindow != null)
+            {
+                var okButton = new Button
+                {
+                    Content = okButtonText,
+                    Width = 100,
+                    Height = 35,
+                    Background = Brushes.Red,
+                    Foreground = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    HorizontalContentAlignment = HorizontalAlignment.Center
+                };
+                
+                var cancelButton = new Button
+                {
+                    Content = cancelButtonText,
+                    Width = 100,
+                    Height = 35,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    HorizontalContentAlignment = HorizontalAlignment.Center
+                };
+                
+                var dialog = new Window
+                {
+                    Title = title,
+                    Width = 500,
+                    MinHeight = 200,
+                    MaxHeight = 600,
+                    SizeToContent = SizeToContent.Height,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    CanResize = false,
+                    ShowInTaskbar = false,
+                    Content = new ScrollViewer
+                    {
+                        MaxHeight = 550,
+                        Content = new StackPanel
+                        {
+                            Margin = new Thickness(20),
+                            Spacing = 20,
+                            Children =
+                            {
+                                new TextBlock
+                                {
+                                    Text = message,
+                                    FontSize = 14,
+                                    TextWrapping = TextWrapping.Wrap,
+                                    TextAlignment = TextAlignment.Left,
+                                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                                    VerticalAlignment = VerticalAlignment.Top
+                                },
+                                new StackPanel
+                                {
+                                    Orientation = Orientation.Horizontal,
+                                    HorizontalAlignment = HorizontalAlignment.Center,
+                                    Spacing = 15,
+                                    Margin = new Thickness(0, 10, 0, 0),
+                                    Children = { okButton, cancelButton }
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                okButton.Click += (s, e) => dialog.Close(true);
+                cancelButton.Click += (s, e) => dialog.Close(false);
+                
+                var result = await dialog.ShowDialog<bool>(mainWindow);
+                return result;
+            }
+        }
+        
+        // 如果无法显示对话框，默认返回 false（不关闭）
+        return false;
     }
     
     private bool CanCloseBrowserTab() => IsBrowserTabVisible;
@@ -276,13 +384,18 @@ public partial class MainWindowViewModel : ViewModelBase
             // 检查最新版本
             await CheckLatestVersionAsync();
             
+            // 立即关闭初始化遮罩，让用户看到 WebView2 安装日志
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                IsInitializing = false;
+            });
+            
             // 初始化浏览器
             await InitializeBrowserAsync();
             
             // 完成初始化
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                IsInitializing = false;
                 AddLog("✅ 应用程序初始化完成");
             });
         }
@@ -305,7 +418,73 @@ public partial class MainWindowViewModel : ViewModelBase
                 AddLog("🌐 正在初始化内置浏览器...");
             });
             
-            // 模拟浏览器初始化过程
+            // 仅在 Windows 上检查和安装 WebView2
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("🔍 检查 WebView2 Runtime...");
+                });
+                
+                // 检查并安装 WebView2
+                var progress = new Progress<(string message, double percentage)>(update =>
+                {
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog($"   {update.message}");
+                        if (update.percentage >= 0)
+                        {
+                            ProgressValue = update.percentage;
+                            IsProgressIndeterminate = false;
+                        }
+                        else
+                        {
+                            IsProgressIndeterminate = true;
+                        }
+                    });
+                });
+                
+                var installed = await _webView2Service.EnsureWebView2InstalledAsync(progress);
+                
+                if (!installed)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog("⚠️ WebView2 Runtime 安装失败");
+                        AddLog("   内置浏览器可能无法正常工作");
+                        AddLog("   请访问 https://go.microsoft.com/fwlink/p/?LinkId=2124703 手动下载安装");
+                        HasBrowserError = true;
+                        BrowserErrorMessage = "WebView2 Runtime 安装失败\n\n" +
+                                             "内置浏览器需要 Microsoft Edge WebView2 Runtime 才能运行。\n" +
+                                             "您可以手动下载并安装：\n" +
+                                             "https://go.microsoft.com/fwlink/p/?LinkId=2124703\n\n" +
+                                             "或者使用外部浏览器打开 NCF 应用。";
+                    });
+                    
+                    // 即使失败也标记为就绪，让用户可以使用外部浏览器
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        OnBrowserReady();
+                    });
+                    return;
+                }
+                
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("✅ WebView2 Runtime 已就绪");
+                    ProgressValue = 0;
+                    IsProgressIndeterminate = false;
+                });
+            }
+            else
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("ℹ️ 非 Windows 平台，使用系统 WebView");
+                });
+            }
+            
+            // 等待浏览器组件初始化
             await Task.Delay(500);
             
             await Dispatcher.UIThread.InvokeAsync(() =>
@@ -331,12 +510,32 @@ public partial class MainWindowViewModel : ViewModelBase
                 AddLog("🔍 检查最新版本...");
             });
 
-            var version = await _ncfService.GetLatestVersionAsync();
+            var latestVersion = await _ncfService.GetLatestVersionAsync();
+            var installedVersion = await _ncfService.GetInstalledVersionAsync();
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                LatestVersion = version;
-                AddLog($"📋 最新版本: {version}");
+                LatestVersion = latestVersion;
+                AddLog($"📋 最新版本: {latestVersion}");
+                
+                if (!string.IsNullOrEmpty(installedVersion))
+                {
+                    AddLog($"💾 当前已安装版本: {installedVersion}");
+                    
+                    // 比较版本
+                    if (installedVersion != latestVersion)
+                    {
+                        AddLog($"🆕 发现新版本可用！");
+                    }
+                    else
+                    {
+                        AddLog($"✅ 当前已是最新版本");
+                    }
+                }
+                else
+                {
+                    AddLog($"ℹ️ 未检测到已安装的 NeuCharFramework");
+                }
             });
         }
         catch (Exception ex)
@@ -367,11 +566,35 @@ public partial class MainWindowViewModel : ViewModelBase
             
             AddLog("🚀 开始启动 NCF...");
 
-            // 1. 检查/下载文件
-            await DownloadNcfAsync(cancellationToken);
-            
-            // 2. 提取文件
-            await ExtractNcfAsync(cancellationToken);
+            // 检查版本更新
+            var (shouldContinue, shouldUpdate) = await CheckAndConfirmUpdateAsync();
+            if (!shouldContinue)
+            {
+                // 用户取消启动，恢复状态
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    IsOperationInProgress = false;
+                    CurrentStatus = "已取消";
+                    StatusColor = "#6C757D";
+                    MainButtonText = "启动 NCF";
+                    AddLog("ℹ️ 用户取消了启动操作");
+                });
+                return;
+            }
+
+            // 1-2. 如果需要更新，则下载和提取文件
+            if (shouldUpdate)
+            {
+                // 1. 检查/下载文件
+                await DownloadNcfAsync(cancellationToken);
+                
+                // 2. 提取文件
+                await ExtractNcfAsync(cancellationToken);
+            }
+            else
+            {
+                AddLog("⏭️ 跳过下载和提取，使用现有版本");
+            }
             
             // 3. 启动NCF进程
             await StartNcfProcessAsync(cancellationToken);
@@ -492,6 +715,12 @@ public partial class MainWindowViewModel : ViewModelBase
             ProgressText = "启动进程...";
         });
 
+        // 注册 CLI 输出回调
+        _ncfService.OnProcessOutput = (output, isError) =>
+        {
+            AddCliLog(output, isError);
+        };
+
         _ncfProcess = await _ncfService.StartNcfProcessAsync(availablePort, cancellationToken);
         
         await Dispatcher.UIThread.InvokeAsync(() =>
@@ -518,6 +747,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            // 清理 CLI 输出回调
+            if (_ncfService != null)
+            {
+                _ncfService.OnProcessOutput = null;
+            }
+            
             if (_ncfProcess != null && !_ncfProcess.HasExited)
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
@@ -525,13 +760,64 @@ public partial class MainWindowViewModel : ViewModelBase
                     AddLog("🛑 正在停止 NCF 进程...");
                 });
 
-                _ncfProcess.Kill();
-                await _ncfProcess.WaitForExitAsync();
-                
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                // 在 Windows 上，使用 taskkill 杀死整个进程树
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    AddLog("✅ NCF 进程已停止");
-                });
+                    try
+                    {
+                        var killProcess = Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "taskkill",
+                            Arguments = $"/PID {_ncfProcess.Id} /T /F",
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true
+                        });
+                        
+                        if (killProcess != null)
+                        {
+                            await killProcess.WaitForExitAsync();
+                            await Dispatcher.UIThread.InvokeAsync(() =>
+                            {
+                                AddLog($"🔪 已使用 taskkill 终止进程树 (PID: {_ncfProcess.Id})");
+                            });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                        {
+                            AddLog($"⚠️ taskkill 失败，尝试常规 Kill: {ex.Message}");
+                        });
+                        _ncfProcess.Kill();
+                    }
+                }
+                else
+                {
+                    // macOS/Linux 使用常规 Kill
+                    _ncfProcess.Kill(entireProcessTree: true);
+                }
+                
+                // 等待进程退出，最多等待 5 秒
+                var exitTask = _ncfProcess.WaitForExitAsync();
+                var timeoutTask = Task.Delay(5000);
+                var completedTask = await Task.WhenAny(exitTask, timeoutTask);
+                
+                if (completedTask == timeoutTask)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog("⚠️ 进程未在 5 秒内退出，强制终止");
+                    });
+                }
+                else
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AddLog("✅ NCF 进程已停止");
+                    });
+                }
             }
         }
         catch (Exception ex)
@@ -543,6 +829,8 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         finally
         {
+            _ncfProcess?.Dispose();
+            _ncfProcess = null;
             _isNcfRunning = false;
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -651,6 +939,139 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 处理 appsettings 配置文件冲突
+    /// </summary>
+    /// <param name="fileName">文件名</param>
+    /// <param name="oldContent">旧文件内容</param>
+    /// <param name="newContent">新文件内容</param>
+    /// <returns>true=使用旧配置覆盖，false=保留新配置</returns>
+    private async Task<bool> HandleAppSettingsConflictAsync(string fileName, string oldContent, string newContent)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            AddLog($"⚠️ 配置文件冲突: {fileName}");
+            AddLog($"   需要用户决策...");
+        });
+        
+        var message = $"检测到配置文件冲突：\n\n" +
+                     $"文件名: {fileName}\n\n" +
+                     $"旧配置大小: {oldContent.Length} 字符\n" +
+                     $"新配置大小: {newContent.Length} 字符\n\n" +
+                     $"选择\"使用旧配置\"将保留您的自定义设置\n" +
+                     $"选择\"使用新配置\"将使用新版本的默认设置\n\n" +
+                     $"注意：\n" +
+                     $"• 使用旧配置：新版本配置将备份为 {fileName}.backup-[日期].json\n" +
+                     $"• 使用新配置：旧配置将另存为 {fileName}.old-[日期].json";
+        
+        var result = await ShowConfirmDialogAsync(
+            "配置文件冲突",
+            message,
+            "使用旧配置",
+            "使用新配置"
+        );
+        
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (result)
+            {
+                AddLog($"✅ 用户选择：使用旧配置覆盖");
+            }
+            else
+            {
+                AddLog($"✅ 用户选择：保留新配置");
+            }
+        });
+        
+        return result;
+    }
+    
+    /// <summary>
+    /// 检查版本更新并确认
+    /// </summary>
+    /// <returns>(shouldContinue, shouldUpdate): shouldContinue=是否继续启动, shouldUpdate=是否需要更新</returns>
+    private async Task<(bool shouldContinue, bool shouldUpdate)> CheckAndConfirmUpdateAsync()
+    {
+        try
+        {
+            // 获取当前已安装版本
+            var installedVersion = await _ncfService.GetInstalledVersionAsync();
+            
+            // 如果没有安装过，直接继续（首次安装）
+            if (string.IsNullOrEmpty(installedVersion))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("ℹ️ 首次安装，将下载最新版本");
+                });
+                return (true, true); // 继续且需要下载
+            }
+            
+            // 获取最新版本
+            var latestVersion = await _ncfService.GetLatestVersionAsync();
+            
+            // 如果版本相同，直接继续
+            if (installedVersion == latestVersion)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog($"✅ 当前版本 {installedVersion} 已是最新版本");
+                });
+                return (true, false); // 继续但不需要下载
+            }
+            
+            // 发现新版本，显示确认对话框
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"🆕 发现新版本可用");
+                AddLog($"   当前版本: {installedVersion}");
+                AddLog($"   最新版本: {latestVersion}");
+            });
+            
+            var message = $"检测到 NeuCharFramework 有新版本可用：\n\n" +
+                         $"当前版本: {installedVersion}\n" +
+                         $"最新版本: {latestVersion}\n\n" +
+                         $"是否更新到最新版本？\n\n" +
+                         $"注意：\n" +
+                         $"• 更新将保留您的数据库和配置文件\n" +
+                         $"• 选择\"继续使用当前版本\"将跳过更新";
+            
+            var result = await ShowConfirmDialogAsync(
+                "版本更新提示",
+                message,
+                "更新",
+                "继续使用当前版本"
+            );
+            
+            if (result)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("✅ 用户选择更新到最新版本");
+                });
+                return (true, true); // 继续且需要下载
+            }
+            else
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("ℹ️ 用户选择继续使用当前版本");
+                });
+                return (true, false); // 继续但不下载
+            }
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"⚠️ 版本检查失败: {ex.Message}");
+                AddLog($"   将继续使用当前版本");
+            });
+            // 出错时继续，但不下载
+            return (true, false);
+        }
+    }
+    
     private void AddLog(string message)
     {
         var timestamp = DateTime.Now.ToString("HH:mm:ss");
@@ -667,6 +1088,84 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         LogText = _logBuffer.ToString();
+        
+        // 自动滚动到底部（如果用户没有手动滚动到历史记录）
+        ScrollToBottomIfNeeded();
+    }
+
+    /// <summary>
+    /// 添加 CLI 进程输出到日志
+    /// </summary>
+    private void AddCliLog(string message, bool isError)
+    {
+        // 必须在 UI 线程上更新
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => AddCliLog(message, isError));
+            return;
+        }
+        
+        var timestamp = DateTime.Now.ToString("HH:mm:ss");
+        var prefix = isError ? "[CLI:ERROR]" : "[CLI]";
+        var logEntry = $"[{timestamp}] {prefix} {message}";
+        
+        _logBuffer.AppendLine(logEntry);
+        
+        // 限制日志大小，保留最后1000行
+        var lines = _logBuffer.ToString().Split('\n');
+        if (lines.Length > 1000)
+        {
+            _logBuffer.Clear();
+            _logBuffer.AppendLine(string.Join('\n', lines.Skip(lines.Length - 1000)));
+        }
+        
+        LogText = _logBuffer.ToString();
+        
+        // 自动滚动到底部（如果用户没有手动滚动到历史记录）
+        ScrollToBottomIfNeeded();
+    }
+    
+    /// <summary>
+    /// 如果需要，滚动到日志底部
+    /// </summary>
+    private void ScrollToBottomIfNeeded()
+    {
+        try
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                // 查找 MainWindow 和 SettingsView
+                if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                {
+                    var mainWindow = desktop.MainWindow as MainWindow;
+                    if (mainWindow?.Content is UserControl mainContent)
+                    {
+                        // 查找 SettingsView 中的 LogScrollViewer
+                        var scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
+                        if (scrollViewer != null)
+                        {
+                            // 检查是否应该自动滚动
+                            var settingsView = mainContent as Views.SettingsView;
+                            if (settingsView?.ShouldAutoScroll ?? true)
+                            {
+                                // 延迟滚动，确保内容已更新
+                                Task.Delay(10).ContinueWith(_ =>
+                                {
+                                    Dispatcher.UIThread.Post(() =>
+                                    {
+                                        scrollViewer.ScrollToEnd();
+                                    });
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        catch
+        {
+            // 忽略滚动错误，不影响日志功能
+        }
     }
 
     #endregion

@@ -13,6 +13,13 @@ using Microsoft.Extensions.Logging;
 
 namespace NcfDesktopApp.GUI.Services;
 
+/// <summary>
+/// CLI 进程输出处理委托
+/// </summary>
+/// <param name="output">输出内容</param>
+/// <param name="isError">是否为错误输出</param>
+public delegate void ProcessOutputHandler(string output, bool isError);
+
 public class NcfService
 {
     private readonly HttpClient _httpClient;
@@ -22,6 +29,16 @@ public class NcfService
     public static string AppDataPath { get; private set; } = string.Empty;
     public static string DownloadsPath { get; private set; } = string.Empty;
     public static string NcfRuntimePath { get; private set; } = string.Empty;
+    
+    // 🆕 配置文件冲突处理回调
+    // 参数: fileName, oldContent, newContent
+    // 返回: true=使用新文件（覆盖），false=保留旧文件
+    public Func<string, string, string, Task<bool>>? OnAppSettingsConflict { get; set; }
+    
+    /// <summary>
+    /// CLI 进程输出回调（参数：输出内容, 是否为错误输出）
+    /// </summary>
+    public ProcessOutputHandler? OnProcessOutput { get; set; }
     
     static NcfService()
     {
@@ -139,6 +156,38 @@ public class NcfService
         }
         
         _logger?.LogInformation($"下载完成: {fileName}");
+    }
+    
+    /// <summary>
+    /// 获取当前已安装的 NeuCharFramework 版本
+    /// </summary>
+    /// <returns>当前版本号，如果未安装则返回 null</returns>
+    public async Task<string?> GetInstalledVersionAsync()
+    {
+        var versionFile = Path.Combine(NcfRuntimePath, "version.txt");
+        var senparcWebDll = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
+        
+        // 检查是否已安装（至少存在主程序文件）
+        if (!File.Exists(senparcWebDll))
+        {
+            return null;
+        }
+        
+        // 检查版本文件
+        if (!File.Exists(versionFile))
+        {
+            return null;
+        }
+        
+        try
+        {
+            var version = await File.ReadAllTextAsync(versionFile);
+            return version.Trim();
+        }
+        catch
+        {
+            return null;
+        }
     }
     
     public async Task<bool> CheckIfExtractNeededAsync(string version)
@@ -309,28 +358,13 @@ public class NcfService
         // 捕获进程输出，便于诊断
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
+        startInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+        startInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
+        
         var process = Process.Start(startInfo);
-        if (process != null)
-        {
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var so = await process.StandardOutput.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(so)) _logger?.LogInformation("NCF 输出:\n" + so);
-                }
-                catch { }
-            });
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var se = await process.StandardError.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(se)) _logger?.LogWarning("NCF 错误:\n" + se);
-                }
-                catch { }
-            });
-        }
+        
+        // 附加输出捕获事件处理
+        AttachProcessOutputHandlers(process);
         // 若自包含可执行在 macOS 被 Gatekeeper 杀死或依赖缺失导致瞬退，尝试回退到 dotnet 方式
         if ((process == null || process.HasExited) && File.Exists(Path.Combine(ncfAppDir, "Senparc.Web.dll")))
         {
@@ -353,7 +387,9 @@ public class NcfService
                 UseShellExecute = false,
                 CreateNoWindow = false,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                StandardOutputEncoding = System.Text.Encoding.UTF8,
+                StandardErrorEncoding = System.Text.Encoding.UTF8
             };
             fb.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
             fb.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
@@ -370,6 +406,7 @@ public class NcfService
                 fb.Environment["PATH"] = string.IsNullOrEmpty(path2) ? root2 : root2 + Path.PathSeparator + path2;
             }
             process = Process.Start(fb);
+            AttachProcessOutputHandlers(process);
         }
 
         // 若自包含进程在极短时间内崩溃（被 Gatekeeper 杀死），再做一次回退检查
@@ -390,7 +427,9 @@ public class NcfService
                         UseShellExecute = false,
                         CreateNoWindow = false,
                         RedirectStandardOutput = true,
-                        RedirectStandardError = true
+                        RedirectStandardError = true,
+                        StandardOutputEncoding = System.Text.Encoding.UTF8,
+                        StandardErrorEncoding = System.Text.Encoding.UTF8
                     };
                     fb2.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
                     fb2.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
@@ -407,6 +446,7 @@ public class NcfService
                         fb2.Environment["PATH"] = string.IsNullOrEmpty(path3) ? root3 : root3 + Path.PathSeparator + path3;
                     }
                     process = Process.Start(fb2);
+                    AttachProcessOutputHandlers(process);
                 }
             }
             catch { }
@@ -898,6 +938,61 @@ public class NcfService
     
     #region 私有方法
     
+    /// <summary>
+    /// 为进程附加输出捕获事件处理
+    /// </summary>
+    private void AttachProcessOutputHandlers(Process? process)
+    {
+        if (process == null) return;
+        
+        // 捕获标准输出
+        process.OutputDataReceived += (sender, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                try
+                {
+                    OnProcessOutput?.Invoke(args.Data, false);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"处理进程输出时出错: {ex.Message}");
+                }
+            }
+        };
+        
+        // 捕获错误输出
+        process.ErrorDataReceived += (sender, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                try
+                {
+                    OnProcessOutput?.Invoke(args.Data, true);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"处理进程错误输出时出错: {ex.Message}");
+                }
+            }
+        };
+        
+        // 开始异步读取
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        
+        // 注册进程退出事件
+        process.EnableRaisingEvents = true;
+        process.Exited += (sender, args) =>
+        {
+            try
+            {
+                OnProcessOutput?.Invoke("--- 进程已退出 ---", false);
+            }
+            catch { }
+        };
+    }
+    
     private static string GetCurrentPlatform()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -1180,6 +1275,24 @@ public class NcfService
                 _logger?.LogInformation("✅ App_Data 文件夹已备份");
             }
             
+            // 🆕 保护 logs 文件夹
+            var logsPath = Path.Combine(NcfRuntimePath, "logs");
+            if (Directory.Exists(logsPath))
+            {
+                var backupLogsPath = Path.Combine(backupPath, "logs");
+                await CopyDirectoryAsync(logsPath, backupLogsPath);
+                _logger?.LogInformation("✅ logs 文件夹已备份");
+            }
+            
+            // 备用：如果存在 log 文件夹（向后兼容）
+            var logPath = Path.Combine(NcfRuntimePath, "log");
+            if (Directory.Exists(logPath))
+            {
+                var backupLogPath = Path.Combine(backupPath, "log");
+                await CopyDirectoryAsync(logPath, backupLogPath);
+                _logger?.LogInformation("✅ log 文件夹已备份");
+            }
+            
             // 备份 appsettings.json 文件
             await BackupAppSettingsFilesAsync(backupPath);
             
@@ -1329,7 +1442,25 @@ public class NcfService
                 _logger?.LogInformation("✅ App_Data 文件夹已恢复");
             }
             
-            // 恢复 appsettings 文件
+            // 🆕 恢复 logs 文件夹
+            var backupLogsPath = Path.Combine(backupPath, "logs");
+            if (Directory.Exists(backupLogsPath))
+            {
+                var logsPath = Path.Combine(NcfRuntimePath, "logs");
+                await CopyDirectoryAsync(backupLogsPath, logsPath);
+                _logger?.LogInformation("✅ logs 文件夹已恢复");
+            }
+            
+            // 恢复 log 文件夹（向后兼容）
+            var backupLogPath = Path.Combine(backupPath, "log");
+            if (Directory.Exists(backupLogPath))
+            {
+                var logPath = Path.Combine(NcfRuntimePath, "log");
+                await CopyDirectoryAsync(backupLogPath, logPath);
+                _logger?.LogInformation("✅ log 文件夹已恢复");
+            }
+            
+            // 🆕 智能恢复 appsettings 文件（带冲突检测）
             await RestoreAppSettingsFilesAsync(backupPath);
             
             // 清理临时备份
@@ -1352,9 +1483,9 @@ public class NcfService
     }
 
     /// <summary>
-    /// 恢复 appsettings 配置文件
+    /// 智能恢复 appsettings 配置文件（带冲突检测）
     /// </summary>
-    private Task RestoreAppSettingsFilesAsync(string backupPath)
+    private async Task RestoreAppSettingsFilesAsync(string backupPath)
     {
         try
         {
@@ -1362,7 +1493,8 @@ public class NcfService
             
             if (!Directory.Exists(settingsBackupPath))
             {
-                return Task.CompletedTask;
+                _logger?.LogInformation("ℹ️ 没有备份的配置文件，跳过");
+                return;
             }
             
             var backupFiles = Directory.GetFiles(settingsBackupPath, "*", SearchOption.AllDirectories);
@@ -1392,16 +1524,96 @@ public class NcfService
                     Directory.CreateDirectory(targetDir);
                 }
                 
-                File.Copy(backupFile, targetPath, true);
-                _logger?.LogInformation($"✅ 已恢复配置文件: {originalFileName}");
+                // 🆕 检测冲突：如果新版本中也有这个文件，比较内容
+                if (File.Exists(targetPath))
+                {
+                    var shouldOverwrite = await HandleAppSettingsConflictAsync(
+                        originalFileName,
+                        backupFile,  // 旧文件（备份）
+                        targetPath   // 新文件（当前已解压的）
+                    );
+                    
+                    if (shouldOverwrite)
+                    {
+                        // 用户选择覆盖：先备份新文件，然后用旧文件覆盖
+                        var archiveFileName = $"{Path.GetFileNameWithoutExtension(originalFileName)}.backup-{DateTime.Now:yyyyMMdd-HHmmss}{Path.GetExtension(originalFileName)}";
+                        var archivePath = Path.Combine(NcfRuntimePath, archiveFileName);
+                        File.Copy(targetPath, archivePath, true);
+                        _logger?.LogInformation($"📦 已存档新版本配置文件: {archiveFileName}");
+                        
+                        // 用旧配置覆盖
+                        File.Copy(backupFile, targetPath, true);
+                        _logger?.LogInformation($"✅ 已恢复旧配置文件: {originalFileName}");
+                    }
+                    else
+                    {
+                        // 用户选择保留新文件
+                        _logger?.LogInformation($"⏭️ 保留新版本配置文件: {originalFileName}");
+                        
+                        // 将旧配置另存为 .old 文件供参考
+                        var oldFileName = $"{Path.GetFileNameWithoutExtension(originalFileName)}.old-{DateTime.Now:yyyyMMdd-HHmmss}{Path.GetExtension(originalFileName)}";
+                        var oldFilePath = Path.Combine(NcfRuntimePath, oldFileName);
+                        File.Copy(backupFile, oldFilePath, true);
+                        _logger?.LogInformation($"📋 旧配置已另存为: {oldFileName}");
+                    }
+                }
+                else
+                {
+                    // 新版本中没有这个文件，直接恢复
+                    File.Copy(backupFile, targetPath, true);
+                    _logger?.LogInformation($"✅ 已恢复配置文件: {originalFileName}");
+                }
             }
         }
         catch (Exception ex)
         {
             _logger?.LogWarning($"⚠️ 恢复配置文件时出错: {ex.Message}");
         }
-        
-        return Task.CompletedTask;
+    }
+    
+    /// <summary>
+    /// 处理 appsettings 配置文件冲突
+    /// </summary>
+    /// <param name="fileName">文件名</param>
+    /// <param name="oldFilePath">旧文件路径（备份）</param>
+    /// <param name="newFilePath">新文件路径（当前）</param>
+    /// <returns>true=使用旧文件覆盖，false=保留新文件</returns>
+    private async Task<bool> HandleAppSettingsConflictAsync(string fileName, string oldFilePath, string newFilePath)
+    {
+        try
+        {
+            // 读取两个文件的内容
+            var oldContent = await File.ReadAllTextAsync(oldFilePath);
+            var newContent = await File.ReadAllTextAsync(newFilePath);
+            
+            // 比较内容
+            if (oldContent.Trim() == newContent.Trim())
+            {
+                // 内容相同，直接使用新文件（不需要覆盖）
+                _logger?.LogInformation($"ℹ️ 配置文件内容相同，无需处理: {fileName}");
+                return false;
+            }
+            
+            _logger?.LogWarning($"⚠️ 检测到配置文件冲突: {fileName}");
+            _logger?.LogInformation($"   旧文件大小: {oldContent.Length} 字符");
+            _logger?.LogInformation($"   新文件大小: {newContent.Length} 字符");
+            
+            // 如果设置了冲突处理回调，调用它
+            if (OnAppSettingsConflict != null)
+            {
+                return await OnAppSettingsConflict(fileName, oldContent, newContent);
+            }
+            
+            // 默认：保留新文件
+            _logger?.LogInformation($"   默认行为：保留新版本文件");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"❌ 处理配置文件冲突时出错: {ex.Message}");
+            // 出错时默认保留新文件
+            return false;
+        }
     }
 
     /// <summary>
@@ -1442,6 +1654,13 @@ public class NcfService
             return true;
         }
         
+        // 🆕 保留 logs/log 文件夹中的所有文件
+        if (relativePath.StartsWith("logs", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("log", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        
         // 保留 appsettings*.json 文件
         if (fileName.StartsWith("appsettings", StringComparison.OrdinalIgnoreCase) && 
             fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
@@ -1462,6 +1681,15 @@ public class NcfService
         // 保留 App_Data 文件夹
         if (relativePath.Equals("App_Data", StringComparison.OrdinalIgnoreCase) ||
             relativePath.StartsWith("App_Data" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        
+        // 🆕 保留 logs/log 文件夹
+        if (relativePath.Equals("logs", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.Equals("log", StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("logs" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ||
+            relativePath.StartsWith("log" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }

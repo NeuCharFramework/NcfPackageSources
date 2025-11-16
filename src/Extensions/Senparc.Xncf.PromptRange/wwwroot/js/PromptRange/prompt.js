@@ -16,6 +16,8 @@ var app = new Vue({
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
+            isComposing: false, // 是否正在使用输入法（IME composition）
+            isUserEditing: false, // 是否正在编辑（避免watch content时重新渲染）
             numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
             numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
             // 参数设置 视图配置列表
@@ -344,6 +346,124 @@ var app = new Vue({
             
             // 通过ID判断是否为同一个Prompt
             return this.comparePromptAId === this.comparePromptBId;
+        },
+        
+        // 检测Prompt中的变量
+        detectedVariables() {
+            if (!this.content) return [];
+            
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
+            const variableList = this.promptParamForm.variableList || [];
+            
+            // 如果没有设置前缀和后缀，返回空数组
+            if (!prefix || !suffix) return [];
+            
+            // 转义前缀和后缀用于正则表达式
+            const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            // 构建正则表达式：匹配 prefix + 变量名 + suffix
+            const regex = new RegExp(`${escapedPrefix}(\\w+)${escapedSuffix}`, 'g');
+            
+            // 获取所有已定义的变量名
+            const definedVarNames = variableList.map(v => v.name).filter(n => n);
+            
+            // 找出所有匹配的变量
+            const variables = [];
+            const seen = new Set();
+            let match;
+            
+            while ((match = regex.exec(this.content)) !== null) {
+                const fullMatch = match[0];
+                const varName = match[1];
+                
+                // 避免重复
+                if (!seen.has(fullMatch)) {
+                    seen.add(fullMatch);
+                    variables.push({
+                        fullMatch: fullMatch,
+                        name: varName,
+                        isDefined: definedVarNames.includes(varName)
+                    });
+                }
+            }
+            
+            return variables;
+        },
+        
+        // 生成带高亮的HTML内容
+        highlightedHTML() {
+            if (!this.content) return '';
+            
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
+            const variableList = this.promptParamForm.variableList || [];
+            
+            // 如果没有设置前缀和后缀，直接返回纯文本（转义HTML，保留换行）
+            if (!prefix || !suffix) {
+                return this.escapeHtml(this.content).replace(/\n/g, '<br>');
+            }
+            
+            // 转义前缀和后缀用于正则表达式
+            const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            // 构建正则表达式，使用全局标志
+            const regex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
+            
+            // 获取所有已定义的变量名
+            const definedVarNames = variableList.map(v => v.name).filter(n => n);
+            
+            // 逐行处理内容
+            const lines = this.content.split('\n');
+            const processedLines = lines.map(line => {
+                // 先转义整行HTML
+                let escapedLine = this.escapeHtml(line);
+                
+                // 创建一个数组来存储处理后的片段
+                let lastIndex = 0;
+                let result = '';
+                let match;
+                
+                // 重新创建正则（因为有g标志，需要重置lastIndex）
+                const lineRegex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
+                
+                // 在转义后的文本中查找匹配
+                while ((match = lineRegex.exec(escapedLine)) !== null) {
+                    // 添加匹配前的文本
+                    result += escapedLine.substring(lastIndex, match.index);
+                    
+                    // 提取变量名（去掉前缀和后缀）
+                    const fullMatch = match[1];
+                    const varName = fullMatch.substring(prefix.length, fullMatch.length - suffix.length);
+                    
+                    // 判断是否已定义
+                    const isDefined = definedVarNames.includes(varName);
+                    const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
+                    const title = isDefined ? `已定义: ${varName}` : `未定义: ${varName}`;
+                    
+                    // 添加高亮的span（使用内联样式确保不换行）
+                    result += `<span class="${className}" title="${title}" style="display:inline;">${fullMatch}</span>`;
+                    
+                    lastIndex = lineRegex.lastIndex;
+                }
+                
+                // 添加剩余的文本
+                result += escapedLine.substring(lastIndex);
+                
+                return result;
+            });
+            
+            // 用<br>连接各行
+            const finalHTML = processedLines.join('<br>');
+            
+            // 调试：打印生成的HTML（仅在开发环境）
+            if (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1')) {
+                console.log('[highlightedHTML] Generated HTML:', finalHTML.substring(0, 300));
+            }
+            
+            return finalHTML;
         }
     },
     watch: {
@@ -355,6 +475,30 @@ var app = new Vue({
         //}
         versionSearchVal(val) {
             this.$refs.versionTree.filter(val);
+        },
+        
+        // 监听content外部变化（如加载数据）
+        content(newVal, oldVal) {
+            // 只处理外部赋值（比如加载数据），不处理用户编辑
+            if (this.isUserEditing) {
+                // 用户正在编辑，不重新渲染HTML
+                return;
+            }
+            
+            // 外部赋值，更新编辑器
+            if (newVal !== oldVal && this.$refs.promptEditor && !this.isComposing) {
+                this.$nextTick(() => {
+                    const editor = this.$refs.promptEditor;
+                    if (!editor) return;
+                    
+                    const currentText = this.getPlainText(editor);
+                    
+                    // 如果编辑器内容与content不一致（外部赋值），更新编辑器
+                    if (currentText !== newVal) {
+                        editor.innerHTML = this.highlightedHTML;
+                    }
+                });
+            }
         }
     },
     created() {
@@ -388,6 +532,14 @@ var app = new Vue({
         setTimeout(() => {
           this.getTargetRangeIdFromUrl();
       }, 200)
+      
+        // 初始化contenteditable编辑器
+        this.$nextTick(() => {
+            const editor = this.$refs.promptEditor;
+            if (editor && this.content) {
+                editor.innerHTML = this.highlightedHTML;
+            }
+        });
       
     },
     beforeDestroy() {
@@ -1645,16 +1797,34 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
-        copyInfo() {
-            // 找到promptOpt里面的promptid
+        copyInfo(source) {
+            let fullVersion = '';
+            let label = '';
+            
+            // 如果传入了参数，则复制对比窗口中的版本号
+            if (source === 'A' || source === 'B') {
+                const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
+                if (!prompt || !prompt.fullVersion) {
+                    this.$message.warning('无法获取版本号');
+                    return;
+                }
+                fullVersion = prompt.fullVersion;
+                label = `Prompt ${source} 版本号`;
+            } else {
+                // 否则复制当前选中的 Prompt
             if (!this.promptid) {
                 this.$message.info('请选择靶道后再复制信息！')
                 return
             }
-
             const promptItem = this.promptOpt.find(item => item.id === this.promptid)
-
-            const fullVersion = promptItem.fullVersion
+                if (!promptItem) {
+                    this.$message.warning('无法获取当前 Prompt 信息');
+                    return;
+                }
+                fullVersion = promptItem.fullVersion;
+                label = '';
+            }
+            
             // 把结果复制到剪切板
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
@@ -1664,9 +1834,10 @@ var app = new Vue({
             input.setSelectionRange(0, 9999)
             if (document.execCommand('copy')) {
                 document.execCommand('copy')
-                this.$message.success(`复制【${fullVersion}】成功`)
+                const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
+                this.$message.success(message)
             }
-            input.style.display = 'none';
+            document.body.removeChild(input);
         },
         // 格式化时间
         formatDate(d) {
@@ -4083,6 +4254,198 @@ var app = new Vue({
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        },
+        
+        // ========== contenteditable编辑器方法 ==========
+        
+        // 编辑器聚焦事件
+        onEditorFocus() {
+            this.isUserEditing = true;
+        },
+        
+        // 编辑器输入事件
+        onEditorInput(e) {
+            // 如果正在使用输入法，不处理
+            if (this.isComposing) return;
+            
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            this.isUserEditing = true;
+            this.content = this.getPlainText(editor);
+            
+            // 使用防抖延迟更新高亮（避免打断输入）
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 1500);  // 延长到1.5秒
+        },
+        
+        // 编辑器按键松开事件
+        onEditorKeyup(e) {
+            // 如果正在使用输入法，不处理
+            if (this.isComposing) return;
+            
+            // 使用防抖延迟高亮更新（1秒后更新，避免打断输入）
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 1000);
+        },
+        
+        // 输入法结束事件
+        onCompositionEnd(e) {
+            this.isComposing = false;
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            this.isUserEditing = true;
+            this.content = this.getPlainText(editor);
+            
+            // 输入法结束后延迟更新高亮
+            setTimeout(() => {
+                this.updateHighlightWithCaret();
+            }, 100);
+        },
+        
+        // 编辑器失焦事件
+        onEditorBlur() {
+            // 清除定时器
+            if (this._highlightTimer) {
+                clearTimeout(this._highlightTimer);
+                this._highlightTimer = null;
+            }
+            
+            this.isUserEditing = false;
+            const editor = this.$refs.promptEditor;
+            if (editor) {
+                this.content = this.getPlainText(editor);
+                // 失焦时更新高亮
+                this.updateHighlightWithCaret();
+            }
+            
+            this.promptChangeHandel(this.content, 'content');
+        },
+        
+        // 更新高亮并保存/恢复光标位置
+        updateHighlightWithCaret() {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 保存光标位置
+            const sel = window.getSelection();
+            let charOffset = 0;
+            if (sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(editor);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                charOffset = preCaretRange.toString().length;
+            }
+            
+            // 重新渲染高亮HTML
+            editor.innerHTML = this.highlightedHTML;
+            
+            // 恢复光标位置
+            this.$nextTick(() => {
+                this.restoreCaret(editor, charOffset);
+                // 重新聚焦编辑器（如果之前有焦点）
+                if (this.isUserEditing && document.activeElement !== editor) {
+                    editor.focus();
+                }
+            });
+        },
+        
+        // 编辑器粘贴事件（只粘贴纯文本）
+        onEditorPaste(e) {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            document.execCommand('insertText', false, text);
+        },
+        
+        // 从contenteditable元素提取纯文本
+        getPlainText(element) {
+            let text = '';
+            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+            
+            for (let i = 0; i < element.childNodes.length; i++) {
+                const node = element.childNodes[i];
+                
+                if (node.nodeType === Node.TEXT_NODE) {
+                    text += node.textContent;
+                } else if (node.nodeName === 'BR') {
+                    text += '\n';
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 块级元素前面（如果不是第一个元素）添加换行
+                    if (blockElements.includes(node.nodeName) && i > 0) {
+                        text += '\n';
+                    }
+                    
+                    // 递归处理子节点
+                    text += this.getPlainText(node);
+                }
+            }
+            return text;
+        },
+        
+        // 恢复光标位置
+        restoreCaret(element, charOffset) {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            let currentOffset = 0;
+            let found = false;
+            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+            
+            const findPosition = (node, parentIndex = 0) => {
+                if (found) return;
+                
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    if (found) return;
+                    
+                    const child = node.childNodes[i];
+                    
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        const nextOffset = currentOffset + child.length;
+                        if (charOffset >= currentOffset && charOffset <= nextOffset) {
+                            range.setStart(child, charOffset - currentOffset);
+                            range.collapse(true);
+                            found = true;
+                            return;
+                        }
+                        currentOffset = nextOffset;
+                    } else if (child.nodeName === 'BR') {
+                        // BR算作一个换行符
+                        if (charOffset === currentOffset) {
+                            range.setStartBefore(child);
+                            range.collapse(true);
+                            found = true;
+                            return;
+                        }
+                        currentOffset += 1;
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        // 块级元素算作换行（如果不是第一个元素）
+                        if (blockElements.includes(child.nodeName) && i > 0) {
+                            if (charOffset === currentOffset) {
+                                range.setStartBefore(child);
+                                range.collapse(true);
+                                found = true;
+                                return;
+                            }
+                            currentOffset += 1;
+                        }
+                        
+                        // 递归处理子节点
+                        findPosition(child, i);
+                    }
+                }
+            };
+            
+            findPosition(element);
+            
+            if (found) {
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
         },
         
         // 辅助方法：根据ID获取名称

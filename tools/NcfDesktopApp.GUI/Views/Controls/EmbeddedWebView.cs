@@ -5,14 +5,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
-using System.Net.Http;
-using System.Text;
-using System.IO;
-using Avalonia.Platform;
-using Avalonia.Layout;
 using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Linq;
+using WebView = AvaloniaWebView.WebView;
 
 namespace NcfDesktopApp.GUI.Views.Controls;
 
@@ -30,14 +24,16 @@ public partial class EmbeddedWebView : UserControl
     private Border _contentBorder = null!;
     private string _currentUrl = "";
     private bool _isWebViewReady = false;
-    private static readonly HttpClient _httpClient = new();
     
     private TextBlock _statusText = null!;
     private Grid _webViewContainer = null!;
     private Border _webViewArea = null!;
-    private WebViewHost? _webViewHost = null;
-    private Control? _nativeWebView = null;
-    private Type? _nativeWebViewType = null;
+    private WebView? _webView = null;
+    
+    /// <summary>
+    /// 获取 WebView 是否已初始化完成
+    /// </summary>
+    public bool IsWebViewReady => _isWebViewReady;
 
     public EmbeddedWebView()
     {
@@ -179,47 +175,35 @@ public partial class EmbeddedWebView : UserControl
             {
                 try
                 {
-                    // 优先尝试使用 WebView.Avalonia 的原生控件
-                    _nativeWebView = TryCreateNativeWebView(out _nativeWebViewType);
+                    Debug.WriteLine("🔧 创建 WebView.Avalonia 控件");
+                    Debug.WriteLine($"   平台: {RuntimeInformation.OSDescription}");
+                    Debug.WriteLine($"   架构: {RuntimeInformation.ProcessArchitecture}");
+                    
+                    // 直接创建 WebView.Avalonia 控件
+                    _webView = new WebView();
+                    _webView.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
+                    _webView.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
+                    
                     _webViewContainer.Children.Clear();
-
-                    if (_nativeWebView != null)
-                    {
-                        _nativeWebView.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        _nativeWebView.VerticalAlignment = VerticalAlignment.Stretch;
-                        _nativeWebView.Width = double.NaN; // Auto
-                        _nativeWebView.Height = double.NaN; // Auto
-                        _webViewContainer.Children.Clear();
-                        _webViewContainer.Children.Add(_nativeWebView);
-                        Grid.SetRow(_nativeWebView, 0);
-                    }
-                    else
-                    {
-                        // 回退到占位实现
-                        _webViewHost = new WebViewHost
-                        {
-                            HorizontalAlignment = HorizontalAlignment.Stretch,
-                            VerticalAlignment = VerticalAlignment.Stretch,
-                            Width = double.NaN,
-                            Height = double.NaN
-                        };
-                        _webViewContainer.Children.Clear();
-                        _webViewContainer.Children.Add(_webViewHost);
-                        Grid.SetRow(_webViewHost, 0);
-                    }
+                    _webViewContainer.Children.Add(_webView);
+                    Grid.SetRow(_webView, 0);
 
                     _isWebViewReady = true;
+                    Debug.WriteLine("✅ WebView 创建成功");
                     UpdateStatus("嵌入式浏览器已就绪", Brushes.Green);
 
                     // 如果有初始 URL，则导航到它
                     if (!string.IsNullOrEmpty(Source))
                     {
+                        Debug.WriteLine($"🎯 准备导航到初始 URL: {Source}");
                         _ = NavigateToUrlAsync(Source);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"创建 WebView 失败: {ex.Message}");
+                    Debug.WriteLine($"❌ 创建 WebView 失败: {ex.Message}");
+                    Debug.WriteLine($"   异常类型: {ex.GetType().Name}");
+                    Debug.WriteLine($"   堆栈跟踪: {ex.StackTrace}");
                     throw;
                 }
             });
@@ -231,56 +215,6 @@ public partial class EmbeddedWebView : UserControl
         }
     }
 
-    private Control? TryCreateNativeWebView(out Type? controlType)
-    {
-        controlType = null;
-        try
-        {
-            // 优先匹配包名包含 "Avalonia.WebView" 的程序集中的类型名 "WebView"
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var candidateTypes = assemblies
-                .Where(a => !a.IsDynamic)
-                .SelectMany(a =>
-                {
-                    try { return a.GetTypes(); } catch { return Array.Empty<Type>(); }
-                })
-                .Where(t => typeof(Control).IsAssignableFrom(t)
-                            && string.Equals(t.Name, "WebView", StringComparison.Ordinal)
-                            && (t.Namespace?.Contains("Avalonia.WebView", StringComparison.OrdinalIgnoreCase) ?? false))
-                .ToList();
-
-            // 兼容可能的命名空间变化，兜底匹配类型名为 WebView 的控件
-            if (candidateTypes.Count == 0)
-            {
-                candidateTypes = assemblies
-                    .Where(a => !a.IsDynamic)
-                    .SelectMany(a =>
-                    {
-                        try { return a.GetTypes(); } catch { return Array.Empty<Type>(); }
-                    })
-                    .Where(t => typeof(Control).IsAssignableFrom(t)
-                                && string.Equals(t.Name, "WebView", StringComparison.Ordinal))
-                    .ToList();
-            }
-
-            var type = candidateTypes.FirstOrDefault();
-            if (type == null)
-            {
-                Debug.WriteLine("未找到 WebView.Avalonia 控件类型，使用占位实现");
-                return null;
-            }
-
-            controlType = type;
-            var instance = Activator.CreateInstance(type) as Control;
-            return instance;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"创建原生 WebView 控件失败: {ex.Message}");
-            controlType = null;
-            return null;
-        }
-    }
 
     private void UpdateStatus(string message, IBrush color)
     {
@@ -316,7 +250,10 @@ public partial class EmbeddedWebView : UserControl
     private async Task NavigateToUrlAsync(string url)
     {
         if (!_isWebViewReady || string.IsNullOrEmpty(url))
+        {
+            Debug.WriteLine($"⚠️ 跳过导航: Ready={_isWebViewReady}, URL={url}");
             return;
+        }
 
         try
         {
@@ -325,60 +262,30 @@ public partial class EmbeddedWebView : UserControl
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (_nativeWebView != null && _nativeWebViewType != null)
+                if (_webView != null)
                 {
-                    // 优先设置 Source 属性
-                    var sourceProp = _nativeWebViewType.GetProperty("Source", BindingFlags.Public | BindingFlags.Instance);
-                    if (sourceProp != null && sourceProp.CanWrite)
+                    try
                     {
-                        try
-                        {
-                            if (sourceProp.PropertyType == typeof(string))
-                            {
-                                sourceProp.SetValue(_nativeWebView, url);
-                            }
-                            else if (sourceProp.PropertyType == typeof(Uri))
-                            {
-                                sourceProp.SetValue(_nativeWebView, new Uri(url));
-                            }
-                            else
-                            {
-                                // 其他类型，尝试直接赋值
-                                sourceProp.SetValue(_nativeWebView, url);
-                            }
-                        }
-                        catch (Exception setEx)
-                        {
-                            Debug.WriteLine($"设置 WebView.Source 失败: {setEx.Message}");
-                        }
+                        Debug.WriteLine($"🚀 WebView.Url 设置为: {url}");
+                        _webView.Url = new Uri(url);
+                        _currentUrl = url;
+                        Debug.WriteLine($"✅ WebView.Url 设置成功");
+                        UpdateStatus("页面加载完成", Brushes.Green);
+                        OnNavigationCompleted(url);
                     }
-                    else
+                    catch (Exception navEx)
                     {
-                        // 尝试调用 Navigate 方法
-                        var navigateMethod = _nativeWebViewType.GetMethod("Navigate", BindingFlags.Public | BindingFlags.Instance);
-                        if (navigateMethod != null)
-                        {
-                            try
-                            {
-                                navigateMethod.Invoke(_nativeWebView, new object?[] { url });
-                            }
-                            catch (Exception navEx)
-                            {
-                                Debug.WriteLine($"调用 WebView.Navigate 失败: {navEx.Message}");
-                            }
-                        }
+                        Debug.WriteLine($"❌ WebView.Url 设置失败: {navEx.Message}");
+                        Debug.WriteLine($"   堆栈跟踪: {navEx.StackTrace}");
+                        throw;
                     }
                 }
-                else if (_webViewHost != null)
+                else
                 {
-                    _webViewHost.NavigateTo(url);
+                    Debug.WriteLine("❌ WebView 为 null，无法导航");
+                    throw new InvalidOperationException("WebView is not initialized");
                 }
-                _currentUrl = url;
             });
-            
-            // 导航完成后更新状态
-            UpdateStatus("页面加载完成", Brushes.Green);
-            OnNavigationCompleted(url);
         }
         catch (Exception ex)
         {
@@ -398,81 +305,30 @@ public partial class EmbeddedWebView : UserControl
         if (!_isWebViewReady) return;
         try
         {
-            if (_nativeWebView != null && _nativeWebViewType != null)
-            {
-                var method = _nativeWebViewType.GetMethod("Reload", BindingFlags.Public | BindingFlags.Instance)
-                             ?? _nativeWebViewType.GetMethod("Refresh", BindingFlags.Public | BindingFlags.Instance);
-                method?.Invoke(_nativeWebView, null);
-            }
-            else if (_webViewHost != null)
-            {
-                _webViewHost.Refresh();
-            }
+            _webView?.Reload();
         }
         catch { }
     }
 
-    // 后退功能，供外部调用
+    // 后退功能，供外部调用  
     public void GoBack()
     {
-        if (!_isWebViewReady) return;
-        try
-        {
-            if (_nativeWebView != null && _nativeWebViewType != null)
-            {
-                var canGoBackProp = _nativeWebViewType.GetProperty("CanGoBack", BindingFlags.Public | BindingFlags.Instance);
-                var goBackMethod = _nativeWebViewType.GetMethod("GoBack", BindingFlags.Public | BindingFlags.Instance);
-                var canGoBack = canGoBackProp?.GetValue(_nativeWebView) as bool?;
-                if (canGoBack == true)
-                {
-                    goBackMethod?.Invoke(_nativeWebView, null);
-                }
-            }
-            else if (_webViewHost?.CanGoBack == true)
-            {
-                _webViewHost.GoBack();
-            }
-        }
-        catch { }
+        // WebView.Avalonia 的 WebView 类可能不支持导航历史
+        Debug.WriteLine("⚠️ GoBack 功能在 WebView.Avalonia 中可能不可用");
     }
 
     // 前进功能，供外部调用
     public void GoForward()
     {
-        if (!_isWebViewReady) return;
-        try
-        {
-            if (_nativeWebView != null && _nativeWebViewType != null)
-            {
-                var canGoForwardProp = _nativeWebViewType.GetProperty("CanGoForward", BindingFlags.Public | BindingFlags.Instance);
-                var goForwardMethod = _nativeWebViewType.GetMethod("GoForward", BindingFlags.Public | BindingFlags.Instance);
-                var canGoForward = canGoForwardProp?.GetValue(_nativeWebView) as bool?;
-                if (canGoForward == true)
-                {
-                    goForwardMethod?.Invoke(_nativeWebView, null);
-                }
-            }
-            else if (_webViewHost?.CanGoForward == true)
-            {
-                _webViewHost.GoForward();
-            }
-        }
-        catch { }
+        // WebView.Avalonia 的 WebView 类可能不支持导航历史
+        Debug.WriteLine("⚠️ GoForward 功能在 WebView.Avalonia 中可能不可用");
     }
 
     // 检查是否可以后退
-    public bool CanGoBack
-        => _isWebViewReady && (
-            (_nativeWebView != null && _nativeWebViewType?.GetProperty("CanGoBack")?.GetValue(_nativeWebView) as bool? == true)
-            || (_webViewHost?.CanGoBack == true)
-        );
+    public bool CanGoBack => false;
 
     // 检查是否可以前进
-    public bool CanGoForward
-        => _isWebViewReady && (
-            (_nativeWebView != null && _nativeWebViewType?.GetProperty("CanGoForward")?.GetValue(_nativeWebView) as bool? == true)
-            || (_webViewHost?.CanGoForward == true)
-        );
+    public bool CanGoForward => false;
 
     private void OpenInExternalBrowser(string url)
     {
@@ -497,42 +353,86 @@ public partial class EmbeddedWebView : UserControl
         
         var fallbackContent = new StackPanel
         {
-            Spacing = 15
+            Spacing = 15,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
         };
 
         var fallbackBorder = new Border
         {
-            Padding = new Thickness(20),
-            Child = fallbackContent
+            Padding = new Thickness(40),
+            Child = fallbackContent,
+            MaxWidth = 600
         };
 
         var errorText = new TextBlock
         {
-            Text = "❌ 嵌入式浏览器初始化失败",
-            FontSize = 18,
+            Text = "❌ 内置浏览器初始化失败",
+            FontSize = 20,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Foreground = Brushes.Red
+            Foreground = Brushes.Red,
+            Margin = new Thickness(0, 0, 0, 10)
         };
 
         var descText = new TextBlock
         {
-            Text = "无法加载嵌入式浏览器组件。\n请使用外部浏览器打开 NCF 应用。",
+            Text = "无法加载内置浏览器组件。这可能是因为：",
             FontSize = 14,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Foreground = Brushes.Gray,
-            Margin = new Thickness(0, 0, 0, 20)
+            Margin = new Thickness(0, 0, 0, 10)
         };
 
+        // 原因列表
+        var reasonsList = new StackPanel
+        {
+            Spacing = 8,
+            Margin = new Thickness(20, 0, 20, 20)
+        };
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            reasonsList.Children.Add(CreateReasonItem("• WebView2 Runtime 未安装或安装失败"));
+            reasonsList.Children.Add(CreateReasonItem("• 系统权限不足"));
+        }
+        else
+        {
+            reasonsList.Children.Add(CreateReasonItem("• 系统 WebView 组件不可用"));
+        }
+        reasonsList.Children.Add(CreateReasonItem("• 组件版本不兼容"));
+
+        // 解决方案文本
+        var solutionText = new TextBlock
+        {
+            Text = "您可以尝试以下解决方案：",
+            FontSize = 14,
+            FontWeight = Avalonia.Media.FontWeight.SemiBold,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 15)
+        };
+
+        // 按钮容器
+        var buttonPanel = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Spacing = 10,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
+        };
+
+        // 在外部浏览器中打开按钮
         var openExternalButton = new Button
         {
             Content = "🌍 在外部浏览器中打开",
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Padding = new Thickness(20, 10),
-            Background = Brushes.Orange,
+            Padding = new Thickness(25, 12),
+            Background = Brushes.DodgerBlue,
             Foreground = Brushes.White,
-            CornerRadius = new CornerRadius(4)
+            CornerRadius = new CornerRadius(6),
+            FontSize = 14,
+            FontWeight = Avalonia.Media.FontWeight.SemiBold,
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
         };
         openExternalButton.Click += (s, e) =>
         {
@@ -542,11 +442,62 @@ public partial class EmbeddedWebView : UserControl
             }
         };
 
+        buttonPanel.Children.Add(openExternalButton);
+
+        // 仅在 Windows 上显示下载 WebView2 的按钮
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            var downloadWebView2Button = new Button
+            {
+                Content = "⬇️ 下载 WebView2 Runtime",
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                Padding = new Thickness(25, 12),
+                Background = Brushes.Orange,
+                Foreground = Brushes.White,
+                CornerRadius = new CornerRadius(6),
+                FontSize = 14,
+                FontWeight = Avalonia.Media.FontWeight.SemiBold,
+                Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+            };
+            downloadWebView2Button.Click += (s, e) =>
+            {
+                OpenInExternalBrowser("https://go.microsoft.com/fwlink/p/?LinkId=2124703");
+            };
+
+            buttonPanel.Children.Add(downloadWebView2Button);
+
+            // 添加提示文本
+            var hintText = new TextBlock
+            {
+                Text = "💡 下载并安装 WebView2 后，重启应用即可使用内置浏览器",
+                FontSize = 12,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                Foreground = Brushes.Gray,
+                Margin = new Thickness(0, 15, 0, 0),
+                MaxWidth = 500
+            };
+            buttonPanel.Children.Add(hintText);
+        }
+
         fallbackContent.Children.Add(errorText);
         fallbackContent.Children.Add(descText);
-        fallbackContent.Children.Add(openExternalButton);
+        fallbackContent.Children.Add(reasonsList);
+        fallbackContent.Children.Add(solutionText);
+        fallbackContent.Children.Add(buttonPanel);
         
         _webViewContainer.Children.Add(fallbackBorder);
+    }
+
+    private TextBlock CreateReasonItem(string text)
+    {
+        return new TextBlock
+        {
+            Text = text,
+            FontSize = 13,
+            Foreground = Brushes.DarkGray,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap
+        };
     }
 
     public event EventHandler<string>? NavigationStarted;
@@ -568,166 +519,70 @@ public partial class EmbeddedWebView : UserControl
         NavigationFailed?.Invoke(this, error);
     }
 
+    protected override void OnLoaded(Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        
+        // 如果 WebView 已被清理（例如控件之前被隐藏），重新初始化
+        if (!_isWebViewReady)
+        {
+            Debug.WriteLine("🔄 检测到 WebView 需要重新初始化...");
+            _ = InitializeWebViewAsync();
+        }
+    }
+    
     protected override void OnUnloaded(Avalonia.Interactivity.RoutedEventArgs e)
     {
         base.OnUnloaded(e);
         
         // 清理资源
-        _webViewHost = null;
-        _nativeWebView = null;
-        _nativeWebViewType = null;
+        CleanupWebView();
     }
-}
-
-// WebView 主机类
-public class WebViewHost : UserControl
-{
-    private string _currentUrl = "";
-    private StackPanel _contentContainer = null!;
-    private Border _webContentArea = null!;
-    private TextBlock _urlDisplay = null!;
-    private TextBlock _statusDisplay = null!;
-
-    public WebViewHost()
+    
+    /// <summary>
+    /// 清理 WebView 资源（修复 Windows ARM64 重新初始化问题）
+    /// </summary>
+    private void CleanupWebView()
     {
-        InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        _contentContainer = new StackPanel
+        try
         {
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
-            Spacing = 10
-        };
-
-        // 创建网页内容区域
-        _webContentArea = new Border
-        {
-            Background = Brushes.White,
-            BorderBrush = Brushes.LightGray,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            MinHeight = 350
-        };
-
-        // 创建内容显示区域
-        var contentDisplay = new StackPanel
-        {
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            Spacing = 15
-        };
-
-        var webIcon = new TextBlock
-        {
-            Text = "🌐",
-            FontSize = 48,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center
-        };
-
-        var webTitle = new TextBlock
-        {
-            Text = "嵌入式网页内容",
-            FontSize = 18,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Foreground = Brushes.DarkBlue
-        };
-
-        _urlDisplay = new TextBlock
-        {
-            Text = "等待加载...",
-            FontSize = 12,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Foreground = Brushes.Gray,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap
-        };
-
-        _statusDisplay = new TextBlock
-        {
-            Text = "准备就绪",
-            FontSize = 12,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Foreground = Brushes.Green
-        };
-
-        var openButton = new Button
-        {
-            Content = "🌍 在外部浏览器中打开",
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Padding = new Thickness(20, 10),
-            Background = Brushes.Blue,
-            Foreground = Brushes.White,
-            CornerRadius = new CornerRadius(4)
-        };
-        openButton.Click += (s, e) =>
-        {
-            if (!string.IsNullOrEmpty(_currentUrl))
+            Debug.WriteLine("🧹 开始清理 WebView 资源...");
+            
+            if (_webView != null)
             {
                 try
                 {
-                    var psi = new ProcessStartInfo
+                    // 1. 导航到空白页，释放网页资源
+                    try
                     {
-                        FileName = _currentUrl,
-                        UseShellExecute = true
-                    };
-                    Process.Start(psi);
+                        _webView.Url = new Uri("about:blank");
+                        Debug.WriteLine("   ✓ WebView 已导航到空白页");
+                    }
+                    catch { /* 忽略导航失败 */ }
+                    
+                    // 2. 从容器中移除
+                    _webViewContainer?.Children.Remove(_webView);
+                    Debug.WriteLine("   ✓ WebView 已从容器移除");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"打开外部浏览器失败: {ex.Message}");
+                    Debug.WriteLine($"   ⚠️ WebView 清理警告: {ex.Message}");
+                }
+                finally
+                {
+                    _webView = null;
                 }
             }
-        };
-
-        contentDisplay.Children.Add(webIcon);
-        contentDisplay.Children.Add(webTitle);
-        contentDisplay.Children.Add(_urlDisplay);
-        contentDisplay.Children.Add(_statusDisplay);
-        contentDisplay.Children.Add(openButton);
-
-        _webContentArea.Child = contentDisplay;
-        _contentContainer.Children.Add(_webContentArea);
-
-        Content = _contentContainer;
-    }
-
-    public void NavigateTo(string url)
-    {
-        _currentUrl = url;
-        _urlDisplay.Text = url;
-        _statusDisplay.Text = "页面已加载";
-        _statusDisplay.Foreground = Brushes.Green;
-        
-        Debug.WriteLine($"导航到: {url}");
-    }
-
-    public bool CanGoBack => false;
-    public bool CanGoForward => false;
-
-    public void GoBack()
-    {
-        Debug.WriteLine("后退");
-        _statusDisplay.Text = "后退功能暂不可用";
-        _statusDisplay.Foreground = Brushes.Orange;
-    }
-
-    public void GoForward()
-    {
-        Debug.WriteLine("前进");
-        _statusDisplay.Text = "前进功能暂不可用";
-        _statusDisplay.Foreground = Brushes.Orange;
-    }
-
-    public void Refresh()
-    {
-        Debug.WriteLine("刷新");
-        if (!string.IsNullOrEmpty(_currentUrl))
+            
+            // 3. 重置初始化标志（关键！）
+            _isWebViewReady = false;
+            _currentUrl = "";
+            
+            Debug.WriteLine("✅ WebView 资源清理完成");
+        }
+        catch (Exception ex)
         {
-            _statusDisplay.Text = "页面已刷新";
-            _statusDisplay.Foreground = Brushes.Green;
+            Debug.WriteLine($"❌ WebView 清理失败: {ex.Message}");
         }
     }
 } 

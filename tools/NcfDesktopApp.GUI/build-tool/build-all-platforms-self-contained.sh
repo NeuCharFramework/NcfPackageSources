@@ -53,6 +53,7 @@ show_help() {
     echo "  --single-file           创建单文件发布"
     echo "  --no-restore            跳过包还原"
     echo "  --ready-to-run          启用 ReadyToRun 优化"
+    echo "  --create-app            自动为 macOS 创建 .app 包（仅限 macOS 平台）"
     echo ""
     echo "示例:"
     echo "  $0                      # 发布所有平台（自包含）"
@@ -140,6 +141,7 @@ publish_platform() {
     if [ "$SINGLE_FILE" = true ]; then
         cmd="$cmd -p:PublishSingleFile=true"
         cmd="$cmd -p:IncludeNativeLibrariesForSelfExtract=true"
+        cmd="$cmd -p:IncludeAllContentForSelfExtract=true"
     fi
     
     if [ "$READY_TO_RUN" = true ]; then
@@ -261,6 +263,7 @@ SPECIFIC_PLATFORM=""
 SINGLE_FILE=false
 NO_RESTORE=false
 READY_TO_RUN=false
+CREATE_MACOS_APP=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -286,6 +289,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --ready-to-run)
             READY_TO_RUN=true
+            shift
+            ;;
+        --create-app)
+            CREATE_MACOS_APP=true
             shift
             ;;
         *)
@@ -338,6 +345,53 @@ else
             ((success_count++))
         fi
     done
+fi
+
+# 🆕 如果发布了 macOS 平台且启用了 --create-app，自动创建 .app 包
+if [ "$CREATE_MACOS_APP" = true ]; then
+    echo -e "${BLUE}📦 检测到 --create-app 参数，准备创建 macOS .app 包...${NC}"
+    
+    # 检查是否发布了 macOS 平台
+    macos_published=false
+    if [ -n "$SPECIFIC_PLATFORM" ]; then
+        if [[ "$SPECIFIC_PLATFORM" == osx-* ]]; then
+            macos_published=true
+        fi
+    else
+        # 检查是否有任何 macOS 平台被发布
+        for platform in "${PLATFORMS[@]}"; do
+            if [[ $platform == osx-* ]]; then
+                platform_dir="$OUTPUT_DIR/$platform"
+                if [ -d "$platform_dir" ] && [ "$(ls -A "$platform_dir")" ]; then
+                    macos_published=true
+                    break
+                fi
+            fi
+        done
+    fi
+    
+    if [ "$macos_published" = true ]; then
+        echo -e "${BLUE}🍎 正在创建 macOS .app 包...${NC}"
+        
+        # 检查是否在 macOS 上运行
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # 调用 create-macos-app.sh
+            SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+            if [ -f "$SCRIPT_DIR/create-macos-app.sh" ]; then
+                bash "$SCRIPT_DIR/create-macos-app.sh"
+                echo -e "${GREEN}✅ macOS .app 包创建完成${NC}"
+            else
+                echo -e "${RED}❌ 未找到 create-macos-app.sh 脚本${NC}"
+            fi
+        else
+            echo -e "${YELLOW}⚠️  当前系统不是 macOS，无法创建 .app 包${NC}"
+            echo -e "${YELLOW}   请在 macOS 系统上运行以下命令创建 .app 包:${NC}"
+            echo -e "${YELLOW}   ./build-tool/create-macos-app.sh${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  未发布 macOS 平台，跳过 .app 包创建${NC}"
+    fi
+    echo ""
 fi
 
 # 显示总结

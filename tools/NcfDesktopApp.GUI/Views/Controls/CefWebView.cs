@@ -10,11 +10,6 @@ using Avalonia.Platform;
 using System.Net.Http;
 using System.Text;
 
-#if WINDOWS
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
-#endif
-
 namespace NcfDesktopApp.GUI.Views.Controls;
 
 public partial class CefWebView : UserControl
@@ -31,11 +26,6 @@ public partial class CefWebView : UserControl
     private Border _contentBorder = null!;
     private string _currentUrl = "";
     private static readonly HttpClient _httpClient = new();
-    
-#if WINDOWS
-    private WebView2? _webView2;
-    private bool _isWebView2Ready = false;
-#endif
     
     private TextBlock _statusText = null!;
     private Button _refreshButton = null!;
@@ -148,16 +138,7 @@ public partial class CefWebView : UserControl
             {
                 try
                 {
-#if WINDOWS
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        await InitializeWebView2Async();
-                    }
-                    else
-#endif
-                    {
-                        await InitializeEmbeddedViewAsync();
-                    }
+                    await InitializeEmbeddedViewAsync();
                 }
                 catch (Exception ex)
                 {
@@ -172,108 +153,6 @@ public partial class CefWebView : UserControl
             await InitializeEmbeddedViewAsync();
         }
     }
-
-#if WINDOWS
-    private async Task InitializeWebView2Async()
-    {
-        try
-        {
-            UpdateStatus("正在初始化 WebView2...", Brushes.Blue);
-            
-            // 创建WebView2控件
-            _webView2 = new WebView2();
-            
-            // 设置WebView2环境
-            var userDataFolder = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "NcfDesktopApp"
-            );
-            
-            var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
-            await _webView2.EnsureCoreWebView2Async(environment);
-
-            // 配置WebView2设置
-            _webView2.CoreWebView2.Settings.IsWebMessageEnabled = true;
-            _webView2.CoreWebView2.Settings.AreDefaultScriptDialogsEnabled = true;
-            _webView2.CoreWebView2.Settings.AreHostObjectsAllowed = true;
-            _webView2.CoreWebView2.Settings.IsScriptEnabled = true;
-            _webView2.CoreWebView2.Settings.AreDevToolsEnabled = true;
-            
-            // 事件处理
-            _webView2.CoreWebView2.NavigationStarting += (s, e) =>
-            {
-                UpdateStatus($"正在加载: {e.Uri}", Brushes.Blue);
-                OnNavigationStarted(e.Uri);
-            };
-            
-            _webView2.CoreWebView2.NavigationCompleted += (s, e) =>
-            {
-                if (e.IsSuccess)
-                {
-                    UpdateStatus("✅ 页面加载完成", Brushes.Green);
-                    OnNavigationCompleted(_currentUrl);
-                }
-                else
-                {
-                    UpdateStatus("❌ 页面加载失败", Brushes.Red);
-                    OnNavigationFailed("导航失败");
-                }
-            };
-
-            _webView2.CoreWebView2.DOMContentLoaded += async (s, e) =>
-            {
-                // 页面DOM加载完成
-                UpdateStatus("页面内容已加载", Brushes.Green);
-            };
-
-            // 创建NativeControlHost来承载WebView2
-            var nativeHost = new NativeControlHost
-            {
-                Content = _webView2
-            };
-
-            // 创建主容器
-            var webViewContainer = new Grid();
-            webViewContainer.Children.Add(nativeHost);
-            
-            // 替换内容
-            _contentBorder.Child = webViewContainer;
-            _isWebView2Ready = true;
-            _isWebViewReady = true;
-            
-            UpdateStatus("🚀 WebView2 已就绪，可以显示动态网页", Brushes.Green);
-            
-            // 如果已经有URL，立即导航
-            if (!string.IsNullOrEmpty(_currentUrl) && _currentUrl != "未启动")
-            {
-                await NavigateWebView2(_currentUrl);
-            }
-        }
-        catch (Exception ex)
-        {
-            UpdateStatus($"WebView2 初始化失败: {ex.Message}", Brushes.Red);
-            Debug.WriteLine($"WebView2 错误详情: {ex}");
-            await InitializeEmbeddedViewAsync(); // 回退到嵌入视图
-        }
-    }
-
-    private async Task NavigateWebView2(string url)
-    {
-        try
-        {
-            if (_webView2?.CoreWebView2 != null)
-            {
-                UpdateStatus($"正在导航到: {url}", Brushes.Blue);
-                _webView2.CoreWebView2.Navigate(url);
-            }
-        }
-        catch (Exception ex)
-        {
-            UpdateStatus($"导航失败: {ex.Message}", Brushes.Red);
-            OnNavigationFailed(ex.Message);
-        }
-    }
-#endif
 
     private async Task InitializeEmbeddedViewAsync()
     {
@@ -559,15 +438,7 @@ public partial class CefWebView : UserControl
             UpdateStatus($"正在连接到: {url}", Brushes.Blue);
             OnNavigationStarted(url);
 
-#if WINDOWS
-            if (_isWebView2Ready && _webView2?.CoreWebView2 != null)
-            {
-                await NavigateWebView2(url);
-                return;
-            }
-#endif
-
-            // 非Windows平台或WebView2不可用时的处理
+            // 使用HTTP客户端获取页面内容并显示
             var currentContent = _contentBorder.Child;
             if (currentContent is ScrollViewer scrollViewer && 
                 scrollViewer.Content is StackPanel stackPanel)
