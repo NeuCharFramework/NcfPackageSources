@@ -314,31 +314,39 @@ public partial class MainWindowViewModel : ViewModelBase
                 var dialog = new Window
                 {
                     Title = title,
-                    Width = 400,
-                    Height = 200,
+                    Width = 500,
+                    MinHeight = 200,
+                    MaxHeight = 600,
+                    SizeToContent = SizeToContent.Height,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     CanResize = false,
                     ShowInTaskbar = false,
-                    Content = new StackPanel
+                    Content = new ScrollViewer
                     {
-                        Margin = new Thickness(20),
-                        Spacing = 20,
-                        Children =
+                        MaxHeight = 550,
+                        Content = new StackPanel
                         {
-                            new TextBlock
+                            Margin = new Thickness(20),
+                            Spacing = 20,
+                            Children =
                             {
-                                Text = message,
-                                FontSize = 14,
-                                TextWrapping = TextWrapping.Wrap,
-                                TextAlignment = TextAlignment.Center,
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            },
-                            new StackPanel
-                            {
-                                Orientation = Orientation.Horizontal,
-                                HorizontalAlignment = HorizontalAlignment.Center,
-                                Spacing = 10,
-                                Children = { okButton, cancelButton }
+                                new TextBlock
+                                {
+                                    Text = message,
+                                    FontSize = 14,
+                                    TextWrapping = TextWrapping.Wrap,
+                                    TextAlignment = TextAlignment.Left,
+                                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                                    VerticalAlignment = VerticalAlignment.Top
+                                },
+                                new StackPanel
+                                {
+                                    Orientation = Orientation.Horizontal,
+                                    HorizontalAlignment = HorizontalAlignment.Center,
+                                    Spacing = 15,
+                                    Margin = new Thickness(0, 10, 0, 0),
+                                    Children = { okButton, cancelButton }
+                                }
                             }
                         }
                     }

@@ -12,6 +12,9 @@ sealed class Program
     {
         try
         {
+            // 设置控制台编码为UTF-8，以正确显示emoji和中文
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            
             Console.WriteLine("========================================");
             Console.WriteLine("🚀 NCF Desktop App Starting...");
             Console.WriteLine("========================================");
