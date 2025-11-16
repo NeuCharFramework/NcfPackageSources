@@ -19,6 +19,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using NcfDesktopApp.GUI.Services;
+using NcfDesktopApp.GUI.Views;
 using System.Linq;
 
 namespace NcfDesktopApp.GUI.ViewModels;
@@ -1087,6 +1088,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         LogText = _logBuffer.ToString();
+        
+        // 自动滚动到底部（如果用户没有手动滚动到历史记录）
+        ScrollToBottomIfNeeded();
     }
 
     /// <summary>
@@ -1116,6 +1120,52 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         LogText = _logBuffer.ToString();
+        
+        // 自动滚动到底部（如果用户没有手动滚动到历史记录）
+        ScrollToBottomIfNeeded();
+    }
+    
+    /// <summary>
+    /// 如果需要，滚动到日志底部
+    /// </summary>
+    private void ScrollToBottomIfNeeded()
+    {
+        try
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                // 查找 MainWindow 和 SettingsView
+                if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                {
+                    var mainWindow = desktop.MainWindow as MainWindow;
+                    if (mainWindow?.Content is UserControl mainContent)
+                    {
+                        // 查找 SettingsView 中的 LogScrollViewer
+                        var scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
+                        if (scrollViewer != null)
+                        {
+                            // 检查是否应该自动滚动
+                            var settingsView = mainContent as Views.SettingsView;
+                            if (settingsView?.ShouldAutoScroll ?? true)
+                            {
+                                // 延迟滚动，确保内容已更新
+                                Task.Delay(10).ContinueWith(_ =>
+                                {
+                                    Dispatcher.UIThread.Post(() =>
+                                    {
+                                        scrollViewer.ScrollToEnd();
+                                    });
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        catch
+        {
+            // 忽略滚动错误，不影响日志功能
+        }
     }
 
     #endregion

@@ -224,14 +224,16 @@
                         <ScrollViewer Name="LogScrollViewer" 
                                      Padding="15,10"
                                      VerticalScrollBarVisibility="Auto"
-                                     HorizontalScrollBarVisibility="Auto">
-                            <TextBlock Text="{Binding LogText}" 
-                                      FontFamily="Consolas,Menlo,Monaco,Courier New" 
-                                      FontSize="11" 
-                                      TextWrapping="Wrap" 
-                                      Foreground="{DynamicResource InputTextBrush}"
-                                      LineHeight="16"
-                                      Background="Transparent"/>
+                                     HorizontalScrollBarVisibility="Auto"
+                                     ScrollChanged="LogScrollViewer_OnScrollChanged">
+                            <SelectableTextBlock Text="{Binding LogText}" 
+                                                FontFamily="Consolas,Menlo,Monaco,Courier New" 
+                                                FontSize="11" 
+                                                TextWrapping="Wrap" 
+                                                Foreground="{DynamicResource InputTextBrush}"
+                                                LineHeight="16"
+                                                Background="Transparent"
+                                                SelectionBrush="{DynamicResource SystemAccentColor}"/>
                         </ScrollViewer>
                     </Border>
                 </Grid>
