@@ -44,9 +44,9 @@ NCF Desktop App 现在支持智能版本更新检测和完整的数据保护机�
 #### 保护范围
 - ✅ SQLite 数据库文件（*.db, *.sqlite, *.sqlite3）
 - ✅ 所有 App_Data 子目录和文件
-- ✅ 应用配置文件
+- ✅ 应用配置文件（带智能冲突检测）
 - ✅ 用户上传的文件
-- ✅ 日志文件
+- ✅ 🆕 logs 文件夹（所有日志文件，同时支持 log 文件夹）
 
 ---
 
@@ -115,11 +115,21 @@ NCF Desktop App 现在支持智能版本更新检测和完整的数据保护机�
    App_Data/
    ├── Database.db        ← SQLite 数据库
    ├── Uploads/           ← 用户上传文件
-   ├── Logs/              ← 日志文件
+   ├── Cache/             ← 缓存文件
    └── ...                ← 其他数据文件
    ```
 
-3. **备份配置文件**
+3. **🆕 完整复制 logs 文件夹**
+   ```
+   logs/
+   ├── app.log           ← 应用日志
+   ├── error.log         ← 错误日志
+   └── ...               ← 其他日志文件
+   ```
+   
+   注：同时支持 `log/` 文件夹（向后兼容）
+
+4. **备份配置文件**
    - `appsettings.json`
    - `appsettings.Production.json`
    - `appsettings.Development.json`
@@ -128,6 +138,7 @@ NCF Desktop App 现在支持智能版本更新检测和完整的数据保护机�
 ### 清理阶段（SafeCleanRuntimeDirectory）
 - ✅ 删除旧程序文件
 - ❌ **跳过** App_Data 目录
+- ❌ **跳过** logs 目录（及 log 目录）🆕
 - ❌ **跳过** 配置文件
 - ✅ 保持目录结构
 
@@ -136,10 +147,19 @@ NCF Desktop App 现在支持智能版本更新检测和完整的数据保护机�
    - 递归复制所有文件和子目录
    - 覆盖同名文件
    
-2. **恢复配置文件**
-   - 保留用户的自定义配置
+2. **🆕 恢复 logs 文件夹**
+   - 保留所有日志文件
+   - 便于问题追踪
+   - 同时支持 log 文件夹（向后兼容）
    
-3. **清理临时备份**
+3. **🆕 智能恢复配置文件（带冲突检测）**
+   - 比较旧配置和新配置内容
+   - 如果内容相同，直接使用新配置
+   - 如果内容不同，弹出确认对话框让用户选择：
+     - **使用旧配置**：保留自定义设置，新配置备份为 `appsettings.backup-yyyyMMdd-HHmmss.json`
+     - **使用新配置**：采用新版本默认设置，旧配置另存为 `appsettings.old-yyyyMMdd-HHmmss.json`
+   
+4. **清理临时备份**
    - 删除临时备份目录
 
 ---
@@ -154,15 +174,23 @@ NCF Desktop App 现在支持智能版本更新检测和完整的数据保护机�
 if (relativePath.StartsWith("App_Data"))
     return true;
 
-// 2. 所有 appsettings*.json 文件
+// 2. 🆕 logs/log 中的所有文件
+if (relativePath.StartsWith("logs") || relativePath.StartsWith("log"))
+    return true;
+
+// 3. 所有 appsettings*.json 文件
 if (fileName.StartsWith("appsettings") && fileName.EndsWith(".json"))
     return true;
 ```
 
 #### 保留的目录（ShouldPreserveDirectory）
 ```csharp
-// App_Data 及其所有子目录
+// 1. App_Data 及其所有子目录
 if (relativePath.StartsWith("App_Data"))
+    return true;
+
+// 2. 🆕 logs/log 及其所有子目录
+if (relativePath.StartsWith("logs") || relativePath.StartsWith("log"))
     return true;
 ```
 
@@ -188,7 +216,7 @@ if (relativePath.StartsWith("App_Data"))
 [10:30:16] 🌐 启动 NCF 进程...
 ```
 
-#### 检测到新版本（用户选择更新）
+#### 检测到新版本（用户选择更新，无配置冲突）
 ```
 [10:30:00] 🔍 检查最新版本...
 [10:30:01] 📋 最新版本: v1.1.0
@@ -199,6 +227,8 @@ if (relativePath.StartsWith("App_Data"))
 [10:30:05] ✅ 用户选择更新到最新版本
 [10:30:06] 🛡️ 开始保护重要文件...
 [10:30:06] ✅ App_Data 文件夹已备份
+[10:30:06] ✅ logs 文件夹已备份
+[10:30:06] ✅ 已备份配置文件: appsettings.json
 [10:30:06] ✅ 重要文件保护完成
 [10:30:07] 🧹 开始安全清理 Runtime 目录...
 [10:30:08] 正在下载 NCF-v1.1.0...
@@ -206,8 +236,35 @@ if (relativePath.StartsWith("App_Data"))
 [10:30:16] 正在提取文件...
 [10:30:20] 🔄 开始恢复重要文件...
 [10:30:20] ✅ App_Data 文件夹已恢复
+[10:30:20] ✅ logs 文件夹已恢复
+[10:30:20] ℹ️ 配置文件内容相同，无需处理: appsettings.json
 [10:30:20] ✅ 重要文件恢复完成
 [10:30:21] 🌐 启动 NCF 进程...
+```
+
+#### 🆕 检测到新版本（用户选择更新，有配置冲突）
+```
+[10:30:00] 🔍 检查最新版本...
+[10:30:01] 📋 最新版本: v1.1.0
+[10:30:01] 💾 当前已安装版本: v1.0.0
+[10:30:01] 🆕 发现新版本可用！
+[10:30:05] ✅ 用户选择更新到最新版本
+[10:30:06] 🛡️ 开始保护重要文件...
+[10:30:15] ✅ 下载完成
+[10:30:16] 正在提取文件...
+[10:30:20] 🔄 开始恢复重要文件...
+[10:30:20] ✅ App_Data 文件夹已恢复
+[10:30:20] ✅ logs 文件夹已恢复
+[10:30:21] ⚠️ 检测到配置文件冲突: appsettings.json
+[10:30:21]    旧文件大小: 1523 字符
+[10:30:21]    新文件大小: 1687 字符
+[10:30:21] ⚠️ 配置文件冲突: appsettings.json
+[10:30:21]    需要用户决策...
+[10:30:25] ✅ 用户选择：使用旧配置覆盖
+[10:30:25] 📦 已存档新版本配置文件: appsettings.backup-20251116-103025.json
+[10:30:25] ✅ 已恢复旧配置文件: appsettings.json
+[10:30:26] ✅ 重要文件恢复完成
+[10:30:27] 🌐 启动 NCF 进程...
 ```
 
 #### 检测到新版本（用户选择继续使用当前版本）
@@ -241,16 +298,20 @@ if (relativePath.StartsWith("App_Data"))
 
 #### NcfService.cs
 - `GetInstalledVersionAsync()` - 获取当前安装的版本
-- `PreserveImportantFilesAsync()` - 备份重要文件
+- `PreserveImportantFilesAsync()` - 备份重要文件（App_Data + logs + 配置）
 - `SafeCleanRuntimeDirectoryAsync()` - 安全清理目录
 - `RestoreImportantFilesAsync()` - 恢复重要文件
-- `ShouldPreserveFile()` - 判断是否保留文件
-- `ShouldPreserveDirectory()` - 判断是否保留目录
+- `RestoreAppSettingsFilesAsync()` - 🆕 智能恢复配置文件（带冲突检测）
+- `HandleAppSettingsConflictAsync()` - 🆕 处理配置文件冲突
+- `ShouldPreserveFile()` - 判断是否保留文件（含 logs 文件夹）
+- `ShouldPreserveDirectory()` - 判断是否保留目录（含 logs 文件夹）
+- `OnAppSettingsConflict` - 🆕 配置文件冲突处理回调
 
 #### MainWindowViewModel.cs
 - `CheckLatestVersionAsync()` - 检查最新版本
 - `CheckAndConfirmUpdateAsync()` - 检查并确认更新
 - `ShowConfirmDialogAsync()` - 显示确认对话框
+- `HandleAppSettingsConflictAsync()` - 🆕 处理配置文件冲突对话框
 
 ### 数据存储位置
 
@@ -374,6 +435,50 @@ C:\Users\{Username}\AppData\Roaming\NcfDesktopApp\
 
 ---
 
+---
+
+## 🆕 版本 1.1.0 更新内容
+
+### 新增功能
+1. **🆕 logs 文件夹保护**
+   - 自动备份和恢复 `logs/` 文件夹
+   - 同时支持 `log/` 文件夹（向后兼容）
+   - 保留所有日志文件，便于问题追踪
+
+2. **🆕 配置文件智能冲突检测**
+   - 自动比较旧配置和新配置内容
+   - 内容相同时自动使用新配置
+   - 内容不同时弹出用户选择对话框
+   - 无论选择哪个，另一个都会被备份
+
+3. **🆕 配置文件备份命名优化**
+   - 使用旧配置时：`appsettings.backup-yyyyMMdd-HHmmss.json`
+   - 保留新配置时：`appsettings.old-yyyyMMdd-HHmmss.json`
+   - 便于识别和追溯
+
+### 对话框示例
+
+#### 配置文件冲突对话框
+```
+检测到配置文件冲突：
+
+文件名: appsettings.json
+
+旧配置大小: 1523 字符
+新配置大小: 1687 字符
+
+选择"使用旧配置"将保留您的自定义设置
+选择"使用新配置"将使用新版本的默认设置
+
+注意：
+• 使用旧配置：新版本配置将备份为 appsettings.json.backup-[日期].json
+• 使用新配置：旧配置将另存为 appsettings.json.old-[日期].json
+
+[使用旧配置]  [使用新配置]
+```
+
+---
+
 **最后更新**: 2025-11-16
-**版本**: 1.0.0
+**版本**: 1.1.0
 

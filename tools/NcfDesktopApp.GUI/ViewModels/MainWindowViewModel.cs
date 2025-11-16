@@ -122,6 +122,9 @@ public partial class MainWindowViewModel : ViewModelBase
         _webView2Service = new WebView2Service(httpClient);
         _logBuffer = new StringBuilder();
         
+        // 🆕 注册配置文件冲突处理回调
+        _ncfService.OnAppSettingsConflict = HandleAppSettingsConflictAsync;
+        
         // 初始化应用程序
         _ = Task.Run(InitializeApplicationAsync);
     }
@@ -915,6 +918,53 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 处理 appsettings 配置文件冲突
+    /// </summary>
+    /// <param name="fileName">文件名</param>
+    /// <param name="oldContent">旧文件内容</param>
+    /// <param name="newContent">新文件内容</param>
+    /// <returns>true=使用旧配置覆盖，false=保留新配置</returns>
+    private async Task<bool> HandleAppSettingsConflictAsync(string fileName, string oldContent, string newContent)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            AddLog($"⚠️ 配置文件冲突: {fileName}");
+            AddLog($"   需要用户决策...");
+        });
+        
+        var message = $"检测到配置文件冲突：\n\n" +
+                     $"文件名: {fileName}\n\n" +
+                     $"旧配置大小: {oldContent.Length} 字符\n" +
+                     $"新配置大小: {newContent.Length} 字符\n\n" +
+                     $"选择\"使用旧配置\"将保留您的自定义设置\n" +
+                     $"选择\"使用新配置\"将使用新版本的默认设置\n\n" +
+                     $"注意：\n" +
+                     $"• 使用旧配置：新版本配置将备份为 {fileName}.backup-[日期].json\n" +
+                     $"• 使用新配置：旧配置将另存为 {fileName}.old-[日期].json";
+        
+        var result = await ShowConfirmDialogAsync(
+            "配置文件冲突",
+            message,
+            "使用旧配置",
+            "使用新配置"
+        );
+        
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (result)
+            {
+                AddLog($"✅ 用户选择：使用旧配置覆盖");
+            }
+            else
+            {
+                AddLog($"✅ 用户选择：保留新配置");
+            }
+        });
+        
+        return result;
+    }
+    
     /// <summary>
     /// 检查版本更新并确认
     /// </summary>
