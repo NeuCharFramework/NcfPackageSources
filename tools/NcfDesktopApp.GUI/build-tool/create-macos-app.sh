@@ -97,15 +97,21 @@ check_prerequisites() {
         exit 1
     fi
     
-    # 检查可执行文件
-    if [ -d "$osx_arm64_dir" ] && [ ! -f "$osx_arm64_dir/$PROJECT_NAME" ]; then
-        echo -e "${RED}❌ 未找到 macOS ARM64 可执行文件${NC}"
-        exit 1
+    # 检查可执行文件（支持重命名后的文件）
+    if [ -d "$osx_arm64_dir" ]; then
+        if [ ! -f "$osx_arm64_dir/$PROJECT_NAME" ] && [ ! -f "$osx_arm64_dir/$PROJECT_NAME-osx-arm64" ]; then
+            echo -e "${RED}❌ 未找到 macOS ARM64 可执行文件${NC}"
+            echo -e "${YELLOW}查找路径: $osx_arm64_dir/$PROJECT_NAME 或 $osx_arm64_dir/$PROJECT_NAME-osx-arm64${NC}"
+            exit 1
+        fi
     fi
     
-    if [ -d "$osx_x64_dir" ] && [ ! -f "$osx_x64_dir/$PROJECT_NAME" ]; then
-        echo -e "${RED}❌ 未找到 macOS x64 可执行文件${NC}"
-        exit 1
+    if [ -d "$osx_x64_dir" ]; then
+        if [ ! -f "$osx_x64_dir/$PROJECT_NAME" ] && [ ! -f "$osx_x64_dir/$PROJECT_NAME-osx-x64" ]; then
+            echo -e "${RED}❌ 未找到 macOS x64 可执行文件${NC}"
+            echo -e "${YELLOW}查找路径: $osx_x64_dir/$PROJECT_NAME 或 $osx_x64_dir/$PROJECT_NAME-osx-x64${NC}"
+            exit 1
+        fi
     fi
     
     echo -e "${GREEN}✅ 前置条件检查通过${NC}"
