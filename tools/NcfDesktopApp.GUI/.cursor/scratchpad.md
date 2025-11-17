@@ -114,6 +114,16 @@ _所有核心任务已完成_
 
 ### ✅ 已完成
 
+- [x] **[TASK-06]** 实现 NCF 程序包下载断点续传功能 (实际耗时: 1h)
+  - ✅ 实现 HTTP Range 请求支持
+  - ✅ 使用 FileMode.Append 追加写入
+  - ✅ 处理 206/416/200 状态码
+  - ✅ 添加版本验证机制（URL 比对）
+  - ✅ 使用 .download 元信息文件记录版本
+  - ✅ 自动清理临时文件
+  - 文件：`Services/NcfService.cs`
+  - 文档：`DOWNLOAD_RESUME_VERSION_CHECK.md`
+
 - [x] **[TASK-01]** 在 NcfService 中实现 CLI 输出捕获机制 (实际耗时: 0.5h)
   - ✅ 添加 ProcessOutputHandler 委托定义
   - ✅ 添加 OnProcessOutput 回调属性
@@ -165,6 +175,18 @@ _所有核心任务已完成_
 - **修复时间**：2025-11-16
 - **文件**：Services/NcfService.cs (第 950-952 行已删除)
 
+**问题 2：断点续传版本混淆风险** ✅ 已解决
+- **风险**：下载一半后 NCF 发布新版本，继续下载会导致文件损坏
+- **原因**：原实现仅基于文件大小判断，未验证版本一致性
+- **解决方案**：
+  - 创建 `.download` 元信息文件记录原始下载 URL
+  - 重新下载时比对 URL（URL 包含版本号）
+  - 版本不一致时自动删除旧文件重新下载
+  - 下载完成后自动清理元信息文件
+- **修复时间**：2025-11-17
+- **文件**：Services/NcfService.cs (DownloadFileAsync 方法)
+- **文档**：DOWNLOAD_RESUME_VERSION_CHECK.md
+
 ### 需要的帮助
 **需要用户测试验证**：
 - ✅ 代码已完成并检查无错误
@@ -177,7 +199,20 @@ _所有核心任务已完成_
 
 ### 技术难点
 
-1. **进程输出捕获方式选择**
+1. **断点续传版本验证**
+   - 问题：如何确保断点续传时下载的是同一版本？
+   - 解决：使用 `.download` 文件存储原始 URL，通过 URL 比对验证版本
+   - 优势：
+     - ✅ 简单可靠：URL 包含完整版本号，唯一标识版本
+     - ✅ 无需额外字段：不需要解析或存储额外的版本元数据
+     - ✅ 自动清理：下载完成后删除临时文件
+   - 实现细节：
+     ```
+     senparc-ncf-template.zip         # 实际文件
+     senparc-ncf-template.zip.download # 元信息（存储 URL）
+     ```
+
+2. **进程输出捕获方式选择**
    - 问题：原代码使用 `ReadToEndAsync()` 会阻塞到进程结束
    - 解决：改用事件驱动的 `OutputDataReceived` + `BeginOutputReadLine()`
    - 优势：实时捕获，不阻塞，性能更好
@@ -187,7 +222,15 @@ _所有核心任务已完成_
    - 解决：使用 `Dispatcher.UIThread.Post()` 而非 `Invoke()`
    - 原因：Post 是异步的，避免死锁；Invoke 是同步的，可能阻塞
 
-3. **三个启动点的统一处理**
+3. **HTTP Range 请求处理**
+   - 问题：需要正确处理服务器的多种响应状态码
+   - 解决：
+     - **206 Partial Content**: 服务器支持断点续传 → 继续下载
+     - **200 OK**: 服务器返回完整文件 → 删除旧文件重新下载
+     - **416 Range Not Satisfiable**: 范围请求失败 → 重新下载
+   - 注意：使用 `FileMode.Append` 追加写入，`FileMode.Create` 覆盖写入
+
+4. **三个启动点的统一处理**
    - 问题：NCF 有主启动、回退启动、二次回退三个分支
    - 解决：提取 `AttachProcessOutputHandlers()` 辅助方法
    - 好处：代码复用，维护方便，不遗漏
@@ -244,18 +287,30 @@ private void AddCliLog(string message, bool isError)
    - Post 是异步调用，更安全
 
 4. **记得设置 UTF-8 编码**
-   - Windows 默认编码可能导致中文乱码
-   - 需要显式设置 StandardOutputEncoding
+   - 否则中文输出会乱码
+   - `StandardOutputEncoding = Encoding.UTF8`
 
-5. **记得清理回调**
-   - 停止进程时清理 OnProcessOutput
-   - 避免内存泄漏和意外回调
+5. **断点续传必须验证版本一致性**
+   - ⚠️ 不要仅基于文件大小判断是否续传
+   - ✅ 必须记录并比对下载源（URL、哈希等）
+   - ✅ 版本不一致时必须删除旧文件重新下载
+   - ✅ 下载完成后清理临时元信息文件
 
-6. **所有启动分支都要处理**
+6. **HTTP Range 请求的状态码处理**
+   - **206**: 服务器支持断点续传，正常继续
+   - **200**: 服务器返回完整文件（可能不支持 Range）
+   - **416**: 范围请求失败，需要重新下载
+   - 不同状态码需要不同的处理逻辑
+
+7. **记得清理回调和临时文件**
+   - 停止进程时清理 OnProcessOutput，避免内存泄漏
+   - 下载完成后删除 `.download` 元信息文件
+
+8. **所有启动分支都要处理**
    - NCF 有多个回退启动逻辑
    - 每个 Process.Start() 后都要附加输出处理
 
-7. **⚠️ 不要设置 ReadTimeout**
+9. **⚠️ 不要设置 ReadTimeout**
    - 使用 BeginOutputReadLine 时不能设置 ReadTimeout
    - 会导致"Cannot mix synchronous and asynchronous operation"错误
    - 只使用纯事件驱动的方式
@@ -276,9 +331,34 @@ private void AddCliLog(string message, bool isError)
 
 ## 🎉 里程碑记录
 
+### 🎯 Milestone 2: NCF 程序包下载断点续传功能 - 版本验证机制
+**日期**: 2025-11-17  
+**版本**: v1.1.0
+
+**完成内容**：
+- ✅ 实现 HTTP Range 请求支持
+- ✅ 使用 FileMode.Append 追加写入
+- ✅ 处理 206/200/416 状态码
+- ✅ 添加版本验证机制（`.download` 元信息文件）
+- ✅ 自动清理临时文件
+- ✅ 详细的日志输出
+
+**技术亮点**：
+- 使用 URL 作为版本标识，简单可靠
+- 元信息文件自动管理，避免版本混淆
+- 完善的异常处理和日志记录
+- 支持服务器不支持 Range 的降级处理
+
+**用户价值**：
+- 🚀 大文件下载中断后可以继续
+- 🛡️ 避免版本混淆导致的文件损坏
+- 📊 清晰的下载进度和状态提示
+
+---
+
 ### 🎯 Milestone 1: CLI 输出实时同步功能 - 核心实现完成
 **日期**: 2025-11-16  
-**版本**: v1.0.0-beta
+**版本**: v1.0.0
 
 **完成内容**：
 - ✅ NcfService: 实现事件驱动的进程输出捕获机制
@@ -301,32 +381,76 @@ private void AddCliLog(string message, bool isError)
 ---
 
 **创建日期**: 2025-11-16  
-**最后更新**: 2025-11-16  
-**当前版本**: v1.0.0-rc (Release Candidate - 准备发布)
+**最后更新**: 2025-11-17  
+**当前版本**: v1.1.0 (包含断点续传版本验证功能)
 
 ## 📦 交付清单
 
 ### ✅ 修改的文件
+
+**断点续传功能（v1.1.0）**
 1. **Services/NcfService.cs**
+   - 实现 `DownloadFileAsync` 断点续传功能
+   - 添加版本验证机制（`.download` 元信息文件）
+   - 实现 `DownloadToFileAsync` 辅助方法
+   - 处理 HTTP Range 请求和多种状态码
+   - 完善日志输出和异常处理
+
+**CLI 输出功能（v1.0.0）**
+2. **Services/NcfService.cs**
    - 添加 ProcessOutputHandler 委托
    - 添加 OnProcessOutput 回调属性
    - 实现 AttachProcessOutputHandlers 方法
    - 在三个启动点应用输出捕获
    - 设置 UTF-8 编码
 
-2. **ViewModels/MainWindowViewModel.cs**
+3. **ViewModels/MainWindowViewModel.cs**
    - 添加 AddCliLog 方法
    - 在 StartNcfProcessAsync 中注册回调
    - 在 StopNcfAsync 中清理回调
 
+4. **Views/SettingsView.axaml**
+   - 将 TextBlock 替换为 SelectableTextBlock
+   - 添加 ScrollChanged 事件处理
+
+5. **Views/SettingsView.axaml.cs**
+   - 添加用户滚动检测逻辑
+   - 实现智能自动滚动
+
+6. **Views/Controls/EmbeddedWebView.cs**
+   - 添加 OnLoaded 方法处理重新加载
+
 ### 📄 新建的文档
-1. **CLI_OUTPUT_TESTING_GUIDE.md** - 用户测试指南（10 个测试场景）
-2. **.cursor/scratchpad.md** - 项目规划和进度记录
-3. **.cursor/steps/step-01-cli-capture.md** - 实现细节文档
-4. **.cursor/steps/step-02-viewmodel-integration.md** - 集成细节文档
-5. **.cursor/steps/step-03-testing-optimization.md** - 测试和优化指南
+
+**断点续传功能（v1.1.0）**
+1. **DOWNLOAD_RESUME_VERSION_CHECK.md**
+   - 断点续传版本验证完整说明
+   - 实现细节和代码示例
+   - 测试场景和避坑指南
+
+**CLI 输出功能（v1.0.0）**
+2. **CLI_OUTPUT_TESTING_GUIDE.md** - 用户测试指南（10 个测试场景）
+3. **CLI_OUTPUT_IMPLEMENTATION_SUMMARY.md** - 功能实现总结
+4. **HOTFIX_2025-11-16.md** - 进程流冲突修复文档
+5. **LOG_UX_IMPROVEMENT.md** - 日志用户体验改进文档
+6. **WEBVIEW_REINITIALIZATION_FIX_V2.md** - WebView 重新初始化修复
+
+**项目管理**
+7. **.cursor/scratchpad.md** - 项目规划和进度记录
+8. **.cursor/steps/step-01-cli-capture.md** - CLI 捕获实现细节
+9. **.cursor/steps/step-02-viewmodel-integration.md** - ViewModel 集成细节
+10. **.cursor/steps/step-03-testing-optimization.md** - 测试和优化指南
 
 ### 🎯 功能特性
+
+**断点续传功能**
+- ✅ HTTP Range 请求支持
+- ✅ 版本一致性验证（URL 比对）
+- ✅ 自动清理临时文件
+- ✅ 支持 206/200/416 状态码处理
+- ✅ 详细的下载进度和日志
+
+**CLI 输出功能**
 - ✅ 实时捕获 stdout 和 stderr
 - ✅ 线程安全的 UI 更新
 - ✅ 支持中文显示（UTF-8 编码）
@@ -334,6 +458,11 @@ private void AddCliLog(string message, bool isError)
 - ✅ 完善的异常处理
 - ✅ 内存管理（日志行数限制）
 - ✅ 优雅的进程退出处理
+
+**日志用户体验**
+- ✅ 可选择和复制日志文本
+- ✅ 智能自动滚动（检测用户手动滚动）
+- ✅ WebView 重新加载修复
 
 ### 📊 代码质量
 - ✅ 无 linting 错误
