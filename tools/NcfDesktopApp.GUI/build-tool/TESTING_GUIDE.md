@@ -10,7 +10,7 @@
 
 已创建以下工具文件供测试使用：
 
-1. **`3-quick-clean-webview2.bat`** ⭐ - 批处理启动器（需以管理员身份运行）
+1. **`quick-clean-webview2.bat`** ⭐ - 批处理启动器（需以管理员身份运行）
 2. **`quick-clean-webview2.ps1`** 🔧 - PowerShell 清理脚本（核心工具）
 
 ---
@@ -19,7 +19,7 @@
 
 ### 方法 A：使用批处理文件（最简单）
 
-1. **右键点击** `3-quick-clean-webview2.bat`
+1. **右键点击** `quick-clean-webview2.bat`
 2. 选择 **"以管理员身份运行"**
 3. 阅读说明并按任意键确认
 4. 等待清理完成
