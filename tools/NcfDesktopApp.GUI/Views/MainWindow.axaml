@@ -41,28 +41,61 @@
         <Style Selector="TabItem.browser-tab">
             <Setter Property="Padding" Value="15,8"/>
         </Style>
+        
+        <!-- 🔧 方案1最终版：自定义标签按钮样式 -->
+        <Style Selector="Button.tab-button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        
+        <Style Selector="Button.tab-button:pointerover">
+            <Setter Property="Background" Value="#E0E0E0"/>
+        </Style>
     </Window.Styles>
 
     <Grid>
-        <!-- 🔧 方案1优化版：使用 TabControl（Avalonia 的 TabControl 默认保持标签内容在内存中）-->
-        <!-- 关键：EmbeddedWebView.cs 中已禁用 OnUnloaded 清理逻辑，确保 WebView 状态保持 -->
-        <TabControl x:Name="MainTabControl" 
-                   SelectedIndex="{Binding CurrentTabIndex}">
+        <!-- 🔧 方案1最终版：使用 Grid 叠加层，确保 WebView 始终在 UI 树中，永不卸载 -->
+        <!-- 使用自定义标签按钮 + Grid 叠加，完全避免 TabControl 可能导致的卸载问题 -->
+        <Grid>
+            <!-- 自定义标签按钮栏 -->
+            <StackPanel Orientation="Horizontal" 
+                       Background="{DynamicResource CardBackgroundBrush}"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       ZIndex="100">
+                <Button Content="⚙️ 设置中心"
+                       Command="{Binding SwitchToSettingsCommand}"
+                       Background="{Binding SettingsTabButtonBackground}"
+                       Foreground="{Binding SettingsTabButtonForeground}"
+                       Padding="20,12"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Margin="0,0,1,0"
+                       Classes="tab-button settings-tab"/>
+                <Button Content="🌐 NCF 应用"
+                       Command="{Binding SwitchToBrowserCommand}"
+                       Background="{Binding BrowserTabButtonBackground}"
+                       Foreground="{Binding BrowserTabButtonForeground}"
+                       Padding="20,12"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       IsVisible="{Binding IsBrowserTabVisible}"
+                       Classes="tab-button browser-tab"/>
+            </StackPanel>
             
-            <!-- 设置标签页 -->
-            <TabItem Header="⚙️ 设置中心" Name="SettingsTab">
-                <views:SettingsView DataContext="{Binding}"/>
-            </TabItem>
-            
-            <!-- 浏览器标签页 - 只有在浏览器准备就绪且NCF运行时才显示 -->
-            <TabItem Header="🌐 NCF 应用" 
-                     Name="BrowserTab" 
-                     Classes="browser-tab"
-                     IsVisible="{Binding IsBrowserTabVisible}">
-                <views:BrowserView DataContext="{Binding}"/>
-            </TabItem>
-            
-        </TabControl>
+            <!-- 内容区域 - 两个视图都保持在 UI 树中，只通过 IsVisible 控制显示 -->
+            <Grid Margin="0,48,0,0">
+                <!-- 设置页面 - 始终在 UI 树中 -->
+                <views:SettingsView DataContext="{Binding}"
+                                   IsVisible="{Binding IsSettingsTabActive}"/>
+                
+                <!-- 浏览器页面 - 始终在 UI 树中，永不卸载 -->
+                <views:BrowserView DataContext="{Binding}"
+                                  IsVisible="{Binding IsBrowserTabActive}"/>
+            </Grid>
+        </Grid>
         
         <!-- 全局加载遮罩 -->
         <Border Background="{DynamicResource ContentBackgroundBrush}" 

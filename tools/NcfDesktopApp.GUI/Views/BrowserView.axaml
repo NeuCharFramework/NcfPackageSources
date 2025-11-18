@@ -134,9 +134,10 @@
                 </Border>
                 
                 <!-- 内嵌浏览器控件 -->
+                <!-- 🔧 方案1优化：移除 IsVisible 绑定，避免标签切换时 WebView 被隐藏 -->
+                <!-- WebView 一旦初始化完成就保持可见，即使 IsBrowserReady 变化也不隐藏 -->
                 <controls:EmbeddedWebView Name="WebViewControl"
-                                       Source="{Binding SiteUrl}"
-                                       IsVisible="{Binding IsBrowserReady}"/>
+                                       Source="{Binding SiteUrl}"/>
                 
                 <!-- 错误状态显示 -->
                 <Border Name="ErrorOverlay" 

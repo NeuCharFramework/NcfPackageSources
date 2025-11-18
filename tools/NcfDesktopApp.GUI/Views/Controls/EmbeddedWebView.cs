@@ -192,11 +192,18 @@ public partial class EmbeddedWebView : UserControl
                     Debug.WriteLine("✅ WebView 创建成功");
                     UpdateStatus("嵌入式浏览器已就绪", Brushes.Green);
 
-                    // 如果有初始 URL，则导航到它
+                    // 🔧 方案1优化：如果有初始 URL，则导航到它
+                    // 注意：这里直接调用 NavigateToUrlAsync，而不是 UpdateSource()，
+                    // 因为 UpdateSource() 会检查 _currentUrl，但此时还没有设置
                     if (!string.IsNullOrEmpty(Source))
                     {
                         Debug.WriteLine($"🎯 准备导航到初始 URL: {Source}");
                         _ = NavigateToUrlAsync(Source);
+                    }
+                    else
+                    {
+                        // 如果没有初始 URL，确保 _currentUrl 为空，这样后续设置 Source 时会导航
+                        _currentUrl = "";
                     }
                 }
                 catch (Exception ex)
@@ -241,8 +248,18 @@ public partial class EmbeddedWebView : UserControl
 
     private void UpdateSource()
     {
+        // 🔧 方案1优化：避免在标签切换时重新导航
+        // 如果 URL 没有变化，不执行导航（保持当前页面状态）
         if (_isWebViewReady && !string.IsNullOrEmpty(Source))
         {
+            // 比较新 URL 和当前 URL，如果相同则跳过导航
+            if (string.Equals(_currentUrl, Source, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.WriteLine($"ℹ️ Source 属性变化但 URL 相同 ({Source})，跳过导航以保持页面状态");
+                return;
+            }
+            
+            Debug.WriteLine($"🔄 Source 属性变化，从 {_currentUrl} 导航到 {Source}");
             _ = NavigateToUrlAsync(Source);
         }
     }
@@ -523,6 +540,8 @@ public partial class EmbeddedWebView : UserControl
     {
         base.OnLoaded(e);
         
+        Debug.WriteLine($"🔍 [OnLoaded] _isWebViewReady={_isWebViewReady}, _webView={(_webView != null ? "存在" : "null")}, _currentUrl={_currentUrl}");
+        
         // 🔧 方案1：只在首次加载时初始化，避免标签切换时重新初始化
         // Avalonia 的 TabControl 默认保持标签内容在内存中，不会完全卸载
         if (!_isWebViewReady)
@@ -533,6 +552,32 @@ public partial class EmbeddedWebView : UserControl
         else
         {
             Debug.WriteLine("✅ WebView 已就绪，跳过重新初始化（保持状态）");
+            
+            // 🔧 检查 WebView 是否仍然存在且有效
+            if (_webView != null)
+            {
+                try
+                {
+                    var currentWebViewUrl = _webView.Url?.ToString() ?? "null";
+                    Debug.WriteLine($"   WebView.Url = {currentWebViewUrl}");
+                    
+                    // 如果 WebView.Url 为空但 _currentUrl 不为空，尝试恢复
+                    if (string.IsNullOrEmpty(currentWebViewUrl) && !string.IsNullOrEmpty(_currentUrl))
+                    {
+                        Debug.WriteLine($"⚠️ WebView.Url 丢失，尝试恢复导航到: {_currentUrl}");
+                        _ = NavigateToUrlAsync(_currentUrl);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"❌ 检查 WebView 状态时出错: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("⚠️ WebView 为 null，需要重新初始化");
+                _ = InitializeWebViewAsync();
+            }
         }
     }
     

@@ -96,15 +96,47 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int _currentTabIndex = 0; // 0=设置页面, 1=浏览器页面
     
-    // 控制浏览器标签页的可见性
+    // 控制浏览器标签页的可见性（标签按钮）
     [ObservableProperty]
     private bool _isBrowserTabVisible = false;
+    
+    // 🔧 方案1最终版：控制各标签页内容的显示（Grid 叠加层方案）
+    // 设置页面是否可见
+    public bool IsSettingsTabActive => CurrentTabIndex == 0;
+    
+    // 浏览器页面是否可见（且已就绪且标签可见）
+    public bool IsBrowserTabActive => CurrentTabIndex == 1 && IsBrowserTabVisible;
+    
+    // 按钮背景色（表示选中状态）
+    public string SettingsTabButtonBackground => CurrentTabIndex == 0 ? "#007ACC" : "Transparent";
+    public string BrowserTabButtonBackground => CurrentTabIndex == 1 ? "#007ACC" : "Transparent";
+    
+    // 按钮前景色（表示选中状态）
+    public string SettingsTabButtonForeground => CurrentTabIndex == 0 ? "White" : "Black";
+    public string BrowserTabButtonForeground => CurrentTabIndex == 1 ? "White" : "Black";
 
     public object? BrowserViewReference { get; set; }
 
     #endregion
     
     #region 属性变更通知
+    
+    // 🔧 当 CurrentTabIndex 变化时，通知依赖属性
+    partial void OnCurrentTabIndexChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsSettingsTabActive));
+        OnPropertyChanged(nameof(IsBrowserTabActive));
+        OnPropertyChanged(nameof(SettingsTabButtonBackground));
+        OnPropertyChanged(nameof(BrowserTabButtonBackground));
+        OnPropertyChanged(nameof(SettingsTabButtonForeground));
+        OnPropertyChanged(nameof(BrowserTabButtonForeground));
+    }
+    
+    // 🔧 当 IsBrowserTabVisible 变化时，通知 IsBrowserTabActive
+    partial void OnIsBrowserTabVisibleChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsBrowserTabActive));
+    }
     
     // 🔧 当 IsBrowserReady 变化时，通知命令刷新
     partial void OnIsBrowserReadyChanged(bool value)
