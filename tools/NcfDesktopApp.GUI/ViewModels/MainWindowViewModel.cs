@@ -103,6 +103,16 @@ public partial class MainWindowViewModel : ViewModelBase
     public object? BrowserViewReference { get; set; }
 
     #endregion
+    
+    #region 属性变更通知
+    
+    // 🔧 当 IsBrowserReady 变化时，通知命令刷新
+    partial void OnIsBrowserReadyChanged(bool value)
+    {
+        SwitchToBrowserCommand.NotifyCanExecuteChanged();
+    }
+    
+    #endregion
 
     #region 私有字段
     
@@ -1143,31 +1153,37 @@ public partial class MainWindowViewModel : ViewModelBase
         
         Dispatcher.UIThread.Post(() =>
         {
-            // 批量添加日志
-            foreach (var log in logsToAdd)
+            // 🚀 性能优化：一次性构建完整字符串块，然后一次性追加
+            // 这样可以避免逐条操作 StringBuilder，减少 UI 渲染次数
+            if (logsToAdd.Count > 0)
             {
-                _logBuffer.AppendLine(log);
-                _currentLineCount++;
-            }
-            
-            // 限制日志行数（只在超出阈值时执行，避免频繁字符串分割）
-            if (_currentLineCount > MaxLogLines + 100)  // 留一些缓冲
-            {
-                var lines = _logBuffer.ToString().Split('\n');
-                if (lines.Length > MaxLogLines)
+                // 方法1：使用 string.Join 一次性构建（最快）
+                var newLogsBlock = string.Join(Environment.NewLine, logsToAdd) + Environment.NewLine;
+                
+                // 一次性追加到缓冲区
+                _logBuffer.Append(newLogsBlock);
+                _currentLineCount += logsToAdd.Count;
+                
+                // 限制日志行数（只在超出阈值时执行，避免频繁字符串分割）
+                if (_currentLineCount > MaxLogLines + 100)  // 留一些缓冲
                 {
-                    _logBuffer.Clear();
-                    var keptLines = lines.Skip(lines.Length - MaxLogLines);
-                    foreach (var line in keptLines)
+                    var lines = _logBuffer.ToString().Split('\n');
+                    if (lines.Length > MaxLogLines)
                     {
-                        _logBuffer.AppendLine(line);
+                        // 一次性构建保留的日志块
+                        var keptLines = lines.Skip(lines.Length - MaxLogLines);
+                        var keptLogsBlock = string.Join(Environment.NewLine, keptLines);
+                        
+                        _logBuffer.Clear();
+                        _logBuffer.Append(keptLogsBlock);
+                        _currentLineCount = MaxLogLines;
                     }
-                    _currentLineCount = MaxLogLines;
                 }
+                
+                // 🚀 关键：一次性更新 UI，确保同步显示
+                LogText = _logBuffer.ToString();
+                ScrollToBottomIfNeeded();
             }
-            
-            LogText = _logBuffer.ToString();
-            ScrollToBottomIfNeeded();
         });
     }
     

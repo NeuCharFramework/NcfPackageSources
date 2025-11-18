@@ -523,11 +523,16 @@ public partial class EmbeddedWebView : UserControl
     {
         base.OnLoaded(e);
         
-        // 如果 WebView 已被清理（例如控件之前被隐藏），重新初始化
+        // 🔧 方案1：只在首次加载时初始化，避免标签切换时重新初始化
+        // Avalonia 的 TabControl 默认保持标签内容在内存中，不会完全卸载
         if (!_isWebViewReady)
         {
-            Debug.WriteLine("🔄 检测到 WebView 需要重新初始化...");
+            Debug.WriteLine("🔄 首次加载，初始化 WebView...");
             _ = InitializeWebViewAsync();
+        }
+        else
+        {
+            Debug.WriteLine("✅ WebView 已就绪，跳过重新初始化（保持状态）");
         }
     }
     
@@ -535,8 +540,13 @@ public partial class EmbeddedWebView : UserControl
     {
         base.OnUnloaded(e);
         
-        // 清理资源
-        CleanupWebView();
+        // 🔧 方案1：禁用清理逻辑，防止标签切换时丢失 Session/Cookie
+        // Avalonia 的 TabControl 在标签切换时可能触发 OnUnloaded，但不会完全销毁控件
+        // 因此我们不清理 WebView，以保持登录状态和浏览历史
+        Debug.WriteLine("ℹ️ OnUnloaded 触发，保持 WebView 状态（不清理）");
+        
+        // ❌ 已禁用：防止标签切换时清理 WebView（会丢失登录状态）
+        // CleanupWebView();
     }
     
     /// <summary>

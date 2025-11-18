@@ -44,7 +44,8 @@
     </Window.Styles>
 
     <Grid>
-        <!-- 主要内容区域 -->
+        <!-- 🔧 方案1优化版：使用 TabControl（Avalonia 的 TabControl 默认保持标签内容在内存中）-->
+        <!-- 关键：EmbeddedWebView.cs 中已禁用 OnUnloaded 清理逻辑，确保 WebView 状态保持 -->
         <TabControl x:Name="MainTabControl" 
                    SelectedIndex="{Binding CurrentTabIndex}">
             
