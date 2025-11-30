@@ -228,14 +228,11 @@
                         <div class="promptInput prompt-rich-editor"
                              contenteditable="true"
                              ref="promptEditor"
-                             @@focus="onEditorFocus"
-                             @@input="onEditorInput"
-                             @@keyup="onEditorKeyup"
+                             @@input="handleEditorInput"
+                             @@blur="applyHighlight"
                              @@compositionstart="isComposing = true"
-                             @@compositionend="onCompositionEnd"
-                             @@blur="onEditorBlur"
-                             @@paste="onEditorPaste"
-                             :data-placeholder="content ? '' : '请输入内容'">
+                             @@compositionend="isComposing = false"
+                             :data-placeholder="content ? '' : '请输入Prompt内容'">
                         </div>
                             
                             @* 变量提示卡片 *@
