@@ -1275,7 +1275,10 @@ public partial class MainWindowViewModel : ViewModelBase
                 // 🚀 关键：一次性更新 UI，确保同步显示
                 LogText = _logBuffer.ToString();
                 _lastLogUpdateTime = DateTime.Now;
-                ScrollToBottomIfNeeded();
+                
+                // 🔧 延迟滚动，确保 UI 内容已完全渲染
+                // 使用 LayoutUpdated 事件或小延迟确保滚动在内容渲染后执行
+                ScrollToBottomIfNeededDelayed();
             }
         });
     }
@@ -1324,6 +1327,89 @@ public partial class MainWindowViewModel : ViewModelBase
                     {
                         // 🚀 直接滚动到底部，显示最新日志
                         _cachedScrollViewer.ScrollToEnd();
+                    }
+                    // 如果 ShouldAutoScroll 为 false，说明用户在查看历史日志，不自动滚动
+                }
+            });
+        }
+        catch
+        {
+            // 忽略滚动错误，不影响日志功能
+        }
+    }
+    
+    /// <summary>
+    /// 延迟滚动到底部，确保 UI 内容已完全渲染
+    /// </summary>
+    private void ScrollToBottomIfNeededDelayed()
+    {
+        try
+        {
+            // 🔧 使用 InvokeAsync 支持 async/await
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                ScrollViewer? scrollViewer = _cachedScrollViewer;
+                
+                // 🚀 如果缓存为 null，尝试查找 ScrollViewer
+                if (scrollViewer == null)
+                {
+                    if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        var mainWindow = desktop.MainWindow as MainWindow;
+                        if (mainWindow?.Content is Grid mainContent)
+                        {
+                            // LogScrollViewer 在 SettingsView 中，需要通过 FindControl 递归查找
+                            scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
+                            if (scrollViewer != null)
+                            {
+                                _cachedScrollViewer = scrollViewer; // 缓存引用
+                            }
+                        }
+                    }
+                }
+                
+                // 🔧 如果还是找不到，等待一下再试（可能 UI 还没完全加载）
+                if (scrollViewer == null)
+                {
+                    await Task.Delay(50);
+                    if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        var mainWindow = desktop.MainWindow as MainWindow;
+                        if (mainWindow?.Content is Grid mainContent)
+                        {
+                            scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
+                            if (scrollViewer != null)
+                            {
+                                _cachedScrollViewer = scrollViewer; // 缓存引用
+                            }
+                        }
+                    }
+                }
+                
+                if (scrollViewer != null)
+                {
+                    // 🔧 等待一小段时间，确保 UI 内容已完全渲染
+                    await Task.Delay(20);
+                    
+                    // 🔍 查找 SettingsView：向上遍历父级，找到 SettingsView
+                    Views.SettingsView? settingsView = null;
+                    var parent = scrollViewer.Parent;
+                    while (parent != null)
+                    {
+                        if (parent is Views.SettingsView sv)
+                        {
+                            settingsView = sv;
+                            break;
+                        }
+                        parent = parent.Parent;
+                    }
+                    
+                    // 检查是否应该自动滚动（默认应该自动滚动）
+                    // 如果用户手动滚动到历史位置（距离底部 > 20px），则不应该自动滚动
+                    if (settingsView?.ShouldAutoScroll ?? true)
+                    {
+                        // 🚀 滚动到底部，显示最新日志
+                        scrollViewer.ScrollToEnd();
                     }
                     // 如果 ShouldAutoScroll 为 false，说明用户在查看历史日志，不自动滚动
                 }
@@ -1392,7 +1478,8 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 
                 _lastLogUpdateTime = DateTime.Now;
-                ScrollToBottomIfNeeded();
+                // 🔧 延迟滚动，确保 UI 内容已完全渲染
+                ScrollToBottomIfNeededDelayed();
             });
         }
         catch
