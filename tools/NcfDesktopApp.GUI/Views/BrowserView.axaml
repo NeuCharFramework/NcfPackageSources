@@ -43,7 +43,7 @@
                         BorderThickness="1" 
                         CornerRadius="4" 
                         Margin="10,0">
-                    <Grid ColumnDefinitions="*,Auto">
+                    <Grid ColumnDefinitions="*,Auto,Auto">
                         <TextBox Name="UrlTextBox" 
                                  Grid.Column="0"
                                  Text="{Binding SiteUrl, Mode=OneWay}" 
@@ -70,6 +70,18 @@
                                 CornerRadius="3"
                                 ToolTip.Tip="打开"
                                 Click="GoButton_Click"/>
+                        <Button Name="OpenExternalButton"
+                                Grid.Column="2"
+                                Content="🌐"
+                                Width="30"
+                                Height="26"
+                                Margin="0,2,2,2"
+                                FontSize="14"
+                                Background="#28A745"
+                                Foreground="White"
+                                CornerRadius="3"
+                                ToolTip.Tip="在外部浏览器中打开"
+                                Command="{Binding OpenInExternalBrowserCommand}"/>
                     </Grid>
                 </Border>
                 

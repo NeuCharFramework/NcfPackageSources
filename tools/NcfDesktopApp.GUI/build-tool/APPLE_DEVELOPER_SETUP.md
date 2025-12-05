@@ -362,3 +362,4 @@ xcrun notarytool submit "macos-app/NCF Desktop.zip" \
 **适用版本**：NCF Desktop App v1.0.0+
 
 
+

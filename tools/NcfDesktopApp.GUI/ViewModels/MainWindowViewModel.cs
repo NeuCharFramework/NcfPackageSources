@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -144,6 +144,12 @@ public partial class MainWindowViewModel : ViewModelBase
         SwitchToBrowserCommand.NotifyCanExecuteChanged();
     }
     
+    // 🔧 当 SiteUrl 变化时，通知外部浏览器打开命令刷新
+    partial void OnSiteUrlChanged(string value)
+    {
+        OpenInExternalBrowserCommand.NotifyCanExecuteChanged();
+    }
+    
     #endregion
 
     #region 私有字段
@@ -162,6 +168,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private ScrollViewer? _cachedScrollViewer;
     private const int MaxLogLines = 1000;
     private const int LogUpdateIntervalMs = 100;  // 每100ms批量更新一次
+    private const int InitialDisplayLines = 200;  // 初始只显示最后200行
+    private bool _isApplicationReady = false;  // 应用是否已就绪（启动完成后才显示完整日志）
+    private DateTime _lastLogUpdateTime = DateTime.MinValue;  // 上次日志更新时间
+    private const int MaxLogUpdateIntervalMs = 500;  // 当日志量大时的最大更新间隔（500ms）
 
     #endregion
 
@@ -454,6 +464,10 @@ public partial class MainWindowViewModel : ViewModelBase
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 AddLog("✅ 应用程序初始化完成");
+                // 🚀 标记应用已就绪，现在可以显示完整日志了
+                _isApplicationReady = true;
+                // 立即刷新一次日志显示
+                FlushPendingLogs();
             });
         }
         catch (Exception ex)
@@ -1183,6 +1197,52 @@ public partial class MainWindowViewModel : ViewModelBase
             _pendingCliLogs.Clear();
         }
         
+        // 🚀 性能优化：如果应用还未就绪，只累积日志不立即显示
+        // 这样可以避免启动时阻塞UI
+        if (!_isApplicationReady)
+        {
+            // 应用启动阶段：只累积日志到缓冲区，不更新UI
+            // 注意：_logBuffer 只在定时器回调中使用，不需要锁
+            foreach (var log in logsToAdd)
+            {
+                _logBuffer.AppendLine(log);
+                _currentLineCount++;
+            }
+            
+            // 限制缓冲区大小，避免内存占用过大
+            if (_currentLineCount > MaxLogLines * 2)
+            {
+                var lines = _logBuffer.ToString().Split('\n');
+                if (lines.Length > MaxLogLines)
+                {
+                    var keptLines = lines.Skip(lines.Length - MaxLogLines);
+                    _logBuffer.Clear();
+                    _logBuffer.AppendLine(string.Join(Environment.NewLine, keptLines));
+                    _currentLineCount = MaxLogLines;
+                }
+            }
+            return;
+        }
+        
+        // 🚀 应用已就绪：正常更新UI，但根据日志量动态调整更新频率
+        var now = DateTime.Now;
+        var timeSinceLastUpdate = (now - _lastLogUpdateTime).TotalMilliseconds;
+        var pendingCount = logsToAdd.Count;
+        
+        // 如果日志量很大且距离上次更新时间很短，跳过本次更新（降低更新频率）
+        if (pendingCount > 50 && timeSinceLastUpdate < MaxLogUpdateIntervalMs)
+        {
+            // 将日志重新放回队列，等待下次更新
+            lock (_pendingCliLogs)
+            {
+                foreach (var log in logsToAdd)
+                {
+                    _pendingCliLogs.Enqueue(log);
+                }
+            }
+            return;
+        }
+        
         Dispatcher.UIThread.Post(() =>
         {
             // 🚀 性能优化：一次性构建完整字符串块，然后一次性追加
@@ -1214,6 +1274,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 
                 // 🚀 关键：一次性更新 UI，确保同步显示
                 LogText = _logBuffer.ToString();
+                _lastLogUpdateTime = DateTime.Now;
                 ScrollToBottomIfNeeded();
             }
         });
@@ -1234,8 +1295,9 @@ public partial class MainWindowViewModel : ViewModelBase
                     if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                     {
                         var mainWindow = desktop.MainWindow as MainWindow;
-                        if (mainWindow?.Content is UserControl mainContent)
+                        if (mainWindow?.Content is Grid mainContent)
                         {
+                            // LogScrollViewer 在 SettingsView 中，需要通过 FindControl 递归查找
                             _cachedScrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
                         }
                     }
@@ -1243,13 +1305,27 @@ public partial class MainWindowViewModel : ViewModelBase
                 
                 if (_cachedScrollViewer != null)
                 {
-                    // 检查是否应该自动滚动
-                    var settingsView = _cachedScrollViewer.Parent as Views.SettingsView;
+                    // 🔍 查找 SettingsView：向上遍历父级，找到 SettingsView
+                    Views.SettingsView? settingsView = null;
+                    var parent = _cachedScrollViewer.Parent;
+                    while (parent != null)
+                    {
+                        if (parent is Views.SettingsView sv)
+                        {
+                            settingsView = sv;
+                            break;
+                        }
+                        parent = parent.Parent;
+                    }
+                    
+                    // 检查是否应该自动滚动（默认应该自动滚动）
+                    // 如果用户手动滚动到历史位置（距离底部 > 20px），则不应该自动滚动
                     if (settingsView?.ShouldAutoScroll ?? true)
                     {
-                        // 🚀 直接滚动，不需要 Task.Delay
+                        // 🚀 直接滚动到底部，显示最新日志
                         _cachedScrollViewer.ScrollToEnd();
                     }
+                    // 如果 ShouldAutoScroll 为 false，说明用户在查看历史日志，不自动滚动
                 }
             });
         }
@@ -1260,7 +1336,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     /// <summary>
-    /// 立即刷新所有待处理的日志（用于停止或清理时）
+    /// 立即刷新所有待处理的日志（用于停止或清理时，或应用就绪时）
     /// </summary>
     private void FlushPendingLogs()
     {
@@ -1270,21 +1346,53 @@ public partial class MainWindowViewModel : ViewModelBase
             
             lock (_pendingCliLogs)
             {
-                if (_pendingCliLogs.Count == 0) return;
-                
                 logsToAdd = new List<string>(_pendingCliLogs);
                 _pendingCliLogs.Clear();
             }
             
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                foreach (var log in logsToAdd)
+                // 先处理队列中的新日志
+                if (logsToAdd.Count > 0)
                 {
-                    _logBuffer.AppendLine(log);
-                    _currentLineCount++;
+                    foreach (var log in logsToAdd)
+                    {
+                        _logBuffer.AppendLine(log);
+                        _currentLineCount++;
+                    }
                 }
                 
-                LogText = _logBuffer.ToString();
+                // 🚀 如果应用刚就绪且日志很多，只显示最后N行，避免一次性渲染太多日志
+                if (_isApplicationReady && _currentLineCount > InitialDisplayLines && _lastLogUpdateTime == DateTime.MinValue)
+                {
+                    var allLogs = _logBuffer.ToString();
+                    var lines = allLogs.Split('\n');
+                    
+                    if (lines.Length > InitialDisplayLines)
+                    {
+                        var displayLines = lines.Skip(lines.Length - InitialDisplayLines);
+                        var displayText = string.Join(Environment.NewLine, displayLines);
+                        
+                        var skippedCount = lines.Length - InitialDisplayLines;
+                        LogText = $"[已跳过 {skippedCount} 行启动日志，仅显示最后 {InitialDisplayLines} 行]{Environment.NewLine}{displayText}";
+                        
+                        _logBuffer.Clear();
+                        _logBuffer.Append(displayText);
+                        _currentLineCount = InitialDisplayLines;
+                    }
+                    else
+                    {
+                        LogText = allLogs;
+                    }
+                }
+                else if (_logBuffer.Length > 0)
+                {
+                    // 正常显示所有日志
+                    LogText = _logBuffer.ToString();
+                }
+                
+                _lastLogUpdateTime = DateTime.Now;
+                ScrollToBottomIfNeeded();
             });
         }
         catch
