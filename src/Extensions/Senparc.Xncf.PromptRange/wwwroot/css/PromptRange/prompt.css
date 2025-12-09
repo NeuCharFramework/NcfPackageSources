@@ -785,12 +785,12 @@
             color: #C0C4CC;
         }
 
-        /* 高亮变量样式 - 确保绝对内联 */
+        /* 高亮变量样式 - 强制内联显示 */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight {
             display: inline !important;
             background: rgba(255, 235, 59, 0.3);
             border-radius: 2px;
-            padding: 1px 3px !important;
+            padding: 0 2px !important;
             margin: 0 !important;
             border: none !important;
             line-height: inherit !important;
@@ -799,6 +799,10 @@
             float: none !important;
             clear: none !important;
             position: static !important;
+            width: auto !important;
+            height: auto !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {

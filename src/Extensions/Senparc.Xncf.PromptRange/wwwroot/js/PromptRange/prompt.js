@@ -4186,12 +4186,17 @@ var app = new Vue({
         generateHighlightHTML(text) {
             if (!text) return '';
             
-            // 获取前缀和后缀
-            const prefix = this.getPromptPrefix();
-            const suffix = this.getPromptSuffix();
+            // 获取前缀和后缀（从当前编辑的prompt参数）
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
+            
+            // 调试日志
+            console.log('[generateHighlightHTML] prefix:', prefix, 'suffix:', suffix);
+            console.log('[generateHighlightHTML] variableList:', this.promptParamForm.variableList);
             
             if (!prefix || !suffix) {
                 // 没有前缀后缀，直接返回转义的HTML
+                console.log('[generateHighlightHTML] No prefix/suffix, returning plain text');
                 return text
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
@@ -4201,27 +4206,41 @@ var app = new Vue({
             
             // 获取所有已定义的变量名（不带前后缀）
             const definedVarNames = new Set();
-            if (this.variablesJson && this.variablesJson.variables) {
-                this.variablesJson.variables.forEach(v => {
-                    if (v.key) {
-                        definedVarNames.add(v.key);
+            if (this.promptParamForm.variableList && this.promptParamForm.variableList.length > 0) {
+                this.promptParamForm.variableList.forEach(v => {
+                    if (v.name) {
+                        definedVarNames.add(v.name);
                     }
                 });
             }
+            
+            console.log('[generateHighlightHTML] definedVarNames:', Array.from(definedVarNames));
             
             // 转义正则特殊字符
             const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const escapedPrefix = escapeRegex(prefix);
             const escapedSuffix = escapeRegex(suffix);
             
-            // 构建正则：匹配 {{$varName}}，捕获变量名
-            const regex = new RegExp(`${escapedPrefix}([^${escapedSuffix}]+)${escapedSuffix}`, 'g');
+            // 构建正则：匹配 {{$varName}}，使用非贪婪匹配
+            // 例如：prefix={{$, suffix=}}, 正则为：\{\{\$(.+?)\}\}
+            const regex = new RegExp(`${escapedPrefix}(.+?)${escapedSuffix}`, 'g');
+            
+            console.log('[generateHighlightHTML] regex:', regex);
             
             let result = '';
             let lastIndex = 0;
+            let matchCount = 0;
+            let match;
             
-            // 逐个匹配变量
-            text.replace(regex, (match, varName, offset) => {
+            // 使用 exec 逐个匹配
+            while ((match = regex.exec(text)) !== null) {
+                matchCount++;
+                const fullMatch = match[0];  // 完整匹配，如 {{$prefix}}
+                const varName = match[1];     // 捕获组，如 prefix
+                const offset = match.index;
+                
+                console.log(`[generateHighlightHTML] Match ${matchCount}:`, fullMatch, 'varName:', varName, 'offset:', offset);
+                
                 // 添加匹配前的文本（HTML转义）
                 const beforeText = text.substring(lastIndex, offset);
                 result += beforeText
@@ -4233,16 +4252,19 @@ var app = new Vue({
                 const isDefined = definedVarNames.has(varName);
                 const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
                 
+                console.log(`[generateHighlightHTML] varName "${varName}" isDefined:`, isDefined);
+                
                 // 添加高亮的变量（HTML转义）
-                const escapedMatch = match
+                const escapedMatch = fullMatch
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
                 result += `<span class="${className}">${escapedMatch}</span>`;
                 
-                lastIndex = offset + match.length;
-                return match;
-            });
+                lastIndex = offset + fullMatch.length;
+            }
+            
+            console.log('[generateHighlightHTML] Total matches:', matchCount);
             
             // 添加剩余文本（HTML转义）
             const remainingText = text.substring(lastIndex);
@@ -4252,7 +4274,10 @@ var app = new Vue({
                 .replace(/>/g, '&gt;');
             
             // 处理换行
-            return result.replace(/\n/g, '<br>');
+            const finalResult = result.replace(/\n/g, '<br>');
+            console.log('[generateHighlightHTML] Final HTML (first 200 chars):', finalResult.substring(0, 200));
+            
+            return finalResult;
         },
         
         // 转义正则表达式特殊字符
