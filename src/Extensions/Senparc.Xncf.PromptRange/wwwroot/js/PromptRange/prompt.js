@@ -4246,12 +4246,13 @@ var app = new Vue({
                 
                 console.log(`[generateHighlightHTML] Match ${matchCount}:`, fullMatch, 'varName:', varName, 'offset:', offset);
                 
-                // 添加匹配前的文本（HTML转义）
+                // 添加匹配前的文本（HTML转义并处理换行）
                 const beforeText = text.substring(lastIndex, offset);
                 result += beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
+                    .replace(/>/g, '&gt;')
+                    .replace(/\n/g, '<br>');
                 
                 // 判断变量是否已定义
                 const isDefined = definedVarNames.has(varName);
@@ -4259,7 +4260,7 @@ var app = new Vue({
                 
                 console.log(`[generateHighlightHTML] varName "${varName}" isDefined:`, isDefined);
                 
-                // 添加高亮的变量（HTML转义）
+                // 添加高亮的变量（HTML转义，但不包含换行）
                 const escapedMatch = fullMatch
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
@@ -4271,18 +4272,17 @@ var app = new Vue({
             
             console.log('[generateHighlightHTML] Total matches:', matchCount);
             
-            // 添加剩余文本（HTML转义）
+            // 添加剩余文本（HTML转义并处理换行）
             const remainingText = text.substring(lastIndex);
             result += remainingText
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+                .replace(/>/g, '&gt;')
+                .replace(/\n/g, '<br>');
             
-            // 处理换行
-            const finalResult = result.replace(/\n/g, '<br>');
-            console.log('[generateHighlightHTML] Final HTML (first 200 chars):', finalResult.substring(0, 200));
+            console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
-            return finalResult;
+            return result;
         },
         
         // 转义正则表达式特殊字符
@@ -4366,6 +4366,62 @@ var app = new Vue({
             }, 2000);
         },
         
+        // 清理 var-highlight span 周围多余的 <br> 标签
+        cleanupHighlightBrTags(editor) {
+            if (!editor) return;
+            
+            // 查找所有 var-highlight span 标签
+            const highlightSpans = editor.querySelectorAll('.var-highlight');
+            
+            highlightSpans.forEach(span => {
+                // 清理 span 前面的连续 <br> 标签和空白文本节点
+                let prevSibling = span.previousSibling;
+                while (prevSibling) {
+                    if (prevSibling.nodeType === Node.ELEMENT_NODE && prevSibling.tagName === 'BR') {
+                        const toRemove = prevSibling;
+                        prevSibling = prevSibling.previousSibling;
+                        toRemove.remove();
+                    } else if (prevSibling.nodeType === Node.TEXT_NODE) {
+                        // 如果是空白文本节点，也移除
+                        if (prevSibling.textContent.trim() === '') {
+                            const toRemove = prevSibling;
+                            prevSibling = prevSibling.previousSibling;
+                            toRemove.remove();
+                        } else {
+                            // 有内容的文本节点，停止清理
+                            break;
+                        }
+                    } else {
+                        // 其他类型的节点，停止清理
+                        break;
+                    }
+                }
+                
+                // 清理 span 后面的连续 <br> 标签和空白文本节点
+                let nextSibling = span.nextSibling;
+                while (nextSibling) {
+                    if (nextSibling.nodeType === Node.ELEMENT_NODE && nextSibling.tagName === 'BR') {
+                        const toRemove = nextSibling;
+                        nextSibling = nextSibling.nextSibling;
+                        toRemove.remove();
+                    } else if (nextSibling.nodeType === Node.TEXT_NODE) {
+                        // 如果是空白文本节点，也移除
+                        if (nextSibling.textContent.trim() === '') {
+                            const toRemove = nextSibling;
+                            nextSibling = nextSibling.nextSibling;
+                            toRemove.remove();
+                        } else {
+                            // 有内容的文本节点，停止清理
+                            break;
+                        }
+                    } else {
+                        // 其他类型的节点，停止清理
+                        break;
+                    }
+                }
+            });
+        },
+        
         // 应用高亮（保存光标位置）
         applyHighlight() {
             const editor = this.$refs.promptEditor;
@@ -4389,6 +4445,9 @@ var app = new Vue({
                 // 更新HTML
                 editor.innerHTML = html;
                 
+                // 清理多余的 <br> 标签
+                this.cleanupHighlightBrTags(editor);
+                
                 // 恢复光标位置
                 this.$nextTick(() => {
                     this.restoreCaretPosition(caretPos);
@@ -4396,6 +4455,9 @@ var app = new Vue({
             } else {
                 // 编辑器没有焦点，直接更新HTML（不恢复光标）
                 editor.innerHTML = html;
+                
+                // 清理多余的 <br> 标签
+                this.cleanupHighlightBrTags(editor);
             }
             
             // 触发数据更新
