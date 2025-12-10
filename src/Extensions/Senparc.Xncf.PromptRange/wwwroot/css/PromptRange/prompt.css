@@ -803,6 +803,9 @@
             height: auto !important;
             font-size: inherit !important;
             font-family: inherit !important;
+            /* 确保 span 标签前后没有空白导致的换行 */
+            word-spacing: 0 !important;
+            letter-spacing: normal !important;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {

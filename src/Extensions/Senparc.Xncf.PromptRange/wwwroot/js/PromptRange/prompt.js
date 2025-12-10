@@ -4248,11 +4248,13 @@ var app = new Vue({
                 
                 // 添加匹配前的文本（HTML转义并处理换行）
                 const beforeText = text.substring(lastIndex, offset);
-                result += beforeText
+                // 处理换行：将换行符替换为 <br>，但确保 span 前后没有多余的空白
+                const processedBeforeText = beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;')
                     .replace(/\n/g, '<br>');
+                result += processedBeforeText;
                 
                 // 判断变量是否已定义
                 const isDefined = definedVarNames.has(varName);
@@ -4265,6 +4267,7 @@ var app = new Vue({
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
+                // 确保 span 标签前后没有空白字符，直接拼接
                 result += `<span class="${className}">${escapedMatch}</span>`;
                 
                 lastIndex = offset + fullMatch.length;
@@ -4279,6 +4282,12 @@ var app = new Vue({
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/\n/g, '<br>');
+            
+            // 清理 span 标签前后的空白字符（包括换行符、空格、制表符等）
+            // 这可以防止 white-space: pre-wrap 导致 span 单独成行
+            // 注意：只清理紧邻 span 标签的空白，不影响其他内容
+            result = result.replace(/([ \t\n\r]+)(<span class="var-highlight[^"]*">)/g, '$2');
+            result = result.replace(/(<\/span>)([ \t\n\r]+)/g, '$1');
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
@@ -4366,7 +4375,7 @@ var app = new Vue({
             }, 2000);
         },
         
-        // 清理 var-highlight span 周围多余的 <br> 标签
+        // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点
         cleanupHighlightBrTags(editor) {
             if (!editor) return;
             
@@ -4382,13 +4391,15 @@ var app = new Vue({
                         prevSibling = prevSibling.previousSibling;
                         toRemove.remove();
                     } else if (prevSibling.nodeType === Node.TEXT_NODE) {
-                        // 如果是空白文本节点，也移除
-                        if (prevSibling.textContent.trim() === '') {
+                        // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
+                        const textContent = prevSibling.textContent;
+                        if (!textContent || /^[\s\n\r\t]*$/.test(textContent)) {
+                            // 只包含空白字符，移除
                             const toRemove = prevSibling;
                             prevSibling = prevSibling.previousSibling;
                             toRemove.remove();
                         } else {
-                            // 有内容的文本节点，停止清理
+                            // 有非空白内容，停止清理
                             break;
                         }
                     } else {
@@ -4405,13 +4416,15 @@ var app = new Vue({
                         nextSibling = nextSibling.nextSibling;
                         toRemove.remove();
                     } else if (nextSibling.nodeType === Node.TEXT_NODE) {
-                        // 如果是空白文本节点，也移除
-                        if (nextSibling.textContent.trim() === '') {
+                        // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
+                        const textContent = nextSibling.textContent;
+                        if (!textContent || /^[\s\n\r\t]*$/.test(textContent)) {
+                            // 只包含空白字符，移除
                             const toRemove = nextSibling;
                             nextSibling = nextSibling.nextSibling;
                             toRemove.remove();
                         } else {
-                            // 有内容的文本节点，停止清理
+                            // 有非空白内容，停止清理
                             break;
                         }
                     } else {
