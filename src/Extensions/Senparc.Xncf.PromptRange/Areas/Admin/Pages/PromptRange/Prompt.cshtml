@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
 @{
     ViewData["Title"] = "PromptRange Prompt";
@@ -230,6 +230,7 @@
                              contenteditable="true"
                              ref="promptEditor"
                              @@input="handleEditorInput"
+                             @@paste="handlePaste"
                              @@blur="applyHighlight"
                              @@compositionstart="isComposing = true"
                              @@compositionend="isComposing = false"

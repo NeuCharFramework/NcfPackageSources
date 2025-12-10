@@ -4314,7 +4314,8 @@ var app = new Vue({
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         },
         
-        // 保存光标位置（返回字符偏移量）
+        // 保存光标位置（返回字符偏移量，基于纯文本）
+        // 使用与 restoreCaretPosition 完全相同的遍历逻辑，确保一致性
         saveCaretPosition() {
             const editor = this.$refs.promptEditor;
             if (!editor) return 0;
@@ -4323,44 +4324,71 @@ var app = new Vue({
             if (sel.rangeCount === 0) return 0;
             
             const range = sel.getRangeAt(0);
-            const preCaretRange = range.cloneRange();
-            preCaretRange.selectNodeContents(editor);
-            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            const targetContainer = range.startContainer;
+            const targetOffset = range.startOffset;
             
-            return preCaretRange.toString().length;
-        },
-        
-        // 恢复光标位置
-        restoreCaretPosition(offset) {
-            const editor = this.$refs.promptEditor;
-            if (!editor) return;
-            
-            const sel = window.getSelection();
-            const range = document.createRange();
             let charCount = 0;
             let found = false;
             
+            // 使用与 restoreCaretPosition 完全相同的遍历逻辑
             const walkNodes = (node) => {
                 if (found) return;
                 
                 if (node.nodeType === Node.TEXT_NODE) {
-                    const nextCharCount = charCount + node.length;
-                    if (offset >= charCount && offset <= nextCharCount) {
-                        range.setStart(node, Math.min(offset - charCount, node.length));
-                        range.collapse(true);
+                    if (node === targetContainer) {
+                        // 找到了目标文本节点，加上偏移量
+                        charCount += targetOffset;
                         found = true;
                         return;
                     }
-                    charCount = nextCharCount;
+                    // 不是目标节点，加上整个节点的长度
+                    const nodeLength = node.textContent ? node.textContent.length : 0;
+                    charCount += nodeLength;
                 } else if (node.nodeName === 'BR') {
+                    // 检查光标是否在这个 BR 标签之后
+                    // 如果 targetContainer 是 BR 的父节点，且 targetOffset 指向这个 BR 之后
+                    if (targetContainer.nodeType === Node.ELEMENT_NODE && 
+                        targetContainer === node.parentNode &&
+                        targetOffset > 0) {
+                        // 检查 targetOffset 是否指向这个 BR 之后
+                        const brIndex = Array.from(targetContainer.childNodes).indexOf(node);
+                        if (targetOffset === brIndex + 1) {
+                            // 光标在这个 BR 标签之后
+                            charCount += 1;
+                            found = true;
+                            return;
+                        }
+                    }
+                    // BR 标签算作一个字符（换行符）
                     charCount += 1;
-                    if (offset === charCount) {
-                        range.setStartAfter(node);
-                        range.collapse(true);
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 检查光标是否在这个元素节点的子节点之间
+                    if (node === targetContainer && targetOffset > 0) {
+                        // 光标在这个节点的子节点之间
+                        // 使用与 restoreCaretPosition 完全相同的遍历逻辑计算字符数
+                        for (let i = 0; i < targetOffset && i < node.childNodes.length; i++) {
+                            const childNode = node.childNodes[i];
+                            // 递归遍历子节点，使用相同的逻辑
+                            const countChildNodes = (child) => {
+                                if (child.nodeType === Node.TEXT_NODE) {
+                                    return child.textContent ? child.textContent.length : 0;
+                                } else if (child.nodeName === 'BR') {
+                                    return 1;
+                                } else if (child.nodeType === Node.ELEMENT_NODE) {
+                                    let count = 0;
+                                    for (let j = 0; j < child.childNodes.length; j++) {
+                                        count += countChildNodes(child.childNodes[j]);
+                                    }
+                                    return count;
+                                }
+                                return 0;
+                            };
+                            charCount += countChildNodes(childNode);
+                        }
                         found = true;
                         return;
                     }
-                } else {
+                    // 对于元素节点，递归遍历子节点
                     for (let i = 0; i < node.childNodes.length; i++) {
                         walkNodes(node.childNodes[i]);
                         if (found) return;
@@ -4370,21 +4398,164 @@ var app = new Vue({
             
             walkNodes(editor);
             
+            console.log('[saveCaretPosition] Calculated position:', charCount, 'targetContainer:', targetContainer.nodeName, 'targetOffset:', targetOffset);
+            
+            return charCount;
+        },
+        
+        // 恢复光标位置（基于纯文本偏移量）
+        // 使用与 saveCaretPosition 完全相同的遍历逻辑，确保一致性
+        restoreCaretPosition(offset) {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            const sel = window.getSelection();
+            if (!sel) return;
+            
+            const range = document.createRange();
+            let charCount = 0;
+            let found = false;
+            
+            // 使用与 saveCaretPosition 完全相同的遍历逻辑
+            const walkNodes = (node) => {
+                if (found) return;
+                
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const nodeText = node.textContent || '';
+                    const nodeLength = nodeText.length;
+                    const nextCharCount = charCount + nodeLength;
+                    
+                    if (offset >= charCount && offset <= nextCharCount) {
+                        // 光标在这个文本节点内
+                        const positionInNode = Math.min(offset - charCount, nodeLength);
+                        range.setStart(node, positionInNode);
+                        range.collapse(true);
+                        found = true;
+                        return;
+                    }
+                    charCount = nextCharCount;
+                } else if (node.nodeName === 'BR') {
+                    // BR 标签算作一个字符（换行符）
+                    const nextCharCount = charCount + 1;
+                    if (offset === charCount) {
+                        // 光标在 BR 标签之前
+                        range.setStartBefore(node);
+                        range.collapse(true);
+                        found = true;
+                        return;
+                    } else if (offset === nextCharCount) {
+                        // 光标在 BR 标签之后
+                        range.setStartAfter(node);
+                        range.collapse(true);
+                        found = true;
+                        return;
+                    }
+                    charCount = nextCharCount;
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 对于元素节点，递归遍历子节点
+                    // 注意：span 等内联元素不影响字符计数，只计算其内部的文本
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        walkNodes(node.childNodes[i]);
+                        if (found) return;
+                    }
+                }
+            };
+            
+            walkNodes(editor);
+            
+            console.log('[restoreCaretPosition] Looking for position:', offset, 'found:', found, 'charCount:', charCount);
+            
             if (found) {
-                sel.removeAllRanges();
-                sel.addRange(range);
+                try {
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    console.log('[restoreCaretPosition] Successfully restored to position:', offset);
+                } catch (e) {
+                    console.warn('[restoreCaretPosition] Failed to restore caret position:', e);
+                    // Fallback: 放在末尾
+                    try {
+                        range.selectNodeContents(editor);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    } catch (e2) {
+                        console.warn('[restoreCaretPosition] Fallback also failed:', e2);
+                    }
+                }
+            } else {
+                // 如果找不到精确位置，尝试将光标放在末尾
+                console.warn('[restoreCaretPosition] Could not find position', offset, ', placing at end');
+                try {
+                    range.selectNodeContents(editor);
+                    range.collapse(false); // 折叠到末尾
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                } catch (e) {
+                    console.warn('[restoreCaretPosition] Failed to place caret at end:', e);
+                }
             }
+        },
+        
+        // 处理粘贴事件
+        handlePaste(e) {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 标记正在粘贴
+            this._isPasting = true;
+            
+            // 清除之前的防抖定时器
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            
+            // 在粘贴前保存光标位置和选中的文本长度
+            const sel = window.getSelection();
+            let pasteStartPos = 0;
+            let selectedTextLength = 0;
+            
+            if (sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                // 保存粘贴开始位置
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(editor);
+                preCaretRange.setEnd(range.startContainer, range.startOffset);
+                pasteStartPos = preCaretRange.toString().length;
+                
+                // 计算选中的文本长度（粘贴会替换选中的文本）
+                selectedTextLength = range.toString().length;
+            }
+            
+            // 获取粘贴的纯文本内容
+            const pasteData = e.clipboardData ? e.clipboardData.getData('text/plain') : '';
+            const pasteTextLength = pasteData.length;
+            
+            // 等待粘贴内容插入完成后再处理
+            // 使用 requestAnimationFrame 确保粘贴操作完全完成
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this._isPasting = false;
+                    
+                    // 计算粘贴后的光标位置：粘贴开始位置 + 粘贴文本长度
+                    const newCaretPos = pasteStartPos + pasteTextLength;
+                    
+                    const text = this.getEditorText();
+                    this.content = text;
+                    
+                    // 应用高亮，并传入预期的光标位置
+                    this.applyHighlightWithCaretPos(newCaretPos);
+                }, 10);
+            });
         },
         
         // 用户输入时（立即更新高亮，使用短防抖优化性能）
         handleEditorInput(e) {
             if (this.isComposing) return;  // IME输入中不处理
+            if (this._isPasting) return;   // 粘贴操作中不处理，由 handlePaste 处理
             
             const text = this.getEditorText();
             this.content = text;
             
             // 使用较短的防抖时间（150ms）来平衡性能和响应性
-            // 这样用户输入、删除、粘贴、剪切等操作时，高亮会立即更新
+            // 这样用户输入、删除、剪切等操作时，高亮会立即更新
             if (this._highlightTimer) clearTimeout(this._highlightTimer);
             this._highlightTimer = setTimeout(() => {
                 this.applyHighlight();
@@ -4403,14 +4574,10 @@ var app = new Vue({
             console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
             
             highlightSpans.forEach(span => {
-                // 清理 span 前面的连续 <br> 标签和空白文本节点
+                // 清理 span 前面的空白文本节点（但不移除 BR 标签，因为 BR 是用户输入的换行）
                 let prevSibling = span.previousSibling;
                 while (prevSibling) {
-                    if (prevSibling.nodeType === Node.ELEMENT_NODE && prevSibling.tagName === 'BR') {
-                        const toRemove = prevSibling;
-                        prevSibling = prevSibling.previousSibling;
-                        toRemove.remove();
-                    } else if (prevSibling.nodeType === Node.TEXT_NODE) {
+                    if (prevSibling.nodeType === Node.TEXT_NODE) {
                         // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = prevSibling.textContent;
                         if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
@@ -4441,14 +4608,10 @@ var app = new Vue({
                     }
                 }
                 
-                // 清理 span 后面的连续 <br> 标签和空白文本节点
+                // 清理 span 后面的空白文本节点（但不移除 BR 标签，因为 BR 是用户输入的换行）
                 let nextSibling = span.nextSibling;
                 while (nextSibling) {
-                    if (nextSibling.nodeType === Node.ELEMENT_NODE && nextSibling.tagName === 'BR') {
-                        const toRemove = nextSibling;
-                        nextSibling = nextSibling.nextSibling;
-                        toRemove.remove();
-                    } else if (nextSibling.nodeType === Node.TEXT_NODE) {
+                    if (nextSibling.nodeType === Node.TEXT_NODE) {
                         // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = nextSibling.textContent;
                         if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
@@ -4458,7 +4621,7 @@ var app = new Vue({
                             toRemove.remove();
                         } else {
                             // 有非空白内容，但可能开头有空白字符，需要清理开头的空白
-                            // 移除开头的所有空白字符（包括换行符）
+                            // 移除开头的所有空白字符（包括换行符），但保留文本内容
                             const trimmed = textContent.replace(/^[\s\n\r\t\u00A0]+/, '');
                             if (trimmed !== textContent) {
                                 if (trimmed) {
@@ -4474,7 +4637,8 @@ var app = new Vue({
                             break;
                         }
                     } else {
-                        // 其他类型的节点，停止清理
+                        // 遇到非文本节点（包括 BR 标签），停止清理
+                        // BR 标签是用户输入的换行，不应该被移除
                         break;
                     }
                 }
@@ -4487,13 +4651,10 @@ var app = new Vue({
             console.log('[cleanupHighlightBrTags] Cleanup completed. Editor innerHTML (first 300 chars):', editor.innerHTML.substring(0, 300));
         },
         
-        // 应用高亮（保存光标位置）
-        applyHighlight() {
+        // 应用高亮（使用指定的光标位置，用于粘贴等操作）
+        applyHighlightWithCaretPos(expectedCaretPos) {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
-            
-            // 检查编辑器是否有焦点
-            const hasFocus = document.activeElement === editor;
             
             // 获取当前文本
             const text = this.getEditorText();
@@ -4502,34 +4663,80 @@ var app = new Vue({
             // 生成高亮HTML
             const html = this.generateHighlightHTML(text);
             
-            // 只有在编辑器有焦点时才保存和恢复光标
+            // 更新HTML
+            editor.innerHTML = html;
+            
+            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            requestAnimationFrame(() => {
+                // 清理多余的 <br> 标签和空白文本节点
+                this.cleanupHighlightBrTags(editor);
+                
+                // 使用 $nextTick 确保清理完成后再恢复光标
+                this.$nextTick(() => {
+                    // 使用 innerText 来计算文本长度，确保与 saveCaretPosition 一致
+                    const currentText = editor.innerText || '';
+                    const currentTextLength = currentText.length;
+                    const targetPos = Math.min(expectedCaretPos, currentTextLength);
+                    console.log('[applyHighlightWithCaretPos] Restoring caret position:', targetPos, 'expected:', expectedCaretPos, 'current text length:', currentTextLength);
+                    this.restoreCaretPosition(targetPos);
+                });
+            });
+            
+            // 触发数据更新
+            this.promptChangeHandel(text, 'content');
+        },
+        
+        // 应用高亮（保存光标位置）
+        applyHighlight() {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 检查编辑器是否有焦点
+            const hasFocus = document.activeElement === editor;
+            
+            // 获取当前文本（在保存光标位置之前获取，确保文本一致性）
+            const text = this.getEditorText();
+            this.content = text;
+            
+            // 只有在编辑器有焦点时才保存光标位置
+            // 使用基于文本内容的方法，而不是 DOM 遍历，确保与恢复时一致
+            let caretPos = 0;
             if (hasFocus) {
-                // 保存当前光标位置
-                const caretPos = this.saveCaretPosition();
+                const sel = window.getSelection();
+                if (sel.rangeCount > 0) {
+                    const range = sel.getRangeAt(0);
+                    // 创建一个从编辑器开始到光标位置的 range
+                    const preCaretRange = range.cloneRange();
+                    preCaretRange.selectNodeContents(editor);
+                    preCaretRange.setEnd(range.startContainer, range.startOffset);
+                    // 使用 textContent 来计算位置（不包括 BR 标签，BR 标签会在遍历时单独计算）
+                    // 但我们需要考虑 BR 标签，所以使用遍历 DOM 的方法
+                    caretPos = this.saveCaretPosition();
+                }
+                console.log('[applyHighlight] Saved caret position:', caretPos, 'text length:', text.length);
+            }
+            
+            // 生成高亮HTML
+            const html = this.generateHighlightHTML(text);
+            
+            // 更新HTML
+            editor.innerHTML = html;
+            
+            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            requestAnimationFrame(() => {
+                // 清理多余的 <br> 标签和空白文本节点
+                this.cleanupHighlightBrTags(editor);
                 
-                // 更新HTML
-                editor.innerHTML = html;
-                
-                // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理
-                requestAnimationFrame(() => {
-                    // 清理多余的 <br> 标签和空白文本节点
-                    this.cleanupHighlightBrTags(editor);
-                    
-                    // 恢复光标位置
+                // 只有在编辑器有焦点时才恢复光标位置
+                if (hasFocus && caretPos > 0) {
+                    // 使用 $nextTick 确保清理完成后再恢复光标
                     this.$nextTick(() => {
+                        // 恢复光标位置（使用相同的遍历逻辑）
+                        console.log('[applyHighlight] Restoring caret position:', caretPos);
                         this.restoreCaretPosition(caretPos);
                     });
-                });
-            } else {
-                // 编辑器没有焦点，直接更新HTML（不恢复光标）
-                editor.innerHTML = html;
-                
-                // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理
-                requestAnimationFrame(() => {
-                    // 清理多余的 <br> 标签和空白文本节点
-                    this.cleanupHighlightBrTags(editor);
-                });
-            }
+                }
+            });
             
             // 触发数据更新
             this.promptChangeHandel(text, 'content');
