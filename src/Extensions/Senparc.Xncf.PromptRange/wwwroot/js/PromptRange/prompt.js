@@ -4248,12 +4248,17 @@ var app = new Vue({
                 
                 // 添加匹配前的文本（HTML转义并处理换行）
                 const beforeText = text.substring(lastIndex, offset);
-                // 处理换行：将换行符替换为 <br>，但确保 span 前后没有多余的空白
-                const processedBeforeText = beforeText
+                // 处理换行：将换行符替换为 <br>
+                // 移除 span 标签前的尾随空白字符（空格、制表符等），但保留换行符转换为 <br>
+                let processedBeforeText = beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/\n/g, '<br>');
+                    .replace(/>/g, '&gt;');
+                
+                // 移除尾随空白字符（但保留换行符，因为需要转换为 <br>）
+                processedBeforeText = processedBeforeText.replace(/[ \t]+$/, '');
+                // 将换行符替换为 <br>
+                processedBeforeText = processedBeforeText.replace(/\n/g, '<br>');
                 result += processedBeforeText;
                 
                 // 判断变量是否已定义
@@ -4267,7 +4272,7 @@ var app = new Vue({
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
-                // 确保 span 标签前后没有空白字符，直接拼接
+                // 确保 span 标签前后没有空白字符，直接拼接（不在 HTML 字符串中添加换行或空格）
                 result += `<span class="${className}">${escapedMatch}</span>`;
                 
                 lastIndex = offset + fullMatch.length;
@@ -4277,17 +4282,27 @@ var app = new Vue({
             
             // 添加剩余文本（HTML转义并处理换行）
             const remainingText = text.substring(lastIndex);
-            result += remainingText
+            // 如果剩余文本开头有空白字符（空格、制表符等），先移除，避免在 span 后面产生空白
+            // 但保留换行符，因为需要转换为 <br>
+            let processedRemainingText = remainingText
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/\n/g, '<br>');
+                .replace(/>/g, '&gt;');
             
-            // 清理 span 标签前后的空白字符（包括换行符、空格、制表符等）
+            // 移除开头的空白字符（但保留换行符）
+            processedRemainingText = processedRemainingText.replace(/^[ \t]+/, '');
+            // 将换行符替换为 <br>
+            processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
+            result += processedRemainingText;
+            
+            // 清理 span 标签前后的空白字符和 <br> 标签
             // 这可以防止 white-space: pre-wrap 导致 span 单独成行
-            // 注意：只清理紧邻 span 标签的空白，不影响其他内容
-            result = result.replace(/([ \t\n\r]+)(<span class="var-highlight[^"]*">)/g, '$2');
-            result = result.replace(/(<\/span>)([ \t\n\r]+)/g, '$1');
+            // 1. 清理 span 标签前的空白字符和 <br>
+            result = result.replace(/([ \t\n\r]+|<br\s*\/?>)(<span class="var-highlight[^"]*">)/gi, '$2');
+            // 2. 清理 span 标签后的空白字符和 <br>
+            result = result.replace(/(<\/span>)([ \t\n\r]+|<br\s*\/?>)/gi, '$1');
+            // 3. 清理连续的 <br> 标签（防止多个 <br> 紧跟在 span 后面）
+            result = result.replace(/(<\/span>)(<br\s*\/?>)+/gi, '$1');
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
@@ -4375,12 +4390,16 @@ var app = new Vue({
             }, 2000);
         },
         
-        // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点
+        // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点，并规范化 DOM
         cleanupHighlightBrTags(editor) {
             if (!editor) return;
             
-            // 查找所有 var-highlight span 标签
-            const highlightSpans = editor.querySelectorAll('.var-highlight');
+            console.log('[cleanupHighlightBrTags] Starting cleanup...');
+            
+            // 查找所有 var-highlight span 标签（使用 Array.from 创建副本，避免动态查询问题）
+            const highlightSpans = Array.from(editor.querySelectorAll('.var-highlight'));
+            
+            console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
             
             highlightSpans.forEach(span => {
                 // 清理 span 前面的连续 <br> 标签和空白文本节点
@@ -4393,13 +4412,26 @@ var app = new Vue({
                     } else if (prevSibling.nodeType === Node.TEXT_NODE) {
                         // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = prevSibling.textContent;
-                        if (!textContent || /^[\s\n\r\t]*$/.test(textContent)) {
-                            // 只包含空白字符，移除
+                        if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
+                            // 只包含空白字符（包括不间断空格），移除
                             const toRemove = prevSibling;
                             prevSibling = prevSibling.previousSibling;
                             toRemove.remove();
                         } else {
-                            // 有非空白内容，停止清理
+                            // 有非空白内容，但可能末尾有空白字符，需要清理末尾的空白
+                            // 移除末尾的所有空白字符（包括换行符）
+                            const trimmed = textContent.replace(/[\s\n\r\t\u00A0]+$/, '');
+                            if (trimmed !== textContent) {
+                                if (trimmed) {
+                                    prevSibling.textContent = trimmed;
+                                } else {
+                                    // 如果全部是空白，移除节点
+                                    const toRemove = prevSibling;
+                                    prevSibling = prevSibling.previousSibling;
+                                    toRemove.remove();
+                                    continue;
+                                }
+                            }
                             break;
                         }
                     } else {
@@ -4418,13 +4450,26 @@ var app = new Vue({
                     } else if (nextSibling.nodeType === Node.TEXT_NODE) {
                         // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = nextSibling.textContent;
-                        if (!textContent || /^[\s\n\r\t]*$/.test(textContent)) {
-                            // 只包含空白字符，移除
+                        if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
+                            // 只包含空白字符（包括不间断空格），移除
                             const toRemove = nextSibling;
                             nextSibling = nextSibling.nextSibling;
                             toRemove.remove();
                         } else {
-                            // 有非空白内容，停止清理
+                            // 有非空白内容，但可能开头有空白字符，需要清理开头的空白
+                            // 移除开头的所有空白字符（包括换行符）
+                            const trimmed = textContent.replace(/^[\s\n\r\t\u00A0]+/, '');
+                            if (trimmed !== textContent) {
+                                if (trimmed) {
+                                    nextSibling.textContent = trimmed;
+                                } else {
+                                    // 如果全部是空白，移除节点
+                                    const toRemove = nextSibling;
+                                    nextSibling = nextSibling.nextSibling;
+                                    toRemove.remove();
+                                    continue;
+                                }
+                            }
                             break;
                         }
                     } else {
@@ -4433,6 +4478,12 @@ var app = new Vue({
                     }
                 }
             });
+            
+            // 规范化 DOM：合并相邻的文本节点
+            // 这可以确保 span 标签紧贴文本节点，没有中间的空白文本节点
+            editor.normalize();
+            
+            console.log('[cleanupHighlightBrTags] Cleanup completed. Editor innerHTML (first 300 chars):', editor.innerHTML.substring(0, 300));
         },
         
         // 应用高亮（保存光标位置）
@@ -4458,19 +4509,25 @@ var app = new Vue({
                 // 更新HTML
                 editor.innerHTML = html;
                 
-                // 清理多余的 <br> 标签
-                this.cleanupHighlightBrTags(editor);
-                
-                // 恢复光标位置
-                this.$nextTick(() => {
-                    this.restoreCaretPosition(caretPos);
+                // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理
+                requestAnimationFrame(() => {
+                    // 清理多余的 <br> 标签和空白文本节点
+                    this.cleanupHighlightBrTags(editor);
+                    
+                    // 恢复光标位置
+                    this.$nextTick(() => {
+                        this.restoreCaretPosition(caretPos);
+                    });
                 });
             } else {
                 // 编辑器没有焦点，直接更新HTML（不恢复光标）
                 editor.innerHTML = html;
                 
-                // 清理多余的 <br> 标签
-                this.cleanupHighlightBrTags(editor);
+                // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理
+                requestAnimationFrame(() => {
+                    // 清理多余的 <br> 标签和空白文本节点
+                    this.cleanupHighlightBrTags(editor);
+                });
             }
             
             // 触发数据更新

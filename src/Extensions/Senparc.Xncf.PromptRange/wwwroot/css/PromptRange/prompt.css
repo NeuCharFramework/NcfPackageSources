@@ -794,7 +794,8 @@
             margin: 0 !important;
             border: none !important;
             line-height: inherit !important;
-            white-space: nowrap !important;
+            /* 使用 normal 而不是 nowrap，这样可以完全覆盖父元素的 pre-wrap，忽略空白字符 */
+            white-space: normal !important;
             vertical-align: baseline !important;
             float: none !important;
             clear: none !important;
@@ -806,6 +807,18 @@
             /* 确保 span 标签前后没有空白导致的换行 */
             word-spacing: 0 !important;
             letter-spacing: normal !important;
+            /* 防止因为空白字符导致的换行 */
+            unicode-bidi: embed !important;
+            /* 确保内容不会换行 */
+            word-break: keep-all !important;
+            overflow-wrap: normal !important;
+        }
+        
+        /* 确保 var-highlight span 前后的空白文本节点不会导致换行 */
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight::before,
+        .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight::after {
+            content: none !important;
+            display: none !important;
         }
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight.defined {
