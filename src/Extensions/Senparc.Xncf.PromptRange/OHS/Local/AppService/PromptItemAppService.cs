@@ -395,7 +395,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     // TODO: 这里需要根据实际需求实现对话逻辑
                     // 1. 根据 promptItemId 获取 PromptItem
-                    // 2. 使用 PromptItem 的 PromptContent 作为 SystemMessage
+                    // 2. 使用 PromptItem 的 Content 作为 SystemMessage
                     // 3. 调用 AI 服务进行对话
                     // 4. 返回 AI 的回复
                     
@@ -408,7 +408,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     
                     // TODO: 实现实际的对话逻辑
                     // 这里只是示例，需要根据实际的 AI 服务调用方式来实现
-                    var systemMessage = promptItem.PromptContent ?? "";
+                    var systemMessage = promptItem.Content ?? "";
                     
                     // 模拟返回（实际应该调用 AI 服务）
                     return $"收到消息: {message}\n\n当前使用的 SystemMessage (Prompt):\n{systemMessage}\n\n[这是硬编码的返回，请根据实际需求实现对话逻辑]";
