@@ -4507,26 +4507,83 @@ var app = new Vue({
             // 清除之前的防抖定时器
             if (this._highlightTimer) clearTimeout(this._highlightTimer);
             
-            // 在粘贴前保存光标位置和选中的文本长度
+            // 在粘贴前保存光标位置（使用与 saveCaretPosition 相同的方法）
             const sel = window.getSelection();
             let pasteStartPos = 0;
-            let selectedTextLength = 0;
             
             if (sel.rangeCount > 0) {
+                // 使用与 saveCaretPosition 相同的遍历方法来计算位置
                 const range = sel.getRangeAt(0);
-                // 保存粘贴开始位置
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(editor);
-                preCaretRange.setEnd(range.startContainer, range.startOffset);
-                pasteStartPos = preCaretRange.toString().length;
+                const targetContainer = range.startContainer;
+                const targetOffset = range.startOffset;
                 
-                // 计算选中的文本长度（粘贴会替换选中的文本）
-                selectedTextLength = range.toString().length;
+                let charCount = 0;
+                let found = false;
+                
+                // 使用与 saveCaretPosition 完全相同的遍历逻辑
+                const walkNodes = (node) => {
+                    if (found) return;
+                    
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        if (node === targetContainer) {
+                            charCount += targetOffset;
+                            found = true;
+                            return;
+                        }
+                        const nodeLength = node.textContent ? node.textContent.length : 0;
+                        charCount += nodeLength;
+                    } else if (node.nodeName === 'BR') {
+                        if (targetContainer.nodeType === Node.ELEMENT_NODE && 
+                            targetContainer === node.parentNode &&
+                            targetOffset > 0) {
+                            const brIndex = Array.from(targetContainer.childNodes).indexOf(node);
+                            if (targetOffset === brIndex + 1) {
+                                charCount += 1;
+                                found = true;
+                                return;
+                            }
+                        }
+                        charCount += 1;
+                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                        if (node === targetContainer && targetOffset > 0) {
+                            for (let i = 0; i < targetOffset && i < node.childNodes.length; i++) {
+                                const childNode = node.childNodes[i];
+                                const countChildNodes = (child) => {
+                                    if (child.nodeType === Node.TEXT_NODE) {
+                                        return child.textContent ? child.textContent.length : 0;
+                                    } else if (child.nodeName === 'BR') {
+                                        return 1;
+                                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                                        let count = 0;
+                                        for (let j = 0; j < child.childNodes.length; j++) {
+                                            count += countChildNodes(child.childNodes[j]);
+                                        }
+                                        return count;
+                                    }
+                                    return 0;
+                                };
+                                charCount += countChildNodes(childNode);
+                            }
+                            found = true;
+                            return;
+                        }
+                        for (let i = 0; i < node.childNodes.length; i++) {
+                            walkNodes(node.childNodes[i]);
+                            if (found) return;
+                        }
+                    }
+                };
+                
+                walkNodes(editor);
+                pasteStartPos = charCount;
+                console.log('[handlePaste] Saved paste start position:', pasteStartPos);
             }
             
             // 获取粘贴的纯文本内容
             const pasteData = e.clipboardData ? e.clipboardData.getData('text/plain') : '';
             const pasteTextLength = pasteData.length;
+            
+            console.log('[handlePaste] Paste data length:', pasteTextLength, 'pasteStartPos:', pasteStartPos);
             
             // 等待粘贴内容插入完成后再处理
             // 使用 requestAnimationFrame 确保粘贴操作完全完成
@@ -4536,6 +4593,8 @@ var app = new Vue({
                     
                     // 计算粘贴后的光标位置：粘贴开始位置 + 粘贴文本长度
                     const newCaretPos = pasteStartPos + pasteTextLength;
+                    
+                    console.log('[handlePaste] Calculated new caret position:', newCaretPos);
                     
                     const text = this.getEditorText();
                     this.content = text;
