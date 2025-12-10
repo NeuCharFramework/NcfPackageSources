@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
 @{
     ViewData["Title"] = "PromptRange Prompt";
@@ -218,6 +218,7 @@
                                 <div class="titleContent">输入Prompt</div>
                             </div>
                             <div class="titleRow_rightBox">
+                                <el-button type="success" size="mini" icon="el-icon-chat-line-round" @@click="openChatDialog">对话测试</el-button>
                                 <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
                                 <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
                                 <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box2')"></i>
@@ -1143,6 +1144,63 @@
         
         <div slot="footer" class="dialog-footer">
             <el-button @@click="compareDialogVisible = false">关闭</el-button>
+        </div>
+    </el-dialog>
+    
+    @* 对话测试 dialog *@
+    <el-dialog title="对话测试" 
+               :visible.sync="chatDialogVisible" 
+               width="70%" 
+               top="5vh"
+               class="chat-test-dialog"
+               :close-on-click-modal="false"
+               @@close="closeChatDialog">
+        <div class="chat-container">
+            @* 消息列表区域 *@
+            <div class="chat-messages" ref="chatMessagesContainer">
+                <div v-for="(msg, index) in chatMessages" :key="index" :class="['chat-message', msg.role === 'user' ? 'user-message' : 'assistant-message']">
+                    <div class="message-role">{{ msg.role === 'user' ? '用户' : '助手' }}</div>
+                    <div class="message-content" v-html="msg.content"></div>
+                    <div class="message-time">{{ msg.timestamp }}</div>
+                </div>
+                <div v-if="chatLoading" class="chat-message assistant-message">
+                    <div class="message-role">助手</div>
+                    <div class="message-content">
+                        <i class="el-icon-loading"></i> 正在思考中...
+                    </div>
+                </div>
+            </div>
+            
+            @* 输入区域 *@
+            <div class="chat-input-area">
+                <el-input 
+                    v-model="chatInputMessage" 
+                    type="textarea" 
+                    :rows="3"
+                    placeholder="请输入您的消息..."
+                    @@keydown.ctrl.enter="sendChatMessage"
+                    :disabled="chatLoading || !promptid">
+                </el-input>
+                <div class="chat-input-actions">
+                    <span class="chat-tip">按 Ctrl+Enter 发送</span>
+                    <el-button 
+                        type="primary" 
+                        size="small" 
+                        @@click="sendChatMessage"
+                        :loading="chatLoading"
+                        :disabled="!chatInputMessage.trim() || !promptid">
+                        发送
+                    </el-button>
+                    <el-button 
+                        size="small" 
+                        @@click="clearChatMessages">
+                        清空对话
+                    </el-button>
+                </div>
+            </div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="chatDialogVisible = false">关闭</el-button>
         </div>
     </el-dialog>
 </div>

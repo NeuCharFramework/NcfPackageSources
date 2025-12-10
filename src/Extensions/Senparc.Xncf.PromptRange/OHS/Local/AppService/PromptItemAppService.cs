@@ -380,6 +380,42 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         //     return await BuildZipStream(rangePath);
         // }
 
+        /// <summary>
+        /// 对话测试接口 - 使用当前Prompt作为SystemMessage进行对话
+        /// </summary>
+        /// <param name="promptItemId">Prompt项ID</param>
+        /// <param name="message">用户消息</param>
+        /// <param name="messages">历史消息列表（可选）</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> ChatTest(int promptItemId, string message, List<object> messages = null)
+        {
+            return await this.GetResponseAsync<string>(
+                async (response, logger) =>
+                {
+                    // TODO: 这里需要根据实际需求实现对话逻辑
+                    // 1. 根据 promptItemId 获取 PromptItem
+                    // 2. 使用 PromptItem 的 PromptContent 作为 SystemMessage
+                    // 3. 调用 AI 服务进行对话
+                    // 4. 返回 AI 的回复
+                    
+                    // Hard code 示例返回
+                    var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
+                    if (promptItem == null)
+                    {
+                        throw new Exception($"未找到 ID 为 {promptItemId} 的 PromptItem");
+                    }
+                    
+                    // TODO: 实现实际的对话逻辑
+                    // 这里只是示例，需要根据实际的 AI 服务调用方式来实现
+                    var systemMessage = promptItem.PromptContent ?? "";
+                    
+                    // 模拟返回（实际应该调用 AI 服务）
+                    return $"收到消息: {message}\n\n当前使用的 SystemMessage (Prompt):\n{systemMessage}\n\n[这是硬编码的返回，请根据实际需求实现对话逻辑]";
+                }
+            );
+        }
+
         private static async Task<FileContentResult> BuildZipStreamAsync(string dirPath)
         {
             try

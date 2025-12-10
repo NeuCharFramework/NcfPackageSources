@@ -266,6 +266,11 @@ var app = new Vue({
             dialogVisible: false,
             targetlaneName: '',
             dailogpromptOptlist: [],
+            // 对话测试相关
+            chatDialogVisible: false, // 对话测试弹窗显隐
+            chatMessages: [], // 对话消息列表
+            chatInputMessage: '', // 当前输入的消息
+            chatLoading: false, // 是否正在发送消息
             box1Hidden: false,
             box2Hidden: false,
             box3Hidden: false,
@@ -4421,6 +4426,151 @@ var app = new Vue({
             if (!this.modelOpt || !id) return '未知模型';
             const model = this.modelOpt.find(item => item.value === id);
             return model ? model.label : '未知模型';
+        },
+        
+        // 对话测试相关方法
+        // 打开对话测试弹窗
+        openChatDialog() {
+            if (!this.promptid) {
+                this.$message({
+                    message: '请先选择一个靶道',
+                    type: 'warning',
+                    duration: 3000
+                });
+                return;
+            }
+            this.chatDialogVisible = true;
+            // 初始化对话消息列表
+            if (this.chatMessages.length === 0) {
+                this.chatMessages = [{
+                    role: 'assistant',
+                    content: '您好！我是AI助手，使用当前Prompt作为系统消息。您可以开始与我对话了。',
+                    timestamp: this.formatChatTime(new Date())
+                }];
+            }
+            // 确保滚动到底部
+            this.$nextTick(() => {
+                this.scrollChatToBottom();
+            });
+        },
+        
+        // 关闭对话测试弹窗
+        closeChatDialog() {
+            this.chatDialogVisible = false;
+        },
+        
+        // 发送消息
+        async sendChatMessage() {
+            if (!this.chatInputMessage.trim() || this.chatLoading) {
+                return;
+            }
+            
+            if (!this.promptid) {
+                this.$message({
+                    message: '请先选择一个靶道',
+                    type: 'warning',
+                    duration: 3000
+                });
+                return;
+            }
+            
+            const userMessage = this.chatInputMessage.trim();
+            // 添加用户消息到列表
+            this.chatMessages.push({
+                role: 'user',
+                content: userMessage,
+                timestamp: this.formatChatTime(new Date())
+            });
+            
+            // 清空输入框
+            this.chatInputMessage = '';
+            
+            // 滚动到底部
+            this.$nextTick(() => {
+                this.scrollChatToBottom();
+            });
+            
+            // 设置加载状态
+            this.chatLoading = true;
+            
+            try {
+                // 调用API发送消息
+                // 准备消息历史（不包含刚添加的用户消息，因为API会单独处理）
+                const historyMessages = this.chatMessages.slice(0, -1).map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                }));
+                
+                const res = await servicePR.post(
+                    `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.ChatTest`,
+                    {
+                        promptItemId: this.promptid,
+                        message: userMessage,
+                        messages: historyMessages
+                    }
+                );
+                
+                if (res.data.success && res.data.data) {
+                    // 添加助手回复到列表
+                    this.chatMessages.push({
+                        role: 'assistant',
+                        content: res.data.data.content || res.data.data,
+                        timestamp: this.formatChatTime(new Date())
+                    });
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '发送消息失败',
+                        type: 'error',
+                        duration: 5000
+                    });
+                }
+            } catch (error) {
+                console.error('发送消息失败:', error);
+                this.$message({
+                    message: '发送消息失败，请稍后重试',
+                    type: 'error',
+                    duration: 5000
+                });
+            } finally {
+                this.chatLoading = false;
+                // 滚动到底部
+                this.$nextTick(() => {
+                    this.scrollChatToBottom();
+                });
+            }
+        },
+        
+        // 清空对话消息
+        clearChatMessages() {
+            this.$confirm('确定要清空所有对话记录吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.chatMessages = [{
+                    role: 'assistant',
+                    content: '对话已清空，您可以重新开始对话。',
+                    timestamp: this.formatChatTime(new Date())
+                }];
+            }).catch(() => {
+                // 取消操作
+            });
+        },
+        
+        // 滚动对话到底部
+        scrollChatToBottom() {
+            const container = this.$refs.chatMessagesContainer;
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        },
+        
+        // 格式化聊天时间
+        formatChatTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
         }
     }
 });
