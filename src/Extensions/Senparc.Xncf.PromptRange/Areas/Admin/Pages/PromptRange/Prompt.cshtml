@@ -231,6 +231,7 @@
                              ref="promptEditor"
                              @@input="handleEditorInput"
                              @@paste="handlePaste"
+                             @@keydown="handleKeyDown"
                              @@blur="applyHighlight"
                              @@compositionstart="isComposing = true"
                              @@compositionend="isComposing = false"

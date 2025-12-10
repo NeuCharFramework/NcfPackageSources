@@ -4605,10 +4605,54 @@ var app = new Vue({
             });
         },
         
+        // 处理键盘按键事件（特别是回车键）
+        handleKeyDown(e) {
+            // 如果是回车键，需要特殊处理
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                const editor = this.$refs.promptEditor;
+                if (!editor) return;
+                
+                // 标记正在输入回车
+                this._isEntering = true;
+                
+                // 清除之前的防抖定时器
+                if (this._highlightTimer) clearTimeout(this._highlightTimer);
+                
+                // 在回车键插入 BR 标签之前，保存当前光标位置
+                const sel = window.getSelection();
+                let enterStartPos = 0;
+                
+                if (sel.rangeCount > 0) {
+                    // 使用与 saveCaretPosition 相同的方法计算位置
+                    enterStartPos = this.saveCaretPosition();
+                    console.log('[handleKeyDown] Enter key pressed, saved position before BR insertion:', enterStartPos);
+                }
+                
+                // 等待回车键插入 BR 标签完成后再处理
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        this._isEntering = false;
+                        
+                        // 回车后，光标应该在 BR 标签之后，位置应该是 enterStartPos + 1
+                        const newCaretPos = enterStartPos + 1;
+                        
+                        console.log('[handleKeyDown] After Enter, calculated new caret position:', newCaretPos);
+                        
+                        const text = this.getEditorText();
+                        this.content = text;
+                        
+                        // 使用 applyHighlightWithCaretPos 来应用高亮并恢复光标位置
+                        this.applyHighlightWithCaretPos(newCaretPos);
+                    }, 10);
+                });
+            }
+        },
+        
         // 用户输入时（立即更新高亮，使用短防抖优化性能）
         handleEditorInput(e) {
             if (this.isComposing) return;  // IME输入中不处理
             if (this._isPasting) return;   // 粘贴操作中不处理，由 handlePaste 处理
+            if (this._isEntering) return;  // 回车操作中不处理，由 handleKeyDown 处理
             
             const text = this.getEditorText();
             this.content = text;
