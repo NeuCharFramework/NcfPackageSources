@@ -4295,14 +4295,13 @@ var app = new Vue({
             processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
             result += processedRemainingText;
             
-            // 清理 span 标签前后的空白字符和 <br> 标签
+            // 清理 span 标签前后的空白字符（但不移除 BR 标签，因为 BR 是用户输入的换行）
             // 这可以防止 white-space: pre-wrap 导致 span 单独成行
-            // 1. 清理 span 标签前的空白字符和 <br>
-            result = result.replace(/([ \t\n\r]+|<br\s*\/?>)(<span class="var-highlight[^"]*">)/gi, '$2');
-            // 2. 清理 span 标签后的空白字符和 <br>
-            result = result.replace(/(<\/span>)([ \t\n\r]+|<br\s*\/?>)/gi, '$1');
-            // 3. 清理连续的 <br> 标签（防止多个 <br> 紧跟在 span 后面）
-            result = result.replace(/(<\/span>)(<br\s*\/?>)+/gi, '$1');
+            // 1. 清理 span 标签前的空白字符（空格、制表符等），但保留 BR 标签
+            result = result.replace(/([ \t]+)(<span class="var-highlight[^"]*">)/gi, '$2');
+            // 2. 清理 span 标签后的空白字符（空格、制表符等），但保留 BR 标签
+            result = result.replace(/(<\/span>)([ \t]+)/gi, '$1');
+            // 注意：不再移除 BR 标签，因为 BR 是用户输入的换行，应该保留
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
