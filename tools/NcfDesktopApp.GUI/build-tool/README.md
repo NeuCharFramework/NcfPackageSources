@@ -274,9 +274,15 @@ macos-app/
 
 9. **应用程序包签名问题**
    ```bash
-   # 手动重新签名
+   # 手动重新签名（ad-hoc 签名）
    codesign --force --deep --sign - "macos-app/NCF Desktop-Universal.app"
+   
+   # 使用开发者证书签名（需要 Apple 开发者账号）
+   codesign --force --deep --sign "Developer ID Application: Your Name" \
+       "macos-app/NCF Desktop-Universal.app"
    ```
+   
+   **详细配置指南**：请参考 [Apple 开发者账号配置指南](./APPLE_DEVELOPER_SETUP.md)
 
 ### 安全警告
 
@@ -346,6 +352,8 @@ macos-app/
 # 查看所有选项
 ./build-tool/create-macos-app.sh --help
 ```
+
+**📘 需要配置 Apple 开发者账号？** 请查看 [Apple 开发者账号配置指南](./APPLE_DEVELOPER_SETUP.md)
 
 ### macOS 应用程序包特性
 

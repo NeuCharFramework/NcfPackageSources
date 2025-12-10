@@ -43,7 +43,7 @@
                         BorderThickness="1" 
                         CornerRadius="4" 
                         Margin="10,0">
-                    <Grid ColumnDefinitions="*,Auto">
+                    <Grid ColumnDefinitions="*,Auto,Auto">
                         <TextBox Name="UrlTextBox" 
                                  Grid.Column="0"
                                  Text="{Binding SiteUrl, Mode=OneWay}" 
@@ -70,6 +70,18 @@
                                 CornerRadius="3"
                                 ToolTip.Tip="打开"
                                 Click="GoButton_Click"/>
+                        <Button Name="OpenExternalButton"
+                                Grid.Column="2"
+                                Content="🌐"
+                                Width="30"
+                                Height="26"
+                                Margin="0,2,2,2"
+                                FontSize="14"
+                                Background="#28A745"
+                                Foreground="White"
+                                CornerRadius="3"
+                                ToolTip.Tip="在外部浏览器中打开"
+                                Command="{Binding OpenInExternalBrowserCommand}"/>
                     </Grid>
                 </Border>
                 
@@ -134,9 +146,10 @@
                 </Border>
                 
                 <!-- 内嵌浏览器控件 -->
+                <!-- 🔧 方案1优化：移除 IsVisible 绑定，避免标签切换时 WebView 被隐藏 -->
+                <!-- WebView 一旦初始化完成就保持可见，即使 IsBrowserReady 变化也不隐藏 -->
                 <controls:EmbeddedWebView Name="WebViewControl"
-                                       Source="{Binding SiteUrl}"
-                                       IsVisible="{Binding IsBrowserReady}"/>
+                                       Source="{Binding SiteUrl}"/>
                 
                 <!-- 错误状态显示 -->
                 <Border Name="ErrorOverlay" 

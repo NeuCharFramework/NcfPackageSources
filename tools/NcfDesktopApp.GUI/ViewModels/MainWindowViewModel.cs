@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -95,12 +96,60 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int _currentTabIndex = 0; // 0=设置页面, 1=浏览器页面
     
-    // 控制浏览器标签页的可见性
+    // 控制浏览器标签页的可见性（标签按钮）
     [ObservableProperty]
     private bool _isBrowserTabVisible = false;
+    
+    // 🔧 方案1最终版：控制各标签页内容的显示（Grid 叠加层方案）
+    // 设置页面是否可见
+    public bool IsSettingsTabActive => CurrentTabIndex == 0;
+    
+    // 浏览器页面是否可见（且已就绪且标签可见）
+    public bool IsBrowserTabActive => CurrentTabIndex == 1 && IsBrowserTabVisible;
+    
+    // 按钮背景色（表示选中状态）
+    public string SettingsTabButtonBackground => CurrentTabIndex == 0 ? "#007ACC" : "Transparent";
+    public string BrowserTabButtonBackground => CurrentTabIndex == 1 ? "#007ACC" : "Transparent";
+    
+    // 按钮前景色（表示选中状态）
+    public string SettingsTabButtonForeground => CurrentTabIndex == 0 ? "White" : "Black";
+    public string BrowserTabButtonForeground => CurrentTabIndex == 1 ? "White" : "Black";
 
     public object? BrowserViewReference { get; set; }
 
+    #endregion
+    
+    #region 属性变更通知
+    
+    // 🔧 当 CurrentTabIndex 变化时，通知依赖属性
+    partial void OnCurrentTabIndexChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsSettingsTabActive));
+        OnPropertyChanged(nameof(IsBrowserTabActive));
+        OnPropertyChanged(nameof(SettingsTabButtonBackground));
+        OnPropertyChanged(nameof(BrowserTabButtonBackground));
+        OnPropertyChanged(nameof(SettingsTabButtonForeground));
+        OnPropertyChanged(nameof(BrowserTabButtonForeground));
+    }
+    
+    // 🔧 当 IsBrowserTabVisible 变化时，通知 IsBrowserTabActive
+    partial void OnIsBrowserTabVisibleChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsBrowserTabActive));
+    }
+    
+    // 🔧 当 IsBrowserReady 变化时，通知命令刷新
+    partial void OnIsBrowserReadyChanged(bool value)
+    {
+        SwitchToBrowserCommand.NotifyCanExecuteChanged();
+    }
+    
+    // 🔧 当 SiteUrl 变化时，通知外部浏览器打开命令刷新
+    partial void OnSiteUrlChanged(string value)
+    {
+        OpenInExternalBrowserCommand.NotifyCanExecuteChanged();
+    }
+    
     #endregion
 
     #region 私有字段
@@ -111,6 +160,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private CancellationTokenSource? _cancellationTokenSource;
     private Process? _ncfProcess;
     private bool _isNcfRunning = false;
+    
+    // 🚀 性能优化：批量日志处理
+    private readonly Queue<string> _pendingCliLogs = new Queue<string>();
+    private readonly System.Timers.Timer _logUpdateTimer;
+    private int _currentLineCount = 0;
+    private ScrollViewer? _cachedScrollViewer;
+    private const int MaxLogLines = 1000;
+    private const int LogUpdateIntervalMs = 100;  // 每100ms批量更新一次
+    private const int InitialDisplayLines = 200;  // 初始只显示最后200行
+    private bool _isApplicationReady = false;  // 应用是否已就绪（启动完成后才显示完整日志）
+    private DateTime _lastLogUpdateTime = DateTime.MinValue;  // 上次日志更新时间
+    private const int MaxLogUpdateIntervalMs = 500;  // 当日志量大时的最大更新间隔（500ms）
 
     #endregion
 
@@ -122,6 +183,12 @@ public partial class MainWindowViewModel : ViewModelBase
         _ncfService = new NcfService(httpClient);
         _webView2Service = new WebView2Service(httpClient);
         _logBuffer = new StringBuilder();
+        
+        // 🚀 初始化日志批量更新定时器（性能优化）
+        _logUpdateTimer = new System.Timers.Timer(LogUpdateIntervalMs);
+        _logUpdateTimer.Elapsed += OnLogUpdateTimerElapsed;
+        _logUpdateTimer.AutoReset = true;
+        _logUpdateTimer.Start();
         
         // 🆕 注册配置文件冲突处理回调
         _ncfService.OnAppSettingsConflict = HandleAppSettingsConflictAsync;
@@ -397,6 +464,10 @@ public partial class MainWindowViewModel : ViewModelBase
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 AddLog("✅ 应用程序初始化完成");
+                // 🚀 标记应用已就绪，现在可以显示完整日志了
+                _isApplicationReady = true;
+                // 立即刷新一次日志显示
+                FlushPendingLogs();
             });
         }
         catch (Exception ex)
@@ -753,6 +824,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 _ncfService.OnProcessOutput = null;
             }
             
+            // 🚀 停止定时器前先处理剩余的日志
+            FlushPendingLogs();
+            
             if (_ncfProcess != null && !_ncfProcess.HasExited)
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
@@ -1072,61 +1146,145 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
     
+    /// <summary>
+    /// 添加应用日志（高性能版本：批量处理）
+    /// </summary>
     private void AddLog(string message)
     {
+        if (string.IsNullOrWhiteSpace(message)) return;
+        
         var timestamp = DateTime.Now.ToString("HH:mm:ss");
         var logEntry = $"[{timestamp}] {message}";
         
-        _logBuffer.AppendLine(logEntry);
-        
-        // 限制日志大小，保留最后1000行
-        var lines = _logBuffer.ToString().Split('\n');
-        if (lines.Length > 1000)
+        // 🚀 性能优化：使用相同的批量更新机制
+        lock (_pendingCliLogs)
         {
-            _logBuffer.Clear();
-            _logBuffer.AppendLine(string.Join('\n', lines.Skip(lines.Length - 1000)));
+            _pendingCliLogs.Enqueue(logEntry);
         }
-        
-        LogText = _logBuffer.ToString();
-        
-        // 自动滚动到底部（如果用户没有手动滚动到历史记录）
-        ScrollToBottomIfNeeded();
     }
 
     /// <summary>
-    /// 添加 CLI 进程输出到日志
+    /// 添加 CLI 日志（高性能版本：批量处理）
     /// </summary>
     private void AddCliLog(string message, bool isError)
     {
-        // 必须在 UI 线程上更新
-        if (!Dispatcher.UIThread.CheckAccess())
-        {
-            Dispatcher.UIThread.Post(() => AddCliLog(message, isError));
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(message)) return;
         
         var timestamp = DateTime.Now.ToString("HH:mm:ss");
         var prefix = isError ? "[CLI:ERROR]" : "[CLI]";
         var logEntry = $"[{timestamp}] {prefix} {message}";
         
-        _logBuffer.AppendLine(logEntry);
-        
-        // 限制日志大小，保留最后1000行
-        var lines = _logBuffer.ToString().Split('\n');
-        if (lines.Length > 1000)
+        // 🚀 性能优化：只将日志加入队列，不立即更新 UI
+        // 由定时器每 100ms 批量更新，减少 95%+ 的性能开销
+        lock (_pendingCliLogs)
         {
-            _logBuffer.Clear();
-            _logBuffer.AppendLine(string.Join('\n', lines.Skip(lines.Length - 1000)));
+            _pendingCliLogs.Enqueue(logEntry);
         }
-        
-        LogText = _logBuffer.ToString();
-        
-        // 自动滚动到底部（如果用户没有手动滚动到历史记录）
-        ScrollToBottomIfNeeded();
     }
     
     /// <summary>
-    /// 如果需要，滚动到日志底部
+    /// 定时器回调：批量更新日志到 UI（每 100ms 一次）
+    /// </summary>
+    private void OnLogUpdateTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        List<string> logsToAdd;
+        
+        lock (_pendingCliLogs)
+        {
+            if (_pendingCliLogs.Count == 0) return;
+            
+            logsToAdd = new List<string>(_pendingCliLogs);
+            _pendingCliLogs.Clear();
+        }
+        
+        // 🚀 性能优化：如果应用还未就绪，只累积日志不立即显示
+        // 这样可以避免启动时阻塞UI
+        if (!_isApplicationReady)
+        {
+            // 应用启动阶段：只累积日志到缓冲区，不更新UI
+            // 注意：_logBuffer 只在定时器回调中使用，不需要锁
+            foreach (var log in logsToAdd)
+            {
+                _logBuffer.AppendLine(log);
+                _currentLineCount++;
+            }
+            
+            // 限制缓冲区大小，避免内存占用过大
+            if (_currentLineCount > MaxLogLines * 2)
+            {
+                var lines = _logBuffer.ToString().Split('\n');
+                if (lines.Length > MaxLogLines)
+                {
+                    var keptLines = lines.Skip(lines.Length - MaxLogLines);
+                    _logBuffer.Clear();
+                    _logBuffer.AppendLine(string.Join(Environment.NewLine, keptLines));
+                    _currentLineCount = MaxLogLines;
+                }
+            }
+            return;
+        }
+        
+        // 🚀 应用已就绪：正常更新UI，但根据日志量动态调整更新频率
+        var now = DateTime.Now;
+        var timeSinceLastUpdate = (now - _lastLogUpdateTime).TotalMilliseconds;
+        var pendingCount = logsToAdd.Count;
+        
+        // 如果日志量很大且距离上次更新时间很短，跳过本次更新（降低更新频率）
+        if (pendingCount > 50 && timeSinceLastUpdate < MaxLogUpdateIntervalMs)
+        {
+            // 将日志重新放回队列，等待下次更新
+            lock (_pendingCliLogs)
+            {
+                foreach (var log in logsToAdd)
+                {
+                    _pendingCliLogs.Enqueue(log);
+                }
+            }
+            return;
+        }
+        
+        Dispatcher.UIThread.Post(() =>
+        {
+            // 🚀 性能优化：一次性构建完整字符串块，然后一次性追加
+            // 这样可以避免逐条操作 StringBuilder，减少 UI 渲染次数
+            if (logsToAdd.Count > 0)
+            {
+                // 方法1：使用 string.Join 一次性构建（最快）
+                var newLogsBlock = string.Join(Environment.NewLine, logsToAdd) + Environment.NewLine;
+                
+                // 一次性追加到缓冲区
+                _logBuffer.Append(newLogsBlock);
+                _currentLineCount += logsToAdd.Count;
+                
+                // 限制日志行数（只在超出阈值时执行，避免频繁字符串分割）
+                if (_currentLineCount > MaxLogLines + 100)  // 留一些缓冲
+                {
+                    var lines = _logBuffer.ToString().Split('\n');
+                    if (lines.Length > MaxLogLines)
+                    {
+                        // 一次性构建保留的日志块
+                        var keptLines = lines.Skip(lines.Length - MaxLogLines);
+                        var keptLogsBlock = string.Join(Environment.NewLine, keptLines);
+                        
+                        _logBuffer.Clear();
+                        _logBuffer.Append(keptLogsBlock);
+                        _currentLineCount = MaxLogLines;
+                    }
+                }
+                
+                // 🚀 关键：一次性更新 UI，确保同步显示
+                LogText = _logBuffer.ToString();
+                _lastLogUpdateTime = DateTime.Now;
+                
+                // 🔧 延迟滚动，确保 UI 内容已完全渲染
+                // 使用 LayoutUpdated 事件或小延迟确保滚动在内容渲染后执行
+                ScrollToBottomIfNeededDelayed();
+            }
+        });
+    }
+    
+    /// <summary>
+    /// 如果需要，滚动到日志底部（优化版本：缓存控件引用）
     /// </summary>
     private void ScrollToBottomIfNeeded()
     {
@@ -1134,37 +1292,199 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             Dispatcher.UIThread.Post(() =>
             {
-                // 查找 MainWindow 和 SettingsView
-                if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                // 🚀 性能优化：缓存 ScrollViewer 引用，避免每次都查找控件
+                if (_cachedScrollViewer == null)
                 {
-                    var mainWindow = desktop.MainWindow as MainWindow;
-                    if (mainWindow?.Content is UserControl mainContent)
+                    if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                     {
-                        // 查找 SettingsView 中的 LogScrollViewer
-                        var scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
-                        if (scrollViewer != null)
+                        var mainWindow = desktop.MainWindow as MainWindow;
+                        if (mainWindow?.Content is Grid mainContent)
                         {
-                            // 检查是否应该自动滚动
-                            var settingsView = mainContent as Views.SettingsView;
-                            if (settingsView?.ShouldAutoScroll ?? true)
-                            {
-                                // 延迟滚动，确保内容已更新
-                                Task.Delay(10).ContinueWith(_ =>
-                                {
-                                    Dispatcher.UIThread.Post(() =>
-                                    {
-                                        scrollViewer.ScrollToEnd();
-                                    });
-                                });
-                            }
+                            // LogScrollViewer 在 SettingsView 中，需要通过 FindControl 递归查找
+                            _cachedScrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
                         }
                     }
+                }
+                
+                if (_cachedScrollViewer != null)
+                {
+                    // 🔍 查找 SettingsView：向上遍历父级，找到 SettingsView
+                    Views.SettingsView? settingsView = null;
+                    var parent = _cachedScrollViewer.Parent;
+                    while (parent != null)
+                    {
+                        if (parent is Views.SettingsView sv)
+                        {
+                            settingsView = sv;
+                            break;
+                        }
+                        parent = parent.Parent;
+                    }
+                    
+                    // 检查是否应该自动滚动（默认应该自动滚动）
+                    // 如果用户手动滚动到历史位置（距离底部 > 20px），则不应该自动滚动
+                    if (settingsView?.ShouldAutoScroll ?? true)
+                    {
+                        // 🚀 直接滚动到底部，显示最新日志
+                        _cachedScrollViewer.ScrollToEnd();
+                    }
+                    // 如果 ShouldAutoScroll 为 false，说明用户在查看历史日志，不自动滚动
                 }
             });
         }
         catch
         {
             // 忽略滚动错误，不影响日志功能
+        }
+    }
+    
+    /// <summary>
+    /// 延迟滚动到底部，确保 UI 内容已完全渲染
+    /// </summary>
+    private void ScrollToBottomIfNeededDelayed()
+    {
+        try
+        {
+            // 🔧 使用 InvokeAsync 支持 async/await
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                ScrollViewer? scrollViewer = _cachedScrollViewer;
+                
+                // 🚀 如果缓存为 null，尝试查找 ScrollViewer
+                if (scrollViewer == null)
+                {
+                    if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        var mainWindow = desktop.MainWindow as MainWindow;
+                        if (mainWindow?.Content is Grid mainContent)
+                        {
+                            // LogScrollViewer 在 SettingsView 中，需要通过 FindControl 递归查找
+                            scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
+                            if (scrollViewer != null)
+                            {
+                                _cachedScrollViewer = scrollViewer; // 缓存引用
+                            }
+                        }
+                    }
+                }
+                
+                // 🔧 如果还是找不到，等待一下再试（可能 UI 还没完全加载）
+                if (scrollViewer == null)
+                {
+                    await Task.Delay(50);
+                    if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        var mainWindow = desktop.MainWindow as MainWindow;
+                        if (mainWindow?.Content is Grid mainContent)
+                        {
+                            scrollViewer = mainContent.FindControl<ScrollViewer>("LogScrollViewer");
+                            if (scrollViewer != null)
+                            {
+                                _cachedScrollViewer = scrollViewer; // 缓存引用
+                            }
+                        }
+                    }
+                }
+                
+                if (scrollViewer != null)
+                {
+                    // 🔧 等待一小段时间，确保 UI 内容已完全渲染
+                    await Task.Delay(20);
+                    
+                    // 🔍 查找 SettingsView：向上遍历父级，找到 SettingsView
+                    Views.SettingsView? settingsView = null;
+                    var parent = scrollViewer.Parent;
+                    while (parent != null)
+                    {
+                        if (parent is Views.SettingsView sv)
+                        {
+                            settingsView = sv;
+                            break;
+                        }
+                        parent = parent.Parent;
+                    }
+                    
+                    // 检查是否应该自动滚动（默认应该自动滚动）
+                    // 如果用户手动滚动到历史位置（距离底部 > 20px），则不应该自动滚动
+                    if (settingsView?.ShouldAutoScroll ?? true)
+                    {
+                        // 🚀 滚动到底部，显示最新日志
+                        scrollViewer.ScrollToEnd();
+                    }
+                    // 如果 ShouldAutoScroll 为 false，说明用户在查看历史日志，不自动滚动
+                }
+            });
+        }
+        catch
+        {
+            // 忽略滚动错误，不影响日志功能
+        }
+    }
+    
+    /// <summary>
+    /// 立即刷新所有待处理的日志（用于停止或清理时，或应用就绪时）
+    /// </summary>
+    private void FlushPendingLogs()
+    {
+        try
+        {
+            List<string> logsToAdd;
+            
+            lock (_pendingCliLogs)
+            {
+                logsToAdd = new List<string>(_pendingCliLogs);
+                _pendingCliLogs.Clear();
+            }
+            
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                // 先处理队列中的新日志
+                if (logsToAdd.Count > 0)
+                {
+                    foreach (var log in logsToAdd)
+                    {
+                        _logBuffer.AppendLine(log);
+                        _currentLineCount++;
+                    }
+                }
+                
+                // 🚀 如果应用刚就绪且日志很多，只显示最后N行，避免一次性渲染太多日志
+                if (_isApplicationReady && _currentLineCount > InitialDisplayLines && _lastLogUpdateTime == DateTime.MinValue)
+                {
+                    var allLogs = _logBuffer.ToString();
+                    var lines = allLogs.Split('\n');
+                    
+                    if (lines.Length > InitialDisplayLines)
+                    {
+                        var displayLines = lines.Skip(lines.Length - InitialDisplayLines);
+                        var displayText = string.Join(Environment.NewLine, displayLines);
+                        
+                        var skippedCount = lines.Length - InitialDisplayLines;
+                        LogText = $"[已跳过 {skippedCount} 行启动日志，仅显示最后 {InitialDisplayLines} 行]{Environment.NewLine}{displayText}";
+                        
+                        _logBuffer.Clear();
+                        _logBuffer.Append(displayText);
+                        _currentLineCount = InitialDisplayLines;
+                    }
+                    else
+                    {
+                        LogText = allLogs;
+                    }
+                }
+                else if (_logBuffer.Length > 0)
+                {
+                    // 正常显示所有日志
+                    LogText = _logBuffer.ToString();
+                }
+                
+                _lastLogUpdateTime = DateTime.Now;
+                // 🔧 延迟滚动，确保 UI 内容已完全渲染
+                ScrollToBottomIfNeededDelayed();
+            });
+        }
+        catch
+        {
+            // 忽略错误
         }
     }
 

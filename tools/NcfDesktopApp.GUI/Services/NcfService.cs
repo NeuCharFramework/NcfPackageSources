@@ -128,19 +128,162 @@ public class NcfService
     public async Task DownloadFileAsync(string downloadUrl, string fileName, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
     {
         var filePath = Path.Combine(DownloadsPath, fileName);
+        var downloadInfoPath = filePath + ".download"; // 下载信息文件
         
-        _logger?.LogInformation($"开始下载: {fileName}");
+        // 检查是否有未完成的下载（断点续传）
+        long existingFileSize = 0;
+        bool canResume = false;
         
-        using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        if (File.Exists(filePath))
+        {
+            var fileInfo = new FileInfo(filePath);
+            existingFileSize = fileInfo.Length;
+            
+            // 检查是否有下载信息文件（包含 URL 和版本信息）
+            if (File.Exists(downloadInfoPath))
+            {
+                try
+                {
+                    var savedUrl = await File.ReadAllTextAsync(downloadInfoPath, cancellationToken);
+                    
+                    // 比较 URL 是否一致（URL 包含版本号）
+                    if (savedUrl.Trim() == downloadUrl.Trim())
+                    {
+                        canResume = true;
+                        _logger?.LogInformation($"✅ 检测到同一版本的未完成下载，可以断点续传");
+                    }
+                    else
+                    {
+                        _logger?.LogWarning($"⚠️ 检测到不同版本的文件，删除旧文件");
+                        _logger?.LogInformation($"   旧版本: {savedUrl}");
+                        _logger?.LogInformation($"   新版本: {downloadUrl}");
+                        
+                        // 删除旧文件和下载信息
+                        File.Delete(filePath);
+                        File.Delete(downloadInfoPath);
+                        existingFileSize = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning($"⚠️ 无法读取下载信息，重新下载: {ex.Message}");
+                    File.Delete(filePath);
+                    if (File.Exists(downloadInfoPath))
+                    {
+                        File.Delete(downloadInfoPath);
+                    }
+                    existingFileSize = 0;
+                }
+            }
+            else
+            {
+                // 没有下载信息文件，无法确认版本，删除重新下载
+                _logger?.LogWarning($"⚠️ 未找到下载信息文件，无法确认版本，重新下载");
+                File.Delete(filePath);
+                existingFileSize = 0;
+            }
+        }
         
-        var totalBytes = response.Content.Headers.ContentLength ?? 0;
-        var downloadedBytes = 0L;
+        // 保存下载信息（URL 作为版本标识）
+        if (existingFileSize == 0)
+        {
+            await File.WriteAllTextAsync(downloadInfoPath, downloadUrl, cancellationToken);
+        }
+        
+        // 创建 HTTP 请求，支持断点续传
+        var request = new HttpRequestMessage(HttpMethod.Get, downloadUrl);
+        
+        if (existingFileSize > 0 && canResume)
+        {
+            // 使用 Range 请求头从上次中断的位置继续下载
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(existingFileSize, null);
+            _logger?.LogInformation($"📥 从 {existingFileSize:N0} 字节处继续下载: {fileName}");
+        }
+        else
+        {
+            _logger?.LogInformation($"📥 开始下载: {fileName}");
+        }
+        
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        
+        // 检查服务器响应
+        if (response.StatusCode == System.Net.HttpStatusCode.RequestedRangeNotSatisfiable)
+        {
+            // 服务器不支持断点续传或文件已完整下载
+            _logger?.LogWarning($"服务器不支持断点续传或文件已完整，重新下载: {fileName}");
+            existingFileSize = 0;
+            
+            // 删除旧文件重新下载
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            
+            // 重新请求完整文件
+            request = new HttpRequestMessage(HttpMethod.Get, downloadUrl);
+            using var retryResponse = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            retryResponse.EnsureSuccessStatusCode();
+            
+            await DownloadToFileAsync(retryResponse, filePath, 0, progress, cancellationToken);
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.PartialContent)
+        {
+            // 206 Partial Content - 服务器支持断点续传
+            _logger?.LogInformation($"✅ 服务器支持断点续传，继续下载");
+            await DownloadToFileAsync(response, filePath, existingFileSize, progress, cancellationToken);
+        }
+        else if (response.IsSuccessStatusCode)
+        {
+            // 200 OK - 服务器返回完整文件（可能不支持 Range 或文件从头开始）
+            if (existingFileSize > 0)
+            {
+                _logger?.LogWarning($"服务器不支持断点续传，重新下载: {fileName}");
+                File.Delete(filePath);
+            }
+            await DownloadToFileAsync(response, filePath, 0, progress, cancellationToken);
+        }
+        else
+        {
+            response.EnsureSuccessStatusCode();
+        }
+        
+        _logger?.LogInformation($"✅ 下载完成: {fileName}");
+        
+        // 下载完成后删除下载信息文件
+        if (File.Exists(downloadInfoPath))
+        {
+            try
+            {
+                File.Delete(downloadInfoPath);
+                _logger?.LogInformation($"🧹 已清理下载信息文件");
+            }
+            catch
+            {
+                // 忽略删除失败
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 下载数据到文件（支持断点续传）
+    /// </summary>
+    private async Task DownloadToFileAsync(
+        HttpResponseMessage response, 
+        string filePath, 
+        long existingFileSize, 
+        IProgress<double>? progress, 
+        CancellationToken cancellationToken)
+    {
+        var totalBytes = (response.Content.Headers.ContentLength ?? 0) + existingFileSize;
+        var downloadedBytes = existingFileSize;
         
         using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
         
-        var buffer = new byte[8192];
+        // 如果是断点续传，使用 Append 模式；否则使用 Create 模式
+        var fileMode = existingFileSize > 0 ? FileMode.Append : FileMode.Create;
+        using var fileStream = new FileStream(filePath, fileMode, FileAccess.Write, FileShare.None);
+        
+        var buffer = new byte[81920]; // 使用 80KB 缓冲区提升性能
         int bytesRead;
         
         while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
@@ -154,8 +297,6 @@ public class NcfService
                 progress?.Report(progressPercent);
             }
         }
-        
-        _logger?.LogInformation($"下载完成: {fileName}");
     }
     
     /// <summary>

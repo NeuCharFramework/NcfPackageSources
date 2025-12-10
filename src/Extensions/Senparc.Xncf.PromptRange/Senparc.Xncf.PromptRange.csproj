@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.14.1-preview.1</Version>
+    <Version>0.14.2-preview.1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -18,66 +18,74 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>提示词靶场</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <!--<ProjectUrl>
+    https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1.0 创世
-		v0.2.0 完成数据库和基本测试功能
-		v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
-		v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
-		v0.3.0 重构 PromptRange 数据库和逻辑
-		v0.3.10 引用 Senparc.Xncf.AIKernel
-		v0.4.0 完成 PromptRange 基本功能
-		v0.4.2 优化 PromptRange 模糊查询
-		v0.4.7 支持手动打分精确到小数点后 1 位
-		v0.4.11 添加 PromptResultService.GetPromptConfigParameterFromAiSetting() 方法
-		v0.6.4 更新 Prompt 导入和导出 #207
-		v0.6.5 优化通过 PromptRangeCode 查询
-		[2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
-		[2024-08-29] v0.9.9.0-preview1 更新首页统计
-		[2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示
-		[2024-09-03] v0.10.1-preview1 PromptRange 结果提供“复制”功能
-		[2024-09-04] v0.10.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
-		[2024-09-07] v0.10.2.10-preview1 PromptRange 优化输出格式
-		[2024-09-07] v0.10.2.11-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
-		[2024-09-07] v0.10.3-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-		[2024-09-08] v0.10.3.1-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
-		[2024-09-10] v0.10.4-preview1 升级缓存基础库
-		[2024-09-27] v0.10.5-preview1 修复首页的下拉栏过长的问题
-		[2024-10-09] v0.10.7-preview1 升级基础库
-		[2024-10-16] v0.10.5-preview1 提供 PromptRangeAppService.GetPromptRangeTree() 方法，输出树状 PromptRange 信息
-		[2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-11-04] v0.11.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
-		[2024-11-08] v0.11.1-preview1 升级 Senparc.AI
-		[2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-		[2024-11-15] v0.12.1-preview1 升级备注名称替换功能
-		[2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
-		[2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		[2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
-		[2025-01-25] v0.13.8-preview1 Update Agents functions, support for function calling
-		[2025-01-28] v0.13.9-preview1 update Senparc.AI
-		[2025-02-06] v0.13.10-preview1 update NeuCharAI model update
-		[2025-02-22] v0.13.11-preview1 add DeepSeek-R1 &lt;think&gt; tag style
-		[2025-03-21] v0.13.12-preview1 PromptRange's 3D charts are accurate to 1 decimal place
-		[2025-04-29] v0.13.14-preview1 Update CO2NET and AIKernel
-		[2025-05-18] v0.13.15-preview1 Update Installation
-		[2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
-		[2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
-				[2025-11-01] update basic libraries, including Senparc.AI
-        [2025-11-06] v0.13.19-preview.1 add AI score standard setting
-        [2025-11-06] v0.14.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and provide a scalable layout
-        [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison 
-		</PackageReleaseNotes>
+      v0.1.0 创世
+      v0.2.0 完成数据库和基本测试功能
+      v0.2.0.1024 升级至 1024 特别版，支持 SK v1.0.0-beta3（2023.10.24发布）
+      v0.2.1 重构当前解决方案 XNCF 模块自动获取的方法到 Senparc.Xncf.XncfBase 项目中，位于 FunctionHelper.LoadXncfProjects()
+      v0.3.0 重构 PromptRange 数据库和逻辑
+      v0.3.10 引用 Senparc.Xncf.AIKernel
+      v0.4.0 完成 PromptRange 基本功能
+      v0.4.2 优化 PromptRange 模糊查询
+      v0.4.7 支持手动打分精确到小数点后 1 位
+      v0.4.11 添加 PromptResultService.GetPromptConfigParameterFromAiSetting() 方法
+      v0.6.4 更新 Prompt 导入和导出 #207
+      v0.6.5 优化通过 PromptRangeCode 查询
+      [2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
+      [2024-08-29] v0.9.9.0-preview1 更新首页统计
+      [2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示
+      [2024-09-03] v0.10.1-preview1 PromptRange 结果提供“复制”功能
+      [2024-09-04] v0.10.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
+      [2024-09-07] v0.10.2.10-preview1 PromptRange 优化输出格式
+      [2024-09-07] v0.10.2.11-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
+      [2024-09-07] v0.10.3-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
+      [2024-09-08] v0.10.3.1-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
+      [2024-09-10] v0.10.4-preview1 升级缓存基础库
+      [2024-09-27] v0.10.5-preview1 修复首页的下拉栏过长的问题
+      [2024-10-09] v0.10.7-preview1 升级基础库
+      [2024-10-16] v0.10.5-preview1 提供 PromptRangeAppService.GetPromptRangeTree() 方法，输出树状
+      PromptRange 信息
+      [2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+      [2024-10-16] v0.10.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+      [2024-11-04] v0.11.0-preview1 重构 PromptRange 界面；大幅提升树状 Prompt 检索性能（约20倍）
+      [2024-11-08] v0.11.1-preview1 升级 Senparc.AI
+      [2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+      [2024-11-15] v0.12.1-preview1 升级备注名称替换功能
+      [2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
+      [2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName
+      property
+      [2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
+      [2025-01-25] v0.13.8-preview1 Update Agents functions, support for function calling
+      [2025-01-28] v0.13.9-preview1 update Senparc.AI
+      [2025-02-06] v0.13.10-preview1 update NeuCharAI model update
+      [2025-02-22] v0.13.11-preview1 add DeepSeek-R1 &lt;think&gt; tag style
+      [2025-03-21] v0.13.12-preview1 PromptRange's 3D charts are accurate to 1 decimal place
+      [2025-04-29] v0.13.14-preview1 Update CO2NET and AIKernel
+      [2025-05-18] v0.13.15-preview1 Update Installation
+      [2025-06-20] v0.13.16-preview1 Add MCP functions in XncfRegisterBase class
+      [2025-08-19] v0.13.17-preview.1 remove debug code in prompt.js
+      [2025-11-01] update basic libraries, including Senparc.AI
+      [2025-11-06] v0.13.19-preview.1 add AI score standard setting
+      [2025-11-06] v0.14.0-preview.1 Support Prompt comparison; Optimize the PromptRange layout and
+      provide a scalable layout
+      [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison
+      [2025-12-11] v0.14.2-preview.1 Optimize Prompt keyword highlight
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
-    <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
-    <BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">objForNcf\</BaseIntermediateOutputPath>
+    <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">
+      $(DefineConstants);DEBUG;NcfDebugForPromptRange</DefineConstants>
+    <BaseIntermediateOutputPath Condition=" '$(Configuration)' == 'NcfDebugForPromptRange' ">
+      objForNcf\</BaseIntermediateOutputPath>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <!--<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>-->
   </PropertyGroup>
-  <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <!--<PropertyGroup
+  Condition=" '$(Configuration)' == 'Debug' ">
         <RestoreSources>
             $(RestoreSources);D:\Senparc\Senparc.AI\BuildOutPut;
         </RestoreSources>
@@ -86,7 +94,8 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+    <!--<FrameworkReference
+    Include="Microsoft.AspNetCore.App" />-->
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <Compile Remove="Domain\PromptPlugins\**" />
@@ -114,7 +123,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <!-- 为解决 VS 2019 v16.8 的一个bug，需要添加下方引用 -->
-    <!--<PackageReference Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
+    <!--<PackageReference
+    Include="Microsoft.NET.Sdk.Razor" Version="3.1.10" />-->
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\Migrations\" />
@@ -125,8 +135,10 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-    <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+    <ProjectReference
+      Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+    <ProjectReference
+      Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
   </ItemGroup>
 </Project>
