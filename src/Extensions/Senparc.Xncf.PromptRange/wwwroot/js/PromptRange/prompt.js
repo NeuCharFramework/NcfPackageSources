@@ -4376,18 +4376,19 @@ var app = new Vue({
             }
         },
         
-        // 用户输入时（不打断输入，只更新数据）
+        // 用户输入时（立即更新高亮，使用短防抖优化性能）
         handleEditorInput(e) {
             if (this.isComposing) return;  // IME输入中不处理
             
             const text = this.getEditorText();
             this.content = text;
             
-            // 防抖高亮更新（2秒后）
+            // 使用较短的防抖时间（150ms）来平衡性能和响应性
+            // 这样用户输入、删除、粘贴、剪切等操作时，高亮会立即更新
             if (this._highlightTimer) clearTimeout(this._highlightTimer);
             this._highlightTimer = setTimeout(() => {
                 this.applyHighlight();
-            }, 2000);
+            }, 150);
         },
         
         // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点，并规范化 DOM
