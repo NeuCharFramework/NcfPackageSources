@@ -303,10 +303,10 @@
                             <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
                                 <div class="formItem">
                                     <el-form-item label="前缀" prop="prefix">
-                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{$"></el-input>
+                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{{$"></el-input>
                                     </el-form-item>
                                     <el-form-item label="后缀" prop="suffix">
-                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}"></el-input>
+                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}}"></el-input>
                                     </el-form-item>
                                 </div>
                                 @* 变量名 变量值 *@
