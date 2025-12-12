@@ -66,7 +66,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
+        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem, string userMessage = null)
         {
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
@@ -94,13 +94,25 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
-            var iWantToRun =
-                handler.IWantTo(aiSettings)
-                    // todo 替换为真实用户名，可能需要从NeuChar获取？
-                    .ConfigModel(configModel, "SenparcGenerateResult")
-                    .BuildKernel()
-                    .CreateFunctionFromPrompt(completionPrompt, promptParameter)
-                    .iWantToRun;
+
+
+            IWantToRun iWantToRun =
+            userMessage != null
+                ? handler.ChatConfig(promptParameter,
+                                            userId: "Jeffrey",
+                                            maxHistoryStore: 20,
+                                            chatSystemMessage: completionPrompt,
+                                            senparcAiSetting: aiSettings,
+                                            kernelBuilderAction: kh =>
+                                                { }
+                                                )
+                : handler.IWantTo(aiSettings)
+                        // todo 替换为真实用户名，可能需要从NeuChar获取？
+                        .ConfigModel(configModel, "SenparcGenerateResult")
+                        .BuildKernel()
+                        .CreateFunctionFromPrompt(completionPrompt, promptParameter)
+                        .iWantToRun;
+
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             //aiArguments["input"] = promptItem.Content;
 
@@ -123,11 +135,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             #endregion
-
-            var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
+            SenparcAiResult aiResult = null;
             var dt1 = SystemTime.Now;
-
-            var result = await iWantToRun.RunAsync(aiRequest);
+            if (userMessage != null)
+            {
+                aiResult = await handler.ChatAsync(iWantToRun, userMessage);
+            }
+            else
+            {
+                var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
+                aiResult = await iWantToRun.RunAsync(aiRequest);
+            }
 
             // todo 计算token消耗
             // 简单计算
@@ -138,7 +156,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var resultCostToken = 0;
 
             var promptResult = new PromptResult(
-                promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
+                promptItem.ModelId, aiResult.OutputString, SystemTime.DiffTotalMS(dt1),
                 -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.FullVersion, promptItem.Id);

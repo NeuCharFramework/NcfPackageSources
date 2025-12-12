@@ -116,7 +116,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults)
+        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults,string userMessage=null)
         {
             return await this.GetResponseAsync<PromptResult_ListResponse>(
                 async (response, logger) =>
@@ -137,7 +137,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
                     for (int i = 0; i < numsOfResults; i++)
                     {
-                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem);
+                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem, userMessage);
                         resp.PromptResults.Add(result);
                     }
 

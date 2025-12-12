@@ -93,6 +93,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         PromptItem toSavePromptItem;
         if (request.Id == null)
         {
+            //新建 PromptItem
             toSavePromptItem = new PromptItem(
                 rangeId: promptRange.Id,
                 rangeName: promptRange.RangeName, // $"{todayStr}.{todayPromptList.Count + 1}",
