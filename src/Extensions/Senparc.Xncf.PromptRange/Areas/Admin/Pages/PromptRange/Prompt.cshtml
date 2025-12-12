@@ -661,52 +661,63 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
+            @* 对话模式下的对话输入区域 *@
+            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入" prop="chatInput">
+                <div class="tactical-chat-container">
+                    @* 对话消息列表 *@
+                    <div class="tactical-chat-messages" ref="tacticalChatMessagesContainer">
+                        <div v-if="tacticalChatMessages.length === 0" class="tactical-chat-empty">
+                            <i class="el-icon-chat-line-round" style="font-size: 24px; color: #c0c4cc;"></i>
+                            <div style="margin-top: 10px; color: #909399;">开始对话，输入您的问题...</div>
+                        </div>
+                        <div v-for="(msg, index) in tacticalChatMessages" :key="index" 
+                             :class="['tactical-chat-message', msg.role === 'user' ? 'tactical-user-message' : 'tactical-assistant-message']">
+                            <div class="tactical-message-role">{{ msg.role === 'user' ? '用户' : '助手' }}</div>
+                            <div class="tactical-message-content">{{ msg.content }}</div>
+                            <div class="tactical-message-time">{{ msg.timestamp }}</div>
+                        </div>
+                        <div v-if="tacticalChatLoading" class="tactical-chat-message tactical-assistant-message">
+                            <div class="tactical-message-role">助手</div>
+                            <div class="tactical-message-content">
+                                <i class="el-icon-loading"></i> 正在思考中...
+                            </div>
+                        </div>
+                    </div>
+                    @* 输入区域 *@
+                    <div class="tactical-chat-input-area">
+                        <el-input 
+                            v-model="tacticalChatInput" 
+                            type="textarea" 
+                            :rows="3"
+                            placeholder="请输入您的问题..."
+                            @@keydown.ctrl.enter="sendTacticalChatMessage"
+                            :disabled="tacticalChatLoading || !promptid">
+                        </el-input>
+                        <div class="tactical-chat-input-actions">
+                            <span class="tactical-chat-tip">按 Ctrl+Enter 发送</span>
+                            <el-button 
+                                type="primary" 
+                                size="small" 
+                                @@click="sendTacticalChatMessage"
+                                :loading="tacticalChatLoading"
+                                :disabled="!tacticalChatInput.trim() || !promptid">
+                                发送
+                            </el-button>
+                            <el-button 
+                                size="small" 
+                                @@click="clearTacticalChatMessages"
+                                :disabled="tacticalChatMessages.length === 0">
+                                清空
+                            </el-button>
+                        </div>
+                    </div>
+                </div>
+            </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
             @* v-loading="tacticalFormSubmitLoading" *@
             <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
-        </div>
-    </el-dialog>
-    @*对话输入 dialog*@
-    <el-dialog title="对话输入" 
-               :visible.sync="chatInputDialogVisible" 
-               width="60%" 
-               top="10vh"
-               :close-on-click-modal="false"
-               @@close="closeChatInputDialog">
-        <div style="padding: 20px;">
-            <el-alert
-                title="提示"
-                type="info"
-                :closable="false"
-                show-icon
-                style="margin-bottom: 20px;">
-                <template slot="default">
-                    <div>请以对话方式输入您的问题，系统将使用当前 Prompt 作为 SystemMessage 进行对话，对话完成后将进行打靶。</div>
-                </template>
-            </el-alert>
-            <el-input 
-                v-model="chatInputMessage" 
-                type="textarea" 
-                :rows="8"
-                placeholder="请输入您的问题..."
-                @@keydown.ctrl.enter="submitChatInput"
-                :disabled="chatInputLoading">
-            </el-input>
-            <div style="margin-top: 10px; font-size: 12px; color: #909399;">
-                提示：按 Ctrl+Enter 快速提交
-            </div>
-        </div>
-        <div slot="footer" class="dialog-footer">
-            <el-button @@click="closeChatInputDialog">取 消</el-button>
-            <el-button 
-                type="primary" 
-                @@click="submitChatInput"
-                :loading="chatInputLoading"
-                :disabled="!chatInputMessage.trim()">
-                确定并打靶
-            </el-button>
         </div>
     </el-dialog>
     @*新增模型 dialog*@

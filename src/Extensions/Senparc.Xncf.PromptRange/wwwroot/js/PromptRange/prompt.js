@@ -140,10 +140,10 @@ var app = new Vue({
                 tactics: '重新瞄准',
                 chatMode: '对话模式' // 对话模式/直接测试，默认对话模式
             },
-            // 对话输入弹窗
-            chatInputDialogVisible: false,
-            chatInputMessage: '', // 对话输入的消息
-            chatInputLoading: false, // 对话输入加载状态
+            // 战术选择弹窗中的对话消息列表
+            tacticalChatMessages: [], // 对话消息列表 [{role: 'user'|'assistant', content: string, timestamp: string}]
+            tacticalChatInput: '', // 当前输入的对话消息
+            tacticalChatLoading: false, // 是否正在发送对话消息
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -780,11 +780,40 @@ var app = new Vue({
         tacticalFormSubmitBtn() {
             this.$refs.tacticalForm.validate(async (valid) => {
                 if (valid) {
-                    // 如果选择对话模式，先打开对话输入弹窗
+                    // 如果选择对话模式，需要检查是否有对话内容
                     if (this.tacticalForm.chatMode === '对话模式') {
-                        this.tacticalFormVisible = false
-                        this.chatInputDialogVisible = true
-                        this.chatInputMessage = ''
+                        // 检查是否有对话消息
+                        if (this.tacticalChatMessages.length === 0) {
+                            this.$message({
+                                message: '请先进行对话输入',
+                                type: 'warning',
+                                duration: 3000
+                            })
+                            return
+                        }
+                        
+                        // 将对话内容转换为Prompt内容
+                        // 格式：将对话消息组合成文本，用户消息和助手回复交替显示
+                        const chatContent = this.tacticalChatMessages.map(msg => {
+                            const roleLabel = msg.role === 'user' ? '用户' : '助手'
+                            return `${roleLabel}: ${msg.content}`
+                        }).join('\n\n')
+                        
+                        // 保存原始内容，用于错误恢复
+                        const originalContent = this.content
+                        this.content = chatContent
+                        
+                        try {
+                            // 执行打靶
+                            await this.executeTargetShoot()
+                            // 清空对话消息
+                            this.tacticalChatMessages = []
+                            this.tacticalChatInput = ''
+                        } catch (error) {
+                            // 恢复原始内容
+                            this.content = originalContent
+                            throw error
+                        }
                         return
                     }
                     
@@ -2191,54 +2220,127 @@ var app = new Vue({
                 tactics: '重新瞄准',
                 chatMode: '对话模式' // 重置为默认值
             }
+            // 清空对话消息
+            this.tacticalChatMessages = []
+            this.tacticalChatInput = ''
+            this.tacticalChatLoading = false
             if (this.$refs.tacticalForm) {
                 this.$refs.tacticalForm.resetFields();
             }
         },
         
-        // 关闭对话输入弹窗
-        closeChatInputDialog() {
-            this.chatInputDialogVisible = false
-            this.chatInputMessage = ''
-            this.chatInputLoading = false
-        },
-        
-        // 提交对话输入并继续打靶
-        async submitChatInput() {
-            if (!this.chatInputMessage.trim()) {
+        // 发送战术选择弹窗中的对话消息
+        async sendTacticalChatMessage() {
+            if (!this.tacticalChatInput.trim() || this.tacticalChatLoading) {
+                return
+            }
+            
+            if (!this.promptid) {
                 this.$message({
-                    message: '请输入对话内容',
-                    type: 'warning'
+                    message: '请先选择一个靶道',
+                    type: 'warning',
+                    duration: 3000
                 })
                 return
             }
             
-            // 将对话输入的内容设置为 Prompt 内容
-            const originalContent = this.content
-            this.content = this.chatInputMessage.trim()
+            const userMessage = this.tacticalChatInput.trim()
+            // 添加用户消息到列表
+            this.tacticalChatMessages.push({
+                role: 'user',
+                content: userMessage,
+                timestamp: this.formatTacticalChatTime(new Date())
+            })
             
-            // 关闭对话输入弹窗
-            this.chatInputDialogVisible = false
-            this.chatInputLoading = true
+            // 清空输入框
+            this.tacticalChatInput = ''
+            
+            // 滚动到底部
+            this.$nextTick(() => {
+                this.scrollTacticalChatToBottom()
+            })
+            
+            // 设置加载状态
+            this.tacticalChatLoading = true
             
             try {
-                // 继续打靶流程（复用tacticalFormSubmitBtn中的逻辑）
-                await this.executeTargetShoot()
+                // TODO: 调用API发送消息，获取AI回复
+                // 这里暂时模拟AI回复，后续需要根据实际API实现
+                // 准备消息历史
+                const historyMessages = this.tacticalChatMessages.slice(0, -1).map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                }))
+                
+                // TODO: 调用实际的对话API
+                // const res = await servicePR.post(
+                //     `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.ChatTest`,
+                //     {
+                //         promptItemId: this.promptid,
+                //         message: userMessage,
+                //         messages: historyMessages
+                //     }
+                // )
+                
+                // 模拟AI回复（硬编码，后续需要替换为实际API调用）
+                await new Promise(resolve => setTimeout(resolve, 500)) // 模拟延迟
+                const assistantReply = `收到您的消息: "${userMessage}"\n\n[这是模拟回复，请根据实际需求实现对话逻辑]`
+                
+                // 添加助手回复到列表
+                this.tacticalChatMessages.push({
+                    role: 'assistant',
+                    content: assistantReply,
+                    timestamp: this.formatTacticalChatTime(new Date())
+                })
             } catch (error) {
-                console.error('打靶失败:', error)
+                console.error('发送消息失败:', error)
                 this.$message({
-                    message: '打靶失败，请稍后重试',
+                    message: '发送消息失败，请稍后重试',
                     type: 'error',
                     duration: 5000
                 })
-                // 恢复原始内容
-                this.content = originalContent
             } finally {
-                this.chatInputLoading = false
-                this.chatInputMessage = ''
+                this.tacticalChatLoading = false
+                // 滚动到底部
+                this.$nextTick(() => {
+                    this.scrollTacticalChatToBottom()
+                })
             }
         },
         
+        // 清空战术选择弹窗中的对话消息
+        clearTacticalChatMessages() {
+            this.$confirm('确定要清空所有对话记录吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.tacticalChatMessages = []
+                this.tacticalChatInput = ''
+            }).catch(() => {
+                // 取消操作
+            })
+        },
+        
+        // 滚动战术选择弹窗中的对话到底部
+        scrollTacticalChatToBottom() {
+            const container = this.$refs.tacticalChatMessagesContainer
+            if (container) {
+                this.$nextTick(() => {
+                    container.scrollTop = container.scrollHeight
+                })
+            }
+        },
+        
+        // 格式化战术选择弹窗中的聊天时间
+        formatTacticalChatTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0')
+            const minutes = String(date.getMinutes()).padStart(2, '0')
+            const seconds = String(date.getSeconds()).padStart(2, '0')
+            return `${hours}:${minutes}:${seconds}`
+        },
+        
+        // 关闭对话输入弹窗
         // 执行打靶的核心逻辑（提取出来供对话模式和直接测试模式复用）
         async executeTargetShoot() {
             this.tacticalFormSubmitLoading = true
