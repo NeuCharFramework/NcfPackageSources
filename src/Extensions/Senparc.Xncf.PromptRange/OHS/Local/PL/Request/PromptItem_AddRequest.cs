@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
@@ -74,5 +74,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public string VariableDictJson { get; set; }
 
         [Required] public bool IsDraft { get; set; }
+        
+        /// <summary>
+        /// 对话模式下的用户消息（可选）
+        /// </summary>
+        public string UserMessage { get; set; }
     }
 }
