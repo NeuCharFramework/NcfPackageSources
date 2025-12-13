@@ -1868,9 +1868,10 @@ var app = new Vue({
                 const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
                 
                 // 调用API更新反馈（使用有效的消息 ID）
+                // 注意：使用 Request DTO 格式，属性名需要首字母大写
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
-                    chatId: msgId,
-                    feedback: newFeedback
+                    ChatId: msgId,
+                    Feedback: newFeedback
                 })
                 
                 if (res.data.success) {
