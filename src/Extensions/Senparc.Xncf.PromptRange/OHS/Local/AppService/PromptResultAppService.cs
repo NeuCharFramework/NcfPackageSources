@@ -8,6 +8,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -139,9 +140,44 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
+                    
+                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
+                    // 获取第一个结果的模式，用于后续结果保持一致
+                    ResultMode? firstResultMode = null;
+                    string firstUserMessage = userMessage;
+                    List<ChatMessageDto> firstChatHistory = null;
+                    
                     for (int i = 0; i < numsOfResults; i++)
                     {
-                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem, userMessage);
+                        // 如果是第一次生成，使用传入的参数
+                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        string currentUserMessage = null;
+                        List<ChatMessageDto> currentChatHistory = null;
+                        
+                        if (i == 0)
+                        {
+                            // 第一次生成，使用传入的参数
+                            currentUserMessage = userMessage;
+                            currentChatHistory = null; // 第一次生成时，chatHistory 应该为空
+                        }
+                        else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
+                        {
+                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
+                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            currentUserMessage = firstUserMessage;
+                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                        }
+                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        
+                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem, currentUserMessage, currentChatHistory);
+                        
+                        // 记录第一个结果的模式
+                        if (i == 0)
+                        {
+                            firstResultMode = result.Mode;
+                            firstUserMessage = currentUserMessage;
+                        }
+                        
                         resp.PromptResults.Add(result);
                     }
 

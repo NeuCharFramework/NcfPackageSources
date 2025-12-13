@@ -1164,9 +1164,29 @@ var app = new Vue({
             }
             this.targetShootLoading = true
             this.dodgersLoading = true
+            
+            // 获取第一个结果的模式，用于后续结果保持一致
+            let firstUserMessage = null
+            
+            // 检查 outputList 中最后一个结果（应该是第一个生成的结果）
+            if (this.outputList.length > 0) {
+                const lastResult = this.outputList[this.outputList.length - 1]
+                const firstResultMode = lastResult.mode
+                
+                // 如果第一个结果是 Chat 模式，需要获取 userMessage
+                if (firstResultMode === 2 || firstResultMode === 'Chat') {
+                    // 从第一个结果的生成参数中获取 userMessage
+                    // 注意：我们需要保存第一个结果生成时的 userMessage
+                    // 如果是在对话模式下生成的，应该保存了 userMessage
+                    // 这里我们使用保存的 userMessage（如果有的话）
+                    firstUserMessage = this._lastUserMessage || null
+                }
+            }
+            
             let promises = [];
             for (let i = 0; i < howmany; i++) {
-                promises.push(this.rapidFireHandel(id));
+                // 如果第一个结果是 Chat 模式，传递 userMessage 以保持 Chat 模式
+                promises.push(this.rapidFireHandel(id, firstUserMessage));
             }
             await Promise.all(promises)
             // 从新获取靶场列表
@@ -2502,6 +2522,10 @@ var app = new Vue({
         // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
         async executeTargetShootWithChatMessage(userMessage) {
             this.tacticalFormSubmitLoading = true
+            
+            // 保存 userMessage，用于后续连发时保持 Chat 模式
+            this._lastUserMessage = userMessage || null
+            
             let _postData = {
                 modelid: this.modelid,
                 content: this.content,
@@ -2627,6 +2651,15 @@ var app = new Vue({
                     }
                     return item
                 })
+                
+                // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
+                if (promptResultList.length > 0) {
+                    const firstResult = promptResultList[0]
+                    if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
+                        // 如果不是 Chat 模式，清空保存的 userMessage
+                        this._lastUserMessage = null
+                    }
+                }
                 
                 // 重置继续聊天状态
                 this.continueChatMode = false
@@ -2966,11 +2999,16 @@ var app = new Vue({
             })
             return JSON.stringify(res)
         },
-        async rapidFireHandel(id) {
+        async rapidFireHandel(id, userMessage = null) {
             const promptItemId = id || this.promptid
             const numsOfResults = 1
+            const params = { promptItemId, numsOfResults }
+            // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
+            if (userMessage) {
+                params.userMessage = userMessage
+            }
             return await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
-                { params: { promptItemId, numsOfResults } }).then(res => {
+                { params }).then(res => {
                     //console.log('testHandel res ', res.data)
                     if (!res.data.success) {
                         app.$message({

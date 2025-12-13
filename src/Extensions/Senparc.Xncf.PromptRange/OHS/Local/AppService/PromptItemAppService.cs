@@ -71,11 +71,44 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }).ToList();
                     }
                     
+                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
+                    // 获取第一个结果的模式，用于后续结果保持一致
+                    ResultMode? firstResultMode = null;
+                    string firstUserMessage = request.UserMessage;
+                    List<Domain.Services.ChatMessageDto> firstChatHistory = chatHistory;
+                    
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
+                        // 如果是第一次生成，使用传入的参数
+                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        string currentUserMessage = null;
+                        List<Domain.Services.ChatMessageDto> currentChatHistory = null;
+                        
+                        if (i == 0)
+                        {
+                            // 第一次生成，使用传入的参数
+                            currentUserMessage = request.UserMessage;
+                            currentChatHistory = chatHistory;
+                        }
+                        else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
+                        {
+                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
+                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            currentUserMessage = firstUserMessage;
+                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                        }
+                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        
                         // 分别生成结果
-                        // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, request.UserMessage, chatHistory);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, currentUserMessage, currentChatHistory);
+                        
+                        // 记录第一个结果的模式
+                        if (i == 0)
+                        {
+                            firstResultMode = promptResult.Mode;
+                            firstUserMessage = currentUserMessage;
+                        }
+                        
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
