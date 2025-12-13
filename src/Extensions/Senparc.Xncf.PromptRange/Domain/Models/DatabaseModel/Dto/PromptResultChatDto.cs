@@ -47,7 +47,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime AddTime { get; set; }
+        public new DateTime AddTime { get; set; }
 
         /// <summary>
         /// 构造函数
