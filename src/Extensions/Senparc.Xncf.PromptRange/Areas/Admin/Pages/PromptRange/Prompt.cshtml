@@ -676,7 +676,7 @@
                         <i class="el-icon-chat-line-round"></i>
                         <span>暂无对话记录</span>
                     </div>
-                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || idx" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2}">
+                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2}">
                         <div class="chat-message-avatar">
                             <i :class="msg.roleType === 1 ? 'el-icon-user' : 'el-icon-service'"></i>
                         </div>
@@ -688,8 +688,8 @@
                             </div>
                             <div class="chat-message-content" v-html="formatChatContent(msg.content)">
                             </div>
-                            @* 只有助手消息才显示反馈按钮 *@
-                            <div v-if="msg.roleType === 2" class="chat-message-feedback">
+                            @* 只有助手消息才显示反馈按钮，并且必须有有效的 ID *@
+                            <div v-if="msg.roleType === 2 && msg.id && msg.id > 0" class="chat-message-feedback">
                                 <el-button 
                                     :type="msg.userFeedback === true ? 'success' : 'text'" 
                                     :icon="msg.userFeedback === true ? 'el-icon-check' : 'el-icon-thumb'" 
@@ -708,6 +708,10 @@
                                     <span v-if="msg.userFeedback === false">已点踩</span>
                                     <span v-else>点踩</span>
                                 </el-button>
+                            </div>
+                            @* 如果没有有效 ID，显示提示 *@
+                            <div v-if="msg.roleType === 2 && (!msg.id || msg.id === 0)" class="chat-message-feedback" style="color: #909399; font-size: 12px;">
+                                <i class="el-icon-loading"></i> 正在保存...
                             </div>
                         </div>
                     </div>

@@ -839,23 +839,35 @@ var app = new Vue({
                 if (res.data.success) {
                     const newChatMessages = res.data.data || []
                     
+                    // 验证新消息是否有有效的 ID
+                    const invalidMessages = newChatMessages.filter(msg => !msg.id || msg.id === 0)
+                    if (invalidMessages.length > 0) {
+                        console.warn('警告：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID')
+                        // 如果消息没有 ID，重新加载历史记录以确保获取正确的 ID
+                        const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                        if (reloadRes.data.success) {
+                            this.continueChatHistory = reloadRes.data.data || []
+                        }
+                    } else {
+                        // 追加新的对话记录到历史记录
+                        this.continueChatHistory.push(...newChatMessages)
+                    }
+                    
                     // 找到对应的输出项并更新
                     const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
                     if (resultIndex !== -1) {
                         const resultItem = this.outputList[resultIndex]
                         
-                    // 追加新的对话记录到历史记录
-                    this.continueChatHistory.push(...newChatMessages)
-                    
-                    // 更新显示：将最新的 AI 回复追加到 ResultString
-                    const latestAssistantMessage = newChatMessages.find(msg => msg.roleType === 2)
-                    if (latestAssistantMessage) {
-                        // 追加到现有的 ResultString（格式化为对话形式）
-                        const currentResult = resultItem.resultString || ''
-                        const separator = currentResult ? '\n\n---\n\n' : ''
-                        const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
-                        resultItem.resultString = currentResult + separator + newContent
-                        resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                        // 更新显示：将最新的 AI 回复追加到 ResultString
+                        const latestAssistantMessage = this.continueChatHistory.find(msg => msg.roleType === 2 && msg.sequence === Math.max(...this.continueChatHistory.map(m => m.sequence)))
+                        if (latestAssistantMessage) {
+                            // 追加到现有的 ResultString（格式化为对话形式）
+                            const currentResult = resultItem.resultString || ''
+                            const separator = currentResult ? '\n\n---\n\n' : ''
+                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            resultItem.resultString = currentResult + separator + newContent
+                            resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                        }
                     }
                     
                     // 刷新对话历史显示
@@ -868,7 +880,6 @@ var app = new Vue({
                             container.scrollTop = container.scrollHeight
                         }
                     })
-                    }
                     
                     // 清空输入框，但保持弹窗打开以便继续对话
                     this.tacticalChatInput = ''
@@ -1777,9 +1788,11 @@ var app = new Vue({
         },
         // 切换聊天反馈（Like/Unlike）
         async toggleChatFeedback(chatId, feedback) {
-            if (!chatId) {
+            // 验证 chatId 是否有效
+            if (!chatId || chatId === 0 || chatId === '0') {
+                console.error('无效的 chatId:', chatId)
                 this.$message({
-                    message: '对话记录ID无效',
+                    message: '对话记录ID无效，请刷新页面后重试',
                     type: 'error'
                 })
                 return
@@ -1789,8 +1802,9 @@ var app = new Vue({
                 // 找到当前消息
                 const msgIndex = this.continueChatHistory.findIndex(msg => msg.id === chatId)
                 if (msgIndex === -1) {
+                    console.error('未找到对应的对话记录，chatId:', chatId, '历史记录:', this.continueChatHistory)
                     this.$message({
-                        message: '未找到对应的对话记录',
+                        message: '未找到对应的对话记录，请刷新页面后重试',
                         type: 'error'
                     })
                     return
