@@ -17,7 +17,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -142,6 +142,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("IsAIGrade")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDraft")
                         .HasColumnType("boolean");
@@ -293,6 +296,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                     b.Property<int>("LlmModelId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("Mode")
+                        .HasColumnType("integer");
+
                     b.Property<int>("PromptCostToken")
                         .HasColumnType("integer");
 
@@ -328,6 +334,58 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptResult");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("PromptResultId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("RoleType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("UserFeedback")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal?>("UserScore")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_PromptRange_PromptResultChat");
                 });
 #pragma warning restore 612, 618
         }

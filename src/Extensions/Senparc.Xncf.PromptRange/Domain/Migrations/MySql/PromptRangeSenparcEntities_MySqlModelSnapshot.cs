@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.PromptRange.Models;
 
@@ -16,14 +17,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime(6)");
@@ -100,6 +105,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime(6)");
 
@@ -135,6 +142,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsAIGrade")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsDraft")
                         .HasColumnType("tinyint(1)");
@@ -217,6 +227,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime(6)");
 
@@ -257,6 +269,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime(6)");
 
@@ -280,6 +294,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("LlmModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Mode")
                         .HasColumnType("int");
 
                     b.Property<int>("PromptCostToken")
@@ -317,6 +334,58 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptResult");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PromptResultId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("RoleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("UserFeedback")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal?>("UserScore")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_PromptRange_PromptResultChat");
                 });
 #pragma warning restore 612, 618
         }

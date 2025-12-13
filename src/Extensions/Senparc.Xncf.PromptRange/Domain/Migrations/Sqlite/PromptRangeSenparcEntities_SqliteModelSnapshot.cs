@@ -283,6 +283,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<int>("LlmModelId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("Mode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("PromptCostToken")
                         .HasColumnType("INTEGER");
 
@@ -318,6 +321,56 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("Senparc_PromptRange_PromptResult");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PromptResultId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RoleType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("UserFeedback")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("UserScore")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_PromptRange_PromptResultChat");
                 });
 #pragma warning restore 612, 618
         }
