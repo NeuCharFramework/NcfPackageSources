@@ -255,10 +255,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 创建 AI Handler 处理器
             var handler = new SemanticAiHandler(aiSettings);
 
-            // 使用 ChatConfig，使用基于 promptResultId 的唯一 userId 以确保历史记录正确关联
+            // 使用 ChatConfig，使用基于 promptResultId 的唯一 userId
             // 注意：ChatConfig 会自动从存储中加载历史记录（如果使用相同的 userId）
-            // 但为了确保历史记录被正确使用，我们需要手动设置历史记录
-            // 这里我们使用一个唯一的 userId，但实际上 ChatAsync 会自动管理历史记录
+            // 但为了确保使用我们数据库中的历史记录，我们需要将历史记录传递给 ChatAsync
+            // 方法：ChatAsync 方法应该会自动管理历史记录，但我们需要确保历史记录被正确传递
+            // 如果 ChatConfig 的内部存储机制与我们数据库不同步，可能需要手动设置历史记录
+            
             IWantToRun iWantToRun = handler.ChatConfig(promptParameter,
                 userId: $"PromptResult_{promptResultId}",
                 maxHistoryStore: 20,
@@ -267,13 +269,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 kernelBuilderAction: kh => { }
             );
 
-            // 如果有历史记录，需要手动设置到 ChatConfig 中
-            // 注意：ChatAsync 方法会自动从存储中加载历史记录，但为了确保使用我们数据库中的历史记录，
-            // 我们需要在调用 ChatAsync 之前手动设置历史记录
-            // 由于 ChatConfig 的内部实现，我们可能需要通过其他方式传递历史记录
-            // 这里先使用 ChatAsync，它应该会自动管理历史记录
-
             // 调用 AI 接口
+            // 注意：ChatAsync 方法会自动管理历史记录，通过 userId 来关联
+            // 但为了确保使用数据库中的历史记录，我们需要找到正确的方法传递历史记录
+            // 如果 ChatConfig 的内部存储机制与我们数据库不同步，可能需要手动设置历史记录
+            // 暂时先使用 ChatAsync，期望它能通过 userId 自动加载历史记录
             var dt1 = SystemTime.Now;
             var aiResult = await handler.ChatAsync(iWantToRun, userMessage);
             var costTime = SystemTime.DiffTotalMS(dt1);

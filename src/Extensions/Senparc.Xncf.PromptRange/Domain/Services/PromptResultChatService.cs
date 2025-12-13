@@ -84,37 +84,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await this.SaveObjectListAsync(chatEntities);
 
             // 保存后，Entity Framework 会自动更新实体的 ID
-            // 注意：SaveObjectListAsync 调用 SaveChangesAsync 后，chatEntities 中的实体 ID 应该已经被更新
-            // 如果 ID 仍然是 0，可能是数据库配置问题或实体跟踪问题
-            // 为了确保 ID 正确，我们检查并重新读取（仅在必要时）
+            // 但为了确保 ID 正确，我们强制重新从数据库读取所有刚保存的实体
+            // 这样可以避免 ID 为 0 的问题
             var savedDtos = new List<PromptResultChatDto>();
-            foreach (var entity in chatEntities)
-            {
-                // 如果实体 ID 仍然为 0，尝试重新读取
-                if (entity.Id == 0)
-                {
-                    // 通过 PromptResultId 和 Sequence 查找刚保存的实体
-                    var savedEntity = await this.GetObjectAsync(c => 
-                        c.PromptResultId == promptResultId && 
-                        c.Sequence == entity.Sequence &&
-                        c.RoleType == entity.RoleType);
-                    
-                    if (savedEntity != null)
-                    {
-                        savedDtos.Add(new PromptResultChatDto(savedEntity));
-                    }
-                    else
-                    {
-                        // 如果还是找不到，使用原实体（可能 ID 还没有更新，但这种情况不应该发生）
-                        savedDtos.Add(new PromptResultChatDto(entity));
-                    }
-                }
-                else
-                {
-                    // ID 已经更新，直接使用
-                    savedDtos.Add(new PromptResultChatDto(entity));
-                }
-            }
+            
+            // 获取所有刚保存的实体的 Sequence 列表
+            var sequences = chatEntities.Select(e => e.Sequence).ToList();
+            
+            // 重新从数据库读取这些实体（通过 PromptResultId 和 Sequence）
+            var savedEntities = await this.GetFullListAsync(c => 
+                c.PromptResultId == promptResultId && 
+                sequences.Contains(c.Sequence));
+            
+            // 按照原始顺序排序并创建 DTO
+            savedDtos = savedEntities
+                .OrderBy(e => e.Sequence)
+                .ThenBy(e => e.RoleType)
+                .Select(e => new PromptResultChatDto(e))
+                .ToList();
 
             return savedDtos;
         }
