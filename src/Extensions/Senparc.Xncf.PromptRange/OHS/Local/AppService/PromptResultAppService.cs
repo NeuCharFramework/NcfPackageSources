@@ -118,6 +118,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// </summary>
         /// <param name="promptItemId">靶道ID</param>
         /// <param name="numsOfResults">连发次数</param>
+        /// <param name="userMessage">用户消息（可选，如果为空且第一个结果是 Chat 模式，则从第一个结果的对话记录中获取）</param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -142,10 +143,30 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
                     
                     // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
+                    // 如果没有传入 userMessage，先检查该 PromptItem 的第一个 PromptResult 是否是 Chat 模式
+                    string firstUserMessage = userMessage;
+                    if (string.IsNullOrWhiteSpace(firstUserMessage))
+                    {
+                        // 获取该 PromptItem 的第一个 PromptResult（按 ID 升序）
+                        var existingResults = await _promptResultService.GetByItemId(promptItemId);
+                        if (existingResults != null && existingResults.Count > 0)
+                        {
+                            var firstExistingResult = existingResults.OrderBy(r => r.Id).FirstOrDefault();
+                            if (firstExistingResult != null && firstExistingResult.Mode == ResultMode.Chat)
+                            {
+                                // 第一个结果是 Chat 模式，从对话记录中获取第一条用户消息
+                                var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(firstExistingResult.Id);
+                                var firstUserChat = chatHistory?.FirstOrDefault(c => c.RoleType == ChatRoleType.User);
+                                if (firstUserChat != null && !string.IsNullOrWhiteSpace(firstUserChat.Content))
+                                {
+                                    firstUserMessage = firstUserChat.Content;
+                                }
+                            }
+                        }
+                    }
+                    
                     // 获取第一个结果的模式，用于后续结果保持一致
                     ResultMode? firstResultMode = null;
-                    string firstUserMessage = userMessage;
-                    List<ChatMessageDto> firstChatHistory = null;
                     
                     for (int i = 0; i < numsOfResults; i++)
                     {
@@ -157,7 +178,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         if (i == 0)
                         {
                             // 第一次生成，使用传入的参数
-                            currentUserMessage = userMessage;
+                            currentUserMessage = firstUserMessage;
                             currentChatHistory = null; // 第一次生成时，chatHistory 应该为空
                         }
                         else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))

@@ -1165,28 +1165,16 @@ var app = new Vue({
             this.targetShootLoading = true
             this.dodgersLoading = true
             
-            // 获取第一个结果的模式，用于后续结果保持一致
-            let firstUserMessage = null
-            
-            // 检查 outputList 中最后一个结果（应该是第一个生成的结果）
-            if (this.outputList.length > 0) {
-                const lastResult = this.outputList[this.outputList.length - 1]
-                const firstResultMode = lastResult.mode
-                
-                // 如果第一个结果是 Chat 模式，需要获取 userMessage
-                if (firstResultMode === 2 || firstResultMode === 'Chat') {
-                    // 从第一个结果的生成参数中获取 userMessage
-                    // 注意：我们需要保存第一个结果生成时的 userMessage
-                    // 如果是在对话模式下生成的，应该保存了 userMessage
-                    // 这里我们使用保存的 userMessage（如果有的话）
-                    firstUserMessage = this._lastUserMessage || null
-                }
-            }
+            // 注意：现在后端会自动根据第一个 PromptResult 来判断类型
+            // 如果第一个结果是 Chat 模式，后端会从对话记录中获取 userMessage
+            // 所以前端不需要传递 userMessage，后端会自动处理
+            // 但为了兼容性，如果前端有保存的 userMessage，仍然可以传递
             
             let promises = [];
             for (let i = 0; i < howmany; i++) {
-                // 如果第一个结果是 Chat 模式，传递 userMessage 以保持 Chat 模式
-                promises.push(this.rapidFireHandel(id, firstUserMessage));
+                // 后端会自动判断第一个结果的模式，不需要前端传递 userMessage
+                // 但如果前端有保存的 userMessage，可以传递以保持一致性
+                promises.push(this.rapidFireHandel(id, this._lastUserMessage || null));
             }
             await Promise.all(promises)
             // 从新获取靶场列表
