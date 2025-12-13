@@ -203,6 +203,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResultChatDto>> UpdateChatFeedback(int chatId, bool? feedback)
         {
+            Console.WriteLine("chatId:"+chatId+"");
+            Console.WriteLine("feedback:"+feedback);
             return await this.GetResponseAsync<PromptResultChatDto>(
                 async (response, logger) =>
                 {

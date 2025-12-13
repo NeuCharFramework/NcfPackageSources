@@ -82,26 +82,43 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             await this.SaveObjectListAsync(chatEntities);
+            
+            // 强制保存更改，确保 ID 被正确更新
+            await this.SaveChangesAsync();
 
             // 保存后，Entity Framework 会自动更新实体的 ID
             // 但为了确保 ID 正确，我们强制重新从数据库读取所有刚保存的实体
             // 这样可以避免 ID 为 0 的问题
             var savedDtos = new List<PromptResultChatDto>();
             
-            // 获取所有刚保存的实体的 Sequence 列表
-            var sequences = chatEntities.Select(e => e.Sequence).ToList();
+            // 获取所有刚保存的实体的 Sequence 和 RoleType 组合（用于精确匹配）
+            var entityKeys = chatEntities.Select(e => new { e.Sequence, e.RoleType }).ToList();
             
-            // 重新从数据库读取这些实体（通过 PromptResultId 和 Sequence）
-            var savedEntities = await this.GetFullListAsync(c => 
-                c.PromptResultId == promptResultId && 
-                sequences.Contains(c.Sequence));
+            // 重新从数据库读取这些实体（通过 PromptResultId、Sequence 和 RoleType）
+            // 注意：同一个 Sequence 可能有 User 和 Assistant 两条记录，所以我们需要精确匹配
+            var allSavedEntities = await this.GetFullListAsync(c => 
+                c.PromptResultId == promptResultId);
             
             // 按照原始顺序排序并创建 DTO
-            savedDtos = savedEntities
-                .OrderBy(e => e.Sequence)
-                .ThenBy(e => e.RoleType)
-                .Select(e => new PromptResultChatDto(e))
-                .ToList();
+            // 需要按照 chatEntities 的原始顺序来匹配，确保返回顺序正确
+            foreach (var originalEntity in chatEntities)
+            {
+                // 通过 Sequence 和 RoleType 精确匹配找到对应的已保存实体
+                var savedEntity = allSavedEntities.FirstOrDefault(e => 
+                    e.Sequence == originalEntity.Sequence && 
+                    e.RoleType == originalEntity.RoleType);
+                
+                if (savedEntity != null && savedEntity.Id > 0)
+                {
+                    savedDtos.Add(new PromptResultChatDto(savedEntity));
+                }
+                else
+                {
+                    // 如果找不到或 ID 仍然为 0，抛出异常而不是返回无效的 DTO
+                    // 这样可以确保问题被及时发现和修复
+                    throw new Exception($"保存对话记录失败：未找到 Sequence={originalEntity.Sequence}, RoleType={originalEntity.RoleType} 的已保存实体，或 ID 为 0。PromptResultId={promptResultId}");
+                }
+            }
 
             return savedDtos;
         }

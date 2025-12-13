@@ -840,17 +840,33 @@ var app = new Vue({
                     const newChatMessages = res.data.data || []
                     
                     // 验证新消息是否有有效的 ID
-                    const invalidMessages = newChatMessages.filter(msg => !msg.id || msg.id === 0)
+                    const invalidMessages = newChatMessages.filter(msg => {
+                        const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                        return !msgId || msgId === 0 || isNaN(msgId)
+                    })
+                    
                     if (invalidMessages.length > 0) {
-                        console.warn('警告：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID')
+                        console.error('错误：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID', invalidMessages)
                         // 如果消息没有 ID，重新加载历史记录以确保获取正确的 ID
                         const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
                         if (reloadRes.data.success) {
                             this.continueChatHistory = reloadRes.data.data || []
+                            console.log('重新加载后的历史记录:', this.continueChatHistory)
+                            
+                            // 验证重新加载后的记录是否都有有效的 ID
+                            const stillInvalid = this.continueChatHistory.filter(msg => {
+                                const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                                return !msgId || msgId === 0 || isNaN(msgId)
+                            })
+                            if (stillInvalid.length > 0) {
+                                console.error('严重错误：重新加载后仍有消息 ID 无效:', stillInvalid)
+                            }
                         }
                     } else {
                         // 追加新的对话记录到历史记录
+                        console.log('追加新消息到历史记录:', newChatMessages.map(m => ({ id: m.id, roleType: m.roleType, sequence: m.sequence })))
                         this.continueChatHistory.push(...newChatMessages)
+                        console.log('更新后的历史记录（最后5条）:', this.continueChatHistory.slice(-5).map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     }
                     
                     // 找到对应的输出项并更新
@@ -1788,21 +1804,45 @@ var app = new Vue({
         },
         // 切换聊天反馈（Like/Unlike）
         async toggleChatFeedback(chatId, feedback) {
-            // 验证 chatId 是否有效
-            if (!chatId || chatId === 0 || chatId === '0') {
-                console.error('无效的 chatId:', chatId)
-                this.$message({
-                    message: '对话记录ID无效，请刷新页面后重试',
-                    type: 'error'
-                })
+            // 防止重复点击：如果正在处理，直接返回
+            if (this._isUpdatingFeedback) {
                 return
             }
+            this._isUpdatingFeedback = true
             
             try {
-                // 找到当前消息
-                const msgIndex = this.continueChatHistory.findIndex(msg => msg.id === chatId)
+                // 验证 chatId 是否有效
+                if (!chatId || chatId === 0 || chatId === '0') {
+                    console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
+                    console.error('当前历史记录:', this.continueChatHistory)
+                    this.$message({
+                        message: '对话记录ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 确保 chatId 是数字类型
+                const numericChatId = typeof chatId === 'string' ? parseInt(chatId, 10) : chatId
+                if (isNaN(numericChatId) || numericChatId <= 0) {
+                    console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
+                    this.$message({
+                        message: '对话记录ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 找到当前消息（同时检查 id 和 numericChatId）
+                const msgIndex = this.continueChatHistory.findIndex(msg => {
+                    const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                    return msgId === numericChatId || msg.id === numericChatId || msg.id === chatId
+                })
+                
                 if (msgIndex === -1) {
-                    console.error('未找到对应的对话记录，chatId:', chatId, '历史记录:', this.continueChatHistory)
+                    console.error('未找到对应的对话记录')
+                    console.error('查找的 chatId:', numericChatId, '原始 chatId:', chatId)
+                    console.error('历史记录中的所有 ID:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     this.$message({
                         message: '未找到对应的对话记录，请刷新页面后重试',
                         type: 'error'
@@ -1811,12 +1851,25 @@ var app = new Vue({
                 }
                 
                 const currentMsg = this.continueChatHistory[msgIndex]
+                console.log('找到的消息:', currentMsg)
+                
+                // 验证消息 ID 是否有效
+                const msgId = typeof currentMsg.id === 'string' ? parseInt(currentMsg.id, 10) : currentMsg.id
+                if (!msgId || msgId === 0 || isNaN(msgId)) {
+                    console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
+                    this.$message({
+                        message: '消息ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
                 // 如果点击的是当前已选中的反馈，则取消反馈（设为null）
                 const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
                 
-                // 调用API更新反馈
+                // 调用API更新反馈（使用有效的消息 ID）
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
-                    chatId: chatId,
+                    chatId: msgId,
                     feedback: newFeedback
                 })
                 
@@ -1837,10 +1890,14 @@ var app = new Vue({
                     })
                 }
             } catch (error) {
+                console.error('更新反馈失败:', error)
                 this.$message({
                     message: '更新反馈失败：' + (error.message || '未知错误'),
                     type: 'error'
                 })
+            } finally {
+                // 重置标志，允许下次点击
+                this._isUpdatingFeedback = false
             }
         },
         // 处理对话历史滚动
