@@ -24,6 +24,9 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Senparc.CO2NET.Cache;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -175,17 +178,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (isChatMode && !string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(aiResult.OutputString))
             {
                 var chatMessages = new List<ChatMessageDto>();
-                
+
                 // 如果有历史记录，先添加历史记录
                 if (chatHistory != null && chatHistory.Count > 0)
                 {
                     chatMessages.AddRange(chatHistory);
                 }
-                
+
                 // 添加当前对话（用户消息和 AI 响应）
                 chatMessages.Add(new ChatMessageDto { Role = "user", Content = userMessage });
                 chatMessages.Add(new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString });
-                
+
                 await _promptResultChatService.AddChatMessagesAsync(promptResult.Id, chatMessages);
             }
 
@@ -226,11 +229,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 获取历史对话记录
             var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
-            var chatHistoryForAI = chatHistory.Select(c => new ChatMessageDto
-            {
-                Role = c.RoleType == ChatRoleType.User ? "user" : "assistant",
-                Content = c.Content
-            }).ToList();
+            // var chatHistoryForAI = chatHistory.Select(c => new ChatMessageDto
+            // {
+            //     Role = c.RoleType == ChatRoleType.User ? "user" : "assistant",
+            //     Content = c.Content
+            // }).ToList();
 
             // 定义 AI 接口调用参数
             var promptParameter = new PromptConfigParameter()
@@ -255,27 +258,42 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 创建 AI Handler 处理器
             var handler = new SemanticAiHandler(aiSettings);
 
+            var hisgoryArgName = "history";
+
             // 使用 ChatConfig，使用基于 promptResultId 的唯一 userId
-            // 注意：ChatConfig 会自动从存储中加载历史记录（如果使用相同的 userId）
-            // 但为了确保使用我们数据库中的历史记录，我们需要将历史记录传递给 ChatAsync
-            // 方法：ChatAsync 方法应该会自动管理历史记录，但我们需要确保历史记录被正确传递
-            // 如果 ChatConfig 的内部存储机制与我们数据库不同步，可能需要手动设置历史记录
-            
             IWantToRun iWantToRun = handler.ChatConfig(promptParameter,
                 userId: $"PromptResult_{promptResultId}",
                 maxHistoryStore: 20,
                 chatSystemMessage: completionPrompt,
                 senparcAiSetting: aiSettings,
+                hisgoryArgName: hisgoryArgName,
                 kernelBuilderAction: kh => { }
-            );
+                );
+
+            // 获取历史记录并添加到 KernelArguments
+            var chatHistoryFromKernel = iWantToRun.StoredAiArguments.KernelArguments[hisgoryArgName] as ChatHistory;
+
+            if (chatHistoryFromKernel != null)
+            {
+                foreach (var c in chatHistory)
+                {
+                    switch (c.RoleType)
+                    {
+                        case ChatRoleType.User:
+                            chatHistoryFromKernel.AddUserMessage(c.Content);
+                            break;
+                        case ChatRoleType.Assistant:
+                            chatHistoryFromKernel.AddAssistantMessage(c.Content);
+                            break;
+                    }
+                }
+
+                iWantToRun.StoredAiArguments.KernelArguments[hisgoryArgName] = chatHistoryFromKernel;
+            }
 
             // 调用 AI 接口
-            // 注意：ChatAsync 方法会自动管理历史记录，通过 userId 来关联
-            // 但为了确保使用数据库中的历史记录，我们需要找到正确的方法传递历史记录
-            // 如果 ChatConfig 的内部存储机制与我们数据库不同步，可能需要手动设置历史记录
-            // 暂时先使用 ChatAsync，期望它能通过 userId 自动加载历史记录
             var dt1 = SystemTime.Now;
-            var aiResult = await handler.ChatAsync(iWantToRun, userMessage);
+            var aiResult = await handler.ChatAsync(iWantToRun, userMessage,historyArgName:hisgoryArgName);
             var costTime = SystemTime.DiffTotalMS(dt1);
 
             // 追加新的对话记录到 PromptResultChat
