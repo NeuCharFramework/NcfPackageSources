@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -301,8 +301,8 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             .Select(p => this.Mapper.Map<PromptItemDto>(p))
             .ToList();
 
-        // 根据 Tactic 的第一位, 将 list 转为 Dictionary<string,List<PromptItem>>
-        var itemGroupByT = promptItems.GroupBy(p => p.Tactic.Substring(0, 1))
+        // 根据 Tactic 的第一级（第一个点号之前的部分，如 "1"、"11"、"1.1" 分别提取为 "1"、"11"、"1"）
+        var itemGroupByT = promptItems.GroupBy(p => p.Tactic.Split('.')[0])
             .ToDictionary(p => p.Key, p => p.ToList());
 
         var resp = new Statistic_TodayTacticResponse(promptItem.RangeName, DateTime.Now);
