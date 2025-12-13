@@ -1353,6 +1353,56 @@
             white-space: pre-line;
         }
 
+        /* Markdown table 样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table thead {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table th {
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #303133;
+            border-bottom: 2px solid #409eff;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table tbody tr {
+            border-bottom: 1px solid #ebeef5;
+            transition: background-color 0.2s ease;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table tbody tr:hover {
+            background-color: #f5f7fa;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table td {
+            padding: 10px 12px;
+            color: #606266;
+            font-size: 14px;
+            border-bottom: 1px solid #ebeef5;
+            word-break: break-word;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
             margin-right: 160px; /* 为右侧滚动条预留空间 */
