@@ -42,8 +42,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// </summary>
         /// <param name="promptResultId">PromptResult 的 ID</param>
         /// <param name="chatMessages">对话消息列表，格式：[{role: 'user'|'assistant', content: string}]</param>
+        /// <param name="startSequence">起始序号，如果为 null 则从现有最大序号+1开始，如果为 1 则从头开始</param>
         /// <returns></returns>
-        public async Task<List<PromptResultChatDto>> AddChatMessagesAsync(int promptResultId, List<ChatMessageDto> chatMessages)
+        public async Task<List<PromptResultChatDto>> AddChatMessagesAsync(int promptResultId, List<ChatMessageDto> chatMessages, int? startSequence = null)
         {
             if (chatMessages == null || chatMessages.Count == 0)
             {
@@ -51,7 +52,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             var chatEntities = new List<PromptResultChat>();
-            int sequence = 1;
+            int sequence;
+
+            // 如果指定了起始序号，使用它；否则从现有最大序号+1开始
+            if (startSequence.HasValue)
+            {
+                sequence = startSequence.Value;
+            }
+            else
+            {
+                // 获取现有的最大序号
+                var existingChats = await this.GetFullListAsync(c => c.PromptResultId == promptResultId);
+                sequence = existingChats.Count > 0 ? existingChats.Max(c => c.Sequence) + 1 : 1;
+            }
 
             foreach (var msg in chatMessages)
             {

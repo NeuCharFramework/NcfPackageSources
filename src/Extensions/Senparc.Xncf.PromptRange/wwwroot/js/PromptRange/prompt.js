@@ -794,8 +794,13 @@ var app = new Vue({
                             return
                         }
                         
-                        // 执行打靶，将输入内容作为 userMessage 传递
-                        await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
+                        // 如果是继续聊天模式，调用继续聊天 API
+                        if (this.continueChatMode && this.continueChatPromptResultId) {
+                            await this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
+                        } else {
+                            // 执行打靶，将输入内容作为 userMessage 传递
+                            await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
+                        }
                         // 清空对话输入
                         this.tacticalChatInput = ''
                         return
@@ -807,6 +812,64 @@ var app = new Vue({
                     return false;
                 }
             });
+        },
+        
+        // 继续聊天提交
+        async continueChatSubmit(promptResultId, userMessage) {
+            this.tacticalFormSubmitLoading = true
+            try {
+                const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
+                    promptResultId: promptResultId,
+                    userMessage: userMessage
+                })
+                
+                if (res.data.success) {
+                    const newChatMessages = res.data.data || []
+                    
+                    // 找到对应的输出项并更新
+                    const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
+                    if (resultIndex !== -1) {
+                        const resultItem = this.outputList[resultIndex]
+                        
+                        // 追加新的对话记录到历史记录
+                        this.continueChatHistory.push(...newChatMessages)
+                        
+                        // 更新显示：将最新的 AI 回复追加到 ResultString
+                        const latestAssistantMessage = newChatMessages.find(msg => msg.roleType === 2)
+                        if (latestAssistantMessage) {
+                            // 追加到现有的 ResultString（格式化为对话形式）
+                            const currentResult = resultItem.resultString || ''
+                            const separator = currentResult ? '\n\n---\n\n' : ''
+                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            resultItem.resultString = currentResult + separator + newContent
+                            resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                        }
+                        
+                        // 刷新对话历史显示
+                        this.$forceUpdate()
+                    }
+                    
+                    // 清空输入框，但保持弹窗打开以便继续对话
+                    this.tacticalChatInput = ''
+                    this.$message({
+                        message: '对话已追加',
+                        type: 'success',
+                        duration: 2000
+                    })
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '继续聊天失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                this.$message({
+                    message: '继续聊天失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            } finally {
+                this.tacticalFormSubmitLoading = false
+            }
         },
         /*
         * 打靶 事件

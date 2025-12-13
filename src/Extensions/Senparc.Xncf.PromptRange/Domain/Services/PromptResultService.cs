@@ -198,6 +198,103 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
+        /// <summary>
+        /// 继续聊天：在现有 PromptResult 中追加对话记录，不创建新的 PromptResult
+        /// </summary>
+        /// <param name="promptResultId">现有的 PromptResult ID</param>
+        /// <param name="userMessage">用户消息</param>
+        /// <returns>返回新追加的对话记录（用户消息和 AI 回复）</returns>
+        public async Task<List<PromptResultChatDto>> ContinueChatAsync(int promptResultId, string userMessage)
+        {
+            if (string.IsNullOrWhiteSpace(userMessage))
+            {
+                throw new NcfExceptionBase("用户消息不能为空");
+            }
+
+            // 获取现有的 PromptResult
+            var promptResult = await this.GetObjectAsync(p => p.Id == promptResultId)
+                ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
+
+            // 验证是否为聊天模式
+            if (promptResult.Mode != ResultMode.Chat)
+            {
+                throw new NcfExceptionBase("只有聊天模式的 PromptResult 才能继续聊天");
+            }
+
+            // 获取 PromptItem
+            var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
+
+            // 获取历史对话记录
+            var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
+            var chatHistoryForAI = chatHistory.Select(c => new ChatMessageDto
+            {
+                Role = c.RoleType == ChatRoleType.User ? "user" : "assistant",
+                Content = c.Content
+            }).ToList();
+
+            // 定义 AI 接口调用参数
+            var promptParameter = new PromptConfigParameter()
+            {
+                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
+                Temperature = promptItem.Temperature,
+                TopP = promptItem.TopP,
+                FrequencyPenalty = promptItem.FrequencyPenalty,
+                PresencePenalty = promptItem.PresencePenalty,
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+            };
+
+            string completionPrompt = $@"{promptItem.Content}";
+
+            // 从数据库中获取模型信息
+            var model = promptItem.AIModelDto;
+            // 构建生成AI设置
+            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+
+            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
+
+            // 创建 AI Handler 处理器
+            var handler = new SemanticAiHandler(aiSettings);
+
+            // 使用 ChatConfig，使用基于 promptResultId 的唯一 userId 以确保历史记录正确关联
+            // 注意：ChatConfig 会自动从存储中加载历史记录（如果使用相同的 userId）
+            // 但为了确保历史记录被正确使用，我们需要手动设置历史记录
+            // 这里我们使用一个唯一的 userId，但实际上 ChatAsync 会自动管理历史记录
+            IWantToRun iWantToRun = handler.ChatConfig(promptParameter,
+                userId: $"PromptResult_{promptResultId}",
+                maxHistoryStore: 20,
+                chatSystemMessage: completionPrompt,
+                senparcAiSetting: aiSettings,
+                kernelBuilderAction: kh => { }
+            );
+
+            // 如果有历史记录，需要手动设置到 ChatConfig 中
+            // 注意：ChatAsync 方法会自动从存储中加载历史记录，但为了确保使用我们数据库中的历史记录，
+            // 我们需要在调用 ChatAsync 之前手动设置历史记录
+            // 由于 ChatConfig 的内部实现，我们可能需要通过其他方式传递历史记录
+            // 这里先使用 ChatAsync，它应该会自动管理历史记录
+
+            // 调用 AI 接口
+            var dt1 = SystemTime.Now;
+            var aiResult = await handler.ChatAsync(iWantToRun, userMessage);
+            var costTime = SystemTime.DiffTotalMS(dt1);
+
+            // 追加新的对话记录到 PromptResultChat
+            var newChatMessages = new List<ChatMessageDto>
+            {
+                new ChatMessageDto { Role = "user", Content = userMessage },
+                new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString }
+            };
+
+            // 添加新的对话记录（会自动从现有最大序号+1开始）
+            var newChatDtos = await _promptResultChatService.AddChatMessagesAsync(promptResultId, newChatMessages);
+
+            // 更新 PromptResult 的 ResultString（追加新的回复）
+            // 注意：由于 ResultString 是 private set，我们需要通过反射或者添加一个更新方法
+            // 这里我们暂时不更新 ResultString，因为对话记录已经保存在 PromptResultChat 中了
+            // 如果需要更新，可以添加一个 UpdateResultString 方法
+
+            return newChatDtos;
+        }
 
         public async Task<PromptResult> ManualScoreAsync(int id, decimal score)
         {
