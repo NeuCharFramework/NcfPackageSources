@@ -137,8 +137,15 @@ var app = new Vue({
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
-                tactics: '重新瞄准'
+                tactics: '重新瞄准',
+                chatMode: '对话模式' // 对话模式/直接测试，默认对话模式
             },
+            // 战术选择弹窗中的对话输入
+            tacticalChatInput: '', // 对话模式下的用户输入内容
+            // 继续聊天相关状态
+            continueChatMode: false, // 是否处于继续聊天模式
+            continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
+            continueChatHistory: [], // 继续聊天的历史记录
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -266,11 +273,6 @@ var app = new Vue({
             dialogVisible: false,
             targetlaneName: '',
             dailogpromptOptlist: [],
-            // 对话测试相关
-            chatDialogVisible: false, // 对话测试弹窗显隐
-            chatMessages: [], // 对话消息列表
-            chatInputMessage: '', // 当前输入的消息
-            chatLoading: false, // 是否正在发送消息
             box1Hidden: false,
             box2Hidden: false,
             box3Hidden: false,
@@ -778,151 +780,144 @@ var app = new Vue({
         },
         // 战术选择 dialog 提交
         tacticalFormSubmitBtn() {
+            // 如果是继续聊天模式，直接处理，不需要验证战术字段
+            if (this.continueChatMode && this.continueChatPromptResultId) {
+                // 检查是否有输入内容
+                if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                    this.$message({
+                        message: '请输入对话内容',
+                        type: 'warning',
+                        duration: 3000
+                    })
+                    return
+                }
+                
+                // 调用继续聊天 API
+                this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
+                return
+            }
+            
+            // 普通模式，需要验证表单
             this.$refs.tacticalForm.validate(async (valid) => {
                 if (valid) {
-                    this.tacticalFormSubmitLoading = true
-                    let _postData = {
-                        //promptid: this.promptid,// 选择靶场
-                        modelid: this.modelid,// 选择模型
-                        content: this.content,// prompt 输入内容
-                        note: this.remarks, // prompt 输入的备注
-                        numsOfResults: 1,
-                        isDraft: this.sendBtnText === '保存草稿',
-                        suffix: this.promptParamForm.suffix,
-                        prefix: this.promptParamForm.prefix
-                    }
-                    // ai评分标准
-                    _postData.isAIGrade = this.isAIGrade
-                    if (this.aiScoreForm.resultList.length > 0) {
-                        let _list = this.aiScoreForm.resultList.map(item => item.value)
-                        _list = _list.filter(item => item)
-                        if (_list.length > 0) {
-                            _postData.expectedResultsJson = JSON.stringify(_list)
+                    // 如果选择对话模式，需要检查是否有输入内容
+                    if (this.tacticalForm.chatMode === '对话模式') {
+                        // 检查是否有输入内容
+                        if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                            this.$message({
+                                message: '请输入对话内容',
+                                type: 'warning',
+                                duration: 3000
+                            })
+                            return
                         }
+                        
+                        // 执行打靶，将输入内容作为 userMessage 传递
+                        await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
+                        // 清空对话输入
+                        this.tacticalChatInput = ''
+                        return
                     }
                     
-                    if (this.promptParamForm.variableList.length > 0) {
-                        _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
-                    }
-                    if (this.promptid) {
-                        _postData.id = this.promptid
-                        //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                        if (this.tacticalForm.tactics === '创建顶级战术') {
-                            _postData.isTopTactic = true // prompt 新建分支
-                        }
-                        if (this.tacticalForm.tactics === '创建平行战术') {
-                            _postData.isNewTactic = true // prompt 新建分支
-                        }
-                        if (this.tacticalForm.tactics === '创建子战术') {
-                            _postData.isNewSubTactic = true // prompt 新建子分支
-                        }
-                        if (this.tacticalForm.tactics === '重新瞄准') {
-                            _postData.isNewAiming = true // prompt 内容变化
-                        }
-                    }
-                    // id: null, // 
-                    this.parameterViewList.forEach(item => {
-                        // todo 单独处理
-                        if (item.formField === 'stopSequences') {
-                            _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
-                        } else if (item.formField === 'maxToken') {
-                            _postData[item.formField] = item.value ? Number(item.value) : 0
-                        } else {
-                            _postData[item.formField] = item.value
-                        }
-                    })
-
-                    // 要提交this.promptField
-                    _postData['rangeId'] = this.promptField
-                    let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
-                    // console.log('testHandel res ', res.data)
-                    this.tacticalFormSubmitLoading = false
-                    if (res.data.success) {
-                        this.pageChange = false
-                        // 关闭dialog
-                        this.tacticalFormVisible = false
-                        let {
-                            promptResultList = [],
-                            fullVersion = '',
-                            id,
-                            evalAvgScore = -1,
-                            evalMaxScore = -1
-                        } = res.data.data || {}
-
-                        // 拷贝数据
-                        let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                        delete copyResultData.promptResultList
-                        let vArr = copyResultData.fullVersion.split('-')
-                        copyResultData.promptFieldStr = vArr[0] || ''
-                        copyResultData.promptStr = vArr[1] || ''
-                        copyResultData.tacticsStr = vArr[2] || ''
-                        this.promptDetail = copyResultData
-                        this.sendBtns = [
-                            {
-                                text: '连发'
-                            },
-                            {
-                                text: '保存草稿'
-                            }
-                        ]
-                        this.sendBtnText = '连发'
-                        // 平均分 
-                        this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
-                        // 最高分
-                        this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
-                        // 输出列表
-                        this.outputList = promptResultList.map(item => {
-                            if (item) {
-                                item.promptId = id
-                                item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-
-                                //使用 MarkDown 格式，对输出结果进行展示
-                                item.resultStringHtml = marked.parse(item.resultString);
-
-                                item.scoreVal = 0 // 手动评分
-                                // ai评分预期结果
-                                item.alResultList = [{
-                                    id: 1,
-                                    label: '预期结果1',
-                                    value: ''
-                                }, {
-                                    id: 2,
-                                    label: '预期结果2',
-                                    value: ''
-                                }, {
-                                    id: 3,
-                                    label: '预期结果3',
-                                    value: ''
-                                }]
-                            }
-                            return item
-                        })
-                        //console.log('选择正确的靶场')
-                        //提交数据后，选择正确的靶场和靶道
-                        this.getFieldList().then(() => {
-                            this.getPromptOptData(id)
-                            // 获取分数趋势图表数据
-                            this.getScoringTrendData()
-                        })
-
-                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                            this.dealRapicFireHandel(this.numsOfResults - 1, id)
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        });
-                    }
+                    // 直接测试模式，继续原有流程
+                    await this.executeTargetShoot()
                 } else {
                     return false;
                 }
             });
+        },
+        
+        // 继续聊天提交
+        async continueChatSubmit(promptResultId, userMessage) {
+            this.tacticalFormSubmitLoading = true
+            try {
+                const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
+                    promptResultId: promptResultId,
+                    userMessage: userMessage || ''
+                })
+                
+                if (res.data.success) {
+                    const newChatMessages = res.data.data || []
+                    
+                    // 验证新消息是否有有效的 ID
+                    const invalidMessages = newChatMessages.filter(msg => {
+                        const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                        return !msgId || msgId === 0 || isNaN(msgId)
+                    })
+                    
+                    if (invalidMessages.length > 0) {
+                        console.error('错误：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID', invalidMessages)
+                        // 如果消息没有 ID，重新加载历史记录以确保获取正确的 ID
+                        const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                        if (reloadRes.data.success) {
+                            this.continueChatHistory = reloadRes.data.data || []
+                            console.log('重新加载后的历史记录:', this.continueChatHistory)
+                            
+                            // 验证重新加载后的记录是否都有有效的 ID
+                            const stillInvalid = this.continueChatHistory.filter(msg => {
+                                const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                                return !msgId || msgId === 0 || isNaN(msgId)
+                            })
+                            if (stillInvalid.length > 0) {
+                                console.error('严重错误：重新加载后仍有消息 ID 无效:', stillInvalid)
+                            }
+                        }
+                    } else {
+                        // 追加新的对话记录到历史记录
+                        console.log('追加新消息到历史记录:', newChatMessages.map(m => ({ id: m.id, roleType: m.roleType, sequence: m.sequence })))
+                        this.continueChatHistory.push(...newChatMessages)
+                        console.log('更新后的历史记录（最后5条）:', this.continueChatHistory.slice(-5).map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
+                    }
+                    
+                    // 找到对应的输出项并更新
+                    const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
+                    if (resultIndex !== -1) {
+                        const resultItem = this.outputList[resultIndex]
+                        
+                        // 更新显示：将最新的 AI 回复追加到 ResultString
+                        const latestAssistantMessage = this.continueChatHistory.find(msg => msg.roleType === 2 && msg.sequence === Math.max(...this.continueChatHistory.map(m => m.sequence)))
+                        if (latestAssistantMessage) {
+                            // 追加到现有的 ResultString（格式化为对话形式）
+                            const currentResult = resultItem.resultString || ''
+                            const separator = currentResult ? '\n\n---\n\n' : ''
+                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            resultItem.resultString = currentResult + separator + newContent
+                            resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                        }
+                    }
+                    
+                    // 刷新对话历史显示
+                    this.$forceUpdate()
+                    
+                    // 滚动到底部显示最新消息
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chatHistoryContainer')
+                        if (container) {
+                            container.scrollTop = container.scrollHeight
+                        }
+                    })
+                    
+                    // 清空输入框，但保持弹窗打开以便继续对话
+                    this.tacticalChatInput = ''
+                    this.$message({
+                        message: '对话已追加',
+                        type: 'success',
+                        duration: 2000
+                    })
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '继续聊天失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                this.$message({
+                    message: '继续聊天失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            } finally {
+                this.tacticalFormSubmitLoading = false
+            }
         },
         /*
         * 打靶 事件
@@ -1169,9 +1164,29 @@ var app = new Vue({
             }
             this.targetShootLoading = true
             this.dodgersLoading = true
+            
+            // 获取第一个结果的模式，用于后续结果保持一致
+            let firstUserMessage = null
+            
+            // 检查 outputList 中最后一个结果（应该是第一个生成的结果）
+            if (this.outputList.length > 0) {
+                const lastResult = this.outputList[this.outputList.length - 1]
+                const firstResultMode = lastResult.mode
+                
+                // 如果第一个结果是 Chat 模式，需要获取 userMessage
+                if (firstResultMode === 2 || firstResultMode === 'Chat') {
+                    // 从第一个结果的生成参数中获取 userMessage
+                    // 注意：我们需要保存第一个结果生成时的 userMessage
+                    // 如果是在对话模式下生成的，应该保存了 userMessage
+                    // 这里我们使用保存的 userMessage（如果有的话）
+                    firstUserMessage = this._lastUserMessage || null
+                }
+            }
+            
             let promises = [];
             for (let i = 0; i < howmany; i++) {
-                promises.push(this.rapidFireHandel(id));
+                // 如果第一个结果是 Chat 模式，传递 userMessage 以保持 Chat 模式
+                promises.push(this.rapidFireHandel(id, firstUserMessage));
             }
             await Promise.all(promises)
             // 从新获取靶场列表
@@ -1779,6 +1794,138 @@ var app = new Vue({
                 date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
             return YY + MM + DD + ' ' + hh + mm + ss;
         },
+        // 格式化聊天时间（更简洁的格式）
+        formatChatTime(d) {
+            if (!d) return ''
+            var date = new Date(d)
+            var now = new Date()
+            var diff = now - date
+            var minutes = Math.floor(diff / 60000)
+            var hours = Math.floor(minutes / 60)
+            var days = Math.floor(hours / 24)
+            
+            if (minutes < 1) return '刚刚'
+            if (minutes < 60) return minutes + '分钟前'
+            if (hours < 24) return hours + '小时前'
+            if (days < 7) return days + '天前'
+            
+            // 超过7天显示具体日期
+            var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+            var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+            var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+            var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            return MM + DD + ' ' + hh + mm
+        },
+        // 格式化聊天内容（支持markdown）
+        formatChatContent(content) {
+            if (!content) return ''
+            // 使用marked解析markdown
+            return marked.parse(content)
+        },
+        // 切换聊天反馈（Like/Unlike）
+        async toggleChatFeedback(chatId, feedback) {
+            // 防止重复点击：如果正在处理，直接返回
+            if (this._isUpdatingFeedback) {
+                return
+            }
+            this._isUpdatingFeedback = true
+            
+            try {
+                // 验证 chatId 是否有效
+                if (!chatId || chatId === 0 || chatId === '0') {
+                    console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
+                    console.error('当前历史记录:', this.continueChatHistory)
+                    this.$message({
+                        message: '对话记录ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 确保 chatId 是数字类型
+                const numericChatId = typeof chatId === 'string' ? parseInt(chatId, 10) : chatId
+                if (isNaN(numericChatId) || numericChatId <= 0) {
+                    console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
+                    this.$message({
+                        message: '对话记录ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 找到当前消息（同时检查 id 和 numericChatId）
+                const msgIndex = this.continueChatHistory.findIndex(msg => {
+                    const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                    return msgId === numericChatId || msg.id === numericChatId || msg.id === chatId
+                })
+                
+                if (msgIndex === -1) {
+                    console.error('未找到对应的对话记录')
+                    console.error('查找的 chatId:', numericChatId, '原始 chatId:', chatId)
+                    console.error('历史记录中的所有 ID:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
+                    this.$message({
+                        message: '未找到对应的对话记录，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                const currentMsg = this.continueChatHistory[msgIndex]
+                console.log('找到的消息:', currentMsg)
+                
+                // 验证消息 ID 是否有效
+                const msgId = typeof currentMsg.id === 'string' ? parseInt(currentMsg.id, 10) : currentMsg.id
+                if (!msgId || msgId === 0 || isNaN(msgId)) {
+                    console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
+                    this.$message({
+                        message: '消息ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 如果点击的是当前已选中的反馈，则取消反馈（设为null）
+                const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
+                
+                // 调用API更新反馈（使用有效的消息 ID）
+                // 注意：使用 Request DTO 格式，属性名需要首字母大写
+                const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
+                    ChatId: msgId,
+                    Feedback: newFeedback
+                })
+                
+                if (res.data.success) {
+                    // 更新本地数据
+                    this.continueChatHistory[msgIndex].userFeedback = newFeedback
+                    this.$forceUpdate()
+                    
+                    this.$message({
+                        message: newFeedback === null ? '已取消反馈' : (newFeedback ? '已点赞' : '已点踩'),
+                        type: 'success',
+                        duration: 1500
+                    })
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '更新反馈失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                console.error('更新反馈失败:', error)
+                this.$message({
+                    message: '更新反馈失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            } finally {
+                // 重置标志，允许下次点击
+                this._isUpdatingFeedback = false
+            }
+        },
+        // 处理对话历史滚动
+        handleChatHistoryScroll(event) {
+            // 可以在这里添加滚动相关的逻辑，比如显示滚动位置等
+            // 目前暂时不需要特殊处理
+        },
         // 输出 分数趋势图初始化
         chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
@@ -2313,13 +2460,227 @@ var app = new Vue({
 
         },
 
+        // 继续聊天：加载历史记录并打开战术选择弹窗
+        async continueChat(promptResultId, resultIndex) {
+            try {
+                // 加载对话历史记录
+                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                if (res.data.success) {
+                    this.continueChatMode = true
+                    this.continueChatPromptResultId = promptResultId
+                    this.continueChatHistory = res.data.data || []
+                    
+                    // 打开战术选择弹窗，锁定为对话模式
+                    this.tacticalForm.chatMode = '对话模式'
+                    this.tacticalFormVisible = true
+                    
+                    // 滚动到底部显示最新消息
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chatHistoryContainer')
+                        if (container) {
+                            container.scrollTop = container.scrollHeight
+                        }
+                    })
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '加载对话历史失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                this.$message({
+                    message: '加载对话历史失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            }
+        },
+        
         // 战术选择 关闭弹出
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
             this.tacticalForm = {
-                tactics: '重新瞄准'
+                tactics: '重新瞄准',
+                chatMode: '对话模式' // 重置为默认值
             }
-            this.$refs.tacticalForm.resetFields();
+            // 清空对话输入
+            this.tacticalChatInput = ''
+            // 重置继续聊天状态
+            this.continueChatMode = false
+            this.continueChatPromptResultId = null
+            this.continueChatHistory = []
+            if (this.$refs.tacticalForm) {
+                this.$refs.tacticalForm.resetFields();
+            }
+        },
+        
+        // 关闭对话输入弹窗
+        // 执行打靶的核心逻辑（提取出来供对话模式和直接测试模式复用）
+        async executeTargetShoot() {
+            await this.executeTargetShootWithChatMessage(null)
+        },
+        
+        // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
+        async executeTargetShootWithChatMessage(userMessage) {
+            this.tacticalFormSubmitLoading = true
+            
+            // 保存 userMessage，用于后续连发时保持 Chat 模式
+            this._lastUserMessage = userMessage || null
+            
+            let _postData = {
+                modelid: this.modelid,
+                content: this.content,
+                note: this.remarks,
+                numsOfResults: 1,
+                isDraft: this.sendBtnText === '保存草稿',
+                suffix: this.promptParamForm.suffix,
+                prefix: this.promptParamForm.prefix
+            }
+            
+            // 如果提供了 userMessage，添加到请求数据中
+            if (userMessage) {
+                _postData.userMessage = userMessage
+            }
+            
+            // 如果是继续聊天模式，传递历史记录
+            if (this.continueChatMode && this.continueChatHistory.length > 0) {
+                _postData.chatHistory = this.continueChatHistory.map(msg => ({
+                    role: msg.roleType === 1 ? 'user' : 'assistant',
+                    content: msg.content
+                }))
+            }
+            
+            // ai评分标准
+            _postData.isAIGrade = this.isAIGrade
+            if (this.aiScoreForm.resultList.length > 0) {
+                let _list = this.aiScoreForm.resultList.map(item => item.value)
+                _list = _list.filter(item => item)
+                if (_list.length > 0) {
+                    _postData.expectedResultsJson = JSON.stringify(_list)
+                }
+            }
+            
+            if (this.promptParamForm.variableList.length > 0) {
+                _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
+            }
+            if (this.promptid) {
+                _postData.id = this.promptid
+                //创建顶级战术，创建平行战术，创建子战术，重新瞄准
+                if (this.tacticalForm.tactics === '创建顶级战术') {
+                    _postData.isTopTactic = true
+                }
+                if (this.tacticalForm.tactics === '创建平行战术') {
+                    _postData.isNewTactic = true
+                }
+                if (this.tacticalForm.tactics === '创建子战术') {
+                    _postData.isNewSubTactic = true
+                }
+                if (this.tacticalForm.tactics === '重新瞄准') {
+                    _postData.isNewAiming = true
+                }
+            }
+            
+            this.parameterViewList.forEach(item => {
+                if (item.formField === 'stopSequences') {
+                    _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
+                } else if (item.formField === 'maxToken') {
+                    _postData[item.formField] = item.value ? Number(item.value) : 0
+                } else {
+                    _postData[item.formField] = item.value
+                }
+            })
+
+            _postData['rangeId'] = this.promptField
+            let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+            this.tacticalFormSubmitLoading = false
+            
+            if (res.data.success) {
+                this.pageChange = false
+                this.tacticalFormVisible = false
+                let {
+                    promptResultList = [],
+                    fullVersion = '',
+                    id,
+                    evalAvgScore = -1,
+                    evalMaxScore = -1
+                } = res.data.data || {}
+
+                let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                delete copyResultData.promptResultList
+                let vArr = copyResultData.fullVersion.split('-')
+                copyResultData.promptFieldStr = vArr[0] || ''
+                copyResultData.promptStr = vArr[1] || ''
+                copyResultData.tacticsStr = vArr[2] || ''
+                this.promptDetail = copyResultData
+                this.sendBtns = [
+                    {
+                        text: '连发'
+                    },
+                    {
+                        text: '保存草稿'
+                    }
+                ]
+                this.sendBtnText = '连发'
+                this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
+                this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
+                this.outputList = promptResultList.map(item => {
+                    if (item) {
+                        item.promptId = id
+                        item.version = fullVersion
+                        item.scoreType = '1'
+                        item.isScoreView = false
+                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                        item.resultStringHtml = marked.parse(item.resultString)
+                        item.scoreVal = 0
+                        item.alResultList = [{
+                            id: 1,
+                            label: '预期结果1',
+                            value: ''
+                        }, {
+                            id: 2,
+                            label: '预期结果2',
+                            value: ''
+                        }, {
+                            id: 3,
+                            label: '预期结果3',
+                            value: ''
+                        }]
+                        // 确保 mode 字段正确设置（后端返回的是枚举值 1 或 2）
+                        if (item.mode === undefined || item.mode === null) {
+                            item.mode = null // 兼容旧数据
+                        }
+                    }
+                    return item
+                })
+                
+                // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
+                if (promptResultList.length > 0) {
+                    const firstResult = promptResultList[0]
+                    if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
+                        // 如果不是 Chat 模式，清空保存的 userMessage
+                        this._lastUserMessage = null
+                    }
+                }
+                
+                // 重置继续聊天状态
+                this.continueChatMode = false
+                this.continueChatPromptResultId = null
+                this.continueChatHistory = []
+                
+                this.getFieldList().then(() => {
+                    this.getPromptOptData(id)
+                    this.getScoringTrendData()
+                })
+
+                if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                    this.dealRapicFireHandel(this.numsOfResults - 1, id)
+                }
+            } else {
+                this.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }
         },
         checkUseRed(index,item, which) {
             if (item.finalScore === -1 || item.finalScore === '-1') return '';
@@ -2638,11 +2999,16 @@ var app = new Vue({
             })
             return JSON.stringify(res)
         },
-        async rapidFireHandel(id) {
+        async rapidFireHandel(id, userMessage = null) {
             const promptItemId = id || this.promptid
             const numsOfResults = 1
+            const params = { promptItemId, numsOfResults }
+            // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
+            if (userMessage) {
+                params.userMessage = userMessage
+            }
             return await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
-                { params: { promptItemId, numsOfResults } }).then(res => {
+                { params }).then(res => {
                     //console.log('testHandel res ', res.data)
                     if (!res.data.success) {
                         app.$message({
@@ -4869,151 +5235,6 @@ var app = new Vue({
             const model = this.modelOpt.find(item => item.value === id);
             return model ? model.label : '未知模型';
         },
-        
-        // 对话测试相关方法
-        // 打开对话测试弹窗
-        openChatDialog() {
-            if (!this.promptid) {
-                this.$message({
-                    message: '请先选择一个靶道',
-                    type: 'warning',
-                    duration: 3000
-                });
-                return;
-            }
-            this.chatDialogVisible = true;
-            // 初始化对话消息列表
-            if (this.chatMessages.length === 0) {
-                this.chatMessages = [{
-                    role: 'assistant',
-                    content: '您好！我是AI助手，使用当前Prompt作为系统消息。您可以开始与我对话了。',
-                    timestamp: this.formatChatTime(new Date())
-                }];
-            }
-            // 确保滚动到底部
-            this.$nextTick(() => {
-                this.scrollChatToBottom();
-            });
-        },
-        
-        // 关闭对话测试弹窗
-        closeChatDialog() {
-            this.chatDialogVisible = false;
-        },
-        
-        // 发送消息
-        async sendChatMessage() {
-            if (!this.chatInputMessage.trim() || this.chatLoading) {
-                return;
-            }
-            
-            if (!this.promptid) {
-                this.$message({
-                    message: '请先选择一个靶道',
-                    type: 'warning',
-                    duration: 3000
-                });
-                return;
-            }
-            
-            const userMessage = this.chatInputMessage.trim();
-            // 添加用户消息到列表
-            this.chatMessages.push({
-                role: 'user',
-                content: userMessage,
-                timestamp: this.formatChatTime(new Date())
-            });
-            
-            // 清空输入框
-            this.chatInputMessage = '';
-            
-            // 滚动到底部
-            this.$nextTick(() => {
-                this.scrollChatToBottom();
-            });
-            
-            // 设置加载状态
-            this.chatLoading = true;
-            
-            try {
-                // 调用API发送消息
-                // 准备消息历史（不包含刚添加的用户消息，因为API会单独处理）
-                const historyMessages = this.chatMessages.slice(0, -1).map(msg => ({
-                    role: msg.role,
-                    content: msg.content
-                }));
-                
-                const res = await servicePR.post(
-                    `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.ChatTest`,
-                    {
-                        promptItemId: this.promptid,
-                        message: userMessage,
-                        messages: historyMessages
-                    }
-                );
-                
-                if (res.data.success && res.data.data) {
-                    // 添加助手回复到列表
-                    this.chatMessages.push({
-                        role: 'assistant',
-                        content: res.data.data.content || res.data.data,
-                        timestamp: this.formatChatTime(new Date())
-                    });
-                } else {
-                    this.$message({
-                        message: res.data.errorMessage || '发送消息失败',
-                        type: 'error',
-                        duration: 5000
-                    });
-                }
-            } catch (error) {
-                console.error('发送消息失败:', error);
-                this.$message({
-                    message: '发送消息失败，请稍后重试',
-                    type: 'error',
-                    duration: 5000
-                });
-            } finally {
-                this.chatLoading = false;
-                // 滚动到底部
-                this.$nextTick(() => {
-                    this.scrollChatToBottom();
-                });
-            }
-        },
-        
-        // 清空对话消息
-        clearChatMessages() {
-            this.$confirm('确定要清空所有对话记录吗？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.chatMessages = [{
-                    role: 'assistant',
-                    content: '对话已清空，您可以重新开始对话。',
-                    timestamp: this.formatChatTime(new Date())
-                }];
-            }).catch(() => {
-                // 取消操作
-            });
-        },
-        
-        // 滚动对话到底部
-        scrollChatToBottom() {
-            const container = this.$refs.chatMessagesContainer;
-            if (container) {
-                container.scrollTop = container.scrollHeight;
-            }
-        },
-        
-        // 格式化聊天时间
-        formatChatTime(date) {
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
-            return `${hours}:${minutes}:${seconds}`;
-        }
     }
 });
 

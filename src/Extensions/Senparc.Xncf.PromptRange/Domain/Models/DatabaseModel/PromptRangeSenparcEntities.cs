@@ -26,6 +26,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
         public DbSet<PromptRange> PromptRanges { get; set; }
 
+        /// <summary>
+        /// 数据库中的 PromptResultChat 实体
+        /// </summary>
+        public DbSet<PromptResultChat> PromptResultChats { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 

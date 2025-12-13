@@ -2,90 +2,98 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.PromptRange.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
+namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
 {
-    [DbContext(typeof(PromptRangeSenparcEntities_Sqlite))]
-    partial class PromptRangeSenparcEntities_SqliteModelSnapshot : ModelSnapshot
+    [DbContext(typeof(PromptRangeSenparcEntities_Dm))]
+    [Migration("20251213122556_Add_PromptResultChat")]
+    partial class Add_PromptResultChat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder
+                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             modelBuilder.Entity("Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Alias")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("ApiKey")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<string>("ApiVersion")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("DeploymentName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("Endpoint")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(250)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("MaxToken")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ModelType")
                         .HasMaxLength(20)
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Note")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(1000)");
 
                     b.Property<string>("OrganizationId")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Show")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -96,35 +104,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("Aiming")
                         .HasMaxLength(5)
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Content")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
-                    b.Property<double>("EvalAvgScore")
+                    b.Property<decimal>("EvalAvgScore")
                         .HasMaxLength(3)
-                        .HasColumnType("REAL");
+                        .HasColumnType("DECIMAL(29,4)");
 
-                    b.Property<double>("EvalMaxScore")
+                    b.Property<decimal>("EvalMaxScore")
                         .HasMaxLength(3)
-                        .HasColumnType("REAL");
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.Property<string>("ExpectedResultsJson")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<float>("FrequencyPenalty")
                         .HasColumnType("REAL");
@@ -132,80 +141,80 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("FullVersion")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<bool>("IsAIGrade")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("IsDraft")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("IsShare")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastRunTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("MaxToken")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ModelId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("NickName")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("Note")
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(20)");
 
                     b.Property<string>("ParentTac")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Prefix")
                         .HasMaxLength(10)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(10)");
 
                     b.Property<float>("PresencePenalty")
                         .HasColumnType("REAL");
 
                     b.Property<int>("RangeId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("RangeName")
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(20)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("StopSequences")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Suffix")
                         .HasMaxLength(10)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(10)");
 
                     b.Property<string>("Tactic")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<float>("Temperature")
                         .HasColumnType("REAL");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<float>("TopP")
                         .HasColumnType("REAL");
 
                     b.Property<string>("VariableDictJson")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.HasKey("Id");
 
@@ -216,36 +225,37 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Alias")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("RangeName")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(20)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -256,67 +266,68 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<double>("CostTime")
-                        .HasColumnType("REAL");
+                        .HasColumnType("FLOAT");
 
                     b.Property<decimal>("FinalScore")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<decimal>("HumanScore")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("LlmModelId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int?>("Mode")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("PromptCostToken")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("PromptItemId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("PromptItemVersion")
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("ResultCostToken")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("ResultString")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<decimal>("RobotScore")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TestType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TotalCostToken")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -327,46 +338,47 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("PromptResultId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("RoleType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("Sequence")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INT");
 
                     b.Property<bool?>("UserFeedback")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("BIT");
 
                     b.Property<decimal?>("UserScore")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.HasKey("Id");
 

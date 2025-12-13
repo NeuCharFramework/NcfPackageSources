@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.14.2-preview.1</Version>
+    <Version>0.15.0-preview.1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -74,6 +74,7 @@
       provide a scalable layout
       [2025-11-07] v0.14.1-preview.1 Optimize Prompt comparison
       [2025-12-11] v0.14.2-preview.1 Optimize Prompt keyword highlight
+      [2025-12-14] v0.15.0-preview.1 PromptRange support Chat mode
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

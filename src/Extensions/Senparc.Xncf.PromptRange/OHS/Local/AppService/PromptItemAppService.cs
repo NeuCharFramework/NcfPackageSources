@@ -60,11 +60,55 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     }
 
                     // 如果立即生成，就根据numsOfResults立即生成
+                    // 转换历史记录格式
+                    List<Domain.Services.ChatMessageDto> chatHistory = null;
+                    if (request.ChatHistory != null && request.ChatHistory.Count > 0)
+                    {
+                        chatHistory = request.ChatHistory.Select(h => new Domain.Services.ChatMessageDto
+                        {
+                            Role = h.Role,
+                            Content = h.Content
+                        }).ToList();
+                    }
+                    
+                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
+                    // 获取第一个结果的模式，用于后续结果保持一致
+                    ResultMode? firstResultMode = null;
+                    string firstUserMessage = request.UserMessage;
+                    List<Domain.Services.ChatMessageDto> firstChatHistory = chatHistory;
+                    
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
+                        // 如果是第一次生成，使用传入的参数
+                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        string currentUserMessage = null;
+                        List<Domain.Services.ChatMessageDto> currentChatHistory = null;
+                        
+                        if (i == 0)
+                        {
+                            // 第一次生成，使用传入的参数
+                            currentUserMessage = request.UserMessage;
+                            currentChatHistory = chatHistory;
+                        }
+                        else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
+                        {
+                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
+                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            currentUserMessage = firstUserMessage;
+                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                        }
+                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        
                         // 分别生成结果
-                        // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, currentUserMessage, currentChatHistory);
+                        
+                        // 记录第一个结果的模式
+                        if (i == 0)
+                        {
+                            firstResultMode = promptResult.Mode;
+                            firstUserMessage = currentUserMessage;
+                        }
+                        
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
@@ -379,42 +423,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         //     var rangePath = await _promptItemService.ExportPluginsAsync(itemVersion);
         //     return await BuildZipStream(rangePath);
         // }
-
-        /// <summary>
-        /// 对话测试接口 - 使用当前Prompt作为SystemMessage进行对话
-        /// </summary>
-        /// <param name="promptItemId">Prompt项ID</param>
-        /// <param name="message">用户消息</param>
-        /// <param name="messages">历史消息列表（可选）</param>
-        /// <returns></returns>
-        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<string>> ChatTest(int promptItemId, string message, List<object> messages = null)
-        {
-            return await this.GetResponseAsync<string>(
-                async (response, logger) =>
-                {
-                    // TODO: 这里需要根据实际需求实现对话逻辑
-                    // 1. 根据 promptItemId 获取 PromptItem
-                    // 2. 使用 PromptItem 的 Content 作为 SystemMessage
-                    // 3. 调用 AI 服务进行对话
-                    // 4. 返回 AI 的回复
-                    
-                    // Hard code 示例返回
-                    var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId);
-                    if (promptItem == null)
-                    {
-                        throw new Exception($"未找到 ID 为 {promptItemId} 的 PromptItem");
-                    }
-                    
-                    // TODO: 实现实际的对话逻辑
-                    // 这里只是示例，需要根据实际的 AI 服务调用方式来实现
-                    var systemMessage = promptItem.Content ?? "";
-                    
-                    // 模拟返回（实际应该调用 AI 服务）
-                    return $"收到消息: {message}\n\n当前使用的 SystemMessage (Prompt):\n{systemMessage}\n\n[这是硬编码的返回，请根据实际需求实现对话逻辑]";
-                }
-            );
-        }
 
         private static async Task<FileContentResult> BuildZipStreamAsync(string dirPath)
         {

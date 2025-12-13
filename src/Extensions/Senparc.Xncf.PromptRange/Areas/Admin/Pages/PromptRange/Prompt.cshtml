@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
 @{
     ViewData["Title"] = "PromptRange Prompt";
@@ -218,7 +218,6 @@
                                 <div class="titleContent">输入Prompt</div>
                             </div>
                             <div class="titleRow_rightBox">
-                                <el-button type="success" size="mini" icon="el-icon-chat-line-round" @@click="openChatDialog">对话测试</el-button>
                                 <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
                                 <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
                                 <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box2')"></i>
@@ -303,10 +302,10 @@
                             <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
                                 <div class="formItem">
                                     <el-form-item label="前缀" prop="prefix">
-                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{$"></el-input>
+                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{{$"></el-input>
                                     </el-form-item>
                                     <el-form-item label="后缀" prop="suffix">
-                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}"></el-input>
+                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}}"></el-input>
                                     </el-form-item>
                                 </div>
                                 @* 变量名 变量值 *@
@@ -451,6 +450,10 @@
                         <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
+                        </div>
+                        <div class="operateRow_item" v-if="item.mode === 2 || item.mode === 'Chat'" @@click="app.continueChat(item.id, index)" style="cursor: pointer; color: #409EFF;">
+                            <i class="el-icon-chat-line-round"></i>
+                            <span>继续聊天</span>
                         </div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
@@ -600,9 +603,16 @@
         </div>
     </el-drawer>
     @*战术选择 dialog*@
-    <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
+    <el-dialog 
+        :title="continueChatMode ? '继续聊天' : '战术选择'" 
+        :visible.sync="tacticalFormVisible" 
+        :width="continueChatMode ? '80%' : '50%'"
+        :close-on-click-modal="false"
+        center 
+        @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
-            <el-form-item label="战术" prop="tactics">
+            @* 继续聊天模式下不显示战术选择 *@
+            <el-form-item v-if="!continueChatMode" label="战术" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
                         <div class="d-f-startr-start-title">创建顶级战术</div>
@@ -649,6 +659,82 @@
                         </div>
                     </el-radio>
                 </el-radio-group>
+            </el-form-item>
+            <el-form-item v-if="!continueChatMode" label="测试模式" prop="chatMode">
+                <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
+                    <el-radio label="对话模式">
+                        <div>对话模式</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">以对话方式输入，输入后进行打靶</div>
+                    </el-radio>
+                    <el-radio label="直接测试">
+                        <div>直接测试</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">直接使用当前的 Prompt 进行测试</div>
+                    </el-radio>
+                </el-radio-group>
+                <div v-if="continueChatMode" style="margin-top: 8px; font-size: 12px; color: #E6A23C;">
+                    <i class="el-icon-lock"></i> 继续聊天模式已锁定为对话模式
+                </div>
+            </el-form-item>
+            @* 继续聊天模式下的历史记录显示 *@
+            <el-form-item v-if="continueChatMode" label="对话历史">
+                <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
+                    <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
+                        <i class="el-icon-chat-line-round"></i>
+                        <span>暂无对话记录</span>
+                    </div>
+                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2}">
+                        <div class="chat-message-avatar">
+                            <i :class="msg.roleType === 1 ? 'el-icon-user' : 'el-icon-service'"></i>
+                        </div>
+                        <div class="chat-message-content-wrapper">
+                            <div class="chat-message-header">
+                                <span class="chat-message-role">{{ msg.roleType === 1 ? '用户' : '助手' }}</span>
+                                <span class="chat-message-sequence">#{{ msg.sequence }}</span>
+                                <span class="chat-message-time">{{ formatChatTime(msg.addTime) }}</span>
+                            </div>
+                            <div class="chat-message-content" v-html="formatChatContent(msg.content)">
+                            </div>
+                            @* 只有助手消息才显示反馈按钮，并且必须有有效的 ID *@
+                            <div v-if="msg.roleType === 2 && msg.id && msg.id > 0" class="chat-message-feedback">
+                                <el-button 
+                                    :type="msg.userFeedback === true ? 'success' : 'text'" 
+                                    :icon="msg.userFeedback === true ? 'el-icon-check' : 'el-icon-thumb'" 
+                                    size="mini"
+                                    @@click="toggleChatFeedback(msg.id, true)"
+                                    title="点赞">
+                                    <span v-if="msg.userFeedback === true">已点赞</span>
+                                    <span v-else>点赞</span>
+                                </el-button>
+                                <el-button 
+                                    :type="msg.userFeedback === false ? 'danger' : 'text'" 
+                                    :icon="msg.userFeedback === false ? 'el-icon-close' : 'el-icon-remove-outline'" 
+                                    size="mini"
+                                    @@click="toggleChatFeedback(msg.id, false)"
+                                    title="点踩">
+                                    <span v-if="msg.userFeedback === false">已点踩</span>
+                                    <span v-else>点踩</span>
+                                </el-button>
+                            </div>
+                            @* 如果没有有效 ID，显示提示 *@
+                            <div v-if="msg.roleType === 2 && (!msg.id || msg.id === 0)" class="chat-message-feedback" style="color: #909399; font-size: 12px;">
+                                <i class="el-icon-loading"></i> 正在保存...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </el-form-item>
+            @* 对话模式下的对话输入区域 *@
+            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入" prop="chatInput">
+                <el-input 
+                    v-model="tacticalChatInput" 
+                    type="textarea" 
+                    :rows="6"
+                    :placeholder="continueChatMode ? '请输入您的下一句话...' : '请输入您的问题...'"
+                    :disabled="!promptid">
+                </el-input>
+                <div style="margin-top: 8px; font-size: 12px; color: #909399;">
+                    {{ continueChatMode ? '输入内容将追加到现有对话中' : '输入内容将作为 userMessage 参数传递到后端接口' }}
+                </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -1149,62 +1235,6 @@
         </div>
     </el-dialog>
     
-    @* 对话测试 dialog *@
-    <el-dialog title="对话测试" 
-               :visible.sync="chatDialogVisible" 
-               width="70%" 
-               top="5vh"
-               class="chat-test-dialog"
-               :close-on-click-modal="false"
-               @@close="closeChatDialog">
-        <div class="chat-container">
-            @* 消息列表区域 *@
-            <div class="chat-messages" ref="chatMessagesContainer">
-                <div v-for="(msg, index) in chatMessages" :key="index" :class="['chat-message', msg.role === 'user' ? 'user-message' : 'assistant-message']">
-                    <div class="message-role">{{ msg.role === 'user' ? '用户' : '助手' }}</div>
-                    <div class="message-content" v-html="msg.content"></div>
-                    <div class="message-time">{{ msg.timestamp }}</div>
-                </div>
-                <div v-if="chatLoading" class="chat-message assistant-message">
-                    <div class="message-role">助手</div>
-                    <div class="message-content">
-                        <i class="el-icon-loading"></i> 正在思考中...
-                    </div>
-                </div>
-            </div>
-            
-            @* 输入区域 *@
-            <div class="chat-input-area">
-                <el-input 
-                    v-model="chatInputMessage" 
-                    type="textarea" 
-                    :rows="3"
-                    placeholder="请输入您的消息..."
-                    @@keydown.ctrl.enter="sendChatMessage"
-                    :disabled="chatLoading || !promptid">
-                </el-input>
-                <div class="chat-input-actions">
-                    <span class="chat-tip">按 Ctrl+Enter 发送</span>
-                    <el-button 
-                        type="primary" 
-                        size="small" 
-                        @@click="sendChatMessage"
-                        :loading="chatLoading"
-                        :disabled="!chatInputMessage.trim() || !promptid">
-                        发送
-                    </el-button>
-                    <el-button 
-                        size="small" 
-                        @@click="clearChatMessages">
-                        清空对话
-                    </el-button>
-                </div>
-            </div>
-        </div>
-        <div slot="footer" class="dialog-footer">
-            <el-button @@click="chatDialogVisible = false">关闭</el-button>
-        </div>
-    </el-dialog>
 </div>
 
 

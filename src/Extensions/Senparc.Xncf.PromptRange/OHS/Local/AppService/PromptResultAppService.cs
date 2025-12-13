@@ -8,8 +8,10 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
@@ -20,14 +22,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // private readonly RepositoryBase<PromptResult> _promptResultRepository;
         private readonly PromptResultService _promptResultService;
         private readonly PromptItemService _promptItemService;
+        private readonly PromptResultChatService _promptResultChatService;
 
         public PromptResultAppService(
             IServiceProvider serviceProvider,
             PromptResultService promptResultService,
-            PromptItemService promptItemService) : base(serviceProvider)
+            PromptItemService promptItemService,
+            PromptResultChatService promptResultChatService) : base(serviceProvider)
         {
             _promptResultService = promptResultService;
             _promptItemService = promptItemService;
+            _promptResultChatService = promptResultChatService;
         }
 
         /// <summary>
@@ -116,7 +121,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults)
+        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults,string userMessage=null)
         {
             return await this.GetResponseAsync<PromptResult_ListResponse>(
                 async (response, logger) =>
@@ -135,9 +140,44 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
+                    
+                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
+                    // 获取第一个结果的模式，用于后续结果保持一致
+                    ResultMode? firstResultMode = null;
+                    string firstUserMessage = userMessage;
+                    List<ChatMessageDto> firstChatHistory = null;
+                    
                     for (int i = 0; i < numsOfResults; i++)
                     {
-                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem);
+                        // 如果是第一次生成，使用传入的参数
+                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        string currentUserMessage = null;
+                        List<ChatMessageDto> currentChatHistory = null;
+                        
+                        if (i == 0)
+                        {
+                            // 第一次生成，使用传入的参数
+                            currentUserMessage = userMessage;
+                            currentChatHistory = null; // 第一次生成时，chatHistory 应该为空
+                        }
+                        else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
+                        {
+                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
+                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            currentUserMessage = firstUserMessage;
+                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                        }
+                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        
+                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem, currentUserMessage, currentChatHistory);
+                        
+                        // 记录第一个结果的模式
+                        if (i == 0)
+                        {
+                            firstResultMode = result.Mode;
+                            firstUserMessage = currentUserMessage;
+                        }
+                        
                         resp.PromptResults.Add(result);
                     }
 
@@ -157,6 +197,51 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     await _promptResultService.UpdateEvalScoreAsync(promptItemId);
                     return "ok";
+                });
+        }
+
+        /// <summary>
+        /// 根据 PromptResultId 获取对话记录
+        /// </summary>
+        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<List<PromptResultChatDto>>> GetChatHistory(int promptResultId)
+        {
+            return await this.GetResponseAsync<List<PromptResultChatDto>>(
+                async (response, logger) =>
+                {
+                    return await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
+                });
+        }
+
+        /// <summary>
+        /// 继续聊天：在现有 PromptResult 中追加对话记录
+        /// </summary>
+        /// <param name="request">继续聊天请求</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<List<PromptResultChatDto>>> ContinueChat(PromptResult_ContinueChatRequest request)
+        {
+            return await this.GetResponseAsync<List<PromptResultChatDto>>(
+                async (response, logger) =>
+                {
+                    return await _promptResultService.ContinueChatAsync(request.PromptResultId, request.UserMessage);
+                });
+        }
+
+        /// <summary>
+        /// 更新对话记录的用户反馈（Like/Unlike）
+        /// </summary>
+        /// <param name="request">更新反馈请求</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PromptResultChatDto>> UpdateChatFeedback(PromptResult_UpdateChatFeedbackRequest request)
+        {
+            return await this.GetResponseAsync<PromptResultChatDto>(
+                async (response, logger) =>
+                {
+                    return await _promptResultChatService.UpdateUserFeedbackAsync(request.ChatId, request.Feedback);
                 });
         }
     }
