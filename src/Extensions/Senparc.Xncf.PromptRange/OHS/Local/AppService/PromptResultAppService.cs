@@ -182,16 +182,15 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <summary>
         /// 继续聊天：在现有 PromptResult 中追加对话记录
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
-        /// <param name="userMessage">用户消息</param>
+        /// <param name="request">继续聊天请求</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<List<PromptResultChatDto>>> ContinueChat(int promptResultId, string userMessage)
+        public async Task<AppResponseBase<List<PromptResultChatDto>>> ContinueChat(PromptResult_ContinueChatRequest request)
         {
             return await this.GetResponseAsync<List<PromptResultChatDto>>(
                 async (response, logger) =>
                 {
-                    return await _promptResultService.ContinueChatAsync(promptResultId, userMessage);
+                    return await _promptResultService.ContinueChatAsync(request.PromptResultId, request.UserMessage);
                 });
         }
     }

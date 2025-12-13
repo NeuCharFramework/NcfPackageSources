@@ -780,12 +780,30 @@ var app = new Vue({
         },
         // 战术选择 dialog 提交
         tacticalFormSubmitBtn() {
+            // 如果是继续聊天模式，直接处理，不需要验证战术字段
+            if (this.continueChatMode && this.continueChatPromptResultId) {
+                // 检查是否有输入内容
+                if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                    this.$message({
+                        message: '请输入对话内容',
+                        type: 'warning',
+                        duration: 3000
+                    })
+                    return
+                }
+                
+                // 调用继续聊天 API
+                this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
+                return
+            }
+            
+            // 普通模式，需要验证表单
             this.$refs.tacticalForm.validate(async (valid) => {
                 if (valid) {
                     // 如果选择对话模式，需要检查是否有输入内容
                     if (this.tacticalForm.chatMode === '对话模式') {
                         // 检查是否有输入内容
-                        if (!this.tacticalChatInput.trim()) {
+                        if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                             this.$message({
                                 message: '请输入对话内容',
                                 type: 'warning',
@@ -794,13 +812,8 @@ var app = new Vue({
                             return
                         }
                         
-                        // 如果是继续聊天模式，调用继续聊天 API
-                        if (this.continueChatMode && this.continueChatPromptResultId) {
-                            await this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
-                        } else {
-                            // 执行打靶，将输入内容作为 userMessage 传递
-                            await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
-                        }
+                        // 执行打靶，将输入内容作为 userMessage 传递
+                        await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
                         // 清空对话输入
                         this.tacticalChatInput = ''
                         return
@@ -820,7 +833,7 @@ var app = new Vue({
             try {
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
                     promptResultId: promptResultId,
-                    userMessage: userMessage
+                    userMessage: userMessage || ''
                 })
                 
                 if (res.data.success) {
