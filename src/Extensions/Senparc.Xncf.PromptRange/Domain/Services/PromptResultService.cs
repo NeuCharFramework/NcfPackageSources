@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,19 +33,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
         private readonly LlModelService _llModelService;
+        private readonly PromptResultChatService _promptResultChatService;
 
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
             PromptItemService promptItemService,
             PromptRangeService promptRangeService,
-            LlModelService llModelService
+            LlModelService llModelService,
+            PromptResultChatService promptResultChatService
             ) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;
             _promptRangeService = promptRangeService;
             _llModelService = llModelService;
+            _promptResultChatService = promptResultChatService;
         }
 
 
@@ -66,7 +69,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem, string userMessage = null)
+        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem, string userMessage = null, List<ChatMessageDto> chatHistory = null)
         {
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
@@ -155,13 +158,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptCostToken = 0;
             var resultCostToken = 0;
 
+            // 判断是否为聊天模式
+            var isChatMode = userMessage != null;
+            var resultMode = isChatMode ? ResultMode.Chat : ResultMode.Single;
+
             var promptResult = new PromptResult(
                 promptItem.ModelId, aiResult.OutputString, SystemTime.DiffTotalMS(dt1),
                 -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-                promptItem.FullVersion, promptItem.Id);
+                promptItem.FullVersion, promptItem.Id,
+                resultMode);
 
             await base.SaveObjectAsync(promptResult);
+
+            // 如果是聊天模式，保存对话记录
+            if (isChatMode && !string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(aiResult.OutputString))
+            {
+                var chatMessages = new List<ChatMessageDto>();
+                
+                // 如果有历史记录，先添加历史记录
+                if (chatHistory != null && chatHistory.Count > 0)
+                {
+                    chatMessages.AddRange(chatHistory);
+                }
+                
+                // 添加当前对话（用户消息和 AI 响应）
+                chatMessages.Add(new ChatMessageDto { Role = "user", Content = userMessage });
+                chatMessages.Add(new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString });
+                
+                await _promptResultChatService.AddChatMessagesAsync(promptResult.Id, chatMessages);
+            }
 
             // 有期望结果， 进行自动打分
             if (promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))

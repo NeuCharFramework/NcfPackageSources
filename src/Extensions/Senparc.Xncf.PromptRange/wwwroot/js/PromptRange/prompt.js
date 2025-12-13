@@ -142,6 +142,10 @@ var app = new Vue({
             },
             // 战术选择弹窗中的对话输入
             tacticalChatInput: '', // 对话模式下的用户输入内容
+            // 继续聊天相关状态
+            continueChatMode: false, // 是否处于继续聊天模式
+            continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
+            continueChatHistory: [], // 继续聊天的历史记录
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -2193,6 +2197,33 @@ var app = new Vue({
 
         },
 
+        // 继续聊天：加载历史记录并打开战术选择弹窗
+        async continueChat(promptResultId, resultIndex) {
+            try {
+                // 加载对话历史记录
+                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                if (res.data.success) {
+                    this.continueChatMode = true
+                    this.continueChatPromptResultId = promptResultId
+                    this.continueChatHistory = res.data.data || []
+                    
+                    // 打开战术选择弹窗，锁定为对话模式
+                    this.tacticalForm.chatMode = '对话模式'
+                    this.tacticalFormVisible = true
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '加载对话历史失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                this.$message({
+                    message: '加载对话历史失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            }
+        },
+        
         // 战术选择 关闭弹出
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
@@ -2202,6 +2233,10 @@ var app = new Vue({
             }
             // 清空对话输入
             this.tacticalChatInput = ''
+            // 重置继续聊天状态
+            this.continueChatMode = false
+            this.continueChatPromptResultId = null
+            this.continueChatHistory = []
             if (this.$refs.tacticalForm) {
                 this.$refs.tacticalForm.resetFields();
             }
@@ -2229,6 +2264,14 @@ var app = new Vue({
             // 如果提供了 userMessage，添加到请求数据中
             if (userMessage) {
                 _postData.userMessage = userMessage
+            }
+            
+            // 如果是继续聊天模式，传递历史记录
+            if (this.continueChatMode && this.continueChatHistory.length > 0) {
+                _postData.chatHistory = this.continueChatHistory.map(msg => ({
+                    role: msg.roleType === 1 ? 'user' : 'assistant',
+                    content: msg.content
+                }))
             }
             
             // ai评分标准
@@ -2326,9 +2369,18 @@ var app = new Vue({
                             label: '预期结果3',
                             value: ''
                         }]
+                        // 确保 mode 字段正确设置（后端返回的是枚举值 1 或 2）
+                        if (item.mode === undefined || item.mode === null) {
+                            item.mode = null // 兼容旧数据
+                        }
                     }
                     return item
                 })
+                
+                // 重置继续聊天状态
+                this.continueChatMode = false
+                this.continueChatPromptResultId = null
+                this.continueChatHistory = []
                 
                 this.getFieldList().then(() => {
                     this.getPromptOptData(id)

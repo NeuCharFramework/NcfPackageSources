@@ -10,6 +10,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
@@ -20,14 +21,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // private readonly RepositoryBase<PromptResult> _promptResultRepository;
         private readonly PromptResultService _promptResultService;
         private readonly PromptItemService _promptItemService;
+        private readonly PromptResultChatService _promptResultChatService;
 
         public PromptResultAppService(
             IServiceProvider serviceProvider,
             PromptResultService promptResultService,
-            PromptItemService promptItemService) : base(serviceProvider)
+            PromptItemService promptItemService,
+            PromptResultChatService promptResultChatService) : base(serviceProvider)
         {
             _promptResultService = promptResultService;
             _promptItemService = promptItemService;
+            _promptResultChatService = promptResultChatService;
         }
 
         /// <summary>
@@ -157,6 +161,21 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     await _promptResultService.UpdateEvalScoreAsync(promptItemId);
                     return "ok";
+                });
+        }
+
+        /// <summary>
+        /// 根据 PromptResultId 获取对话记录
+        /// </summary>
+        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<List<PromptResultChatDto>>> GetChatHistory(int promptResultId)
+        {
+            return await this.GetResponseAsync<List<PromptResultChatDto>>(
+                async (response, logger) =>
+                {
+                    return await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
                 });
         }
     }

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
 @{
     ViewData["Title"] = "PromptRange Prompt";
@@ -451,6 +451,10 @@
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
                         </div>
+                        <div class="operateRow_item" v-if="item.mode === 2 || item.mode === 'Chat'" @@click="app.continueChat(item.id, index)" style="cursor: pointer; color: #409EFF;">
+                            <i class="el-icon-chat-line-round"></i>
+                            <span>继续聊天</span>
+                        </div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
                         <div class="tabsArea">
@@ -650,7 +654,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="测试模式" prop="chatMode">
-                <el-radio-group v-model="tacticalForm.chatMode">
+                <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
                     <el-radio label="对话模式">
                         <div>对话模式</div>
                         <div style="margin-top:5px; font-size:12px; color:#909399;">以对话方式输入，输入后进行打靶</div>
@@ -660,6 +664,20 @@
                         <div style="margin-top:5px; font-size:12px; color:#909399;">直接使用当前的 Prompt 进行测试</div>
                     </el-radio>
                 </el-radio-group>
+                <div v-if="continueChatMode" style="margin-top: 8px; font-size: 12px; color: #E6A23C;">
+                    <i class="el-icon-lock"></i> 继续聊天模式已锁定为对话模式
+                </div>
+            </el-form-item>
+            @* 继续聊天模式下的历史记录显示 *@
+            <el-form-item v-if="continueChatMode && continueChatHistory.length > 0" label="对话历史">
+                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #DCDFE6; border-radius: 4px; padding: 10px; background-color: #F5F7FA;">
+                    <div v-for="(msg, idx) in continueChatHistory" :key="idx" style="margin-bottom: 10px;">
+                        <div style="font-weight: bold; color: #409EFF; margin-bottom: 4px;">
+                            {{ msg.roleType === 1 ? '用户' : '助手' }} ({{ msg.sequence }})
+                        </div>
+                        <div style="color: #606266; white-space: pre-wrap;">{{ msg.content }}</div>
+                    </div>
+                </div>
             </el-form-item>
             @* 对话模式下的对话输入区域 *@
             <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入" prop="chatInput">
@@ -667,11 +685,11 @@
                     v-model="tacticalChatInput" 
                     type="textarea" 
                     :rows="6"
-                    placeholder="请输入您的问题..."
+                    :placeholder="continueChatMode ? '请输入您的下一句话...' : '请输入您的问题...'"
                     :disabled="!promptid">
                 </el-input>
                 <div style="margin-top: 8px; font-size: 12px; color: #909399;">
-                    输入内容将作为 userMessage 参数传递到后端接口
+                    {{ continueChatMode ? '输入内容将追加到现有对话中' : '输入内容将作为 userMessage 参数传递到后端接口' }}
                 </div>
             </el-form-item>
         </el-form>

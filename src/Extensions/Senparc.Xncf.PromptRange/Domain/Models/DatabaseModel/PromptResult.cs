@@ -80,6 +80,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         [MaxLength(50)]
         public string PromptItemVersion { get; private set; }
 
+        /// <summary>
+        /// 打靶模式：Chat（聊天模式）或 Single（单次测试模式），可为空（兼容旧数据）
+        /// </summary>
+        public ResultMode? Mode { get; private set; }
+
         private PromptResult()
         {
         }
@@ -97,6 +102,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             TotalCostToken = dto.TotalCostToken;
             PromptItemVersion = dto.PromptItemVersion;
             PromptItemId = dto.PromptItemId;
+            Mode = dto.Mode;
         }
 
 
@@ -104,7 +110,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             int llmModelId, string resultString, double costTime,
             int robotScore, int humanScore, int finalScore, // 分数
             TestType testType, int promptCostToken,
-            int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId)
+            int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId,
+            ResultMode? mode = null)
         {
             LlmModelId = llmModelId;
             ResultString = resultString;
@@ -117,6 +124,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             TotalCostToken = totalCostToken;
             PromptItemVersion = promptItemVersion;
             PromptItemId = promptItemId;
+            Mode = mode;
         }
 
 
@@ -176,5 +184,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         /// 声音
         /// </summary>
         Voice
+    }
+
+    /// <summary>
+    /// 打靶模式枚举
+    /// </summary>
+    public enum ResultMode
+    {
+        /// <summary>
+        /// 单次测试模式
+        /// </summary>
+        Single = 1,
+
+        /// <summary>
+        /// 聊天模式
+        /// </summary>
+        Chat = 2
     }
 }

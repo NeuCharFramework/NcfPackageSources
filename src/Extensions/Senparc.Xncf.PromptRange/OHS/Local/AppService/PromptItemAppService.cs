@@ -60,11 +60,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     }
 
                     // 如果立即生成，就根据numsOfResults立即生成
+                    // 转换历史记录格式
+                    List<Domain.Services.ChatMessageDto> chatHistory = null;
+                    if (request.ChatHistory != null && request.ChatHistory.Count > 0)
+                    {
+                        chatHistory = request.ChatHistory.Select(h => new Domain.Services.ChatMessageDto
+                        {
+                            Role = h.Role,
+                            Content = h.Content
+                        }).ToList();
+                    }
+                    
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
                         // 分别生成结果
                         // var promptResult = await _promptResultService.GenerateResultAsync(promptItem);
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, request.UserMessage);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, request.UserMessage, chatHistory);
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 

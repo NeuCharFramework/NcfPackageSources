@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
@@ -79,5 +80,26 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// 对话模式下的用户消息（可选）
         /// </summary>
         public string UserMessage { get; set; }
+        
+        /// <summary>
+        /// 继续聊天模式下的历史对话记录（可选）
+        /// </summary>
+        public List<ChatHistoryItem> ChatHistory { get; set; }
+    }
+    
+    /// <summary>
+    /// 对话历史记录项
+    /// </summary>
+    public class ChatHistoryItem
+    {
+        /// <summary>
+        /// 角色：'user' 或 'assistant'
+        /// </summary>
+        public string Role { get; set; }
+        
+        /// <summary>
+        /// 消息内容
+        /// </summary>
+        public string Content { get; set; }
     }
 }

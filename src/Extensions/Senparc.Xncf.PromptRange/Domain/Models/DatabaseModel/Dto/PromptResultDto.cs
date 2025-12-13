@@ -94,5 +94,10 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// 总共花费的 Token 数量
         /// </summary>
         public int TotalCostToken { get; set; }
+
+        /// <summary>
+        /// 打靶模式：Chat（聊天模式）或 Single（单次测试模式），可为空（兼容旧数据）
+        /// </summary>
+        public ResultMode? Mode { get; set; }
     }
 }
