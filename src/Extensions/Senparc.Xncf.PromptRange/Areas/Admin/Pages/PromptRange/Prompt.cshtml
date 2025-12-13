@@ -603,7 +603,13 @@
         </div>
     </el-drawer>
     @*战术选择 dialog*@
-    <el-dialog :title="continueChatMode ? '继续聊天' : '战术选择'" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
+    <el-dialog 
+        :title="continueChatMode ? '继续聊天' : '战术选择'" 
+        :visible.sync="tacticalFormVisible" 
+        :width="continueChatMode ? '80%' : '50%'"
+        :close-on-click-modal="false"
+        center 
+        @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
             @* 继续聊天模式下不显示战术选择 *@
             <el-form-item v-if="!continueChatMode" label="战术" prop="tactics">
