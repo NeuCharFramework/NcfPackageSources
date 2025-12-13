@@ -106,6 +106,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptRangeService>();
             services.AddScoped<PromptItemService>();
             services.AddScoped<PromptResultService>();
+            services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
 
             services.AddAutoMapper(z =>
@@ -113,6 +114,7 @@ namespace Senparc.Xncf.PromptRange
                 z.CreateMap<Domain.Models.DatabaseModel.PromptRange, PromptRangeDto>().ReverseMap();
                 z.CreateMap<PromptItem, PromptItemDto>().ReverseMap();
                 z.CreateMap<PromptResult, PromptResultDto>().ReverseMap();
+                z.CreateMap<PromptResultChat, PromptResultChatDto>().ReverseMap();
                 // z.CreateMap<LlModel, LlModelDto>().ReverseMap();
                 //
                 // z.CreateMap<LlModel, LlmModel_GetPageItemResponse>();
