@@ -844,22 +844,30 @@ var app = new Vue({
                     if (resultIndex !== -1) {
                         const resultItem = this.outputList[resultIndex]
                         
-                        // 追加新的对话记录到历史记录
-                        this.continueChatHistory.push(...newChatMessages)
-                        
-                        // 更新显示：将最新的 AI 回复追加到 ResultString
-                        const latestAssistantMessage = newChatMessages.find(msg => msg.roleType === 2)
-                        if (latestAssistantMessage) {
-                            // 追加到现有的 ResultString（格式化为对话形式）
-                            const currentResult = resultItem.resultString || ''
-                            const separator = currentResult ? '\n\n---\n\n' : ''
-                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
-                            resultItem.resultString = currentResult + separator + newContent
-                            resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                    // 追加新的对话记录到历史记录
+                    this.continueChatHistory.push(...newChatMessages)
+                    
+                    // 更新显示：将最新的 AI 回复追加到 ResultString
+                    const latestAssistantMessage = newChatMessages.find(msg => msg.roleType === 2)
+                    if (latestAssistantMessage) {
+                        // 追加到现有的 ResultString（格式化为对话形式）
+                        const currentResult = resultItem.resultString || ''
+                        const separator = currentResult ? '\n\n---\n\n' : ''
+                        const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                        resultItem.resultString = currentResult + separator + newContent
+                        resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                    }
+                    
+                    // 刷新对话历史显示
+                    this.$forceUpdate()
+                    
+                    // 滚动到底部显示最新消息
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chatHistoryContainer')
+                        if (container) {
+                            container.scrollTop = container.scrollHeight
                         }
-                        
-                        // 刷新对话历史显示
-                        this.$forceUpdate()
+                    })
                     }
                     
                     // 清空输入框，但保持弹窗打开以便继续对话
@@ -1739,6 +1747,93 @@ var app = new Vue({
                 date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
             return YY + MM + DD + ' ' + hh + mm + ss;
         },
+        // 格式化聊天时间（更简洁的格式）
+        formatChatTime(d) {
+            if (!d) return ''
+            var date = new Date(d)
+            var now = new Date()
+            var diff = now - date
+            var minutes = Math.floor(diff / 60000)
+            var hours = Math.floor(minutes / 60)
+            var days = Math.floor(hours / 24)
+            
+            if (minutes < 1) return '刚刚'
+            if (minutes < 60) return minutes + '分钟前'
+            if (hours < 24) return hours + '小时前'
+            if (days < 7) return days + '天前'
+            
+            // 超过7天显示具体日期
+            var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+            var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+            var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+            var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            return MM + DD + ' ' + hh + mm
+        },
+        // 格式化聊天内容（支持markdown）
+        formatChatContent(content) {
+            if (!content) return ''
+            // 使用marked解析markdown
+            return marked.parse(content)
+        },
+        // 切换聊天反馈（Like/Unlike）
+        async toggleChatFeedback(chatId, feedback) {
+            if (!chatId) {
+                this.$message({
+                    message: '对话记录ID无效',
+                    type: 'error'
+                })
+                return
+            }
+            
+            try {
+                // 找到当前消息
+                const msgIndex = this.continueChatHistory.findIndex(msg => msg.id === chatId)
+                if (msgIndex === -1) {
+                    this.$message({
+                        message: '未找到对应的对话记录',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                const currentMsg = this.continueChatHistory[msgIndex]
+                // 如果点击的是当前已选中的反馈，则取消反馈（设为null）
+                const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
+                
+                // 调用API更新反馈
+                const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
+                    chatId: chatId,
+                    feedback: newFeedback
+                })
+                
+                if (res.data.success) {
+                    // 更新本地数据
+                    this.continueChatHistory[msgIndex].userFeedback = newFeedback
+                    this.$forceUpdate()
+                    
+                    this.$message({
+                        message: newFeedback === null ? '已取消反馈' : (newFeedback ? '已点赞' : '已点踩'),
+                        type: 'success',
+                        duration: 1500
+                    })
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '更新反馈失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                this.$message({
+                    message: '更新反馈失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            }
+        },
+        // 处理对话历史滚动
+        handleChatHistoryScroll(event) {
+            // 可以在这里添加滚动相关的逻辑，比如显示滚动位置等
+            // 目前暂时不需要特殊处理
+        },
         // 输出 分数趋势图初始化
         chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
@@ -2286,6 +2381,14 @@ var app = new Vue({
                     // 打开战术选择弹窗，锁定为对话模式
                     this.tacticalForm.chatMode = '对话模式'
                     this.tacticalFormVisible = true
+                    
+                    // 滚动到底部显示最新消息
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chatHistoryContainer')
+                        if (container) {
+                            container.scrollTop = container.scrollHeight
+                        }
+                    })
                 } else {
                     this.$message({
                         message: res.data.errorMessage || '加载对话历史失败',

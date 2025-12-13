@@ -1,5 +1,6 @@
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using System;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 {
@@ -44,6 +45,11 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public decimal? UserScore { get; set; }
 
         /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime AddTime { get; set; }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         public PromptResultChatDto()
@@ -63,6 +69,7 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
             Sequence = entity.Sequence;
             UserFeedback = entity.UserFeedback;
             UserScore = entity.UserScore;
+            AddTime = entity.AddTime;
         }
     }
 }

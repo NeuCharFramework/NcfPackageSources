@@ -193,5 +193,21 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     return await _promptResultService.ContinueChatAsync(request.PromptResultId, request.UserMessage);
                 });
         }
+
+        /// <summary>
+        /// 更新对话记录的用户反馈（Like/Unlike）
+        /// </summary>
+        /// <param name="chatId">对话记录 ID</param>
+        /// <param name="feedback">Like（true）、Unlike（false）、取消反馈（null）</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PromptResultChatDto>> UpdateChatFeedback(int chatId, bool? feedback)
+        {
+            return await this.GetResponseAsync<PromptResultChatDto>(
+                async (response, logger) =>
+                {
+                    return await _promptResultChatService.UpdateUserFeedbackAsync(chatId, feedback);
+                });
+        }
     }
 }
