@@ -4962,7 +4962,17 @@ var app = new Vue({
                     console.log('[handlePaste] Calculated new caret position:', newCaretPos);
                     
                     const text = this.getEditorText();
+                    
+                    // 检查内容是否真的发生了变化
+                    const contentChanged = text !== this.content;
+                    
+                    // 更新 content
                     this.content = text;
+                    
+                    // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                    if (contentChanged) {
+                        this.promptChangeHandel(text, 'content');
+                    }
                     
                     // 应用高亮，并传入预期的光标位置
                     this.applyHighlightWithCaretPos(newCaretPos);
@@ -5004,7 +5014,17 @@ var app = new Vue({
                         console.log('[handleKeyDown] After Enter, calculated new caret position:', newCaretPos);
                         
                         const text = this.getEditorText();
+                        
+                        // 检查内容是否真的发生了变化
+                        const contentChanged = text !== this.content;
+                        
+                        // 更新 content
                         this.content = text;
+                        
+                        // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                        if (contentChanged) {
+                            this.promptChangeHandel(text, 'content');
+                        }
                         
                         // 使用 applyHighlightWithCaretPos 来应用高亮并恢复光标位置
                         this.applyHighlightWithCaretPos(newCaretPos);
@@ -5020,7 +5040,17 @@ var app = new Vue({
             if (this._isEntering) return;  // 回车操作中不处理，由 handleKeyDown 处理
             
             const text = this.getEditorText();
+            
+            // 检查内容是否真的发生了变化
+            const contentChanged = text !== this.content;
+            
+            // 更新 content
             this.content = text;
+            
+            // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+            if (contentChanged) {
+                this.promptChangeHandel(text, 'content');
+            }
             
             // 使用较短的防抖时间（150ms）来平衡性能和响应性
             // 这样用户输入、删除、剪切等操作时，高亮会立即更新
@@ -5126,6 +5156,9 @@ var app = new Vue({
             
             // 获取当前文本
             const text = this.getEditorText();
+            
+            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput、handlePaste、handleKeyDown 中处理）
+            // 这里只负责高亮显示
             this.content = text;
             
             // 生成高亮HTML
@@ -5150,8 +5183,9 @@ var app = new Vue({
                 });
             });
             
-            // 触发数据更新
-            this.promptChangeHandel(text, 'content');
+            // 注意：不再在这里调用 promptChangeHandel
+            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
+            // 这里只负责高亮显示
         },
         
         // 应用高亮（保存光标位置）
@@ -5164,6 +5198,9 @@ var app = new Vue({
             
             // 获取当前文本（在保存光标位置之前获取，确保文本一致性）
             const text = this.getEditorText();
+            
+            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput 中处理）
+            // 这里只负责高亮显示
             this.content = text;
             
             // 只有在编辑器有焦点时才保存光标位置
@@ -5206,8 +5243,9 @@ var app = new Vue({
                 }
             });
             
-            // 触发数据更新
-            this.promptChangeHandel(text, 'content');
+            // 注意：不再在这里调用 promptChangeHandel
+            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
+            // 这里只负责高亮显示，避免在 blur 时误触发状态变化
         },
         
         // 辅助方法：根据ID获取名称
