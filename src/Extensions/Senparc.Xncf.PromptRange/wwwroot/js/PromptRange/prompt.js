@@ -2563,15 +2563,25 @@ var app = new Vue({
             const gradientTexture = this.createGradientBackground()
             this.map3dScene.background = gradientTexture
             
-            // 创建相机
+            // 禁用雾化效果，确保远处节点清晰可见
+            this.map3dScene.fog = null
+            
+            // 创建相机（增大远裁剪面，确保所有节点都可见）
             const width = container.clientWidth
             const height = container.clientHeight
-            this.map3dCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+            // 参数：视场角(75度), 宽高比, 近裁剪面(0.1), 远裁剪面(5000 - 增大以支持更远的节点)
+            this.map3dCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 5000)
             this.map3dCamera.position.set(0, 0, 50)
             
-            // 创建渲染器
-            this.map3dRenderer = new THREE.WebGLRenderer({ antialias: true })
+            // 创建渲染器（禁用对数深度缓冲，提高远处物体的清晰度）
+            this.map3dRenderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                logarithmicDepthBuffer: false,
+                precision: 'highp' // 使用高精度，提高渲染质量
+            })
             this.map3dRenderer.setSize(width, height)
+            // 设置像素比，在高DPI屏幕上更清晰
+            this.map3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
             container.appendChild(this.map3dRenderer.domElement)
             
             // 添加控制器（使用本地化的 OrbitControls）
@@ -2582,11 +2592,11 @@ var app = new Vue({
                 this.map3dControls.enableDamping = true
                 this.map3dControls.dampingFactor = 0.05
                 
-                // 启用缩放
+                // 启用缩放（增大最大距离，支持更远的视角）
                 this.map3dControls.enableZoom = true
                 this.map3dControls.zoomSpeed = 1.2
                 this.map3dControls.minDistance = 10
-                this.map3dControls.maxDistance = 200
+                this.map3dControls.maxDistance = 500 // 从 200 增加到 500
                 
                 // 启用旋转
                 this.map3dControls.enableRotate = true
@@ -2605,24 +2615,29 @@ var app = new Vue({
                 console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
             }
             
-            // 添加更丰富的光源系统
-            // 环境光 - 提供基础照明
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
+            // 添加更丰富的光源系统（增强远处物体的照明）
+            // 环境光 - 提供基础照明（增强亮度以照亮远处节点）
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6) // 从 0.4 增加到 0.6
             this.map3dScene.add(ambientLight)
             
-            // 主方向光 - 模拟太阳光
+            // 主方向光 - 模拟太阳光（无衰减，照亮所有节点）
             const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8)
             directionalLight1.position.set(20, 20, 20)
             directionalLight1.castShadow = false
             this.map3dScene.add(directionalLight1)
             
-            // 辅助方向光 - 补充照明
-            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.4)
+            // 辅助方向光 - 补充照明（从另一侧照亮）
+            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5) // 从 0.4 增加到 0.5
             directionalLight2.position.set(-20, 10, -20)
             this.map3dScene.add(directionalLight2)
             
-            // 点光源 - 增加层次感
-            const pointLight = new THREE.PointLight(0xffffff, 0.5, 100)
+            // 第三方向光 - 从前方照亮远处节点
+            const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.4)
+            directionalLight3.position.set(0, 0, 50)
+            this.map3dScene.add(directionalLight3)
+            
+            // 点光源 - 增加层次感（无衰减距离限制）
+            const pointLight = new THREE.PointLight(0xffffff, 0.6, 0) // distance=0 表示无限距离
             pointLight.position.set(0, 20, 0)
             this.map3dScene.add(pointLight)
             
@@ -2786,13 +2801,15 @@ var app = new Vue({
             const raycaster = new THREE.Raycaster()
             const mouse = new THREE.Vector2()
             
-            // 递归渲染节点（改进的平衡布局算法）
+            // 递归渲染节点（改进的平衡布局算法 - 支持父节点垂直居中）
             const renderNode = (nodeData, parentPosition, depth, yOffset, availableSpace) => {
-                if (!nodeData || typeof nodeData !== 'object') return { yOffset, height: 0 }
+                if (!nodeData || typeof nodeData !== 'object') return { yOffset, height: 0, minY: yOffset, maxY: yOffset }
                 
                 const keys = Object.keys(nodeData)
                 let currentYOffset = yOffset
                 let totalHeight = 0
+                let minY = yOffset
+                let maxY = yOffset
                 
                 keys.forEach((key, index) => {
                     const node = nodeData[key]
@@ -2808,9 +2825,12 @@ var app = new Vue({
                     const baseSpacing = 8
                     const nodeSpacing = Math.max(baseSpacing, nodeCount * 2)
                     
+                    // 先记录子树的起始位置
+                    const subtreeStartY = currentYOffset
+                    
                     // 计算位置（水平分层，垂直排列，动态平衡）
                     const x = depth * 20
-                    const y = currentYOffset
+                    let y = currentYOffset // 暂时使用当前位置，后续可能调整
                     const z = 0
                     
                     // 检查是否有当前编辑的靶道
@@ -3102,10 +3122,37 @@ var app = new Vue({
                     }
                     
                     // 递归渲染子节点（传递子树可用空间）
+                    let childMinY = y
+                    let childMaxY = y
+                    
                     if (isExpanded && node.children && Object.keys(node.children).length > 0) {
                         const childResult = renderNode(node.children, { x, y, z }, depth + 1, currentYOffset, nodeSpacing)
                         currentYOffset = childResult.yOffset
                         totalHeight += childResult.height
+                        childMinY = childResult.minY
+                        childMaxY = childResult.maxY
+                        
+                        // 如果有子节点，将父节点调整到子树的垂直中点
+                        const subtreeMiddleY = (childMinY + childMaxY) / 2
+                        y = subtreeMiddleY
+                        
+                        // 更新已创建的mesh位置
+                        const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        if (currentNodeData) {
+                            currentNodeData.mesh.position.y = y
+                            if (currentNodeData.glowMesh) {
+                                currentNodeData.glowMesh.position.y = y
+                            }
+                            currentNodeData.sprite.position.y = y + (node.type === 'range' ? 5 : 4)
+                            currentNodeData.position.y = y
+                            
+                            // 更新连接线的起点（父节点端）
+                            if (currentNodeData.line && parentPosition) {
+                                const linePositions = currentNodeData.line.geometry.attributes.position.array
+                                linePositions[1] = y // 更新父节点端的 Y 坐标
+                                currentNodeData.line.geometry.attributes.position.needsUpdate = true
+                            }
+                        }
                         
                         // 记录子节点引用（用于快速更新可见性）
                         const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
@@ -3124,18 +3171,70 @@ var app = new Vue({
                         currentYOffset -= nodeSpacing
                     }
                     
+                    // 更新 minY 和 maxY
+                    minY = Math.min(minY, y, childMinY)
+                    maxY = Math.max(maxY, y, childMaxY)
+                    
                     totalHeight += nodeSpacing
                 })
                 
-                return { yOffset: currentYOffset, height: totalHeight }
+                return { yOffset: currentYOffset, height: totalHeight, minY, maxY }
             }
             
-            // 从根节点开始渲染
-            let startYOffset = 0
+            // 第一步：计算整个树的总高度，用于垂直居中
+            let totalTreeHeight = 0
+            const tempRenderForHeight = (nodeData, depth = 0) => {
+                if (!nodeData || typeof nodeData !== 'object') return 0
+                
+                let height = 0
+                Object.keys(nodeData).forEach(key => {
+                    const node = nodeData[key]
+                    const isExpanded = node.expanded !== false
+                    
+                    let nodeCount = 1
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                        nodeCount += this.countTreeNodes(node.children)
+                    }
+                    
+                    const baseSpacing = 8
+                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 2)
+                    
+                    height += nodeSpacing
+                    
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                        height += tempRenderForHeight(node.children, depth + 1)
+                    }
+                })
+                
+                return height
+            }
+            
+            // 计算所有根节点的总高度
+            Object.keys(this.map3dTreeData).forEach(key => {
+                totalTreeHeight += tempRenderForHeight({ [key]: this.map3dTreeData[key] })
+                totalTreeHeight += 10 // 根节点之间的额外间距
+            })
+            
+            // 从根节点开始渲染（垂直居中）
+            let startYOffset = totalTreeHeight / 2 // 从上半部分开始，实现垂直居中
+            
             Object.keys(this.map3dTreeData).forEach(key => {
                 const result = renderNode({ [key]: this.map3dTreeData[key] }, null, 0, startYOffset, 100)
                 startYOffset = result.yOffset - 10
             })
+            
+            // 调整相机初始位置，对准整个树的中心
+            const treeCenter = {
+                x: 15, // 水平方向大致中心（考虑树的宽度）
+                y: 0,  // 垂直居中后的中心点
+                z: 0
+            }
+            
+            if (this.map3dControls) {
+                this.map3dControls.target.set(treeCenter.x, treeCenter.y, treeCenter.z)
+                this.map3dCamera.position.set(treeCenter.x + 40, treeCenter.y + 20, treeCenter.z + 60)
+                this.map3dControls.update()
+            }
             
             // 启动入场动画
             this.startNodeAnimations()
