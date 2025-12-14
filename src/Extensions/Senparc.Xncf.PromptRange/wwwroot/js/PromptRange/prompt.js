@@ -2898,21 +2898,21 @@ var app = new Vue({
                         this.map3dScene.add(glowMesh)
                     }
                     
-                    // 添加更大更美观的文字标签（优化：使用合适的尺寸平衡清晰度和性能）
+                    // 创建更大更清晰的文字标签
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
-                    // 使用适中的尺寸：足够清晰但不会过度消耗内存
-                    canvas.width = 1024
-                    canvas.height = 256
+                    // 使用更大的画布尺寸以获得更清晰的文字
+                    canvas.width = 2048
+                    canvas.height = 512
                     
                     // 绘制背景（带圆角和阴影）
-                    const padding = 20
-                    const borderRadius = 15
-                    context.fillStyle = hasCurrent ? 'rgba(255, 107, 107, 0.95)' : 'rgba(0, 0, 0, 0.85)'
-                    context.shadowColor = 'rgba(0, 0, 0, 0.7)'
-                    context.shadowBlur = 20
-                    context.shadowOffsetX = 4
-                    context.shadowOffsetY = 4
+                    const padding = 40
+                    const borderRadius = 30
+                    context.fillStyle = hasCurrent ? 'rgba(255, 107, 107, 0.95)' : 'rgba(0, 0, 0, 0.9)'
+                    context.shadowColor = 'rgba(0, 0, 0, 0.8)'
+                    context.shadowBlur = 30
+                    context.shadowOffsetX = 6
+                    context.shadowOffsetY = 6
                     
                     // 绘制圆角矩形（兼容性处理）
                     const drawRoundedRect = (x, y, width, height, radius) => {
@@ -2932,24 +2932,71 @@ var app = new Vue({
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
                     context.fill()
                     
-                    // 绘制文字（优化：使用合适的字号）
-                    context.fillStyle = '#ffffff'
-                    const fontSize = hasCurrent ? 60 : 50
-                    context.font = `bold ${fontSize}px 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif`
+                    // 准备标签文字（添加类型前缀：T/A）
+                    let labelPrefix = ''
+                    let labelText = node.name
+                    
+                    if (node.type === 'tactic') {
+                        // 靶道类型：显示 T1, T1.1 等
+                        labelPrefix = 'T'
+                        // 从 key 中提取战术编号（去除前面的部分）
+                        const tacticMatch = key.match(/T?(\d+(?:\.\d+)*)/)
+                        if (tacticMatch) {
+                            labelText = tacticMatch[1]
+                        }
+                    } else if (node.type === 'aiming') {
+                        // Aiming 类型：显示 A1, A123 等
+                        labelPrefix = 'A'
+                        // 从 key 中提取 Aiming 编号
+                        const aimingMatch = key.match(/A?(\d+)/)
+                        if (aimingMatch) {
+                            labelText = aimingMatch[1]
+                        }
+                    } else {
+                        // 靶场类型：显示完整名称
+                        labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
+                    }
+                    
+                    // 绘制文字
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
                     context.shadowColor = 'rgba(0, 0, 0, 0.9)'
-                    context.shadowBlur = 8
+                    context.shadowBlur = 12
                     
-                    const displayName = node.name.length > 20 ? node.name.substring(0, 20) + '...' : node.name
-                    context.fillText(displayName, canvas.width / 2, canvas.height / 2 - 15)
+                    let mainTextY = canvas.height / 2
+                    
+                    // 如果有类型前缀（T/A），在上方显示类型标识
+                    if (labelPrefix) {
+                        // 类型标识（T 或 A）- 较小的字体，在上方
+                        context.fillStyle = hasCurrent ? 'rgba(255, 255, 200, 0.9)' : 'rgba(200, 200, 200, 0.8)'
+                        const prefixFontSize = hasCurrent ? 100 : 85
+                        context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
+                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 80)
+                        
+                        // 主要数字 - 超大字体
+                        context.fillStyle = '#ffffff'
+                        const mainFontSize = hasCurrent ? 160 : 140
+                        context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 40)
+                        
+                        mainTextY = canvas.height / 2 + 40
+                    } else {
+                        // 靶场名称 - 大字体
+                        context.fillStyle = '#ffffff'
+                        const rangeFontSize = hasCurrent ? 120 : 100
+                        context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2)
+                        
+                        mainTextY = canvas.height / 2
+                    }
                     
                     // 如果有提示信息，显示在下方
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? '32' : '28'}px Arial`
-                        context.fillStyle = 'rgba(255, 255, 255, 0.9)'
-                        context.shadowBlur = 6
-                        context.fillText(`${node.prompts.length} 个结果`, canvas.width / 2, canvas.height / 2 + 30)
+                        context.font = `bold ${hasCurrent ? 70 : 60}px Arial`
+                        context.fillStyle = 'rgba(255, 255, 255, 0.85)'
+                        context.shadowBlur = 8
+                        const promptText = `${node.prompts.length} 个结果`
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 100)
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -2962,8 +3009,8 @@ var app = new Vue({
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
                     sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
-                    // 增大 sprite 尺寸，使文字更大更清晰（但不过度）
-                    sprite.scale.set(16, 4, 1)
+                    // 增大 sprite 尺寸，使文字更大更清晰
+                    sprite.scale.set(24, 6, 1)
                     sprite.userData = { 
                         node, 
                         key, 
