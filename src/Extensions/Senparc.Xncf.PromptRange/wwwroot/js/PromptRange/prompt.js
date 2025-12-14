@@ -2918,21 +2918,16 @@ var app = new Vue({
                         this.map3dScene.add(glowMesh)
                     }
                     
-                    // 创建更大更清晰的文字标签
+                    // 创建文字标签（缩小尺寸，使用玻璃效果）
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
-                    // 使用更大的画布尺寸以获得更清晰的文字
-                    canvas.width = 2048
-                    canvas.height = 512
+                    // 缩小画布尺寸
+                    canvas.width = 1024
+                    canvas.height = 256
                     
-                    // 绘制背景（带圆角和阴影）
-                    const padding = 40
-                    const borderRadius = 30
-                    context.fillStyle = hasCurrent ? 'rgba(255, 107, 107, 0.95)' : 'rgba(0, 0, 0, 0.9)'
-                    context.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                    context.shadowBlur = 30
-                    context.shadowOffsetX = 6
-                    context.shadowOffsetY = 6
+                    // 绘制玻璃效果背景
+                    const padding = 20
+                    const borderRadius = 15
                     
                     // 绘制圆角矩形（兼容性处理）
                     const drawRoundedRect = (x, y, width, height, radius) => {
@@ -2949,7 +2944,27 @@ var app = new Vue({
                         context.closePath()
                     }
                     
+                    // 玻璃效果：半透明白色背景
+                    context.fillStyle = hasCurrent 
+                        ? 'rgba(255, 107, 107, 0.25)'  // 当前选中：淡红色玻璃
+                        : 'rgba(255, 255, 255, 0.15)'  // 普通：半透明白色玻璃
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
+                    context.fill()
+                    
+                    // 玻璃边框（增强玻璃效果）
+                    context.strokeStyle = hasCurrent 
+                        ? 'rgba(255, 150, 150, 0.6)'   // 当前选中：红色边框
+                        : 'rgba(255, 255, 255, 0.3)'   // 普通：白色边框
+                    context.lineWidth = 3
+                    drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
+                    context.stroke()
+                    
+                    // 添加高光效果（模拟玻璃反光）
+                    const highlightGradient = context.createLinearGradient(0, padding, 0, canvas.height / 2)
+                    highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
+                    highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+                    context.fillStyle = highlightGradient
+                    drawRoundedRect(padding, padding, canvas.width - padding * 2, (canvas.height - padding * 2) / 2, borderRadius)
                     context.fill()
                     
                     // 准备标签文字（添加类型前缀：T/A）
@@ -2979,33 +2994,35 @@ var app = new Vue({
                         labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
                     }
                     
-                    // 绘制文字
+                    // 绘制文字（带阴影增强可读性）
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
-                    context.shadowColor = 'rgba(0, 0, 0, 0.9)'
-                    context.shadowBlur = 12
+                    context.shadowColor = 'rgba(0, 0, 0, 0.8)'
+                    context.shadowBlur = 8
+                    context.shadowOffsetX = 2
+                    context.shadowOffsetY = 2
                     
                     let mainTextY = canvas.height / 2
                     
                     // 如果有类型前缀（T/A），在上方显示类型标识
                     if (labelPrefix) {
-                        // 类型标识（T 或 A）- 较小的字体，在上方
-                        context.fillStyle = hasCurrent ? 'rgba(255, 255, 200, 0.9)' : 'rgba(200, 200, 200, 0.8)'
-                        const prefixFontSize = hasCurrent ? 100 : 85
+                        // 类型标识（T 或 A）- 缩小字体
+                        context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
+                        const prefixFontSize = hasCurrent ? 50 : 42  // 从 100/85 缩小到 50/42
                         context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 80)
+                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 40)  // 从 -80 改为 -40
                         
-                        // 主要数字 - 超大字体
+                        // 主要数字 - 缩小字体
                         context.fillStyle = '#ffffff'
-                        const mainFontSize = hasCurrent ? 160 : 140
+                        const mainFontSize = hasCurrent ? 80 : 70  // 从 160/140 缩小到 80/70
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 40)
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 20)  // 从 +40 改为 +20
                         
-                        mainTextY = canvas.height / 2 + 40
+                        mainTextY = canvas.height / 2 + 20
                     } else {
-                        // 靶场名称 - 大字体
+                        // 靶场名称 - 缩小字体
                         context.fillStyle = '#ffffff'
-                        const rangeFontSize = hasCurrent ? 120 : 100
+                        const rangeFontSize = hasCurrent ? 60 : 50  // 从 120/100 缩小到 60/50
                         context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
                         context.fillText(labelText, canvas.width / 2, canvas.height / 2)
                         
@@ -3014,11 +3031,11 @@ var app = new Vue({
                     
                     // 如果有提示信息，显示在下方
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? 70 : 60}px Arial`
+                        context.font = `bold ${hasCurrent ? 35 : 30}px Arial`  // 从 70/60 缩小到 35/30
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
-                        context.shadowBlur = 8
+                        context.shadowBlur = 6
                         const promptText = `${node.prompts.length} 个结果`
-                        context.fillText(promptText, canvas.width / 2, mainTextY + 100)
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 50)  // 从 +100 改为 +50
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -3031,8 +3048,8 @@ var app = new Vue({
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
                     sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
-                    // 增大 sprite 尺寸，使文字更大更清晰
-                    sprite.scale.set(24, 6, 1)
+                    // 缩小 sprite 尺寸，配合缩小的文字标签
+                    sprite.scale.set(12, 3, 1)  // 从 24x6 缩小到 12x3
                     sprite.userData = { 
                         node, 
                         key, 
@@ -3074,40 +3091,56 @@ var app = new Vue({
                         dot: null 
                     })
                     
-                    // 添加更美观的连接线（带渐变效果）
+                    // 添加更美观的连接线（使用管道几何体实现加粗效果）
                     let line = null
                     let dot = null
                     if (parentPosition) {
-                        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-                            new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z),
-                            new THREE.Vector3(x, y, z)
-                        ])
-                        
-                        // 根据节点类型设置不同的线条颜色和粗细
+                        // 根据节点类型设置不同的线条颜色和半径
                         let lineColor = 0x666666
-                        let lineWidth = 2
+                        let lineRadius = 0.15 // 基础半径（从 0.075 加粗一倍到 0.15）
+                        
                         if (hasCurrent) {
                             lineColor = 0xffd93d
-                            lineWidth = 3
+                            lineRadius = 0.2 // 当前选中的线条更粗（从 0.1 加粗一倍到 0.2）
                         } else if (node.type === 'range') {
                             lineColor = 0x4ecdc4
                         } else if (node.type === 'tactic') {
                             lineColor = 0x95e1d3
                         }
                         
-                        const lineMaterial = new THREE.LineBasicMaterial({ 
+                        // 使用 CylinderGeometry 创建管道状的连接线
+                        const lineStart = new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z)
+                        const lineEnd = new THREE.Vector3(x, y, z)
+                        const direction = new THREE.Vector3().subVectors(lineEnd, lineStart)
+                        const lineLength = direction.length()
+                        const lineMidpoint = new THREE.Vector3().addVectors(lineStart, lineEnd).multiplyScalar(0.5)
+                        
+                        // 创建圆柱体作为连接线
+                        const cylinderGeometry = new THREE.CylinderGeometry(lineRadius, lineRadius, lineLength, 8)
+                        const lineMaterial = new THREE.MeshStandardMaterial({ 
                             color: lineColor,
-                            linewidth: lineWidth,
+                            metalness: 0.3,
+                            roughness: 0.5,
                             transparent: true,
                             opacity: 0 // 初始透明，用于渐入动画
                         })
-                        line = new THREE.Line(lineGeometry, lineMaterial)
+                        line = new THREE.Mesh(cylinderGeometry, lineMaterial)
+                        
+                        // 设置圆柱体的位置和旋转
+                        line.position.copy(lineMidpoint)
+                        
+                        // 计算旋转角度使圆柱体对齐到两个点之间
+                        const axis = new THREE.Vector3(0, 1, 0)
+                        line.quaternion.setFromUnitVectors(axis, direction.clone().normalize())
+                        
                         this.map3dScene.add(line)
                         
-                        // 添加连接点（小圆球）
-                        const dotGeometry = new THREE.SphereGeometry(0.15, 8, 8)
-                        const dotMaterial = new THREE.MeshBasicMaterial({ 
+                        // 添加连接点（小圆球）- 也加粗一倍
+                        const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8) // 从 0.15 加粗一倍到 0.3
+                        const dotMaterial = new THREE.MeshStandardMaterial({ 
                             color: lineColor,
+                            metalness: 0.3,
+                            roughness: 0.5,
                             transparent: true,
                             opacity: 0 // 初始透明
                         })
