@@ -3219,22 +3219,46 @@ var app = new Vue({
             
             // 从根节点开始渲染（垂直居中）
             let startYOffset = totalTreeHeight / 2 // 从上半部分开始，实现垂直居中
+            let maxDepth = 0 // 记录最大深度，用于计算相机位置
+            let actualMinY = Infinity
+            let actualMaxY = -Infinity
             
             Object.keys(this.map3dTreeData).forEach(key => {
                 const result = renderNode({ [key]: this.map3dTreeData[key] }, null, 0, startYOffset, 100)
                 startYOffset = result.yOffset - 10
+                actualMinY = Math.min(actualMinY, result.minY)
+                actualMaxY = Math.max(actualMaxY, result.maxY)
             })
             
-            // 调整相机初始位置，对准整个树的中心
+            // 计算树的实际范围
+            this.map3dNodes.forEach(node => {
+                maxDepth = Math.max(maxDepth, node.depth)
+            })
+            
+            const treeWidth = maxDepth * 20 // 水平宽度
+            const treeHeight = actualMaxY - actualMinY // 垂直高度
+            const treeCenterX = treeWidth / 2
+            const treeCenterY = (actualMaxY + actualMinY) / 2
+            
+            // 调整相机初始位置，确保能看到整个树
             const treeCenter = {
-                x: 15, // 水平方向大致中心（考虑树的宽度）
-                y: 0,  // 垂直居中后的中心点
+                x: treeCenterX,
+                y: treeCenterY,
                 z: 0
             }
             
+            // 根据树的大小计算合适的相机距离
+            const maxDimension = Math.max(treeWidth, treeHeight)
+            const cameraDistance = maxDimension * 1.5 // 1.5倍的距离确保全景可见
+            
             if (this.map3dControls) {
                 this.map3dControls.target.set(treeCenter.x, treeCenter.y, treeCenter.z)
-                this.map3dCamera.position.set(treeCenter.x + 40, treeCenter.y + 20, treeCenter.z + 60)
+                // 相机位置：斜45度角，距离根据树的大小动态调整
+                this.map3dCamera.position.set(
+                    treeCenter.x + cameraDistance * 0.5,
+                    treeCenter.y + cameraDistance * 0.3,
+                    treeCenter.z + cameraDistance
+                )
                 this.map3dControls.update()
             }
             
@@ -3312,6 +3336,40 @@ var app = new Vue({
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
+                } else {
+                    // 动画完成后，确保所有节点都完全可见
+                    this.map3dNodes.forEach((nodeData) => {
+                        nodeData.mesh.scale.set(1, 1, 1)
+                        nodeData.mesh.visible = true
+                        
+                        if (nodeData.glowMesh) {
+                            nodeData.glowMesh.scale.set(1, 1, 1)
+                            nodeData.glowMesh.visible = true
+                        }
+                        
+                        if (nodeData.sprite) {
+                            nodeData.sprite.visible = true
+                            if (nodeData.sprite.material) {
+                                nodeData.sprite.material.opacity = 1
+                            }
+                        }
+                        
+                        if (nodeData.line) {
+                            nodeData.line.visible = true
+                            if (nodeData.line.material) {
+                                nodeData.line.material.opacity = 0.6
+                            }
+                        }
+                        
+                        if (nodeData.dot) {
+                            nodeData.dot.visible = true
+                            if (nodeData.dot.material) {
+                                nodeData.dot.material.opacity = 1
+                            }
+                        }
+                        
+                        nodeData.animationProgress = 1
+                    })
                 }
             }
             
