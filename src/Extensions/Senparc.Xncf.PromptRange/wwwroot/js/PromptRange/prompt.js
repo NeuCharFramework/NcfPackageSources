@@ -2802,7 +2802,7 @@ var app = new Vue({
             const raycaster = new THREE.Raycaster()
             const mouse = new THREE.Vector2()
             
-            // 递归渲染节点（改进的平衡布局算法 - 支持父节点垂直居中 + 避免节点重叠）
+            // 递归渲染节点（重构版：支持 Aiming 水平布局）
             const renderNode = (nodeData, parentPosition, depth, yOffset, availableSpace) => {
                 if (!nodeData || typeof nodeData !== 'object') return { yOffset, height: 0, minY: yOffset, maxY: yOffset }
                 
@@ -2816,16 +2816,19 @@ var app = new Vue({
                     const node = nodeData[key]
                     const isExpanded = node.expanded !== false // 默认展开
                     
+                    // 检查子节点是否全是 Aiming 类型
+                    const hasAimingChildren = node.children && Object.keys(node.children).length > 0 &&
+                        Object.values(node.children).every(child => child.type === 'aiming')
+                    
                     // 计算子树的节点数量，用于分配垂直空间
                     let nodeCount = 1
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0 && !hasAimingChildren) {
                         nodeCount += this.countTreeNodes(node.children)
                     }
                     
                     // 根据节点数量动态调整间距（实现平衡布局）
-                    // 增加最小间距，确保节点不会重叠
-                    const baseSpacing = 12 // 从8增加到12
-                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 3) // 从2增加到3
+                    const baseSpacing = 12
+                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 3)
                     
                     // 计算位置（水平分层，垂直排列，动态平衡）
                     const x = depth * 20
@@ -3102,49 +3105,245 @@ var app = new Vue({
                     let line = null
                     let dot = null
                     
-                    // 递归渲染子节点（传递子树可用空间）
+                    // 递归渲染子节点（特殊处理 Aiming 节点：水平排列）
                     let childMinY = y
                     let childMaxY = y
                     
                     if (isExpanded && node.children && Object.keys(node.children).length > 0) {
-                        // 为子节点分配起始位置（确保不会与当前节点重叠）
-                        const childStartY = currentYOffset + nodeSpacing
-                        const childResult = renderNode(node.children, { x, y, z }, depth + 1, childStartY, nodeSpacing)
-                        currentYOffset = childResult.yOffset
-                        totalHeight += childResult.height
-                        childMinY = childResult.minY
-                        childMaxY = childResult.maxY
-                        
-                        // 如果有子节点，将父节点调整到子树的垂直中点
-                        const subtreeMiddleY = (childMinY + childMaxY) / 2
-                        y = subtreeMiddleY
-                        
-                        // 更新已创建的mesh位置
-                        mesh.position.y = y
-                        if (glowMesh) {
-                            glowMesh.position.y = y
-                        }
-                        sprite.position.y = y + (node.type === 'range' ? 5 : 4)
-                        
-                        // 更新 map3dNodes 中的位置记录
-                        const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
-                        if (currentNodeData) {
-                            currentNodeData.position.y = y
-                        }
-                        
-                        // 记录子节点引用（用于快速更新可见性）
-                        const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
-                        Object.keys(node.children).forEach(childKey => {
-                            const childNode = node.children[childKey]
-                            const childNodeData = this.map3dNodes.find(n => n.node === childNode)
-                            if (childNodeData) {
-                                nodeData.childrenMeshes.push(childNodeData.mesh)
-                                nodeData.childrenMeshes.push(childNodeData.sprite)
-                                if (childNodeData.glowMesh) {
-                                    nodeData.childrenMeshes.push(childNodeData.glowMesh)
+                        if (hasAimingChildren) {
+                            // Aiming 节点：水平排列（垂直于 Tactic）
+                            const aimingKeys = Object.keys(node.children)
+                            const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
+                            const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
+                            let startZ = -totalAimingWidth / 2 // 从中心开始分布
+                            
+                            aimingKeys.forEach((aimingKey, aimingIndex) => {
+                                const aimingNode = node.children[aimingKey]
+                                const aimingX = (depth + 1) * 20
+                                const aimingY = y // 与父节点同一高度
+                                const aimingZ = startZ + aimingIndex * aimingSpacing
+                                
+                                // 检查是否有当前编辑的靶道
+                                const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
+                                
+                                // 创建 Aiming 几何体：小圆球
+                                const aimingGeometry = new THREE.SphereGeometry(1.5, 24, 24)
+                                const aimingMaterial = new THREE.MeshStandardMaterial({ 
+                                    color: aimingHasCurrent ? 0xffd93d : 0xa8e6cf,
+                                    metalness: 0.4,
+                                    roughness: 0.5,
+                                    emissive: aimingHasCurrent ? 0xffaa00 : 0x003333,
+                                    emissiveIntensity: aimingHasCurrent ? 0.7 : 0.05
+                                })
+                                
+                                const aimingMesh = new THREE.Mesh(aimingGeometry, aimingMaterial)
+                                aimingMesh.position.set(aimingX, aimingY, aimingZ)
+                                aimingMesh.userData = { 
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    depth: depth + 1, 
+                                    type: aimingNode.type,
+                                    targetPosition: { x: aimingX, y: aimingY, z: aimingZ },
+                                    initialScale: 0.1
+                                }
+                                aimingMesh.castShadow = true
+                                aimingMesh.receiveShadow = true
+                                aimingMesh.scale.set(0.1, 0.1, 0.1)
+                                
+                                // 创建 Aiming 文字标签
+                                const aimingCanvas = document.createElement('canvas')
+                                const aimingContext = aimingCanvas.getContext('2d')
+                                aimingCanvas.width = 1024
+                                aimingCanvas.height = 256
+                                
+                                const aimingPadding = 20
+                                const aimingBorderRadius = 15
+                                
+                                const drawRoundedRect = (x, y, width, height, radius) => {
+                                    aimingContext.beginPath()
+                                    aimingContext.moveTo(x + radius, y)
+                                    aimingContext.lineTo(x + width - radius, y)
+                                    aimingContext.quadraticCurveTo(x + width, y, x + width, y + radius)
+                                    aimingContext.lineTo(x + width, y + height - radius)
+                                    aimingContext.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+                                    aimingContext.lineTo(x + radius, y + height)
+                                    aimingContext.quadraticCurveTo(x, y + height, x, y + height - radius)
+                                    aimingContext.lineTo(x, y + radius)
+                                    aimingContext.quadraticCurveTo(x, y, x + radius, y)
+                                    aimingContext.closePath()
+                                }
+                                
+                                // 玻璃效果背景
+                                aimingContext.fillStyle = aimingHasCurrent 
+                                    ? 'rgba(255, 107, 107, 0.25)' 
+                                    : 'rgba(255, 255, 255, 0.15)'
+                                drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
+                                aimingContext.fill()
+                                
+                                // 玻璃边框
+                                aimingContext.strokeStyle = aimingHasCurrent 
+                                    ? 'rgba(255, 150, 150, 0.6)' 
+                                    : 'rgba(255, 255, 255, 0.3)'
+                                aimingContext.lineWidth = 3
+                                drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
+                                aimingContext.stroke()
+                                
+                                // 高光效果
+                                const aimingHighlightGradient = aimingContext.createLinearGradient(0, aimingPadding, 0, aimingCanvas.height / 2)
+                                aimingHighlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
+                                aimingHighlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+                                aimingContext.fillStyle = aimingHighlightGradient
+                                drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
+                                aimingContext.fill()
+                                
+                                // 绘制文字
+                                aimingContext.textAlign = 'center'
+                                aimingContext.textBaseline = 'middle'
+                                aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
+                                aimingContext.shadowBlur = 8
+                                aimingContext.shadowOffsetX = 2
+                                aimingContext.shadowOffsetY = 2
+                                
+                                // 提取 Aiming 数字
+                                const aimingMatch = aimingKey.match(/-A(\d+)$/)
+                                const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
+                                
+                                // 类型标识 'A'
+                                aimingContext.fillStyle = aimingHasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
+                                const aimingPrefixFontSize = aimingHasCurrent ? 50 : 42
+                                aimingContext.font = `bold ${aimingPrefixFontSize}px 'Arial Black', Arial, sans-serif`
+                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 40)
+                                
+                                // 主要数字
+                                aimingContext.fillStyle = '#ffffff'
+                                const aimingMainFontSize = aimingHasCurrent ? 80 : 70
+                                aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 20)
+                                
+                                // 创建 sprite
+                                const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
+                                const aimingSpriteMaterial = new THREE.SpriteMaterial({ 
+                                    map: aimingTexture, 
+                                    transparent: true,
+                                    alphaTest: 0.1,
+                                    opacity: 0
+                                })
+                                const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
+                                aimingSprite.position.set(aimingX, aimingY + 4, aimingZ)
+                                aimingSprite.scale.set(12, 3, 1)
+                                aimingSprite.userData = { 
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    depth: depth + 1, 
+                                    type: aimingNode.type,
+                                    targetOpacity: 1
+                                }
+                                
+                                this.map3dScene.add(aimingMesh)
+                                this.map3dScene.add(aimingSprite)
+                                
+                                this.map3dNodes.push({ 
+                                    mesh: aimingMesh, 
+                                    sprite: aimingSprite, 
+                                    glowMesh: null,
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    depth: depth + 1, 
+                                    isExpanded: true, 
+                                    position: { x: aimingX, y: aimingY, z: aimingZ }, 
+                                    parentPosition: { x, y, z }, // 使用最终的父节点位置
+                                    childrenMeshes: [], 
+                                    line: null, 
+                                    dot: null,
+                                    animationProgress: 0,
+                                    hasCurrent: aimingHasCurrent
+                                })
+                                
+                                if (!this.map3dNodeMap) {
+                                    this.map3dNodeMap = new Map()
+                                }
+                                this.map3dNodeMap.set(aimingNode.fullPath, { 
+                                    mesh: aimingMesh, 
+                                    sprite: aimingSprite, 
+                                    glowMesh: null,
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    childrenMeshes: [], 
+                                    line: null, 
+                                    dot: null 
+                                })
+                            })
+                            
+                            // Aiming 节点不占用垂直空间，父节点保持当前高度
+                            childMinY = y
+                            childMaxY = y
+                            
+                            // 更新当前节点数据中记录的子节点引用
+                            const currentNodeData = this.map3dNodes.find(n => n.mesh === mesh)
+                            if (currentNodeData) {
+                                aimingKeys.forEach(aimingKey => {
+                                    const aimingChild = node.children[aimingKey]
+                                    const aimingChildData = this.map3dNodes.find(n => n.node === aimingChild)
+                                    if (aimingChildData) {
+                                        currentNodeData.childrenMeshes.push(aimingChildData.mesh)
+                                        currentNodeData.childrenMeshes.push(aimingChildData.sprite)
+                                    }
+                                })
+                            }
+                            
+                        } else {
+                            // 普通子节点：垂直排列
+                            const childStartY = currentYOffset + nodeSpacing
+                            const childResult = renderNode(node.children, { x, y, z }, depth + 1, childStartY, nodeSpacing)
+                            currentYOffset = childResult.yOffset
+                            totalHeight += childResult.height
+                            childMinY = childResult.minY
+                            childMaxY = childResult.maxY
+                            
+                            // 如果有子节点，将父节点调整到子树的垂直中点
+                            const subtreeMiddleY = (childMinY + childMaxY) / 2
+                            y = subtreeMiddleY
+                            
+                            // 更新已创建的mesh位置
+                            mesh.position.y = y
+                            if (glowMesh) {
+                                glowMesh.position.y = y
+                            }
+                            sprite.position.y = y + (node.type === 'range' ? 5 : 4)
+                            
+                            // 更新 map3dNodes 中的位置记录
+                            const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                            if (currentNodeData) {
+                                currentNodeData.position.y = y
+                                // 保持原有的 parentPosition（如果有的话）
+                                if (parentPosition) {
+                                    currentNodeData.parentPosition = parentPosition
                                 }
                             }
-                        })
+                            
+                            // 更新所有子节点的 parentPosition，使其指向调整后的父节点位置
+                            Object.keys(node.children).forEach(childKey => {
+                                const childNode = node.children[childKey]
+                                const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                                if (childNodeData) {
+                                    childNodeData.parentPosition = { x, y, z }
+                                }
+                            })
+                            
+                            // 记录子节点引用（用于快速更新可见性）
+                            const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                            Object.keys(node.children).forEach(childKey => {
+                                const childNode = node.children[childKey]
+                                const childNodeData = this.map3dNodes.find(n => n.node === childNode)
+                                if (childNodeData) {
+                                    nodeData.childrenMeshes.push(childNodeData.mesh)
+                                    nodeData.childrenMeshes.push(childNodeData.sprite)
+                                    if (childNodeData.glowMesh) {
+                                        nodeData.childrenMeshes.push(childNodeData.glowMesh)
+                                    }
+                                }
+                            })
+                        }
                     } else {
                         // 没有子节点，更新 Y 偏移
                         currentYOffset += nodeSpacing
