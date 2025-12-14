@@ -83,8 +83,8 @@ _THREE.OrbitControls = function ( object, domElement ) {
 		offset.applyQuaternion( quat );
 		
 		// 计算球坐标
-		const theta = Math.atan2( offset.x, offset.z );
-		const phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.z * offset.z ), offset.y );
+		let theta = Math.atan2( offset.x, offset.z );
+		let phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.z * offset.z ), offset.y );
 		
 		// 确保phi在界限内
 		phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, phi ) );

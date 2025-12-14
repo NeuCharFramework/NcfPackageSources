@@ -32,6 +32,7 @@
                             <div class="d-flex align-center">
                                 <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
                                 <div class="titleContent">选择靶场</div>
+                                <el-button type="info" size="mini" icon="el-icon-s-data" @@click="openMapDialog" style="margin-left: 10px;">导图</el-button>
                             </div>
                             <div>
                                 <el-button type="primary" size="mini" @@click="expectedPluginOpen">导出 plugins</el-button>
@@ -743,6 +744,16 @@
             <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
         </div>
     </el-dialog>
+    @*导图 dialog*@
+    <el-dialog 
+        title="3D 结构导图" 
+        :visible.sync="mapDialogVisible" 
+        width="90%"
+        :close-on-click-modal="false"
+        center 
+        @@close="mapDialogClose">
+        <div id="map3dContainer" style="width: 100%; height: 600px; background: #1a1a1a;"></div>
+    </el-dialog>
     @*新增模型 dialog*@
     <el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
         <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
@@ -1255,6 +1266,8 @@
     <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
+    <script src="~/js/PromptRange/lib/three.min.js"></script>
+    <script src="~/js/PromptRange/lib/OrbitControls.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>
     <script src="~/js/PromptRange/prompt.js"></script>
 }

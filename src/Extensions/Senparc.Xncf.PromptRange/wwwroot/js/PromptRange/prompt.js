@@ -146,6 +146,16 @@ var app = new Vue({
             continueChatMode: false, // 是否处于继续聊天模式
             continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
             continueChatHistory: [], // 继续聊天的历史记录
+            // 导图相关状态
+            mapDialogVisible: false, // 导图对话框显示状态
+            map3dScene: null, // three.js 场景
+            map3dCamera: null, // three.js 相机
+            map3dRenderer: null, // three.js 渲染器
+            map3dControls: null, // 相机控制器
+            map3dNodes: [], // 3D 节点数组
+            map3dTreeData: null, // 树状结构数据
+            map3dClickHandler: null, // 点击事件处理器
+            map3dAnimationId: null, // 动画ID
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -2499,6 +2509,405 @@ var app = new Vue({
             if (this.$refs.tacticalForm) {
                 this.$refs.tacticalForm.resetFields();
             }
+        },
+        
+        // 打开导图对话框
+        openMapDialog() {
+            if (!this.promptField) {
+                this.$message({
+                    message: '请先选择靶场',
+                    type: 'warning'
+                })
+                return
+            }
+            this.mapDialogVisible = true
+            this.$nextTick(() => {
+                this.initMap3D()
+            })
+        },
+        
+        // 关闭导图对话框
+        mapDialogClose() {
+            this.destroyMap3D()
+        },
+        
+        // 初始化 3D 导图
+        initMap3D() {
+            const container = document.getElementById('map3dContainer')
+            if (!container) return
+            
+            // 构建树状结构数据
+            this.buildTreeData()
+            
+            // 确保 THREE 已加载
+            if (typeof THREE === 'undefined' && typeof window.THREE !== 'undefined') {
+                window.THREE = window.THREE
+            }
+            
+            if (typeof THREE === 'undefined') {
+                this.$message({
+                    message: 'THREE.js 未加载，请刷新页面重试',
+                    type: 'error'
+                })
+                this.mapDialogVisible = false
+                return
+            }
+            
+            // 创建场景
+            this.map3dScene = new THREE.Scene()
+            this.map3dScene.background = new THREE.Color(0x1a1a1a)
+            
+            // 创建相机
+            const width = container.clientWidth
+            const height = container.clientHeight
+            this.map3dCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+            this.map3dCamera.position.set(0, 0, 50)
+            
+            // 创建渲染器
+            this.map3dRenderer = new THREE.WebGLRenderer({ antialias: true })
+            this.map3dRenderer.setSize(width, height)
+            container.appendChild(this.map3dRenderer.domElement)
+            
+            // 添加控制器（使用本地化的 OrbitControls）
+            if (typeof THREE.OrbitControls !== 'undefined') {
+                this.map3dControls = new THREE.OrbitControls(this.map3dCamera, this.map3dRenderer.domElement)
+                this.map3dControls.enableDamping = true
+                this.map3dControls.dampingFactor = 0.05
+            } else {
+                console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
+            }
+            
+            // 添加光源
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+            this.map3dScene.add(ambientLight)
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+            directionalLight.position.set(10, 10, 10)
+            this.map3dScene.add(directionalLight)
+            
+            // 渲染节点
+            this.renderTreeNodes()
+            
+            // 开始动画循环
+            this.animateMap3D()
+            
+            // 处理窗口大小变化
+            window.addEventListener('resize', this.handleMap3DResize)
+        },
+        
+        // 构建树状结构数据
+        buildTreeData() {
+            if (!this.promptOpt || this.promptOpt.length === 0) {
+                this.map3dTreeData = null
+                return
+            }
+            
+            const tree = {}
+            const currentPromptId = this.promptid
+            
+            // 解析每个靶道的 FullVersion
+            this.promptOpt.forEach(prompt => {
+                const fullVersion = prompt.fullVersion || prompt.label
+                if (!fullVersion) return
+                
+                // 解析格式：2023.12.14.1-T1.1-A123
+                const parts = fullVersion.split('-')
+                if (parts.length < 2) return
+                
+                const rangeName = parts[0] // 2023.12.14.1
+                const tacticPart = parts[1] // T1.1
+                const aimingPart = parts[2] || '' // A123
+                
+                // 获取或创建 RangeName 根节点
+                if (!tree[rangeName]) {
+                    tree[rangeName] = {
+                        type: 'range',
+                        name: rangeName,
+                        fullPath: rangeName,
+                        children: {},
+                        prompts: [],
+                        expanded: true
+                    }
+                }
+                
+                const rangeNode = tree[rangeName]
+                
+                // 解析 Tactic（每个.是一层）
+                const tacticParts = tacticPart.replace('T', '').split('.')
+                let currentNode = rangeNode.children
+                let lastTacticNode = null
+                
+                tacticParts.forEach((part, index) => {
+                    const key = `T${tacticParts.slice(0, index + 1).join('.')}`
+                    
+                    if (!currentNode[key]) {
+                        currentNode[key] = {
+                            type: 'tactic',
+                            name: part,
+                            fullPath: `${rangeName}-${key}`,
+                            parentPath: index > 0 ? `T${tacticParts.slice(0, index).join('.')}` : rangeName,
+                            children: {},
+                            prompts: [],
+                            expanded: true
+                        }
+                    }
+                    lastTacticNode = currentNode[key]
+                    currentNode = currentNode[key].children
+                })
+                
+                // 确保 lastTacticNode 存在
+                if (!lastTacticNode) {
+                    console.warn('无法找到 Tactic 节点:', tacticPart)
+                    return
+                }
+                
+                // 添加 Aiming（特殊层）
+                if (aimingPart) {
+                    const aimingKey = aimingPart.replace('A', '')
+                    if (!lastTacticNode.children[aimingKey]) {
+                        lastTacticNode.children[aimingKey] = {
+                            type: 'aiming',
+                            name: aimingKey,
+                            fullPath: `${rangeName}-${tacticPart}-${aimingPart}`,
+                            parentPath: `${rangeName}-${tacticPart}`,
+                            children: {},
+                            prompts: [],
+                            expanded: true
+                        }
+                    }
+                    lastTacticNode.children[aimingKey].prompts.push({
+                        id: prompt.idkey || prompt.value,
+                        fullVersion: fullVersion,
+                        nickName: prompt.nickName,
+                        isCurrent: (prompt.idkey || prompt.value) == currentPromptId
+                    })
+                } else {
+                    // 如果没有 Aiming，直接添加到最后一个 Tactic 节点
+                    lastTacticNode.prompts.push({
+                        id: prompt.idkey || prompt.value,
+                        fullVersion: fullVersion,
+                        nickName: prompt.nickName,
+                        isCurrent: (prompt.idkey || prompt.value) == currentPromptId
+                    })
+                }
+            })
+            
+            this.map3dTreeData = tree
+        },
+        
+        // 渲染树节点
+        renderTreeNodes() {
+            if (!this.map3dTreeData) return
+            
+            this.map3dNodes = []
+            const raycaster = new THREE.Raycaster()
+            const mouse = new THREE.Vector2()
+            
+            // 递归渲染节点
+            const renderNode = (nodeData, parentPosition, depth, yOffset) => {
+                if (!nodeData || typeof nodeData !== 'object') return { yOffset }
+                
+                const keys = Object.keys(nodeData)
+                let currentYOffset = yOffset
+                
+                keys.forEach((key, index) => {
+                    const node = nodeData[key]
+                    const isExpanded = node.expanded !== false // 默认展开
+                    
+                    // 计算位置（水平分层，垂直排列）
+                    const x = depth * 20
+                    const y = currentYOffset
+                    const z = 0
+                    
+                    // 检查是否有当前编辑的靶道
+                    const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
+                    
+                    // 创建几何体
+                    let geometry, material
+                    if (node.type === 'range') {
+                        // 靶场：方块
+                        geometry = new THREE.BoxGeometry(4, 4, 4)
+                        material = new THREE.MeshPhongMaterial({ 
+                            color: hasCurrent ? 0xff6b6b : 0x4ecdc4,
+                            emissive: hasCurrent ? 0xff0000 : 0x000000,
+                            emissiveIntensity: hasCurrent ? 0.5 : 0
+                        })
+                    } else {
+                        // 靶道：圆球
+                        geometry = new THREE.SphereGeometry(2, 16, 16)
+                        material = new THREE.MeshPhongMaterial({ 
+                            color: hasCurrent ? 0xffd93d : 0x95e1d3,
+                            emissive: hasCurrent ? 0xffff00 : 0x000000,
+                            emissiveIntensity: hasCurrent ? 0.6 : 0
+                        })
+                    }
+                    
+                    const mesh = new THREE.Mesh(geometry, material)
+                    mesh.position.set(x, y, z)
+                    mesh.userData = { node, key, depth, type: node.type }
+                    
+                    // 添加文字标签
+                    const canvas = document.createElement('canvas')
+                    const context = canvas.getContext('2d')
+                    canvas.width = 512
+                    canvas.height = 128
+                    context.fillStyle = '#ffffff'
+                    context.font = 'bold 32px Arial'
+                    context.textAlign = 'center'
+                    context.textBaseline = 'middle'
+                    const displayName = node.name.length > 10 ? node.name.substring(0, 10) + '...' : node.name
+                    context.fillText(displayName, 256, 64)
+                    
+                    const texture = new THREE.CanvasTexture(canvas)
+                    texture.needsUpdate = true
+                    const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true })
+                    const sprite = new THREE.Sprite(spriteMaterial)
+                    sprite.position.set(x, y + 3.5, z)
+                    sprite.scale.set(8, 2, 1)
+                    sprite.userData = { node, key, depth, type: node.type }
+                    
+                    this.map3dScene.add(mesh)
+                    this.map3dScene.add(sprite)
+                    
+                    this.map3dNodes.push({ mesh, sprite, node, key, depth, isExpanded, position: { x, y, z } })
+                    
+                    // 添加连接线
+                    if (parentPosition) {
+                        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                            new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z),
+                            new THREE.Vector3(x, y, z)
+                        ])
+                        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x888888, linewidth: 2 })
+                        const line = new THREE.Line(lineGeometry, lineMaterial)
+                        this.map3dScene.add(line)
+                    }
+                    
+                    // 递归渲染子节点
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                        const childResult = renderNode(node.children, { x, y, z }, depth + 1, currentYOffset)
+                        currentYOffset = childResult.yOffset
+                    } else {
+                        currentYOffset -= 8
+                    }
+                })
+                
+                return { yOffset: currentYOffset }
+            }
+            
+            // 从根节点开始渲染
+            let startYOffset = 0
+            Object.keys(this.map3dTreeData).forEach(key => {
+                const result = renderNode({ [key]: this.map3dTreeData[key] }, null, 0, startYOffset)
+                startYOffset = result.yOffset - 8
+            })
+            
+            // 添加点击事件
+            const onMouseClick = (event) => {
+                const rect = this.map3dRenderer.domElement.getBoundingClientRect()
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+                
+                raycaster.setFromCamera(mouse, this.map3dCamera)
+                const intersects = raycaster.intersectObjects(this.map3dNodes.map(n => n.mesh))
+                
+                if (intersects.length > 0) {
+                    const clickedMesh = intersects[0].object
+                    const nodeData = this.map3dNodes.find(n => n.mesh === clickedMesh)
+                    if (nodeData && nodeData.node.children && Object.keys(nodeData.node.children).length > 0) {
+                        // 切换展开/收拢
+                        nodeData.node.expanded = !nodeData.node.expanded
+                        // 重新渲染
+                        this.clearMap3DScene()
+                        this.renderTreeNodes()
+                    }
+                }
+            }
+            
+            this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
+            this.map3dClickHandler = onMouseClick
+        },
+        
+        // 清空 3D 场景
+        clearMap3DScene() {
+            if (!this.map3dScene) return
+            
+            // 移除所有对象
+            while(this.map3dScene.children.length > 0) {
+                const obj = this.map3dScene.children[0]
+                if (obj.geometry) obj.geometry.dispose()
+                if (obj.material) {
+                    if (Array.isArray(obj.material)) {
+                        obj.material.forEach(m => {
+                            if (m.map) m.map.dispose()
+                            m.dispose()
+                        })
+                    } else {
+                        if (obj.material.map) obj.material.map.dispose()
+                        obj.material.dispose()
+                    }
+                }
+                this.map3dScene.remove(obj)
+            }
+            
+            this.map3dNodes = []
+        },
+        
+        // 动画循环
+        animateMap3D() {
+            if (!this.map3dRenderer || !this.map3dScene || !this.map3dCamera) return
+            
+            this.map3dAnimationId = requestAnimationFrame(() => this.animateMap3D())
+            
+            if (this.map3dControls) {
+                this.map3dControls.update()
+            }
+            
+            this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
+        },
+        
+        // 处理窗口大小变化
+        handleMap3DResize() {
+            const container = document.getElementById('map3dContainer')
+            if (!container || !this.map3dCamera || !this.map3dRenderer) return
+            
+            const width = container.clientWidth
+            const height = container.clientHeight
+            
+            this.map3dCamera.aspect = width / height
+            this.map3dCamera.updateProjectionMatrix()
+            this.map3dRenderer.setSize(width, height)
+        },
+        
+        // 销毁 3D 场景
+        destroyMap3D() {
+            window.removeEventListener('resize', this.handleMap3DResize)
+            
+            // 移除点击事件
+            if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {
+                this.map3dRenderer.domElement.removeEventListener('click', this.map3dClickHandler)
+                this.map3dClickHandler = null
+            }
+            
+            // 清空场景
+            this.clearMap3DScene()
+            
+            if (this.map3dRenderer && this.map3dRenderer.domElement) {
+                const container = document.getElementById('map3dContainer')
+                if (container && container.contains(this.map3dRenderer.domElement)) {
+                    container.removeChild(this.map3dRenderer.domElement)
+                }
+            }
+            
+            // 停止动画循环
+            if (this.map3dAnimationId) {
+                cancelAnimationFrame(this.map3dAnimationId)
+                this.map3dAnimationId = null
+            }
+            
+            this.map3dScene = null
+            this.map3dCamera = null
+            this.map3dRenderer = null
+            this.map3dControls = null
+            this.map3dNodes = []
         },
         
         // 关闭对话输入弹窗
