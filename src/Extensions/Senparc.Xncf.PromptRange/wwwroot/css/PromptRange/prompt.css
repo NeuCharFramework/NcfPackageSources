@@ -1350,7 +1350,7 @@
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            white-space: pre-line;
+            white-space: normal;  /* 改为 normal，让 HTML 标签自然控制换行，避免多余空行 */
         }
 
         /* Markdown 列表样式优化 */
@@ -2608,7 +2608,8 @@ think::before {
 .chat-message-content {
     line-height: 1.6;
     word-wrap: break-word;
-    white-space: pre-wrap;
+    /* 移除 white-space: pre-wrap; 因为 Markdown 已解析为 HTML，HTML 标签会自然控制换行 */
+    /* 保留此属性会导致 HTML 标签之间的换行符被保留，造成多余空行 */
     font-size: 14px;
 }
 
