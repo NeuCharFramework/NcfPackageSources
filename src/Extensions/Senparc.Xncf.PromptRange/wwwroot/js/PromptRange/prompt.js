@@ -156,6 +156,10 @@ var app = new Vue({
             map3dTreeData: null, // 树状结构数据
             map3dClickHandler: null, // 点击事件处理器
             map3dAnimationId: null, // 动画ID
+            map3dNeedsAnimationUpdate: false, // 是否需要更新动画
+            map3dNodeMap: new Map(), // 节点映射，用于快速查找
+            map3dLastAnimationTime: 0, // 上次动画更新时间（用于节流）
+            map3dCurrentNodes: [], // 缓存当前选中的节点（性能优化）
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -2737,6 +2741,10 @@ var app = new Vue({
             if (!this.map3dTreeData) return
             
             this.map3dNodes = []
+            // 初始化节点映射
+            if (!this.map3dNodeMap) {
+                this.map3dNodeMap = new Map()
+            }
             const raycaster = new THREE.Raycaster()
             const mouse = new THREE.Vector2()
             
@@ -2783,8 +2791,8 @@ var app = new Vue({
                             })
                         }
                     } else if (node.type === 'tactic') {
-                        // 靶道：圆球（使用更高精度的球体）
-                        geometry = new THREE.SphereGeometry(2.5, 32, 32)
+                        // 靶道：圆球（优化：降低精度以提高性能）
+                        geometry = new THREE.SphereGeometry(2.5, 24, 24)
                         material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xffd93d : 0x95e1d3,
                             metalness: 0.5,
@@ -2795,7 +2803,7 @@ var app = new Vue({
                         
                         // 添加发光效果（当前选中时）
                         if (hasCurrent) {
-                            glowGeometry = new THREE.SphereGeometry(2.8, 32, 32)
+                            glowGeometry = new THREE.SphereGeometry(2.8, 24, 24)
                             glowMaterial = new THREE.MeshBasicMaterial({
                                 color: 0xffd93d,
                                 transparent: true,
@@ -2828,20 +2836,21 @@ var app = new Vue({
                         this.map3dScene.add(glowMesh)
                     }
                     
-                    // 添加更美观的文字标签
+                    // 添加更大更美观的文字标签（优化：使用合适的尺寸平衡清晰度和性能）
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
+                    // 使用适中的尺寸：足够清晰但不会过度消耗内存
                     canvas.width = 1024
                     canvas.height = 256
                     
                     // 绘制背景（带圆角和阴影）
                     const padding = 20
                     const borderRadius = 15
-                    context.fillStyle = hasCurrent ? 'rgba(255, 107, 107, 0.9)' : 'rgba(0, 0, 0, 0.7)'
-                    context.shadowColor = 'rgba(0, 0, 0, 0.5)'
-                    context.shadowBlur = 10
-                    context.shadowOffsetX = 2
-                    context.shadowOffsetY = 2
+                    context.fillStyle = hasCurrent ? 'rgba(255, 107, 107, 0.95)' : 'rgba(0, 0, 0, 0.85)'
+                    context.shadowColor = 'rgba(0, 0, 0, 0.7)'
+                    context.shadowBlur = 20
+                    context.shadowOffsetX = 4
+                    context.shadowOffsetY = 4
                     
                     // 绘制圆角矩形（兼容性处理）
                     const drawRoundedRect = (x, y, width, height, radius) => {
@@ -2861,22 +2870,24 @@ var app = new Vue({
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
                     context.fill()
                     
-                    // 绘制文字
+                    // 绘制文字（优化：使用合适的字号）
                     context.fillStyle = '#ffffff'
-                    context.font = `bold ${hasCurrent ? '48' : '40'}px 'Microsoft YaHei', Arial, sans-serif`
+                    const fontSize = hasCurrent ? 60 : 50
+                    context.font = `bold ${fontSize}px 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif`
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
-                    context.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                    context.shadowBlur = 5
+                    context.shadowColor = 'rgba(0, 0, 0, 0.9)'
+                    context.shadowBlur = 8
                     
-                    const displayName = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
-                    context.fillText(displayName, canvas.width / 2, canvas.height / 2)
+                    const displayName = node.name.length > 20 ? node.name.substring(0, 20) + '...' : node.name
+                    context.fillText(displayName, canvas.width / 2, canvas.height / 2 - 15)
                     
                     // 如果有提示信息，显示在下方
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = '24px Arial'
-                        context.fillStyle = 'rgba(255, 255, 255, 0.8)'
-                        context.fillText(`${node.prompts.length} 个结果`, canvas.width / 2, canvas.height / 2 + 40)
+                        context.font = `bold ${hasCurrent ? '32' : '28'}px Arial`
+                        context.fillStyle = 'rgba(255, 255, 255, 0.9)'
+                        context.shadowBlur = 6
+                        context.fillText(`${node.prompts.length} 个结果`, canvas.width / 2, canvas.height / 2 + 30)
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -2887,14 +2898,21 @@ var app = new Vue({
                         alphaTest: 0.1
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    sprite.position.set(x, y + (node.type === 'range' ? 4.5 : 3.5), z)
-                    sprite.scale.set(12, 3, 1)
+                    sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
+                    // 增大 sprite 尺寸，使文字更大更清晰（但不过度）
+                    sprite.scale.set(16, 4, 1)
                     sprite.userData = { node, key, depth, type: node.type }
                     
                     this.map3dScene.add(mesh)
                     this.map3dScene.add(sprite)
                     
-                    this.map3dNodes.push({ mesh, sprite, node, key, depth, isExpanded, position: { x, y, z } })
+                    this.map3dNodes.push({ mesh, sprite, node, key, depth, isExpanded, position: { x, y, z }, childrenMeshes: [], line: null, dot: null })
+                    
+                    // 存储节点引用以便快速查找
+                    if (!this.map3dNodeMap) {
+                        this.map3dNodeMap = new Map()
+                    }
+                    this.map3dNodeMap.set(node.fullPath, { mesh, sprite, node, key, childrenMeshes: [], line: null, dot: null })
                     
                     // 添加更美观的连接线（带渐变效果）
                     if (parentPosition) {
@@ -2930,12 +2948,30 @@ var app = new Vue({
                         const dot = new THREE.Mesh(dotGeometry, dotMaterial)
                         dot.position.set(x, y, z)
                         this.map3dScene.add(dot)
+                        
+                        // 保存连接线和点的引用
+                        const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        if (currentNodeData) {
+                            currentNodeData.line = line
+                            currentNodeData.dot = dot
+                        }
                     }
                     
                     // 递归渲染子节点
                     if (isExpanded && node.children && Object.keys(node.children).length > 0) {
                         const childResult = renderNode(node.children, { x, y, z }, depth + 1, currentYOffset)
                         currentYOffset = childResult.yOffset
+                        
+                        // 记录子节点引用（用于快速更新可见性）
+                        const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        Object.keys(node.children).forEach(childKey => {
+                            const childNode = node.children[childKey]
+                            const childNodeData = this.map3dNodes.find(n => n.node === childNode)
+                            if (childNodeData) {
+                                nodeData.childrenMeshes.push(childNodeData.mesh)
+                                nodeData.childrenMeshes.push(childNodeData.sprite)
+                            }
+                        })
                     } else {
                         currentYOffset -= 8
                     }
@@ -2966,9 +3002,8 @@ var app = new Vue({
                     if (nodeData && nodeData.node.children && Object.keys(nodeData.node.children).length > 0) {
                         // 切换展开/收拢
                         nodeData.node.expanded = !nodeData.node.expanded
-                        // 重新渲染
-                        this.clearMap3DScene()
-                        this.renderTreeNodes()
+                        // 只更新相关节点，而不是重新渲染整个场景（性能优化）
+                        this.updateNodeVisibility(nodeData.node, nodeData.key)
                     }
                 }
             }
@@ -3023,30 +3058,97 @@ var app = new Vue({
             this.map3dNodes = []
         },
         
-        // 动画循环
+        // 动画循环（优化版：减少不必要的计算和渲染）
         animateMap3D() {
             if (!this.map3dRenderer || !this.map3dScene || !this.map3dCamera) return
             
             this.map3dAnimationId = requestAnimationFrame(() => this.animateMap3D())
             
+            // 跟踪是否需要渲染
+            let needsRender = false
+            
             // 更新控制器（启用阻尼时需要每帧更新）
             if (this.map3dControls) {
-                this.map3dControls.update()
+                // update() 返回 true 表示相机位置发生了变化
+                const controlsChanged = this.map3dControls.update()
+                if (controlsChanged) {
+                    needsRender = true
+                }
             }
             
-            // 添加轻微的旋转动画（可选，使场景更有活力）
-            if (this.map3dNodes && this.map3dNodes.length > 0) {
-                const time = Date.now() * 0.001
-                this.map3dNodes.forEach(({ mesh, node }) => {
-                    if (node.prompts && node.prompts.some(p => p.isCurrent)) {
-                        // 当前选中的节点有轻微的呼吸效果
+            // 优化：大幅减少动画更新频率，避免 CPU 占用过高
+            if (!this.map3dLastAnimationTime) {
+                this.map3dLastAnimationTime = Date.now()
+                this.map3dCurrentNodes = [] // 缓存当前选中的节点
+            }
+            
+            const now = Date.now()
+            // 每 200ms 更新一次动画（降低频率从100ms到200ms）
+            if (now - this.map3dLastAnimationTime > 200) {
+                this.map3dLastAnimationTime = now
+                
+                // 第一次时，找出所有当前选中的节点并缓存
+                if (!this.map3dCurrentNodes || this.map3dCurrentNodes.length === 0) {
+                    if (this.map3dNodes && this.map3dNodes.length > 0) {
+                        this.map3dCurrentNodes = this.map3dNodes.filter(({ node }) => 
+                            node.prompts && node.prompts.some(p => p.isCurrent)
+                        )
+                    }
+                }
+                
+                // 只更新缓存的当前选中节点，避免遍历所有节点
+                if (this.map3dCurrentNodes && this.map3dCurrentNodes.length > 0) {
+                    const time = now * 0.001
+                    this.map3dCurrentNodes.forEach(({ mesh }) => {
                         const scale = 1 + Math.sin(time * 2) * 0.05
                         mesh.scale.set(scale, scale, scale)
+                    })
+                    needsRender = true
+                }
+            }
+            
+            // 只在需要时渲染，避免无效渲染
+            if (needsRender) {
+                this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
+            }
+        },
+        
+        // 更新节点可见性（优化：只更新相关节点，不重新渲染整个场景）
+        updateNodeVisibility(node, nodeKey) {
+            if (!this.map3dScene || !this.map3dNodes) return
+            
+            // 找到对应的节点数据
+            const nodeData = this.map3dNodes.find(n => n.node === node && n.key === nodeKey)
+            if (!nodeData) return
+            
+            const isExpanded = node.expanded !== false
+            
+            // 递归函数：更新节点及其所有子节点的可见性
+            const updateChildrenVisibility = (parentNode, parentNodeData, shouldBeVisible) => {
+                if (!parentNode.children || Object.keys(parentNode.children).length === 0) return
+                
+                Object.keys(parentNode.children).forEach(childKey => {
+                    const childNode = parentNode.children[childKey]
+                    const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                    
+                    if (childNodeData) {
+                        // 设置可见性：如果父节点收拢，子节点隐藏；如果父节点展开，子节点根据自身状态决定
+                        const childVisible = shouldBeVisible && (childNode.expanded !== false || Object.keys(childNode.children || {}).length === 0)
+                        childNodeData.mesh.visible = childVisible
+                        childNodeData.sprite.visible = childVisible
+                        
+                        // 更新连接线和连接点的可见性
+                        if (childNodeData.line) childNodeData.line.visible = childVisible
+                        if (childNodeData.dot) childNodeData.dot.visible = childVisible
+                        
+                        // 递归更新子节点的子节点
+                        updateChildrenVisibility(childNode, childNodeData, childVisible)
                     }
                 })
             }
             
-            this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
+            // 更新直接子节点
+            updateChildrenVisibility(node, nodeData, isExpanded)
         },
         
         // 处理窗口大小变化
@@ -3072,26 +3174,41 @@ var app = new Vue({
                 this.map3dClickHandler = null
             }
             
-            // 清空场景
-            this.clearMap3DScene()
-            
-            if (this.map3dRenderer && this.map3dRenderer.domElement) {
-                const container = document.getElementById('map3dContainer')
-                if (container && container.contains(this.map3dRenderer.domElement)) {
-                    container.removeChild(this.map3dRenderer.domElement)
-                }
-            }
-            
             // 停止动画循环
             if (this.map3dAnimationId) {
                 cancelAnimationFrame(this.map3dAnimationId)
                 this.map3dAnimationId = null
             }
             
+            // 销毁控制器
+            if (this.map3dControls) {
+                this.map3dControls.dispose()
+                this.map3dControls = null
+            }
+            
+            // 清空场景
+            this.clearMap3DScene()
+            
+            // 清空节点映射
+            if (this.map3dNodeMap) {
+                this.map3dNodeMap.clear()
+                this.map3dNodeMap = null
+            }
+            
+            // 清理缓存的当前节点
+            this.map3dCurrentNodes = []
+            
+            if (this.map3dRenderer && this.map3dRenderer.domElement) {
+                const container = document.getElementById('map3dContainer')
+                if (container && container.contains(this.map3dRenderer.domElement)) {
+                    container.removeChild(this.map3dRenderer.domElement)
+                }
+                this.map3dRenderer.dispose()
+            }
+            
             this.map3dScene = null
             this.map3dCamera = null
             this.map3dRenderer = null
-            this.map3dControls = null
             this.map3dNodes = []
         },
         
