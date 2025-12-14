@@ -2553,9 +2553,11 @@ var app = new Vue({
                 return
             }
             
-            // 创建场景
+            // 创建场景（使用渐变背景）
             this.map3dScene = new THREE.Scene()
-            this.map3dScene.background = new THREE.Color(0x1a1a1a)
+            // 创建渐变背景
+            const gradientTexture = this.createGradientBackground()
+            this.map3dScene.background = gradientTexture
             
             // 创建相机
             const width = container.clientWidth
@@ -2571,18 +2573,54 @@ var app = new Vue({
             // 添加控制器（使用本地化的 OrbitControls）
             if (typeof THREE.OrbitControls !== 'undefined') {
                 this.map3dControls = new THREE.OrbitControls(this.map3dCamera, this.map3dRenderer.domElement)
+                
+                // 启用阻尼效果，使旋转更平滑
                 this.map3dControls.enableDamping = true
                 this.map3dControls.dampingFactor = 0.05
+                
+                // 启用缩放
+                this.map3dControls.enableZoom = true
+                this.map3dControls.zoomSpeed = 1.2
+                this.map3dControls.minDistance = 10
+                this.map3dControls.maxDistance = 200
+                
+                // 启用旋转
+                this.map3dControls.enableRotate = true
+                this.map3dControls.rotateSpeed = 0.8
+                
+                // 启用平移
+                this.map3dControls.enablePan = true
+                this.map3dControls.panSpeed = 0.8
+                this.map3dControls.screenSpacePanning = true
+                
+                // 设置初始相机位置，使其能看到整个场景
+                this.map3dCamera.position.set(30, 30, 50)
+                this.map3dControls.target.set(0, 0, 0)
+                this.map3dControls.update()
             } else {
                 console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
             }
             
-            // 添加光源
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+            // 添加更丰富的光源系统
+            // 环境光 - 提供基础照明
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
             this.map3dScene.add(ambientLight)
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
-            directionalLight.position.set(10, 10, 10)
-            this.map3dScene.add(directionalLight)
+            
+            // 主方向光 - 模拟太阳光
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8)
+            directionalLight1.position.set(20, 20, 20)
+            directionalLight1.castShadow = false
+            this.map3dScene.add(directionalLight1)
+            
+            // 辅助方向光 - 补充照明
+            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.4)
+            directionalLight2.position.set(-20, 10, -20)
+            this.map3dScene.add(directionalLight2)
+            
+            // 点光源 - 增加层次感
+            const pointLight = new THREE.PointLight(0xffffff, 0.5, 100)
+            pointLight.position.set(0, 20, 0)
+            this.map3dScene.add(pointLight)
             
             // 渲染节点
             this.renderTreeNodes()
@@ -2722,47 +2760,135 @@ var app = new Vue({
                     const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
                     
                     // 创建几何体
-                    let geometry, material
+                    let geometry, material, glowGeometry, glowMaterial
                     if (node.type === 'range') {
-                        // 靶场：方块
-                        geometry = new THREE.BoxGeometry(4, 4, 4)
-                        material = new THREE.MeshPhongMaterial({ 
+                        // 靶场：方块（使用更平滑的圆角效果）
+                        geometry = new THREE.BoxGeometry(5, 5, 5)
+                        material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xff6b6b : 0x4ecdc4,
-                            emissive: hasCurrent ? 0xff0000 : 0x000000,
-                            emissiveIntensity: hasCurrent ? 0.5 : 0
+                            metalness: 0.3,
+                            roughness: 0.4,
+                            emissive: hasCurrent ? 0xff3333 : 0x004444,
+                            emissiveIntensity: hasCurrent ? 0.8 : 0.1
                         })
-                    } else {
-                        // 靶道：圆球
-                        geometry = new THREE.SphereGeometry(2, 16, 16)
-                        material = new THREE.MeshPhongMaterial({ 
+                        
+                        // 添加发光效果（当前选中时）
+                        if (hasCurrent) {
+                            glowGeometry = new THREE.BoxGeometry(5.5, 5.5, 5.5)
+                            glowMaterial = new THREE.MeshBasicMaterial({
+                                color: 0xff6b6b,
+                                transparent: true,
+                                opacity: 0.3,
+                                side: THREE.BackSide
+                            })
+                        }
+                    } else if (node.type === 'tactic') {
+                        // 靶道：圆球（使用更高精度的球体）
+                        geometry = new THREE.SphereGeometry(2.5, 32, 32)
+                        material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xffd93d : 0x95e1d3,
-                            emissive: hasCurrent ? 0xffff00 : 0x000000,
-                            emissiveIntensity: hasCurrent ? 0.6 : 0
+                            metalness: 0.5,
+                            roughness: 0.3,
+                            emissive: hasCurrent ? 0xffaa00 : 0x004444,
+                            emissiveIntensity: hasCurrent ? 0.9 : 0.1
+                        })
+                        
+                        // 添加发光效果（当前选中时）
+                        if (hasCurrent) {
+                            glowGeometry = new THREE.SphereGeometry(2.8, 32, 32)
+                            glowMaterial = new THREE.MeshBasicMaterial({
+                                color: 0xffd93d,
+                                transparent: true,
+                                opacity: 0.4,
+                                side: THREE.BackSide
+                            })
+                        }
+                    } else {
+                        // Aiming：小圆球
+                        geometry = new THREE.SphereGeometry(1.5, 24, 24)
+                        material = new THREE.MeshStandardMaterial({ 
+                            color: hasCurrent ? 0xffd93d : 0xa8e6cf,
+                            metalness: 0.4,
+                            roughness: 0.5,
+                            emissive: hasCurrent ? 0xffaa00 : 0x003333,
+                            emissiveIntensity: hasCurrent ? 0.7 : 0.05
                         })
                     }
                     
                     const mesh = new THREE.Mesh(geometry, material)
                     mesh.position.set(x, y, z)
                     mesh.userData = { node, key, depth, type: node.type }
+                    mesh.castShadow = true
+                    mesh.receiveShadow = true
                     
-                    // 添加文字标签
+                    // 添加发光效果
+                    if (glowGeometry && glowMaterial) {
+                        const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
+                        glowMesh.position.set(x, y, z)
+                        this.map3dScene.add(glowMesh)
+                    }
+                    
+                    // 添加更美观的文字标签
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
-                    canvas.width = 512
-                    canvas.height = 128
+                    canvas.width = 1024
+                    canvas.height = 256
+                    
+                    // 绘制背景（带圆角和阴影）
+                    const padding = 20
+                    const borderRadius = 15
+                    context.fillStyle = hasCurrent ? 'rgba(255, 107, 107, 0.9)' : 'rgba(0, 0, 0, 0.7)'
+                    context.shadowColor = 'rgba(0, 0, 0, 0.5)'
+                    context.shadowBlur = 10
+                    context.shadowOffsetX = 2
+                    context.shadowOffsetY = 2
+                    
+                    // 绘制圆角矩形（兼容性处理）
+                    const drawRoundedRect = (x, y, width, height, radius) => {
+                        context.beginPath()
+                        context.moveTo(x + radius, y)
+                        context.lineTo(x + width - radius, y)
+                        context.quadraticCurveTo(x + width, y, x + width, y + radius)
+                        context.lineTo(x + width, y + height - radius)
+                        context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+                        context.lineTo(x + radius, y + height)
+                        context.quadraticCurveTo(x, y + height, x, y + height - radius)
+                        context.lineTo(x, y + radius)
+                        context.quadraticCurveTo(x, y, x + radius, y)
+                        context.closePath()
+                    }
+                    
+                    drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
+                    context.fill()
+                    
+                    // 绘制文字
                     context.fillStyle = '#ffffff'
-                    context.font = 'bold 32px Arial'
+                    context.font = `bold ${hasCurrent ? '48' : '40'}px 'Microsoft YaHei', Arial, sans-serif`
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
-                    const displayName = node.name.length > 10 ? node.name.substring(0, 10) + '...' : node.name
-                    context.fillText(displayName, 256, 64)
+                    context.shadowColor = 'rgba(0, 0, 0, 0.8)'
+                    context.shadowBlur = 5
+                    
+                    const displayName = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
+                    context.fillText(displayName, canvas.width / 2, canvas.height / 2)
+                    
+                    // 如果有提示信息，显示在下方
+                    if (node.prompts && node.prompts.length > 0) {
+                        context.font = '24px Arial'
+                        context.fillStyle = 'rgba(255, 255, 255, 0.8)'
+                        context.fillText(`${node.prompts.length} 个结果`, canvas.width / 2, canvas.height / 2 + 40)
+                    }
                     
                     const texture = new THREE.CanvasTexture(canvas)
                     texture.needsUpdate = true
-                    const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true })
+                    const spriteMaterial = new THREE.SpriteMaterial({ 
+                        map: texture, 
+                        transparent: true,
+                        alphaTest: 0.1
+                    })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    sprite.position.set(x, y + 3.5, z)
-                    sprite.scale.set(8, 2, 1)
+                    sprite.position.set(x, y + (node.type === 'range' ? 4.5 : 3.5), z)
+                    sprite.scale.set(12, 3, 1)
                     sprite.userData = { node, key, depth, type: node.type }
                     
                     this.map3dScene.add(mesh)
@@ -2770,15 +2896,40 @@ var app = new Vue({
                     
                     this.map3dNodes.push({ mesh, sprite, node, key, depth, isExpanded, position: { x, y, z } })
                     
-                    // 添加连接线
+                    // 添加更美观的连接线（带渐变效果）
                     if (parentPosition) {
                         const lineGeometry = new THREE.BufferGeometry().setFromPoints([
                             new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z),
                             new THREE.Vector3(x, y, z)
                         ])
-                        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x888888, linewidth: 2 })
+                        
+                        // 根据节点类型设置不同的线条颜色和粗细
+                        let lineColor = 0x666666
+                        let lineWidth = 2
+                        if (hasCurrent) {
+                            lineColor = 0xffd93d
+                            lineWidth = 3
+                        } else if (node.type === 'range') {
+                            lineColor = 0x4ecdc4
+                        } else if (node.type === 'tactic') {
+                            lineColor = 0x95e1d3
+                        }
+                        
+                        const lineMaterial = new THREE.LineBasicMaterial({ 
+                            color: lineColor,
+                            linewidth: lineWidth,
+                            transparent: true,
+                            opacity: 0.6
+                        })
                         const line = new THREE.Line(lineGeometry, lineMaterial)
                         this.map3dScene.add(line)
+                        
+                        // 添加连接点（小圆球）
+                        const dotGeometry = new THREE.SphereGeometry(0.15, 8, 8)
+                        const dotMaterial = new THREE.MeshBasicMaterial({ color: lineColor })
+                        const dot = new THREE.Mesh(dotGeometry, dotMaterial)
+                        dot.position.set(x, y, z)
+                        this.map3dScene.add(dot)
                     }
                     
                     // 递归渲染子节点
@@ -2826,6 +2977,27 @@ var app = new Vue({
             this.map3dClickHandler = onMouseClick
         },
         
+        // 创建渐变背景
+        createGradientBackground() {
+            const canvas = document.createElement('canvas')
+            canvas.width = 256
+            canvas.height = 256
+            const context = canvas.getContext('2d')
+            
+            // 创建径向渐变
+            const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128)
+            gradient.addColorStop(0, '#1a1a2e')
+            gradient.addColorStop(0.5, '#16213e')
+            gradient.addColorStop(1, '#0f3460')
+            
+            context.fillStyle = gradient
+            context.fillRect(0, 0, 256, 256)
+            
+            const texture = new THREE.CanvasTexture(canvas)
+            texture.needsUpdate = true
+            return texture
+        },
+        
         // 清空 3D 场景
         clearMap3DScene() {
             if (!this.map3dScene) return
@@ -2857,8 +3029,21 @@ var app = new Vue({
             
             this.map3dAnimationId = requestAnimationFrame(() => this.animateMap3D())
             
+            // 更新控制器（启用阻尼时需要每帧更新）
             if (this.map3dControls) {
                 this.map3dControls.update()
+            }
+            
+            // 添加轻微的旋转动画（可选，使场景更有活力）
+            if (this.map3dNodes && this.map3dNodes.length > 0) {
+                const time = Date.now() * 0.001
+                this.map3dNodes.forEach(({ mesh, node }) => {
+                    if (node.prompts && node.prompts.some(p => p.isCurrent)) {
+                        // 当前选中的节点有轻微的呼吸效果
+                        const scale = 1 + Math.sin(time * 2) * 0.05
+                        mesh.scale.set(scale, scale, scale)
+                    }
+                })
             }
             
             this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
