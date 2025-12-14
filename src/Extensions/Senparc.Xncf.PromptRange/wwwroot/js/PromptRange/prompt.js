@@ -2736,7 +2736,45 @@ var app = new Vue({
             this.map3dTreeData = tree
         },
         
-        // 渲染树节点
+        // 计算树的高度（用于平衡布局）
+        calculateTreeHeight(nodeData) {
+            if (!nodeData || typeof nodeData !== 'object') return 0
+            
+            let maxHeight = 0
+            Object.keys(nodeData).forEach(key => {
+                const node = nodeData[key]
+                const isExpanded = node.expanded !== false
+                
+                if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    const childHeight = this.calculateTreeHeight(node.children)
+                    maxHeight = Math.max(maxHeight, 1 + childHeight)
+                } else {
+                    maxHeight = Math.max(maxHeight, 1)
+                }
+            })
+            
+            return maxHeight
+        },
+        
+        // 计算子树的节点数量（用于平衡布局）
+        countTreeNodes(nodeData) {
+            if (!nodeData || typeof nodeData !== 'object') return 0
+            
+            let count = 0
+            Object.keys(nodeData).forEach(key => {
+                const node = nodeData[key]
+                count++ // 当前节点
+                
+                const isExpanded = node.expanded !== false
+                if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    count += this.countTreeNodes(node.children)
+                }
+            })
+            
+            return count
+        },
+        
+        // 渲染树节点（优化版：动态平衡布局 + 动画效果）
         renderTreeNodes() {
             if (!this.map3dTreeData) return
             
@@ -2748,18 +2786,29 @@ var app = new Vue({
             const raycaster = new THREE.Raycaster()
             const mouse = new THREE.Vector2()
             
-            // 递归渲染节点
-            const renderNode = (nodeData, parentPosition, depth, yOffset) => {
-                if (!nodeData || typeof nodeData !== 'object') return { yOffset }
+            // 递归渲染节点（改进的平衡布局算法）
+            const renderNode = (nodeData, parentPosition, depth, yOffset, availableSpace) => {
+                if (!nodeData || typeof nodeData !== 'object') return { yOffset, height: 0 }
                 
                 const keys = Object.keys(nodeData)
                 let currentYOffset = yOffset
+                let totalHeight = 0
                 
                 keys.forEach((key, index) => {
                     const node = nodeData[key]
                     const isExpanded = node.expanded !== false // 默认展开
                     
-                    // 计算位置（水平分层，垂直排列）
+                    // 计算子树的节点数量，用于分配垂直空间
+                    let nodeCount = 1
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                        nodeCount += this.countTreeNodes(node.children)
+                    }
+                    
+                    // 根据节点数量动态调整间距（实现平衡布局）
+                    const baseSpacing = 8
+                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 2)
+                    
+                    // 计算位置（水平分层，垂直排列，动态平衡）
                     const x = depth * 20
                     const y = currentYOffset
                     const z = 0
@@ -2824,15 +2873,28 @@ var app = new Vue({
                     }
                     
                     const mesh = new THREE.Mesh(geometry, material)
+                    // 初始位置设置为目标位置（后续用于动画）
                     mesh.position.set(x, y, z)
-                    mesh.userData = { node, key, depth, type: node.type }
+                    mesh.userData = { 
+                        node, 
+                        key, 
+                        depth, 
+                        type: node.type,
+                        targetPosition: { x, y, z },
+                        initialScale: 0.1 // 用于展开动画
+                    }
                     mesh.castShadow = true
                     mesh.receiveShadow = true
                     
+                    // 如果是新创建的节点，从小到大的展开动画
+                    mesh.scale.set(0.1, 0.1, 0.1)
+                    
                     // 添加发光效果
+                    let glowMesh = null
                     if (glowGeometry && glowMaterial) {
-                        const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
+                        glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
                         glowMesh.position.set(x, y, z)
+                        glowMesh.scale.set(0.1, 0.1, 0.1)
                         this.map3dScene.add(glowMesh)
                     }
                     
@@ -2895,26 +2957,57 @@ var app = new Vue({
                     const spriteMaterial = new THREE.SpriteMaterial({ 
                         map: texture, 
                         transparent: true,
-                        alphaTest: 0.1
+                        alphaTest: 0.1,
+                        opacity: 0 // 初始透明，用于渐入动画
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
                     sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
                     // 增大 sprite 尺寸，使文字更大更清晰（但不过度）
                     sprite.scale.set(16, 4, 1)
-                    sprite.userData = { node, key, depth, type: node.type }
+                    sprite.userData = { 
+                        node, 
+                        key, 
+                        depth, 
+                        type: node.type,
+                        targetOpacity: 1
+                    }
                     
                     this.map3dScene.add(mesh)
                     this.map3dScene.add(sprite)
                     
-                    this.map3dNodes.push({ mesh, sprite, node, key, depth, isExpanded, position: { x, y, z }, childrenMeshes: [], line: null, dot: null })
+                    this.map3dNodes.push({ 
+                        mesh, 
+                        sprite, 
+                        glowMesh,
+                        node, 
+                        key, 
+                        depth, 
+                        isExpanded, 
+                        position: { x, y, z }, 
+                        childrenMeshes: [], 
+                        line: null, 
+                        dot: null,
+                        animationProgress: 0 // 动画进度 0-1
+                    })
                     
                     // 存储节点引用以便快速查找
                     if (!this.map3dNodeMap) {
                         this.map3dNodeMap = new Map()
                     }
-                    this.map3dNodeMap.set(node.fullPath, { mesh, sprite, node, key, childrenMeshes: [], line: null, dot: null })
+                    this.map3dNodeMap.set(node.fullPath, { 
+                        mesh, 
+                        sprite, 
+                        glowMesh,
+                        node, 
+                        key, 
+                        childrenMeshes: [], 
+                        line: null, 
+                        dot: null 
+                    })
                     
                     // 添加更美观的连接线（带渐变效果）
+                    let line = null
+                    let dot = null
                     if (parentPosition) {
                         const lineGeometry = new THREE.BufferGeometry().setFromPoints([
                             new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z),
@@ -2937,15 +3030,19 @@ var app = new Vue({
                             color: lineColor,
                             linewidth: lineWidth,
                             transparent: true,
-                            opacity: 0.6
+                            opacity: 0 // 初始透明，用于渐入动画
                         })
-                        const line = new THREE.Line(lineGeometry, lineMaterial)
+                        line = new THREE.Line(lineGeometry, lineMaterial)
                         this.map3dScene.add(line)
                         
                         // 添加连接点（小圆球）
                         const dotGeometry = new THREE.SphereGeometry(0.15, 8, 8)
-                        const dotMaterial = new THREE.MeshBasicMaterial({ color: lineColor })
-                        const dot = new THREE.Mesh(dotGeometry, dotMaterial)
+                        const dotMaterial = new THREE.MeshBasicMaterial({ 
+                            color: lineColor,
+                            transparent: true,
+                            opacity: 0 // 初始透明
+                        })
+                        dot = new THREE.Mesh(dotGeometry, dotMaterial)
                         dot.position.set(x, y, z)
                         this.map3dScene.add(dot)
                         
@@ -2957,10 +3054,11 @@ var app = new Vue({
                         }
                     }
                     
-                    // 递归渲染子节点
+                    // 递归渲染子节点（传递子树可用空间）
                     if (isExpanded && node.children && Object.keys(node.children).length > 0) {
-                        const childResult = renderNode(node.children, { x, y, z }, depth + 1, currentYOffset)
+                        const childResult = renderNode(node.children, { x, y, z }, depth + 1, currentYOffset, nodeSpacing)
                         currentYOffset = childResult.yOffset
+                        totalHeight += childResult.height
                         
                         // 记录子节点引用（用于快速更新可见性）
                         const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
@@ -2970,22 +3068,30 @@ var app = new Vue({
                             if (childNodeData) {
                                 nodeData.childrenMeshes.push(childNodeData.mesh)
                                 nodeData.childrenMeshes.push(childNodeData.sprite)
+                                if (childNodeData.glowMesh) {
+                                    nodeData.childrenMeshes.push(childNodeData.glowMesh)
+                                }
                             }
                         })
                     } else {
-                        currentYOffset -= 8
+                        currentYOffset -= nodeSpacing
                     }
+                    
+                    totalHeight += nodeSpacing
                 })
                 
-                return { yOffset: currentYOffset }
+                return { yOffset: currentYOffset, height: totalHeight }
             }
             
             // 从根节点开始渲染
             let startYOffset = 0
             Object.keys(this.map3dTreeData).forEach(key => {
-                const result = renderNode({ [key]: this.map3dTreeData[key] }, null, 0, startYOffset)
-                startYOffset = result.yOffset - 8
+                const result = renderNode({ [key]: this.map3dTreeData[key] }, null, 0, startYOffset, 100)
+                startYOffset = result.yOffset - 10
             })
+            
+            // 启动入场动画
+            this.startNodeAnimations()
             
             // 添加点击事件
             const onMouseClick = (event) => {
@@ -3010,6 +3116,58 @@ var app = new Vue({
             
             this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
             this.map3dClickHandler = onMouseClick
+        },
+        
+        // 启动节点入场动画
+        startNodeAnimations() {
+            if (!this.map3dNodes || this.map3dNodes.length === 0) return
+            
+            const animationDuration = 500 // 动画持续时间(ms)
+            const startTime = Date.now()
+            
+            const animate = () => {
+                const elapsed = Date.now() - startTime
+                const progress = Math.min(elapsed / animationDuration, 1)
+                
+                // 使用缓动函数（easeOutCubic）
+                const easeProgress = 1 - Math.pow(1 - progress, 3)
+                
+                this.map3dNodes.forEach((nodeData, index) => {
+                    // 延迟每个节点的动画开始时间，创建波浪效果
+                    const delay = index * 20 // 每个节点延迟20ms
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    const nodeEaseProgress = 1 - Math.pow(1 - nodeProgress, 3)
+                    
+                    // 缩放动画：从 0.1 到 1
+                    const scale = 0.1 + nodeEaseProgress * 0.9
+                    nodeData.mesh.scale.set(scale, scale, scale)
+                    
+                    if (nodeData.glowMesh) {
+                        nodeData.glowMesh.scale.set(scale, scale, scale)
+                    }
+                    
+                    // 透明度动画
+                    if (nodeData.sprite && nodeData.sprite.material) {
+                        nodeData.sprite.material.opacity = nodeEaseProgress
+                    }
+                    
+                    if (nodeData.line && nodeData.line.material) {
+                        nodeData.line.material.opacity = nodeEaseProgress * 0.6
+                    }
+                    
+                    if (nodeData.dot && nodeData.dot.material) {
+                        nodeData.dot.material.opacity = nodeEaseProgress
+                    }
+                    
+                    nodeData.animationProgress = nodeEaseProgress
+                })
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate)
+                }
+            }
+            
+            animate()
         },
         
         // 创建渐变背景
@@ -3113,7 +3271,7 @@ var app = new Vue({
             }
         },
         
-        // 更新节点可见性（优化：只更新相关节点，不重新渲染整个场景）
+        // 更新节点可见性（优化版：带动画效果的展开/收缩）
         updateNodeVisibility(node, nodeKey) {
             if (!this.map3dScene || !this.map3dNodes) return
             
@@ -3122,9 +3280,14 @@ var app = new Vue({
             if (!nodeData) return
             
             const isExpanded = node.expanded !== false
+            const animationDuration = 300 // 动画持续时间(ms)
+            const startTime = Date.now()
             
-            // 递归函数：更新节点及其所有子节点的可见性
-            const updateChildrenVisibility = (parentNode, parentNodeData, shouldBeVisible) => {
+            // 收集需要动画的节点
+            const nodesToAnimate = []
+            
+            // 递归函数：收集节点及其所有子节点
+            const collectChildNodes = (parentNode, parentNodeData) => {
                 if (!parentNode.children || Object.keys(parentNode.children).length === 0) return
                 
                 Object.keys(parentNode.children).forEach(childKey => {
@@ -3132,23 +3295,109 @@ var app = new Vue({
                     const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
                     
                     if (childNodeData) {
-                        // 设置可见性：如果父节点收拢，子节点隐藏；如果父节点展开，子节点根据自身状态决定
-                        const childVisible = shouldBeVisible && (childNode.expanded !== false || Object.keys(childNode.children || {}).length === 0)
-                        childNodeData.mesh.visible = childVisible
-                        childNodeData.sprite.visible = childVisible
+                        nodesToAnimate.push(childNodeData)
                         
-                        // 更新连接线和连接点的可见性
-                        if (childNodeData.line) childNodeData.line.visible = childVisible
-                        if (childNodeData.dot) childNodeData.dot.visible = childVisible
-                        
-                        // 递归更新子节点的子节点
-                        updateChildrenVisibility(childNode, childNodeData, childVisible)
+                        // 递归收集子节点的子节点
+                        if (childNode.expanded !== false) {
+                            collectChildNodes(childNode, childNodeData)
+                        }
                     }
                 })
             }
             
-            // 更新直接子节点
-            updateChildrenVisibility(node, nodeData, isExpanded)
+            // 收集所有需要动画的子节点
+            collectChildNodes(node, nodeData)
+            
+            if (nodesToAnimate.length === 0) return
+            
+            // 执行动画
+            const animate = () => {
+                const elapsed = Date.now() - startTime
+                const progress = Math.min(elapsed / animationDuration, 1)
+                
+                // 使用缓动函数
+                const easeProgress = isExpanded 
+                    ? 1 - Math.pow(1 - progress, 3) // 展开：easeOutCubic
+                    : Math.pow(progress, 3) // 收缩：easeInCubic (反向)
+                
+                nodesToAnimate.forEach((childNodeData, index) => {
+                    // 延迟每个节点的动画开始时间，创建波浪效果
+                    const delay = isExpanded ? index * 15 : (nodesToAnimate.length - index) * 15
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    const nodeEaseProgress = isExpanded 
+                        ? 1 - Math.pow(1 - nodeProgress, 3)
+                        : Math.pow(nodeProgress, 3)
+                    
+                    if (isExpanded) {
+                        // 展开动画：从小到大，从透明到不透明
+                        const scale = 0.1 + nodeEaseProgress * 0.9
+                        childNodeData.mesh.scale.set(scale, scale, scale)
+                        childNodeData.mesh.visible = true
+                        
+                        if (childNodeData.glowMesh) {
+                            childNodeData.glowMesh.scale.set(scale, scale, scale)
+                            childNodeData.glowMesh.visible = true
+                        }
+                        
+                        if (childNodeData.sprite) {
+                            childNodeData.sprite.visible = true
+                            if (childNodeData.sprite.material) {
+                                childNodeData.sprite.material.opacity = nodeEaseProgress
+                            }
+                        }
+                        
+                        if (childNodeData.line) {
+                            childNodeData.line.visible = true
+                            if (childNodeData.line.material) {
+                                childNodeData.line.material.opacity = nodeEaseProgress * 0.6
+                            }
+                        }
+                        
+                        if (childNodeData.dot) {
+                            childNodeData.dot.visible = true
+                            if (childNodeData.dot.material) {
+                                childNodeData.dot.material.opacity = nodeEaseProgress
+                            }
+                        }
+                    } else {
+                        // 收缩动画：从大到小，从不透明到透明
+                        const reverseProgress = 1 - nodeEaseProgress
+                        const scale = 0.1 + reverseProgress * 0.9
+                        childNodeData.mesh.scale.set(scale, scale, scale)
+                        
+                        if (childNodeData.glowMesh) {
+                            childNodeData.glowMesh.scale.set(scale, scale, scale)
+                        }
+                        
+                        if (childNodeData.sprite && childNodeData.sprite.material) {
+                            childNodeData.sprite.material.opacity = reverseProgress
+                        }
+                        
+                        if (childNodeData.line && childNodeData.line.material) {
+                            childNodeData.line.material.opacity = reverseProgress * 0.6
+                        }
+                        
+                        if (childNodeData.dot && childNodeData.dot.material) {
+                            childNodeData.dot.material.opacity = reverseProgress
+                        }
+                        
+                        // 动画结束后隐藏
+                        if (nodeProgress >= 1) {
+                            childNodeData.mesh.visible = false
+                            if (childNodeData.glowMesh) childNodeData.glowMesh.visible = false
+                            if (childNodeData.sprite) childNodeData.sprite.visible = false
+                            if (childNodeData.line) childNodeData.line.visible = false
+                            if (childNodeData.dot) childNodeData.dot.visible = false
+                        }
+                    }
+                })
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate)
+                }
+            }
+            
+            animate()
         },
         
         // 处理窗口大小变化
