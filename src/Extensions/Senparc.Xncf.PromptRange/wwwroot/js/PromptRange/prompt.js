@@ -2957,21 +2957,23 @@ var app = new Vue({
                     let labelText = node.name
                     
                     if (node.type === 'tactic') {
-                        // 靶道类型：显示 T1, T1.1 等
+                        // 靶道类型：显示 T1, T1.1, T10, T10.1 等
                         labelPrefix = 'T'
-                        // 从 key 中提取战术编号（去除前面的部分）
-                        const tacticMatch = key.match(/T?(\d+(?:\.\d+)*)/)
+                        // key 的格式是 "T1", "T1.1", "T10", "T10.1" 等
+                        // 从 key 中提取战术编号（去除前面的 T）
+                        const tacticMatch = key.match(/^T(.+)$/)
                         if (tacticMatch) {
                             labelText = tacticMatch[1]
+                        } else {
+                            // 如果 key 不匹配，使用 node.name
+                            labelText = node.name
                         }
                     } else if (node.type === 'aiming') {
                         // Aiming 类型：显示 A1, A123 等
                         labelPrefix = 'A'
-                        // 从 key 中提取 Aiming 编号
-                        const aimingMatch = key.match(/A?(\d+)/)
-                        if (aimingMatch) {
-                            labelText = aimingMatch[1]
-                        }
+                        // key 已经去掉了 'A'，直接是数字（如 "1", "123", "456"）
+                        // 但 node.name 也是数字，所以直接使用
+                        labelText = key // 或者 node.name，两者应该相同
                     } else {
                         // 靶场类型：显示完整名称
                         labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
