@@ -3274,9 +3274,13 @@ var app = new Vue({
                                 })
                             })
                             
-                            // Aiming 节点不占用垂直空间，父节点保持当前高度
+                            // Aiming 节点：父节点保持当前高度，但需要更新 Y 偏移以避免下一个节点重叠
                             childMinY = y
                             childMaxY = y
+                            
+                            // 重要：虽然 Aiming 子节点水平排列，但父节点本身需要占用垂直空间
+                            // 否则下一个同级 Tactic 会与当前 Tactic 重叠
+                            currentYOffset += nodeSpacing
                             
                             // 更新当前节点数据中记录的子节点引用
                             const currentNodeData = this.map3dNodes.find(n => n.mesh === mesh)
@@ -3369,18 +3373,24 @@ var app = new Vue({
                     const node = nodeData[key]
                     const isExpanded = node.expanded !== false
                     
+                    // 检查子节点是否全是 Aiming 类型
+                    const hasAimingChildren = node.children && Object.keys(node.children).length > 0 &&
+                        Object.values(node.children).every(child => child.type === 'aiming')
+                    
                     let nodeCount = 1
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    // 如果子节点是 Aiming，不计入 nodeCount（因为 Aiming 水平排列）
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0 && !hasAimingChildren) {
                         nodeCount += this.countTreeNodes(node.children)
                     }
                     
                     // 使用与 renderNode 相同的间距计算
-                    const baseSpacing = 12 // 从8增加到12
-                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 3) // 从2增加到3
+                    const baseSpacing = 12
+                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 3)
                     
                     height += nodeSpacing
                     
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    // 只有非 Aiming 子节点才递归计算高度
+                    if (isExpanded && node.children && Object.keys(node.children).length > 0 && !hasAimingChildren) {
                         height += tempRenderForHeight(node.children, depth + 1)
                     }
                 })
