@@ -2795,9 +2795,72 @@ var app = new Vue({
             return count
         },
         
+        // **计算所有评分的统计信息（用于排名）**
+        calculateScoreStatistics() {
+            const scores = []
+            
+            // 遍历所有 promptOpt 收集评分
+            if (this.promptOpt && this.promptOpt.length > 0) {
+                this.promptOpt.forEach(prompt => {
+                    let score = null
+                    
+                    // 优先使用 evalMaxScore
+                    if (prompt.evalMaxScore !== undefined && 
+                        prompt.evalMaxScore !== null && 
+                        prompt.evalMaxScore !== -1 && 
+                        prompt.evalMaxScore !== '-1') {
+                        score = prompt.evalMaxScore
+                    }
+                    // 如果没有，使用 evalAvgScore
+                    else if (prompt.evalAvgScore !== undefined && 
+                             prompt.evalAvgScore !== null && 
+                             prompt.evalAvgScore !== -1 && 
+                             prompt.evalAvgScore !== '-1') {
+                        score = prompt.evalAvgScore
+                    }
+                    
+                    if (score !== null) {
+                        scores.push(score)
+                    }
+                })
+            }
+            
+            if (scores.length === 0) {
+                return null
+            }
+            
+            // 排序（从大到小）
+            scores.sort((a, b) => b - a)
+            
+            const result = {
+                scores: scores,
+                min: Math.min(...scores),
+                max: Math.max(...scores),
+                count: scores.length,
+                // 计算百分位点（用于分级）
+                getPercentileRank: (score) => {
+                    // 返回该分数在所有分数中的排名百分比（0-100）
+                    const rank = scores.filter(s => s > score).length
+                    return ((scores.length - rank) / scores.length) * 100
+                }
+            }
+            
+            console.log('📊 评分统计:', {
+                总数: result.count,
+                最高分: result.max,
+                最低分: result.min,
+                分数列表: scores.slice(0, 10) // 只显示前10个
+            })
+            
+            return result
+        },
+        
         // 渲染树节点（优化版：动态平衡布局 + 动画效果）
         renderTreeNodes() {
             if (!this.map3dTreeData) return
+            
+            // **计算评分统计信息**
+            this.scoreStatistics = this.calculateScoreStatistics()
             
             this.map3dNodes = []
             // 初始化节点映射
@@ -3194,38 +3257,40 @@ var app = new Vue({
                                         }
                                     }
                                     
-                                    if (score !== null) {
-                                        console.log('✅ 使用评分:', score)
+                                    if (score !== null && this.scoreStatistics) {
+                                        // **根据相对排名设置大小和颜色**
+                                        const percentile = this.scoreStatistics.getPercentileRank(score)
+                                        console.log('✅ 使用评分:', score, '排名百分位:', percentile.toFixed(1) + '%')
                                         
-                                        // **根据评分等级设置大小和颜色**
-                                        if (score >= 8) {
-                                            // 8-10分：优秀 - 最大、亮绿色
+                                        // 根据排名百分位分级（Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%）
+                                        if (percentile >= 80) {
+                                            // Top 20% - 最大、亮绿色
                                             sphereSize = 2.2
-                                            sphereColor = 0x00d4aa  // 亮绿色
+                                            sphereColor = 0x00d4aa
                                             emissiveColor = 0x00ffcc
                                             emissiveIntensity = 0.4
-                                        } else if (score >= 6) {
-                                            // 6-8分：良好 - 较大、绿色
+                                        } else if (percentile >= 60) {
+                                            // 20-40% - 较大、绿色
                                             sphereSize = 1.9
-                                            sphereColor = 0x52c41a  // 绿色
+                                            sphereColor = 0x52c41a
                                             emissiveColor = 0x66ff66
                                             emissiveIntensity = 0.3
-                                        } else if (score >= 4) {
-                                            // 4-6分：中等 - 正常、橙色
+                                        } else if (percentile >= 40) {
+                                            // 40-60% - 正常、橙色
                                             sphereSize = 1.6
-                                            sphereColor = 0xfaad14  // 橙色
+                                            sphereColor = 0xfaad14
                                             emissiveColor = 0xffcc00
                                             emissiveIntensity = 0.2
-                                        } else if (score >= 2) {
-                                            // 2-4分：较低 - 较小、浅红色
+                                        } else if (percentile >= 20) {
+                                            // 60-80% - 较小、浅红色
                                             sphereSize = 1.3
-                                            sphereColor = 0xff7875  // 浅红色
+                                            sphereColor = 0xff7875
                                             emissiveColor = 0xff6666
                                             emissiveIntensity = 0.15
                                         } else {
-                                            // 0-2分：差 - 最小、红色
+                                            // Bottom 20% - 最小、红色
                                             sphereSize = 1.0
-                                            sphereColor = 0xf5222d  // 红色
+                                            sphereColor = 0xf5222d
                                             emissiveColor = 0xff3333
                                             emissiveIntensity = 0.1
                                         }
@@ -3782,48 +3847,69 @@ var app = new Vue({
                                             
                                             tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
                                             
-                                            // **显示最终评分（大号、醒目）**
+                                            // **显示最终评分（大号、醒目）+ 排名**
                                             if (finalScore !== null) {
-                                                // 根据评分等级使用不同颜色和大小
+                                                // **根据相对排名设置颜色和大小**
                                                 let scoreColor = '#999'
                                                 let scoreSize = '20px'
                                                 let scoreEmoji = '📊'
-                                                let scoreBadge = ''
+                                                let rankBadge = ''
+                                                let rankText = ''
                                                 
-                                                if (finalScore >= 8) {
-                                                    scoreColor = '#00d4aa'  // 优秀：亮绿色
-                                                    scoreSize = '24px'
-                                                    scoreEmoji = '🏆'
-                                                    scoreBadge = '<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">优秀</span>'
-                                                } else if (finalScore >= 6) {
-                                                    scoreColor = '#52c41a'  // 良好：绿色
-                                                    scoreSize = '22px'
-                                                    scoreEmoji = '✨'
-                                                    scoreBadge = '<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">良好</span>'
-                                                } else if (finalScore >= 4) {
-                                                    scoreColor = '#faad14'  // 中等：橙色
-                                                    scoreSize = '20px'
-                                                    scoreEmoji = '📊'
-                                                    scoreBadge = '<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">中等</span>'
-                                                } else if (finalScore >= 2) {
-                                                    scoreColor = '#ff7875'  // 较低：浅红色
-                                                    scoreSize = '18px'
-                                                    scoreEmoji = '⚠️'
-                                                    scoreBadge = '<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">较低</span>'
-                                                } else {
-                                                    scoreColor = '#f5222d'  // 差：红色
-                                                    scoreSize = '18px'
-                                                    scoreEmoji = '❌'
-                                                    scoreBadge = '<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">需改进</span>'
+                                                if (this.scoreStatistics) {
+                                                    const percentile = this.scoreStatistics.getPercentileRank(finalScore)
+                                                    const allScores = this.scoreStatistics.scores
+                                                    const rank = allScores.filter(s => s > finalScore).length + 1
+                                                    const total = allScores.length
+                                                    
+                                                    rankText = `排名: ${rank}/${total}`
+                                                    
+                                                    // 根据排名百分位分级
+                                                    if (percentile >= 80) {
+                                                        // Top 20%
+                                                        scoreColor = '#00d4aa'
+                                                        scoreSize = '24px'
+                                                        scoreEmoji = '🏆'
+                                                        rankBadge = '<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 20%</span>'
+                                                    } else if (percentile >= 60) {
+                                                        // 20-40%
+                                                        scoreColor = '#52c41a'
+                                                        scoreSize = '22px'
+                                                        scoreEmoji = '✨'
+                                                        rankBadge = '<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 40%</span>'
+                                                    } else if (percentile >= 40) {
+                                                        // 40-60%
+                                                        scoreColor = '#faad14'
+                                                        scoreSize = '20px'
+                                                        scoreEmoji = '📊'
+                                                        rankBadge = '<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">中游</span>'
+                                                    } else if (percentile >= 20) {
+                                                        // 60-80%
+                                                        scoreColor = '#ff7875'
+                                                        scoreSize = '18px'
+                                                        scoreEmoji = '📉'
+                                                        rankBadge = '<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">靠后</span>'
+                                                    } else {
+                                                        // Bottom 20%
+                                                        scoreColor = '#f5222d'
+                                                        scoreSize = '18px'
+                                                        scoreEmoji = '📊'
+                                                        rankBadge = '<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Bottom 20%</span>'
+                                                    }
                                                 }
                                                 
                                                 tooltipContent += `
                                                     <div style="margin-bottom: 8px;">
                                                         ${scoreEmoji} <span style="color: ${scoreColor}; font-weight: bold; font-size: ${scoreSize};">${finalScore.toFixed(1)}</span>
                                                         <span style="color: #888; font-size: 12px;"> / 10</span>
-                                                        ${scoreBadge}
+                                                        ${rankBadge}
                                                     </div>
                                                 `
+                                                
+                                                // 显示排名信息
+                                                if (rankText) {
+                                                    tooltipContent += `<div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">${rankText}</div>`
+                                                }
                                             }
                                             
                                             // **显示详细评分**
