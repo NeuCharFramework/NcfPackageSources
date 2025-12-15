@@ -3942,11 +3942,17 @@ var app = new Vue({
                             const parentOffset = (hashCode(parentData.node.fullPath || parentData.key) % 100) / 10
                             const correctZ = -totalAimingWidth / 2 + parentOffset + aimingIndex * aimingSpacing
                             
-                            // 使用重新计算的正确 Z 轴位置
+                            // **关键修复：Aiming 节点的 X 和 Y 也需要基于父节点重新计算**
+                            // X 轴：父节点深度 + 1
+                            const correctX = parentData.mesh.position.x + 20
+                            // Y 轴：与父节点相同（Aiming 节点水平排列）
+                            const correctY = parentData.mesh.position.y
+                            
+                            // 使用重新计算的正确位置（X, Y, Z 都重新计算）
                             childData._targetPosition = {
-                                x: childData.position.x,
-                                y: childData.position.y,
-                                z: correctZ  // 使用重新计算的 Z 轴
+                                x: correctX,  // 基于父节点的 X + 偏移
+                                y: correctY,  // 与父节点相同的 Y
+                                z: correctZ   // 基于父节点 hash 的唯一 Z
                             }
                         } else {
                             childData._targetPosition = { ...childData.position }
