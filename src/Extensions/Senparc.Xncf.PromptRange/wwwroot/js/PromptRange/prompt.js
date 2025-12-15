@@ -2697,11 +2697,16 @@ var app = new Vue({
                     const key = `T${tacticParts.slice(0, index + 1).join('.')}`
                     
                     if (!currentNode[key]) {
+                        // 修复 parentPath：应该包含完整的路径前缀
+                        const parentFullPath = index > 0 
+                            ? `${rangeName}-T${tacticParts.slice(0, index).join('.')}` // 例如: "Range1-T2.1"
+                            : rangeName // 例如: "Range1"
+                        
                         currentNode[key] = {
                             type: 'tactic',
                             name: part,
                             fullPath: `${rangeName}-${key}`,
-                            parentPath: index > 0 ? `T${tacticParts.slice(0, index).join('.')}` : rangeName,
+                            parentPath: parentFullPath,
                             children: {},
                             prompts: [],
                             expanded: true
@@ -3503,7 +3508,7 @@ var app = new Vue({
             this.map3dClickHandler = onMouseClick
         },
         
-        // 创建连接线（在所有节点位置确定后调用）- 重构版：基于实际mesh位置
+        // 创建连接线（在所有节点位置确定后调用）- 动态绑定版本
         createConnectionLines() {
             if (!this.map3dNodes || !this.map3dScene) return
             
@@ -3522,24 +3527,17 @@ var app = new Vue({
                     nodeData.dot = null
                 }
                 
-                // **关键修复：使用实际的mesh位置，而不是 parentPosition**
-                // 找到父节点的实际位置
+                // 通过 parentPath 找到父节点
                 if (nodeData.node.parentPath) {
-                    // 通过 parentPath 找到父节点
                     const parentNodeData = this.map3dNodes.find(n => {
-                        // 对于 Range 节点，parentPath 可能不存在
                         if (!n.node.fullPath) return false
-                        
-                        // 检查是否是当前节点的父节点
-                        // 例如：当前节点 fullPath = "Range1-T1.1"，父节点 fullPath = "Range1-T1"
-                        // 或者：当前节点 fullPath = "Range1-T1.1-A1"，父节点 fullPath = "Range1-T1.1"
                         return n.node.fullPath === nodeData.node.parentPath
                     })
                     
                     if (parentNodeData && parentNodeData.mesh) {
-                        // 使用父节点 mesh 的实际位置
-                        const parentPosition = parentNodeData.mesh.position
-                        const currentPosition = nodeData.mesh.position
+                        // **保存父节点引用，用于动态更新**
+                        nodeData.parentNodeData = parentNodeData
+                        
                         const hasCurrent = nodeData.hasCurrent
                         const nodeType = nodeData.node.type
                         
@@ -3556,39 +3554,26 @@ var app = new Vue({
                             lineColor = 0x95e1d3
                         }
                         
-                        // 使用 CylinderGeometry 创建管道状的连接线
-                        const lineStart = new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z)
-                        const lineEnd = new THREE.Vector3(currentPosition.x, currentPosition.y, currentPosition.z)
-                        const direction = new THREE.Vector3().subVectors(lineEnd, lineStart)
-                        const lineLength = direction.length()
+                        // 使用 Line 而不是 Cylinder，这样可以动态更新端点
+                        // 创建线条几何体（两个点）
+                        const lineGeometry = new THREE.BufferGeometry()
+                        const positions = new Float32Array(6) // 2 个点 × 3 个坐标
+                        lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
                         
-                        // 避免创建长度为0的线条（会导致视觉问题）
-                        if (lineLength < 0.01) return
-                        
-                        const lineMidpoint = new THREE.Vector3().addVectors(lineStart, lineEnd).multiplyScalar(0.5)
-                        
-                        // 创建圆柱体作为连接线
-                        const cylinderGeometry = new THREE.CylinderGeometry(lineRadius, lineRadius, lineLength, 8)
-                        const lineMaterial = new THREE.MeshStandardMaterial({ 
+                        // 使用 LineBasicMaterial 代替圆柱体
+                        const lineMaterial = new THREE.LineBasicMaterial({
                             color: lineColor,
-                            metalness: 0.3,
-                            roughness: 0.5,
+                            linewidth: 2, // 注意：WebGL 的限制，这个值在大多数平台上会被忽略
                             transparent: true,
                             opacity: 0 // 初始透明，用于渐入动画
                         })
-                        const line = new THREE.Mesh(cylinderGeometry, lineMaterial)
                         
-                        // 设置圆柱体的位置和旋转
-                        line.position.copy(lineMidpoint)
-                        
-                        // 计算旋转角度使圆柱体对齐到两个点之间
-                        const axis = new THREE.Vector3(0, 1, 0)
-                        line.quaternion.setFromUnitVectors(axis, direction.clone().normalize())
-                        
+                        const line = new THREE.Line(lineGeometry, lineMaterial)
                         this.map3dScene.add(line)
                         nodeData.line = line
+                        nodeData.lineColor = lineColor
                         
-                        // 添加连接点（小圆球）
+                        // 添加连接点（小圆球）- 也会动态跟随
                         const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8)
                         const dotMaterial = new THREE.MeshStandardMaterial({ 
                             color: lineColor,
@@ -3598,10 +3583,49 @@ var app = new Vue({
                             opacity: 0 // 初始透明
                         })
                         const dot = new THREE.Mesh(dotGeometry, dotMaterial)
-                        dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
                         this.map3dScene.add(dot)
                         nodeData.dot = dot
+                        
+                        // **立即更新一次连接线位置**
+                        this.updateConnectionLine(nodeData)
+                    } else {
+                        // 调试：记录找不到父节点的情况
+                        console.warn('找不到父节点:', nodeData.node.fullPath, '→', nodeData.node.parentPath)
                     }
+                }
+            })
+        },
+        
+        // 更新单个连接线的位置（动态绑定到节点位置）
+        updateConnectionLine(nodeData) {
+            if (!nodeData.line || !nodeData.parentNodeData) return
+            
+            const parentPosition = nodeData.parentNodeData.mesh.position
+            const currentPosition = nodeData.mesh.position
+            
+            // 更新线条的端点位置
+            const positions = nodeData.line.geometry.attributes.position.array
+            positions[0] = parentPosition.x
+            positions[1] = parentPosition.y
+            positions[2] = parentPosition.z
+            positions[3] = currentPosition.x
+            positions[4] = currentPosition.y
+            positions[5] = currentPosition.z
+            nodeData.line.geometry.attributes.position.needsUpdate = true
+            
+            // 更新连接点位置
+            if (nodeData.dot) {
+                nodeData.dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
+            }
+        },
+        
+        // 更新所有连接线的位置
+        updateAllConnectionLines() {
+            if (!this.map3dNodes) return
+            
+            this.map3dNodes.forEach(nodeData => {
+                if (nodeData.line && nodeData.parentNodeData) {
+                    this.updateConnectionLine(nodeData)
                 }
             })
         },
@@ -3649,6 +3673,9 @@ var app = new Vue({
                     
                     nodeData.animationProgress = nodeEaseProgress
                 })
+                
+                // **关键：在动画过程中更新连接线位置**
+                this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
@@ -3775,6 +3802,9 @@ var app = new Vue({
                         )
                     }
                 }
+                
+                // **更新连接线位置（确保始终跟随节点）**
+                this.updateAllConnectionLines()
                 
                 // 只更新缓存的当前选中节点，避免遍历所有节点
                 if (this.map3dCurrentNodes && this.map3dCurrentNodes.length > 0) {
