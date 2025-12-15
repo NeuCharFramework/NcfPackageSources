@@ -2816,6 +2816,11 @@ var app = new Vue({
                     const node = nodeData[key]
                     const isExpanded = node.expanded !== false // 默认展开
                     
+                    // **重要：跳过 Aiming 类型节点，它们会在父节点处理时被创建**
+                    if (node.type === 'aiming') {
+                        return // 不在这里处理 Aiming 节点
+                    }
+                    
                     // 检查子节点是否全是 Aiming 类型
                     const hasAimingChildren = node.children && Object.keys(node.children).length > 0 &&
                         Object.values(node.children).every(child => child.type === 'aiming')
@@ -2838,7 +2843,7 @@ var app = new Vue({
                     // 检查是否有当前编辑的靶道
                     const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
                     
-                    // 创建几何体
+                    // 创建几何体（只为 Range 和 Tactic 创建，Aiming 在专门的地方创建）
                     let geometry, material, glowGeometry, glowMaterial
                     if (node.type === 'range') {
                         // 靶场：方块（使用更平滑的圆角效果）
@@ -2883,15 +2888,9 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        // Aiming：小圆球
-                        geometry = new THREE.SphereGeometry(1.5, 24, 24)
-                        material = new THREE.MeshStandardMaterial({ 
-                            color: hasCurrent ? 0xffd93d : 0xa8e6cf,
-                            metalness: 0.4,
-                            roughness: 0.5,
-                            emissive: hasCurrent ? 0xffaa00 : 0x003333,
-                            emissiveIntensity: hasCurrent ? 0.7 : 0.05
-                        })
+                        // 不应该到达这里，因为 Aiming 节点已经在上面被 return 了
+                        console.error('意外的节点类型:', node.type, key)
+                        return
                     }
                     
                     const mesh = new THREE.Mesh(geometry, material)
@@ -2969,7 +2968,7 @@ var app = new Vue({
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, (canvas.height - padding * 2) / 2, borderRadius)
                     context.fill()
                     
-                    // 准备标签文字（添加类型前缀：T/A）
+                    // 准备标签文字（添加类型前缀：T）
                     let labelPrefix = ''
                     let labelText = node.name
                     
@@ -2985,22 +2984,11 @@ var app = new Vue({
                             // 如果 key 不匹配，使用 node.name
                             labelText = node.name
                         }
-                    } else if (node.type === 'aiming') {
-                        // Aiming 类型：显示 A1, A123 等
-                        labelPrefix = 'A'
-                        // key 的格式现在是 "T1.1-A1", "T1.2-A1" 等
-                        // 需要提取 A 后面的数字
-                        const aimingMatch = key.match(/-A(\d+)$/)
-                        if (aimingMatch) {
-                            labelText = aimingMatch[1]
-                        } else {
-                            // 如果不匹配，使用 node.name
-                            labelText = node.name
-                        }
-                    } else {
+                    } else if (node.type === 'range') {
                         // 靶场类型：显示完整名称
                         labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
                     }
+                    // Aiming 类型已经在专门的代码块中处理，不会到达这里
                     
                     // 绘制文字（带阴影增强可读性）
                     context.textAlign = 'center'
@@ -3012,25 +3000,25 @@ var app = new Vue({
                     
                     let mainTextY = canvas.height / 2
                     
-                    // 如果有类型前缀（T/A），在上方显示类型标识
-                    if (labelPrefix) {
-                        // 类型标识（T 或 A）- 缩小字体
+                    // 如果有类型前缀（T），在上方显示类型标识
+                    if (labelPrefix === 'T') {
+                        // 类型标识 T - 缩小字体
                         context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                        const prefixFontSize = hasCurrent ? 50 : 42  // 从 100/85 缩小到 50/42
+                        const prefixFontSize = hasCurrent ? 50 : 42
                         context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 40)  // 从 -80 改为 -40
+                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 40)
                         
                         // 主要数字 - 缩小字体
                         context.fillStyle = '#ffffff'
-                        const mainFontSize = hasCurrent ? 80 : 70  // 从 160/140 缩小到 80/70
+                        const mainFontSize = hasCurrent ? 80 : 70
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 20)  // 从 +40 改为 +20
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 20)
                         
                         mainTextY = canvas.height / 2 + 20
                     } else {
                         // 靶场名称 - 缩小字体
                         context.fillStyle = '#ffffff'
-                        const rangeFontSize = hasCurrent ? 60 : 50  // 从 120/100 缩小到 60/50
+                        const rangeFontSize = hasCurrent ? 60 : 50
                         context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
                         context.fillText(labelText, canvas.width / 2, canvas.height / 2)
                         
@@ -3112,10 +3100,15 @@ var app = new Vue({
                     if (isExpanded && node.children && Object.keys(node.children).length > 0) {
                         if (hasAimingChildren) {
                             // Aiming 节点：水平排列（垂直于 Tactic）
+                            // 先保存当前节点的引用，稍后会更新 Aiming 的 parentPosition
+                            const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                            
                             const aimingKeys = Object.keys(node.children)
                             const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
                             const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
                             let startZ = -totalAimingWidth / 2 // 从中心开始分布
+                            
+                            const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
                             
                             aimingKeys.forEach((aimingKey, aimingIndex) => {
                                 const aimingNode = node.children[aimingKey]
@@ -3242,7 +3235,7 @@ var app = new Vue({
                                 this.map3dScene.add(aimingMesh)
                                 this.map3dScene.add(aimingSprite)
                                 
-                                this.map3dNodes.push({ 
+                                const aimingNodeData = { 
                                     mesh: aimingMesh, 
                                     sprite: aimingSprite, 
                                     glowMesh: null,
@@ -3251,13 +3244,16 @@ var app = new Vue({
                                     depth: depth + 1, 
                                     isExpanded: true, 
                                     position: { x: aimingX, y: aimingY, z: aimingZ }, 
-                                    parentPosition: { x, y, z }, // 使用最终的父节点位置
+                                    parentPosition: null, // 稍后更新
                                     childrenMeshes: [], 
                                     line: null, 
                                     dot: null,
                                     animationProgress: 0,
                                     hasCurrent: aimingHasCurrent
-                                })
+                                }
+                                
+                                this.map3dNodes.push(aimingNodeData)
+                                aimingNodesData.push(aimingNodeData)
                                 
                                 if (!this.map3dNodeMap) {
                                     this.map3dNodeMap = new Map()
@@ -3282,15 +3278,20 @@ var app = new Vue({
                             // 否则下一个同级 Tactic 会与当前 Tactic 重叠
                             currentYOffset += nodeSpacing
                             
+                            // **关键修复：使用父节点的最终位置更新所有 Aiming 子节点的 parentPosition**
+                            // 注意：这里的 y 仍然是初始值，因为 Aiming 父节点不会被调整
+                            aimingNodesData.forEach(aimingData => {
+                                aimingData.parentPosition = { x, y, z }
+                            })
+                            
                             // 更新当前节点数据中记录的子节点引用
-                            const currentNodeData = this.map3dNodes.find(n => n.mesh === mesh)
-                            if (currentNodeData) {
+                            if (currentParentNodeData) {
                                 aimingKeys.forEach(aimingKey => {
                                     const aimingChild = node.children[aimingKey]
                                     const aimingChildData = this.map3dNodes.find(n => n.node === aimingChild)
                                     if (aimingChildData) {
-                                        currentNodeData.childrenMeshes.push(aimingChildData.mesh)
-                                        currentNodeData.childrenMeshes.push(aimingChildData.sprite)
+                                        currentParentNodeData.childrenMeshes.push(aimingChildData.mesh)
+                                        currentParentNodeData.childrenMeshes.push(aimingChildData.sprite)
                                     }
                                 })
                             }
@@ -3306,6 +3307,7 @@ var app = new Vue({
                             
                             // 如果有子节点，将父节点调整到子树的垂直中点
                             const subtreeMiddleY = (childMinY + childMaxY) / 2
+                            const oldY = y
                             y = subtreeMiddleY
                             
                             // 更新已创建的mesh位置
@@ -3325,13 +3327,19 @@ var app = new Vue({
                                 }
                             }
                             
-                            // 更新所有子节点的 parentPosition，使其指向调整后的父节点位置
+                            // **关键修复：使用调整后的父节点位置，更新所有子节点的 parentPosition**
+                            // 这必须在父节点位置调整之后执行
+                            const finalParentPosition = { x, y, z }
                             Object.keys(node.children).forEach(childKey => {
                                 const childNode = node.children[childKey]
-                                const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
-                                if (childNodeData) {
-                                    childNodeData.parentPosition = { x, y, z }
+                                // 递归更新所有后代节点的 parentPosition
+                                const updateDescendantParentPositions = (searchNode, searchKey, newParentPos) => {
+                                    const childNodeData = this.map3dNodes.find(n => n.node === searchNode && n.key === searchKey)
+                                    if (childNodeData) {
+                                        childNodeData.parentPosition = newParentPos
+                                    }
                                 }
+                                updateDescendantParentPositions(childNode, childKey, finalParentPosition)
                             })
                             
                             // 记录子节点引用（用于快速更新可见性）
@@ -3495,7 +3503,7 @@ var app = new Vue({
             this.map3dClickHandler = onMouseClick
         },
         
-        // 创建连接线（在所有节点位置确定后调用）
+        // 创建连接线（在所有节点位置确定后调用）- 重构版：基于实际mesh位置
         createConnectionLines() {
             if (!this.map3dNodes || !this.map3dScene) return
             
@@ -3514,71 +3522,86 @@ var app = new Vue({
                     nodeData.dot = null
                 }
                 
-                // 如果有父节点，创建连接线
-                if (nodeData.parentPosition) {
-                    const parentPosition = nodeData.parentPosition
-                    const currentPosition = nodeData.position
-                    const hasCurrent = nodeData.hasCurrent
-                    const nodeType = nodeData.node.type
+                // **关键修复：使用实际的mesh位置，而不是 parentPosition**
+                // 找到父节点的实际位置
+                if (nodeData.node.parentPath) {
+                    // 通过 parentPath 找到父节点
+                    const parentNodeData = this.map3dNodes.find(n => {
+                        // 对于 Range 节点，parentPath 可能不存在
+                        if (!n.node.fullPath) return false
+                        
+                        // 检查是否是当前节点的父节点
+                        // 例如：当前节点 fullPath = "Range1-T1.1"，父节点 fullPath = "Range1-T1"
+                        // 或者：当前节点 fullPath = "Range1-T1.1-A1"，父节点 fullPath = "Range1-T1.1"
+                        return n.node.fullPath === nodeData.node.parentPath
+                    })
                     
-                    // 根据节点类型设置不同的线条颜色和半径
-                    let lineColor = 0x666666
-                    let lineRadius = 0.15 // 基础半径（从 0.075 加粗一倍到 0.15）
-                    
-                    if (hasCurrent) {
-                        lineColor = 0xffd93d
-                        lineRadius = 0.2 // 当前选中的线条更粗（从 0.1 加粗一倍到 0.2）
-                    } else if (nodeType === 'range') {
-                        lineColor = 0x4ecdc4
-                    } else if (nodeType === 'tactic') {
-                        lineColor = 0x95e1d3
+                    if (parentNodeData && parentNodeData.mesh) {
+                        // 使用父节点 mesh 的实际位置
+                        const parentPosition = parentNodeData.mesh.position
+                        const currentPosition = nodeData.mesh.position
+                        const hasCurrent = nodeData.hasCurrent
+                        const nodeType = nodeData.node.type
+                        
+                        // 根据节点类型设置不同的线条颜色和半径
+                        let lineColor = 0x666666
+                        let lineRadius = 0.15
+                        
+                        if (hasCurrent) {
+                            lineColor = 0xffd93d
+                            lineRadius = 0.2
+                        } else if (nodeType === 'range') {
+                            lineColor = 0x4ecdc4
+                        } else if (nodeType === 'tactic') {
+                            lineColor = 0x95e1d3
+                        }
+                        
+                        // 使用 CylinderGeometry 创建管道状的连接线
+                        const lineStart = new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z)
+                        const lineEnd = new THREE.Vector3(currentPosition.x, currentPosition.y, currentPosition.z)
+                        const direction = new THREE.Vector3().subVectors(lineEnd, lineStart)
+                        const lineLength = direction.length()
+                        
+                        // 避免创建长度为0的线条（会导致视觉问题）
+                        if (lineLength < 0.01) return
+                        
+                        const lineMidpoint = new THREE.Vector3().addVectors(lineStart, lineEnd).multiplyScalar(0.5)
+                        
+                        // 创建圆柱体作为连接线
+                        const cylinderGeometry = new THREE.CylinderGeometry(lineRadius, lineRadius, lineLength, 8)
+                        const lineMaterial = new THREE.MeshStandardMaterial({ 
+                            color: lineColor,
+                            metalness: 0.3,
+                            roughness: 0.5,
+                            transparent: true,
+                            opacity: 0 // 初始透明，用于渐入动画
+                        })
+                        const line = new THREE.Mesh(cylinderGeometry, lineMaterial)
+                        
+                        // 设置圆柱体的位置和旋转
+                        line.position.copy(lineMidpoint)
+                        
+                        // 计算旋转角度使圆柱体对齐到两个点之间
+                        const axis = new THREE.Vector3(0, 1, 0)
+                        line.quaternion.setFromUnitVectors(axis, direction.clone().normalize())
+                        
+                        this.map3dScene.add(line)
+                        nodeData.line = line
+                        
+                        // 添加连接点（小圆球）
+                        const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8)
+                        const dotMaterial = new THREE.MeshStandardMaterial({ 
+                            color: lineColor,
+                            metalness: 0.3,
+                            roughness: 0.5,
+                            transparent: true,
+                            opacity: 0 // 初始透明
+                        })
+                        const dot = new THREE.Mesh(dotGeometry, dotMaterial)
+                        dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
+                        this.map3dScene.add(dot)
+                        nodeData.dot = dot
                     }
-                    
-                    // 使用 CylinderGeometry 创建管道状的连接线
-                    const lineStart = new THREE.Vector3(parentPosition.x, parentPosition.y, parentPosition.z)
-                    const lineEnd = new THREE.Vector3(currentPosition.x, currentPosition.y, currentPosition.z)
-                    const direction = new THREE.Vector3().subVectors(lineEnd, lineStart)
-                    const lineLength = direction.length()
-                    
-                    // 避免创建长度为0的线条（会导致视觉问题）
-                    if (lineLength < 0.01) return
-                    
-                    const lineMidpoint = new THREE.Vector3().addVectors(lineStart, lineEnd).multiplyScalar(0.5)
-                    
-                    // 创建圆柱体作为连接线
-                    const cylinderGeometry = new THREE.CylinderGeometry(lineRadius, lineRadius, lineLength, 8)
-                    const lineMaterial = new THREE.MeshStandardMaterial({ 
-                        color: lineColor,
-                        metalness: 0.3,
-                        roughness: 0.5,
-                        transparent: true,
-                        opacity: 0 // 初始透明，用于渐入动画
-                    })
-                    const line = new THREE.Mesh(cylinderGeometry, lineMaterial)
-                    
-                    // 设置圆柱体的位置和旋转
-                    line.position.copy(lineMidpoint)
-                    
-                    // 计算旋转角度使圆柱体对齐到两个点之间
-                    const axis = new THREE.Vector3(0, 1, 0)
-                    line.quaternion.setFromUnitVectors(axis, direction.clone().normalize())
-                    
-                    this.map3dScene.add(line)
-                    nodeData.line = line
-                    
-                    // 添加连接点（小圆球）- 也加粗一倍
-                    const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8) // 从 0.15 加粗一倍到 0.3
-                    const dotMaterial = new THREE.MeshStandardMaterial({ 
-                        color: lineColor,
-                        metalness: 0.3,
-                        roughness: 0.5,
-                        transparent: true,
-                        opacity: 0 // 初始透明
-                    })
-                    const dot = new THREE.Mesh(dotGeometry, dotMaterial)
-                    dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
-                    this.map3dScene.add(dot)
-                    nodeData.dot = dot
                 }
             })
         },
