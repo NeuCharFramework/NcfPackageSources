@@ -3805,8 +3805,9 @@ var app = new Vue({
             this.map3dRenderer.domElement.addEventListener('dblclick', onMouseDoubleClick)
             this.map3dDoubleClickHandler = onMouseDoubleClick
             
-            // **添加鼠标移动事件：显示节点信息tooltip**
+            // **添加鼠标移动事件：显示节点信息tooltip + 边缘高光**
             let hoveredNode = null  // 当前悬停的节点
+            let currentHighlightMesh = null  // 当前的高光外壳
             
             // 创建tooltip元素
             const createTooltip = () => {
@@ -3864,9 +3865,53 @@ var app = new Vue({
                     )
                     
                     if (nodeData) {
-                        // 如果是新的节点，更新tooltip
+                        // 如果是新的节点，更新tooltip和高光
                         if (hoveredNode !== nodeData) {
+                            // **移除之前的高光**
+                            if (currentHighlightMesh) {
+                                this.map3dScene.remove(currentHighlightMesh)
+                                if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
+                                if (currentHighlightMesh.material) currentHighlightMesh.material.dispose()
+                                currentHighlightMesh = null
+                            }
+                            
                             hoveredNode = nodeData
+                            
+                            // **添加边缘高光效果**
+                            if (nodeData.mesh && nodeData.mesh.visible) {
+                                let highlightGeometry, highlightSize
+                                
+                                // 根据节点类型创建不同形状的高光
+                                if (nodeData.node.type === 'range') {
+                                    // 方块：使用稍大的方块作为边缘
+                                    highlightSize = 5.3  // 原大小是5
+                                    highlightGeometry = new THREE.BoxGeometry(highlightSize, highlightSize, highlightSize)
+                                } else {
+                                    // 圆球：使用稍大的球体作为边缘
+                                    const originalScale = nodeData.mesh.scale.x
+                                    const originalGeometry = nodeData.mesh.geometry
+                                    if (originalGeometry && originalGeometry.parameters && originalGeometry.parameters.radius) {
+                                        highlightSize = originalGeometry.parameters.radius * 1.15 * originalScale  // 放大15%
+                                    } else {
+                                        highlightSize = 2.5 * 1.15 * originalScale  // 默认大小
+                                    }
+                                    highlightGeometry = new THREE.SphereGeometry(highlightSize, 32, 32)
+                                }
+                                
+                                // 创建高光材质（边缘发光效果）
+                                const highlightMaterial = new THREE.MeshBasicMaterial({
+                                    color: 0xffffff,  // 白色
+                                    transparent: true,
+                                    opacity: 0.3,
+                                    side: THREE.BackSide,  // 只显示背面，形成边缘效果
+                                    depthWrite: false
+                                })
+                                
+                                currentHighlightMesh = new THREE.Mesh(highlightGeometry, highlightMaterial)
+                                currentHighlightMesh.position.copy(nodeData.mesh.position)
+                                currentHighlightMesh.scale.copy(nodeData.mesh.scale)
+                                this.map3dScene.add(currentHighlightMesh)
+                            }
                             
                             // 构建tooltip内容
                             let tooltipContent = ''
@@ -4038,6 +4083,9 @@ var app = new Vue({
                                         }
                                     }
                                 }
+                                
+                                // **添加双击提示（仅Aiming节点）**
+                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">💡 双击可快速选中此靶道</div>`
                             }
                             
                             tooltip.innerHTML = tooltipContent
@@ -4057,6 +4105,14 @@ var app = new Vue({
                         hoveredNode = null
                         tooltip.style.display = 'none'
                         this.map3dRenderer.domElement.style.cursor = 'default'
+                        
+                        // **移除高光效果**
+                        if (currentHighlightMesh) {
+                            this.map3dScene.remove(currentHighlightMesh)
+                            if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
+                            if (currentHighlightMesh.material) currentHighlightMesh.material.dispose()
+                            currentHighlightMesh = null
+                        }
                     }
                 }
             }
