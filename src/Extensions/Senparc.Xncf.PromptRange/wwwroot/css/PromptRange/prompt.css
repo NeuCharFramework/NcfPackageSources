@@ -1350,7 +1350,19 @@
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            white-space: pre-line;
+            white-space: normal;  /* 改为 normal，让 HTML 标签自然控制换行，避免多余空行 */
+        }
+
+        /* Markdown 列表样式优化 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow ul,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow ol {
+            margin: 4px 0;           /* 减少上下间距，避免过多空行 */
+            padding-left: 24px;      /* 保持左侧缩进 */
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow li {
+            margin: 2px 0;           /* 减少列表项之间的间距 */
+            padding: 0;              /* 确保无额外 padding */
         }
 
         /* Markdown table 样式 */
@@ -2596,7 +2608,8 @@ think::before {
 .chat-message-content {
     line-height: 1.6;
     word-wrap: break-word;
-    white-space: pre-wrap;
+    /* 移除 white-space: pre-wrap; 因为 Markdown 已解析为 HTML，HTML 标签会自然控制换行 */
+    /* 保留此属性会导致 HTML 标签之间的换行符被保留，造成多余空行 */
     font-size: 14px;
 }
 
@@ -2634,8 +2647,13 @@ think::before {
 
 .chat-message-content ul,
 .chat-message-content ol {
-    margin: 8px 0;
-    padding-left: 24px;
+    margin: 4px 0;           /* 优化：减少上下间距，避免过多空行 */
+    padding-left: 24px;      /* 保持左侧缩进 */
+}
+
+.chat-message-content li {
+    margin: 2px 0;           /* 优化：减少列表项之间的间距 */
+    padding: 0;              /* 确保无额外 padding */
 }
 
 .chat-message-content blockquote {

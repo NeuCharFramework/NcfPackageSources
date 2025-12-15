@@ -59,10 +59,13 @@
                     </div>
 
                     <div class="w-100">
-                        <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
-                            <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                            <div class="titleContent d-flex justify-content-between  align-center w-100">
-                                <span>选择靶道</span>
+                        <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
+                            <div class="d-flex align-center" style="gap: 5px;">
+                                <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                                <div class="titleContent">选择靶道</div>
+                            </div>
+                            <div class="d-flex align-center" style="gap: 5px;">
+                                <el-button type="info" size="mini" icon="el-icon-s-data" @@click="openMapDialog">导图</el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
@@ -743,6 +746,16 @@
             <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
         </div>
     </el-dialog>
+    @*导图 dialog*@
+    <el-dialog 
+        title="3D 结构导图" 
+        :visible.sync="mapDialogVisible" 
+        width="90%"
+        :close-on-click-modal="false"
+        center 
+        @@close="mapDialogClose">
+        <div id="map3dContainer" style="width: 100%; height: 600px; background: #1a1a1a;"></div>
+    </el-dialog>
     @*新增模型 dialog*@
     <el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
         <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
@@ -1252,9 +1265,21 @@
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
+    <script src="~/js/PromptRange/lib/diff.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
+    <script src="~/js/PromptRange/lib/three.min.js"></script>
+    <script src="~/js/PromptRange/lib/OrbitControls.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>
+    
+    @* PromptRange 工具类库 - 必须在 prompt.js 之前加载 *@
+    <script src="~/js/PromptRange/utils/htmlHelper.js"></script>
+    <script src="~/js/PromptRange/utils/dateHelper.js"></script>
+    <script src="~/js/PromptRange/utils/nameHelper.js"></script>
+    <script src="~/js/PromptRange/utils/storageHelper.js"></script>
+    <script src="~/js/PromptRange/utils/copyHelper.js"></script>
+    @* ApiHelper 暂不使用，项目已有 servicePR (axios) *@
+    @* <script src="~/js/PromptRange/utils/apiHelper.js"></script> *@
+    
     <script src="~/js/PromptRange/prompt.js"></script>
 }
