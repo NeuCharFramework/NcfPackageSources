@@ -3910,8 +3910,54 @@ var app = new Vue({
             
             // **修复：保存每个子节点的目标位置和它的直接父节点位置**
             childNodes.forEach(childData => {
-                // 目标位置：使用保存的原始位置
-                childData._targetPosition = { ...childData.position }
+                // **关键修复：对于 Aiming 节点，重新计算 Z 轴位置**
+                if (childData.node.type === 'aiming') {
+                    // 找到父节点
+                    const parentData = this.map3dNodes.find(n => 
+                        n.node.fullPath === childData.node.parentPath
+                    )
+                    
+                    if (parentData && parentData.node.children) {
+                        // 重新计算 Aiming 节点的 Z 轴偏移
+                        const aimingKeys = Object.keys(parentData.node.children).filter(k => 
+                            parentData.node.children[k].type === 'aiming'
+                        )
+                        const aimingIndex = aimingKeys.indexOf(childData.key)
+                        
+                        if (aimingIndex !== -1) {
+                            const aimingSpacing = 8
+                            const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
+                            
+                            // 使用相同的 hashCode 函数生成稳定的偏移
+                            const hashCode = (str) => {
+                                let hash = 0
+                                for (let i = 0; i < str.length; i++) {
+                                    const char = str.charCodeAt(i)
+                                    hash = ((hash << 5) - hash) + char
+                                    hash = hash & hash
+                                }
+                                return Math.abs(hash)
+                            }
+                            
+                            const parentOffset = (hashCode(parentData.node.fullPath || parentData.key) % 100) / 10
+                            const correctZ = -totalAimingWidth / 2 + parentOffset + aimingIndex * aimingSpacing
+                            
+                            // 使用重新计算的正确 Z 轴位置
+                            childData._targetPosition = {
+                                x: childData.position.x,
+                                y: childData.position.y,
+                                z: correctZ  // 使用重新计算的 Z 轴
+                            }
+                        } else {
+                            childData._targetPosition = { ...childData.position }
+                        }
+                    } else {
+                        childData._targetPosition = { ...childData.position }
+                    }
+                } else {
+                    // 非 Aiming 节点：使用保存的原始位置
+                    childData._targetPosition = { ...childData.position }
+                }
                 
                 // **关键修复：找到这个节点的直接父节点位置**
                 // 而不是使用最顶层的 parentNodeData
