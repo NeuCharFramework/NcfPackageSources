@@ -3215,6 +3215,7 @@ var app = new Vue({
                                 let sphereColor = 0xa8e6cf  // 默认颜色（浅绿）
                                 let emissiveColor = 0x003333
                                 let emissiveIntensity = 0.05
+                                let score = null  // **提升到外层作用域，供后续发光效果使用**
                                 
                                 // 如果有评分数据，根据评分调整
                                 if (aimingNode.prompts && aimingNode.prompts.length > 0) {
@@ -3232,7 +3233,7 @@ var app = new Vue({
                                     })
                                     
                                     // **优先使用 evalMaxScore（最高分）作为评分**
-                                    let score = null
+                                    // score 已在外层定义，直接赋值
                                     if (fullPromptData) {
                                         // 先尝试 finalScore
                                         if (fullPromptData.finalScore !== undefined && 
@@ -3268,10 +3269,10 @@ var app = new Vue({
                                         
                                         // **特殊处理：排名第一的节点**
                                         if (isFirst) {
-                                            // 第一名 - 特大、金色
+                                            // 第一名 - 特大、紫色（区别于黄色高亮）
                                             sphereSize = 2.5
-                                            sphereColor = 0xffd700  // 金色
-                                            emissiveColor = 0xffaa00
+                                            sphereColor = 0xb24df5  // 紫色（与黄色区分明显）
+                                            emissiveColor = 0xff00ff  // 紫红色发光
                                             emissiveIntensity = 0.6
                                         }
                                         // 根据排名百分位分级（Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%）
@@ -3346,12 +3347,12 @@ var app = new Vue({
                                     const allScores = this.scoreStatistics.scores
                                     const rank = allScores.filter(s => s > score).length + 1
                                     if (rank === 1) {
-                                        // 创建金色发光外壳
+                                        // 创建紫色发光外壳（与黄色高亮区分）
                                         const aimingGlowGeometry = new THREE.SphereGeometry(sphereSize * 1.3, 24, 24)
                                         const aimingGlowMaterial = new THREE.MeshBasicMaterial({
-                                            color: 0xffd700,  // 金色
+                                            color: 0xb24df5,  // 紫色
                                             transparent: true,
-                                            opacity: 0.3,
+                                            opacity: 0.35,
                                             side: THREE.BackSide
                                         })
                                         aimingGlowMesh = new THREE.Mesh(aimingGlowGeometry, aimingGlowMaterial)
@@ -3742,6 +3743,68 @@ var app = new Vue({
             this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
             this.map3dClickHandler = onMouseClick
             
+            // **添加双击事件：选中Aiming节点对应的靶道**
+            const onMouseDoubleClick = (event) => {
+                const rect = this.map3dRenderer.domElement.getBoundingClientRect()
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+                
+                raycaster.setFromCamera(mouse, this.map3dCamera)
+                
+                // 检测mesh和sprite
+                const detectableObjects = []
+                this.map3dNodes.forEach(n => {
+                    if (n.mesh && n.mesh.visible) {
+                        detectableObjects.push(n.mesh)
+                    }
+                    if (n.sprite && n.sprite.visible) {
+                        detectableObjects.push(n.sprite)
+                    }
+                })
+                
+                const intersects = raycaster.intersectObjects(detectableObjects, false)
+                
+                if (intersects.length > 0) {
+                    const intersectedObject = intersects[0].object
+                    const nodeData = this.map3dNodes.find(n => 
+                        n.mesh === intersectedObject || n.sprite === intersectedObject
+                    )
+                    
+                    // 只处理Aiming节点
+                    if (nodeData && nodeData.node.type === 'aiming') {
+                        // 获取该Aiming节点对应的promptId
+                        if (nodeData.node.prompts && nodeData.node.prompts.length > 0) {
+                            const promptId = nodeData.node.prompts[0].id
+                            
+                            console.log('🎯 双击Aiming节点，选中靶道:', {
+                                nodeKey: nodeData.key,
+                                promptId: promptId,
+                                fullPath: nodeData.node.fullPath
+                            })
+                            
+                            // 设置选中的靶道
+                            this.promptid = promptId
+                            
+                            // 获取靶道详情
+                            this.getPromptetail(promptId, true, true)
+                            
+                            // 关闭3D导图浮窗
+                            this.mapDialogVisible = false
+                            
+                            // 显示成功提示
+                            this.$message({
+                                message: `已选中靶道：${nodeData.node.fullPath}`,
+                                type: 'success',
+                                duration: 2000
+                            })
+                        }
+                    }
+                }
+            }
+            
+            this.map3dRenderer.domElement.addEventListener('dblclick', onMouseDoubleClick)
+            this.map3dDoubleClickHandler = onMouseDoubleClick
+            
             // **添加鼠标移动事件：显示节点信息tooltip**
             let hoveredNode = null  // 当前悬停的节点
             
@@ -3900,10 +3963,10 @@ var app = new Vue({
                                                     
                                                     // **特殊处理：排名第一**
                                                     if (isFirst) {
-                                                        scoreColor = '#ffd700'  // 金色
+                                                        scoreColor = '#b24df5'  // 紫色（与黄色高亮区分）
                                                         scoreSize = '26px'
                                                         scoreEmoji = '🥇'
-                                                        rankBadge = '<span style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%); color: #000; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(255,215,0,0.4);">👑 第一名</span>'
+                                                        rankBadge = '<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">👑 第一名</span>'
                                                     }
                                                     // 根据排名百分位分级
                                                     else if (percentile >= 80) {
@@ -4688,6 +4751,12 @@ var app = new Vue({
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {
                 this.map3dRenderer.domElement.removeEventListener('click', this.map3dClickHandler)
                 this.map3dClickHandler = null
+            }
+            
+            // **移除双击事件**
+            if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dDoubleClickHandler) {
+                this.map3dRenderer.domElement.removeEventListener('dblclick', this.map3dDoubleClickHandler)
+                this.map3dDoubleClickHandler = null
             }
             
             // **移除鼠标移动事件**
