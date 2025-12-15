@@ -3160,14 +3160,44 @@ var app = new Vue({
                                         (p.idkey || p.value) == promptId
                                     )
                                     
-                                    if (fullPromptData && fullPromptData.finalScore !== undefined && 
-                                        fullPromptData.finalScore !== null && 
-                                        fullPromptData.finalScore !== -1 && 
-                                        fullPromptData.finalScore !== '-1') {
+                                    // **调试：查看数据结构**
+                                    console.log('🔍 Aiming节点评分数据检查:', {
+                                        promptId,
+                                        fullPromptData,
+                                        evalMaxScore: fullPromptData?.evalMaxScore,
+                                        finalScore: fullPromptData?.finalScore
+                                    })
+                                    
+                                    // **优先使用 evalMaxScore（最高分）作为评分**
+                                    let score = null
+                                    if (fullPromptData) {
+                                        // 先尝试 finalScore
+                                        if (fullPromptData.finalScore !== undefined && 
+                                            fullPromptData.finalScore !== null && 
+                                            fullPromptData.finalScore !== -1 && 
+                                            fullPromptData.finalScore !== '-1') {
+                                            score = fullPromptData.finalScore
+                                        }
+                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        else if (fullPromptData.evalMaxScore !== undefined && 
+                                                 fullPromptData.evalMaxScore !== null && 
+                                                 fullPromptData.evalMaxScore !== -1 && 
+                                                 fullPromptData.evalMaxScore !== '-1') {
+                                            score = fullPromptData.evalMaxScore
+                                        }
+                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        else if (fullPromptData.evalAvgScore !== undefined && 
+                                                 fullPromptData.evalAvgScore !== null && 
+                                                 fullPromptData.evalAvgScore !== -1 && 
+                                                 fullPromptData.evalAvgScore !== '-1') {
+                                            score = fullPromptData.evalAvgScore
+                                        }
+                                    }
+                                    
+                                    if (score !== null) {
+                                        console.log('✅ 使用评分:', score)
                                         
-                                        const score = fullPromptData.finalScore
-                                        
-                                        // 根据评分等级设置大小和颜色
+                                        // **根据评分等级设置大小和颜色**
                                         if (score >= 8) {
                                             // 8-10分：优秀 - 最大、亮绿色
                                             sphereSize = 2.2
@@ -3712,20 +3742,43 @@ var app = new Vue({
                                         (p.idkey || p.value) == promptId
                                     )
                                     
+                                    console.log('🔍 Tooltip评分数据检查:', {
+                                        promptId,
+                                        fullPromptData,
+                                        evalMaxScore: fullPromptData?.evalMaxScore,
+                                        evalAvgScore: fullPromptData?.evalAvgScore
+                                    })
+                                    
                                     if (fullPromptData) {
-                                        // 获取最终评分
+                                        // **获取最终评分：优先使用 evalMaxScore（最高分）**
                                         let finalScore = null
+                                        
+                                        // 先尝试 finalScore
                                         if (fullPromptData.finalScore !== undefined && 
                                             fullPromptData.finalScore !== null && 
                                             fullPromptData.finalScore !== -1 && 
                                             fullPromptData.finalScore !== '-1') {
                                             finalScore = fullPromptData.finalScore
                                         }
+                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        else if (fullPromptData.evalMaxScore !== undefined && 
+                                                 fullPromptData.evalMaxScore !== null && 
+                                                 fullPromptData.evalMaxScore !== -1 && 
+                                                 fullPromptData.evalMaxScore !== '-1') {
+                                            finalScore = fullPromptData.evalMaxScore
+                                        }
+                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        else if (fullPromptData.evalAvgScore !== undefined && 
+                                                 fullPromptData.evalAvgScore !== null && 
+                                                 fullPromptData.evalAvgScore !== -1 && 
+                                                 fullPromptData.evalAvgScore !== '-1') {
+                                            finalScore = fullPromptData.evalAvgScore
+                                        }
+                                        
+                                        console.log('✅ Tooltip使用评分:', finalScore)
                                         
                                         // 如果有评分数据，显示评分区域
-                                        if (finalScore !== null || 
-                                            fullPromptData.humanScore > -1 || 
-                                            fullPromptData.robotScore > -1) {
+                                        if (finalScore !== null) {
                                             
                                             tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
                                             
@@ -3774,12 +3827,21 @@ var app = new Vue({
                                             }
                                             
                                             // **显示详细评分**
-                                            if (fullPromptData.humanScore > -1) {
-                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">👤 人工: <span style="color: #6bcf7f;">${fullPromptData.humanScore}</span></div>`
+                                            // 显示平均分
+                                            if (fullPromptData.evalAvgScore !== undefined && 
+                                                fullPromptData.evalAvgScore !== null && 
+                                                fullPromptData.evalAvgScore !== -1 && 
+                                                fullPromptData.evalAvgScore !== '-1') {
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">📊 平均分: <span style="color: #95e1d3;">${fullPromptData.evalAvgScore.toFixed(1)}</span></div>`
                                             }
                                             
-                                            if (fullPromptData.robotScore > -1) {
-                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">🤖 机器: <span style="color: #7fb3d5;">${fullPromptData.robotScore.toFixed(1)}</span></div>`
+                                            // 显示最高分（如果不是用作主评分）
+                                            if (fullPromptData.evalMaxScore !== undefined && 
+                                                fullPromptData.evalMaxScore !== null && 
+                                                fullPromptData.evalMaxScore !== -1 && 
+                                                fullPromptData.evalMaxScore !== '-1' &&
+                                                finalScore !== fullPromptData.evalMaxScore) {
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">⭐ 最高分: <span style="color: #ffd93d;">${fullPromptData.evalMaxScore.toFixed(1)}</span></div>`
                                             }
                                             
                                             tooltipContent += `</div>`
