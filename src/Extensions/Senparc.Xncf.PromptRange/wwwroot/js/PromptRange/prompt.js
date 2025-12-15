@@ -2944,10 +2944,10 @@ var app = new Vue({
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
                     
-                    // 根据文字内容和类型动态计算画布大小（继续增大字体）
-                    const prefixFontSize = hasCurrent ? 90 : 80  // 从 70/60 增大到 90/80
-                    const mainFontSize = hasCurrent ? 140 : 120   // 从 110/95 增大到 140/120
-                    const rangeFontSize = hasCurrent ? 110 : 95   // 从 85/70 增大到 110/95
+                    // 根据文字内容和类型动态计算画布大小（再次加大一倍）
+                    const prefixFontSize = hasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
+                    const mainFontSize = hasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
+                    const rangeFontSize = hasCurrent ? 220 : 190   // 从 110/95 加大到 220/190
                     
                     // 预计算文字宽度
                     if (labelPrefix === 'T') {
@@ -2957,12 +2957,12 @@ var app = new Vue({
                     }
                     const textWidth = context.measureText(labelText).width
                     
-                    const padding = 30  // 增加 padding
-                    const borderRadius = 20  // 增加圆角
+                    const padding = 50  // 从 30 增加到 50
+                    const borderRadius = 30  // 从 20 增加到 30
                     
-                    // 动态设置画布大小
-                    canvas.width = Math.max(400, textWidth + padding * 4)
-                    canvas.height = 256
+                    // 动态设置画布大小（字体加大后，画布也要更大）
+                    canvas.width = Math.max(800, textWidth + padding * 4)
+                    canvas.height = 512  // 从 256 增加到 512
                     
                     // 绘制圆角矩形（兼容性处理）
                     const drawRoundedRect = (x, y, width, height, radius) => {
@@ -3006,9 +3006,9 @@ var app = new Vue({
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
                     context.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                    context.shadowBlur = 10
-                    context.shadowOffsetX = 3
-                    context.shadowOffsetY = 3
+                    context.shadowBlur = 20  // 从 10 增加到 20
+                    context.shadowOffsetX = 5  // 从 3 增加到 5
+                    context.shadowOffsetY = 5  // 从 3 增加到 5
                     
                     let mainTextY = canvas.height / 2
                     
@@ -3017,14 +3017,14 @@ var app = new Vue({
                         // 类型标识 T（更大字体）
                         context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
                         context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 60)  // 从 -50 改为 -60
+                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 100)  // 从 -60 改为 -100
                         
                         // 主要数字（更大字体）
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 40)  // 从 +30 改为 +40
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 60)  // 从 +40 改为 +60
                         
-                        mainTextY = canvas.height / 2 + 40
+                        mainTextY = canvas.height / 2 + 60
                     } else {
                         // 靶场名称（更大字体）
                         context.fillStyle = '#ffffff'
@@ -3036,11 +3036,11 @@ var app = new Vue({
                     
                     // 如果有提示信息，显示在下方
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? 55 : 48}px Arial`  // 从 45/38 增大到 55/48
+                        context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  // 从 55/48 加大到 110/96
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
-                        context.shadowBlur = 8
+                        context.shadowBlur = 12
                         const promptText = `${node.prompts.length} 个结果`
-                        context.fillText(promptText, canvas.width / 2, mainTextY + 70)  // 从 +60 改为 +70
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 120)  // 从 +70 改为 +120
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -3053,9 +3053,10 @@ var app = new Vue({
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
                     sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
-                    // 动态设置 sprite 尺寸（根据画布宽度）
-                    const spriteWidth = (canvas.width / 1024) * 12  // 按比例缩放
-                    sprite.scale.set(spriteWidth, 3, 1)
+                    // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
+                    const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
+                    const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                    sprite.scale.set(spriteWidth, spriteHeight, 1)
                     sprite.userData = { 
                         node, 
                         key, 
@@ -3161,20 +3162,20 @@ var app = new Vue({
                                 const aimingMatch = aimingKey.match(/-A(\d+)$/)
                                 const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
                                 
-                                // 根据文字内容动态计算画布大小（继续增大字体）
-                                const aimingPrefixFontSize = aimingHasCurrent ? 90 : 80  // 从 70/60 增大到 90/80
-                                const aimingMainFontSize = aimingHasCurrent ? 140 : 120   // 从 110/95 增大到 140/120
+                                // 根据文字内容动态计算画布大小（再次加大一倍）
+                                const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
+                                const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
                                 
                                 // 预计算文字宽度
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                                 const textWidth = aimingContext.measureText(aimingLabelText).width
                                 
-                                const aimingPadding = 30  // 增加 padding
-                                const aimingBorderRadius = 20  // 增加圆角
+                                const aimingPadding = 50  // 从 30 增加到 50
+                                const aimingBorderRadius = 30  // 从 20 增加到 30
                                 
-                                // 动态设置画布大小（根据文字内容）
-                                aimingCanvas.width = Math.max(400, textWidth + aimingPadding * 4)
-                                aimingCanvas.height = 256
+                                // 动态设置画布大小（根据文字内容，字体加大后画布也要更大）
+                                aimingCanvas.width = Math.max(800, textWidth + aimingPadding * 4)
+                                aimingCanvas.height = 512  // 从 256 增加到 512
                                 
                                 const drawRoundedRect = (x, y, width, height, radius) => {
                                     aimingContext.beginPath()
@@ -3217,19 +3218,19 @@ var app = new Vue({
                                 aimingContext.textAlign = 'center'
                                 aimingContext.textBaseline = 'middle'
                                 aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                                aimingContext.shadowBlur = 10
-                                aimingContext.shadowOffsetX = 3
-                                aimingContext.shadowOffsetY = 3
+                                aimingContext.shadowBlur = 20  // 从 10 增加到 20
+                                aimingContext.shadowOffsetX = 5  // 从 3 增加到 5
+                                aimingContext.shadowOffsetY = 5  // 从 3 增加到 5
                                 
                                 // 类型标识 'A'（更大字体）
                                 aimingContext.fillStyle = aimingHasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
                                 aimingContext.font = `bold ${aimingPrefixFontSize}px 'Arial Black', Arial, sans-serif`
-                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 60)  // 从 -50 改为 -60
+                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 100)  // 从 -60 改为 -100
                                 
                                 // 主要数字（更大字体）
                                 aimingContext.fillStyle = '#ffffff'
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 40)  // 从 +30 改为 +40
+                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 60)  // 从 +40 改为 +60
                                 
                                 // 创建 sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
@@ -3241,9 +3242,10 @@ var app = new Vue({
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
                                 aimingSprite.position.set(aimingX, aimingY + 4, aimingZ)
-                                // 动态设置 sprite 尺寸（根据画布宽度）
-                                const spriteWidth = (aimingCanvas.width / 1024) * 12  // 按比例缩放
-                                aimingSprite.scale.set(spriteWidth, 3, 1)
+                                // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
+                                const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
+                                const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                                aimingSprite.scale.set(spriteWidth, spriteHeight, 1)
                                 aimingSprite.userData = { 
                                     node: aimingNode, 
                                     key: aimingKey, 
@@ -3856,23 +3858,29 @@ var app = new Vue({
         animateNodesPopOut(parentNodeData, onComplete) {
             if (!this.map3dScene || !this.map3dNodes) return
             
-            // **修复：只收集直接子节点，不递归**
-            // 展开时，只显示直接子节点；如果子节点本身也是展开状态，它的子节点会在下次展开时显示
+            // **递归收集所有应该显示的子节点**
+            // 如果子节点本身是展开状态（expanded !== false），则递归收集它的子节点
             const childNodes = []
             
-            if (!parentNodeData.node.children || Object.keys(parentNodeData.node.children).length === 0) {
-                if (onComplete) onComplete()
-                return
+            const collectChildren = (parentNode) => {
+                if (!parentNode.children || Object.keys(parentNode.children).length === 0) return
+                
+                Object.keys(parentNode.children).forEach(childKey => {
+                    const childNode = parentNode.children[childKey]
+                    const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                    if (childNodeData) {
+                        childNodes.push(childNodeData)
+                        
+                        // **关键修复：如果这个子节点是展开状态，递归收集它的子节点**
+                        // 这样可以一次性展开所有层级
+                        if (childNode.expanded !== false) {
+                            collectChildren(childNode)
+                        }
+                    }
+                })
             }
             
-            // 只收集直接子节点
-            Object.keys(parentNodeData.node.children).forEach(childKey => {
-                const childNode = parentNodeData.node.children[childKey]
-                const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
-                if (childNodeData) {
-                    childNodes.push(childNodeData)
-                }
-            })
+            collectChildren(parentNodeData.node)
             
             if (childNodes.length === 0) {
                 if (onComplete) onComplete()
