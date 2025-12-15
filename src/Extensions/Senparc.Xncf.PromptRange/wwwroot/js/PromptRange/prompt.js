@@ -2924,16 +2924,45 @@ var app = new Vue({
                         this.map3dScene.add(glowMesh)
                     }
                     
-                    // 创建文字标签（缩小尺寸，使用玻璃效果）
+                    // 准备标签文字（提前计算，用于动态宽度）
+                    let labelPrefix = ''
+                    let labelText = node.name
+                    
+                    if (node.type === 'tactic') {
+                        labelPrefix = 'T'
+                        const tacticMatch = key.match(/^T(.+)$/)
+                        if (tacticMatch) {
+                            labelText = tacticMatch[1]
+                        } else {
+                            labelText = node.name
+                        }
+                    } else if (node.type === 'range') {
+                        labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
+                    }
+                    
+                    // 创建文字标签（更大的文字，动态宽度）
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
-                    // 缩小画布尺寸
-                    canvas.width = 1024
-                    canvas.height = 256
                     
-                    // 绘制玻璃效果背景
-                    const padding = 20
-                    const borderRadius = 15
+                    // 根据文字内容和类型动态计算画布大小
+                    const prefixFontSize = hasCurrent ? 70 : 60  // 增大字体
+                    const mainFontSize = hasCurrent ? 110 : 95   // 增大字体
+                    const rangeFontSize = hasCurrent ? 85 : 70   // 增大字体
+                    
+                    // 预计算文字宽度
+                    if (labelPrefix === 'T') {
+                        context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                    } else {
+                        context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
+                    }
+                    const textWidth = context.measureText(labelText).width
+                    
+                    const padding = 30  // 增加 padding
+                    const borderRadius = 20  // 增加圆角
+                    
+                    // 动态设置画布大小
+                    canvas.width = Math.max(400, textWidth + padding * 4)
+                    canvas.height = 256
                     
                     // 绘制圆角矩形（兼容性处理）
                     const drawRoundedRect = (x, y, width, height, radius) => {
@@ -2973,57 +3002,32 @@ var app = new Vue({
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, (canvas.height - padding * 2) / 2, borderRadius)
                     context.fill()
                     
-                    // 准备标签文字（添加类型前缀：T）
-                    let labelPrefix = ''
-                    let labelText = node.name
-                    
-                    if (node.type === 'tactic') {
-                        // 靶道类型：显示 T1, T1.1, T10, T10.1 等
-                        labelPrefix = 'T'
-                        // key 的格式是 "T1", "T1.1", "T10", "T10.1" 等
-                        // 从 key 中提取战术编号（去除前面的 T）
-                        const tacticMatch = key.match(/^T(.+)$/)
-                        if (tacticMatch) {
-                            labelText = tacticMatch[1]
-                        } else {
-                            // 如果 key 不匹配，使用 node.name
-                            labelText = node.name
-                        }
-                    } else if (node.type === 'range') {
-                        // 靶场类型：显示完整名称
-                        labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
-                    }
-                    // Aiming 类型已经在专门的代码块中处理，不会到达这里
-                    
-                    // 绘制文字（带阴影增强可读性）
+                    // 绘制文字（带阴影增强可读性，更大字体）
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
                     context.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                    context.shadowBlur = 8
-                    context.shadowOffsetX = 2
-                    context.shadowOffsetY = 2
+                    context.shadowBlur = 10
+                    context.shadowOffsetX = 3
+                    context.shadowOffsetY = 3
                     
                     let mainTextY = canvas.height / 2
                     
                     // 如果有类型前缀（T），在上方显示类型标识
                     if (labelPrefix === 'T') {
-                        // 类型标识 T - 缩小字体
+                        // 类型标识 T（更大字体）
                         context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                        const prefixFontSize = hasCurrent ? 50 : 42
                         context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 40)
+                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 50)
                         
-                        // 主要数字 - 缩小字体
+                        // 主要数字（更大字体）
                         context.fillStyle = '#ffffff'
-                        const mainFontSize = hasCurrent ? 80 : 70
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 20)
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 30)
                         
-                        mainTextY = canvas.height / 2 + 20
+                        mainTextY = canvas.height / 2 + 30
                     } else {
-                        // 靶场名称 - 缩小字体
+                        // 靶场名称（更大字体）
                         context.fillStyle = '#ffffff'
-                        const rangeFontSize = hasCurrent ? 60 : 50
                         context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
                         context.fillText(labelText, canvas.width / 2, canvas.height / 2)
                         
@@ -3032,11 +3036,11 @@ var app = new Vue({
                     
                     // 如果有提示信息，显示在下方
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? 35 : 30}px Arial`  // 从 70/60 缩小到 35/30
+                        context.font = `bold ${hasCurrent ? 45 : 38}px Arial`  // 增大字体
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
-                        context.shadowBlur = 6
+                        context.shadowBlur = 8
                         const promptText = `${node.prompts.length} 个结果`
-                        context.fillText(promptText, canvas.width / 2, mainTextY + 50)  // 从 +100 改为 +50
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 60)
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -3049,8 +3053,9 @@ var app = new Vue({
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
                     sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
-                    // 缩小 sprite 尺寸，配合缩小的文字标签
-                    sprite.scale.set(12, 3, 1)  // 从 24x6 缩小到 12x3
+                    // 动态设置 sprite 尺寸（根据画布宽度）
+                    const spriteWidth = (canvas.width / 1024) * 12  // 按比例缩放
+                    sprite.scale.set(spriteWidth, 3, 1)
                     sprite.userData = { 
                         node, 
                         key, 
@@ -3148,14 +3153,28 @@ var app = new Vue({
                                 aimingMesh.receiveShadow = true
                                 aimingMesh.scale.set(0.1, 0.1, 0.1)
                                 
-                                // 创建 Aiming 文字标签
+                                // 创建 Aiming 文字标签（更大的文字，动态宽度）
                                 const aimingCanvas = document.createElement('canvas')
                                 const aimingContext = aimingCanvas.getContext('2d')
-                                aimingCanvas.width = 1024
-                                aimingCanvas.height = 256
                                 
-                                const aimingPadding = 20
-                                const aimingBorderRadius = 15
+                                // 提取 Aiming 数字（提前，用于计算宽度）
+                                const aimingMatch = aimingKey.match(/-A(\d+)$/)
+                                const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
+                                
+                                // 根据文字内容动态计算画布大小
+                                const aimingPrefixFontSize = aimingHasCurrent ? 70 : 60  // 增大字体
+                                const aimingMainFontSize = aimingHasCurrent ? 110 : 95   // 增大字体
+                                
+                                // 预计算文字宽度
+                                aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                                const textWidth = aimingContext.measureText(aimingLabelText).width
+                                
+                                const aimingPadding = 30  // 增加 padding
+                                const aimingBorderRadius = 20  // 增加圆角
+                                
+                                // 动态设置画布大小（根据文字内容）
+                                aimingCanvas.width = Math.max(400, textWidth + aimingPadding * 4)
+                                aimingCanvas.height = 256
                                 
                                 const drawRoundedRect = (x, y, width, height, radius) => {
                                     aimingContext.beginPath()
@@ -3194,29 +3213,23 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 绘制文字
+                                // 绘制文字（更大的字体）
                                 aimingContext.textAlign = 'center'
                                 aimingContext.textBaseline = 'middle'
                                 aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                                aimingContext.shadowBlur = 8
-                                aimingContext.shadowOffsetX = 2
-                                aimingContext.shadowOffsetY = 2
+                                aimingContext.shadowBlur = 10
+                                aimingContext.shadowOffsetX = 3
+                                aimingContext.shadowOffsetY = 3
                                 
-                                // 提取 Aiming 数字
-                                const aimingMatch = aimingKey.match(/-A(\d+)$/)
-                                const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
-                                
-                                // 类型标识 'A'
+                                // 类型标识 'A'（更大字体）
                                 aimingContext.fillStyle = aimingHasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                                const aimingPrefixFontSize = aimingHasCurrent ? 50 : 42
                                 aimingContext.font = `bold ${aimingPrefixFontSize}px 'Arial Black', Arial, sans-serif`
-                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 40)
+                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 50)
                                 
-                                // 主要数字
+                                // 主要数字（更大字体）
                                 aimingContext.fillStyle = '#ffffff'
-                                const aimingMainFontSize = aimingHasCurrent ? 80 : 70
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 20)
+                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 30)
                                 
                                 // 创建 sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
@@ -3228,7 +3241,9 @@ var app = new Vue({
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
                                 aimingSprite.position.set(aimingX, aimingY + 4, aimingZ)
-                                aimingSprite.scale.set(12, 3, 1)
+                                // 动态设置 sprite 尺寸（根据画布宽度）
+                                const spriteWidth = (aimingCanvas.width / 1024) * 12  // 按比例缩放
+                                aimingSprite.scale.set(spriteWidth, 3, 1)
                                 aimingSprite.userData = { 
                                     node: aimingNode, 
                                     key: aimingKey, 
@@ -3590,7 +3605,17 @@ var app = new Vue({
                         this.updateConnectionLine(nodeData)
                     } else {
                         // 调试：记录找不到父节点的情况
-                        console.warn('找不到父节点:', nodeData.node.fullPath, '→', nodeData.node.parentPath)
+                        console.warn('找不到父节点:', {
+                            fullPath: nodeData.node.fullPath,
+                            parentPath: nodeData.node.parentPath,
+                            nodeType: nodeData.node.type,
+                            key: nodeData.key
+                        })
+                        
+                        // 尝试输出所有节点的 fullPath，帮助调试
+                        if (nodeData.node.type === 'aiming') {
+                            console.log('所有节点的 fullPath:', this.map3dNodes.map(n => n.node.fullPath))
+                        }
                     }
                 }
             })
