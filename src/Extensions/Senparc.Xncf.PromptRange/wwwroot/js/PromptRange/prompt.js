@@ -2944,10 +2944,10 @@ var app = new Vue({
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
                     
-                    // 根据文字内容和类型动态计算画布大小
-                    const prefixFontSize = hasCurrent ? 70 : 60  // 增大字体
-                    const mainFontSize = hasCurrent ? 110 : 95   // 增大字体
-                    const rangeFontSize = hasCurrent ? 85 : 70   // 增大字体
+                    // 根据文字内容和类型动态计算画布大小（继续增大字体）
+                    const prefixFontSize = hasCurrent ? 90 : 80  // 从 70/60 增大到 90/80
+                    const mainFontSize = hasCurrent ? 140 : 120   // 从 110/95 增大到 140/120
+                    const rangeFontSize = hasCurrent ? 110 : 95   // 从 85/70 增大到 110/95
                     
                     // 预计算文字宽度
                     if (labelPrefix === 'T') {
@@ -3017,14 +3017,14 @@ var app = new Vue({
                         // 类型标识 T（更大字体）
                         context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
                         context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 50)
+                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 60)  // 从 -50 改为 -60
                         
                         // 主要数字（更大字体）
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 30)
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 40)  // 从 +30 改为 +40
                         
-                        mainTextY = canvas.height / 2 + 30
+                        mainTextY = canvas.height / 2 + 40
                     } else {
                         // 靶场名称（更大字体）
                         context.fillStyle = '#ffffff'
@@ -3036,11 +3036,11 @@ var app = new Vue({
                     
                     // 如果有提示信息，显示在下方
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? 45 : 38}px Arial`  // 增大字体
+                        context.font = `bold ${hasCurrent ? 55 : 48}px Arial`  // 从 45/38 增大到 55/48
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
                         context.shadowBlur = 8
                         const promptText = `${node.prompts.length} 个结果`
-                        context.fillText(promptText, canvas.width / 2, mainTextY + 60)
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 70)  // 从 +60 改为 +70
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -3161,9 +3161,9 @@ var app = new Vue({
                                 const aimingMatch = aimingKey.match(/-A(\d+)$/)
                                 const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
                                 
-                                // 根据文字内容动态计算画布大小
-                                const aimingPrefixFontSize = aimingHasCurrent ? 70 : 60  // 增大字体
-                                const aimingMainFontSize = aimingHasCurrent ? 110 : 95   // 增大字体
+                                // 根据文字内容动态计算画布大小（继续增大字体）
+                                const aimingPrefixFontSize = aimingHasCurrent ? 90 : 80  // 从 70/60 增大到 90/80
+                                const aimingMainFontSize = aimingHasCurrent ? 140 : 120   // 从 110/95 增大到 140/120
                                 
                                 // 预计算文字宽度
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
@@ -3224,12 +3224,12 @@ var app = new Vue({
                                 // 类型标识 'A'（更大字体）
                                 aimingContext.fillStyle = aimingHasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
                                 aimingContext.font = `bold ${aimingPrefixFontSize}px 'Arial Black', Arial, sans-serif`
-                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 50)
+                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 60)  // 从 -50 改为 -60
                                 
                                 // 主要数字（更大字体）
                                 aimingContext.fillStyle = '#ffffff'
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 30)
+                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 40)  // 从 +30 改为 +40
                                 
                                 // 创建 sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
@@ -3483,13 +3483,12 @@ var app = new Vue({
             // 启动入场动画
             this.startNodeAnimations()
             
-            // 添加点击事件（优化：防止重复触发）
+            // 添加点击事件（简化版：吸入/弹出效果）
             let isAnimating = false // 标记是否正在执行动画
             
             const onMouseClick = (event) => {
                 // 如果正在执行动画，忽略点击
                 if (isAnimating) {
-                    console.log('动画进行中，忽略点击')
                     return
                 }
                 
@@ -3503,18 +3502,28 @@ var app = new Vue({
                 if (intersects.length > 0) {
                     const clickedMesh = intersects[0].object
                     const nodeData = this.map3dNodes.find(n => n.mesh === clickedMesh)
+                    
+                    // 只处理有子节点的节点
                     if (nodeData && nodeData.node.children && Object.keys(nodeData.node.children).length > 0) {
-                        // 切换展开/收拢
-                        nodeData.node.expanded = !nodeData.node.expanded
+                        // 切换展开/收拢状态
+                        const wasExpanded = nodeData.node.expanded !== false
+                        nodeData.node.expanded = !wasExpanded
                         
                         // 设置动画标记
                         isAnimating = true
                         
-                        // 只更新相关节点，而不是重新渲染整个场景（性能优化）
-                        this.updateNodeVisibility(nodeData.node, nodeData.key, () => {
-                            // 动画完成后重置标记
-                            isAnimating = false
-                        })
+                        // 执行动画
+                        if (nodeData.node.expanded) {
+                            // 展开：弹出动画
+                            this.animateNodesPopOut(nodeData, () => {
+                                isAnimating = false
+                            })
+                        } else {
+                            // 收拢：吸入动画
+                            this.animateNodesSuckIn(nodeData, () => {
+                                isAnimating = false
+                            })
+                        }
                     }
                 }
             }
@@ -3554,19 +3563,12 @@ var app = new Vue({
                         nodeData.parentNodeData = parentNodeData
                         
                         const hasCurrent = nodeData.hasCurrent
-                        const nodeType = nodeData.node.type
                         
-                        // 根据节点类型设置不同的线条颜色和半径
-                        let lineColor = 0x666666
-                        let lineRadius = 0.15
+                        // **使用明亮的白色或接近白色的颜色**
+                        let lineColor = 0xffffff  // 默认白色
                         
                         if (hasCurrent) {
-                            lineColor = 0xffd93d
-                            lineRadius = 0.2
-                        } else if (nodeType === 'range') {
-                            lineColor = 0x4ecdc4
-                        } else if (nodeType === 'tactic') {
-                            lineColor = 0x95e1d3
+                            lineColor = 0xffd93d  // 当前节点使用黄色
                         }
                         
                         // 使用 Line 而不是 Cylinder，这样可以动态更新端点
@@ -3578,7 +3580,7 @@ var app = new Vue({
                         // 使用 LineBasicMaterial 代替圆柱体
                         const lineMaterial = new THREE.LineBasicMaterial({
                             color: lineColor,
-                            linewidth: 2, // 注意：WebGL 的限制，这个值在大多数平台上会被忽略
+                            linewidth: 2,
                             transparent: true,
                             opacity: 0 // 初始透明，用于渐入动画
                         })
@@ -3588,10 +3590,12 @@ var app = new Vue({
                         nodeData.line = line
                         nodeData.lineColor = lineColor
                         
-                        // 添加连接点（小圆球）- 也会动态跟随
+                        // 添加连接点（小圆球）- 也会动态跟随，使用明亮颜色
                         const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8)
                         const dotMaterial = new THREE.MeshStandardMaterial({ 
-                            color: lineColor,
+                            color: 0xffffff,  // 使用白色
+                            emissive: hasCurrent ? 0xffd93d : 0xffffff,  // 发光颜色
+                            emissiveIntensity: hasCurrent ? 0.5 : 0.2,
                             metalness: 0.3,
                             roughness: 0.5,
                             transparent: true,
@@ -3848,180 +3852,114 @@ var app = new Vue({
             }
         },
         
-        // 更新节点可见性（重构版：真正隐藏节点并重新布局，带弹簧动画）
-        updateNodeVisibility(node, nodeKey, onComplete) {
+        // 弹出动画（展开子节点）
+        animateNodesPopOut(parentNodeData, onComplete) {
             if (!this.map3dScene || !this.map3dNodes) return
             
-            // 找到对应的节点数据
-            const nodeData = this.map3dNodes.find(n => n.node === node && n.key === nodeKey)
-            if (!nodeData) return
+            // **修复：只收集直接子节点，不递归**
+            // 展开时，只显示直接子节点；如果子节点本身也是展开状态，它的子节点会在下次展开时显示
+            const childNodes = []
             
-            const isExpanded = node.expanded !== false
-            
-            // 收集需要处理的节点
-            const nodesToProcess = []
-            
-            // 递归函数：收集节点及其所有子节点
-            const collectChildNodes = (parentNode, parentNodeData) => {
-                if (!parentNode.children || Object.keys(parentNode.children).length === 0) return
-                
-                Object.keys(parentNode.children).forEach(childKey => {
-                    const childNode = parentNode.children[childKey]
-                    const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
-                    
-                    if (childNodeData) {
-                        nodesToProcess.push(childNodeData)
-                        
-                        // 递归收集子节点的子节点
-                        if (childNode.expanded !== false) {
-                            collectChildNodes(childNode, childNodeData)
-                        }
-                    }
-                })
-            }
-            
-            // 收集所有需要处理的子节点
-            collectChildNodes(node, nodeData)
-            
-            if (nodesToProcess.length === 0) {
+            if (!parentNodeData.node.children || Object.keys(parentNodeData.node.children).length === 0) {
                 if (onComplete) onComplete()
                 return
             }
             
-            if (isExpanded) {
-                // 展开：显示节点，带弹簧动画
-                this.expandNodesWithSpring(nodesToProcess, onComplete)
-            } else {
-                // 收缩：隐藏节点，带弹簧动画，然后重新布局
-                this.collapseNodesWithSpring(nodesToProcess, () => {
-                    // 收缩完成后，重新计算并布局所有可见节点
-                    this.rebalanceTree()
-                    if (onComplete) onComplete()
-                })
-            }
-        },
-        
-        // 展开节点，带弹簧动画
-        expandNodesWithSpring(nodesToAnimate, onComplete) {
-            const animationDuration = 400 // 动画持续时间(ms)
-            const startTime = Date.now()
-            
-            // 弹簧参数
-            const springStiffness = 0.3
-            const springDamping = 0.7
-            
-            const animate = () => {
-                const elapsed = Date.now() - startTime
-                const t = Math.min(elapsed / animationDuration, 1)
-                
-                // 弹簧缓动函数（easeOutElastic）
-                const easeProgress = t === 1 ? 1 : 
-                    1 - Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * (2 * Math.PI) / 3)
-                
-                nodesToAnimate.forEach((childNodeData, index) => {
-                    // 延迟每个节点的动画开始时间
-                    const delay = index * 15
-                    const nodeT = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
-                    const nodeEaseProgress = nodeT === 1 ? 1 :
-                        1 - Math.pow(2, -10 * nodeT) * Math.sin((nodeT * 10 - 0.75) * (2 * Math.PI) / 3)
-                    
-                    // 从小到大，从透明到不透明
-                    const scale = 0.1 + nodeEaseProgress * 0.9
-                    childNodeData.mesh.scale.set(scale, scale, scale)
-                    childNodeData.mesh.visible = true
-                    
-                    if (childNodeData.glowMesh) {
-                        childNodeData.glowMesh.scale.set(scale, scale, scale)
-                        childNodeData.glowMesh.visible = true
-                    }
-                    
-                    if (childNodeData.sprite) {
-                        childNodeData.sprite.visible = true
-                        if (childNodeData.sprite.material) {
-                            childNodeData.sprite.material.opacity = nodeEaseProgress
-                        }
-                    }
-                    
-                    if (childNodeData.line) {
-                        childNodeData.line.visible = true
-                        if (childNodeData.line.material) {
-                            childNodeData.line.material.opacity = nodeEaseProgress * 0.6
-                        }
-                    }
-                    
-                    if (childNodeData.dot) {
-                        childNodeData.dot.visible = true
-                        if (childNodeData.dot.material) {
-                            childNodeData.dot.material.opacity = nodeEaseProgress
-                        }
-                    }
-                })
-                
-                if (t < 1) {
-                    requestAnimationFrame(animate)
-                } else {
-                    // 动画完成，调用回调
-                    if (onComplete) onComplete()
+            // 只收集直接子节点
+            Object.keys(parentNodeData.node.children).forEach(childKey => {
+                const childNode = parentNodeData.node.children[childKey]
+                const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                if (childNodeData) {
+                    childNodes.push(childNodeData)
                 }
+            })
+            
+            if (childNodes.length === 0) {
+                if (onComplete) onComplete()
+                return
             }
             
-            animate()
-        },
-        
-        // 收缩节点，带弹簧动画
-        collapseNodesWithSpring(nodesToAnimate, onComplete) {
-            const animationDuration = 300 // 动画持续时间(ms)
+            // 弹出动画：从父节点位置开始，缩放+位移到目标位置
+            const animationDuration = 350
             const startTime = Date.now()
+            
+            // 保存每个子节点的目标位置
+            childNodes.forEach(childData => {
+                childData._targetPosition = { ...childData.position }
+                childData._parentPosition = { ...parentNodeData.position }
+            })
             
             const animate = () => {
                 const elapsed = Date.now() - startTime
-                const t = Math.min(elapsed / animationDuration, 1)
+                const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 收缩缓动函数（easeInBack）- 轻微回弹效果
+                // 使用 easeOutBack 缓动（轻微弹出效果）
                 const c1 = 1.70158
-                const easeProgress = t * t * ((c1 + 1) * t - c1)
+                const c3 = c1 + 1
+                const easeProgress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2)
                 
-                nodesToAnimate.forEach((childNodeData, index) => {
-                    // 反向延迟（最后的节点先收缩）
-                    const delay = (nodesToAnimate.length - index) * 10
-                    const nodeT = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
-                    const nodeEaseProgress = nodeT * nodeT * ((c1 + 1) * nodeT - c1)
+                childNodes.forEach((childData, index) => {
+                    // 添加延迟，产生波浪效果
+                    const delay = index * 20
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    const nodeEase = 1 + c3 * Math.pow(nodeProgress - 1, 3) + c1 * Math.pow(nodeProgress - 1, 2)
                     
-                    // 从大到小，从不透明到透明
-                    const reverseProgress = 1 - nodeEaseProgress
-                    const scale = 0.1 + reverseProgress * 0.9
-                    childNodeData.mesh.scale.set(scale, scale, scale)
+                    // 从父节点位置插值到目标位置
+                    const x = childData._parentPosition.x + (childData._targetPosition.x - childData._parentPosition.x) * nodeEase
+                    const y = childData._parentPosition.y + (childData._targetPosition.y - childData._parentPosition.y) * nodeEase
+                    const z = childData._parentPosition.z + (childData._targetPosition.z - childData._parentPosition.z) * nodeEase
                     
-                    if (childNodeData.glowMesh) {
-                        childNodeData.glowMesh.scale.set(scale, scale, scale)
+                    // 缩放：从0.1放大到1
+                    const scale = 0.1 + nodeEase * 0.9
+                    
+                    // 更新节点位置和缩放
+                    childData.mesh.position.set(x, y, z)
+                    childData.mesh.scale.set(scale, scale, scale)
+                    childData.mesh.visible = true
+                    
+                    if (childData.glowMesh) {
+                        childData.glowMesh.position.set(x, y, z)
+                        childData.glowMesh.scale.set(scale, scale, scale)
+                        childData.glowMesh.visible = true
                     }
                     
-                    if (childNodeData.sprite && childNodeData.sprite.material) {
-                        childNodeData.sprite.material.opacity = reverseProgress
+                    if (childData.sprite) {
+                        childData.sprite.position.set(x, y + (childData.node.type === 'range' ? 5 : 4), z)
+                        childData.sprite.visible = true
+                        if (childData.sprite.material) {
+                            childData.sprite.material.opacity = nodeEase
+                        }
                     }
                     
-                    if (childNodeData.line && childNodeData.line.material) {
-                        childNodeData.line.material.opacity = reverseProgress * 0.6
+                    if (childData.line && childData.line.material) {
+                        childData.line.visible = true
+                        childData.line.material.opacity = nodeEase * 0.8
                     }
                     
-                    if (childNodeData.dot && childNodeData.dot.material) {
-                        childNodeData.dot.material.opacity = reverseProgress
-                    }
-                    
-                    // 动画结束后完全隐藏
-                    if (nodeT >= 1) {
-                        childNodeData.mesh.visible = false
-                        if (childNodeData.glowMesh) childNodeData.glowMesh.visible = false
-                        if (childNodeData.sprite) childNodeData.sprite.visible = false
-                        if (childNodeData.line) childNodeData.line.visible = false
-                        if (childNodeData.dot) childNodeData.dot.visible = false
+                    if (childData.dot && childData.dot.material) {
+                        childData.dot.visible = true
+                        childData.dot.material.opacity = nodeEase
                     }
                 })
                 
-                if (t < 1) {
+                // 更新连接线
+                this.updateAllConnectionLines()
+                
+                if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // 动画完成，调用回调
+                    // 动画完成，恢复正常位置
+                    childNodes.forEach(childData => {
+                        childData.mesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
+                        if (childData.glowMesh) {
+                            childData.glowMesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
+                        }
+                        if (childData.sprite) {
+                            const spriteY = childData._targetPosition.y + (childData.node.type === 'range' ? 5 : 4)
+                            childData.sprite.position.set(childData._targetPosition.x, spriteY, childData._targetPosition.z)
+                        }
+                    })
+                    this.updateAllConnectionLines()
                     if (onComplete) onComplete()
                 }
             }
@@ -4029,16 +3967,112 @@ var app = new Vue({
             animate()
         },
         
-        // 重新平衡树布局（收缩后调用）
-        rebalanceTree() {
-            // 重新计算所有可见节点的位置
-            // 这里暂时使用简单的垂直重新分布，后续可以优化为更复杂的布局算法
+        // 吸入动画（收起子节点）
+        animateNodesSuckIn(parentNodeData, onComplete) {
+            if (!this.map3dScene || !this.map3dNodes) return
             
-            // TODO: 实现完整的树重新布局算法
-            // 由于需要重新计算整个树的布局，这里先保持简单实现
-            // 可以在未来版本中添加更复杂的自动布局算法
+            // 收集所有直接子节点
+            const childNodes = []
+            const collectChildren = (node) => {
+                if (!node.children || Object.keys(node.children).length === 0) return
+                
+                Object.keys(node.children).forEach(childKey => {
+                    const childNode = node.children[childKey]
+                    const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                    if (childNodeData) {
+                        childNodes.push(childNodeData)
+                        // 递归收集所有子节点
+                        collectChildren(childNode)
+                    }
+                })
+            }
             
-            console.log('Tree rebalanced - 布局重新计算完成')
+            collectChildren(parentNodeData.node)
+            
+            if (childNodes.length === 0) {
+                if (onComplete) onComplete()
+                return
+            }
+            
+            // 吸入动画：从当前位置缩放+位移到父节点位置，然后隐藏
+            const animationDuration = 300
+            const startTime = Date.now()
+            
+            // 保存每个子节点的起始位置
+            childNodes.forEach(childData => {
+                childData._startPosition = {
+                    x: childData.mesh.position.x,
+                    y: childData.mesh.position.y,
+                    z: childData.mesh.position.z
+                }
+            })
+            
+            const animate = () => {
+                const elapsed = Date.now() - startTime
+                const progress = Math.min(elapsed / animationDuration, 1)
+                
+                // 使用 easeInCubic 缓动（加速吸入）
+                const easeProgress = progress * progress * progress
+                
+                childNodes.forEach((childData, index) => {
+                    // 反向延迟（后面的节点先消失）
+                    const delay = (childNodes.length - index) * 15
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    const nodeEase = nodeProgress * nodeProgress * nodeProgress
+                    
+                    // 从当前位置插值到父节点位置
+                    const x = childData._startPosition.x + (parentNodeData.position.x - childData._startPosition.x) * nodeEase
+                    const y = childData._startPosition.y + (parentNodeData.position.y - childData._startPosition.y) * nodeEase
+                    const z = childData._startPosition.z + (parentNodeData.position.z - childData._startPosition.z) * nodeEase
+                    
+                    // 缩放：从1缩小到0.1
+                    const scale = 1 - nodeEase * 0.9
+                    const opacity = 1 - nodeEase
+                    
+                    // 更新节点位置和缩放
+                    childData.mesh.position.set(x, y, z)
+                    childData.mesh.scale.set(scale, scale, scale)
+                    
+                    if (childData.glowMesh) {
+                        childData.glowMesh.position.set(x, y, z)
+                        childData.glowMesh.scale.set(scale, scale, scale)
+                    }
+                    
+                    if (childData.sprite) {
+                        childData.sprite.position.set(x, y + (childData.node.type === 'range' ? 5 : 4), z)
+                        if (childData.sprite.material) {
+                            childData.sprite.material.opacity = opacity
+                        }
+                    }
+                    
+                    if (childData.line && childData.line.material) {
+                        childData.line.material.opacity = opacity * 0.8
+                    }
+                    
+                    if (childData.dot && childData.dot.material) {
+                        childData.dot.material.opacity = opacity
+                    }
+                })
+                
+                // 更新连接线
+                this.updateAllConnectionLines()
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate)
+                } else {
+                    // 动画完成，完全隐藏所有节点
+                    childNodes.forEach(childData => {
+                        childData.mesh.visible = false
+                        if (childData.glowMesh) childData.glowMesh.visible = false
+                        if (childData.sprite) childData.sprite.visible = false
+                        if (childData.line) childData.line.visible = false
+                        if (childData.dot) childData.dot.visible = false
+                    })
+                    if (onComplete) onComplete()
+                }
+            }
+            
+            animate()
         },
         
         // 处理窗口大小变化
