@@ -3891,10 +3891,36 @@ var app = new Vue({
             const animationDuration = 350
             const startTime = Date.now()
             
-            // 保存每个子节点的目标位置
+            // **修复：保存每个子节点的目标位置和它的直接父节点位置**
             childNodes.forEach(childData => {
+                // 目标位置：使用保存的原始位置
                 childData._targetPosition = { ...childData.position }
-                childData._parentPosition = { ...parentNodeData.position }
+                
+                // **关键修复：找到这个节点的直接父节点位置**
+                // 而不是使用最顶层的 parentNodeData
+                if (childData.parentNodeData && childData.parentNodeData.mesh) {
+                    // 如果有 parentNodeData（来自连接线逻辑），使用它
+                    childData._parentPosition = {
+                        x: childData.parentNodeData.mesh.position.x,
+                        y: childData.parentNodeData.mesh.position.y,
+                        z: childData.parentNodeData.mesh.position.z
+                    }
+                } else {
+                    // 否则，尝试查找直接父节点
+                    const directParentData = this.map3dNodes.find(n => 
+                        n.node.fullPath === childData.node.parentPath
+                    )
+                    if (directParentData && directParentData.mesh) {
+                        childData._parentPosition = {
+                            x: directParentData.mesh.position.x,
+                            y: directParentData.mesh.position.y,
+                            z: directParentData.mesh.position.z
+                        }
+                    } else {
+                        // 如果找不到，使用最顶层的父节点（兜底）
+                        childData._parentPosition = { ...parentNodeData.position }
+                    }
+                }
             })
             
             const animate = () => {
@@ -3910,6 +3936,17 @@ var app = new Vue({
                     // 添加延迟，产生波浪效果
                     const delay = index * 20
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    
+                    // **如果动画还没开始（nodeProgress === 0），隐藏节点**
+                    if (nodeProgress === 0) {
+                        childData.mesh.visible = false
+                        if (childData.glowMesh) childData.glowMesh.visible = false
+                        if (childData.sprite) childData.sprite.visible = false
+                        if (childData.line) childData.line.visible = false
+                        if (childData.dot) childData.dot.visible = false
+                        return
+                    }
+                    
                     const nodeEase = 1 + c3 * Math.pow(nodeProgress - 1, 3) + c1 * Math.pow(nodeProgress - 1, 2)
                     
                     // 从父节点位置插值到目标位置
@@ -3956,15 +3993,40 @@ var app = new Vue({
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // 动画完成，恢复正常位置
+                    // **动画完成，恢复正常位置并确保完全可见**
                     childNodes.forEach(childData => {
+                        // 恢复位置
                         childData.mesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
+                        childData.mesh.scale.set(1, 1, 1)
+                        childData.mesh.visible = true
+                        
                         if (childData.glowMesh) {
                             childData.glowMesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
+                            childData.glowMesh.scale.set(1, 1, 1)
+                            childData.glowMesh.visible = true
                         }
+                        
                         if (childData.sprite) {
                             const spriteY = childData._targetPosition.y + (childData.node.type === 'range' ? 5 : 4)
                             childData.sprite.position.set(childData._targetPosition.x, spriteY, childData._targetPosition.z)
+                            childData.sprite.visible = true
+                            if (childData.sprite.material) {
+                                childData.sprite.material.opacity = 1
+                            }
+                        }
+                        
+                        if (childData.line) {
+                            childData.line.visible = true
+                            if (childData.line.material) {
+                                childData.line.material.opacity = 0.8
+                            }
+                        }
+                        
+                        if (childData.dot) {
+                            childData.dot.visible = true
+                            if (childData.dot.material) {
+                                childData.dot.material.opacity = 1
+                            }
                         }
                     })
                     this.updateAllConnectionLines()
