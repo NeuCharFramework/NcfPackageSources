@@ -2840,9 +2840,9 @@ var app = new Vue({
                     const baseSpacing = 12
                     const nodeSpacing = Math.max(baseSpacing, nodeCount * 3)
                     
-                    // 计算位置（水平分层，垂直排列，动态平衡）
-                    const x = depth * 20
-                    let y = currentYOffset // 当前节点的Y位置
+                    // **横向布局：X轴为深度（层级），Y轴为主轴（垂直展开），Z轴为Aiming分布**
+                    const x = depth * 20  // X轴表示深度（层级）
+                    let y = currentYOffset // 当前节点的Y位置（主轴）
                     const z = 0
                     
                     // 检查是否有当前编辑的靶道
@@ -3117,14 +3117,19 @@ var app = new Vue({
                             const aimingKeys = Object.keys(node.children)
                             const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
                             const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
-                            let startZ = -totalAimingWidth / 2 // 从中心开始分布
+                            
+                            // **修复：使用父节点的位置生成唯一的Z轴偏移，避免不同父节点的A节点重叠**
+                            // 使用当前节点的X位置（原Y）的哈希值来生成唯一偏移
+                            const parentOffset = (currentYOffset % 100) / 10 // 基于父节点位置的唯一偏移
+                            let startZ = -totalAimingWidth / 2 + parentOffset // 加入父节点偏移
                             
                             const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
                             
                             aimingKeys.forEach((aimingKey, aimingIndex) => {
                                 const aimingNode = node.children[aimingKey]
+                                // **横向布局调整**
                                 const aimingX = (depth + 1) * 20
-                                const aimingY = y // 与父节点同一高度
+                                const aimingY = y // 与父节点同一层级
                                 const aimingZ = startZ + aimingIndex * aimingSpacing
                                 
                                 // 检查是否有当前编辑的靶道
@@ -3933,8 +3938,8 @@ var app = new Vue({
                 const easeProgress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2)
                 
                 childNodes.forEach((childData, index) => {
-                    // 添加延迟，产生波浪效果
-                    const delay = index * 20
+                    // **增加延迟，产生更明显的顺序动画效果，降低CPU压力**
+                    const delay = index * 50  // 从 20ms 增加到 50ms
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     
                     // **如果动画还没开始（nodeProgress === 0），隐藏节点**
@@ -4085,8 +4090,8 @@ var app = new Vue({
                 const easeProgress = progress * progress * progress
                 
                 childNodes.forEach((childData, index) => {
-                    // 反向延迟（后面的节点先消失）
-                    const delay = (childNodes.length - index) * 15
+                    // **增加反向延迟（后面的节点先消失），产生顺序动画效果**
+                    const delay = (childNodes.length - index) * 35  // 从 15ms 增加到 35ms
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     const nodeEase = nodeProgress * nodeProgress * nodeProgress
                     
