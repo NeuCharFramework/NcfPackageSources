@@ -3786,14 +3786,22 @@ var app = new Vue({
                             this.mapDialogVisible = false
                             
                             // **复用原有的靶道切换逻辑（包括保存草稿提示）**
-                            // 直接设置 promptid，会自动触发 el-select 的 @change 事件
-                            // 从而调用 promptChangeHandel(promptId, 'promptid')
+                            // 注意：程序化设置 v-model 不会触发 @change 事件
+                            // 需要手动调用 promptChangeHandel 函数来触发完整逻辑
                             // 该函数会自动处理：
                             // 1. 检查 pageChange 状态
                             // 2. 如果有修改，弹出"是否保存为草稿"确认框
                             // 3. 根据用户选择保存或不保存
                             // 4. 调用 getPromptetail 获取靶道详情
+                            
+                            // 保存旧值（用于change检测）
+                            const oldPromptId = this.promptid
+                            
+                            // 设置新值
                             this.promptid = promptId
+                            
+                            // 手动触发change处理逻辑
+                            this.promptChangeHandel(promptId, 'promptid', oldPromptId)
                         }
                     }
                 }
