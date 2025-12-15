@@ -2840,9 +2840,9 @@ var app = new Vue({
                     const baseSpacing = 12
                     const nodeSpacing = Math.max(baseSpacing, nodeCount * 3)
                     
-                    // **横向布局：X轴为深度（层级），Y轴为主轴（垂直展开），Z轴为Aiming分布**
-                    const x = depth * 20  // X轴表示深度（层级）
-                    let y = currentYOffset // 当前节点的Y位置（主轴）
+                    // **横向布局：X轴为主轴（水平排列），Y轴为深度（层级向下），Z轴为Aiming分布**
+                    let x = currentYOffset  // X轴为主轴（水平位置）
+                    const y = -depth * 20   // Y轴为深度（负值向下展开）
                     const z = 0
                     
                     // 检查是否有当前编辑的靶道
@@ -3052,7 +3052,8 @@ var app = new Vue({
                         opacity: 0 // 初始透明，用于渐入动画
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    sprite.position.set(x, y + (node.type === 'range' ? 5 : 4), z)
+                    // **横向布局：标签在节点下方（Y轴负方向）**
+                    sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z)
                     // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
                     const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
                     const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
@@ -3104,9 +3105,9 @@ var app = new Vue({
                     let line = null
                     let dot = null
                     
-                    // 递归渲染子节点（特殊处理 Aiming 节点：水平排列）
-                    let childMinY = y
-                    let childMaxY = y
+                    // **横向布局：递归渲染子节点（X轴为主轴）**
+                    let childMinX = x
+                    let childMaxX = x
                     
                     if (isExpanded && node.children && Object.keys(node.children).length > 0) {
                         if (hasAimingChildren) {
@@ -3138,9 +3139,9 @@ var app = new Vue({
                             
                             aimingKeys.forEach((aimingKey, aimingIndex) => {
                                 const aimingNode = node.children[aimingKey]
-                                // **横向布局调整**
-                                const aimingX = (depth + 1) * 20
-                                const aimingY = y // 与父节点同一层级
+                                // **横向布局：X轴主轴，Y轴深度，Z轴分布**
+                                const aimingX = x // 与父节点同一水平位置
+                                const aimingY = -(depth + 1) * 20 // Y轴向下一层
                                 const aimingZ = startZ + aimingIndex * aimingSpacing
                                 
                                 // 检查是否有当前编辑的靶道
@@ -3257,7 +3258,8 @@ var app = new Vue({
                                     opacity: 0
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
-                                aimingSprite.position.set(aimingX, aimingY + 4, aimingZ)
+                                // **横向布局：标签在节点下方**
+                                aimingSprite.position.set(aimingX, aimingY - 4, aimingZ)
                                 // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
                                 const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
                                 const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
@@ -3308,12 +3310,12 @@ var app = new Vue({
                                 })
                             })
                             
-                            // Aiming 节点：父节点保持当前高度，但需要更新 Y 偏移以避免下一个节点重叠
-                            childMinY = y
-                            childMaxY = y
+                            // **横向布局：Aiming 节点父节点保持当前位置**
+                            childMinX = x
+                            childMaxX = x
                             
-                            // 重要：虽然 Aiming 子节点水平排列，但父节点本身需要占用垂直空间
-                            // 否则下一个同级 Tactic 会与当前 Tactic 重叠
+                            // 重要：父节点本身需要占用水平空间
+                            // 否则下一个同级节点会重叠
                             currentYOffset += nodeSpacing
                             
                             // **关键修复：使用父节点的最终位置更新所有 Aiming 子节点的 parentPosition**
@@ -3335,30 +3337,30 @@ var app = new Vue({
                             }
                             
                         } else {
-                            // 普通子节点：垂直排列
-                            const childStartY = currentYOffset + nodeSpacing
-                            const childResult = renderNode(node.children, { x, y, z }, depth + 1, childStartY, nodeSpacing)
-                            currentYOffset = childResult.yOffset
+                            // **横向布局：普通子节点水平排列**
+                            const childStartX = currentYOffset + nodeSpacing
+                            const childResult = renderNode(node.children, { x, y, z }, depth + 1, childStartX, nodeSpacing)
+                            currentYOffset = childResult.yOffset  // 仍使用 yOffset 变量名，但实际是 X 轴
                             totalHeight += childResult.height
-                            childMinY = childResult.minY
-                            childMaxY = childResult.maxY
+                            childMinX = childResult.minY  // 变量名保持，但实际是 X 轴
+                            childMaxX = childResult.maxY  // 变量名保持，但实际是 X 轴
                             
-                            // 如果有子节点，将父节点调整到子树的垂直中点
-                            const subtreeMiddleY = (childMinY + childMaxY) / 2
-                            const oldY = y
-                            y = subtreeMiddleY
+                            // **横向布局：将父节点调整到子树的水平中点**
+                            const subtreeMiddleX = (childMinX + childMaxX) / 2
+                            const oldX = x
+                            x = subtreeMiddleX
                             
                             // 更新已创建的mesh位置
-                            mesh.position.y = y
+                            mesh.position.x = x
                             if (glowMesh) {
-                                glowMesh.position.y = y
+                                glowMesh.position.x = x
                             }
-                            sprite.position.y = y + (node.type === 'range' ? 5 : 4)
+                            sprite.position.x = x
                             
                             // 更新 map3dNodes 中的位置记录
                             const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
                             if (currentNodeData) {
-                                currentNodeData.position.y = y
+                                currentNodeData.position.x = x
                                 // 保持原有的 parentPosition（如果有的话）
                                 if (parentPosition) {
                                     currentNodeData.parentPosition = parentPosition
@@ -3399,9 +3401,9 @@ var app = new Vue({
                         currentYOffset += nodeSpacing
                     }
                     
-                    // 更新 minY 和 maxY
-                    minY = Math.min(minY, y, childMinY)
-                    maxY = Math.max(maxY, y, childMaxY)
+                    // **横向布局：更新 minY 和 maxY（实际是 X 轴范围）**
+                    minY = Math.min(minY, x, childMinX)
+                    maxY = Math.max(maxY, x, childMaxX)
                     
                     totalHeight += nodeSpacing
                 })
@@ -3468,10 +3470,11 @@ var app = new Vue({
                 maxDepth = Math.max(maxDepth, node.depth)
             })
             
-            const treeWidth = maxDepth * 20 // 水平宽度
-            const treeHeight = actualMaxY - actualMinY // 垂直高度
-            const treeCenterX = treeWidth / 2
-            const treeCenterY = (actualMaxY + actualMinY) / 2
+            // **横向布局：重新计算树的范围和摄像机位置**
+            const treeWidth = actualMaxY - actualMinY  // 水平宽度（X轴）
+            const treeDepth = maxDepth * 20            // 深度（Y轴）
+            const treeCenterX = (actualMaxY + actualMinY) / 2
+            const treeCenterY = -treeDepth / 2  // 向下展开，中心点在负Y
             
             // 调整相机初始位置，确保能看到整个树
             const treeCenter = {
@@ -3481,7 +3484,7 @@ var app = new Vue({
             }
             
             // 根据树的大小计算合适的相机距离
-            const maxDimension = Math.max(treeWidth, treeHeight)
+            const maxDimension = Math.max(treeWidth, treeDepth)
             const cameraDistance = maxDimension * 1.5 // 1.5倍的距离确保全景可见
             
             // 在所有节点位置确定后，统一创建连接线
@@ -3942,16 +3945,16 @@ var app = new Vue({
                             const parentOffset = (hashCode(parentData.node.fullPath || parentData.key) % 100) / 10
                             const correctZ = -totalAimingWidth / 2 + parentOffset + aimingIndex * aimingSpacing
                             
-                            // **关键修复：Aiming 节点的 X 和 Y 也需要基于父节点重新计算**
-                            // X 轴：父节点深度 + 1
-                            const correctX = parentData.mesh.position.x + 20
-                            // Y 轴：与父节点相同（Aiming 节点水平排列）
-                            const correctY = parentData.mesh.position.y
+                            // **横向布局：Aiming 节点的坐标重新计算**
+                            // X 轴：与父节点相同（Aiming 节点在同一水平位置）
+                            const correctX = parentData.mesh.position.x
+                            // Y 轴：父节点深度向下一层
+                            const correctY = parentData.mesh.position.y - 20
                             
                             // 使用重新计算的正确位置（X, Y, Z 都重新计算）
                             childData._targetPosition = {
-                                x: correctX,  // 基于父节点的 X + 偏移
-                                y: correctY,  // 与父节点相同的 Y
+                                x: correctX,  // 与父节点相同的 X
+                                y: correctY,  // 父节点 Y - 20（向下一层）
                                 z: correctZ   // 基于父节点 hash 的唯一 Z
                             }
                         } else {
